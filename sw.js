@@ -1,13 +1,10 @@
-const C="schoolbloom-v12";const A=["./","./index.html","./manifest.webmanifest","./icon-192.png","./icon-512.png"];self.addEventListener("install",e=>e.waitUntil(caches.open(C).then(c=>c.addAll(A))));self.addEventListener("activate",e=>e.waitUntil(self.clients.claim()));self.addEventListener("fetch",e=>{if(e.request.method!=="GET")return;e.respondWith(fetch(e.request).then(r=>{const x=r.clone();caches.open(C).then(c=>c.put(e.request,x)).catch(()=>{});return r}).catch(()=>caches.match(e.request)))})
-self.addEventListener("push",event=>{
- let data={title:"SchoolBloom 🌷",body:"Du hast eine neue Erinnerung."};
- try{data=event.data.json()}catch{}
- event.waitUntil(self.registration.showNotification(data.title||"SchoolBloom 🌷",{body:data.body||"",icon:"./icon-192.png",badge:"./icon-192.png",data:data.url||"./"}));
-});
-self.addEventListener("notificationclick",event=>{
- event.notification.close();
- event.waitUntil(clients.matchAll({type:"window",includeUncontrolled:true}).then(list=>{
-   for(const c of list){if("focus"in c)return c.focus()}
-   if(clients.openWindow)return clients.openWindow(event.notification.data||"./");
- }));
+const CACHE="schoolbloom-v15";
+const CORE=["./","./index.html","./icon-192.png","./icon-512.png"];
+self.addEventListener("install",e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)))});
+self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
+self.addEventListener("fetch",e=>{
+ const u=new URL(e.request.url);
+ if(u.hostname.includes("phs-lu.de"))return; // niemals Schul-PDF cachen
+ if(e.request.mode==="navigate"){e.respondWith(fetch(e.request).then(r=>{const c=r.clone();caches.open(CACHE).then(x=>x.put("./index.html",c));return r}).catch(()=>caches.match("./index.html")));return}
+ e.respondWith(caches.match(e.request).then(c=>c||fetch(e.request)));
 });

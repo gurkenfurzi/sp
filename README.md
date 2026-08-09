@@ -1,16 +1,10 @@
-# SchoolBloom
+# VERSION 15
 
-Kostenlose GitHub-Pages-Version von SchoolBloom.
+SchoolBloom GitHub Pages.
 
-## GitHub Pages
-Veröffentliche den `main` Branch aus dem Repository-Root (`/`).
-
-Benötigte Web-App-Dateien:
-- index.html
-- manifest.webmanifest
-- sw.js
-- icon-192.png
-- icon-512.png
-- .nojekyll
-
-Hinweis: Diese Version verwendet keine kostenpflichtige OpenAI-API und keine Netlify Functions.
+Neu:
+- Stundenplan lädt mit Cache-Buster und mehreren Quellen.
+- M U1 Offline-Sicherheitskopie für den Plan ab 10. August 2026.
+- Leere Stunden vor der letzten echten Stunde werden als „Entfall“ angezeigt.
+- Nach der letzten echten Stunde werden keine Entfall-Karten erzeugt.
+- Service Worker cached die PHS-PDF ausdrücklich nicht.

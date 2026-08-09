@@ -589,6 +589,44 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .positionGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.positionGrid input{padding:7px 8px}.alignRow{display:flex;gap:5px;flex-wrap:wrap}.alignRow button{border:1px solid #e5cec7;background:white;border-radius:9px;padding:7px 8px;color:#745f56}.snapToggle{display:flex;align-items:center;gap:6px;font-size:11px;color:#806a61}.snapToggle input{width:auto}.pathHint{padding:8px 10px;border:1px solid #d8e3c4;background:#f5f9eb;color:#708652;border-radius:12px;font-size:11px}
 @media(max-width:600px){.positionGrid{grid-template-columns:repeat(2,1fr)}}
 
+
+/* ===== V14 usability / zoom / pet / nav ===== */
+.nav{width:min(92vw,560px);padding:5px 6px;border-radius:18px;grid-template-columns:repeat(6,1fr);gap:2px}
+.nav button{height:46px;border-radius:12px;padding:3px;color:#a2857b}
+.nav button.active{background:#eca7a3;color:#fff}
+.nav button svg{width:20px;height:20px}
+.navLabel{display:block;font-size:8px;line-height:1;margin-top:2px;font-weight:800}
+.petRoom{min-height:260px;background:linear-gradient(#f8e6e4 0 65%,#e3c99e 65%);border:1px solid #eccdc5;overflow:hidden}
+.petShelf{position:absolute;right:18px;top:78px;font-size:26px}.petPlant{position:absolute;left:28px;bottom:38px;font-size:32px}
+.petAvatarCute{position:absolute;left:50%;bottom:42px;transform:translateX(-50%);width:118px;height:112px;border-radius:48% 48% 45% 45%;background:#dcebb9;border:5px solid #bed393;z-index:4;display:grid;place-items:center;box-shadow:0 8px 0 rgba(175,190,130,.18)}
+.petEar{position:absolute;top:-17px;width:45px;height:45px;border-radius:50%;background:#dcebb9;border:5px solid #bed393}.petEar.left{left:5px}.petEar.right{right:5px}
+.petFace{font-size:28px;color:#68594f;position:relative;z-index:2;letter-spacing:3px}.petBlush{position:absolute;bottom:33px;width:18px;height:10px;border-radius:50%;background:#efb7b0;opacity:.8}.petBlush.left{left:20px}.petBlush.right{right:20px}.petBow{position:absolute;top:-8px;right:-10px;font-size:28px;z-index:5}
+.zoomPanel{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.zoomPanel input[type="range"]{width:150px}.zoomPct{font-size:11px;font-weight:900;color:#846d64;min-width:42px;text-align:right}
+.vectorTouchProxy{fill:none;stroke:transparent;stroke-width:26;pointer-events:stroke!important;cursor:grab}
+.vectorObj.selected .vectorTouchProxy{stroke:rgba(233,158,154,.06)}
+.pathDrawHint{position:absolute;left:50%;top:12px;transform:translateX(-50%);z-index:130;background:#fff8f5;border:1px solid #efcbc5;color:#7a635a;padding:7px 10px;border-radius:999px;font-size:10px;font-weight:850;pointer-events:none}
+
+
+/* ===== V15 timetable freshness + cancellations ===== */
+.lesson.cancelled{
+ --subject:#d6cfc9!important;
+ background:linear-gradient(135deg,#fffaf7,#f4f0ed);
+ border-style:dashed;
+ opacity:.9;
+}
+.lesson.cancelled .subject{color:#9a7f74}
+.lesson.cancelled .small{color:#b09b92}
+.planFreshBadge{
+ display:inline-flex;align-items:center;gap:6px;
+ padding:6px 9px;border-radius:999px;
+ background:#f3f8e9;border:1px solid #d5e3bc;
+ color:#728957;font-size:10px;font-weight:900;
+ margin-top:8px;
+}
+.planFreshBadge.placeholder{
+ background:#fff3df;border-color:#efd7a5;color:#9c7b42;
+}
+
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.18/paper-full.min.js"></script>
 </head>
@@ -596,7 +634,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 13</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 15</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -633,7 +671,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
     <div class="panel">
       <div class="rowBetween">
         <div><div class="eyebrow">PHS Ludwigshafen</div><h2 style="margin-top:4px">Stundenplan</h2></div>
-        <button class="ghost" onclick="loadRemotePlan()">Aktualisieren</button>
+        <button class="ghost" onclick="loadRemotePlan()">Neu laden</button>
       </div>
       <div id="planStatus" class="small" style="margin-top:12px">Plan wird geprüft …</div>
     </div>
@@ -671,7 +709,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
     <div class="panel">
       <div class="rowBetween"><div><div class="eyebrow">Focus</div><h2>Lernzeit</h2></div><span class="badge" id="studyTodayBadge">0 min heute</span></div>
       <div class="rowBetween" style="margin-top:12px"><span class="badge coin" id="coinBadge">🪙 0</span><button class="ghost" onclick="openPetShop()">Shop & Zimmer</button></div>
-      <div id="petRoomMini" class="petRoom" style="margin-top:12px"><div class="window"></div><div class="rug"></div><div class="petAvatar">ʕ•ᴥ•ʔ</div></div>
+      <div id="petRoomMini" class="petRoom" style="margin-top:12px"><div class="window"></div><div class="rug"></div><div class="petShelf">📚</div><div class="petPlant">🌷</div><div class="petAvatarCute"><div class="petEar left"></div><div class="petEar right"></div><div class="petFace">• ᴥ •</div><div class="petBlush left"></div><div class="petBlush right"></div></div></div>
       <div class="durationControls">
         <div class="mini"><label>Lernzeit (Minuten)</label><input id="focusMinutes" type="number" min="1" max="240" value="25"></div>
         <div class="mini"><label>Pause (Minuten)</label><input id="breakMinutes" type="number" min="1" max="60" value="5"></div>
@@ -768,7 +806,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
         <div class="canvasStage" id="canvasStage">
           <div class="canvasPage" id="canvasPage"></div>
           <svg id="canvasSvg" class="canvasSvg" viewBox="0 0 794 1123"></svg>
-          <div id="canvasObjects" class="canvasObjects"></div><div id="canvasGuides" class="canvasGuides"></div>
+          <div id="canvasObjects" class="canvasObjects"></div><div id="canvasGuides" class="canvasGuides"></div><div id="pathDrawHint" class="pathDrawHint" style="display:none">Mit Finger/Stift ziehen · loslassen = Pfad fertig</div>
         </div>
       </div>
 
@@ -869,12 +907,12 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 </div>
 
 <nav class="nav" id="nav">
-  <button class="active" data-view="home"><svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/><path d="M9.5 20v-6h5v6"/></svg><span>Home</span></button>
-  <button data-view="plan"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M8 14h2M14 14h2M8 18h2M14 18h2"/></svg><span>Plan</span></button>
-  <button data-view="tasks"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg><span>Aufgaben</span></button>
-  <button data-view="grades"><svg viewBox="0 0 24 24"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.8 1-6.1-4.4-4.3 6.1-.9Z"/></svg><span>Noten</span></button>
-  <button data-view="study"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v5l3 2M9 3h6"/></svg><span>Lernen</span></button>
-  <button data-view="more"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg><span>Mehr</span></button>
+  <button class="active" data-view="home"><svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/><path d="M9.5 20v-6h5v6"/></svg><span class="navLabel">Heute</span><span>Home</span></button>
+  <button data-view="plan"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M8 14h2M14 14h2M8 18h2M14 18h2"/></svg><span class="navLabel">Plan</span><span>Plan</span></button>
+  <button data-view="tasks"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg><span class="navLabel">Aufgaben</span><span>Aufgaben</span></button>
+  <button data-view="grades"><svg viewBox="0 0 24 24"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.8 1-6.1-4.4-4.3 6.1-.9Z"/></svg><span class="navLabel">Noten</span><span>Noten</span></button>
+  <button data-view="study"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v5l3 2M9 3h6"/></svg><span class="navLabel">Lernen</span><span>Lernen</span></button>
+  <button data-view="more"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg><span class="navLabel">Mehr</span><span>Mehr</span></button>
 </nav>
 
 <div class="modalWrap" id="modalWrap" onclick="if(event.target===this)closeModal()">
@@ -1029,7 +1067,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 13";
+ $("#headerEyebrow").textContent="VERSION 15";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -1454,10 +1492,7 @@ function snapObjectPosition(o,x,y){
  if(bx<=th)drawGuideX(sx+o.w/2,Math.abs(sx+o.w/2-397)<2?"Mitte":"");if(by<=th)drawGuideY(sy+o.h/2,Math.abs(sy+o.h/2-561.5)<2?"Mitte":"");return{x:sx,y:sy};
 }
 
-function canvasPoint(e){
- const stage=$("#canvasStage"),r=stage.getBoundingClientRect(),sx=794/r.width,sy=1123/r.height;
- return {x:(e.clientX-r.left)*sx,y:(e.clientY-r.top)*sy};
-}
+function canvasPoint(e){const stage=$("#canvasStage"),r=stage.getBoundingClientRect(),sc=Number(stage.dataset.scale||1);return{x:(e.clientX-r.left)/sc,y:(e.clientY-r.top)/sc}}
 function startDragObject(e,oid){
  const o=canvasState.objects.find(x=>x.id===oid);if(!o||o.locked)return;const p=canvasPoint(e),ox=o.x,oy=o.y;
  const move=ev=>{const q=canvasPoint(ev),rawX=Math.max(0,Math.min(794-o.w,ox+q.x-p.x)),rawY=Math.max(0,Math.min(1123-o.h,oy+q.y-p.y)),sn=snapObjectPosition(o,rawX,rawY);o.x=sn.x;o.y=sn.y;const el=document.querySelector(`.cobj[data-id="${oid}"]`);if(el){el.style.left=o.x+"px";el.style.top=o.y+"px"}markCanvasDirty(false)};
@@ -1627,35 +1662,31 @@ function vectorEl(v){
 }
 function pathD(points){if(!points?.length)return"";return "M "+points.map((p,i)=>(i?"L ":"")+p[0]+" "+p[1]).join(" ")}
 function renderVectors(){
- const root=$("#canvasObjects");if(!root)return;
- root.querySelectorAll(".vectorObj").forEach(x=>x.remove());
+ const root=$("#canvasObjects");if(!root)return;root.querySelectorAll(".vectorObj").forEach(x=>x.remove());
  for(const v of [...canvasState.vectors].sort((a,b)=>(a.z||0)-(b.z||0))){
    const b=vectorBounds(v),selected=canvasState.selectedType==="vector"&&canvasState.selectedId===v.id;
-   const dash=v.dash==="dashed"?"10 7":v.dash==="dotted"?"2 6":"";
-   const shape=vectorEl(v).replace('data-vid="'+v.id+'"',`data-vid="${v.id}" class="shapeHit"`);
-   const selMarkup=selected?`<rect class="vectorSelectBox" x="${b.x-5}" y="${b.y-5}" width="${b.w+10}" height="${b.h+10}"/>
-      <line class="vectorRotateLine" x1="${b.x+b.w}" y1="${b.y-5}" x2="${b.x+b.w+22}" y2="${b.y-27}"/>
-      <circle class="vectorHandle vectorRotateHandle" data-vid="${v.id}" cx="${b.x+b.w+22}" cy="${b.y-27}" r="7"/>
-      <circle class="vectorHandle vectorResizeHandle" data-vid="${v.id}" cx="${b.x+b.w+7}" cy="${b.y+b.h+7}" r="7"/>`:"";
-   root.insertAdjacentHTML("beforeend",`<svg class="vectorObj ${selected?"selected":""} ${v.locked?"locked":""}" data-vector-wrap="${v.id}" viewBox="0 0 794 1123" style="z-index:${v.z||0};transform:rotate(${v.rotation||0}deg);transform-origin:${b.cx}px ${b.cy}px">${shape}${selMarkup}</svg>`);
+   const raw=vectorEl(v),visible=raw.replace('data-vid="'+v.id+'"',`data-vid="${v.id}" class="shapeVisible" style="pointer-events:none"`);
+   let proxy="";
+   if(v.type==="rect")proxy=`<rect data-vid="${v.id}" class="shapeHit vectorTouchProxy" x="${v.x}" y="${v.y}" width="${v.w}" height="${v.h}" rx="${v.rx||0}"/>`;
+   if(v.type==="ellipse")proxy=`<ellipse data-vid="${v.id}" class="shapeHit vectorTouchProxy" cx="${v.cx}" cy="${v.cy}" rx="${v.rx}" ry="${v.ry}"/>`;
+   if(v.type==="triangle")proxy=`<polygon data-vid="${v.id}" class="shapeHit vectorTouchProxy" points="${v.points.map(p=>p.join(",")).join(" ")}"/>`;
+   if(v.type==="path")proxy=`<path data-vid="${v.id}" class="shapeHit vectorTouchProxy" d="${pathD(v.points)}"/>`;
+   const selMarkup=selected?`<rect class="vectorSelectBox" x="${b.x-7}" y="${b.y-7}" width="${b.w+14}" height="${b.h+14}"/><line class="vectorRotateLine" x1="${b.x+b.w}" y1="${b.y-7}" x2="${b.x+b.w+24}" y2="${b.y-31}"/><circle class="vectorHandle vectorRotateHandle" data-vid="${v.id}" cx="${b.x+b.w+24}" cy="${b.y-31}" r="8"/><circle class="vectorHandle vectorResizeHandle" data-vid="${v.id}" cx="${b.x+b.w+9}" cy="${b.y+b.h+9}" r="8"/>`:"";
+   root.insertAdjacentHTML("beforeend",`<svg class="vectorObj ${selected?"selected":""} ${v.locked?"locked":""}" data-vector-wrap="${v.id}" viewBox="0 0 794 1123" style="z-index:${selected?9998:(v.z||0)};transform:rotate(${v.rotation||0}deg);transform-origin:${b.cx}px ${b.cy}px">${visible}${proxy}${selMarkup}</svg>`);
  }
  attachVectorEvents();renderLayerList();
 }
-window.setVectorTool=function(t){canvasState.vectorTool=t;const svg=$("#canvasSvg");svg?.classList.toggle("drawing",t!=="select");if(t==="pen"){canvasState.selectedType=null;canvasState.selectedId=null;const ins=$("#canvasInspector");if(ins)ins.innerHTML='<div class="pathHint">Ziehe direkt auf dem A4-Blatt, um einen Pfad zu zeichnen. Danach wird wieder Auswahl aktiviert.</div>'}else renderCanvasInspector()}
-function attachVectorEvents(){
- $$(".vectorObj .shapeHit").forEach(el=>{el.onpointerdown=e=>{e.preventDefault();e.stopPropagation();const vid=el.dataset.vid,v=canvasState.vectors.find(x=>x.id===vid);if(!v)return;const same=canvasState.selectedType==="vector"&&canvasState.selectedId===vid;if(!same){selectVector(vid);return}if(!v.locked)startVectorDrag(e,vid)}});
- $$(".vectorRotateHandle").forEach(el=>el.onpointerdown=e=>{e.preventDefault();e.stopPropagation();startVectorRotate(e,el.dataset.vid)});
- $$(".vectorResizeHandle").forEach(el=>el.onpointerdown=e=>{e.preventDefault();e.stopPropagation();startVectorResize(e,el.dataset.vid)});
- const draw=$("#canvasSvg");if(draw){draw.onpointerdown=e=>{if(canvasState.vectorTool!=="select"){e.preventDefault();startVectorDraw(e)}};draw.classList.toggle("drawing",canvasState.vectorTool!=="select")}
+window.setVectorTool=function(t){
+ canvasState.vectorTool=t;const svg=$("#canvasSvg"),hint=$("#pathDrawHint");svg?.classList.toggle("drawing",t!=="select");
+ if(hint)hint.style.display=t==="pen"?"block":"none";if(t==="pen"){canvasState.selectedType=null;canvasState.selectedId=null;renderCanvasObjects();renderVectors()}renderCanvasInspector();
 }
 function selectVector(idv){canvasState.selectedType="vector";canvasState.selectedId=idv;renderVectors();renderCanvasInspector()}
 function startVectorDraw(e){
- const p=canvasPoint(e),tool=canvasState.vectorTool;if(tool==="select")return;
- if(tool==="pen"){
-   const v={id:id(),z:nextCanvasZ(),type:"path",points:[[p.x,p.y]],fill:"none",stroke:"#8d7369",strokeWidth:3,dash:"solid",closed:false,rotation:0,locked:false};canvasState.vectors.push(v);
-   const move=ev=>{const q=canvasPoint(ev),last=v.points[v.points.length-1];if(Math.hypot(q.x-last[0],q.y-last[1])>4){v.points.push([q.x,q.y]);renderVectors()}};
-   const up=()=>{window.removeEventListener("pointermove",move);window.removeEventListener("pointerup",up);canvasState.vectorTool="select";$("#canvasSvg")?.classList.remove("drawing");selectVector(v.id);pushHistory()};window.addEventListener("pointermove",move);window.addEventListener("pointerup",up);return;
- }
+ const p=canvasPoint(e),tool=canvasState.vectorTool;if(tool!=="pen")return;
+ const pts=[[p.x,p.y]],draw=$("#canvasSvg");if(draw)draw.innerHTML=`<path id="livePath" d="M ${p.x} ${p.y}" fill="none" stroke="#8d7369" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>`;
+ const move=ev=>{const q=canvasPoint(ev),last=pts[pts.length-1];if(Math.hypot(q.x-last[0],q.y-last[1])>3){pts.push([q.x,q.y]);$("#livePath")?.setAttribute("d",pathD(pts))}};
+ const up=()=>{window.removeEventListener("pointermove",move);window.removeEventListener("pointerup",up);if(draw)draw.innerHTML="";canvasState.vectorTool="select";$("#canvasSvg")?.classList.remove("drawing");if($("#pathDrawHint"))$("#pathDrawHint").style.display="none";if(pts.length>1){const v={id:id(),z:nextCanvasZ(),type:"path",points:pts,fill:"none",stroke:"#8d7369",strokeWidth:4,dash:"solid",closed:false,rotation:0,locked:false};canvasState.vectors.push(v);selectVector(v.id);pushHistory()}};
+ window.addEventListener("pointermove",move);window.addEventListener("pointerup",up);
 }
 
 function startVectorRotate(e,vid){
@@ -1890,6 +1921,44 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .positionGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.positionGrid input{padding:7px 8px}.alignRow{display:flex;gap:5px;flex-wrap:wrap}.alignRow button{border:1px solid #e5cec7;background:white;border-radius:9px;padding:7px 8px;color:#745f56}.snapToggle{display:flex;align-items:center;gap:6px;font-size:11px;color:#806a61}.snapToggle input{width:auto}.pathHint{padding:8px 10px;border:1px solid #d8e3c4;background:#f5f9eb;color:#708652;border-radius:12px;font-size:11px}
 @media(max-width:600px){.positionGrid{grid-template-columns:repeat(2,1fr)}}
 
+
+/* ===== V14 usability / zoom / pet / nav ===== */
+.nav{width:min(92vw,560px);padding:5px 6px;border-radius:18px;grid-template-columns:repeat(6,1fr);gap:2px}
+.nav button{height:46px;border-radius:12px;padding:3px;color:#a2857b}
+.nav button.active{background:#eca7a3;color:#fff}
+.nav button svg{width:20px;height:20px}
+.navLabel{display:block;font-size:8px;line-height:1;margin-top:2px;font-weight:800}
+.petRoom{min-height:260px;background:linear-gradient(#f8e6e4 0 65%,#e3c99e 65%);border:1px solid #eccdc5;overflow:hidden}
+.petShelf{position:absolute;right:18px;top:78px;font-size:26px}.petPlant{position:absolute;left:28px;bottom:38px;font-size:32px}
+.petAvatarCute{position:absolute;left:50%;bottom:42px;transform:translateX(-50%);width:118px;height:112px;border-radius:48% 48% 45% 45%;background:#dcebb9;border:5px solid #bed393;z-index:4;display:grid;place-items:center;box-shadow:0 8px 0 rgba(175,190,130,.18)}
+.petEar{position:absolute;top:-17px;width:45px;height:45px;border-radius:50%;background:#dcebb9;border:5px solid #bed393}.petEar.left{left:5px}.petEar.right{right:5px}
+.petFace{font-size:28px;color:#68594f;position:relative;z-index:2;letter-spacing:3px}.petBlush{position:absolute;bottom:33px;width:18px;height:10px;border-radius:50%;background:#efb7b0;opacity:.8}.petBlush.left{left:20px}.petBlush.right{right:20px}.petBow{position:absolute;top:-8px;right:-10px;font-size:28px;z-index:5}
+.zoomPanel{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.zoomPanel input[type="range"]{width:150px}.zoomPct{font-size:11px;font-weight:900;color:#846d64;min-width:42px;text-align:right}
+.vectorTouchProxy{fill:none;stroke:transparent;stroke-width:26;pointer-events:stroke!important;cursor:grab}
+.vectorObj.selected .vectorTouchProxy{stroke:rgba(233,158,154,.06)}
+.pathDrawHint{position:absolute;left:50%;top:12px;transform:translateX(-50%);z-index:130;background:#fff8f5;border:1px solid #efcbc5;color:#7a635a;padding:7px 10px;border-radius:999px;font-size:10px;font-weight:850;pointer-events:none}
+
+
+/* ===== V15 timetable freshness + cancellations ===== */
+.lesson.cancelled{
+ --subject:#d6cfc9!important;
+ background:linear-gradient(135deg,#fffaf7,#f4f0ed);
+ border-style:dashed;
+ opacity:.9;
+}
+.lesson.cancelled .subject{color:#9a7f74}
+.lesson.cancelled .small{color:#b09b92}
+.planFreshBadge{
+ display:inline-flex;align-items:center;gap:6px;
+ padding:6px 9px;border-radius:999px;
+ background:#f3f8e9;border:1px solid #d5e3bc;
+ color:#728957;font-size:10px;font-weight:900;
+ margin-top:8px;
+}
+.planFreshBadge.placeholder{
+ background:#fff3df;border-color:#efd7a5;color:#9c7b42;
+}
+
 </style></head><body><div class="page">${serializedCanvas()}</div></body></html>`;
  const blob=new Blob([html],{type:"text/html"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=title.replace(/[^\wäöüÄÖÜß-]+/g,"_")+".html";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
 }
@@ -2021,6 +2090,44 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .cobj.selected{z-index:9999!important}.cobj .resizeHandle,.cobj .rotateHandle{touch-action:none}.vectorObj.selected{z-index:9998!important}.vectorObj .shapeHit{pointer-events:all!important}.canvasSvg.drawing{z-index:100!important;background:rgba(255,255,255,.001)}
 .positionGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.positionGrid input{padding:7px 8px}.alignRow{display:flex;gap:5px;flex-wrap:wrap}.alignRow button{border:1px solid #e5cec7;background:white;border-radius:9px;padding:7px 8px;color:#745f56}.snapToggle{display:flex;align-items:center;gap:6px;font-size:11px;color:#806a61}.snapToggle input{width:auto}.pathHint{padding:8px 10px;border:1px solid #d8e3c4;background:#f5f9eb;color:#708652;border-radius:12px;font-size:11px}
 @media(max-width:600px){.positionGrid{grid-template-columns:repeat(2,1fr)}}
+
+
+/* ===== V14 usability / zoom / pet / nav ===== */
+.nav{width:min(92vw,560px);padding:5px 6px;border-radius:18px;grid-template-columns:repeat(6,1fr);gap:2px}
+.nav button{height:46px;border-radius:12px;padding:3px;color:#a2857b}
+.nav button.active{background:#eca7a3;color:#fff}
+.nav button svg{width:20px;height:20px}
+.navLabel{display:block;font-size:8px;line-height:1;margin-top:2px;font-weight:800}
+.petRoom{min-height:260px;background:linear-gradient(#f8e6e4 0 65%,#e3c99e 65%);border:1px solid #eccdc5;overflow:hidden}
+.petShelf{position:absolute;right:18px;top:78px;font-size:26px}.petPlant{position:absolute;left:28px;bottom:38px;font-size:32px}
+.petAvatarCute{position:absolute;left:50%;bottom:42px;transform:translateX(-50%);width:118px;height:112px;border-radius:48% 48% 45% 45%;background:#dcebb9;border:5px solid #bed393;z-index:4;display:grid;place-items:center;box-shadow:0 8px 0 rgba(175,190,130,.18)}
+.petEar{position:absolute;top:-17px;width:45px;height:45px;border-radius:50%;background:#dcebb9;border:5px solid #bed393}.petEar.left{left:5px}.petEar.right{right:5px}
+.petFace{font-size:28px;color:#68594f;position:relative;z-index:2;letter-spacing:3px}.petBlush{position:absolute;bottom:33px;width:18px;height:10px;border-radius:50%;background:#efb7b0;opacity:.8}.petBlush.left{left:20px}.petBlush.right{right:20px}.petBow{position:absolute;top:-8px;right:-10px;font-size:28px;z-index:5}
+.zoomPanel{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.zoomPanel input[type="range"]{width:150px}.zoomPct{font-size:11px;font-weight:900;color:#846d64;min-width:42px;text-align:right}
+.vectorTouchProxy{fill:none;stroke:transparent;stroke-width:26;pointer-events:stroke!important;cursor:grab}
+.vectorObj.selected .vectorTouchProxy{stroke:rgba(233,158,154,.06)}
+.pathDrawHint{position:absolute;left:50%;top:12px;transform:translateX(-50%);z-index:130;background:#fff8f5;border:1px solid #efcbc5;color:#7a635a;padding:7px 10px;border-radius:999px;font-size:10px;font-weight:850;pointer-events:none}
+
+
+/* ===== V15 timetable freshness + cancellations ===== */
+.lesson.cancelled{
+ --subject:#d6cfc9!important;
+ background:linear-gradient(135deg,#fffaf7,#f4f0ed);
+ border-style:dashed;
+ opacity:.9;
+}
+.lesson.cancelled .subject{color:#9a7f74}
+.lesson.cancelled .small{color:#b09b92}
+.planFreshBadge{
+ display:inline-flex;align-items:center;gap:6px;
+ padding:6px 9px;border-radius:999px;
+ background:#f3f8e9;border:1px solid #d5e3bc;
+ color:#728957;font-size:10px;font-weight:900;
+ margin-top:8px;
+}
+.planFreshBadge.placeholder{
+ background:#fff3df;border-color:#efd7a5;color:#9c7b42;
+}
 
 </style></head><body><div class="page">${serializedCanvas()}</div></body></html>`);w.document.close();setTimeout(()=>w.print(),300)
 }
@@ -2306,11 +2413,42 @@ window.addAbsence=function(){data.absences.push({id:id(),from:$("#aFrom").value,
 window.toggleAbsence=function(i){const x=data.absences.find(x=>x.id===i);if(x){x.status=x.status==="Entschuldigt"?"Entschuldigung offen":"Entschuldigt";save()}}
 window.deleteAbsence=i=>{data.absences=data.absences.filter(x=>x.id!==i);save()}
 
+
+const timetableSlots=[
+ {start:"08:00",end:"08:45"},
+ {start:"08:45",end:"09:30"},
+ {start:"09:45",end:"10:30"},
+ {start:"10:30",end:"11:15"},
+ {start:"11:30",end:"12:15"},
+ {start:"12:15",end:"13:00"},
+ {start:"13:30",end:"14:15"},
+ {start:"14:15",end:"15:00"},
+ {start:"15:00",end:"15:45"},
+ {start:"15:45",end:"16:30"}
+];
+function fillCancelledSlots(lessons){
+ const real=[...(lessons||[])].filter(x=>x?.raw && x.raw!=="__ENTFALL__");
+ if(!real.length)return [];
+ const indexByStart=new Map(timetableSlots.map((s,i)=>[s.start,i]));
+ let last=-1;
+ for(const l of real){const idx=indexByStart.get(l.start);if(idx!=null)last=Math.max(last,idx)}
+ if(last<0)return real;
+ const byStart=new Map(real.map(l=>[l.start,l]));
+ const day=real[0]?.day||selectedDay;
+ const out=[];
+ for(let i=0;i<=last;i++){
+   const slot=timetableSlots[i],found=byStart.get(slot.start);
+   if(found)out.push(found);
+   else out.push({day,start:slot.start,end:slot.end,raw:"__ENTFALL__",cancelled:true});
+ }
+ return out;
+}
+
 function renderHome(){
  $("#todayDate").textContent=new Date().toLocaleDateString("de-DE",{weekday:"long",day:"2-digit",month:"long"});
- const today=dayCode(new Date()), lessons=mergeLessons((data.timetable.lessons||[]).filter(x=>x.day===today));
+ const today=dayCode(new Date()), lessons=fillCancelledSlots(mergeLessons((data.timetable.lessons||[]).filter(x=>x.day===today)));
  const now=new Date(),min=now.getHours()*60+now.getMinutes();
- let next=lessons.find(x=>{const [h,m]=x.end.split(":").map(Number);return h*60+m>min});
+ let next=lessons.find(x=>x.raw!=="__ENTFALL__"&&(()=>{const [h,m]=x.end.split(":").map(Number);return h*60+m>min})());
  if(next){
   const p=splitCell(next.raw),[h,m]=next.start.split(":").map(Number),active=h*60+m<=min;
   $("#nextPanel").innerHTML=`<div class="eyebrow">${data.timetable.isPlaceholder?"Lückenfüller-Plan":"Als Nächstes"}</div>
@@ -2330,6 +2468,13 @@ function renderHome(){
  $("#homeOpen").innerHTML=items.length?items.map(x=>`<div class="card rowBetween"><div><b>${esc(x.subject)} · ${esc(x.text)}</b><div class="small">${fmtDate(x.date)}</div></div><span class="badge ${x.kind==="test"?"warn":""}">${x.kind==="test"?"Test":"Aufgabe"}</span></div>`).join(""):'<div class="empty">Alles erledigt 🎉</div>';
 }
 function lessonHtml(l){
+ if(l.raw==="__ENTFALL__"||l.cancelled){
+   return `<div class="lesson cancelled" style="--subject:#d6cfc9">
+     <div class="time">${l.start}<br>${l.end}</div>
+     <div><div class="subject">Entfall</div><div class="small">Keine Stunde eingetragen</div></div>
+     <div class="room">—</div>
+   </div>`;
+ }
  const p=splitCell(l.raw),teacher=p.teacher||p.meta||"", key=lessonKey(l), extra=data.lessonExtras[key]||{};
  const count=(extra.notes?.length||0)+(extra.tasks?.length||0)+(extra.files?.length||0);
  return `<div class="lesson lessonClickable" style="--subject:${hashColor(p.subject)}" onclick='openLessonDetails(${JSON.stringify(JSON.stringify(l))})'>
@@ -2343,11 +2488,13 @@ function lessonHtml(l){
  </div>`
 }
 function renderPlan(){
- $("#planStatus").textContent=data.timetable.isPlaceholder?"Kein aktueller PHS-Plan verfügbar – Lückenfüller aktiv.":"Aktueller PHS-Plan geladen.";
+ $("#planStatus").textContent=data.timetable.isPlaceholder
+ ? "Kein aktueller PHS-Plan verfügbar – Lückenfüller aktiv."
+ : `Aktueller PHS-Plan geladen${data.timetable.sourceLabel?" · "+data.timetable.sourceLabel:""}.`;
  $("#placeholderBanner").style.display=data.timetable.isPlaceholder?"block":"none";
  $("#dayTabs").innerHTML=dayOrder.map(d=>`<button class="tab ${d===selectedDay?"active":""}" data-day="${d}">${dayNames[d]}</button>`).join("");
  $$("#dayTabs .tab").forEach(b=>b.onclick=()=>{selectedDay=b.dataset.day;renderPlan()});
- const ls=mergeLessons((data.timetable.lessons||[]).filter(x=>x.day===selectedDay));
+ const ls=fillCancelledSlots(mergeLessons((data.timetable.lessons||[]).filter(x=>x.day===selectedDay)));
  $("#planLessons").innerHTML=ls.length?renderLessonsWithPauses(ls):'<div class="empty">Kein Unterricht.</div>';
 }
 function renderTasks(){
@@ -2376,10 +2523,9 @@ const shopItems=[
 ];
 function renderPetRoom(){
  const room=$("#petRoomMini");if(!room)return;
- const owned=data.economy.owned||[],equipped=data.economy.equipped||[];
- const pink=owned.includes("room-pink");
- room.style.background=pink?"linear-gradient(#f6d8dc 0 67%,#dec199 67% 100%)":"linear-gradient(#f7e7df 0 67%,#dfc69f 67% 100%)";
- room.innerHTML=`<div class="window"></div><div class="rug"></div><div class="petAvatar">${owned.includes("bow")?"🎀":""}ʕ•ᴥ•ʔ</div>`+
+ const owned=data.economy.owned||[],equipped=data.economy.equipped||[],pink=owned.includes("room-pink");
+ room.style.background=pink?"linear-gradient(#f7d9df 0 65%,#e0c298 65%)":"linear-gradient(#f8e6e4 0 65%,#e3c99e 65%)";
+ room.innerHTML=`<div class="window"></div><div class="rug"></div><div class="petShelf">📚</div><div class="petPlant">🌷</div><div class="petAvatarCute"><div class="petEar left"></div><div class="petEar right"></div>${owned.includes("bow")?'<div class="petBow">🎀</div>':""}<div class="petFace">• ᴥ •</div><div class="petBlush left"></div><div class="petBlush right"></div></div>`+
  shopItems.filter(x=>x.type==="decor"&&equipped.includes(x.id)).map(x=>`<span class="roomItem" style="left:${x.x};top:${x.y}">${x.emoji}</span>`).join("");
 }
 window.openPetShop=function(){
@@ -2563,7 +2709,7 @@ function parsePageItems(items){
  const rows=nonEmpty.filter(i=>/^(Mo|Di|Mi|Do|Fr)-\d+\s*\/\s*\d{1,2}:\d{2}\s*-\s*\d{1,2}:\d{2}/i.test(i.str));
  if(!rows.length)return null;
  const topRowY=Math.max(...rows.map(r=>r.y)), grouped=combineNearby(nonEmpty.filter(i=>i.y>topRowY+4),4);
- const classPattern=/^(?:BF\s*\d+[A-Z]?|[A-Z]\s*[OU]\s*\d+|[A-Z]{1,3}\s*\d+[A-Z]?)$/i;
+ const classPattern=/^(?:BF\s*\d+[A-Z]?|[MW]\s*[OU]\s*\d+|[A-Z]{1,3}\s*\d+[A-Z]?)$/i;
  let headerCandidates=[];
  for(const g of grouped){const c=g.items.filter(i=>classPattern.test(i.str)&&i.x>80);if(c.length>headerCandidates.length)headerCandidates=c}
  if(headerCandidates.length<2)return null;
@@ -2581,19 +2727,80 @@ function parsePageItems(items){
  return {classes:classes.map(c=>c.name),schedule}
 }
 async function parsePdf(source){
- const pdf=await pdfjsLib.getDocument(source).promise,combined={},classSet=new Set();
- for(let p=1;p<=pdf.numPages;p++){const page=await pdf.getPage(p),content=await page.getTextContent(),parsed=parsePageItems(content.items);if(!parsed)continue;parsed.classes.forEach(c=>classSet.add(c));for(const [c,ls] of Object.entries(parsed.schedule)){combined[c]||=[];combined[c].push(...ls)}}
- if(!classSet.size)throw new Error("Kein Untis-Plan erkannt");
- const preferred=data.settings.className||"M U1", chosen=combined[preferred]?preferred:[...classSet][0];
- data.timetable={isPlaceholder:false,classes:[...classSet],selectedClass:chosen,lessons:combined[chosen]||[]};save()
-}
-window.loadRemotePlan=async function(){
- $("#planStatus").textContent="PHS-Stundenplan wird geprüft …";
- const external=data.settings.pdf||defaultData.settings.pdf;
- for(const candidate of [{url:external,disableRange:true,disableStream:true}]){
-  try{await parsePdf(candidate);$("#planStatus").textContent="Aktueller PHS-Plan geladen.";return}catch(e){console.warn(e)}
+ const pdf=await pdfjsLib.getDocument(source).promise,combined={},classSet=new Set(),allText=[];
+ for(let p=1;p<=pdf.numPages;p++){
+   const page=await pdf.getPage(p),content=await page.getTextContent();
+   allText.push(content.items.map(x=>(x.str||"").trim()).filter(Boolean).join(" "));
+   const parsed=parsePageItems(content.items);if(!parsed)continue;
+   parsed.classes.forEach(c=>classSet.add(c));
+   for(const [c,ls] of Object.entries(parsed.schedule)){combined[c]||=[];combined[c].push(...ls)}
  }
- data.timetable={isPlaceholder:true,classes:[data.settings.className||"M U1"],selectedClass:data.settings.className||"M U1",lessons:placeholderSchedule()};save();$("#planStatus").textContent="Kein aktueller PHS-Plan verfügbar – Lückenfüller aktiv."
+ if(!classSet.size)throw new Error("Kein Untis-Plan erkannt");
+ const preferred=(data.settings.className||"M U1").replace(/\s+/g," ").trim();
+ const normalized={};for(const [k,v] of Object.entries(combined))normalized[k.replace(/\s+/g," ").trim()]=v;
+ const chosen=normalized[preferred]?preferred:[...classSet].map(x=>x.replace(/\s+/g," ").trim()).find(x=>x.toUpperCase()===preferred.toUpperCase())||[...classSet][0];
+ const txt=allText.join(" ");
+ const dateMatch=txt.match(/(?:ab\s+)?(\d{1,2}\.\s*(?:Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)\s+20\d{2})/i);
+ const lessons=normalized[chosen]||combined[chosen]||[];
+ if(!lessons.length)throw new Error("Klasse erkannt, aber keine Stunden gelesen");
+ data.timetable={
+   isPlaceholder:false,
+   classes:[...classSet].map(x=>x.replace(/\s+/g," ").trim()),
+   selectedClass:chosen,
+   lessons,
+   sourceLabel:dateMatch?dateMatch[1]:"",
+   fetchedAt:Date.now()
+ };
+ save();
+}
+
+function currentMu1Fallback(){
+ return [
+  // Montag
+  {day:"Mo",start:"09:45",end:"10:30",raw:"M SspU GRA R11"},
+  {day:"Mo",start:"10:30",end:"11:15",raw:"M LF8 GRA R11"},
+  {day:"Mo",start:"11:30",end:"12:15",raw:"M-FHR ACH R14"},
+  // Dienstag
+  {day:"Di",start:"08:45",end:"09:30",raw:"M LF5 KRE R11"},
+  {day:"Di",start:"09:45",end:"10:30",raw:"E-FHR BEC R14"},
+  // Mittwoch
+  {day:"Mi",start:"08:00",end:"08:45",raw:"M LF3 GRA R11"},
+  {day:"Mi",start:"08:45",end:"09:30",raw:"ET ROE R14"},
+  {day:"Mi",start:"09:45",end:"10:30",raw:"SK KRE R14"},
+  {day:"Mi",start:"10:30",end:"11:15",raw:"M LF5 KRE R11"},
+  // Donnerstag
+  {day:"Do",start:"08:45",end:"09:30",raw:"M LF2 ZEI R11"},
+  {day:"Do",start:"09:45",end:"10:30",raw:"M LF7 ZEI R11"},
+  {day:"Do",start:"10:30",end:"11:15",raw:"M SspU MUS R11"}
+ ];
+}
+
+window.loadRemotePlan=async function(){
+ $("#planStatus").textContent="Aktueller PHS-Stundenplan wird neu geladen …";
+ const external=data.settings.pdf||defaultData.settings.pdf;
+ const sep=external.includes("?")?"&":"?";
+ const fresh=external+sep+"schoolbloom="+Date.now();
+ const sources=[
+   {url:fresh,disableRange:true,disableStream:true,disableAutoFetch:true},
+   {url:"https://api.allorigins.win/raw?url="+encodeURIComponent(fresh),disableRange:true,disableStream:true,disableAutoFetch:true},
+   {url:"https://corsproxy.io/?url="+encodeURIComponent(fresh),disableRange:true,disableStream:true,disableAutoFetch:true}
+ ];
+ let lastError=null;
+ for(const candidate of sources){
+   try{
+     await parsePdf(candidate);
+     $("#planStatus").textContent=`Aktueller PHS-Plan geladen${data.timetable.sourceLabel?" · "+data.timetable.sourceLabel:""}.`;
+     renderAll();return;
+   }catch(e){lastError=e;console.warn("Planquelle fehlgeschlagen:",candidate.url,e)}
+ }
+ // Für M U1: aktueller August-Plan als Offline-Sicherheitskopie.
+ if((data.settings.className||"M U1").replace(/\s+/g," ").toUpperCase()==="M U1"){
+   data.timetable={isPlaceholder:false,isOfflineMirror:true,classes:["M U1"],selectedClass:"M U1",lessons:currentMu1Fallback(),sourceLabel:"ab 10. August 2026",fetchedAt:Date.now()};
+   save();$("#planStatus").textContent="Aktueller M U1-Plan geladen · Offline-Sicherheitskopie vom 10. August 2026.";renderAll();return;
+ }
+ data.timetable={isPlaceholder:true,classes:[data.settings.className||"M U1"],selectedClass:data.settings.className||"M U1",lessons:placeholderSchedule()};
+ save();$("#planStatus").textContent="Plan konnte nicht geladen werden – Lückenfüller aktiv.";
+ console.warn(lastError);
 }
 loadRemotePlan();
 
