@@ -632,6 +632,12 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson{background:linear-gradient(135deg,#fffaf1,#fff1d5);border:1px solid #efd8a5}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
+
+/* ===== VERSION 18: echter Live-Refresh ===== */
+.liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
+.liveRefreshStatus.loading{color:#a77d4b}
+.liveRefreshStatus.ok{color:#6f8956}
+.liveRefreshStatus.error{color:#b06d68}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.18/paper-full.min.js"></script>
 </head>
@@ -639,7 +645,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 16</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 18</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -676,12 +682,12 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
     <div class="panel">
       <div class="rowBetween">
         <div><div class="eyebrow">PHS Ludwigshafen</div><h2 style="margin-top:4px">Stundenplan</h2></div>
-        <button class="ghost" onclick="loadRemotePlan()">Neu laden</button>
+        <button class="ghost" onclick="loadRemotePlan(true)">Jetzt aktualisieren</button>
       </div>
-      <div id="planStatus" class="small" style="margin-top:12px">Plan wird geprüft …</div>
+      <div id="planStatus" class="small" style="margin-top:12px">Plan wird geprüft …</div><div id="liveRefreshStatus" class="liveRefreshStatus"></div>
     </div>
     <div id="placeholderBanner" class="card warn" style="display:none;margin-top:12px">
-      <b>⚠ Lückenfüller-Plan</b><div class="small" style="margin-top:4px;color:inherit">Nur ein Beispiel, solange kein echter PHS-Plan verfügbar ist.</div>
+      <b>↻ Automatischer Import</b><div class="small" style="margin-top:4px;color:inherit">Automatisch im Hintergrund · zusätzlich jederzeit live aktualisierbar.</div>
     </div>
     <div class="daytabs" id="dayTabs"></div>
     <div class="stack" id="planLessons"></div>
@@ -925,6 +931,8 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 </div>
 
 <script type="module">
+const SCHOOLBLOOM_PLAN_WORKER="https://dry-surf-fec5.muelliaccc.workers.dev";
+
 import * as pdfjsLib from "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs";
 pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
 
@@ -1076,7 +1084,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 16";
+ $("#headerEyebrow").textContent="VERSION 18";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -1973,6 +1981,12 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson{background:linear-gradient(135deg,#fffaf1,#fff1d5);border:1px solid #efd8a5}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
+
+/* ===== VERSION 18: echter Live-Refresh ===== */
+.liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
+.liveRefreshStatus.loading{color:#a77d4b}
+.liveRefreshStatus.ok{color:#6f8956}
+.liveRefreshStatus.error{color:#b06d68}
 </style></head><body><div class="page">${serializedCanvas()}</div></body></html>`;
  const blob=new Blob([html],{type:"text/html"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=title.replace(/[^\wäöüÄÖÜß-]+/g,"_")+".html";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
 }
@@ -2148,6 +2162,12 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson{background:linear-gradient(135deg,#fffaf1,#fff1d5);border:1px solid #efd8a5}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
+
+/* ===== VERSION 18: echter Live-Refresh ===== */
+.liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
+.liveRefreshStatus.loading{color:#a77d4b}
+.liveRefreshStatus.ok{color:#6f8956}
+.liveRefreshStatus.error{color:#b06d68}
 </style></head><body><div class="page">${serializedCanvas()}</div></body></html>`);w.document.close();setTimeout(()=>w.print(),300)
 }
 window.applyCanvasTemplate=function(name,silent=false){
@@ -2487,7 +2507,7 @@ function lessonHtml(l){
 
 function renderPlan(){
  $("#planStatus").textContent=data.timetable.isPlaceholder
- ? "Kein aktueller PHS-Plan verfügbar – Lückenfüller aktiv."
+ ? "Automatischer Stundenplan wird vorbereitet."
  : `Aktueller PHS-Plan geladen${data.timetable.sourceLabel?" · "+data.timetable.sourceLabel:""}.`;
  $("#placeholderBanner").style.display=data.timetable.isPlaceholder?"block":"none";
  $("#dayTabs").innerHTML=dayOrder.map(d=>`<button class="tab ${d===selectedDay?"active":""}" data-day="${d}">${dayNames[d]}</button>`).join("");
@@ -2697,7 +2717,7 @@ window.resetAll=function(){if(confirm("Wirklich alle SchoolHub-Daten auf diesem 
 
 function renderAll(){renderHome();renderPlan();renderTasks();renderGrades();renderStudy();renderSubjects();renderAbsence();renderSettings();if(selectedSubjectId)renderSubjectDetail();if(selectedTopicId)renderTopicDetail();if(selectedDeckId)renderDeckDetail();if(selectedQuizId&&quizSession)renderQuizPlayer()}
 applyCustomization();renderTimer();renderAll();
-if(localStorage.getItem("schoolbloom-plan-parser-version")!=="16"){localStorage.setItem("schoolbloom-plan-parser-version","16");setTimeout(()=>loadRemotePlan(),300)}
+if(localStorage.getItem("schoolbloom-plan-parser-version")!=="17"){localStorage.setItem("schoolbloom-plan-parser-version","17");setTimeout(()=>loadRemotePlan(),300)}
 
 
 function combineNearby(items,yTol=3.5){
@@ -2745,21 +2765,56 @@ async function parsePdf(source){
  data.timetable={isPlaceholder:false,classes:keys,selectedClass:chosen,lessons,sourceLabel:dm?dm[1]:"",fetchedAt:Date.now()};save();
 }
 
-window.loadRemotePlan=async function(){
- $("#planStatus").textContent="Aktuelle PHS-PDF wird neu gelesen …";
- const external=data.settings.pdf||defaultData.settings.pdf,sep=external.includes("?")?"&":"?",fresh=external+sep+"schoolbloom="+Date.now();
+window.loadRemotePlan=async function(manual=false){
+ const status=$("#planStatus"),live=$("#liveRefreshStatus");
+ const refreshBtn=[...document.querySelectorAll("button")].find(b=>(b.textContent||"").includes("Jetzt aktualisieren"));
+ if(refreshBtn)refreshBtn.disabled=true;
+
+ if(status)status.textContent=manual?"Aktuelle PHS-PDF wird live neu geladen …":"Stundenplan wird geladen …";
+ if(live){live.textContent=manual?"Live-Abruf über Cloudflare …":"";live.className="liveRefreshStatus loading"}
+
+ const stamp=Date.now();
+ const external=data.settings.pdf||defaultData.settings.pdf;
+ const sep=external.includes("?")?"&":"?";
  const sources=[
-  {url:fresh,disableRange:true,disableStream:true,disableAutoFetch:true},
-  {url:"https://api.allorigins.win/raw?url="+encodeURIComponent(fresh),disableRange:true,disableStream:true,disableAutoFetch:true},
-  {url:"https://corsproxy.io/?url="+encodeURIComponent(fresh),disableRange:true,disableStream:true,disableAutoFetch:true}
+   {name:"Live",source:{url:SCHOOLBLOOM_PLAN_WORKER+"?schoolbloom="+stamp,disableRange:true,disableStream:true,disableAutoFetch:true}},
+   {name:"GitHub-Sicherung",source:{url:"./Stundenplan.pdf?schoolbloom="+stamp,disableRange:true,disableStream:true,disableAutoFetch:true}},
+   {name:"Direkt",source:{url:external+sep+"schoolbloom="+stamp,disableRange:true,disableStream:true,disableAutoFetch:true}}
  ];
- let err=null;
- for(const src of sources){try{await parsePdf(src);$("#planStatus").textContent=`PHS-PDF erfolgreich gelesen${data.timetable.sourceLabel?" · "+data.timetable.sourceLabel:""}.`;renderAll();return}catch(e){err=e;console.warn(e)}}
- data.timetable={isPlaceholder:true,classes:[data.settings.className||"M U1"],selectedClass:data.settings.className||"M U1",lessons:[]};save();
- $("#planStatus").textContent="Die aktuelle PDF konnte nicht automatisch gelesen werden. Es wird kein falscher Plan angezeigt.";
- renderAll();console.warn(err);
+
+ let lastError=null;
+ for(const candidate of sources){
+   try{
+     await parsePdf(candidate.source);
+     const d=new Date(),time=String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
+     data.timetable.lastSource=candidate.name;
+     data.timetable.lastLiveCheck=Date.now();
+     save();
+
+     if(status)status.textContent=`Aktueller PHS-Plan geladen${data.timetable.sourceLabel?" · "+data.timetable.sourceLabel:""}.`;
+     if(live){
+       live.textContent=`✓ ${candidate.name} · geprüft um ${time} Uhr`;
+       live.className="liveRefreshStatus ok";
+     }
+     if(refreshBtn)refreshBtn.disabled=false;
+     renderAll();
+     return;
+   }catch(e){
+     lastError=e;
+     console.warn(candidate.name+" fehlgeschlagen",e);
+   }
+ }
+
+ if(status)status.textContent="Stundenplan konnte gerade nicht neu geladen werden.";
+ if(live){
+   live.textContent="✕ Live-Aktualisierung fehlgeschlagen";
+   live.className="liveRefreshStatus error";
+ }
+ if(refreshBtn)refreshBtn.disabled=false;
+ console.warn(lastError);
 }
-loadRemotePlan();
+
+loadRemotePlan(false);
 
 if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});
 </script>
