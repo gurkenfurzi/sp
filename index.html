@@ -498,6 +498,36 @@ body.modalOpen{overflow:hidden;position:fixed;width:100%}
  .toolSection{padding:7px}
 }
 
+
+/* ===== V11 Canva-like editor ===== */
+body.editorMode header,body.editorMode #nav{display:none!important}
+body.editorMode main{max-width:none;padding:8px 8px 30px}
+body.editorMode .view#view-sheet-editor{padding-bottom:20px}
+.canvasEditorShell{max-width:1180px;margin:auto}
+.canvasTopbar{position:sticky;top:0;z-index:120;background:rgba(255,250,246,.94);backdrop-filter:blur(18px);padding:6px;border:1px solid #ead3cc;border-radius:16px}
+.editorTitle{display:grid;text-align:center;font-size:13px}.editorTitle .wordStatus{font-size:9px}
+.editorActions{display:flex;gap:5px}
+.editorIcon,.miniIcon{border:1px solid #e7cec7;background:#fffdf9;color:#745f57;border-radius:11px;width:38px;height:38px;padding:0;font-size:20px;font-weight:900}
+.primaryIcon{background:#eda6a4;color:white}.dangerMini{color:#b96f6d}
+.editorDock{display:flex;gap:5px;overflow-x:auto;padding:6px;position:sticky;top:58px;z-index:110;background:rgba(255,250,246,.94);backdrop-filter:blur(16px);border:1px solid #ead3cc;border-radius:15px}
+.editorDock button,.editorDock label{flex:0 0 42px;width:42px;height:42px;display:grid;place-items:center;border:1px solid #e7cec7;background:white;color:#715e56;border-radius:11px;font-size:19px;font-weight:900;margin:0;padding:0}
+.iconOnlyBtn{width:52px;font-size:24px}
+.cobj.locked{outline-style:dashed!important}
+.cobj.locked .resizeHandle{display:none!important}
+.layerItem{border:0;width:100%;cursor:pointer}
+.layerItem .layerBtns{display:flex;gap:3px}
+.layerItem .layerBtns span{display:grid;place-items:center;min-width:24px;height:24px;border-radius:7px;background:#fff7f4}
+.canvasPage{pointer-events:auto}
+.canvasSvg{pointer-events:auto}
+.fontSelect{width:100%}
+@media(max-width:600px){
+ .canvasViewport{border-radius:12px;padding:4px}
+ .objectPanel{border-radius:14px;padding:8px}
+ .editorDock{top:55px}
+ .stylePresetBar{gap:5px}
+ .stylePreset{font-size:11px;padding:7px 9px}
+}
+
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.18/paper-full.min.js"></script>
 </head>
@@ -587,30 +617,10 @@ body.modalOpen{overflow:hidden;position:fixed;width:100%}
       </div>
       <div class="timer" id="timerDisplay">25:00</div>
       <div class="row" style="justify-content:center;flex-wrap:wrap">
-        <button class="primary" id="timerBtn" onclick="startCustomFocus()">Lernen starten</button>
-        <button class="ghost" onclick="startCustomBreak()">Pause starten</button>
-        <button class="ghost" onclick="toggleTimer()">Start/Pause</button>
-        <button class="ghost" onclick="resetTimer()">Reset</button>
+        <button class="primary" id="timerBtn" onclick="smartTimerButton()">▶ Start</button>
+        <button class="ghost iconOnlyBtn" aria-label="Reset" title="Reset" onclick="resetTimer()">↻</button>
       </div>
       <div class="small" id="timerModeLabel" style="text-align:center;margin-top:10px">Fokus · fürs Lernen bekommst du Münzen.</div>
-    </div>
-
-    <div class="section">
-      <div class="sectionHead"><h2>KI Lernstudio ✨</h2><span id="aiConnectionBadge" class="aiState offline">KI wird geprüft</span></div>
-      <div class="aiBox">
-        <label>Thema oder Notizen</label>
-        <textarea id="aiInput" placeholder="z. B. 'Gestaltgesetze im Mediendesign' oder kopiere deine eigenen Aufschriebe hier hinein …"></textarea>
-        <div class="formGrid" style="margin-top:9px">
-          <div><label>Erstellen</label><select id="aiMode"><option value="flashcards">Karteikarten</option><option value="study-sheet">Lernblatt</option><option value="quiz">Quiz / Testfragen</option></select></div>
-          <div><label>Fach</label><select id="aiSubject"></select></div>
-          <div class="full" id="aiDeckWrap"><label>Karteikarten-Ordner</label><select id="aiDeck"></select></div>
-        </div>
-        <div class="row" style="margin-top:10px;flex-wrap:wrap">
-          <button class="primary" style="width:100%" onclick="generateAI()">Mit KI erstellen ✨</button>
-        </div>
-        <div id="aiStatus" class="small" style="margin-top:8px"></div>
-        <div id="aiResult" class="aiResult" style="display:none;margin-top:10px"></div>
-      </div>
     </div>
 
     <div class="section">
@@ -661,60 +671,30 @@ body.modalOpen{overflow:hidden;position:fixed;width:100%}
   <section class="view" id="view-sheet-editor">
     <div class="canvasEditorShell">
       <div class="canvasTopbar">
-        <button class="ghost" onclick="closeSheetEditor()">← Thema</button>
-        <div class="row">
-          <span class="wordStatus" id="wordStatus">Nicht gespeichert</span>
-          <button class="ghost" onclick="exportCanvasHTML()">HTML</button>
-          <button class="ghost" onclick="printCanvasSheet()">PDF / Drucken</button>
-          <button class="primary" onclick="saveCanvasSheet()">Speichern</button>
+        <button class="editorIcon" title="Zurück" onclick="closeSheetEditor()">‹</button>
+        <div class="editorTitle"><b>Lernblatt</b><span class="wordStatus" id="wordStatus">Nicht gespeichert</span></div>
+        <div class="editorActions">
+          <button class="editorIcon" title="Exportieren" onclick="exportCanvasHTML()">⇩</button>
+          <button class="editorIcon" title="PDF / Drucken" onclick="printCanvasSheet()">⎙</button>
+          <button class="editorIcon primaryIcon" title="Speichern" onclick="saveCanvasSheet()">✓</button>
         </div>
       </div>
 
-      <div class="toolSections">
-        <div class="toolSection">
-          <div class="toolSectionTitle">Einfügen</div>
-          <div class="quickAddGrid">
-            <button onclick="addCanvasText('h1')">T<br>Überschrift</button>
-            <button onclick="addCanvasText('body')">¶<br>Text</button>
-            <button onclick="openTableDialog()">▦<br>Tabelle</button>
-            <label for="canvasImageInput" style="display:grid;place-items:center;text-align:center">🖼<br>Bild</label>
-            <input id="canvasImageInput" type="file" accept="image/*" style="display:none" onchange="addCanvasImage(this.files[0])">
-            <button onclick="toggleStickerPanel()">🌸<br>Sticker</button>
-            <button onclick="addPaperSticker('grid')">▦<br>Karo-Zettel</button>
-            <button onclick="addPaperSticker('line')">☰<br>Linierter Zettel</button>
-            <button onclick="addPaperSticker('blank')">□<br>Leerer Zettel</button>
-          </div>
-        </div>
-
-        <div class="toolSection">
-          <div class="toolSectionTitle">Text & Lernblöcke</div>
-          <div class="toolButtons">
-            <button onclick="addCanvasText('h2')">Unterüberschrift</button>
-            <button onclick="addCanvasText('task')">Aufgabe</button>
-            <button onclick="addCanvasText('merke')">Merke</button>
-            <button onclick="addTapeSticker()">Klebeband</button>
-          </div>
-        </div>
-
-        <div class="toolSection">
-          <div class="toolSectionTitle">Formen & Pfade</div>
-          <div class="toolButtons">
-            <button onclick="setVectorTool('select')">Auswahl</button>
-            <button onclick="setVectorTool('rect')">Rechteck</button>
-            <button onclick="setVectorTool('ellipse')">Kreis</button>
-            <button onclick="setVectorTool('triangle')">Dreieck</button>
-            <button onclick="setVectorTool('pen')">Freier Pfad</button>
-          </div>
-        </div>
-
-        <div class="toolSection">
-          <div class="toolSectionTitle">Ansicht</div>
-          <div class="toolButtons">
-            <select id="canvasZoom" onchange="fitCanvasStage()">
-              <option value="fit">An Bildschirm</option><option value="0.5">50%</option><option value="0.75">75%</option><option value="1">100%</option>
-            </select>
-          </div>
-        </div>
+      <div class="editorDock" aria-label="Werkzeuge">
+        <button title="Text" onclick="addCanvasText('body')">T</button>
+        <button title="Überschrift" onclick="addCanvasText('h1')">H</button>
+        <button title="Tabelle" onclick="openTableDialog()">▦</button>
+        <label title="Bild" for="canvasImageInput">▧</label>
+        <input id="canvasImageInput" type="file" accept="image/*" style="display:none" onchange="addCanvasImage(this.files[0]);this.value=''">
+        <button title="Sticker" onclick="toggleStickerPanel()">✿</button>
+        <button title="Karo-Zettel" onclick="addPaperSticker('grid')">▦̇</button>
+        <button title="Linierter Zettel" onclick="addPaperSticker('line')">☰</button>
+        <button title="Leerer Zettel" onclick="addPaperSticker('blank')">□</button>
+        <button title="Klebeband" onclick="addTapeSticker()">▰</button>
+        <button title="Rechteck" onclick="addVectorShape('rect')">▭</button>
+        <button title="Kreis" onclick="addVectorShape('ellipse')">○</button>
+        <button title="Dreieck" onclick="addVectorShape('triangle')">△</button>
+        <button title="Freier Pfad zeichnen" onclick="setVectorTool('pen')">⌁</button>
       </div>
 
       <div class="stylePresetBar" id="stylePresetBar"></div>
@@ -733,17 +713,17 @@ body.modalOpen{overflow:hidden;position:fixed;width:100%}
       </div>
 
       <div class="objectPanel">
-        <div class="rowBetween"><b>Auswahl / Eigenschaften</b><button class="dangerBtn" onclick="deleteSelectedCanvasItem()">Löschen</button></div>
+        <div class="rowBetween"><b>Eigenschaften</b><div class="row"><button class="miniIcon" title="Sperren/Entsperren" onclick="toggleSelectedLock()">🔒</button><button class="miniIcon dangerMini" title="Löschen" onclick="deleteSelectedCanvasItem()">⌫</button></div></div>
         <div id="canvasInspector" class="small">Wähle einen Text, ein Bild, eine Tabelle, einen Sticker oder eine Form aus.</div>
       </div>
 
       <div class="objectPanel">
-        <div class="rowBetween"><b>Ebenen</b><span class="small">Übersicht</span></div>
+        <div class="rowBetween"><b>Ebenen</b><div class="row"><button class="miniIcon" title="Nach vorne" onclick="moveSelectedLayer(1)">↑</button><button class="miniIcon" title="Nach hinten" onclick="moveSelectedLayer(-1)">↓</button></div></div>
         <div id="layerList" class="layerList"></div>
       </div>
 
       <div class="objectPanel">
-        <div class="rowBetween"><b>Vorlagen & eigene Textformate</b><button class="ghost" onclick="createCustomStylePreset()">+ Eigenes Format</button></div>
+        <div class="rowBetween"><b>Textformate</b><button class="miniIcon" title="Eigenes Format" onclick="createCustomStylePreset()">＋</button></div>
         <div class="templatePicker">
           <button class="templateCard" onclick="applyCanvasTemplate('clean')"><b>Clean Notes</b>klare Überschrift + Merkkasten</button>
           <button class="templateCard" onclick="applyCanvasTemplate('cute')"><b>Cute Study</b>Pastell + Sticker + Aufgabe</button>
@@ -833,9 +813,9 @@ body.modalOpen{overflow:hidden;position:fixed;width:100%}
   <button class="active" data-view="home"><b>⌂</b><span>Home</span></button>
   <button data-view="plan"><b>▦</b><span>Plan</span></button>
   <button data-view="tasks"><b>✓</b><span>Aufgaben</span></button>
-  <button data-view="grades"><b>★</b><span>Noten</span></button>
-  <button data-view="study"><b>◴</b><span>Lernen</span></button>
-  <button data-view="more"><b>•••</b><span>Mehr</span></button>
+  <button data-view="grades"><b>☆</b><span>Noten</span></button>
+  <button data-view="study"><b>◷</b><span>Lernen</span></button>
+  <button data-view="more"><b>⋯</b><span>Mehr</span></button>
 </nav>
 
 <div class="modalWrap" id="modalWrap" onclick="if(event.target===this)closeModal()">
@@ -986,6 +966,7 @@ window.openView=function(name){
  $$(".view").forEach(v=>v.classList.remove("active"));
  const el=$("#view-"+name); if(!el)return;
  el.classList.add("active");
+ document.body.classList.toggle("editorMode",name==="sheet-editor");
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
@@ -1231,6 +1212,7 @@ window.createCustomStylePreset=function(){
   <div><label>Schriftgröße</label><input id="presetSize" type="number" min="8" max="72" value="18"></div>
   <div><label>Schriftfarbe</label><input id="presetColor" type="color" value="#4f4540"></div>
   <div><label>Hintergrund</label><input id="presetBg" type="color" value="#fffaf4"></div>
+  <div><label>Schrift</label><select id="presetFont"><option>Arial</option><option>Georgia</option><option>Trebuchet MS</option><option>Verdana</option><option>Times New Roman</option><option>Courier New</option></select></div>
   <div><label>Fett</label><select id="presetWeight"><option value="400">Normal</option><option value="700">Fett</option><option value="900">Sehr fett</option></select></div>
   <div><label>Art</label><select id="presetType"><option value="text">Text</option><option value="task">Aufgabe-Kasten</option><option value="merke">Merke-Kasten</option></select></div>
  </div>
@@ -1238,7 +1220,7 @@ window.createCustomStylePreset=function(){
 }
 window.saveCustomStylePreset=function(){
  const arr=JSON.parse(localStorage.getItem("schoolbloom-canvas-styles")||"[]");
- arr.push({id:"custom-"+Date.now(),name:$("#presetName").value.trim()||"Eigenes Format",type:$("#presetType").value,fontSize:+$("#presetSize").value||16,fontWeight:$("#presetWeight").value,color:$("#presetColor").value,bg:$("#presetBg").value,fontFamily:"Arial, sans-serif"});
+ arr.push({id:"custom-"+Date.now(),name:$("#presetName").value.trim()||"Eigenes Format",type:$("#presetType").value,fontSize:+$("#presetSize").value||16,fontWeight:$("#presetWeight").value,color:$("#presetColor").value,bg:$("#presetBg").value,fontFamily:$("#presetFont")?.value||"Arial"});
  localStorage.setItem("schoolbloom-canvas-styles",JSON.stringify(arr));closeModal();renderStylePresets();
 }
 
@@ -1297,8 +1279,8 @@ function layerName(o){
 }
 function renderLayerList(){
  const el=$("#layerList");if(!el)return;
- const objectItems=canvasState.objects.map((o,i)=>`<button class="layerItem ${canvasState.selectedType==="object"&&canvasState.selectedId===o.id?"active":""}" onclick="selectCanvasObject('${o.id}')"><span>${esc(layerName(o))}</span><span>${i+1}</span></button>`).join("");
- const vectorItems=canvasState.vectors.map((v,i)=>`<button class="layerItem ${canvasState.selectedType==="vector"&&canvasState.selectedId===v.id?"active":""}" onclick="selectVector('${v.id}')"><span>Form: ${esc(v.type)}</span><span>V${i+1}</span></button>`).join("");
+ const objectItems=[...canvasState.objects].reverse().map((o,ri)=>`<button class="layerItem ${canvasState.selectedType==="object"&&canvasState.selectedId===o.id?"active":""}" onclick="selectCanvasObject('${o.id}')"><span>${o.locked?"🔒 ":""}${esc(layerName(o))}</span><span>${canvasState.objects.length-ri}</span></button>`).join("");
+ const vectorItems=[...canvasState.vectors].reverse().map((v,ri)=>`<button class="layerItem ${canvasState.selectedType==="vector"&&canvasState.selectedId===v.id?"active":""}" onclick="selectVector('${v.id}')"><span>${v.locked?"🔒 ":""}Form ${esc(v.type)}</span><span>V${canvasState.vectors.length-ri}</span></button>`).join("");
  el.innerHTML=objectItems+vectorItems||'<div class="small">Noch keine Elemente.</div>';
 }
 
@@ -1306,22 +1288,23 @@ function renderCanvasObjects(){
  const root=$("#canvasObjects");if(!root)return;
  root.innerHTML=canvasState.objects.map(o=>{
    const sel=canvasState.selectedType==="object"&&canvasState.selectedId===o.id?"selected":"";
+   const lockCls=o.locked?" locked":"";
    const base=`left:${o.x}px;top:${o.y}px;width:${o.w}px;height:${o.h}px;`;
-   if(o.kind==="image")return `<div class="cobj imageObj ${sel}" data-id="${o.id}" style="${base}"><img src="${o.src}"><span class="resizeHandle"></span></div>`;
-   if(o.kind==="sticker")return `<div class="cobj stickerObj ${sel}" data-id="${o.id}" style="${base}">${o.text}<span class="resizeHandle"></span></div>`;
+   if(o.kind==="image")return `<div class="cobj imageObj ${sel}${lockCls}" data-id="${o.id}" style="${base}"><img src="${o.src}"><span class="resizeHandle"></span></div>`;
+   if(o.kind==="sticker")return `<div class="cobj stickerObj ${sel}${lockCls}" data-id="${o.id}" style="${base}">${o.text}<span class="resizeHandle"></span></div>`;
    if(o.kind==="paper"){
      const cls=o.paperType==="grid"?"gridPaper":o.paperType==="line"?"linePaper":"blankPaper";
-     const vars=o.paperType==="grid"?`--gridSize:${o.spacing||20}px`:o.paperType==="line"?`--lineSize:${o.spacing||28}px`:"";
-     return `<div class="cobj paperSticker ${cls} ${sel}" data-id="${o.id}" style="${base}${vars}"><span class="resizeHandle"></span></div>`;
+     const vars=(o.paperType==="grid"?`--gridSize:${o.spacing||20}px`:o.paperType==="line"?`--lineSize:${o.spacing||28}px`:"")+`;background-color:${o.paperColor||"#fffdf7"};`;
+     return `<div class="cobj paperSticker ${cls} ${sel}${lockCls}" data-id="${o.id}" style="${base}${vars}"><span class="resizeHandle"></span></div>`;
    }
-   if(o.kind==="tape")return `<div class="cobj tapeSticker ${sel}" data-id="${o.id}" style="${base}--rot:${o.rotation||-4}deg"><span class="resizeHandle"></span></div>`;
+   if(o.kind==="tape")return `<div class="cobj tapeSticker ${sel}${lockCls}" data-id="${o.id}" style="${base}--rot:${o.rotation||-4}deg;background:${o.color||"#f2beb2"}"><span class="resizeHandle"></span></div>`;
    if(o.kind==="table"){
      const table=`<table>${o.cells.map((row,ri)=>`<tr>${row.map((c,ci)=>`<td contenteditable="true" data-r="${ri}" data-c="${ci}">${esc(c)}</td>`).join("")}</tr>`).join("")}</table>`;
-     return `<div class="cobj tableObj ${sel}" data-id="${o.id}" style="${base}">${table}<span class="resizeHandle"></span></div>`;
+     return `<div class="cobj tableObj ${sel}${lockCls}" data-id="${o.id}" style="${base}">${table}<span class="resizeHandle"></span></div>`;
    }
    const cls=o.kind==="task"?"taskObj":o.kind==="merke"?"merkeObj":"textObj";
    const s=o.style||{};
-   return `<div class="cobj ${cls} ${sel}" data-id="${o.id}" contenteditable="true" style="${base}font-size:${s.fontSize||16}px;font-weight:${s.fontWeight||400};color:${s.color||"#333"};font-family:${s.fontFamily||"Arial"};background:${s.background||""};text-align:${s.textAlign||"left"}">${o.text||""}<span class="resizeHandle"></span></div>`;
+   return `<div class="cobj ${cls} ${sel}${lockCls}" data-id="${o.id}" contenteditable="true" style="${base}font-size:${s.fontSize||16}px;font-weight:${s.fontWeight||400};color:${s.color||"#333"};font-family:${s.fontFamily||"Arial"};background:${s.background||""};text-align:${s.textAlign||"left"}">${o.text||""}<span class="resizeHandle"></span></div>`;
  }).join("");
  attachCanvasObjectEvents();renderLayerList();
 }
@@ -1329,10 +1312,13 @@ function attachCanvasObjectEvents(){
  $$("#canvasObjects .cobj").forEach(el=>{
    const oid=el.dataset.id;
    el.addEventListener("pointerdown",e=>{
-     if(e.target.classList.contains("resizeHandle")){e.preventDefault();startResizeObject(e,oid);return}
+     const o=canvasState.objects.find(x=>x.id===oid);
+     if(e.target.classList.contains("resizeHandle")){if(o?.locked)return;e.preventDefault();startResizeObject(e,oid);return}
      if(e.target.tagName==="TD")return;
-     selectCanvasObject(oid);
-     if(el.isContentEditable && document.activeElement===el)return;
+     const already=canvasState.selectedType==="object"&&canvasState.selectedId===oid;
+     if(!already){selectCanvasObject(oid);return}
+     if(o?.locked)return;
+     if(el.isContentEditable){el.focus();return}
      startDragObject(e,oid);
    });
    if(el.isContentEditable)el.addEventListener("input",()=>{const o=canvasState.objects.find(x=>x.id===oid);if(o)o.text=el.innerHTML;markCanvasDirty()});
@@ -1358,7 +1344,12 @@ function startResizeObject(e,oid){
  const up=()=>{window.removeEventListener("pointermove",move);window.removeEventListener("pointerup",up)};
  window.addEventListener("pointermove",move);window.addEventListener("pointerup",up);
 }
-window.selectCanvasObject=function(oid){canvasState.selectedType="object";canvasState.selectedId=oid;renderCanvasObjects();renderCanvasInspector()}
+window.selectCanvasObject=function(oid){
+ const same=canvasState.selectedType==="object"&&canvasState.selectedId===oid;
+ canvasState.selectedType="object";canvasState.selectedId=oid;
+ if(!same)renderCanvasObjects();
+ renderCanvasInspector();renderLayerList();
+}
 function renderCanvasInspector(){
  const el=$("#canvasInspector");if(!el)return;
  if(canvasState.selectedType==="object"){
@@ -1376,6 +1367,7 @@ function renderCanvasInspector(){
        <div class="objectPanelGrid">
        <div><label>Schriftgröße</label><input id="insFontSize" type="number" min="8" max="72" value="${s.fontSize||16}" onchange="applyTextProperty('fontSize',+this.value)"></div>
        <div><label>Schriftfarbe</label><input id="insColor" type="color" value="${s.color||"#333333"}" onchange="applyTextProperty('color',this.value)"></div>
+       <div><label>Schrift</label><select class="fontSelect" onchange="applyTextProperty('fontFamily',this.value)"><option value="Arial" ${String(s.fontFamily).includes("Arial")?"selected":""}>Arial</option><option value="Georgia" ${String(s.fontFamily).includes("Georgia")?"selected":""}>Georgia</option><option value="Trebuchet MS" ${String(s.fontFamily).includes("Trebuchet")?"selected":""}>Trebuchet</option><option value="Verdana" ${String(s.fontFamily).includes("Verdana")?"selected":""}>Verdana</option><option value="Times New Roman" ${String(s.fontFamily).includes("Times")?"selected":""}>Times</option><option value="Courier New" ${String(s.fontFamily).includes("Courier")?"selected":""}>Courier</option></select></div>
        <div><label>Ausrichtung</label><select onchange="updateObjStyle('textAlign',this.value)"><option value="left" ${s.textAlign==="left"?"selected":""}>Links</option><option value="center" ${s.textAlign==="center"?"selected":""}>Mitte</option><option value="right" ${s.textAlign==="right"?"selected":""}>Rechts</option></select></div>
        <div><label>Fett</label><select onchange="applyTextProperty('fontWeight',this.value)"><option value="400">Normal</option><option value="700" ${s.fontWeight=="700"?"selected":""}>Fett</option><option value="900" ${s.fontWeight=="900"?"selected":""}>Sehr fett</option></select></div>
      </div>`;
@@ -1386,9 +1378,10 @@ function renderCanvasInspector(){
        <div><label>Breite</label><input type="number" value="${Math.round(o.w)}" onchange="setSelectedObjectSize('w',+this.value)"></div>
        <div><label>Höhe</label><input type="number" value="${Math.round(o.h)}" onchange="setSelectedObjectSize('h',+this.value)"></div>
        ${o.paperType!=="blank"?`<div><label>${o.paperType==="grid"?"Karo-Größe":"Linienabstand"}</label><input type="number" min="8" max="80" value="${o.spacing||20}" onchange="setPaperSpacing(+this.value)"></div>`:""}
+       <div><label>Zettelfarbe</label><input type="color" value="${o.paperColor||"#fffdf7"}" onchange="setPaperColor(this.value)"></div>
      </div><div class="editorHint" style="margin-top:8px">Zettel frei ziehen und am Punkt unten rechts skalieren.</div>`;
    }else if(o.kind==="tape"){
-     el.innerHTML=`<div class="objectPanelGrid"><div><label>Breite</label><input type="number" value="${Math.round(o.w)}" onchange="setSelectedObjectSize('w',+this.value)"></div><div><label>Drehung</label><input type="number" min="-45" max="45" value="${o.rotation||-5}" onchange="setTapeRotation(+this.value)"></div></div>`;
+     el.innerHTML=`<div class="objectPanelGrid"><div><label>Breite</label><input type="number" value="${Math.round(o.w)}" onchange="setSelectedObjectSize('w',+this.value)"></div><div><label>Höhe</label><input type="number" value="${Math.round(o.h)}" onchange="setSelectedObjectSize('h',+this.value)"></div><div><label>Farbe</label><input type="color" value="${o.color||"#f2beb2"}" onchange="setTapeColor(this.value)"></div><div><label>Drehung</label><input type="number" min="-45" max="45" value="${o.rotation||-5}" onchange="setTapeRotation(+this.value)"></div></div>`;
    }else el.innerHTML=`${o.kind==="image"?"Bild":"Sticker"} ausgewählt. Ziehen zum Verschieben, Punkt unten rechts zum Skalieren.`;
  }else if(canvasState.selectedType==="vector"){
    const v=canvasState.vectors.find(x=>x.id===canvasState.selectedId);if(!v){el.textContent="Keine Auswahl";return}
@@ -1417,6 +1410,7 @@ window.applyTextProperty=function(prop,value){
  if(hasSelection){
    el.focus();
    if(prop==="color")document.execCommand("foreColor",false,value);
+   else if(prop==="fontFamily")document.execCommand("fontName",false,value);
    else if(prop==="fontWeight"&&String(value)!=="400")document.execCommand("bold",false,null);
    else if(prop==="fontSize"){
      document.execCommand("fontSize",false,"7");
@@ -1429,7 +1423,9 @@ window.applyTextProperty=function(prop,value){
  markCanvasDirty();
 }
 window.setSelectedObjectSize=function(k,v){const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(!o)return;o[k]=Math.max(20,v||20);renderCanvasObjects();renderCanvasInspector();markCanvasDirty()}
+window.setPaperColor=function(v){const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(!o)return;o.paperColor=v;renderCanvasObjects();renderCanvasInspector();markCanvasDirty()}
 window.setPaperSpacing=function(v){const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(!o)return;o.spacing=Math.max(8,Math.min(80,v||20));renderCanvasObjects();renderCanvasInspector();markCanvasDirty()}
+window.setTapeColor=function(v){const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(!o)return;o.color=v;renderCanvasObjects();renderCanvasInspector();markCanvasDirty()}
 window.setTapeRotation=function(v){const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(!o)return;o.rotation=Math.max(-45,Math.min(45,v||0));renderCanvasObjects();renderCanvasInspector();markCanvasDirty()}
 
 window.updateObjStyle=function(k,v){const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(!o)return;o.style||={};o.style[k]=v;renderCanvasObjects();markCanvasDirty()}
@@ -1437,6 +1433,38 @@ window.deleteSelectedCanvasItem=function(){
  if(canvasState.selectedType==="object")canvasState.objects=canvasState.objects.filter(x=>x.id!==canvasState.selectedId);
  else if(canvasState.selectedType==="vector")canvasState.vectors=canvasState.vectors.filter(x=>x.id!==canvasState.selectedId);
  canvasState.selectedType=null;canvasState.selectedId=null;renderCanvasObjects();renderVectors();renderCanvasInspector();markCanvasDirty();
+}
+
+$("#canvasPage")?.addEventListener("pointerdown",e=>{if(e.target!==e.currentTarget)return;clearCanvasSelection()});
+function clearCanvasSelection(){canvasState.selectedType=null;canvasState.selectedId=null;renderCanvasObjects();renderVectors();renderCanvasInspector();renderLayerList()}
+
+
+window.toggleSelectedLock=function(){
+ if(canvasState.selectedType==="object"){
+  const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(!o)return;o.locked=!o.locked;
+ }else if(canvasState.selectedType==="vector"){
+  const v=canvasState.vectors.find(x=>x.id===canvasState.selectedId);if(!v)return;v.locked=!v.locked;
+ }
+ renderCanvasObjects();renderVectors();renderCanvasInspector();markCanvasDirty();
+}
+window.moveSelectedLayer=function(dir){
+ if(canvasState.selectedType==="object"){
+  const a=canvasState.objects,i=a.findIndex(x=>x.id===canvasState.selectedId);if(i<0)return;
+  const ni=Math.max(0,Math.min(a.length-1,i+dir));if(ni!==i){const [x]=a.splice(i,1);a.splice(ni,0,x)}
+  renderCanvasObjects();
+ }else if(canvasState.selectedType==="vector"){
+  const a=canvasState.vectors,i=a.findIndex(x=>x.id===canvasState.selectedId);if(i<0)return;
+  const ni=Math.max(0,Math.min(a.length-1,i+dir));if(ni!==i){const [x]=a.splice(i,1);a.splice(ni,0,x)}
+  renderVectors();
+ }
+ markCanvasDirty();
+}
+window.addVectorShape=function(type){
+ let v={id:id(),type,fill:"#f7d2cf",stroke:"#8d7369",strokeWidth:2,dash:"solid"};
+ if(type==="rect")Object.assign(v,{x:220,y:260,w:260,h:150,rx:14});
+ if(type==="ellipse")Object.assign(v,{cx:397,cy:330,rx:120,ry:80});
+ if(type==="triangle")Object.assign(v,{points:[[397,230],[520,410],[274,410]]});
+ canvasState.vectors.push(v);canvasState.vectorTool="select";selectVector(v.id);markCanvasDirty();
 }
 
 // Vector editor (SVG)
@@ -1464,7 +1492,12 @@ function attachVectorEvents(){
  svg.onpointerdown=e=>{
    const node=e.target.closest(".pathNode");if(node){startNodeDrag(e,+node.dataset.node);return}
    const target=e.target.closest("[data-vid]");
-   if(target&&canvasState.vectorTool==="select"){selectVector(target.dataset.vid);startVectorDrag(e,target.dataset.vid);return}
+   if(target){
+     const v=canvasState.vectors.find(x=>x.id===target.dataset.vid);
+     selectVector(target.dataset.vid);
+     if(!v?.locked && canvasState.vectorTool==="select")startVectorDrag(e,target.dataset.vid);
+     return
+   }
    if(canvasState.vectorTool!=="select")startVectorDraw(e);
  };
 }
@@ -1628,6 +1661,36 @@ window.exportCanvasHTML=function(){
  .toolSection{padding:7px}
 }
 
+
+/* ===== V11 Canva-like editor ===== */
+body.editorMode header,body.editorMode #nav{display:none!important}
+body.editorMode main{max-width:none;padding:8px 8px 30px}
+body.editorMode .view#view-sheet-editor{padding-bottom:20px}
+.canvasEditorShell{max-width:1180px;margin:auto}
+.canvasTopbar{position:sticky;top:0;z-index:120;background:rgba(255,250,246,.94);backdrop-filter:blur(18px);padding:6px;border:1px solid #ead3cc;border-radius:16px}
+.editorTitle{display:grid;text-align:center;font-size:13px}.editorTitle .wordStatus{font-size:9px}
+.editorActions{display:flex;gap:5px}
+.editorIcon,.miniIcon{border:1px solid #e7cec7;background:#fffdf9;color:#745f57;border-radius:11px;width:38px;height:38px;padding:0;font-size:20px;font-weight:900}
+.primaryIcon{background:#eda6a4;color:white}.dangerMini{color:#b96f6d}
+.editorDock{display:flex;gap:5px;overflow-x:auto;padding:6px;position:sticky;top:58px;z-index:110;background:rgba(255,250,246,.94);backdrop-filter:blur(16px);border:1px solid #ead3cc;border-radius:15px}
+.editorDock button,.editorDock label{flex:0 0 42px;width:42px;height:42px;display:grid;place-items:center;border:1px solid #e7cec7;background:white;color:#715e56;border-radius:11px;font-size:19px;font-weight:900;margin:0;padding:0}
+.iconOnlyBtn{width:52px;font-size:24px}
+.cobj.locked{outline-style:dashed!important}
+.cobj.locked .resizeHandle{display:none!important}
+.layerItem{border:0;width:100%;cursor:pointer}
+.layerItem .layerBtns{display:flex;gap:3px}
+.layerItem .layerBtns span{display:grid;place-items:center;min-width:24px;height:24px;border-radius:7px;background:#fff7f4}
+.canvasPage{pointer-events:auto}
+.canvasSvg{pointer-events:auto}
+.fontSelect{width:100%}
+@media(max-width:600px){
+ .canvasViewport{border-radius:12px;padding:4px}
+ .objectPanel{border-radius:14px;padding:8px}
+ .editorDock{top:55px}
+ .stylePresetBar{gap:5px}
+ .stylePreset{font-size:11px;padding:7px 9px}
+}
+
 </style></head><body><div class="page">${serializedCanvas()}</div></body></html>`;
  const blob=new Blob([html],{type:"text/html"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=title.replace(/[^\wäöüÄÖÜß-]+/g,"_")+".html";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
 }
@@ -1667,6 +1730,36 @@ window.printCanvasSheet=function(){
 @media(max-width:850px){
  .quickAddGrid{grid-template-columns:repeat(2,1fr)}
  .toolSection{padding:7px}
+}
+
+
+/* ===== V11 Canva-like editor ===== */
+body.editorMode header,body.editorMode #nav{display:none!important}
+body.editorMode main{max-width:none;padding:8px 8px 30px}
+body.editorMode .view#view-sheet-editor{padding-bottom:20px}
+.canvasEditorShell{max-width:1180px;margin:auto}
+.canvasTopbar{position:sticky;top:0;z-index:120;background:rgba(255,250,246,.94);backdrop-filter:blur(18px);padding:6px;border:1px solid #ead3cc;border-radius:16px}
+.editorTitle{display:grid;text-align:center;font-size:13px}.editorTitle .wordStatus{font-size:9px}
+.editorActions{display:flex;gap:5px}
+.editorIcon,.miniIcon{border:1px solid #e7cec7;background:#fffdf9;color:#745f57;border-radius:11px;width:38px;height:38px;padding:0;font-size:20px;font-weight:900}
+.primaryIcon{background:#eda6a4;color:white}.dangerMini{color:#b96f6d}
+.editorDock{display:flex;gap:5px;overflow-x:auto;padding:6px;position:sticky;top:58px;z-index:110;background:rgba(255,250,246,.94);backdrop-filter:blur(16px);border:1px solid #ead3cc;border-radius:15px}
+.editorDock button,.editorDock label{flex:0 0 42px;width:42px;height:42px;display:grid;place-items:center;border:1px solid #e7cec7;background:white;color:#715e56;border-radius:11px;font-size:19px;font-weight:900;margin:0;padding:0}
+.iconOnlyBtn{width:52px;font-size:24px}
+.cobj.locked{outline-style:dashed!important}
+.cobj.locked .resizeHandle{display:none!important}
+.layerItem{border:0;width:100%;cursor:pointer}
+.layerItem .layerBtns{display:flex;gap:3px}
+.layerItem .layerBtns span{display:grid;place-items:center;min-width:24px;height:24px;border-radius:7px;background:#fff7f4}
+.canvasPage{pointer-events:auto}
+.canvasSvg{pointer-events:auto}
+.fontSelect{width:100%}
+@media(max-width:600px){
+ .canvasViewport{border-radius:12px;padding:4px}
+ .objectPanel{border-radius:14px;padding:8px}
+ .editorDock{top:55px}
+ .stylePresetBar{gap:5px}
+ .stylePreset{font-size:11px;padding:7px 9px}
 }
 
 </style></head><body><div class="page">${serializedCanvas()}</div></body></html>`);w.document.close();setTimeout(()=>w.print(),300)
@@ -2053,15 +2146,6 @@ window.toggleEquip=function(itemId){
 function studyMinutesToday(){return Math.round(data.studySessions.filter(x=>x.date===todayISO()).reduce((s,x)=>s+x.minutes,0))}
 function renderStudy(){
  $("#studyTodayBadge").textContent=`${studyMinutesToday()} min heute`;
- const aiSel=$("#aiSubject");
- if(aiSel){
-   const current=aiSel.value;
-   aiSel.innerHTML=subjectOptions() || '<option value="Allgemein">Allgemein</option>';
-   if([...aiSel.options].some(o=>o.value===current))aiSel.value=current;
-   aiSel.onchange=()=>renderAIDecks();
- }
- renderAIDecks();
- updateAIStatus();
  const cb=$("#coinBadge");if(cb)cb.textContent=`🪙 ${data.economy.coins||0}`;
  renderPetRoom();
  renderFlash();
@@ -2072,6 +2156,12 @@ function renderFlash(){
  area.innerHTML=decks.length?`<div class="deckGrid">${decks.map(d=>`<button class="deckCard" onclick="openDeck('${d.id}')"><div class="deckIcon">${esc(d.emoji||"🌸")}</div><div class="deckName">${esc(d.name)}</div><div class="deckMeta">${esc(d.subject)} · ${data.flashcards.filter(c=>c.deckId===d.id).length} Karten</div></button>`).join("")}</div>`:'<div class="empty">Erstelle in einem Fach → Thema deinen ersten Karteikarten-Ordner.</div>';
 }
 
+window.smartTimerButton=function(){
+ if(timer.running){toggleTimer();return}
+ const mins=Math.max(1,Math.min(240,Number($("#focusMinutes")?.value||25)));
+ if(timer.mode!=="focus" || timer.seconds===timer.goal){timer.mode="focus";timer.goal=mins*60;timer.seconds=mins*60;renderTimer()}
+ toggleTimer();
+}
 window.startCustomFocus=function(){
  const mins=Math.max(1,Math.min(240,Number($("#focusMinutes")?.value||25)));
  clearInterval(timer.handle);timer.running=false;timer.handle=null;timer.mode="focus";timer.goal=mins*60;timer.seconds=mins*60;renderTimer();toggleTimer();
@@ -2082,7 +2172,7 @@ window.startCustomBreak=function(){
 }
 
 window.toggleTimer=function(){
- timer.running=!timer.running;$("#timerBtn").textContent=timer.running?"Pause":"Start";
+ timer.running=!timer.running;$("#timerBtn").textContent=timer.running?"Ⅱ Pause":"▶ Start";
  if(timer.running){timer.startedAt=Date.now();timer.handle=setInterval(()=>{timer.seconds--;if(timer.seconds<=0){completeTimer();return}renderTimer()},1000)}
  else{clearInterval(timer.handle);timer.handle=null}
 }
@@ -2094,12 +2184,12 @@ function completeTimer(){
    alert(`Geschafft! +${mins} Münzen 🪙`);
    const b=Math.max(1,Math.min(60,Number($("#breakMinutes")?.value||5)));timer.mode="break";timer.goal=b*60;timer.seconds=b*60;
  }else{alert("Pause vorbei 🌷");const f=Math.max(1,Math.min(240,Number($("#focusMinutes")?.value||25)));timer.mode="focus";timer.goal=f*60;timer.seconds=f*60}
- save();renderTimer();$("#timerBtn").textContent="Start";renderStudy()
+ save();renderTimer();$("#timerBtn").textContent="▶ Start";renderStudy()
 }
 window.startBreak=function(mins){
- clearInterval(timer.handle);timer.running=false;timer.handle=null;timer.mode="break";timer.goal=mins*60;timer.seconds=mins*60;$("#timerBtn").textContent="Start";renderTimer()
+ clearInterval(timer.handle);timer.running=false;timer.handle=null;timer.mode="break";timer.goal=mins*60;timer.seconds=mins*60;$("#timerBtn").textContent="▶ Start";renderTimer()
 }
-window.resetTimer=function(){clearInterval(timer.handle);timer.running=false;timer.handle=null;const f=Math.max(1,Math.min(240,Number($("#focusMinutes")?.value||25)));timer.mode="focus";timer.goal=f*60;timer.seconds=f*60;renderTimer();$("#timerBtn").textContent="Start"}
+window.resetTimer=function(){clearInterval(timer.handle);timer.running=false;timer.handle=null;const f=Math.max(1,Math.min(240,Number($("#focusMinutes")?.value||25)));timer.mode="focus";timer.goal=f*60;timer.seconds=f*60;renderTimer();$("#timerBtn").textContent="▶ Start"}
 function renderTimer(){const m=Math.floor(timer.seconds/60),s=timer.seconds%60;$("#timerDisplay").textContent=`${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;const l=$("#timerModeLabel");if(l)l.textContent=timer.mode==="focus"?"Fokus · fürs Lernen bekommst du Münzen.":"Pause 🌷 · erhol dich kurz."}
 
 function renderSubjects(){
