@@ -1,10 +1,13 @@
-# VERSION 23
+# VERSION 24
 
-Wichtig:
-- SchoolBloom erzeugt KEINEN künstlichen „Entfall“ mehr.
-- Entfall/Ausfall wird nur angezeigt, wenn dieser Text wirklich in der PDF steht.
-- Parser prüft zusammengeführte PDF-Felder zuerst auf Doppelstunden.
-- Erst danach werden Einzelstunden zugeordnet.
-- Identische aufeinanderfolgende PDF-Einträge werden zu einer Doppelstunde zusammengeführt.
-- „10:00 Uhr Klassenleitungsstunden“ bleibt eine einzelne Sondernotiz.
-- Alle dynamisch erkannten Klassen und der Cloudflare-Live-Abruf bleiben erhalten.
+Stundenplan wird nicht mehr anhand vermuteter Doppelstunden aufgebaut.
+
+Neu:
+- PDF-Seite wird zusätzlich unsichtbar gerendert.
+- SchoolBloom prüft die echten horizontalen Tabellenlinien in jeder Klassenspalte.
+- Fehlt die Trennlinie zwischen zwei Stunden, ist es ein zusammengeführtes Untis-Feld / Doppelstunde.
+- Dauer wird direkt aus diesem Feld übernommen.
+- Kein künstlicher Entfall.
+- Alle Klassen bleiben dynamisch auswählbar.
+- Live-Abruf und PDF-Parser haben getrennte Fehlermeldungen.
+- Wenn die Live-PDF geladen wurde, wird nicht mehr fälschlich „Live-Aktualisierung fehlgeschlagen“ angezeigt.

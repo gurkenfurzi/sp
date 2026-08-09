@@ -633,13 +633,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 23: echter Live-Refresh ===== */
+/* ===== VERSION 24: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 23 timetable parser ===== */
+/* ===== VERSION 24 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -648,7 +648,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 23: dynamic classes ===== */
+/* ===== VERSION 24: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -656,6 +656,10 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard{background:linear-gradient(135deg,#fff9e9,#fff0c9);border:1px solid #ecd397;border-radius:22px;padding:20px 18px;color:#846428}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
+
+/* ===== VERSION 24: raster-exact timetable ===== */
+.liveRefreshStatus.warn{color:#a77d4b}
+.parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.18/paper-full.min.js"></script>
 </head>
@@ -663,7 +667,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 23</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 24</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -1140,7 +1144,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 23";
+ $("#headerEyebrow").textContent="VERSION 24";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -2038,13 +2042,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 23: echter Live-Refresh ===== */
+/* ===== VERSION 24: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 23 timetable parser ===== */
+/* ===== VERSION 24 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -2053,7 +2057,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 23: dynamic classes ===== */
+/* ===== VERSION 24: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -2061,6 +2065,10 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard{background:linear-gradient(135deg,#fff9e9,#fff0c9);border:1px solid #ecd397;border-radius:22px;padding:20px 18px;color:#846428}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
+
+/* ===== VERSION 24: raster-exact timetable ===== */
+.liveRefreshStatus.warn{color:#a77d4b}
+.parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 </style></head><body><div class="page">${serializedCanvas()}</div></body></html>`;
  const blob=new Blob([html],{type:"text/html"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=title.replace(/[^\wäöüÄÖÜß-]+/g,"_")+".html";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
 }
@@ -2237,13 +2245,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 23: echter Live-Refresh ===== */
+/* ===== VERSION 24: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 23 timetable parser ===== */
+/* ===== VERSION 24 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -2252,7 +2260,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 23: dynamic classes ===== */
+/* ===== VERSION 24: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -2260,6 +2268,10 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard{background:linear-gradient(135deg,#fff9e9,#fff0c9);border:1px solid #ecd397;border-radius:22px;padding:20px 18px;color:#846428}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
+
+/* ===== VERSION 24: raster-exact timetable ===== */
+.liveRefreshStatus.warn{color:#a77d4b}
+.parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 </style></head><body><div class="page">${serializedCanvas()}</div></body></html>`);w.document.close();setTimeout(()=>w.print(),300)
 }
 window.applyCanvasTemplate=function(name,silent=false){
@@ -2558,7 +2570,7 @@ const timetableSlots=[
  {start:"15:45",end:"16:30"}
 ];
 function fillCancelledSlots(lessons){
- // VERSION 23:
+ // VERSION 24:
  // SchoolBloom darf NIE aus einer nicht erkannten/leeren PDF-Zelle
  // automatisch "Entfall" erfinden.
  // Nur Einträge, die wirklich aus der PDF gelesen wurden, werden gezeigt.
@@ -2909,7 +2921,94 @@ function groupPdfLines(arr,tolerance=2.8){
  }).sort((a,b)=>b.y-a.y);
 }
 
-function parsePageItems(items){
+
+function pdfClock(s){
+ const [hh,mm]=String(s).split(":");
+ return String(Number(hh)).padStart(2,"0")+":"+mm;
+}
+
+function groupPdfLinesV24(arr,tolerance=2.8){
+ const groups=[];
+ for(const item of [...arr].sort((a,b)=>b.y-a.y||a.x-b.x)){
+   let g=groups.find(q=>Math.abs(q.y-item.y)<=tolerance);
+   if(!g){g={y:item.y,items:[]};groups.push(g)}
+   g.items.push(item);
+   g.y=g.items.reduce((sum,x)=>sum+x.y,0)/g.items.length;
+ }
+ return groups.map(g=>{
+   const items=g.items.sort((a,b)=>a.x-b.x);
+   return {
+     y:g.y,
+     items,
+     text:items.map(x=>x.text).join(" ").replace(/\s+/g," ").trim()
+   };
+ }).sort((a,b)=>b.y-a.y);
+}
+
+async function renderPdfRaster(page){
+ const scale=1.65;
+ const viewport=page.getViewport({scale});
+ const canvas=document.createElement("canvas");
+ canvas.width=Math.ceil(viewport.width);
+ canvas.height=Math.ceil(viewport.height);
+ const ctx=canvas.getContext("2d",{willReadFrequently:true});
+ await page.render({canvasContext:ctx,viewport}).promise;
+ const image=ctx.getImageData(0,0,canvas.width,canvas.height);
+ const view=page.view;
+ return {
+   image,
+   scale,
+   width:canvas.width,
+   height:canvas.height,
+   xMin:view[0],
+   yMin:view[1],
+   pageHeight:view[3]-view[1]
+ };
+}
+
+function pdfToRasterX(raster,x){
+ return Math.round((x-raster.xMin)*raster.scale);
+}
+function pdfToRasterY(raster,y){
+ return Math.round((raster.pageHeight-(y-raster.yMin))*raster.scale);
+}
+
+function hasHorizontalGridBorder(raster,left,right,pdfY){
+ if(!raster?.image)return true; // safe fallback: don't invent merges
+ const {data,width,height}=raster.image;
+ const x1=Math.max(0,pdfToRasterX(raster,left+(right-left)*.10));
+ const x2=Math.min(width-1,pdfToRasterX(raster,right-(right-left)*.10));
+ const cy=pdfToRasterY(raster,pdfY);
+ let best=0;
+
+ // A true table border is a near-black horizontal run across much of the class cell.
+ for(let dy=-4;dy<=4;dy++){
+   const y=cy+dy;
+   if(y<0||y>=height)continue;
+   let dark=0,total=0;
+   for(let x=x1;x<=x2;x+=2){
+     const k=(y*width+x)*4;
+     const r=data[k],g=data[k+1],b=data[k+2],a=data[k+3];
+     if(a>180){
+       total++;
+       // Black/gray gridline. Colored lesson backgrounds normally fail this all-channel test.
+       if(r<105&&g<105&&b<105&&Math.max(r,g,b)-Math.min(r,g,b)<28)dark++;
+     }
+   }
+   if(total)best=Math.max(best,dark/total);
+ }
+ return best>.32;
+}
+
+function cleanPdfCellText(raw){
+ return String(raw||"")
+   .replace(/Klassenleitungs-\s*stunden/ig,"Klassenleitungsstunden")
+   .replace(/Klassenleitungs\s+stunden/ig,"Klassenleitungsstunden")
+   .replace(/\s+/g," ")
+   .trim();
+}
+
+function parsePageItems(items,raster){
  const arr=items.map(it=>({
    text:String(it.str||"").trim(),
    x:it.transform?.[4]||0,
@@ -2919,10 +3018,10 @@ function parsePageItems(items){
  })).filter(x=>x.text);
 
  if(!arr.length)return null;
+ const lines=groupPdfLinesV24(arr);
 
- const lines=groupPdfLines(arr);
-
- // ---- 1) Klassenkopf exakt bestimmen ----
+ // Dynamic PHS class headers:
+ // BF 1A / BF 1B / BF 2 / M O1 / M U1 / W O1 / W U2 ...
  const classPattern=/^(?:BF\s*\d+[A-Z]?|[A-Z]\s*[OU]\s*\d+)$/i;
  const classTokens=arr.filter(x=>classPattern.test(x.text.replace(/\s+/g," ").trim()));
  if(!classTokens.length)return null;
@@ -2935,132 +3034,42 @@ function parsePageItems(items){
  }
  const headerGroup=headerGroups.sort((a,b)=>b.items.length-a.items.length)[0];
  const headers=headerGroup.items.sort((a,b)=>a.x-b.x);
- if(headers.length<4)return null;
+ if(headers.length<3)return null;
 
  const classes=headers.map(x=>x.text.replace(/\s+/g," ").trim());
  const centers=headers.map(x=>x.x+x.w/2);
  const bounds=centers.map((c,i)=>({
-   left:i===0 ? c-(centers[i+1]-c)/2 : (centers[i-1]+c)/2,
-   right:i===centers.length-1 ? c+(c-centers[i-1])/2 : (c+centers[i+1])/2
+   left:i===0?c-(centers[i+1]-c)/2:(centers[i-1]+c)/2,
+   right:i===centers.length-1?c+(c-centers[i-1])/2:(c+centers[i+1])/2
  }));
 
- // ---- 2) Linke Zeilen zuerst aus zusammengesetzten PDF-Linien lesen ----
- // Beispiele, die akzeptiert werden:
- // Mo-1 / 8:00-8:45
- // Mo - 1 / 8:00 - 8:45
- // Mo-1/8:00-8:45
- // Manche PDFs zerlegen "-", "/" und Uhrzeiten in einzelne Textobjekte.
+ // Rebuild the left time labels from complete horizontal lines.
  const rowRe=/\b(Mo|Di|Mi|Do|Fr)\s*[-–]?\s*(\d{1,2})\s*\/?\s*(\d{1,2}:\d{2})\s*[-–]\s*(\d{1,2}:\d{2})\b/i;
- let detected=[];
-
+ const detected=[];
  for(const ln of lines){
-   const normalized=ln.text
+   const txt=ln.text
      .replace(/[|]/g," ")
      .replace(/\s*([\/\-–])\s*/g,"$1")
-     .replace(/\s+/g," ")
-     .trim();
-   const m=normalized.match(rowRe);
+     .replace(/\s+/g," ").trim();
+   const m=txt.match(rowRe);
    if(m){
      detected.push({
        day:m[1][0].toUpperCase()+m[1].slice(1).toLowerCase(),
-       num:+m[2],
-       start:normalizeClock(m[3]),
-       end:normalizeClock(m[4]),
-       y:ln.y,
-       source:normalized
+       num:Number(m[2]),
+       start:pdfClock(m[3]),
+       end:pdfClock(m[4]),
+       y:ln.y
      });
    }
  }
+ if(!detected.length)return null;
 
- // Fallback: manche PDF-Renderer machen aus "Mo-1" und "8:00-8:45"
- // zwei separate Textgruppen auf derselben Y-Höhe.
- if(detected.length<10){
-   const dayNumRe=/\b(Mo|Di|Mi|Do|Fr)\s*[-–]\s*(\d{1,2})\b/i;
-   const clockRe=/\b(\d{1,2}:\d{2})\s*[-–]\s*(\d{1,2}:\d{2})\b/;
-   for(const ln of lines){
-     if(detected.some(r=>Math.abs(r.y-ln.y)<2.5))continue;
-     const dn=ln.text.match(dayNumRe);
-     const cl=ln.text.match(clockRe);
-     if(dn&&cl){
-       detected.push({
-         day:dn[1][0].toUpperCase()+dn[1].slice(1).toLowerCase(),
-         num:+dn[2],
-         start:normalizeClock(cl[1]),
-         end:normalizeClock(cl[2]),
-         y:ln.y,
-         source:ln.text
-       });
-     }
-   }
- }
-
- // Doppelte Zeilenerkennungen entfernen.
- const rowMap=new Map();
+ const uniq=new Map();
  for(const r of detected){
-   const k=r.day+"-"+r.num;
-   if(!rowMap.has(k))rowMap.set(k,r);
+   const key=r.day+"-"+r.num;
+   if(!uniq.has(key))uniq.set(key,r);
  }
- detected=[...rowMap.values()];
-
- // Wenn Uhrzeiten aus der PDF fehlen, aber Tages-/Stundennummern erkennbar sind,
- // verwenden wir ausschließlich die offiziellen PHS-Unterrichtsslots.
- const official=[
-   ["08:00","08:45"],["08:45","09:30"],
-   ["09:45","10:30"],["10:30","11:15"],
-   ["11:30","12:15"],["12:15","13:00"],
-   ["13:30","14:15"],["14:15","15:00"],
-   ["15:00","15:45"],["15:45","16:30"]
- ];
-
- // Wichtig: Wir brauchen pro Tag möglichst die komplette Folge.
- // Y-Positionen fehlender Zeilen werden aus den vorhandenen Zeilen interpoliert.
- const rows=[];
- for(const day of ["Mo","Di","Mi","Do","Fr"]){
-   const known=detected.filter(r=>r.day===day).sort((a,b)=>a.num-b.num);
-   if(!known.length)continue;
-
-   // Lineares y-Modell anhand erkannter Stunden dieses Tages.
-   let slope=null,intercept=null;
-   if(known.length>=2){
-     const pairs=[];
-     for(let i=1;i<known.length;i++){
-       const dn=known[i].num-known[i-1].num;
-       if(dn) pairs.push((known[i].y-known[i-1].y)/dn);
-     }
-     pairs.sort((a,b)=>a-b);
-     slope=pairs[Math.floor(pairs.length/2)];
-     intercept=known.reduce((s,r)=>s+(r.y-slope*(r.num-1)),0)/known.length;
-   }
-
-   const maxNum=Math.max(...known.map(r=>r.num));
-   const minNum=Math.min(...known.map(r=>r.num));
-
-   // Die Tabelle kann pro Tag 9 oder 10 Blöcke haben.
-   // Nutze alle Nummern zwischen erstem und letztem erkannten Block.
-   for(let num=minNum;num<=maxNum;num++){
-     const existing=known.find(r=>r.num===num);
-     if(existing){
-       rows.push(existing);
-     }else if(slope!=null){
-       rows.push({
-         day,num,
-         start:official[num-1]?.[0]||"",
-         end:official[num-1]?.[1]||"",
-         y:intercept+slope*(num-1),
-         source:"interpoliert"
-       });
-     }
-   }
- }
-
- if(!rows.length)return null;
-
- function normalizeClock(s){
-   const [hh,mm]=String(s).split(":");
-   return String(+hh).padStart(2,"0")+":"+mm;
- }
-
- // ---- 3) Inhalte exakt nach Klassen-Spalte UND nächster rekonstruierter Zeile ----
+ const rows=[...uniq.values()];
  const schedule={};
  classes.forEach(c=>schedule[c]=[]);
 
@@ -3068,157 +3077,119 @@ function parsePageItems(items){
    const dayRows=rows.filter(r=>r.day===day).sort((a,b)=>a.num-b.num);
    if(!dayRows.length)continue;
 
-   // Typischer Abstand der echten Zeilen dieses Tages.
-   const rowDistances=[];
+   const gaps=[];
    for(let i=1;i<dayRows.length;i++){
-     const d=Math.abs(dayRows[i].y-dayRows[i-1].y);
-     if(d>3)rowDistances.push(d);
+     const d=Math.abs(dayRows[i-1].y-dayRows[i].y);
+     if(d>3)gaps.push(d);
    }
-   rowDistances.sort((a,b)=>a-b);
-   const rowGap=rowDistances.length?rowDistances[Math.floor(rowDistances.length/2)]:15;
-
-   const dayTop=Math.max(...dayRows.map(r=>r.y))+rowGap*.6;
-   const dayBottom=Math.min(...dayRows.map(r=>r.y))-rowGap*.6;
+   gaps.sort((a,b)=>a-b);
+   const gap=gaps.length?gaps[Math.floor(gaps.length/2)]:15;
 
    for(let ci=0;ci<classes.length;ci++){
      const bd=bounds[ci];
 
-     // Textobjekte dieses Tages und dieser Klasse.
-     const relevant=arr.filter(x=>{
-       const cx=x.x+x.w/2;
-       if(cx<bd.left||cx>bd.right)return false;
-       if(x.y>dayTop||x.y<dayBottom)return false;
-       // Kopfzeile ausschließen.
-       if(Math.abs(x.y-headerGroup.y)<9)return false;
-       // Linke Zeitlabels können durch breite PDF-Objekte theoretisch hineinragen.
-       if(/\b(?:Mo|Di|Mi|Do|Fr)\s*[-–]?\s*\d+/i.test(x.text))return false;
-       return true;
-     });
-
-     const buckets=dayRows.map(()=>[]);
-
-     for(const item of relevant){
-       const ds=dayRows.map((r,i)=>({i,d:Math.abs(item.y-r.y)})).sort((a,b)=>a.d-b.d);
-       const nearest=ds[0];
-
-       // WICHTIG: ZUERST prüfen, ob das Textobjekt zu einem
-       // vertikal zusammengeführten Untis-Feld (Doppelstunde) gehört.
-       let assigned=false;
-       for(let i=0;i<dayRows.length-1;i++){
-         const mid=(dayRows[i].y+dayRows[i+1].y)/2;
-         const midDist=Math.abs(item.y-mid);
-
-         // Breiterer Bereich als früher:
-         // Schrift-Baselines sitzen in PDFs nicht immer exakt in der Feldmitte.
-         if(midDist<=rowGap*.37){
-           buckets[i].push(item);
-           buckets[i+1].push(item);
-           assigned=true;
-           break;
-         }
+     // Partition the timetable using the ACTUAL PDF grid lines.
+     // If the line between row i and i+1 is absent in this class column,
+     // Untis has drawn one merged cell -> double/multiple lesson.
+     const groups=[];
+     let i=0;
+     while(i<dayRows.length){
+       let j=i;
+       while(j<dayRows.length-1){
+         const boundary=(dayRows[j].y+dayRows[j+1].y)/2;
+         const border=hasHorizontalGridBorder(raster,bd.left,bd.right,boundary);
+         if(border)break;
+         j++;
        }
-
-       if(assigned)continue;
-
-       // Erst danach normale Einzelstunde.
-       if(nearest.d<=rowGap*.52){
-         buckets[nearest.i].push(item);
-       }
+       groups.push({from:i,to:j});
+       i=j+1;
      }
 
-     for(let ri=0;ri<dayRows.length;ri++){
-       const r=dayRows[ri];
-       const parts=[];
-       const seen=new Set();
+     for(const grp of groups){
+       const first=dayRows[grp.from],last=dayRows[grp.to];
+       const top=first.y+(grp.from>0?Math.abs(dayRows[grp.from-1].y-first.y)/2:gap/2);
+       const bottom=last.y-(grp.to<dayRows.length-1?Math.abs(last.y-dayRows[grp.to+1].y)/2:gap/2);
 
-       for(const x of buckets[ri].sort((a,b)=>b.y-a.y||a.x-b.x)){
-         const key=x.text+"|"+Math.round(x.x*2)+"|"+Math.round(x.y*2);
+       const parts=arr.filter(x=>{
+         const cx=x.x+x.w/2;
+         if(cx<bd.left||cx>bd.right)return false;
+         if(x.y>top||x.y<bottom)return false;
+         if(Math.abs(x.y-headerGroup.y)<9)return false;
+         if(/\b(?:Mo|Di|Mi|Do|Fr)\s*[-–]?\s*\d+/i.test(x.text))return false;
+         return true;
+       }).sort((a,b)=>b.y-a.y||a.x-b.x)
+         .map(x=>x.text.trim())
+         .filter(Boolean);
+
+       const seen=new Set(),uniqueParts=[];
+       for(const part of parts){
+         const key=part;
          if(seen.has(key))continue;
          seen.add(key);
-         parts.push(x.text.trim());
+         uniqueParts.push(part);
        }
 
-       let raw=parts.join(" ").replace(/\s+/g," ").trim();
-       raw=cleanupScheduleRaw(raw);
+       const raw=cleanPdfCellText(uniqueParts.join(" "));
+       if(!raw)continue;
 
-       if(raw){
-         schedule[classes[ci]].push({
-           day,
-           start:r.start || official[r.num-1]?.[0] || "",
-           end:r.end || official[r.num-1]?.[1] || "",
-           raw,
-           rowNum:r.num
-         });
-       }
+       schedule[classes[ci]].push({
+         day,
+         start:first.start,
+         end:last.end,
+         raw,
+         rowNum:first.num,
+         blocks:grp.to-grp.from+1,
+         isDouble:(grp.to-grp.from+1)>=2,
+         gridExact:true
+       });
      }
    }
- }
-
- for(const c of classes){
-   schedule[c]=repairParsedScheduleV21(schedule[c]);
  }
 
  return {classes,schedule};
 }
 
-function cleanupScheduleRaw(raw){
- return String(raw||"")
-   .replace(/Klassenleitungs-\s*stunden/ig,"Klassenleitungsstunden")
-   .replace(/Klassenleitungs\s+stunden/ig,"Klassenleitungsstunden")
-   .replace(/\s+/g," ")
-   .trim();
-}
-
-function repairParsedScheduleV21(list){
- const sorted=[...(list||[])].sort((a,b)=>{
-   const d=dayOrder.indexOf(a.day)-dayOrder.indexOf(b.day);
-   return d||a.start.localeCompare(b.start);
- });
-
+function consolidateSpecialDayNotes(list){
  const out=[];
- for(const item of sorted){
-   const cur={...item};
-   cur.raw=String(cur.raw||"")
-      .replace(/Klassenleitungs-\s*stunden/ig,"Klassenleitungsstunden")
-      .replace(/Klassenleitungs\s+stunden/ig,"Klassenleitungsstunden")
-      .replace(/\s+/g," ").trim();
+ for(const item of (list||[])){
+   const x={...item};
+   x.raw=cleanPdfCellText(x.raw);
 
-   const last=out[out.length-1];
-
-   if(last && last.day===cur.day && last.end===cur.start){
-     const a=String(last.raw||"").replace(/\s+/g," ").trim();
-     const b=String(cur.raw||"").replace(/\s+/g," ").trim();
-
-     // Gleiches PDF-Feld in zwei direkt angrenzenden Unterrichtsblöcken.
-     if(a && a===b){
-       last.end=cur.end;
-       last.blocks=(last.blocks||1)+1;
-       last.isDouble=true;
-       continue;
-     }
-
-     if(/-$/.test(a) || (/klassenleitungs?-?$/i.test(a)&&/^stunden?$/i.test(b))){
-       last.raw=(a.replace(/-$/,"")+b)
-         .replace(/Klassenleitungsstunden/ig,"Klassenleitungsstunden");
-       last.end=cur.end;
-       last.blocks=(last.blocks||1)+1;
-       last.specialOnly=true;
-       continue;
-     }
+   // When the PDF itself says "10:00 Uhr Klassenleitungsstunden",
+   // keep exactly one special note. No artificial surrounding periods.
+   if(/\b\d{1,2}(?::\d{2})?\s*Uhr\b/i.test(x.raw)&&/Klassenleit/i.test(x.raw)){
+     x.specialOnly=true;
    }
-
-   out.push(cur);
+   out.push(x);
  }
  return out;
 }
 
-async function parsePdf(source){
- const pdf=await pdfjsLib.getDocument(source).promise,combined={},allText=[];
+function scheduleForClass(name){
+ const schedules=data.timetable.schedules||{};
+ const exact=Object.keys(schedules).find(k=>k.replace(/\s+/g," ").toUpperCase()===String(name||"").replace(/\s+/g," ").toUpperCase());
+ return exact?schedules[exact]:[];
+}
+
+window.switchTimetableClass=function(name){
+ if(!name)return;
+ data.timetable.selectedClass=name;
+ data.settings.className=name;
+ data.timetable.lessons=scheduleForClass(name);
+ save();renderHome();renderPlan();
+}
+
+async function parsePdfDocument(pdf){
+ const combined={},allText=[];
 
  for(let p=1;p<=pdf.numPages;p++){
-   const page=await pdf.getPage(p),content=await page.getTextContent();
+   const page=await pdf.getPage(p);
+   const content=await page.getTextContent();
+   const raster=await renderPdfRaster(page);
    allText.push(content.items.map(x=>(x.str||"").trim()).filter(Boolean).join(" "));
-   const parsed=parsePageItems(content.items);if(!parsed)continue;
+
+   const parsed=parsePageItems(content.items,raster);
+   if(!parsed)continue;
 
    for(const [className,lessons] of Object.entries(parsed.schedule)){
      const normalized=className.replace(/\s+/g," ").trim();
@@ -3230,19 +3201,11 @@ async function parsePdf(source){
  let keys=Object.keys(combined);
  if(!keys.length)throw new Error("Keine Klassen im PHS-Plan erkannt");
 
- // Jede Klasse separat nachbearbeiten.
- for(const k of keys){
-   combined[k]=consolidateSpecialDayNotes(combined[k]);
- }
-
- // Natürliche Klassenreihenfolge entsprechend der PDF / Benennung.
+ for(const k of keys)combined[k]=consolidateSpecialDayNotes(combined[k]);
  keys=keys.sort((a,b)=>a.localeCompare(b,"de",{numeric:true,sensitivity:"base"}));
 
  const wanted=(data.timetable.selectedClass||data.settings.className||"M U1").replace(/\s+/g," ").toUpperCase();
  let chosen=keys.find(k=>k.replace(/\s+/g," ").toUpperCase()===wanted);
-
- // Falls die bisherige Klasse im neuen Plan nicht mehr existiert, M U1 bevorzugen,
- // sonst die erste automatisch erkannte Klasse.
  if(!chosen)chosen=keys.find(k=>k.replace(/\s+/g," ").toUpperCase()==="M U1")||keys[0];
 
  const txt=allText.join(" ");
@@ -3256,11 +3219,15 @@ async function parsePdf(source){
    lessons:combined[chosen]||[],
    sourceLabel:dm?dm[1]:"",
    fetchedAt:Date.now(),
-   parserVersion:22
+   parserVersion:24
  };
-
  data.settings.className=chosen;
  save();
+}
+
+async function parsePdfBytes(bytes){
+ const pdf=await pdfjsLib.getDocument({data:bytes}).promise;
+ await parsePdfDocument(pdf);
 }
 
 window.loadRemotePlan=async function(manual=false){
@@ -3269,21 +3236,40 @@ window.loadRemotePlan=async function(manual=false){
  if(refreshBtn)refreshBtn.disabled=true;
 
  if(status)status.textContent=manual?"Aktuelle PHS-PDF wird live neu geladen …":"Stundenplan wird geladen …";
- if(live){live.textContent=manual?"Live-Abruf über Cloudflare …":"";live.className="liveRefreshStatus loading"}
+ if(live){live.textContent="Live-PDF wird abgerufen …";live.className="liveRefreshStatus loading"}
 
  const stamp=Date.now();
  const external=data.settings.pdf||defaultData.settings.pdf;
  const sep=external.includes("?")?"&":"?";
  const sources=[
-   {name:"Live",source:{url:SCHOOLBLOOM_PLAN_WORKER+"?schoolbloom="+stamp,disableRange:true,disableStream:true,disableAutoFetch:true}},
-   {name:"GitHub-Sicherung",source:{url:"./Stundenplan.pdf?schoolbloom="+stamp,disableRange:true,disableStream:true,disableAutoFetch:true}},
-   {name:"Direkt",source:{url:external+sep+"schoolbloom="+stamp,disableRange:true,disableStream:true,disableAutoFetch:true}}
+   {name:"Live",url:SCHOOLBLOOM_PLAN_WORKER+"?schoolbloom="+stamp},
+   {name:"GitHub-Sicherung",url:"./Stundenplan.pdf?schoolbloom="+stamp},
+   {name:"Direkt",url:external+sep+"schoolbloom="+stamp}
  ];
 
- let lastError=null;
+ let networkError=null,parserError=null;
+
  for(const candidate of sources){
+   let bytes;
    try{
-     await parsePdf(candidate.source);
+     const response=await fetch(candidate.url,{
+       method:"GET",
+       cache:"no-store",
+       headers:{"Cache-Control":"no-cache","Pragma":"no-cache"}
+     });
+     if(!response.ok)throw new Error(`HTTP ${response.status}`);
+     bytes=new Uint8Array(await response.arrayBuffer());
+     if(bytes.length<4||String.fromCharCode(...bytes.slice(0,4))!=="%PDF")throw new Error("Antwort ist keine PDF");
+   }catch(e){
+     networkError=e;
+     console.warn(candidate.name+" Download fehlgeschlagen",e);
+     continue;
+   }
+
+   try{
+     if(live){live.textContent=`✓ ${candidate.name}-PDF geladen · Stundenplan wird gelesen …`;live.className="liveRefreshStatus loading"}
+     await parsePdfBytes(bytes);
+
      const d=new Date(),time=String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
      data.timetable.lastSource=candidate.name;
      data.timetable.lastLiveCheck=Date.now();
@@ -3291,31 +3277,39 @@ window.loadRemotePlan=async function(manual=false){
 
      if(status)status.textContent=`Aktueller PHS-Plan geladen${data.timetable.sourceLabel?" · "+data.timetable.sourceLabel:""}.`;
      if(live){
-       live.textContent=`✓ ${candidate.name} · geprüft um ${time} Uhr`;
+       live.textContent=`✓ ${candidate.name} · exakt aus PDF gelesen · ${time} Uhr`;
        live.className="liveRefreshStatus ok";
      }
      if(refreshBtn)refreshBtn.disabled=false;
      renderAll();
      return;
    }catch(e){
-     lastError=e;
-     console.warn(candidate.name+" fehlgeschlagen",e);
+     parserError=e;
+     console.warn(candidate.name+" PDF geladen, Parser fehlgeschlagen",e);
+     // If Live PDF was downloaded, do NOT lie that Live itself failed.
+     if(candidate.name==="Live"&&live){
+       live.textContent="✓ Live-PDF geladen · Auslesen fehlgeschlagen, versuche Sicherung …";
+       live.className="liveRefreshStatus warn";
+     }
    }
  }
 
- if(status)status.textContent="Stundenplan konnte gerade nicht neu geladen werden.";
- if(live){
-   live.textContent="✕ Live-Aktualisierung fehlgeschlagen";
-   live.className="liveRefreshStatus error";
- }
  if(refreshBtn)refreshBtn.disabled=false;
- console.warn(lastError);
+
+ if(parserError){
+   if(status)status.textContent="Die PDF wurde geladen, konnte aber nicht vollständig gelesen werden. Der letzte funktionierende Plan bleibt erhalten.";
+   if(live){live.textContent="PDF erreichbar · Parser konnte den neuen Plan nicht übernehmen";live.className="liveRefreshStatus warn"}
+ }else{
+   if(status)status.textContent="Die Stundenplan-PDF ist gerade nicht erreichbar. Der letzte funktionierende Plan bleibt erhalten.";
+   if(live){live.textContent="Live-Verbindung gerade nicht erreichbar";live.className="liveRefreshStatus error"}
+ }
+ console.warn(parserError||networkError);
 }
 
 loadRemotePlan(false);
 
-if(localStorage.getItem("schoolbloom-plan-parser-version")!=="23"){
- localStorage.setItem("schoolbloom-plan-parser-version","23");
+if(localStorage.getItem("schoolbloom-plan-parser-version")!=="24"){
+ localStorage.setItem("schoolbloom-plan-parser-version","24");
  setTimeout(()=>loadRemotePlan(true),250);
 }
 if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});
