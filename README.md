@@ -1,9 +1,10 @@
-# VERSION 22
+# VERSION 23
 
-- alle Klassen aus der jeweils aktuellen PHS-PDF werden gespeichert
-- Klassenwahl direkt im Stundenplan
-- Auswahl funktioniert auch bei künftigen Plänen mit anderer Klassenliste
-- ausgewählte Klasse wird gespeichert und auch auf „Heute“ verwendet
-- Sonderfall „10:00 Uhr Klassenleitungsstunden“ wird zu einer einzigen Notiz
-- wenn ein Tag nur diese organisatorische Notiz enthält, werden keine Entfall-/Unterrichtskarten erfunden
-- Live-Aktualisierung über Cloudflare bleibt aktiv
+Wichtig:
+- SchoolBloom erzeugt KEINEN künstlichen „Entfall“ mehr.
+- Entfall/Ausfall wird nur angezeigt, wenn dieser Text wirklich in der PDF steht.
+- Parser prüft zusammengeführte PDF-Felder zuerst auf Doppelstunden.
+- Erst danach werden Einzelstunden zugeordnet.
+- Identische aufeinanderfolgende PDF-Einträge werden zu einer Doppelstunde zusammengeführt.
+- „10:00 Uhr Klassenleitungsstunden“ bleibt eine einzelne Sondernotiz.
+- Alle dynamisch erkannten Klassen und der Cloudflare-Live-Abruf bleiben erhalten.

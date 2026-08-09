@@ -633,13 +633,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 22: echter Live-Refresh ===== */
+/* ===== VERSION 23: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 22 timetable parser ===== */
+/* ===== VERSION 23 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -648,7 +648,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 22: dynamic classes ===== */
+/* ===== VERSION 23: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -663,7 +663,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 22</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 23</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -1140,7 +1140,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 22";
+ $("#headerEyebrow").textContent="VERSION 23";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -2038,13 +2038,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 22: echter Live-Refresh ===== */
+/* ===== VERSION 23: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 22 timetable parser ===== */
+/* ===== VERSION 23 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -2053,7 +2053,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 22: dynamic classes ===== */
+/* ===== VERSION 23: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -2237,13 +2237,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 22: echter Live-Refresh ===== */
+/* ===== VERSION 23: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 22 timetable parser ===== */
+/* ===== VERSION 23 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -2252,7 +2252,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 22: dynamic classes ===== */
+/* ===== VERSION 23: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -2558,54 +2558,11 @@ const timetableSlots=[
  {start:"15:45",end:"16:30"}
 ];
 function fillCancelledSlots(lessons){
- const real=[...(lessons||[])].filter(x=>x?.raw&&x.raw!=="__ENTFALL__");
- if(!real.length)return [];
-
- const indexByStart=new Map(timetableSlots.map((s,i)=>[s.start,i]));
- const covered=new Set();
- let first=999,last=-1;
-
- for(const l of real){
-   const startIdx=indexByStart.get(l.start);
-   if(startIdx==null)continue;
-
-   let endIdx=startIdx;
-   for(let i=startIdx;i<timetableSlots.length;i++){
-     if(timetableSlots[i].end===l.end){endIdx=i;break}
-   }
-
-   for(let i=startIdx;i<=endIdx;i++)covered.add(i);
-   first=Math.min(first,startIdx);
-   last=Math.max(last,endIdx);
- }
-
- if(last<0)return real;
-
- const starts=new Map(real.map(l=>[l.start,l]));
- const out=[];
-
- for(let i=first;i<=last;i++){
-   const slot=timetableSlots[i];
-   const entry=starts.get(slot.start);
-
-   if(entry){
-     out.push(entry);
-     // Bei Doppel-/Mehrfachstunden die bereits abgedeckten Folgeslots überspringen.
-     let stop=i;
-     for(let j=i;j<timetableSlots.length;j++){
-       if(timetableSlots[j].end===entry.end){stop=j;break}
-     }
-     i=stop;
-   }else if(!covered.has(i)){
-     out.push({
-       day:real[0]?.day||selectedDay,
-       start:slot.start,end:slot.end,
-       raw:"__ENTFALL__",cancelled:true
-     });
-   }
- }
-
- return out;
+ // VERSION 23:
+ // SchoolBloom darf NIE aus einer nicht erkannten/leeren PDF-Zelle
+ // automatisch "Entfall" erfinden.
+ // Nur Einträge, die wirklich aus der PDF gelesen wurden, werden gezeigt.
+ return [...(lessons||[])];
 }
 
 function renderHome(){
@@ -2632,21 +2589,28 @@ function renderHome(){
  $("#homeOpen").innerHTML=items.length?items.map(x=>`<div class="card rowBetween"><div><b>${esc(x.subject)} · ${esc(x.text)}</b><div class="small">${fmtDate(x.date)}</div></div><span class="badge ${x.kind==="test"?"warn":""}">${x.kind==="test"?"Test":"Aufgabe"}</span></div>`).join(""):'<div class="empty">Alles erledigt 🎉</div>';
 }
 function lessonHtml(l){
- if(l.raw==="__ENTFALL__"||l.cancelled){
+ const rawText=String(l.raw||"").replace(/\s+/g," ").trim();
+
+ // Entfall/Ausfall nur dann, wenn genau das in der PDF steht.
+ const explicitCancelled=/\b(entfall|entfällt|ausfall|fällt\s+aus)\b/i.test(rawText);
+ if(explicitCancelled){
    return `<div class="lesson cancelled" style="--subject:#d6cfc9">
      <div class="time">${l.start}<br>${l.end}</div>
-     <div><div class="subject">Entfall</div></div>
+     <div><div class="subject">${esc(rawText)}</div></div>
      <div class="room">—</div>
    </div>`;
  }
 
- const p=splitCell(l.raw),teacher=p.teacher||p.meta||"",key=lessonKey(l),extra=data.lessonExtras[key]||{};
+ const p=splitCell(rawText),teacher=p.teacher||p.meta||"",key=lessonKey(l),extra=data.lessonExtras[key]||{};
  const count=(extra.notes?.length||0)+(extra.tasks?.length||0)+(extra.files?.length||0);
  const double=(l.isDouble||Number(l.blocks)>=2);
 
- if(p.special){
-   const label=String(p.subject||l.raw).replace(/\s+/g," ").trim();
+ if(p.special||l.specialOnly){
+   let label=String(p.subject||rawText).replace(/\s+/g," ").trim();
+   label=label.replace(/Klassenleitungs-\s*stunden/ig,"Klassenleitungsstunden")
+              .replace(/Klassenleitungs\s+stunden/ig,"Klassenleitungsstunden");
    const hasOwnTime=/\b\d{1,2}(?::\d{2})?\s*Uhr\b/i.test(label);
+
    return `<div class="lesson specialLesson" style="--subject:#e9c887">
      ${hasOwnTime?"":`<div class="time">${l.start}<br>${l.end}</div>`}
      <div style="${hasOwnTime?"grid-column:1/-1":""}">
@@ -3137,22 +3101,28 @@ function parsePageItems(items){
        const ds=dayRows.map((r,i)=>({i,d:Math.abs(item.y-r.y)})).sort((a,b)=>a.d-b.d);
        const nearest=ds[0];
 
-       // Der Text muss wirklich in Nähe einer Stundenzeile liegen.
-       if(nearest.d<=rowGap*.43){
-         buckets[nearest.i].push(item);
-       }else{
-         // Zusammengeführte Doppelstundenfelder liegen häufig mittig zwischen zwei Zeilen.
-         let assigned=false;
-         for(let i=0;i<dayRows.length-1;i++){
-           const mid=(dayRows[i].y+dayRows[i+1].y)/2;
-           if(Math.abs(item.y-mid)<=rowGap*.25){
-             buckets[i].push(item);
-             buckets[i+1].push(item);
-             assigned=true;
-             break;
-           }
+       // WICHTIG: ZUERST prüfen, ob das Textobjekt zu einem
+       // vertikal zusammengeführten Untis-Feld (Doppelstunde) gehört.
+       let assigned=false;
+       for(let i=0;i<dayRows.length-1;i++){
+         const mid=(dayRows[i].y+dayRows[i+1].y)/2;
+         const midDist=Math.abs(item.y-mid);
+
+         // Breiterer Bereich als früher:
+         // Schrift-Baselines sitzen in PDFs nicht immer exakt in der Feldmitte.
+         if(midDist<=rowGap*.37){
+           buckets[i].push(item);
+           buckets[i+1].push(item);
+           assigned=true;
+           break;
          }
-         if(!assigned && nearest.d<=rowGap*.62)buckets[nearest.i].push(item);
+       }
+
+       if(assigned)continue;
+
+       // Erst danach normale Einzelstunde.
+       if(nearest.d<=rowGap*.52){
+         buckets[nearest.i].push(item);
        }
      }
 
@@ -3205,105 +3175,41 @@ function repairParsedScheduleV21(list){
    return d||a.start.localeCompare(b.start);
  });
 
- // Identische Inhalte in zwei direkt aufeinanderfolgenden Reihen
- // stammen bei Untis typischerweise aus einem zusammengeführten Doppelstundenfeld.
  const out=[];
  for(const item of sorted){
    const cur={...item};
+   cur.raw=String(cur.raw||"")
+      .replace(/Klassenleitungs-\s*stunden/ig,"Klassenleitungsstunden")
+      .replace(/Klassenleitungs\s+stunden/ig,"Klassenleitungsstunden")
+      .replace(/\s+/g," ").trim();
+
    const last=out[out.length-1];
 
    if(last && last.day===cur.day && last.end===cur.start){
-     const a=cleanupScheduleRaw(last.raw);
-     const b=cleanupScheduleRaw(cur.raw);
+     const a=String(last.raw||"").replace(/\s+/g," ").trim();
+     const b=String(cur.raw||"").replace(/\s+/g," ").trim();
 
-     if(a===b && a){
+     // Gleiches PDF-Feld in zwei direkt angrenzenden Unterrichtsblöcken.
+     if(a && a===b){
        last.end=cur.end;
        last.blocks=(last.blocks||1)+1;
        last.isDouble=true;
        continue;
      }
 
-     // "Klassenleitungs-" / "stunden" o.ä.
      if(/-$/.test(a) || (/klassenleitungs?-?$/i.test(a)&&/^stunden?$/i.test(b))){
-       last.raw=cleanupScheduleRaw(a.replace(/-$/,"")+b);
+       last.raw=(a.replace(/-$/,"")+b)
+         .replace(/Klassenleitungsstunden/ig,"Klassenleitungsstunden");
        last.end=cur.end;
        last.blocks=(last.blocks||1)+1;
+       last.specialOnly=true;
        continue;
      }
    }
 
    out.push(cur);
  }
-
  return out;
-}
-
-
-function consolidateSpecialDayNotes(list){
- const sorted=[...(list||[])].sort((a,b)=>{
-   const d=dayOrder.indexOf(a.day)-dayOrder.indexOf(b.day);
-   return d||a.start.localeCompare(b.start);
- });
- const out=[];
-
- for(let i=0;i<sorted.length;i++){
-   const a={...sorted[i]};
-   const t=String(a.raw||"").replace(/\s+/g," ").trim();
-   const b=sorted[i+1],c=sorted[i+2];
-
-   // 10:00 Uhr / Klassenleitungs- / stunden -> one note
-   if(/^\d{1,2}(?::\d{2})?\s*Uhr$/i.test(t) && b && b.day===a.day){
-     let text=String(b.raw||"").replace(/\s+/g," ").trim();
-     let end=b.end||a.end;
-     let consume=1;
-
-     if(c && c.day===a.day && (/-$/.test(text)||/klassenleitungs?-?$/i.test(text)) && /^stunden?$/i.test(String(c.raw||"").trim())){
-       text=(text.replace(/-$/,"")+"stunden").replace(/klassenleitungsstunden/i,"Klassenleitungsstunden");
-       end=c.end||end;consume=2;
-     }else if(/klassenleitungs[- ]?stunden/i.test(text)){
-       text="Klassenleitungsstunden";
-     }
-
-     if(/klassenleit/i.test(text)){
-       out.push({
-         day:a.day,
-         start:a.start,
-         end,
-         raw:`${t} ${text.replace(/Klassenleitungs-\s*stunden/ig,"Klassenleitungsstunden")}`,
-         specialOnly:true
-       });
-       i+=consume;
-       continue;
-     }
-   }
-
-   // Klassenleitungs- + stunden without separate time item
-   if(/klassenleitungs?-?$/i.test(t) && b && b.day===a.day && /^stunden?$/i.test(String(b.raw||"").trim())){
-     out.push({...a,end:b.end,raw:"Klassenleitungsstunden",specialOnly:true});
-     i++;
-     continue;
-   }
-
-   out.push(a);
- }
-
- return out;
-}
-
-function scheduleForClass(name){
- const schedules=data.timetable.schedules||{};
- const exact=Object.keys(schedules).find(k=>k.replace(/\s+/g," ").toUpperCase()===String(name||"").replace(/\s+/g," ").toUpperCase());
- return exact?schedules[exact]:[];
-}
-
-window.switchTimetableClass=function(name){
- if(!name)return;
- data.timetable.selectedClass=name;
- data.settings.className=name;
- data.timetable.lessons=scheduleForClass(name);
- save();
- renderHome();
- renderPlan();
 }
 
 async function parsePdf(source){
@@ -3408,8 +3314,8 @@ window.loadRemotePlan=async function(manual=false){
 
 loadRemotePlan(false);
 
-if(localStorage.getItem("schoolbloom-plan-parser-version")!=="22"){
- localStorage.setItem("schoolbloom-plan-parser-version","22");
+if(localStorage.getItem("schoolbloom-plan-parser-version")!=="23"){
+ localStorage.setItem("schoolbloom-plan-parser-version","23");
  setTimeout(()=>loadRemotePlan(true),250);
 }
 if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});
