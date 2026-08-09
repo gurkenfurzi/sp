@@ -633,13 +633,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 25: echter Live-Refresh ===== */
+/* ===== VERSION 26: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 25 timetable parser ===== */
+/* ===== VERSION 26 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -648,7 +648,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 25: dynamic classes ===== */
+/* ===== VERSION 26: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -657,7 +657,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 25: raster-exact timetable ===== */
+/* ===== VERSION 26: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 </style>
@@ -667,7 +667,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 25</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 26</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -1083,11 +1083,22 @@ function prettySubject(s){
  const m={"D":"Deutsch","E":"Englisch","M":"Mathematik","ET":"Ethik","SP":"Sport","SPO":"Sport","INF":"Informatik","WISO":"Wirtschaft & Sozialkunde"};
  return m[x.toUpperCase()]||x||"Unterricht";
 }
+const officialBreaks=[
+ ["09:30","09:45"],
+ ["11:15","11:30"],
+ ["13:00","13:30"]
+];
+
+function breakBetween(endA,startB){
+ return officialBreaks.some(([s,e])=>endA===s && startB===e);
+}
+
 function mergeLessons(ls){
  const sorted=[...(ls||[])].sort((a,b)=>{
    const d=dayOrder.indexOf(a.day)-dayOrder.indexOf(b.day);
    return d||a.start.localeCompare(b.start);
  });
+
  const out=[];
 
  for(const x of sorted){
@@ -1095,27 +1106,29 @@ function mergeLessons(ls){
    const p=splitCell(item.raw);
    const last=out[out.length-1];
 
-   if(last && last.day===item.day && last.end===item.start){
+   if(last && last.day===item.day){
      const q=splitCell(last.raw);
 
-     // Identischer Unterricht in direkt aufeinanderfolgenden Blöcken = Doppelstunde.
-     if(!p.special&&!q.special&&
-        q.subject===p.subject&&
-        q.room===p.room&&
-        (q.teacherCode||q.meta)===(p.teacherCode||p.meta)){
-       last.end=item.end;
-       last.blocks=(last.blocks||1)+(item.blocks||1);
-       last.isDouble=last.blocks>=2;
-       continue;
-     }
+     // Never merge through an official break.
+     const separatedByBreak=breakBetween(last.end,item.start);
 
-     // Derselbe PDF-Text wurde wegen eines zusammengeführten Untis-Feldes
-     // beiden Zeilen zugeordnet.
-     if(!p.special&&!q.special&&String(last.raw).trim()===String(item.raw).trim()){
-       last.end=item.end;
-       last.blocks=(last.blocks||1)+(item.blocks||1);
-       last.isDouble=true;
-       continue;
+     if(!separatedByBreak && last.end===item.start){
+       if(!p.special&&!q.special &&
+          q.subject===p.subject &&
+          q.room===p.room &&
+          (q.teacherCode||q.meta)===(p.teacherCode||p.meta)){
+         last.end=item.end;
+         last.blocks=(last.blocks||1)+(item.blocks||1);
+         last.isDouble=last.blocks>=2;
+         continue;
+       }
+
+       if(!p.special&&!q.special && String(last.raw).trim()===String(item.raw).trim()){
+         last.end=item.end;
+         last.blocks=(last.blocks||1)+(item.blocks||1);
+         last.isDouble=true;
+         continue;
+       }
      }
    }
 
@@ -1144,7 +1157,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 25";
+ $("#headerEyebrow").textContent="VERSION 26";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -2042,13 +2055,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 25: echter Live-Refresh ===== */
+/* ===== VERSION 26: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 25 timetable parser ===== */
+/* ===== VERSION 26 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -2057,7 +2070,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 25: dynamic classes ===== */
+/* ===== VERSION 26: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -2066,7 +2079,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 25: raster-exact timetable ===== */
+/* ===== VERSION 26: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 </style></head><body><div class="page">${serializedCanvas()}</div></body></html>`;
@@ -2245,13 +2258,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 25: echter Live-Refresh ===== */
+/* ===== VERSION 26: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 25 timetable parser ===== */
+/* ===== VERSION 26 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -2260,7 +2273,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 25: dynamic classes ===== */
+/* ===== VERSION 26: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -2269,7 +2282,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 25: raster-exact timetable ===== */
+/* ===== VERSION 26: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 </style></head><body><div class="page">${serializedCanvas()}</div></body></html>`);w.document.close();setTimeout(()=>w.print(),300)
@@ -2570,7 +2583,7 @@ const timetableSlots=[
  {start:"15:45",end:"16:30"}
 ];
 function fillCancelledSlots(lessons){
- // VERSION 25:
+ // VERSION 26:
  // SchoolBloom darf NIE aus einer nicht erkannten/leeren PDF-Zelle
  // automatisch "Entfall" erfinden.
  // Nur Einträge, die wirklich aus der PDF gelesen wurden, werden gezeigt.
@@ -2670,10 +2683,13 @@ function renderPlan(){
 
  if(specialOnly.length && !normal.length){
    $("#planLessons").innerHTML=specialOnly.map(x=>{
-     const raw=String(x.raw||"").replace(/\s+/g," ").trim();
+     const raw=cleanPdfCellText(x.raw);
      const tm=raw.match(/^(\d{1,2}(?::\d{2})?\s*Uhr)\s*(.*)$/i);
      const time=tm?tm[1]:"";
-     const text=(tm?tm[2]:raw).replace(/Klassenleitungs-\s*stunden/ig,"Klassenleitungsstunden");
+     let text=tm?tm[2]:raw;
+     text=text.replace(/Klassenleitungs-\s*stunden/ig,"Klassenleitungsstunden")
+              .replace(/Klassenleitungs\s+stunden/ig,"Klassenleitungsstunden");
+
      return `<div class="specialOnlyDay"><div class="specialOnlyCard">
        ${time?`<div class="specialTime">${esc(time)}</div>`:""}
        <div class="specialText">${esc(text)}</div>
@@ -3101,6 +3117,9 @@ function parsePageItems(items,raster){
        // Ein normales zusammengeführtes Feld darf zunächst höchstens
        // zwei Unterrichtsblöcke umfassen.
        while(j<dayRows.length-1 && (j-i)<1){
+         // Don't let a merged PDF cell visually swallow an official school break.
+         if(breakBetween(dayRows[j].end,dayRows[j+1].start))break;
+
          const boundary=(dayRows[j].y+dayRows[j+1].y)/2;
          const border=hasHorizontalGridBorder(raster,bd.left,bd.right,boundary);
          if(border)break;
@@ -3182,18 +3201,84 @@ return {classes,schedule};
 }
 
 function consolidateSpecialDayNotes(list){
- const out=[];
- for(const item of (list||[])){
-   const x={...item};
-   x.raw=cleanPdfCellText(x.raw);
+ const sorted=[...(list||[])].sort((a,b)=>{
+   const d=dayOrder.indexOf(a.day)-dayOrder.indexOf(b.day);
+   return d||a.start.localeCompare(b.start);
+ });
 
-   // When the PDF itself says "10:00 Uhr Klassenleitungsstunden",
-   // keep exactly one special note. No artificial surrounding periods.
-   if(/\b\d{1,2}(?::\d{2})?\s*Uhr\b/i.test(x.raw)&&/Klassenleit/i.test(x.raw)){
-     x.specialOnly=true;
+ const out=[];
+
+ for(let i=0;i<sorted.length;i++){
+   const cur={...sorted[i]};
+   const raw=cleanPdfCellText(cur.raw);
+   const next=sorted[i+1]?{...sorted[i+1]}:null;
+   const next2=sorted[i+2]?{...sorted[i+2]}:null;
+
+   // Already complete in one PDF field.
+   if(/\b\d{1,2}(?::\d{2})?\s*Uhr\b/i.test(raw) && /Klassenleitungsstunden/i.test(raw)){
+     const tm=raw.match(/\b\d{1,2}(?::\d{2})?\s*Uhr\b/i)?.[0] || "";
+     out.push({
+       day:cur.day,
+       start:cur.start,
+       end:cur.end,
+       raw:`${tm} Klassenleitungsstunden`.trim(),
+       specialOnly:true
+     });
+     continue;
    }
-   out.push(x);
+
+   // PDF split into:
+   // "10:00 Uhr" / "Klassenleitungs-" / "stunden"
+   if(/^\d{1,2}(?::\d{2})?\s*Uhr$/i.test(raw) && next && next.day===cur.day){
+     const b=cleanPdfCellText(next.raw);
+     const c=next2 && next2.day===cur.day ? cleanPdfCellText(next2.raw) : "";
+
+     if(/klassenleitungs?-?$/i.test(b) && /^stunden?$/i.test(c)){
+       out.push({
+         day:cur.day,
+         start:cur.start,
+         end:next2.end || next.end || cur.end,
+         raw:`${raw} Klassenleitungsstunden`,
+         specialOnly:true
+       });
+       i+=2;
+       continue;
+     }
+
+     if(/klassenleitungsstunden/i.test(b)){
+       out.push({
+         day:cur.day,
+         start:cur.start,
+         end:next.end || cur.end,
+         raw:`${raw} Klassenleitungsstunden`,
+         specialOnly:true
+       });
+       i+=1;
+       continue;
+     }
+   }
+
+   // PDF split only into Klassenleitungs- / stunden
+   if(/klassenleitungs?-?$/i.test(raw) && next && next.day===cur.day && /^stunden?$/i.test(cleanPdfCellText(next.raw))){
+     out.push({
+       day:cur.day,
+       start:cur.start,
+       end:next.end || cur.end,
+       raw:"Klassenleitungsstunden",
+       specialOnly:true
+     });
+     i++;
+     continue;
+   }
+
+   // A lone "stunden" must never become a lesson card.
+   if(/^stunden?$/i.test(raw)){
+     continue;
+   }
+
+   out.push(cur);
  }
+
  return out;
 }
 
@@ -3340,8 +3425,8 @@ window.loadRemotePlan=async function(manual=false){
 
 loadRemotePlan(false);
 
-if(localStorage.getItem("schoolbloom-plan-parser-version")!=="25"){
- localStorage.setItem("schoolbloom-plan-parser-version","25");
+if(localStorage.getItem("schoolbloom-plan-parser-version")!=="26"){
+ localStorage.setItem("schoolbloom-plan-parser-version","26");
  setTimeout(()=>loadRemotePlan(true),250);
 }
 if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});
