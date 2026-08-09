@@ -1,9 +1,9 @@
-# VERSION 21
+# VERSION 22
 
-Wesentlicher Stundenplan-Parser-Fix:
-- PDF-Zeitzeilen werden zuerst aus mehreren Textobjekten zu kompletten horizontalen Zeilen zusammengesetzt.
-- Mo-1, Mo-2, Di-1 usw. werden danach erkannt.
-- Fehlende Zeilenpositionen werden anhand des Tagesrasters interpoliert.
-- Erst danach wird die M-U1-Spalte den Unterrichtszeiten zugeordnet.
-- Doppelstunden bleiben als ein Eintrag mit kompletter Zeitspanne sichtbar.
-- Cloudflare Live-Aktualisierung bleibt unverändert aktiv.
+- alle Klassen aus der jeweils aktuellen PHS-PDF werden gespeichert
+- Klassenwahl direkt im Stundenplan
+- Auswahl funktioniert auch bei künftigen Plänen mit anderer Klassenliste
+- ausgewählte Klasse wird gespeichert und auch auf „Heute“ verwendet
+- Sonderfall „10:00 Uhr Klassenleitungsstunden“ wird zu einer einzigen Notiz
+- wenn ein Tag nur diese organisatorische Notiz enthält, werden keine Entfall-/Unterrichtskarten erfunden
+- Live-Aktualisierung über Cloudflare bleibt aktiv
