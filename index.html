@@ -633,13 +633,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 20: echter Live-Refresh ===== */
+/* ===== VERSION 21: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 20 timetable parser ===== */
+/* ===== VERSION 21 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -654,7 +654,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 20</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 21</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -1127,7 +1127,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 20";
+ $("#headerEyebrow").textContent="VERSION 21";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -2025,13 +2025,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 20: echter Live-Refresh ===== */
+/* ===== VERSION 21: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 20 timetable parser ===== */
+/* ===== VERSION 21 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -2215,13 +2215,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 20: echter Live-Refresh ===== */
+/* ===== VERSION 21: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 20 timetable parser ===== */
+/* ===== VERSION 21 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -2855,6 +2855,27 @@ function combineNearby(items,yTol=3.5){
  const groups=[];for(const it of items.sort((a,b)=>b.y-a.y||a.x-b.x)){let g=groups.find(g=>Math.abs(g.y-it.y)<=yTol);if(!g){g={y:it.y,items:[]};groups.push(g)}g.items.push(it)}
  for(const g of groups)g.items.sort((a,b)=>a.x-b.x);return groups
 }
+
+function groupPdfLines(arr,tolerance=2.8){
+ const groups=[];
+ for(const item of [...arr].sort((a,b)=>b.y-a.y||a.x-b.x)){
+   let g=groups.find(q=>Math.abs(q.y-item.y)<=tolerance);
+   if(!g){g={y:item.y,items:[]};groups.push(g)}
+   g.items.push(item);
+   g.y=g.items.reduce((s,x)=>s+x.y,0)/g.items.length;
+ }
+ return groups.map(g=>{
+   const items=g.items.sort((a,b)=>a.x-b.x);
+   return {
+     y:g.y,
+     x:Math.min(...items.map(x=>x.x)),
+     right:Math.max(...items.map(x=>x.x+x.w)),
+     items,
+     text:items.map(x=>x.text).join(" ").replace(/\s+/g," ").trim()
+   };
+ }).sort((a,b)=>b.y-a.y);
+}
+
 function parsePageItems(items){
  const arr=items.map(it=>({
    text:String(it.str||"").trim(),
@@ -2866,19 +2887,20 @@ function parsePageItems(items){
 
  if(!arr.length)return null;
 
- // Nur Klassen, die in diesem PHS-Plan tatsächlich als Spalten vorkommen.
- const classPattern=/^(?:BF\s*(?:1A|1B|2)|M\s*[OU]\s*1|W\s*[OU]\s*[12])$/i;
- const candidates=arr.filter(x=>classPattern.test(x.text.replace(/\s+/g," ").trim()));
- if(!candidates.length)return null;
+ const lines=groupPdfLines(arr);
 
- // Echte Kopfzeile = größte Gruppe mit fast identischer Y-Position.
- const groups=[];
- for(const x of candidates){
-   let g=groups.find(q=>Math.abs(q.y-x.y)<=7);
-   if(!g){g={y:x.y,items:[]};groups.push(g)}
+ // ---- 1) Klassenkopf exakt bestimmen ----
+ const classPattern=/^(?:BF\s*(?:1A|1B|2)|M\s*[OU]\s*1|W\s*[OU]\s*[12])$/i;
+ const classTokens=arr.filter(x=>classPattern.test(x.text.replace(/\s+/g," ").trim()));
+ if(!classTokens.length)return null;
+
+ const headerGroups=[];
+ for(const x of classTokens){
+   let g=headerGroups.find(q=>Math.abs(q.y-x.y)<=6);
+   if(!g){g={y:x.y,items:[]};headerGroups.push(g)}
    g.items.push(x);
  }
- const headerGroup=groups.sort((a,b)=>b.items.length-a.items.length)[0];
+ const headerGroup=headerGroups.sort((a,b)=>b.items.length-a.items.length)[0];
  const headers=headerGroup.items.sort((a,b)=>a.x-b.x);
  if(headers.length<4)return null;
 
@@ -2889,102 +2911,204 @@ function parsePageItems(items){
    right:i===centers.length-1 ? c+(c-centers[i-1])/2 : (c+centers[i+1])/2
  }));
 
- // Linke Untis-Zeilen.
- const timeRe=/\b(Mo|Di|Mi|Do|Fr)\s*-\s*\d+\s*\/\s*(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})/i;
- const allRows=arr.map(x=>{
-   const m=x.text.match(timeRe);
-   if(!m)return null;
-   return {
-     day:m[1][0].toUpperCase()+m[1].slice(1).toLowerCase(),
-     start:m[2],end:m[3],y:x.y
-   };
- }).filter(Boolean);
+ // ---- 2) Linke Zeilen zuerst aus zusammengesetzten PDF-Linien lesen ----
+ // Beispiele, die akzeptiert werden:
+ // Mo-1 / 8:00-8:45
+ // Mo - 1 / 8:00 - 8:45
+ // Mo-1/8:00-8:45
+ // Manche PDFs zerlegen "-", "/" und Uhrzeiten in einzelne Textobjekte.
+ const rowRe=/\b(Mo|Di|Mi|Do|Fr)\s*[-–]?\s*(\d{1,2})\s*\/?\s*(\d{1,2}:\d{2})\s*[-–]\s*(\d{1,2}:\d{2})\b/i;
+ let detected=[];
 
- if(!allRows.length)return null;
-
- const schedule={};classes.forEach(c=>schedule[c]=[]);
-
- // Tage separat analysieren. So beeinflussen größere Abstände zwischen Di/Mi usw.
- // nicht mehr die Zuordnung der Unterrichtszeilen.
- for(const day of ["Mo","Di","Mi","Do","Fr"]){
-   const rows=allRows.filter(r=>r.day===day).sort((a,b)=>b.y-a.y);
-   if(!rows.length)continue;
-
-   const gaps=[];
-   for(let i=1;i<rows.length;i++){
-     const d=Math.abs(rows[i-1].y-rows[i].y);
-     if(d>3)gaps.push(d);
+ for(const ln of lines){
+   const normalized=ln.text
+     .replace(/[|]/g," ")
+     .replace(/\s*([\/\-–])\s*/g,"$1")
+     .replace(/\s+/g," ")
+     .trim();
+   const m=normalized.match(rowRe);
+   if(m){
+     detected.push({
+       day:m[1][0].toUpperCase()+m[1].slice(1).toLowerCase(),
+       num:+m[2],
+       start:normalizeClock(m[3]),
+       end:normalizeClock(m[4]),
+       y:ln.y,
+       source:normalized
+     });
    }
-   const rowGap=gaps.length ? gaps.sort((a,b)=>a-b)[Math.floor(gaps.length/2)] : 16;
+ }
 
-   // Gesamter vertikaler Bereich dieses Wochentags.
-   const dayTop=rows[0].y+rowGap*.7;
-   const dayBottom=rows[rows.length-1].y-rowGap*.7;
+ // Fallback: manche PDF-Renderer machen aus "Mo-1" und "8:00-8:45"
+ // zwei separate Textgruppen auf derselben Y-Höhe.
+ if(detected.length<10){
+   const dayNumRe=/\b(Mo|Di|Mi|Do|Fr)\s*[-–]\s*(\d{1,2})\b/i;
+   const clockRe=/\b(\d{1,2}:\d{2})\s*[-–]\s*(\d{1,2}:\d{2})\b/;
+   for(const ln of lines){
+     if(detected.some(r=>Math.abs(r.y-ln.y)<2.5))continue;
+     const dn=ln.text.match(dayNumRe);
+     const cl=ln.text.match(clockRe);
+     if(dn&&cl){
+       detected.push({
+         day:dn[1][0].toUpperCase()+dn[1].slice(1).toLowerCase(),
+         num:+dn[2],
+         start:normalizeClock(cl[1]),
+         end:normalizeClock(cl[2]),
+         y:ln.y,
+         source:ln.text
+       });
+     }
+   }
+ }
+
+ // Doppelte Zeilenerkennungen entfernen.
+ const rowMap=new Map();
+ for(const r of detected){
+   const k=r.day+"-"+r.num;
+   if(!rowMap.has(k))rowMap.set(k,r);
+ }
+ detected=[...rowMap.values()];
+
+ // Wenn Uhrzeiten aus der PDF fehlen, aber Tages-/Stundennummern erkennbar sind,
+ // verwenden wir ausschließlich die offiziellen PHS-Unterrichtsslots.
+ const official=[
+   ["08:00","08:45"],["08:45","09:30"],
+   ["09:45","10:30"],["10:30","11:15"],
+   ["11:30","12:15"],["12:15","13:00"],
+   ["13:30","14:15"],["14:15","15:00"],
+   ["15:00","15:45"],["15:45","16:30"]
+ ];
+
+ // Wichtig: Wir brauchen pro Tag möglichst die komplette Folge.
+ // Y-Positionen fehlender Zeilen werden aus den vorhandenen Zeilen interpoliert.
+ const rows=[];
+ for(const day of ["Mo","Di","Mi","Do","Fr"]){
+   const known=detected.filter(r=>r.day===day).sort((a,b)=>a.num-b.num);
+   if(!known.length)continue;
+
+   // Lineares y-Modell anhand erkannter Stunden dieses Tages.
+   let slope=null,intercept=null;
+   if(known.length>=2){
+     const pairs=[];
+     for(let i=1;i<known.length;i++){
+       const dn=known[i].num-known[i-1].num;
+       if(dn) pairs.push((known[i].y-known[i-1].y)/dn);
+     }
+     pairs.sort((a,b)=>a-b);
+     slope=pairs[Math.floor(pairs.length/2)];
+     intercept=known.reduce((s,r)=>s+(r.y-slope*(r.num-1)),0)/known.length;
+   }
+
+   const maxNum=Math.max(...known.map(r=>r.num));
+   const minNum=Math.min(...known.map(r=>r.num));
+
+   // Die Tabelle kann pro Tag 9 oder 10 Blöcke haben.
+   // Nutze alle Nummern zwischen erstem und letztem erkannten Block.
+   for(let num=minNum;num<=maxNum;num++){
+     const existing=known.find(r=>r.num===num);
+     if(existing){
+       rows.push(existing);
+     }else if(slope!=null){
+       rows.push({
+         day,num,
+         start:official[num-1]?.[0]||"",
+         end:official[num-1]?.[1]||"",
+         y:intercept+slope*(num-1),
+         source:"interpoliert"
+       });
+     }
+   }
+ }
+
+ if(!rows.length)return null;
+
+ function normalizeClock(s){
+   const [hh,mm]=String(s).split(":");
+   return String(+hh).padStart(2,"0")+":"+mm;
+ }
+
+ // ---- 3) Inhalte exakt nach Klassen-Spalte UND nächster rekonstruierter Zeile ----
+ const schedule={};
+ classes.forEach(c=>schedule[c]=[]);
+
+ for(const day of ["Mo","Di","Mi","Do","Fr"]){
+   const dayRows=rows.filter(r=>r.day===day).sort((a,b)=>a.num-b.num);
+   if(!dayRows.length)continue;
+
+   // Typischer Abstand der echten Zeilen dieses Tages.
+   const rowDistances=[];
+   for(let i=1;i<dayRows.length;i++){
+     const d=Math.abs(dayRows[i].y-dayRows[i-1].y);
+     if(d>3)rowDistances.push(d);
+   }
+   rowDistances.sort((a,b)=>a-b);
+   const rowGap=rowDistances.length?rowDistances[Math.floor(rowDistances.length/2)]:15;
+
+   const dayTop=Math.max(...dayRows.map(r=>r.y))+rowGap*.6;
+   const dayBottom=Math.min(...dayRows.map(r=>r.y))-rowGap*.6;
 
    for(let ci=0;ci<classes.length;ci++){
      const bd=bounds[ci];
 
-     // Sämtliche Texte der Spalte für diesen Tag.
-     const colItems=arr.filter(x=>{
+     // Textobjekte dieses Tages und dieser Klasse.
+     const relevant=arr.filter(x=>{
        const cx=x.x+x.w/2;
-       const txt=x.text.replace(/\s+/g," ").trim();
        if(cx<bd.left||cx>bd.right)return false;
        if(x.y>dayTop||x.y<dayBottom)return false;
-       if(timeRe.test(txt))return false;
-       if(classPattern.test(txt)&&Math.abs(x.y-headerGroup.y)<9)return false;
+       // Kopfzeile ausschließen.
+       if(Math.abs(x.y-headerGroup.y)<9)return false;
+       // Linke Zeitlabels können durch breite PDF-Objekte theoretisch hineinragen.
+       if(/\b(?:Mo|Di|Mi|Do|Fr)\s*[-–]?\s*\d+/i.test(x.text))return false;
        return true;
      });
 
-     // Inhalte pro Stundenzeile sammeln.
-     const buckets=rows.map(()=>[]);
+     const buckets=dayRows.map(()=>[]);
 
-     for(const item of colItems){
-       // Distanz zu jeder Stunden-Baseline.
-       const distances=rows.map((r,i)=>({i,d:Math.abs(item.y-r.y)})).sort((a,b)=>a.d-b.d);
-       const nearest=distances[0];
+     for(const item of relevant){
+       const ds=dayRows.map((r,i)=>({i,d:Math.abs(item.y-r.y)})).sort((a,b)=>a.d-b.d);
+       const nearest=ds[0];
 
-       // Normaler Eintrag: eindeutig einer Zeile zuordnen.
-       if(nearest.d <= rowGap*.31){
+       // Der Text muss wirklich in Nähe einer Stundenzeile liegen.
+       if(nearest.d<=rowGap*.43){
          buckets[nearest.i].push(item);
-         continue;
-       }
-
-       // Text liegt ungefähr zwischen zwei Zeilen -> in Untis sehr häufig
-       // ein vertikal zusammengeführtes Feld / Doppelstunde.
-       let spanned=false;
-       for(let i=0;i<rows.length-1;i++){
-         const mid=(rows[i].y+rows[i+1].y)/2;
-         if(Math.abs(item.y-mid)<=rowGap*.24){
-           buckets[i].push(item);
-           buckets[i+1].push(item);
-           spanned=true;
-           break;
+       }else{
+         // Zusammengeführte Doppelstundenfelder liegen häufig mittig zwischen zwei Zeilen.
+         let assigned=false;
+         for(let i=0;i<dayRows.length-1;i++){
+           const mid=(dayRows[i].y+dayRows[i+1].y)/2;
+           if(Math.abs(item.y-mid)<=rowGap*.25){
+             buckets[i].push(item);
+             buckets[i+1].push(item);
+             assigned=true;
+             break;
+           }
          }
-       }
-
-       // Etwas großzügiger Fallback, damit kleine PDF-Baseline-Abweichungen
-       // nicht ganze Unterrichtsstunden verschwinden lassen.
-       if(!spanned && nearest.d<=rowGap*.62){
-         buckets[nearest.i].push(item);
+         if(!assigned && nearest.d<=rowGap*.62)buckets[nearest.i].push(item);
        }
      }
 
-     for(let ri=0;ri<rows.length;ri++){
-       const unique=[];
+     for(let ri=0;ri<dayRows.length;ri++){
+       const r=dayRows[ri];
+       const parts=[];
        const seen=new Set();
+
        for(const x of buckets[ri].sort((a,b)=>b.y-a.y||a.x-b.x)){
-         const key=x.text+"|"+Math.round(x.x)+"|"+Math.round(x.y);
+         const key=x.text+"|"+Math.round(x.x*2)+"|"+Math.round(x.y*2);
          if(seen.has(key))continue;
-         seen.add(key);unique.push(x.text.trim());
+         seen.add(key);
+         parts.push(x.text.trim());
        }
 
-       const raw=unique.join(" ").replace(/\s+/g," ").trim();
+       let raw=parts.join(" ").replace(/\s+/g," ").trim();
+       raw=cleanupScheduleRaw(raw);
+
        if(raw){
          schedule[classes[ci]].push({
            day,
-           start:rows[ri].start,
-           end:rows[ri].end,
-           raw
+           start:r.start || official[r.num-1]?.[0] || "",
+           end:r.end || official[r.num-1]?.[1] || "",
+           raw,
+           rowNum:r.num
          });
        }
      }
@@ -2992,70 +3116,57 @@ function parsePageItems(items){
  }
 
  for(const c of classes){
-   schedule[c]=repairParsedScheduleV20(schedule[c]);
+   schedule[c]=repairParsedScheduleV21(schedule[c]);
  }
 
  return {classes,schedule};
 }
 
-function repairParsedScheduleV20(list){
- const rows=[...(list||[])].sort((a,b)=>{
+function cleanupScheduleRaw(raw){
+ return String(raw||"")
+   .replace(/Klassenleitungs-\s*stunden/ig,"Klassenleitungsstunden")
+   .replace(/Klassenleitungs\s+stunden/ig,"Klassenleitungsstunden")
+   .replace(/\s+/g," ")
+   .trim();
+}
+
+function repairParsedScheduleV21(list){
+ const sorted=[...(list||[])].sort((a,b)=>{
    const d=dayOrder.indexOf(a.day)-dayOrder.indexOf(b.day);
    return d||a.start.localeCompare(b.start);
  });
 
- // 1. Textfragmente normalisieren.
- for(const x of rows){
-   x.raw=String(x.raw||"")
-     .replace(/Klassenleitungs-\s*stunden/ig,"Klassenleitungsstunden")
-     .replace(/Klassenleitungs\s+stunden/ig,"Klassenleitungsstunden")
-     .replace(/\s+/g," ").trim();
- }
-
- // 2. Sondertexte, die vom PDF über mehrere Zeilen verteilt wurden,
- //    zu EINEM Termin zusammensetzen.
+ // Identische Inhalte in zwei direkt aufeinanderfolgenden Reihen
+ // stammen bei Untis typischerweise aus einem zusammengeführten Doppelstundenfeld.
  const out=[];
- for(let i=0;i<rows.length;i++){
-   let cur={...rows[i]};
-   if(isSpecialScheduleText(cur.raw) || /klassenleitungs?-?$/i.test(cur.raw)){
-     let text=cur.raw;
-     let end=cur.end;
-     let j=i+1;
+ for(const item of sorted){
+   const cur={...item};
+   const last=out[out.length-1];
 
-     while(j<rows.length && rows[j].day===cur.day && end===rows[j].start){
-       const nxt=String(rows[j].raw||"").trim();
-       const looksContinuation=
-         /-$/.test(text) ||
-         /^stunden?$/i.test(nxt) ||
-         /^(leitungsstunden?|veranstaltung|tag)$/i.test(nxt) ||
-         (isSpecialScheduleText(text) && nxt.length<30 && !looksLikeNormalLesson(nxt));
+   if(last && last.day===cur.day && last.end===cur.start){
+     const a=cleanupScheduleRaw(last.raw);
+     const b=cleanupScheduleRaw(cur.raw);
 
-       if(!looksContinuation)break;
-
-       text=(text.replace(/-$/,"")+(/-$/.test(text)?"": " ")+nxt)
-         .replace(/Klassenleitungs\s*stunden/ig,"Klassenleitungsstunden")
-         .replace(/\s+/g," ").trim();
-       end=rows[j].end;
-       j++;
+     if(a===b && a){
+       last.end=cur.end;
+       last.blocks=(last.blocks||1)+1;
+       last.isDouble=true;
+       continue;
      }
 
-     cur.raw=text;
-     cur.end=end;
-     i=j-1;
+     // "Klassenleitungs-" / "stunden" o.ä.
+     if(/-$/.test(a) || (/klassenleitungs?-?$/i.test(a)&&/^stunden?$/i.test(b))){
+       last.raw=cleanupScheduleRaw(a.replace(/-$/,"")+b);
+       last.end=cur.end;
+       last.blocks=(last.blocks||1)+1;
+       continue;
+     }
    }
+
    out.push(cur);
  }
 
  return out;
-}
-
-function looksLikeNormalLesson(raw){
- const s=String(raw||"").toUpperCase();
- return /\bLF\s*\d+\b/.test(s) ||
-        /\b(?:M|E)[-\s]*FHR\b/.test(s) ||
-        /\bSSPU\s*\d*\b/.test(s) ||
-        /\bET\b/.test(s) ||
-        /\bR\d+\b/.test(s);
 }
 
 async function parsePdf(source){
@@ -3071,7 +3182,7 @@ async function parsePdf(source){
  const chosen=keys.find(k=>k.replace(/\s+/g," ").toUpperCase()===wanted)||keys[0];
  const lessons=combined[chosen]||[];if(!lessons.length)throw new Error("Keine Einträge für Klasse");
  const txt=allText.join(" "),dm=txt.match(/(?:ab\s+)?(\d{1,2}\.\s*(?:Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)\s+20\d{2})/i);
- data.timetable={isPlaceholder:false,classes:keys,selectedClass:chosen,lessons,sourceLabel:dm?dm[1]:"",fetchedAt:Date.now()};save();
+ data.timetable={isPlaceholder:false,classes:keys,selectedClass:chosen,lessons,sourceLabel:dm?dm[1]:"",fetchedAt:Date.now(),parserVersion:21};save();
 }
 
 window.loadRemotePlan=async function(manual=false){
@@ -3125,8 +3236,8 @@ window.loadRemotePlan=async function(manual=false){
 
 loadRemotePlan(false);
 
-if(localStorage.getItem("schoolbloom-plan-parser-version")!=="20"){
- localStorage.setItem("schoolbloom-plan-parser-version","20");
+if(localStorage.getItem("schoolbloom-plan-parser-version")!=="21"){
+ localStorage.setItem("schoolbloom-plan-parser-version","21");
  setTimeout(()=>loadRemotePlan(true),250);
 }
 if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});

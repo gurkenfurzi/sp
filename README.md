@@ -1,10 +1,9 @@
-# VERSION 20
+# VERSION 21
 
-Stundenplan:
-- neuer PDF-Zeilenparser: Zuordnung nach nächster Stundenzeile statt starrem Kästchen
-- Text zwischen zwei Untis-Zeilen wird als zusammengeführtes Feld / Doppelstunde erkannt
-- Doppelstunden werden zu einer Karte mit kompletter Zeitspanne zusammengeführt
-- Badge „Doppelstunde“
-- Entfall berücksichtigt Doppelstunden und erzeugt keine falsche Lücke innerhalb einer Doppelstunde
-- Sondertermine können über mehrere PDF-Zeilen zusammengesetzt werden
-- Live-Cloudflare-Abruf bleibt aktiv
+Wesentlicher Stundenplan-Parser-Fix:
+- PDF-Zeitzeilen werden zuerst aus mehreren Textobjekten zu kompletten horizontalen Zeilen zusammengesetzt.
+- Mo-1, Mo-2, Di-1 usw. werden danach erkannt.
+- Fehlende Zeilenpositionen werden anhand des Tagesrasters interpoliert.
+- Erst danach wird die M-U1-Spalte den Unterrichtszeiten zugeordnet.
+- Doppelstunden bleiben als ein Eintrag mit kompletter Zeitspanne sichtbar.
+- Cloudflare Live-Aktualisierung bleibt unverändert aktiv.
