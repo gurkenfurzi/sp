@@ -633,7 +633,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 18: echter Live-Refresh ===== */
+/* ===== VERSION 19: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
@@ -645,7 +645,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 18</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 19</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -1060,11 +1060,19 @@ function prettySubject(s){
 function mergeLessons(ls){
  const out=[];
  for(const x of ls){
-  const p=splitCell(x.raw),last=out[out.length-1];
-  if(last){const q=splitCell(last.raw);if(last.day===x.day&&last.end===x.start&&q.subject===p.subject&&q.room===p.room&&q.meta===p.meta){last.end=x.end;continue}}
-  out.push({...x});
- } return out;
+   const p=splitCell(x.raw),last=out[out.length-1];
+   if(last){
+     const q=splitCell(last.raw);
+     if(!p.special && !q.special && last.day===x.day && last.end===x.start &&
+        q.subject===p.subject && q.room===p.room && q.meta===p.meta){
+       last.end=x.end;continue;
+     }
+   }
+   out.push({...x});
+ }
+ return out;
 }
+
 function placeholderSchedule(){
  return [
  ["Mo","08:00","08:45","M LF8 GRA R13"],["Mo","08:45","09:30","M LF8 GRA R13"],["Mo","09:45","10:30","M LF11 GRU R13"],["Mo","10:30","11:15","M LF11 GRU R13"],["Mo","11:30","12:15","E-FHR BEC R14"],["Mo","12:15","13:00","E-FHR BEC R14"],
@@ -1074,7 +1082,7 @@ function placeholderSchedule(){
  ["Fr","08:00","08:45","M LF11 GRU R13"],["Fr","08:45","09:30","M LF11 GRU R13"],["Fr","09:45","10:30","SSPU 2 ZEI R13"],["Fr","10:30","11:15","SSPU 2 ZEI R13"]
  ].map(a=>({day:a[0],start:a[1],end:a[2],raw:a[3]}))
 }
-if(!data.timetable.lessons?.length && data.timetable.isPlaceholder)data.timetable.lessons=placeholderSchedule();
+
 
 window.openView=function(name){
  $$(".view").forEach(v=>v.classList.remove("active"));
@@ -1084,7 +1092,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 18";
+ $("#headerEyebrow").textContent="VERSION 19";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -1982,7 +1990,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 18: echter Live-Refresh ===== */
+/* ===== VERSION 19: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
@@ -2163,7 +2171,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 18: echter Live-Refresh ===== */
+/* ===== VERSION 19: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
@@ -2499,10 +2507,36 @@ function renderHome(){
  $("#homeOpen").innerHTML=items.length?items.map(x=>`<div class="card rowBetween"><div><b>${esc(x.subject)} · ${esc(x.text)}</b><div class="small">${fmtDate(x.date)}</div></div><span class="badge ${x.kind==="test"?"warn":""}">${x.kind==="test"?"Test":"Aufgabe"}</span></div>`).join(""):'<div class="empty">Alles erledigt 🎉</div>';
 }
 function lessonHtml(l){
- if(l.raw==="__ENTFALL__"||l.cancelled)return `<div class="lesson cancelled" style="--subject:#d6cfc9"><div class="time">${l.start}<br>${l.end}</div><div><div class="subject">Entfall</div><div class="small">Keine Stunde eingetragen</div></div><div class="room">—</div></div>`;
- const p=splitCell(l.raw),teacher=p.teacher||p.meta||"",key=lessonKey(l),extra=data.lessonExtras[key]||{},count=(extra.notes?.length||0)+(extra.tasks?.length||0)+(extra.files?.length||0);
- if(p.special)return `<div class="lesson specialLesson" style="--subject:#e9c887"><div class="time">${l.start}<br>${l.end}</div><div><div class="subject">${esc(p.subject)}</div></div></div>`;
- return `<div class="lesson lessonClickable" style="--subject:${hashColor(p.subject)}" onclick='openLessonDetails(${JSON.stringify(JSON.stringify(l))})'><div class="time">${l.start}<br>${l.end}</div><div><div class="subject">${esc(prettySubject(p.subject))}</div><div class="small">${teacher?`🎀 ${esc(teacher)}`:""}</div>${count?`<div class="lessonBadge"><span class="lessonExtraDot">✿ ${count} Eintrag${count===1?"":"e"}</span></div>`:""}</div>${p.room?`<div class="room">${esc(p.room)}</div>`:""}</div>`;
+ if(l.raw==="__ENTFALL__"||l.cancelled){
+   return `<div class="lesson cancelled" style="--subject:#d6cfc9">
+     <div class="time">${l.start}<br>${l.end}</div>
+     <div><div class="subject">Entfall</div></div>
+     <div class="room">—</div>
+   </div>`;
+ }
+
+ const p=splitCell(l.raw),teacher=p.teacher||p.meta||"",key=lessonKey(l),extra=data.lessonExtras[key]||{};
+ const count=(extra.notes?.length||0)+(extra.tasks?.length||0)+(extra.files?.length||0);
+
+ if(p.special){
+   let label=String(p.subject||l.raw).replace(/\s+/g," ").trim();
+   // Wenn der Sondertext seine eigene Uhrzeit enthält, nur diesen Text zeigen.
+   const hasOwnTime=/\b\d{1,2}(?::\d{2})?\s*Uhr\b/i.test(label);
+   return `<div class="lesson specialLesson" style="--subject:#e9c887">
+     ${hasOwnTime?"":`<div class="time">${l.start}<br>${l.end}</div>`}
+     <div style="${hasOwnTime?"grid-column:1/-1":""}"><div class="subject">${esc(label)}</div></div>
+   </div>`;
+ }
+
+ return `<div class="lesson lessonClickable" style="--subject:${hashColor(p.subject)}" onclick='openLessonDetails(${JSON.stringify(JSON.stringify(l))})'>
+   <div class="time">${l.start}<br>${l.end}</div>
+   <div>
+     <div class="subject">${esc(prettySubject(p.subject))}</div>
+     <div class="small">${teacher?`🎀 ${esc(teacher)}`:""}</div>
+     ${count?`<div class="lessonBadge"><span class="lessonExtraDot">✿ ${count} Eintrag${count===1?"":"e"}</span></div>`:""}
+   </div>
+   ${p.room?`<div class="room">${esc(p.room)}</div>`:""}
+ </div>`;
 }
 
 function renderPlan(){
@@ -2725,28 +2759,145 @@ function combineNearby(items,yTol=3.5){
  for(const g of groups)g.items.sort((a,b)=>a.x-b.x);return groups
 }
 function parsePageItems(items){
- const arr=items.map(it=>({text:(it.str||"").trim(),x:it.transform?.[4]||0,y:it.transform?.[5]||0,w:it.width||0})).filter(x=>x.text);
- const classPattern=/^(?:BF\s*\d+[A-Z]?|[MW]\s*[OU]\s*\d+|[A-Z]{1,3}\s*\d+[A-Z]?)$/i;
- const headers=arr.filter(x=>classPattern.test(x.text.replace(/\s+/g," ").trim())).sort((a,b)=>a.x-b.x);
- if(!headers.length)return null;
- const classes=headers.map(x=>x.text.replace(/\s+/g," ").trim()),centers=headers.map(x=>x.x+x.w/2);
- const bounds=centers.map((c,i)=>({left:i===0?c-(centers[i+1]-c)/2:(centers[i-1]+c)/2,right:i===centers.length-1?c+(c-centers[i-1])/2:(c+centers[i+1])/2}));
- const timeRe=/(Mo|Di|Mi|Do|Fr)[^\/]*\/\s*(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})/i;
- const rows=arr.map(x=>{const m=x.text.match(timeRe);return m?{day:m[1][0].toUpperCase()+m[1][1].toLowerCase(),start:m[2],end:m[3],y:x.y}:null}).filter(Boolean).sort((a,b)=>b.y-a.y);
+ const arr=items.map(it=>({
+   text:String(it.str||"").trim(),
+   x:it.transform?.[4]||0,
+   y:it.transform?.[5]||0,
+   w:it.width||0,
+   h:it.height||0
+ })).filter(x=>x.text);
+
+ if(!arr.length)return null;
+
+ // WICHTIG: Nur echte PHS-Klassen dürfen Spaltenköpfe sein.
+ // Alte Versionen hielten z.B. "LF8" für einen Klassenkopf und verschoben dadurch alle Spalten.
+ const classPattern=/^(?:BF\s*(?:1A|1B|2)|[MW]\s*[OU]\s*[12])$/i;
+
+ // Klassenüberschriften liegen praktisch auf derselben Y-Linie.
+ const headerCandidates=arr.filter(x=>classPattern.test(x.text.replace(/\s+/g," ").trim()));
+ if(!headerCandidates.length)return null;
+
+ // Größte Gruppe annähernd gleicher Y-Position = echte Kopfzeile.
+ const groups=[];
+ for(const x of headerCandidates){
+   let g=groups.find(g=>Math.abs(g.y-x.y)<8);
+   if(!g){g={y:x.y,items:[]};groups.push(g)}
+   g.items.push(x);
+ }
+ const headerGroup=groups.sort((a,b)=>b.items.length-a.items.length)[0];
+ const headers=headerGroup.items.sort((a,b)=>a.x-b.x);
+ if(headers.length<3)return null;
+
+ const classes=headers.map(x=>x.text.replace(/\s+/g," ").trim());
+ const centers=headers.map(x=>x.x+x.w/2);
+
+ const bounds=centers.map((c,i)=>({
+   left:i===0 ? c-(centers[i+1]-c)/2 : (centers[i-1]+c)/2,
+   right:i===centers.length-1 ? c+(c-centers[i-1])/2 : (c+centers[i+1])/2
+ }));
+
+ // Untis-Zeilenbezeichnungen
+ const timeRe=/\b(Mo|Di|Mi|Do|Fr)\s*-\s*\d+\s*\/\s*(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})/i;
+ const rows=arr.map(x=>{
+   const m=x.text.match(timeRe);
+   return m ? {
+     day:m[1][0].toUpperCase()+m[1].slice(1).toLowerCase(),
+     start:m[2],end:m[3],y:x.y
+   } : null;
+ }).filter(Boolean).sort((a,b)=>b.y-a.y);
+
  if(!rows.length)return null;
- const gaps=[];for(let i=1;i<rows.length;i++)gaps.push(Math.abs(rows[i-1].y-rows[i].y));
- const rowGap=gaps.length?gaps.sort((a,b)=>a-b)[Math.floor(gaps.length/2)]:18;
- const schedule={};classes.forEach(c=>schedule[c]=[]);
+
+ // Typischen Abstand innerhalb eines Tages ermitteln.
+ const gaps=[];
+ for(let i=1;i<rows.length;i++){
+   const d=Math.abs(rows[i-1].y-rows[i].y);
+   if(d>2 && d<40)gaps.push(d);
+ }
+ const sortedGaps=gaps.sort((a,b)=>a-b);
+ const rowGap=sortedGaps.length ? sortedGaps[Math.floor(sortedGaps.length/2)] : 16;
+
+ const schedule={};
+ classes.forEach(c=>schedule[c]=[]);
+
  for(const r of rows){
-   const top=r.y+rowGap*.48,bottom=r.y-rowGap*.48;
+   // Etwas großzügiger als früher, damit mehrzeilige Inhalte nicht verloren gehen.
+   const top=r.y+rowGap*.54;
+   const bottom=r.y-rowGap*.54;
+
    for(let ci=0;ci<classes.length;ci++){
      const bd=bounds[ci];
-     const parts=arr.filter(x=>{const cx=x.x+x.w/2;return cx>=bd.left&&cx<=bd.right&&x.y<=top&&x.y>=bottom&&!timeRe.test(x.text)&&!classPattern.test(x.text.replace(/\s+/g," ").trim())}).sort((a,b)=>b.y-a.y||a.x-b.x).map(x=>x.text).filter(Boolean);
+
+     const parts=arr.filter(x=>{
+       const cx=x.x+x.w/2;
+       const txt=x.text.replace(/\s+/g," ").trim();
+       if(cx<bd.left || cx>bd.right)return false;
+       if(x.y>top || x.y<bottom)return false;
+       if(timeRe.test(txt))return false;
+       if(classPattern.test(txt) && Math.abs(x.y-headerGroup.y)<8)return false;
+       // Raumnamen neben dem Klassenkopf nicht als Unterricht übernehmen
+       if(Math.abs(x.y-headerGroup.y)<12)return false;
+       return true;
+     }).sort((a,b)=>b.y-a.y||a.x-b.x)
+       .map(x=>x.text.trim())
+       .filter(Boolean);
+
      const raw=parts.join(" ").replace(/\s+/g," ").trim();
-     if(raw)schedule[classes[ci]].push({day:r.day,start:r.start,end:r.end,raw});
+     if(raw){
+       schedule[classes[ci]].push({
+         day:r.day,start:r.start,end:r.end,raw
+       });
+     }
    }
  }
+
+ // Mehrzeilige / zusammengezogene Sondertermine reparieren.
+ for(const c of classes){
+   schedule[c]=repairParsedSchedule(schedule[c]);
+ }
+
  return {classes,schedule};
+}
+
+function repairParsedSchedule(list){
+ const sorted=[...(list||[])].sort((a,b)=>{
+   const di=dayOrder.indexOf(a.day)-dayOrder.indexOf(b.day);
+   return di || a.start.localeCompare(b.start);
+ });
+ const out=[];
+
+ for(let i=0;i<sorted.length;i++){
+   const cur={...sorted[i]};
+   const next=sorted[i+1];
+
+   // PDF kann "Klassenleitungs-" und "stunden" auf zwei Textzeilen verteilen.
+   if(next && cur.day===next.day && cur.end===next.start){
+     const a=String(cur.raw||"").trim();
+     const b=String(next.raw||"").trim();
+
+     const continuation =
+       /-$/.test(a) ||
+       (/klassenleitungs?-?$/i.test(a) && /^stunden?$/i.test(b)) ||
+       (/^(stunden?|unterricht|tag)$/i.test(b) && isSpecialScheduleText(a));
+
+     if(continuation){
+       cur.raw=(a.replace(/-$/,"")+b).replace(/klassenleitungsstunden/i,"Klassenleitungsstunden");
+       cur.end=next.end;
+       i++;
+     }
+   }
+
+   // Häufige PDF-Trennung normalisieren
+   cur.raw=String(cur.raw||"")
+     .replace(/Klassenleitungs-\s*stunden/ig,"Klassenleitungsstunden")
+     .replace(/Klassenleitungsstunden/ig,"Klassenleitungsstunden")
+     .replace(/\s+/g," ")
+     .trim();
+
+   out.push(cur);
+ }
+
+ return out;
 }
 
 async function parsePdf(source){
@@ -2816,6 +2967,10 @@ window.loadRemotePlan=async function(manual=false){
 
 loadRemotePlan(false);
 
+if(localStorage.getItem("schoolbloom-plan-parser-version")!=="19"){
+ localStorage.setItem("schoolbloom-plan-parser-version","19");
+ setTimeout(()=>loadRemotePlan(true),250);
+}
 if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});
 </script>
 </body>

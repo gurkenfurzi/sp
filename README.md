@@ -1,12 +1,9 @@
-# VERSION 18
+# VERSION 19
 
-Der Button **Jetzt aktualisieren** lädt die aktuelle PHS-Stundenplan-PDF sofort live über:
-
-https://dry-surf-fec5.muelliaccc.workers.dev
-
-Fallbacks:
-1. Cloudflare Worker live
-2. GitHub Actions Spiegel (`Stundenplan.pdf`)
-3. direkter PHS-Abruf
-
-Nach jedem erfolgreichen Abruf zeigt die App Quelle und Uhrzeit an.
+Stundenplan-Parser-Reparatur:
+- nur echte Klassenüberschriften (BF 1A/B, BF 2, M O1/U1, W O1/U1/U2) werden als Spalten erkannt
+- LF8/LF11 usw. können nicht mehr fälschlich Klassenköpfe werden
+- mehrzeilige Sondertermine werden zusammengesetzt
+- „Klassenleitungs-“ + „stunden“ wird zu „Klassenleitungsstunden“
+- Sondertermine werden nicht mit normalen Unterrichtsstunden verschmolzen
+- Live-Cloudflare-Abruf aus Version 18 bleibt bestehen
