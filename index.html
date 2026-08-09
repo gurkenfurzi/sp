@@ -500,7 +500,7 @@ body.modalOpen{overflow:hidden;position:fixed;width:100%}
 
 
 /* ===== V11 Canva-like editor ===== */
-body.editorMode header,body.editorMode #nav{display:none!important}
+body.editorMode .header,body.editorMode #nav{display:none!important}
 body.editorMode main{max-width:none;padding:8px 8px 30px}
 body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .canvasEditorShell{max-width:1180px;margin:auto}
@@ -528,6 +528,55 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .stylePreset{font-size:11px;padding:7px 9px}
 }
 
+
+/* ===== V12 interaction + icon overhaul ===== */
+:root{--icon:#8e7168}
+.nav button b{display:none!important}
+.nav button svg{width:22px;height:22px;display:block;margin:auto;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nav button.active svg{stroke:currentColor}
+.editorDock button svg,.editorDock label svg,.editorIcon svg,.miniIcon svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.editorDock button,.editorDock label{font-size:0}
+.editorIcon,.miniIcon{display:grid;place-items:center;font-size:0}
+.editorDock{scrollbar-width:none}
+.editorDock::-webkit-scrollbar{display:none}
+.formatStrip{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none}
+.formatStrip::-webkit-scrollbar{display:none}
+.formatChip{flex:0 0 auto;border:1px solid #e7cec7;background:#fffdf9;border-radius:999px;padding:7px 10px;color:#765f56;font-size:11px;font-weight:850}
+.formatAdd{width:34px;height:34px;border-radius:50%!important;padding:0!important;font-size:20px!important;display:grid!important;place-items:center!important}
+.cobj{cursor:grab}
+.cobj.editing{cursor:text;outline:2px solid #9eb8e9!important}
+.cobj.selected:not(.editing){outline:2px solid #e99e9a;outline-offset:3px}
+.cobj .resizeHandle,.cobj .rotateHandle{display:none;position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid #e99e9a;z-index:50}
+.cobj .resizeHandle{right:-9px;bottom:-9px}
+.cobj .rotateHandle{right:-9px;top:-30px;background:#fff}
+.cobj .rotateHandle:after{content:"";position:absolute;left:6px;top:14px;width:2px;height:15px;background:#e99e9a}
+.cobj.selected:not(.locked) .resizeHandle,.cobj.selected:not(.locked) .rotateHandle{display:block}
+.cobj.locked{cursor:default;outline-style:dashed!important}
+.vectorObj{position:absolute;inset:0;width:794px;height:1123px;pointer-events:none;overflow:visible}
+.vectorObj .shapeHit{pointer-events:all;cursor:grab}
+.vectorObj.locked .shapeHit{cursor:default}
+.vectorSelectBox{fill:none;stroke:#e99e9a;stroke-width:2;stroke-dasharray:6 4;pointer-events:none}
+.vectorHandle{fill:#fff;stroke:#e99e9a;stroke-width:2;pointer-events:all;cursor:pointer}
+.vectorRotateLine{stroke:#e99e9a;stroke-width:2;pointer-events:none}
+.vectorObj.selected .shapeHit{filter:drop-shadow(0 0 2px rgba(233,158,154,.8))}
+.canvasSvg{pointer-events:none!important;z-index:30}
+.canvasSvg.drawing{pointer-events:auto!important}
+.canvasObjects{z-index:20}
+.inspectorGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.layerItem{padding:6px 8px}
+.layerRow{display:flex;align-items:center;justify-content:space-between;gap:6px;width:100%}
+.layerMeta{display:flex;align-items:center;gap:6px;min-width:0}
+.layerName{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.layerTools{display:flex;gap:3px}
+.layerTools button{width:27px;height:27px;border:0;background:#fff7f3;border-radius:8px;color:#80675e;padding:0;font-size:13px}
+.editorHintStrong{border:1px solid #d9e4c4;background:#f5f9eb;color:#6e8453;border-radius:12px;padding:8px 10px;font-size:11px}
+.customFormatPreview{padding:10px;border-radius:12px;margin:8px 0}
+@media(max-width:600px){
+ .editorDock button,.editorDock label{flex-basis:38px;width:38px;height:38px}
+ .editorDock button svg,.editorDock label svg{width:18px;height:18px}
+ .objectPanel{margin-top:4px}
+}
+
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.18/paper-full.min.js"></script>
 </head>
@@ -535,7 +584,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">SchoolBloom</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 12</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -671,30 +720,30 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
   <section class="view" id="view-sheet-editor">
     <div class="canvasEditorShell">
       <div class="canvasTopbar">
-        <button class="editorIcon" title="Zurück" onclick="closeSheetEditor()">‹</button>
+        <button class="editorIcon" title="Zurück" onclick="closeSheetEditor()"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg></button>
         <div class="editorTitle"><b>Lernblatt</b><span class="wordStatus" id="wordStatus">Nicht gespeichert</span></div>
         <div class="editorActions">
-          <button class="editorIcon" title="Exportieren" onclick="exportCanvasHTML()">⇩</button>
-          <button class="editorIcon" title="PDF / Drucken" onclick="printCanvasSheet()">⎙</button>
-          <button class="editorIcon primaryIcon" title="Speichern" onclick="saveCanvasSheet()">✓</button>
+          <button class="editorIcon" title="Exportieren" onclick="exportCanvasHTML()"><svg viewBox="0 0 24 24"><path d="M12 3v12M8 11l4 4 4-4M4 19h16"/></svg></button>
+          <button class="editorIcon" title="PDF / Drucken" onclick="printCanvasSheet()"><svg viewBox="0 0 24 24"><path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="7" y="14" width="10" height="7"/></svg></button>
+          <button class="editorIcon primaryIcon" title="Speichern" onclick="saveCanvasSheet()"><svg viewBox="0 0 24 24"><path d="M5 3h12l2 2v16H5z"/><path d="M8 3v6h8V3M8 21v-7h8v7"/></svg></button>
         </div>
       </div>
 
       <div class="editorDock" aria-label="Werkzeuge">
-        <button title="Text" onclick="addCanvasText('body')">T</button>
-        <button title="Überschrift" onclick="addCanvasText('h1')">H</button>
-        <button title="Tabelle" onclick="openTableDialog()">▦</button>
-        <label title="Bild" for="canvasImageInput">▧</label>
+        <button title="Text" onclick="addCanvasText('body')"><svg viewBox="0 0 24 24"><path d="M5 5h14M12 5v14M8 19h8"/></svg></button>
+        <button title="Überschrift" onclick="addCanvasText('h1')"><svg viewBox="0 0 24 24"><path d="M5 5v14M15 5v14M5 12h10M19 8v11M17 10l2-2 2 2"/></svg></button>
+        <button title="Tabelle" onclick="openTableDialog()"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 10h18M9 4v16M15 4v16"/></svg></button>
+        <label title="Bild" for="canvasImageInput"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="9" r="1.5"/><path d="m5 18 5-5 3 3 2-2 4 4"/></svg></label>
         <input id="canvasImageInput" type="file" accept="image/*" style="display:none" onchange="addCanvasImage(this.files[0]);this.value=''">
-        <button title="Sticker" onclick="toggleStickerPanel()">✿</button>
-        <button title="Karo-Zettel" onclick="addPaperSticker('grid')">▦̇</button>
-        <button title="Linierter Zettel" onclick="addPaperSticker('line')">☰</button>
-        <button title="Leerer Zettel" onclick="addPaperSticker('blank')">□</button>
-        <button title="Klebeband" onclick="addTapeSticker()">▰</button>
-        <button title="Rechteck" onclick="addVectorShape('rect')">▭</button>
-        <button title="Kreis" onclick="addVectorShape('ellipse')">○</button>
-        <button title="Dreieck" onclick="addVectorShape('triangle')">△</button>
-        <button title="Freier Pfad zeichnen" onclick="setVectorTool('pen')">⌁</button>
+        <button title="Sticker" onclick="toggleStickerPanel()"><svg viewBox="0 0 24 24"><path d="M12 3c1.8 0 2.5 2.1 3.7 2.8 1.3.8 3.4-.2 4.3 1.1.9 1.4-.6 3.1-.3 4.6.3 1.5 2.3 2.6 1.9 4.2-.4 1.5-2.7 1.5-3.8 2.5-1.1 1-1.1 3.3-2.6 3.7-1.6.4-2.7-1.6-4.2-1.9-1.5-.3-3.2 1.2-4.6.3-1.3-.9-.3-3-.9-4.3C4.8 14.8 2.7 14.1 3 12.5c.3-1.6 2.5-2 3.3-3.3C7.1 8 6.6 5.8 8 5.2 9.4 4.6 10.3 3 12 3Z"/></svg></button>
+        <button title="Karo-Zettel" onclick="addPaperSticker('grid')"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zM8 4v16M12 4v16M16 4v16M4 8h16M4 12h16M4 16h16"/></svg></button>
+        <button title="Linierter Zettel" onclick="addPaperSticker('line')"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg></button>
+        <button title="Leerer Zettel" onclick="addPaperSticker('blank')"><svg viewBox="0 0 24 24"><path d="M6 3h9l3 3v15H6z"/><path d="M15 3v4h4"/></svg></button>
+        <button title="Klebeband" onclick="addTapeSticker()"><svg viewBox="0 0 24 24"><path d="m5 8 14-2 1 9-14 2z"/></svg></button>
+        <button title="Rechteck" onclick="addVectorShape('rect')"><svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="12" rx="1"/></svg></button>
+        <button title="Kreis" onclick="addVectorShape('ellipse')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg></button>
+        <button title="Dreieck" onclick="addVectorShape('triangle')"><svg viewBox="0 0 24 24"><path d="m12 4 9 16H3Z"/></svg></button>
+        <button title="Freier Pfad zeichnen" onclick="setVectorTool('pen')"><svg viewBox="0 0 24 24"><path d="M4 18c4-12 7 3 10-7 2-6 4-2 6-7"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/><circle cx="20" cy="4" r="1.2" fill="currentColor"/></svg></button>
       </div>
 
       <div class="stylePresetBar" id="stylePresetBar"></div>
@@ -713,7 +762,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
       </div>
 
       <div class="objectPanel">
-        <div class="rowBetween"><b>Eigenschaften</b><div class="row"><button class="miniIcon" title="Sperren/Entsperren" onclick="toggleSelectedLock()">🔒</button><button class="miniIcon dangerMini" title="Löschen" onclick="deleteSelectedCanvasItem()">⌫</button></div></div>
+        <div class="rowBetween"><b>Eigenschaften</b><div class="row"><button class="miniIcon" title="Sperren/Entsperren" onclick="toggleSelectedLock()"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></button><button class="miniIcon dangerMini" title="Löschen" onclick="deleteSelectedCanvasItem()"><svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M7 7l1 14h8l1-14M10 11v6M14 11v6"/></svg></button></div></div>
         <div id="canvasInspector" class="small">Wähle einen Text, ein Bild, eine Tabelle, einen Sticker oder eine Form aus.</div>
       </div>
 
@@ -793,12 +842,6 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
     </div>
 
     <div class="section panel">
-      <h2>KI Lernstudio</h2>
-      <div id="aiConnectionSettings" class="notificationBox">KI-Verbindung wird geprüft …</div>
-      <p class="small">Deine statische GitHub Pages-Seite kann die Cloud-KI erst nutzen, wenn der Server-Endpunkt mit API-Key veröffentlicht wurde. Bis dahin nutzt SchoolBloom automatisch den lokalen Entwurf statt einer Fehlermeldung.</p>
-    </div>
-
-    <div class="section panel">
       <h2>Daten</h2>
       <p class="small">Diese Version speichert deine Daten lokal auf diesem Gerät.</p>
       <button class="ghost" onclick="exportData()">Backup exportieren</button>
@@ -810,12 +853,12 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 </div>
 
 <nav class="nav" id="nav">
-  <button class="active" data-view="home"><b>⌂</b><span>Home</span></button>
-  <button data-view="plan"><b>▦</b><span>Plan</span></button>
-  <button data-view="tasks"><b>✓</b><span>Aufgaben</span></button>
-  <button data-view="grades"><b>☆</b><span>Noten</span></button>
-  <button data-view="study"><b>◷</b><span>Lernen</span></button>
-  <button data-view="more"><b>⋯</b><span>Mehr</span></button>
+  <button class="active" data-view="home"><svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/><path d="M9.5 20v-6h5v6"/></svg><span>Home</span></button>
+  <button data-view="plan"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M8 14h2M14 14h2M8 18h2M14 18h2"/></svg><span>Plan</span></button>
+  <button data-view="tasks"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg><span>Aufgaben</span></button>
+  <button data-view="grades"><svg viewBox="0 0 24 24"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.8 1-6.1-4.4-4.3 6.1-.9Z"/></svg><span>Noten</span></button>
+  <button data-view="study"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v5l3 2M9 3h6"/></svg><span>Lernen</span></button>
+  <button data-view="more"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg><span>Mehr</span></button>
 </nav>
 
 <div class="modalWrap" id="modalWrap" onclick="if(event.target===this)closeModal()">
@@ -970,7 +1013,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent=data.settings.school||"SchoolBloom";
+ $("#headerEyebrow").textContent="VERSION 12";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -1190,11 +1233,11 @@ window.closeSheetEditor=function(){openTopic(selectedSubjectId,selectedTopicId)}
 
 let canvasState={objects:[],vectors:[],selectedType:null,selectedId:null,vectorTool:"select",drawing:null,drag:null};
 const canvasStylesDefault=[
- {id:"h1",name:"Überschrift 1",type:"text",fontSize:34,fontWeight:"900",color:"#4f4540",fontFamily:"Georgia, serif"},
- {id:"h2",name:"Unterüberschrift",type:"text",fontSize:24,fontWeight:"850",color:"#66564f",fontFamily:"Arial, sans-serif"},
- {id:"body",name:"Normaltext",type:"text",fontSize:16,fontWeight:"400",color:"#3d3835",fontFamily:"Arial, sans-serif"},
- {id:"task",name:"Aufgabe",type:"task",fontSize:16,fontWeight:"700",color:"#6b554c",fontFamily:"Arial, sans-serif"},
- {id:"merke",name:"Merke",type:"merke",fontSize:16,fontWeight:"700",color:"#765750",fontFamily:"Arial, sans-serif"}
+ {id:"h1",name:"Überschrift 1",type:"text",fontSize:34,fontWeight:"900",color:"#4f4540",fontFamily:"Georgia",bg:"transparent",borderColor:"transparent",borderWidth:0,radius:0,padding:7},
+ {id:"h2",name:"Unterüberschrift",type:"text",fontSize:24,fontWeight:"800",color:"#66564f",fontFamily:"Trebuchet MS",bg:"transparent",borderColor:"transparent",borderWidth:0,radius:0,padding:7},
+ {id:"body",name:"Normal",type:"text",fontSize:16,fontWeight:"400",color:"#3d3835",fontFamily:"Arial",bg:"transparent",borderColor:"transparent",borderWidth:0,radius:0,padding:7},
+ {id:"task",name:"Aufgabe",type:"block",fontSize:16,fontWeight:"700",color:"#6b554c",fontFamily:"Trebuchet MS",bg:"#fff5eb",borderColor:"#efd4be",borderWidth:1,radius:14,padding:12,prefix:"Aufgabe: "},
+ {id:"merke",name:"Merke",type:"block",fontSize:16,fontWeight:"700",color:"#765750",fontFamily:"Georgia",bg:"#fff0ef",borderColor:"#efcac7",borderWidth:1,radius:14,padding:12,prefix:"Merke: "}
 ];
 
 function canvasPresets(){
@@ -1203,44 +1246,69 @@ function canvasPresets(){
 }
 function renderStylePresets(){
  const bar=$("#stylePresetBar");if(!bar)return;
- bar.innerHTML=canvasPresets().map(s=>`<button class="stylePreset" onclick="addCanvasText('${s.id}')">${esc(s.name)}</button>`).join("");
+ bar.className="formatStrip";
+ bar.innerHTML=canvasPresets().map(s=>`<button class="formatChip" onclick="addCanvasText('${s.id}')">${esc(s.name)}</button>`).join("")+
+ `<button class="formatChip formatAdd" title="Neues Textformat" onclick="createCustomStylePreset()">＋</button>`;
 }
-window.createCustomStylePreset=function(){
- openModal(`<h2>Eigenes Textformat</h2>
+window.createCustomStylePreset=function(editId=null){
+ const old=editId?canvasPresets().find(x=>x.id===editId):null;
+ openModal(`<h2>${old?"Textformat bearbeiten":"Neues Textformat"}</h2>
  <div class="formGrid">
-  <div><label>Name</label><input id="presetName" placeholder="z. B. Definition"></div>
-  <div><label>Schriftgröße</label><input id="presetSize" type="number" min="8" max="72" value="18"></div>
-  <div><label>Schriftfarbe</label><input id="presetColor" type="color" value="#4f4540"></div>
-  <div><label>Hintergrund</label><input id="presetBg" type="color" value="#fffaf4"></div>
-  <div><label>Schrift</label><select id="presetFont"><option>Arial</option><option>Georgia</option><option>Trebuchet MS</option><option>Verdana</option><option>Times New Roman</option><option>Courier New</option></select></div>
-  <div><label>Fett</label><select id="presetWeight"><option value="400">Normal</option><option value="700">Fett</option><option value="900">Sehr fett</option></select></div>
-  <div><label>Art</label><select id="presetType"><option value="text">Text</option><option value="task">Aufgabe-Kasten</option><option value="merke">Merke-Kasten</option></select></div>
+  <div><label>Name</label><input id="presetName" value="${esc(old?.name||"")}" placeholder="z. B. Definition"></div>
+  <div><label>Schriftgröße</label><input id="presetSize" type="number" min="8" max="72" value="${old?.fontSize||16}"></div>
+  <div><label>Schriftart</label><select id="presetFont">${["Arial","Georgia","Trebuchet MS","Verdana","Times New Roman","Courier New"].map(x=>`<option ${x===(old?.fontFamily||"Arial")?"selected":""}>${x}</option>`).join("")}</select></div>
+  <div><label>Schriftfarbe</label><input id="presetColor" type="color" value="${old?.color||"#4f4540"}"></div>
+  <div><label>Schriftgewicht</label><select id="presetWeight"><option value="400" ${old?.fontWeight=="400"?"selected":""}>Normal</option><option value="700" ${old?.fontWeight=="700"?"selected":""}>Fett</option><option value="900" ${old?.fontWeight=="900"?"selected":""}>Sehr fett</option></select></div>
+  <div><label>Kasten</label><select id="presetBox"><option value="no" ${old?.type==="text"?"selected":""}>Kein Kasten</option><option value="yes" ${old?.type==="block"?"selected":""}>Mit Kasten</option></select></div>
+  <div><label>Hintergrund</label><input id="presetBg" type="color" value="${old?.bg&&old.bg!=="transparent"?old.bg:"#fff5eb"}"></div>
+  <div><label>Kontur</label><input id="presetBorder" type="color" value="${old?.borderColor&&old.borderColor!=="transparent"?old.borderColor:"#efd4be"}"></div>
+  <div><label>Konturdicke</label><input id="presetBorderWidth" type="number" min="0" max="12" value="${old?.borderWidth||1}"></div>
+  <div><label>Ecken rund</label><input id="presetRadius" type="number" min="0" max="60" value="${old?.radius||14}"></div>
+  <div><label>Innenabstand</label><input id="presetPadding" type="number" min="0" max="50" value="${old?.padding||10}"></div>
+  <div><label>Starttext</label><input id="presetPrefix" value="${esc(old?.prefix||"")}"></div>
  </div>
- <button class="primary" style="margin-top:10px" onclick="saveCustomStylePreset()">Speichern</button>`);
+ <button class="primary" style="margin-top:10px" onclick="saveCustomStylePreset('${editId||""}')">Speichern</button>
+ ${old&&!String(old.id).startsWith("h")&&!["body","task","merke"].includes(old.id)?`<button class="dangerBtn" style="margin-top:10px" onclick="deleteCustomStylePreset('${old.id}')">Format löschen</button>`:""}`);
 }
-window.saveCustomStylePreset=function(){
- const arr=JSON.parse(localStorage.getItem("schoolbloom-canvas-styles")||"[]");
- arr.push({id:"custom-"+Date.now(),name:$("#presetName").value.trim()||"Eigenes Format",type:$("#presetType").value,fontSize:+$("#presetSize").value||16,fontWeight:$("#presetWeight").value,color:$("#presetColor").value,bg:$("#presetBg").value,fontFamily:$("#presetFont")?.value||"Arial"});
+window.saveCustomStylePreset=function(editId=""){
+ let arr=JSON.parse(localStorage.getItem("schoolbloom-canvas-styles")||"[]");
+ const box=$("#presetBox").value==="yes";
+ const obj={id:editId||"custom-"+Date.now(),name:$("#presetName").value.trim()||"Eigenes Format",type:box?"block":"text",
+ fontSize:+$("#presetSize").value||16,fontWeight:$("#presetWeight").value,color:$("#presetColor").value,
+ fontFamily:$("#presetFont").value,bg:box?$("#presetBg").value:"transparent",borderColor:box?$("#presetBorder").value:"transparent",
+ borderWidth:box?(+$("#presetBorderWidth").value||0):0,radius:box?(+$("#presetRadius").value||0):0,padding:+$("#presetPadding").value||7,prefix:$("#presetPrefix").value||""};
+ const i=arr.findIndex(x=>x.id===editId);if(i>=0)arr[i]=obj;else arr.push(obj);
+ localStorage.setItem("schoolbloom-canvas-styles",JSON.stringify(arr));closeModal();renderStylePresets();
+}
+window.deleteCustomStylePreset=function(idv){
+ let arr=JSON.parse(localStorage.getItem("schoolbloom-canvas-styles")||"[]");arr=arr.filter(x=>x.id!==idv);
  localStorage.setItem("schoolbloom-canvas-styles",JSON.stringify(arr));closeModal();renderStylePresets();
 }
 
+function nextCanvasZ(){
+ const zs=[...canvasState.objects.map(x=>x.z||0),...canvasState.vectors.map(x=>x.z||0)];return (zs.length?Math.max(...zs):0)+1;
+}
 function newCanvasObject(styleId){
  const s=canvasPresets().find(x=>x.id===styleId)||canvasStylesDefault[2];
- return {id:id(),kind:s.type||"text",x:80,y:90,w:s.type==="text"?360:420,h:s.type==="text"?70:100,text:s.type==="task"?"Aufgabe: ":"Merke: ",style:{fontSize:s.fontSize,fontWeight:s.fontWeight,color:s.color,fontFamily:s.fontFamily,background:s.bg||"",textAlign:"left",borderRadius:14}};
+ return {id:id(),z:nextCanvasZ(),kind:s.type==="block"?"block":"text",formatId:s.id,x:80,y:90,w:s.type==="block"?430:360,h:s.type==="block"?100:70,
+ text:s.prefix||"",rotation:0,locked:false,editing:false,
+ style:{fontSize:s.fontSize,fontWeight:s.fontWeight,color:s.color,fontFamily:s.fontFamily||"Arial",background:s.bg||"transparent",
+ borderColor:s.borderColor||"transparent",borderWidth:s.borderWidth||0,borderRadius:s.radius||0,padding:s.padding??7,textAlign:"left"}};
 }
 window.addCanvasText=function(styleId){
  const o=newCanvasObject(styleId);
  if(styleId==="h1")o.text="Überschrift";
  else if(styleId==="h2")o.text="Unterüberschrift";
  else if(styleId==="body")o.text="Text eingeben …";
- else if(styleId==="task")o.text="Aufgabe: ";
- else if(styleId==="merke")o.text="Merke: ";
+ else if(styleId==="task"&&!o.text)o.text="Aufgabe: ";
+ else if(styleId==="merke"&&!o.text)o.text="Merke: ";
+ else if(!o.text)o.text="Text eingeben …";
  canvasState.objects.push(o);renderCanvasObjects();selectCanvasObject(o.id);
  markCanvasDirty();
 }
 window.addCanvasImage=function(file){
  if(!file)return;
- const r=new FileReader();r.onload=()=>{const o={id:id(),kind:"image",x:110,y:150,w:300,h:200,src:r.result};canvasState.objects.push(o);renderCanvasObjects();selectCanvasObject(o.id);markCanvasDirty()};r.readAsDataURL(file)
+ const r=new FileReader();r.onload=()=>{const o={id:id(),z:nextCanvasZ(),kind:"image",x:110,y:150,w:300,h:200,src:r.result};canvasState.objects.push(o);renderCanvasObjects();selectCanvasObject(o.id);markCanvasDirty()};r.readAsDataURL(file)
 }
 window.openTableDialog=function(){
  openModal(`<h2>Tabelle einfügen</h2><div class="formGrid"><div><label>Spalten</label><input id="tblCols" type="number" min="1" max="12" value="3"></div><div><label>Zeilen</label><input id="tblRows" type="number" min="1" max="30" value="4"></div></div><button class="primary" style="margin-top:10px" onclick="insertCanvasTable()">Einfügen</button>`);
@@ -1248,22 +1316,22 @@ window.openTableDialog=function(){
 window.insertCanvasTable=function(){
  const cols=Math.max(1,Math.min(12,+$("#tblCols").value||3)),rows=Math.max(1,Math.min(30,+$("#tblRows").value||4));
  const cells=Array.from({length:rows},()=>Array.from({length:cols},()=>"..."));
- const o={id:id(),kind:"table",x:90,y:180,w:520,h:Math.max(100,rows*38),rows,cols,cells};canvasState.objects.push(o);closeModal();renderCanvasObjects();selectCanvasObject(o.id);markCanvasDirty();
+ const o={id:id(),z:nextCanvasZ(),kind:"table",x:90,y:180,w:520,h:Math.max(100,rows*38),rows,cols,cells};canvasState.objects.push(o);closeModal();renderCanvasObjects();selectCanvasObject(o.id);markCanvasDirty();
 }
 const stickers=["🌸","🌷","🎀","🧸","⭐","✨","🍀","🍓","🫐","☁️","🌙","💗","📚","✏️","📝","🌼","🐻","🐰","🍵","💫","🌱"];
 function renderStickerPicker(){const el=$("#stickerPicker");if(el)el.innerHTML=stickers.map(s=>`<button onclick="addSticker('${s}')">${s}</button>`).join("")}
 window.toggleStickerPanel=function(){const p=$("#stickerPanel");p.style.display=p.style.display==="none"?"block":"none"}
 
 window.addPaperSticker=function(type){
- const o={id:id(),kind:"paper",paperType:type,x:110,y:160,w:420,h:230,spacing:type==="grid"?20:28};
+ const o={id:id(),z:nextCanvasZ(),kind:"paper",paperType:type,x:110,y:160,w:420,h:230,spacing:type==="grid"?20:28};
  canvasState.objects.push(o);renderCanvasObjects();selectCanvasObject(o.id);markCanvasDirty();
 }
 window.addTapeSticker=function(){
- const o={id:id(),kind:"tape",x:160,y:110,w:150,h:38,rotation:-5};
+ const o={id:id(),z:nextCanvasZ(),kind:"tape",x:160,y:110,w:150,h:38,rotation:-5};
  canvasState.objects.push(o);renderCanvasObjects();selectCanvasObject(o.id);markCanvasDirty();
 }
 
-window.addSticker=function(s){const o={id:id(),kind:"sticker",x:120,y:120,w:80,h:80,text:s};canvasState.objects.push(o);renderCanvasObjects();selectCanvasObject(o.id);markCanvasDirty()}
+window.addSticker=function(s){const o={id:id(),z:nextCanvasZ(),kind:"sticker",x:120,y:120,w:80,h:80,text:s};canvasState.objects.push(o);renderCanvasObjects();selectCanvasObject(o.id);markCanvasDirty()}
 
 
 function layerName(o){
@@ -1279,9 +1347,21 @@ function layerName(o){
 }
 function renderLayerList(){
  const el=$("#layerList");if(!el)return;
- const objectItems=[...canvasState.objects].reverse().map((o,ri)=>`<button class="layerItem ${canvasState.selectedType==="object"&&canvasState.selectedId===o.id?"active":""}" onclick="selectCanvasObject('${o.id}')"><span>${o.locked?"🔒 ":""}${esc(layerName(o))}</span><span>${canvasState.objects.length-ri}</span></button>`).join("");
- const vectorItems=[...canvasState.vectors].reverse().map((v,ri)=>`<button class="layerItem ${canvasState.selectedType==="vector"&&canvasState.selectedId===v.id?"active":""}" onclick="selectVector('${v.id}')"><span>${v.locked?"🔒 ":""}Form ${esc(v.type)}</span><span>V${canvasState.vectors.length-ri}</span></button>`).join("");
- el.innerHTML=objectItems+vectorItems||'<div class="small">Noch keine Elemente.</div>';
+ const all=[
+   ...canvasState.objects.map(o=>({kind:"object",id:o.id,z:o.z||0,locked:o.locked,name:layerName(o)})),
+   ...canvasState.vectors.map(v=>({kind:"vector",id:v.id,z:v.z||0,locked:v.locked,name:"Form · "+v.type}))
+ ].sort((a,b)=>b.z-a.z);
+ el.innerHTML=all.length?all.map(a=>`<div class="layerItem ${canvasState.selectedType===a.kind&&canvasState.selectedId===a.id?"active":""}">
+   <div class="layerRow">
+     <button style="border:0;background:transparent;flex:1;text-align:left;color:inherit" onclick="${a.kind==="object"?`selectCanvasObject('${a.id}')`:`selectVector('${a.id}')`}"><span class="layerMeta">${a.locked?"🔒":""}<span class="layerName">${esc(a.name)}</span></span></button>
+     <div class="layerTools">
+       <button title="Nach vorne" onclick="event.stopPropagation();${a.kind==="object"?`selectCanvasObject('${a.id}')`:`selectVector('${a.id}')`};moveSelectedLayer(1)">↑</button>
+       <button title="Nach hinten" onclick="event.stopPropagation();${a.kind==="object"?`selectCanvasObject('${a.id}')`:`selectVector('${a.id}')`};moveSelectedLayer(-1)">↓</button>
+       <button title="Sperren" onclick="event.stopPropagation();${a.kind==="object"?`selectCanvasObject('${a.id}')`:`selectVector('${a.id}')`};toggleSelectedLock()">${a.locked?"🔓":"🔒"}</button>
+       <button title="Löschen" onclick="event.stopPropagation();${a.kind==="object"?`selectCanvasObject('${a.id}')`:`selectVector('${a.id}')`};deleteSelectedCanvasItem()">×</button>
+     </div>
+   </div>
+ </div>`).join(""):'<div class="small">Noch keine Elemente.</div>';
 }
 
 function renderCanvasObjects(){
@@ -1289,22 +1369,23 @@ function renderCanvasObjects(){
  root.innerHTML=canvasState.objects.map(o=>{
    const sel=canvasState.selectedType==="object"&&canvasState.selectedId===o.id?"selected":"";
    const lockCls=o.locked?" locked":"";
-   const base=`left:${o.x}px;top:${o.y}px;width:${o.w}px;height:${o.h}px;`;
-   if(o.kind==="image")return `<div class="cobj imageObj ${sel}${lockCls}" data-id="${o.id}" style="${base}"><img src="${o.src}"><span class="resizeHandle"></span></div>`;
-   if(o.kind==="sticker")return `<div class="cobj stickerObj ${sel}${lockCls}" data-id="${o.id}" style="${base}">${o.text}<span class="resizeHandle"></span></div>`;
+   const base=`left:${o.x}px;top:${o.y}px;width:${o.w}px;height:${o.h}px;z-index:${o.z||0};`;
+   if(o.kind==="image")return `<div class="cobj imageObj ${sel}${lockCls}" data-id="${o.id}" style="${base}"><img src="${o.src}"><span class="rotateHandle"></span><span class="resizeHandle"></span></div>`;
+   if(o.kind==="sticker")return `<div class="cobj stickerObj ${sel}${lockCls}" data-id="${o.id}" style="${base}">${o.text}<span class="rotateHandle"></span><span class="resizeHandle"></span></div>`;
    if(o.kind==="paper"){
      const cls=o.paperType==="grid"?"gridPaper":o.paperType==="line"?"linePaper":"blankPaper";
      const vars=(o.paperType==="grid"?`--gridSize:${o.spacing||20}px`:o.paperType==="line"?`--lineSize:${o.spacing||28}px`:"")+`;background-color:${o.paperColor||"#fffdf7"};`;
-     return `<div class="cobj paperSticker ${cls} ${sel}${lockCls}" data-id="${o.id}" style="${base}${vars}"><span class="resizeHandle"></span></div>`;
+     return `<div class="cobj paperSticker ${cls} ${sel}${lockCls}" data-id="${o.id}" style="${base}${vars}"><span class="rotateHandle"></span><span class="resizeHandle"></span></div>`;
    }
-   if(o.kind==="tape")return `<div class="cobj tapeSticker ${sel}${lockCls}" data-id="${o.id}" style="${base}--rot:${o.rotation||-4}deg;background:${o.color||"#f2beb2"}"><span class="resizeHandle"></span></div>`;
+   if(o.kind==="tape")return `<div class="cobj tapeSticker ${sel}${lockCls}" data-id="${o.id}" style="${base}--rot:${o.rotation||-4}deg;background:${o.color||"#f2beb2"}"><span class="rotateHandle"></span><span class="resizeHandle"></span></div>`;
    if(o.kind==="table"){
      const table=`<table>${o.cells.map((row,ri)=>`<tr>${row.map((c,ci)=>`<td contenteditable="true" data-r="${ri}" data-c="${ci}">${esc(c)}</td>`).join("")}</tr>`).join("")}</table>`;
-     return `<div class="cobj tableObj ${sel}${lockCls}" data-id="${o.id}" style="${base}">${table}<span class="resizeHandle"></span></div>`;
+     return `<div class="cobj tableObj ${sel}${lockCls}" data-id="${o.id}" style="${base}">${table}<span class="rotateHandle"></span><span class="resizeHandle"></span></div>`;
    }
-   const cls=o.kind==="task"?"taskObj":o.kind==="merke"?"merkeObj":"textObj";
+   const cls=o.kind==="block"?"calloutObj":o.kind==="task"?"taskObj":o.kind==="merke"?"merkeObj":"textObj";
    const s=o.style||{};
-   return `<div class="cobj ${cls} ${sel}${lockCls}" data-id="${o.id}" contenteditable="true" style="${base}font-size:${s.fontSize||16}px;font-weight:${s.fontWeight||400};color:${s.color||"#333"};font-family:${s.fontFamily||"Arial"};background:${s.background||""};text-align:${s.textAlign||"left"}">${o.text||""}<span class="resizeHandle"></span></div>`;
+   const editCls=o.editing?" editing":"";
+   return `<div class="cobj ${cls} ${sel}${lockCls}${editCls}" data-id="${o.id}" contenteditable="${o.editing?"true":"false"}" style="${base}transform:rotate(${o.rotation||0}deg);font-size:${s.fontSize||16}px;font-weight:${s.fontWeight||400};color:${s.color||"#333"};font-family:${s.fontFamily||"Arial"};background:${s.background||"transparent"};border:${s.borderWidth||0}px solid ${s.borderColor||"transparent"};border-radius:${s.borderRadius||0}px;padding:${s.padding??7}px;text-align:${s.textAlign||"left"}">${o.text||""}<span class="rotateHandle"></span><span class="resizeHandle"></span></div>`;
  }).join("");
  attachCanvasObjectEvents();renderLayerList();
 }
@@ -1312,14 +1393,35 @@ function attachCanvasObjectEvents(){
  $$("#canvasObjects .cobj").forEach(el=>{
    const oid=el.dataset.id;
    el.addEventListener("pointerdown",e=>{
-     const o=canvasState.objects.find(x=>x.id===oid);
-     if(e.target.classList.contains("resizeHandle")){if(o?.locked)return;e.preventDefault();startResizeObject(e,oid);return}
+     const o=canvasState.objects.find(x=>x.id===oid);if(!o)return;
+     if(e.target.classList.contains("rotateHandle")){if(o.locked)return;e.preventDefault();startRotateObject(e,oid);return}
+     if(e.target.classList.contains("resizeHandle")){if(o.locked)return;e.preventDefault();startResizeObject(e,oid);return}
      if(e.target.tagName==="TD")return;
      const already=canvasState.selectedType==="object"&&canvasState.selectedId===oid;
-     if(!already){selectCanvasObject(oid);return}
-     if(o?.locked)return;
-     if(el.isContentEditable){el.focus();return}
-     startDragObject(e,oid);
+     if(!already){
+       canvasState.objects.forEach(x=>x.editing=false);
+       selectCanvasObject(oid);
+       return;
+     }
+     if(o.locked)return;
+     if(o.editing){return}
+     // Zweiter Kontakt: noch nicht sofort Tastatur. Erst wenn es ein Tap ohne Bewegung war.
+     const start=canvasPoint(e);let moved=false;
+     const elNow=e.currentTarget;
+     const ox=o.x,oy=o.y;
+     const move=ev=>{
+       const q=canvasPoint(ev);
+       if(Math.hypot(q.x-start.x,q.y-start.y)>6)moved=true;
+       if(moved){o.x=Math.max(0,Math.min(794-o.w,ox+q.x-start.x));o.y=Math.max(0,Math.min(1123-o.h,oy+q.y-start.y));elNow.style.left=o.x+"px";elNow.style.top=o.y+"px";markCanvasDirty()}
+     };
+     const up=()=>{
+       window.removeEventListener("pointermove",move);window.removeEventListener("pointerup",up);
+       if(!moved && ["text","block","task","merke"].includes(o.kind)){
+         o.editing=true;renderCanvasObjects();
+         setTimeout(()=>{const x=$(`.cobj[data-id="${oid}"]`);x?.focus()},0);
+       }
+     };
+     window.addEventListener("pointermove",move);window.addEventListener("pointerup",up);
    });
    if(el.isContentEditable)el.addEventListener("input",()=>{const o=canvasState.objects.find(x=>x.id===oid);if(o)o.text=el.innerHTML;markCanvasDirty()});
    el.querySelectorAll("td").forEach(td=>td.addEventListener("input",()=>{const o=canvasState.objects.find(x=>x.id===oid);if(o)o.cells[+td.dataset.r][+td.dataset.c]=td.innerText;markCanvasDirty()}));
@@ -1337,6 +1439,16 @@ function startDragObject(e,oid){
  const up=()=>{window.removeEventListener("pointermove",move);window.removeEventListener("pointerup",up)};
  window.addEventListener("pointermove",move);window.addEventListener("pointerup",up);
 }
+
+function startRotateObject(e,oid){
+ const o=canvasState.objects.find(x=>x.id===oid);if(!o)return;
+ const center={x:o.x+o.w/2,y:o.y+o.h/2},start=canvasPoint(e);
+ const startAngle=Math.atan2(start.y-center.y,start.x-center.x),base=o.rotation||0;
+ const move=ev=>{const q=canvasPoint(ev),ang=Math.atan2(q.y-center.y,q.x-center.x);o.rotation=base+(ang-startAngle)*180/Math.PI;const el=$(`.cobj[data-id="${oid}"]`);if(el)el.style.transform=`rotate(${o.rotation}deg)`;markCanvasDirty()};
+ const up=()=>{window.removeEventListener("pointermove",move);window.removeEventListener("pointerup",up)};
+ window.addEventListener("pointermove",move);window.addEventListener("pointerup",up);
+}
+
 function startResizeObject(e,oid){
  const o=canvasState.objects.find(x=>x.id===oid);if(!o)return;
  const p=canvasPoint(e),ow=o.w,oh=o.h;
@@ -1354,9 +1466,10 @@ function renderCanvasInspector(){
  const el=$("#canvasInspector");if(!el)return;
  if(canvasState.selectedType==="object"){
    const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(!o){el.textContent="Keine Auswahl";return}
-   if(["text","task","merke"].includes(o.kind)){
+   if(["text","block","task","merke"].includes(o.kind)){
      const s=o.style||{};
-     el.innerHTML=`<div class="selectionHelp">Du kannst <b>nur einen Teil des Textes markieren</b> und unten formatieren. Ohne Markierung gelten Änderungen für den ganzen Textblock.</div>
+     el.innerHTML=`<div class="editorHintStrong"><b>1× tippen:</b> auswählen/verschieben · <b>2× tippen:</b> Text bearbeiten.</div>
+       ${o.formatId?`<div class="editRow"><span class="badge">${esc(canvasPresets().find(x=>x.id===o.formatId)?.name||"Textformat")}</span>${String(o.formatId).startsWith("custom-")?`<button class="miniIcon" title="Format bearbeiten" onclick="createCustomStylePreset('${o.formatId}')">✎</button>`:""}</div>`:""}
        <div class="inlineFormatBar" style="margin:8px 0">
          <button onclick="formatSelectedText('bold')"><b>B</b></button>
          <button onclick="formatSelectedText('italic')"><i>I</i></button>
@@ -1370,6 +1483,10 @@ function renderCanvasInspector(){
        <div><label>Schrift</label><select class="fontSelect" onchange="applyTextProperty('fontFamily',this.value)"><option value="Arial" ${String(s.fontFamily).includes("Arial")?"selected":""}>Arial</option><option value="Georgia" ${String(s.fontFamily).includes("Georgia")?"selected":""}>Georgia</option><option value="Trebuchet MS" ${String(s.fontFamily).includes("Trebuchet")?"selected":""}>Trebuchet</option><option value="Verdana" ${String(s.fontFamily).includes("Verdana")?"selected":""}>Verdana</option><option value="Times New Roman" ${String(s.fontFamily).includes("Times")?"selected":""}>Times</option><option value="Courier New" ${String(s.fontFamily).includes("Courier")?"selected":""}>Courier</option></select></div>
        <div><label>Ausrichtung</label><select onchange="updateObjStyle('textAlign',this.value)"><option value="left" ${s.textAlign==="left"?"selected":""}>Links</option><option value="center" ${s.textAlign==="center"?"selected":""}>Mitte</option><option value="right" ${s.textAlign==="right"?"selected":""}>Rechts</option></select></div>
        <div><label>Fett</label><select onchange="applyTextProperty('fontWeight',this.value)"><option value="400">Normal</option><option value="700" ${s.fontWeight=="700"?"selected":""}>Fett</option><option value="900" ${s.fontWeight=="900"?"selected":""}>Sehr fett</option></select></div>
+       <div><label>Hintergrund</label><input type="color" value="${s.background&&s.background!=="transparent"?s.background:"#ffffff"}" onchange="updateObjStyle('background',this.value)"></div>
+       <div><label>Kontur</label><input type="color" value="${s.borderColor&&s.borderColor!=="transparent"?s.borderColor:"#ffffff"}" onchange="updateObjStyle('borderColor',this.value)"></div>
+       <div><label>Ecken</label><input type="number" min="0" max="80" value="${s.borderRadius||0}" onchange="updateObjStyle('borderRadius',+this.value)"></div>
+       <div><label>Konturdicke</label><input type="number" min="0" max="15" value="${s.borderWidth||0}" onchange="updateObjStyle('borderWidth',+this.value)"></div>
      </div>`;
    }else if(o.kind==="table"){
      el.innerHTML=`Tabelle: ${o.rows} Zeilen × ${o.cols} Spalten. Zellen direkt antippen und bearbeiten.`;
@@ -1389,6 +1506,8 @@ function renderCanvasInspector(){
      <div><label>Füllung</label><input type="color" value="${v.fill||"#f7d2cf"}" onchange="updateVectorStyle('fill',this.value)"></div>
      <div><label>Kontur</label><input type="color" value="${v.stroke||"#8d7369"}" onchange="updateVectorStyle('stroke',this.value)"></div>
      <div><label>Dicke</label><input type="number" min="0" max="30" value="${v.strokeWidth||2}" onchange="updateVectorStyle('strokeWidth',+this.value)"></div>
+     <div><label>Drehung</label><input type="number" min="-180" max="180" value="${Math.round(v.rotation||0)}" onchange="updateVectorStyle('rotation',+this.value)"></div>
+     ${v.type==="rect"?`<div><label>Ecken rund</label><input type="number" min="0" max="100" value="${v.rx||0}" onchange="updateVectorStyle('rx',+this.value)"></div>`:""}
      <div><label>Linie</label><select onchange="updateVectorStyle('dash',this.value)"><option value="solid">Durchgezogen</option><option value="dashed" ${v.dash==="dashed"?"selected":""}>Gestrichelt</option><option value="dotted" ${v.dash==="dotted"?"selected":""}>Gepunktet</option></select></div>
      <div class="full vectorToolbar"><button onclick="duplicateSelectedVector()">Duplizieren</button><button onclick="pathfinderSubtract()">Subtrahieren</button><button onclick="toggleNodeEdit()">Ankerpunkte</button></div>
    </div>`;
@@ -1436,7 +1555,7 @@ window.deleteSelectedCanvasItem=function(){
 }
 
 $("#canvasPage")?.addEventListener("pointerdown",e=>{if(e.target!==e.currentTarget)return;clearCanvasSelection()});
-function clearCanvasSelection(){canvasState.selectedType=null;canvasState.selectedId=null;renderCanvasObjects();renderVectors();renderCanvasInspector();renderLayerList()}
+function clearCanvasSelection(){canvasState.objects.forEach(x=>x.editing=false);canvasState.selectedType=null;canvasState.selectedId=null;renderCanvasObjects();renderVectors();renderCanvasInspector();renderLayerList()}
 
 
 window.toggleSelectedLock=function(){
@@ -1448,19 +1567,14 @@ window.toggleSelectedLock=function(){
  renderCanvasObjects();renderVectors();renderCanvasInspector();markCanvasDirty();
 }
 window.moveSelectedLayer=function(dir){
- if(canvasState.selectedType==="object"){
-  const a=canvasState.objects,i=a.findIndex(x=>x.id===canvasState.selectedId);if(i<0)return;
-  const ni=Math.max(0,Math.min(a.length-1,i+dir));if(ni!==i){const [x]=a.splice(i,1);a.splice(ni,0,x)}
-  renderCanvasObjects();
- }else if(canvasState.selectedType==="vector"){
-  const a=canvasState.vectors,i=a.findIndex(x=>x.id===canvasState.selectedId);if(i<0)return;
-  const ni=Math.max(0,Math.min(a.length-1,i+dir));if(ni!==i){const [x]=a.splice(i,1);a.splice(ni,0,x)}
-  renderVectors();
- }
- markCanvasDirty();
+ const all=[...canvasState.objects.map(x=>({kind:"object",x})),...canvasState.vectors.map(x=>({kind:"vector",x}))].sort((a,b)=>(a.x.z||0)-(b.x.z||0));
+ const idx=all.findIndex(a=>a.kind===canvasState.selectedType&&a.x.id===canvasState.selectedId);if(idx<0)return;
+ const ni=Math.max(0,Math.min(all.length-1,idx+dir));if(ni===idx)return;
+ const targetZ=all[ni].x.z||0,currentZ=all[idx].x.z||0;all[ni].x.z=currentZ;all[idx].x.z=targetZ;
+ renderCanvasObjects();renderVectors();renderLayerList();markCanvasDirty();
 }
 window.addVectorShape=function(type){
- let v={id:id(),type,fill:"#f7d2cf",stroke:"#8d7369",strokeWidth:2,dash:"solid"};
+ let v={id:id(),z:nextCanvasZ(),type,fill:"#f7d2cf",stroke:"#8d7369",strokeWidth:2,dash:"solid",rotation:0,locked:false};
  if(type==="rect")Object.assign(v,{x:220,y:260,w:260,h:150,rx:14});
  if(type==="ellipse")Object.assign(v,{cx:397,cy:330,rx:120,ry:80});
  if(type==="triangle")Object.assign(v,{points:[[397,230],[520,410],[274,410]]});
@@ -1468,6 +1582,15 @@ window.addVectorShape=function(type){
 }
 
 // Vector editor (SVG)
+
+function vectorBounds(v){
+ if(v.type==="rect")return{x:v.x,y:v.y,w:v.w,h:v.h,cx:v.x+v.w/2,cy:v.y+v.h/2};
+ if(v.type==="ellipse")return{x:v.cx-v.rx,y:v.cy-v.ry,w:v.rx*2,h:v.ry*2,cx:v.cx,cy:v.cy};
+ const pts=v.points||[];if(!pts.length)return{x:0,y:0,w:0,h:0,cx:0,cy:0};
+ const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]),x=Math.min(...xs),y=Math.min(...ys),w=Math.max(...xs)-x,h=Math.max(...ys)-y;
+ return{x,y,w,h,cx:x+w/2,cy:y+h/2};
+}
+
 function vectorEl(v){
  const dash=v.dash==="dashed"?"10 7":v.dash==="dotted"?"2 6":"";
  if(v.type==="rect")return `<rect data-vid="${v.id}" x="${v.x}" y="${v.y}" width="${v.w}" height="${v.h}" rx="${v.rx||0}" fill="${v.fill}" stroke="${v.stroke}" stroke-width="${v.strokeWidth}" stroke-dasharray="${dash}" class="${canvasState.selectedType==="vector"&&canvasState.selectedId===v.id?"vectorSelected":""}"/>`;
@@ -1478,28 +1601,40 @@ function vectorEl(v){
 }
 function pathD(points){if(!points?.length)return"";return "M "+points.map((p,i)=>(i?"L ":"")+p[0]+" "+p[1]).join(" ")}
 function renderVectors(){
- const svg=$("#canvasSvg");if(!svg)return;
- svg.innerHTML=canvasState.vectors.map(vectorEl).join("");
- if(canvasState.nodeEdit && canvasState.selectedType==="vector"){
-   const v=canvasState.vectors.find(x=>x.id===canvasState.selectedId);
-   if(v?.type==="path")svg.insertAdjacentHTML("beforeend",v.points.map((p,i)=>`<circle class="pathNode" data-node="${i}" cx="${p[0]}" cy="${p[1]}" r="6"></circle>`).join(""));
+ const root=$("#canvasObjects");if(!root)return;
+ root.querySelectorAll(".vectorObj").forEach(x=>x.remove());
+ for(const v of [...canvasState.vectors].sort((a,b)=>(a.z||0)-(b.z||0))){
+   const b=vectorBounds(v),selected=canvasState.selectedType==="vector"&&canvasState.selectedId===v.id;
+   const dash=v.dash==="dashed"?"10 7":v.dash==="dotted"?"2 6":"";
+   const shape=vectorEl(v).replace('data-vid="'+v.id+'"',`data-vid="${v.id}" class="shapeHit"`);
+   const selMarkup=selected?`<rect class="vectorSelectBox" x="${b.x-5}" y="${b.y-5}" width="${b.w+10}" height="${b.h+10}"/>
+      <line class="vectorRotateLine" x1="${b.x+b.w}" y1="${b.y-5}" x2="${b.x+b.w+22}" y2="${b.y-27}"/>
+      <circle class="vectorHandle vectorRotateHandle" data-vid="${v.id}" cx="${b.x+b.w+22}" cy="${b.y-27}" r="7"/>
+      <circle class="vectorHandle vectorResizeHandle" data-vid="${v.id}" cx="${b.x+b.w+7}" cy="${b.y+b.h+7}" r="7"/>`:"";
+   root.insertAdjacentHTML("beforeend",`<svg class="vectorObj ${selected?"selected":""} ${v.locked?"locked":""}" data-vector-wrap="${v.id}" viewBox="0 0 794 1123" style="z-index:${v.z||0};transform:rotate(${v.rotation||0}deg);transform-origin:${b.cx}px ${b.cy}px">${shape}${selMarkup}</svg>`);
  }
  attachVectorEvents();renderLayerList();
 }
-window.setVectorTool=function(t){canvasState.vectorTool=t;canvasState.selectedType=null;canvasState.selectedId=null;renderCanvasInspector()}
+window.setVectorTool=function(t){canvasState.vectorTool=t;const svg=$("#canvasSvg");svg?.classList.toggle("drawing",t!=="select");renderCanvasInspector()}
 function attachVectorEvents(){
- const svg=$("#canvasSvg");
- svg.onpointerdown=e=>{
-   const node=e.target.closest(".pathNode");if(node){startNodeDrag(e,+node.dataset.node);return}
-   const target=e.target.closest("[data-vid]");
-   if(target){
-     const v=canvasState.vectors.find(x=>x.id===target.dataset.vid);
-     selectVector(target.dataset.vid);
-     if(!v?.locked && canvasState.vectorTool==="select")startVectorDrag(e,target.dataset.vid);
-     return
-   }
-   if(canvasState.vectorTool!=="select")startVectorDraw(e);
- };
+ $$(".vectorObj .shapeHit").forEach(el=>{
+   el.onpointerdown=e=>{
+     e.stopPropagation();
+     const vid=el.dataset.vid,v=canvasState.vectors.find(x=>x.id===vid);
+     const same=canvasState.selectedType==="vector"&&canvasState.selectedId===vid;
+     selectVector(vid);
+     if(!v?.locked && same)startVectorDrag(e,vid);
+   };
+ });
+ $$(".vectorRotateHandle").forEach(el=>el.onpointerdown=e=>{e.stopPropagation();startVectorRotate(e,el.dataset.vid)});
+ $$(".vectorResizeHandle").forEach(el=>el.onpointerdown=e=>{e.stopPropagation();startVectorResize(e,el.dataset.vid)});
+ const draw=$("#canvasSvg");
+ if(draw){
+   draw.onpointerdown=e=>{
+     if(canvasState.vectorTool!=="select")startVectorDraw(e);
+   };
+   draw.classList.toggle("drawing",canvasState.vectorTool!=="select");
+ }
 }
 function selectVector(idv){canvasState.selectedType="vector";canvasState.selectedId=idv;renderVectors();renderCanvasInspector()}
 function startVectorDraw(e){
@@ -1526,6 +1661,28 @@ function startVectorDraw(e){
  const up=()=>{window.removeEventListener("pointermove",move);window.removeEventListener("pointerup",up);canvasState.vectorTool="select";selectVector(v.id);markCanvasDirty()};
  window.addEventListener("pointermove",move);window.addEventListener("pointerup",up);
 }
+
+function startVectorRotate(e,vid){
+ const v=canvasState.vectors.find(x=>x.id===vid);if(!v||v.locked)return;
+ const b=vectorBounds(v),p=canvasPoint(e),startA=Math.atan2(p.y-b.cy,p.x-b.cx),base=v.rotation||0;
+ const move=ev=>{const q=canvasPoint(ev),a=Math.atan2(q.y-b.cy,q.x-b.cx);v.rotation=base+(a-startA)*180/Math.PI;renderVectors();markCanvasDirty()};
+ const up=()=>{window.removeEventListener("pointermove",move);window.removeEventListener("pointerup",up)};
+ window.addEventListener("pointermove",move);window.addEventListener("pointerup",up);
+}
+function startVectorResize(e,vid){
+ const v=canvasState.vectors.find(x=>x.id===vid);if(!v||v.locked)return;
+ const b=vectorBounds(v),p=canvasPoint(e),snap=JSON.parse(JSON.stringify(v));
+ const move=ev=>{
+   const q=canvasPoint(ev),sx=Math.max(.1,(b.w+(q.x-p.x))/Math.max(1,b.w)),sy=Math.max(.1,(b.h+(q.y-p.y))/Math.max(1,b.h));
+   if(v.type==="rect"){v.w=snap.w*sx;v.h=snap.h*sy}
+   else if(v.type==="ellipse"){v.rx=snap.rx*sx;v.ry=snap.ry*sy}
+   else if(v.points)v.points=snap.points.map(pt=>[b.x+(pt[0]-b.x)*sx,b.y+(pt[1]-b.y)*sy]);
+   renderVectors();markCanvasDirty();
+ };
+ const up=()=>{window.removeEventListener("pointermove",move);window.removeEventListener("pointerup",up)};
+ window.addEventListener("pointermove",move);window.addEventListener("pointerup",up);
+}
+
 function startVectorDrag(e,vid){
  const v=canvasState.vectors.find(x=>x.id===vid);if(!v)return;const p=canvasPoint(e);
  const snap=JSON.parse(JSON.stringify(v));
@@ -1617,7 +1774,7 @@ function serializedCanvas(){
    if(o.kind==="tape")return `<div style="${base}background:rgba(242,190,178,.62);transform:rotate(${o.rotation||-4}deg)"></div>`;
    if(o.kind==="table")return `<div style="${base}"><table style="border-collapse:collapse;width:100%;height:100%">${o.cells.map(r=>`<tr>${r.map(c=>`<td style="border:1px solid #aaa;padding:6px">${esc(c)}</td>`).join("")}</tr>`).join("")}</table></div>`;
    const s=o.style||{},bg=o.kind==="task"?"#fff5eb":o.kind==="merke"?"#fff0ef":s.background||"transparent";
-   return `<div style="${base}padding:7px;font-size:${s.fontSize||16}px;font-weight:${s.fontWeight||400};color:${s.color||"#333"};font-family:${s.fontFamily||"Arial"};background:${bg};text-align:${s.textAlign||"left"};border-radius:${o.kind==="text"?0:14}px">${o.text||""}</div>`;
+   return `<div style="${base}transform:rotate(${o.rotation||0}deg);padding:${s.padding??7}px;font-size:${s.fontSize||16}px;font-weight:${s.fontWeight||400};color:${s.color||"#333"};font-family:${s.fontFamily||"Arial"};background:${s.background||bg};text-align:${s.textAlign||"left"};border:${s.borderWidth||0}px solid ${s.borderColor||"transparent"};border-radius:${s.borderRadius||0}px">${o.text||""}</div>`;
  }).join("");
  const vec=`<svg style="position:absolute;inset:0;width:794px;height:1123px" viewBox="0 0 794 1123">${canvasState.vectors.map(vectorEl).join("")}</svg>`;
  return vec+objs;
@@ -1663,7 +1820,7 @@ window.exportCanvasHTML=function(){
 
 
 /* ===== V11 Canva-like editor ===== */
-body.editorMode header,body.editorMode #nav{display:none!important}
+body.editorMode .header,body.editorMode #nav{display:none!important}
 body.editorMode main{max-width:none;padding:8px 8px 30px}
 body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .canvasEditorShell{max-width:1180px;margin:auto}
@@ -1689,6 +1846,55 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .editorDock{top:55px}
  .stylePresetBar{gap:5px}
  .stylePreset{font-size:11px;padding:7px 9px}
+}
+
+
+/* ===== V12 interaction + icon overhaul ===== */
+:root{--icon:#8e7168}
+.nav button b{display:none!important}
+.nav button svg{width:22px;height:22px;display:block;margin:auto;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nav button.active svg{stroke:currentColor}
+.editorDock button svg,.editorDock label svg,.editorIcon svg,.miniIcon svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.editorDock button,.editorDock label{font-size:0}
+.editorIcon,.miniIcon{display:grid;place-items:center;font-size:0}
+.editorDock{scrollbar-width:none}
+.editorDock::-webkit-scrollbar{display:none}
+.formatStrip{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none}
+.formatStrip::-webkit-scrollbar{display:none}
+.formatChip{flex:0 0 auto;border:1px solid #e7cec7;background:#fffdf9;border-radius:999px;padding:7px 10px;color:#765f56;font-size:11px;font-weight:850}
+.formatAdd{width:34px;height:34px;border-radius:50%!important;padding:0!important;font-size:20px!important;display:grid!important;place-items:center!important}
+.cobj{cursor:grab}
+.cobj.editing{cursor:text;outline:2px solid #9eb8e9!important}
+.cobj.selected:not(.editing){outline:2px solid #e99e9a;outline-offset:3px}
+.cobj .resizeHandle,.cobj .rotateHandle{display:none;position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid #e99e9a;z-index:50}
+.cobj .resizeHandle{right:-9px;bottom:-9px}
+.cobj .rotateHandle{right:-9px;top:-30px;background:#fff}
+.cobj .rotateHandle:after{content:"";position:absolute;left:6px;top:14px;width:2px;height:15px;background:#e99e9a}
+.cobj.selected:not(.locked) .resizeHandle,.cobj.selected:not(.locked) .rotateHandle{display:block}
+.cobj.locked{cursor:default;outline-style:dashed!important}
+.vectorObj{position:absolute;inset:0;width:794px;height:1123px;pointer-events:none;overflow:visible}
+.vectorObj .shapeHit{pointer-events:all;cursor:grab}
+.vectorObj.locked .shapeHit{cursor:default}
+.vectorSelectBox{fill:none;stroke:#e99e9a;stroke-width:2;stroke-dasharray:6 4;pointer-events:none}
+.vectorHandle{fill:#fff;stroke:#e99e9a;stroke-width:2;pointer-events:all;cursor:pointer}
+.vectorRotateLine{stroke:#e99e9a;stroke-width:2;pointer-events:none}
+.vectorObj.selected .shapeHit{filter:drop-shadow(0 0 2px rgba(233,158,154,.8))}
+.canvasSvg{pointer-events:none!important;z-index:30}
+.canvasSvg.drawing{pointer-events:auto!important}
+.canvasObjects{z-index:20}
+.inspectorGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.layerItem{padding:6px 8px}
+.layerRow{display:flex;align-items:center;justify-content:space-between;gap:6px;width:100%}
+.layerMeta{display:flex;align-items:center;gap:6px;min-width:0}
+.layerName{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.layerTools{display:flex;gap:3px}
+.layerTools button{width:27px;height:27px;border:0;background:#fff7f3;border-radius:8px;color:#80675e;padding:0;font-size:13px}
+.editorHintStrong{border:1px solid #d9e4c4;background:#f5f9eb;color:#6e8453;border-radius:12px;padding:8px 10px;font-size:11px}
+.customFormatPreview{padding:10px;border-radius:12px;margin:8px 0}
+@media(max-width:600px){
+ .editorDock button,.editorDock label{flex-basis:38px;width:38px;height:38px}
+ .editorDock button svg,.editorDock label svg{width:18px;height:18px}
+ .objectPanel{margin-top:4px}
 }
 
 </style></head><body><div class="page">${serializedCanvas()}</div></body></html>`;
@@ -1734,7 +1940,7 @@ window.printCanvasSheet=function(){
 
 
 /* ===== V11 Canva-like editor ===== */
-body.editorMode header,body.editorMode #nav{display:none!important}
+body.editorMode .header,body.editorMode #nav{display:none!important}
 body.editorMode main{max-width:none;padding:8px 8px 30px}
 body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .canvasEditorShell{max-width:1180px;margin:auto}
@@ -1760,6 +1966,55 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .editorDock{top:55px}
  .stylePresetBar{gap:5px}
  .stylePreset{font-size:11px;padding:7px 9px}
+}
+
+
+/* ===== V12 interaction + icon overhaul ===== */
+:root{--icon:#8e7168}
+.nav button b{display:none!important}
+.nav button svg{width:22px;height:22px;display:block;margin:auto;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nav button.active svg{stroke:currentColor}
+.editorDock button svg,.editorDock label svg,.editorIcon svg,.miniIcon svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.editorDock button,.editorDock label{font-size:0}
+.editorIcon,.miniIcon{display:grid;place-items:center;font-size:0}
+.editorDock{scrollbar-width:none}
+.editorDock::-webkit-scrollbar{display:none}
+.formatStrip{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none}
+.formatStrip::-webkit-scrollbar{display:none}
+.formatChip{flex:0 0 auto;border:1px solid #e7cec7;background:#fffdf9;border-radius:999px;padding:7px 10px;color:#765f56;font-size:11px;font-weight:850}
+.formatAdd{width:34px;height:34px;border-radius:50%!important;padding:0!important;font-size:20px!important;display:grid!important;place-items:center!important}
+.cobj{cursor:grab}
+.cobj.editing{cursor:text;outline:2px solid #9eb8e9!important}
+.cobj.selected:not(.editing){outline:2px solid #e99e9a;outline-offset:3px}
+.cobj .resizeHandle,.cobj .rotateHandle{display:none;position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid #e99e9a;z-index:50}
+.cobj .resizeHandle{right:-9px;bottom:-9px}
+.cobj .rotateHandle{right:-9px;top:-30px;background:#fff}
+.cobj .rotateHandle:after{content:"";position:absolute;left:6px;top:14px;width:2px;height:15px;background:#e99e9a}
+.cobj.selected:not(.locked) .resizeHandle,.cobj.selected:not(.locked) .rotateHandle{display:block}
+.cobj.locked{cursor:default;outline-style:dashed!important}
+.vectorObj{position:absolute;inset:0;width:794px;height:1123px;pointer-events:none;overflow:visible}
+.vectorObj .shapeHit{pointer-events:all;cursor:grab}
+.vectorObj.locked .shapeHit{cursor:default}
+.vectorSelectBox{fill:none;stroke:#e99e9a;stroke-width:2;stroke-dasharray:6 4;pointer-events:none}
+.vectorHandle{fill:#fff;stroke:#e99e9a;stroke-width:2;pointer-events:all;cursor:pointer}
+.vectorRotateLine{stroke:#e99e9a;stroke-width:2;pointer-events:none}
+.vectorObj.selected .shapeHit{filter:drop-shadow(0 0 2px rgba(233,158,154,.8))}
+.canvasSvg{pointer-events:none!important;z-index:30}
+.canvasSvg.drawing{pointer-events:auto!important}
+.canvasObjects{z-index:20}
+.inspectorGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.layerItem{padding:6px 8px}
+.layerRow{display:flex;align-items:center;justify-content:space-between;gap:6px;width:100%}
+.layerMeta{display:flex;align-items:center;gap:6px;min-width:0}
+.layerName{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.layerTools{display:flex;gap:3px}
+.layerTools button{width:27px;height:27px;border:0;background:#fff7f3;border-radius:8px;color:#80675e;padding:0;font-size:13px}
+.editorHintStrong{border:1px solid #d9e4c4;background:#f5f9eb;color:#6e8453;border-radius:12px;padding:8px 10px;font-size:11px}
+.customFormatPreview{padding:10px;border-radius:12px;margin:8px 0}
+@media(max-width:600px){
+ .editorDock button,.editorDock label{flex-basis:38px;width:38px;height:38px}
+ .editorDock button svg,.editorDock label svg{width:18px;height:18px}
+ .objectPanel{margin-top:4px}
 }
 
 </style></head><body><div class="page">${serializedCanvas()}</div></body></html>`);w.document.close();setTimeout(()=>w.print(),300)
