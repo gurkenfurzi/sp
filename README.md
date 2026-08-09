@@ -1,9 +1,10 @@
-# VERSION 19
+# VERSION 20
 
-Stundenplan-Parser-Reparatur:
-- nur echte Klassenüberschriften (BF 1A/B, BF 2, M O1/U1, W O1/U1/U2) werden als Spalten erkannt
-- LF8/LF11 usw. können nicht mehr fälschlich Klassenköpfe werden
-- mehrzeilige Sondertermine werden zusammengesetzt
-- „Klassenleitungs-“ + „stunden“ wird zu „Klassenleitungsstunden“
-- Sondertermine werden nicht mit normalen Unterrichtsstunden verschmolzen
-- Live-Cloudflare-Abruf aus Version 18 bleibt bestehen
+Stundenplan:
+- neuer PDF-Zeilenparser: Zuordnung nach nächster Stundenzeile statt starrem Kästchen
+- Text zwischen zwei Untis-Zeilen wird als zusammengeführtes Feld / Doppelstunde erkannt
+- Doppelstunden werden zu einer Karte mit kompletter Zeitspanne zusammengeführt
+- Badge „Doppelstunde“
+- Entfall berücksichtigt Doppelstunden und erzeugt keine falsche Lücke innerhalb einer Doppelstunde
+- Sondertermine können über mehrere PDF-Zeilen zusammengesetzt werden
+- Live-Cloudflare-Abruf bleibt aktiv
