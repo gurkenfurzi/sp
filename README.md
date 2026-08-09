@@ -1,13 +1,8 @@
-# VERSION 24
+# VERSION 25
 
-Stundenplan wird nicht mehr anhand vermuteter Doppelstunden aufgebaut.
-
-Neu:
-- PDF-Seite wird zusätzlich unsichtbar gerendert.
-- SchoolBloom prüft die echten horizontalen Tabellenlinien in jeder Klassenspalte.
-- Fehlt die Trennlinie zwischen zwei Stunden, ist es ein zusammengeführtes Untis-Feld / Doppelstunde.
-- Dauer wird direkt aus diesem Feld übernommen.
-- Kein künstlicher Entfall.
-- Alle Klassen bleiben dynamisch auswählbar.
-- Live-Abruf und PDF-Parser haben getrennte Fehlermeldungen.
-- Wenn die Live-PDF geladen wurde, wird nicht mehr fälschlich „Live-Aktualisierung fehlgeschlagen“ angezeigt.
+- MUS = Herr Mussler-Ochsenfeld
+- Raster-basierte automatische Zusammenführung wird auf maximal 2 Unterrichtsblöcke begrenzt.
+- Mehr als zwei Blöcke werden nur verbunden, wenn der PDF-Text in den Folgezellen wirklich identisch ist.
+- Dünne horizontale Tabellenlinien werden empfindlicher erkannt.
+- Dadurch sollen falsche Blöcke wie SSPU 11:30–15:00 verhindert werden.
+- Live-Aktualisierung und dynamische Klassenwahl bleiben erhalten.
