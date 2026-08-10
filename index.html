@@ -633,13 +633,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 27: echter Live-Refresh ===== */
+/* ===== VERSION 28: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 27 timetable parser ===== */
+/* ===== VERSION 28 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -648,7 +648,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 27: dynamic classes ===== */
+/* ===== VERSION 28: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -657,7 +657,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 27: raster-exact timetable ===== */
+/* ===== VERSION 28: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 </style>
@@ -667,7 +667,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 27</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 28</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -1034,37 +1034,1592 @@ const pauses=[
  {start:"13:00",end:"13:30",label:"Mittagspause"}
 ];
 function renderLessonsWithPauses(ls){
- const lessons=[...(ls||[])].sort((a,b)=>a.start.localeCompare(b.start));
- if(!lessons.length)return "";
+ const merged=mergeLessons(ls);
+ if(!merged.length)return "";
 
- const breaks=[
-   {start:"09:30",end:"09:45",label:"Pause"},
-   {start:"11:15",end:"11:30",label:"Pause"},
-   {start:"13:00",end:"13:30",label:"Mittagspause"}
- ];
  const toMin=t=>{
    const [hh,mm]=String(t||"00:00").split(":").map(Number);
    return hh*60+mm;
  };
 
- const firstStart=Math.min(...lessons.map(x=>toMin(x.start)));
- const lastEnd=Math.max(...lessons.map(x=>toMin(x.end)));
- const events=lessons.map(x=>({type:"lesson",startMin:toMin(x.start),data:x}));
+ const firstStart=Math.min(...merged.map(x=>toMin(x.start)));
+ const lastEnd=Math.max(...merged.map(x=>toMin(x.end)));
 
- for(const br of breaks){
-   const bs=toMin(br.start),be=toMin(br.end);
-   if(firstStart<be && lastEnd>bs){
-     events.push({type:"break",startMin:bs,data:br});
+ const events=merged.map(x=>({
+   type:"lesson",
+   sort:toMin(x.start),
+   lesson:x
+ }));
+
+ // Pausen werden unabhängig davon eingesetzt, ob direkt vor/nach ihnen
+ // eine erkannte Stunde steht. Entscheidend ist nur:
+ // Der Tagesplan beginnt davor und läuft danach noch weiter.
+ for(const p of pauses){
+   const ps=toMin(p.start),pe=toMin(p.end);
+   if(firstStart < pe && lastEnd > ps){
+     events.push({
+       type:"pause",
+       sort:ps,
+       pause:p
+     });
    }
  }
 
- events.sort((a,b)=>a.startMin-b.startMin || (a.type==="break"?1:-1));
+ events.sort((a,b)=>{
+   if(a.sort!==b.sort)return a.sort-b.sort;
+   // Wenn eine Stunde exakt zur Pausenzeit endet/startet:
+   // Unterricht zuerst, danach Pausenkarte.
+   return a.type==="lesson"?-1:1;
+ });
 
- return events.map(ev=>{
-   if(ev.type==="lesson")return lessonHtml(ev.data);
-   const br=ev.data;
-   return `<div class="break"><span>🍵</span><b>${br.start}–${br.end} · ${br.label}</b></div>`;
+ return events.map(e=>{
+   if(e.type==="lesson")return lessonHtml(e.lesson);
+   const p=e.pause;
+   return `<div class="pauseCard"><span class="cup">🍵</span><span>${p.start}–${p.end} · ${p.label}</span></div>`;
  }).join("");
+}
+function ensureSubjectShape(s){
+ ensureSubjectShapeRaw(s); return s;
+}
+data.subjects.forEach(ensureSubjectShape);
+function isSpecialScheduleText(raw){
+ const s=String(raw||"").replace(/\s+/g," ").trim();
+ return !!s && /(klassenleit|ausflug|praktik|projekt|wandertag|exkursion|veranstaltung|prüfung|unterrichtsfrei|berufsmesse|workshop|theater|sporttag|\d{1,2}\s*uhr)/i.test(s);
+}
+function splitCell(raw){
+ const teacherMap={
+ "GRA":"Frau Grandt","ZEI":"Herr Zeilfelder","GRU":"Herr Gruseck","ROE":"Herr Roesinger",
+ "KRE":"Frau Kreiselmayer","BEC":"Herr Becker","ACH":"Frau Achenbach",
+ "KÖH":"Herr Köhler","KOH":"Herr Köhler","SLI":"Herr Slimistinos","STR":"Herr Strenger",
+ "EDI":"Herr Edinger","AUG":"Augustin","MUS":"Herr Mussler-Ochsenfeld"
+ };
+ const clean=String(raw||"").replace(/\s+/g," ").trim();
+ if(isSpecialScheduleText(clean)) return {subject:clean,meta:"",teacher:"",teacherCode:"",room:"",special:true};
+ let t=clean.split(/\s+/).filter(Boolean),room="",teacher="",teacherCode="";
+ const ri=t.findIndex(x=>/^(R\d+[A-Z]?|HBM|HBF|TCO|R\d+\/\d+)$/i.test(x));
+ if(ri>=0){room=t[ri];t.splice(ri,1)}
+ for(let i=t.length-1;i>=0;i--){const code=t[i].toUpperCase();if(teacherMap[code]){teacherCode=code;teacher=teacherMap[code];t.splice(i,1);break}}
+ if(t.length>1 && t[0].toUpperCase()==="M" && (/^LF\d+$/i.test(t[1]) || /^SSPU/i.test(t[1]))) t.shift();
+ const joined=t.join(" ").replace(/\s+/g," ").trim();
+ let subject=joined||"Unterricht";
+ const lf=joined.match(/\bLF\s*(\d+)\b/i);if(lf)subject=`LF ${lf[1]}`;
+ const sspu=joined.match(/\bSSPU\s*(\d+)?\b/i);if(sspu)subject=sspu[1]?`SSPU ${sspu[1]}`:"SSPU";
+ if(/\bM[\s-]*FHR\b/i.test(joined))subject="Mathematik";
+ if(/\bE[\s-]*FHR\b/i.test(joined))subject="Englisch";
+ if(/^ET$/i.test(joined)||/\bET\b/i.test(joined))subject="Ethik";
+ return {subject,meta:teacher||teacherCode,teacher,teacherCode,room,special:false};
+}
+function prettySubject(s){
+ const x=String(s||"").trim();
+ if(/^LF\s*\d+$/i.test(x)){const n=x.match(/\d+/)?.[0];return n?`LF ${n}`:x}
+ const m={"D":"Deutsch","E":"Englisch","M":"Mathematik","ET":"Ethik","SP":"Sport","SPO":"Sport","INF":"Informatik","WISO":"Wirtschaft & Sozialkunde"};
+ return m[x.toUpperCase()]||x||"Unterricht";
+}
+const officialBreaks=[
+ ["09:30","09:45"],
+ ["11:15","11:30"],
+ ["13:00","13:30"]
+];
+
+function breakBetween(endA,startB){
+ return officialBreaks.some(([s,e])=>endA===s && startB===e);
+}
+
+function mergeLessons(ls){
+ const sorted=[...(ls||[])].sort((a,b)=>{
+   const d=dayOrder.indexOf(a.day)-dayOrder.indexOf(b.day);
+   return d||a.start.localeCompare(b.start);
+ });
+
+ const out=[];
+
+ for(const x of sorted){
+   const item={...x,blocks:x.blocks||1};
+   const p=splitCell(item.raw);
+   const last=out[out.length-1];
+
+   if(last && last.day===item.day){
+     const q=splitCell(last.raw);
+
+     // Never merge through an official break.
+     const separatedByBreak=breakBetween(last.end,item.start);
+
+     if(!separatedByBreak && last.end===item.start){
+       if(!p.special&&!q.special &&
+          q.subject===p.subject &&
+          q.room===p.room &&
+          (q.teacherCode||q.meta)===(p.teacherCode||p.meta)){
+         last.end=item.end;
+         last.blocks=(last.blocks||1)+(item.blocks||1);
+         last.isDouble=last.blocks>=2;
+         continue;
+       }
+
+       if(!p.special&&!q.special && String(last.raw).trim()===String(item.raw).trim()){
+         last.end=item.end;
+         last.blocks=(last.blocks||1)+(item.blocks||1);
+         last.isDouble=true;
+         continue;
+       }
+     }
+   }
+
+   out.push(item);
+ }
+
+ return out;
+}
+
+function placeholderSchedule(){
+ return [
+ ["Mo","08:00","08:45","M LF8 GRA R13"],["Mo","08:45","09:30","M LF8 GRA R13"],["Mo","09:45","10:30","M LF11 GRU R13"],["Mo","10:30","11:15","M LF11 GRU R13"],["Mo","11:30","12:15","E-FHR BEC R14"],["Mo","12:15","13:00","E-FHR BEC R14"],
+ ["Di","08:00","08:45","M LF9 ZEI R13"],["Di","08:45","09:30","M LF9 ZEI R13"],["Di","09:45","10:30","SSPU 1 ZEI R13"],["Di","10:30","11:15","SSPU 1 ZEI R13"],["Di","11:30","12:15","ET ROE R14"],
+ ["Mi","08:00","08:45","M LF12 GRU R13"],["Mi","08:45","09:30","M LF12 GRU R13"],["Mi","09:45","10:30","M-FHR ACH R14"],["Mi","10:30","11:15","M-FHR ACH R14"],["Mi","11:30","12:15","M LF10 KRE R13"],
+ ["Do","08:00","08:45","M LF8 GRA R13"],["Do","08:45","09:30","M LF8 GRA R13"],["Do","09:45","10:30","E-FHR BEC R14"],["Do","10:30","11:15","E-FHR BEC R14"],["Do","11:30","12:15","ET ROE R14"],
+ ["Fr","08:00","08:45","M LF11 GRU R13"],["Fr","08:45","09:30","M LF11 GRU R13"],["Fr","09:45","10:30","SSPU 2 ZEI R13"],["Fr","10:30","11:15","SSPU 2 ZEI R13"]
+ ].map(a=>({day:a[0],start:a[1],end:a[2],raw:a[3]}))
+}
+
+
+window.openView=function(name){
+ $$(".view").forEach(v=>v.classList.remove("active"));
+ const el=$("#view-"+name); if(!el)return;
+ el.classList.add("active");
+ document.body.classList.toggle("editorMode",name==="sheet-editor");
+ $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
+ const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
+ $("#headerTitle").textContent=titles[name]||"SchoolHub.";
+ $("#headerEyebrow").textContent="VERSION 28";
+ window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
+}
+$$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
+
+let modalScrollY=0;
+function openModal(html){
+ modalScrollY=window.scrollY;
+ $("#modal").innerHTML=html;$("#modalWrap").classList.add("open");
+ document.body.classList.add("modalOpen");document.body.style.top=`-${modalScrollY}px`;
+}
+window.closeModal=()=>{
+ $("#modalWrap").classList.remove("open");
+ document.body.classList.remove("modalOpen");document.body.style.top="";
+ window.scrollTo(0,modalScrollY);
+};
+
+function subjectOptions(){
+ return data.subjects.map(s=>`<option value="${esc(s.name)}">${esc(s.name)}</option>`).join("")
+}
+
+window.openLessonDetails=function(json){
+ const l=JSON.parse(json), p=splitCell(l.raw), key=lessonKey(l);
+ const ex=data.lessonExtras[key] ||= {notes:[],tasks:[],files:[]};
+ const notes=ex.notes.map(n=>`<div class="card rowBetween"><div><b>📝 ${esc(n.text)}</b><div class="small">${fmtDate(n.date||todayISO())}</div></div><button class="dangerBtn" onclick="deleteLessonItem('${esc(key)}','notes','${n.id}')">×</button></div>`).join("")||'<div class="empty">Noch keine Notizen.</div>';
+ const tasks=ex.tasks.map(n=>`<div class="card rowBetween"><div><b>✓ ${esc(n.text)}</b><div class="small">${fmtDate(n.due||todayISO())}</div></div><button class="dangerBtn" onclick="deleteLessonItem('${esc(key)}','tasks','${n.id}')">×</button></div>`).join("")||'<div class="empty">Noch keine Aufgaben.</div>';
+ openModal(`<h2>${esc(prettySubject(p.subject))}</h2>
+ <div class="small">${l.start}–${l.end}${p.teacher?" · "+esc(p.teacher):""}${p.room?" · "+esc(p.room):""}</div>
+ <div class="section">
+   <h3>Zu dieser Stunde hinzufügen</h3>
+   <div class="formGrid" style="margin-top:10px">
+     <div class="full"><label>Notiz</label><textarea id="lessonNote" placeholder="z. B. Thema, Merksatz, was ihr gemacht habt …"></textarea></div>
+     <div><label>Aufgabe</label><input id="lessonTask" placeholder="z. B. Arbeitsblatt fertig machen"></div>
+     <div><label>Fällig</label><input id="lessonDue" type="date" value="${todayISO()}"></div>
+   </div>
+   <div class="row" style="margin-top:10px;flex-wrap:wrap">
+     <button class="primary" onclick="saveLessonNote('${esc(key)}')">Notiz speichern</button>
+     <button class="ghost" onclick="saveLessonTask('${esc(key)}','${esc(p.subject)}')">Aufgabe speichern</button>
+   </div>
+ </div>
+ <div class="section"><h3>Notizen</h3><div class="stack" style="margin-top:9px">${notes}</div></div>
+ <div class="section"><h3>Aufgaben</h3><div class="stack" style="margin-top:9px">${tasks}</div></div>`);
+}
+window.saveLessonNote=function(key){
+ const t=$("#lessonNote").value.trim(); if(!t)return;
+ const ex=data.lessonExtras[key] ||= {notes:[],tasks:[],files:[]}; ex.notes.push({id:id(),text:t,date:todayISO()}); save(); closeModal();
+}
+window.saveLessonTask=function(key,subject){
+ const t=$("#lessonTask").value.trim(); if(!t)return;
+ const due=$("#lessonDue").value;
+ const ex=data.lessonExtras[key] ||= {notes:[],tasks:[],files:[]}; ex.tasks.push({id:id(),text:t,due});
+ data.homework.push({id:id(),subject:prettySubject(subject),text:t,due,note:"Aus Unterrichtsstunde",done:false,created:Date.now()});
+ save(); closeModal();
+}
+window.deleteLessonItem=function(key,type,itemId){
+ const ex=data.lessonExtras[key]; if(!ex)return; ex[type]=ex[type].filter(x=>x.id!==itemId); save(); closeModal();
+}
+
+window.openAddHomework=function(){
+ openModal(`<h2>Hausaufgabe</h2><div class="formGrid">
+ <div><label>Fach</label><select id="hwSubject">${subjectOptions()}</select></div>
+ <div><label>Fällig</label><input id="hwDue" type="date" value="${todayISO()}"></div>
+ <div class="full"><label>Aufgabe</label><textarea id="hwText" placeholder="z. B. Seite 42, Aufgabe 3–5"></textarea></div>
+ <div class="full"><label>Notiz</label><input id="hwNote" placeholder="optional"></div>
+ <div class="full"><label>Fotos / Dateien</label><input id="hwFiles" type="file" multiple accept="image/*,.pdf,.doc,.docx,.ppt,.pptx"></div></div>
+ <button class="primary" style="margin-top:12px" onclick="addHomework()">Speichern</button>`)
+}
+window.addHomework=async function(){
+ const text=$("#hwText").value.trim();if(!text)return;
+ const obj={id:id(),subject:$("#hwSubject").value,text,due:$("#hwDue").value,note:$("#hwNote").value.trim(),done:false,created:Date.now(),files:[]};
+ await storeEntityFiles(obj,$("#hwFiles")?.files||[]);
+ data.homework.push(obj);save();closeModal()
+}
+window.toggleHomework=function(i){const x=data.homework.find(x=>x.id===i);if(x){x.done=!x.done;save()}}
+window.deleteHomework=function(i){data.homework=data.homework.filter(x=>x.id!==i);save()}
+
+window.openAddTest=function(){
+ openModal(`<h2>Test / Klassenarbeit</h2><div class="formGrid">
+ <div><label>Fach</label><select id="tSubject">${subjectOptions()}</select></div>
+ <div><label>Datum</label><input id="tDate" type="date" value="${todayISO()}"></div>
+ <div><label>Art</label><select id="tType"><option>Test</option><option>Klassenarbeit</option><option>Präsentation</option><option>Prüfung</option></select></div>
+ <div><label>Erinnerung</label><select id="tReminder"><option value="1">1 Tag vorher</option><option value="3">3 Tage vorher</option><option value="7">7 Tage vorher</option></select></div>
+ <div class="full"><label>Beschreibung / Themen</label><textarea id="tText"></textarea></div>
+ <div class="full"><label>Fotos / Dateien</label><input id="testFiles" type="file" multiple accept="image/*,.pdf,.doc,.docx,.ppt,.pptx"></div></div>
+ <button class="primary" style="margin-top:12px" onclick="addTest()">Speichern</button>`)
+}
+window.addTest=async function(){
+ const obj={id:id(),subject:$("#tSubject").value,date:$("#tDate").value,type:$("#tType").value,reminder:+$("#tReminder").value,text:$("#tText").value.trim(),files:[]};
+ await storeEntityFiles(obj,$("#testFiles")?.files||[]);
+ data.tests.push(obj);save();closeModal()
+}
+window.deleteTest=i=>{data.tests=data.tests.filter(x=>x.id!==i);save()}
+
+window.openAddGrade=function(){
+ openModal(`<h2>Note eintragen</h2><div class="formGrid">
+ <div><label>Fach</label><select id="gSubject">${subjectOptions()}</select></div>
+ <div><label>Note</label><input id="gGrade" type="number" min="1" max="6" step="0.1" value="2"></div>
+ <div><label>Gewichtung</label><select id="gWeight"><option value="1">1×</option><option value="2">2×</option><option value="0.5">0,5×</option></select></div>
+ <div><label>Datum</label><input id="gDate" type="date" value="${todayISO()}"></div>
+ <div class="full"><label>Beschreibung</label><input id="gText" placeholder="z. B. Klassenarbeit 1"></div></div>
+ <button class="primary" style="margin-top:12px" onclick="addGrade()">Speichern</button>`)
+}
+window.addGrade=function(){
+ const grade=+$("#gGrade").value;if(!grade||grade<1||grade>6)return;
+ data.grades.push({id:id(),subject:$("#gSubject").value,grade,weight:+$("#gWeight").value,date:$("#gDate").value,text:$("#gText").value.trim()});save();closeModal()
+}
+window.deleteGrade=i=>{data.grades=data.grades.filter(x=>x.id!==i);save()}
+
+
+
+
+function renderAIDecks(){
+ const sel=$("#aiDeck");if(!sel)return;
+ const subject=$("#aiSubject")?.value||"";
+ const decks=(data.flashDecks||[]).filter(d=>d.subject===subject);
+ sel.innerHTML='<option value="">Neuen KI-Ordner erstellen</option>'+decks.map(d=>`<option value="${d.id}">${esc(d.name)}</option>`).join("");
+ const wrap=$("#aiDeckWrap");if(wrap)wrap.style.display=$("#aiMode")?.value==="flashcards"?"block":"none";
+ if($("#aiMode"))$("#aiMode").onchange=()=>renderAIDecks();
+}
+
+async function updateAIStatus(){
+ const badge=$("#aiConnectionBadge"),box=$("#aiConnectionSettings");
+ aiCloudAvailable=false;
+ if(badge){badge.textContent="KI nicht aktiviert";badge.className="aiState offline"}
+ if(box)box.textContent="SchoolBloom läuft komplett kostenlos über GitHub Pages. Die kostenpflichtige Cloud-KI ist deshalb deaktiviert.";
+}
+
+window.generateAI=async function(){
+ alert("Die echte Cloud-KI ist in der kostenlosen GitHub-Version deaktiviert, damit für SchoolBloom keine laufenden Kosten entstehen.");
+}
+
+
+window.openAddFlashcard=function(){
+ openModal(`<h2>Karteikarte</h2><div class="formGrid">
+ <div><label>Fach</label><select id="fSubject">${subjectOptions()}</select></div>
+ <div class="full"><label>Vorderseite / Frage</label><textarea id="fQ"></textarea></div>
+ <div class="full"><label>Rückseite / Antwort</label><textarea id="fA"></textarea></div></div>
+ <button class="primary" style="margin-top:12px" onclick="addFlashcard()">Speichern</button>`)
+}
+window.addFlashcard=function(){
+ const q=$("#fQ").value.trim(),a=$("#fA").value.trim();if(!q||!a)return;
+ data.flashcards.push({id:id(),subject:$("#fSubject").value,q,a,created:Date.now()});currentFlash=data.flashcards.length-1;flashFlipped=false;save();closeModal()
+}
+window.flipFlash=()=>{flashFlipped=!flashFlipped;renderFlash()}
+window.nextFlash=function(dir=1){
+ if(!data.flashcards.length)return;currentFlash=(currentFlash+dir+data.flashcards.length)%data.flashcards.length;flashFlipped=false;renderFlash()
+}
+window.deleteFlash=function(){if(!data.flashcards.length)return;data.flashcards.splice(currentFlash,1);currentFlash=0;flashFlipped=false;save()}
+
+window.openAddSubject=function(){
+ openModal(`<h2>Fach erstellen</h2><div class="formGrid">
+ <div><label>Name</label><input id="sName" placeholder="z. B. LF 8"></div>
+ <div><label>Ordnerfarbe</label><input id="sColor" type="color" value="#f2b6b3"></div>
+ <div><label>Coverfarbe</label><input id="sCover" type="color" value="#f7d2cf"></div>
+ <div><label>Symbol</label><select id="sEmoji"><option>🌸</option><option>🌷</option><option>🍀</option><option>🧸</option><option>⭐</option><option>🎀</option><option>🫐</option><option>🍓</option></select></div>
+ </div><button class="primary" style="margin-top:12px" onclick="addSubject()">Erstellen</button>`)
+}
+window.addSubject=function(){
+ const n=$("#sName").value.trim();if(!n)return;
+ data.subjects.push({id:id(),name:n,color:$("#sColor").value,cover:$("#sCover").value,emoji:$("#sEmoji").value,notes:[],topics:[],files:[]});
+ save();closeModal()
+}
+window.addNote=function(sid){const s=data.subjects.find(x=>x.id===sid),title=$("#nTitle").value.trim(),text=$("#nText").value.trim();if(!s||(!title&&!text))return;(s.notes||(s.notes=[])).push({id:id(),title:title||"Notiz",text});save();openSubject(sid)}
+window.deleteNote=function(sid,nid){const s=data.subjects.find(x=>x.id===sid);if(!s)return;s.notes=(s.notes||[]).filter(n=>n.id!==nid);save();renderSubjectDetail()}
+window.deleteSubject=function(sid){data.subjects=data.subjects.filter(x=>x.id!==sid);save();closeModal();openView("subjects")}
+
+
+
+window.openSubject=function(sid){
+ const s=data.subjects.find(x=>x.id===sid);if(!s)return;
+ ensureSubjectShape(s);selectedSubjectId=sid;openView("subject-detail");
+}
+function renderSubjectDetail(){
+ const root=$("#subjectDetail");if(!root)return;
+ const s=data.subjects.find(x=>x.id===selectedSubjectId);
+ if(!s){root.innerHTML='<div class="empty">Fach nicht gefunden.</div>';return}
+ ensureSubjectShape(s);
+ const folders=(s.topics||[]).map(t=>{
+   const decks=(data.flashDecks||[]).filter(d=>d.subject===s.name&&d.topicId===t.id).length;
+   const sheets=(data.studySheets||[]).filter(x=>x.subject===s.name&&x.topicId===t.id).length;
+   const quizzes=(data.quizzes||[]).filter(x=>x.subject===s.name&&x.topicId===t.id).length;
+   return `<button class="topicFolder" style="--topicbg:${s.cover||s.color}" onclick="openTopic('${s.id}','${t.id}')">
+     <div class="ticon">📁</div><div class="tname">${esc(t.title)}</div><div class="tmeta">${sheets} Lernblätter · ${decks} Kartenordner · ${quizzes} Quiz</div>
+   </button>`;
+ }).join("")||'<div class="empty">Noch keine Themen-Ordner. Erstelle deinen ersten.</div>';
+ root.innerHTML=`<div class="subjectHero" style="background:${s.cover||s.color};color:#6d5950">
+   <div class="emoji">${esc(s.emoji||"🌸")}</div><div class="name">${esc(s.name)}</div>
+   <div class="meta">${(s.topics||[]).length} Themen-Ordner</div>
+ </div>
+ <div class="section"><div class="sectionHead"><h2>Themen</h2><button class="primary" onclick="openNewTopic('${s.id}')">+ Thema</button></div><div class="topicFolderGrid">${folders}</div></div>
+ <div class="section panel"><h3>Notizbuch gestalten</h3><p class="small">Farbe, Cover und Symbol des Fachs.</p><button class="ghost" onclick="openCoverEditor('${s.id}')">🎨 Cover ändern</button></div>`;
+ const del=$("#deleteCurrentSubjectBtn");if(del)del.onclick=()=>deleteSubjectFromPage(s.id);
+}
+
+
+
+const builtInFonts=[
+ {name:"Modern",css:"Arial, sans-serif"},
+ {name:"Elegant",css:"Georgia, serif"},
+ {name:"Clean",css:"Trebuchet MS, sans-serif"},
+ {name:"Soft",css:"Verdana, sans-serif"},
+ {name:"Classic",css:"Times New Roman, serif"},
+ {name:"Rounded",css:"Arial Rounded MT Bold, Arial, sans-serif"}
+];
+
+function sheetFontOptions(selected=""){
+ const custom=JSON.parse(localStorage.getItem("schoolbloom-custom-fonts")||"[]");
+ return [...builtInFonts,...custom].map(f=>`<option value="${esc(f.css)}" ${f.css===selected?"selected":""}>${esc(f.name)}</option>`).join("");
+}
+
+
+
+window.openStudySheetEditor=function(sheetId=null){
+ selectedSheetId=sheetId||null;
+ openView("sheet-editor");
+}
+window.closeSheetEditor=function(){openTopic(selectedSubjectId,selectedTopicId)}
+
+let canvasState={objects:[],vectors:[],selectedType:null,selectedId:null,vectorTool:"select",drawing:null,drag:null,snap:true,history:[],historyIndex:-1,historyLock:false,autosaveTimer:null,lastSavedHash:""};
+const canvasStylesDefault=[
+ {id:"h1",name:"Überschrift 1",type:"text",fontSize:34,fontWeight:"900",color:"#4f4540",fontFamily:"Georgia",bg:"transparent",borderColor:"transparent",borderWidth:0,radius:0,padding:7},
+ {id:"h2",name:"Unterüberschrift",type:"text",fontSize:24,fontWeight:"800",color:"#66564f",fontFamily:"Trebuchet MS",bg:"transparent",borderColor:"transparent",borderWidth:0,radius:0,padding:7},
+ {id:"body",name:"Normal",type:"text",fontSize:16,fontWeight:"400",color:"#3d3835",fontFamily:"Arial",bg:"transparent",borderColor:"transparent",borderWidth:0,radius:0,padding:7},
+ {id:"task",name:"Aufgabe",type:"block",fontSize:16,fontWeight:"700",color:"#6b554c",fontFamily:"Trebuchet MS",bg:"#fff5eb",borderColor:"#efd4be",borderWidth:1,radius:14,padding:12,prefix:"Aufgabe: "},
+ {id:"merke",name:"Merke",type:"block",fontSize:16,fontWeight:"700",color:"#765750",fontFamily:"Georgia",bg:"#fff0ef",borderColor:"#efcac7",borderWidth:1,radius:14,padding:12,prefix:"Merke: "}
+];
+
+
+function canvasSnapshot(){return JSON.stringify({objects:canvasState.objects,vectors:canvasState.vectors})}
+function pushHistory(force=false){
+ if(canvasState.historyLock)return;const snap=canvasSnapshot();
+ if(!force&&canvasState.history[canvasState.historyIndex]===snap)return;
+ canvasState.history=canvasState.history.slice(0,canvasState.historyIndex+1);canvasState.history.push(snap);
+ if(canvasState.history.length>60)canvasState.history.shift();canvasState.historyIndex=canvasState.history.length-1;updateHistoryButtons();scheduleAutosave();
+}
+function restoreHistory(index){
+ if(index<0||index>=canvasState.history.length)return;canvasState.historyLock=true;const d=JSON.parse(canvasState.history[index]);canvasState.objects=d.objects||[];canvasState.vectors=d.vectors||[];canvasState.historyIndex=index;canvasState.selectedType=null;canvasState.selectedId=null;renderCanvasObjects();renderVectors();renderCanvasInspector();renderLayerList();clearGuides();canvasState.historyLock=false;updateHistoryButtons();
+}
+window.undoCanvas=function(){restoreHistory(canvasState.historyIndex-1)}
+window.redoCanvas=function(){restoreHistory(canvasState.historyIndex+1)}
+function updateHistoryButtons(){const u=$("#undoBtn"),r=$("#redoBtn");if(u)u.disabled=canvasState.historyIndex<=0;if(r)r.disabled=canvasState.historyIndex>=canvasState.history.length-1}
+function scheduleAutosave(){clearTimeout(canvasState.autosaveTimer);const el=$("#autosaveState");if(el){el.textContent="Nicht gespeichert";el.className="autosaveState saving"}canvasState.autosaveTimer=setTimeout(()=>autoSaveCanvas(),850)}
+function autoSaveCanvas(){const {s,t}=currentTopic();if(!s||!t)return;const snapshot=canvasSnapshot();if(snapshot===canvasState.lastSavedHash)return;saveCanvasSheetCore(true);canvasState.lastSavedHash=canvasSnapshot();const el=$("#autosaveState");if(el){el.textContent="Automatisch gespeichert ✓";el.className="autosaveState saved"}}
+
+function canvasPresets(){
+ const custom=JSON.parse(localStorage.getItem("schoolbloom-canvas-styles")||"[]");
+ return [...canvasStylesDefault,...custom];
+}
+function renderStylePresets(){
+ const bar=$("#stylePresetBar");if(!bar)return;
+ bar.className="formatStrip";
+ bar.innerHTML=canvasPresets().map(s=>`<button class="formatChip" onclick="addCanvasText('${s.id}')">${esc(s.name)}</button>`).join("")+
+ `<button class="formatChip formatAdd" title="Neues Textformat" onclick="createCustomStylePreset()">＋</button>`;
+}
+window.createCustomStylePreset=function(editId=null){
+ const old=editId?canvasPresets().find(x=>x.id===editId):null;
+ openModal(`<h2>${old?"Textformat bearbeiten":"Neues Textformat"}</h2>
+ <div class="formGrid">
+  <div><label>Name</label><input id="presetName" value="${esc(old?.name||"")}" placeholder="z. B. Definition"></div>
+  <div><label>Schriftgröße</label><input id="presetSize" type="number" min="8" max="72" value="${old?.fontSize||16}"></div>
+  <div><label>Schriftart</label><select id="presetFont">${["Arial","Georgia","Trebuchet MS","Verdana","Times New Roman","Courier New"].map(x=>`<option ${x===(old?.fontFamily||"Arial")?"selected":""}>${x}</option>`).join("")}</select></div>
+  <div><label>Schriftfarbe</label><input id="presetColor" type="color" value="${old?.color||"#4f4540"}"></div>
+  <div><label>Schriftgewicht</label><select id="presetWeight"><option value="400" ${old?.fontWeight=="400"?"selected":""}>Normal</option><option value="700" ${old?.fontWeight=="700"?"selected":""}>Fett</option><option value="900" ${old?.fontWeight=="900"?"selected":""}>Sehr fett</option></select></div>
+  <div><label>Kasten</label><select id="presetBox"><option value="no" ${old?.type==="text"?"selected":""}>Kein Kasten</option><option value="yes" ${old?.type==="block"?"selected":""}>Mit Kasten</option></select></div>
+  <div><label>Hintergrund</label><input id="presetBg" type="color" value="${old?.bg&&old.bg!=="transparent"?old.bg:"#fff5eb"}"></div>
+  <div><label>Kontur</label><input id="presetBorder" type="color" value="${old?.borderColor&&old.borderColor!=="transparent"?old.borderColor:"#efd4be"}"></div>
+  <div><label>Konturdicke</label><input id="presetBorderWidth" type="number" min="0" max="12" value="${old?.borderWidth||1}"></div>
+  <div><label>Ecken rund</label><input id="presetRadius" type="number" min="0" max="60" value="${old?.radius||14}"></div>
+  <div><label>Innenabstand</label><input id="presetPadding" type="number" min="0" max="50" value="${old?.padding||10}"></div>
+  <div><label>Starttext</label><input id="presetPrefix" value="${esc(old?.prefix||"")}"></div>
+ </div>
+ <button class="primary" style="margin-top:10px" onclick="saveCustomStylePreset('${editId||""}')">Speichern</button>
+ ${old&&!String(old.id).startsWith("h")&&!["body","task","merke"].includes(old.id)?`<button class="dangerBtn" style="margin-top:10px" onclick="deleteCustomStylePreset('${old.id}')">Format löschen</button>`:""}`);
+}
+window.saveCustomStylePreset=function(editId=""){
+ let arr=JSON.parse(localStorage.getItem("schoolbloom-canvas-styles")||"[]");
+ const box=$("#presetBox").value==="yes";
+ const obj={id:editId||"custom-"+Date.now(),name:$("#presetName").value.trim()||"Eigenes Format",type:box?"block":"text",
+ fontSize:+$("#presetSize").value||16,fontWeight:$("#presetWeight").value,color:$("#presetColor").value,
+ fontFamily:$("#presetFont").value,bg:box?$("#presetBg").value:"transparent",borderColor:box?$("#presetBorder").value:"transparent",
+ borderWidth:box?(+$("#presetBorderWidth").value||0):0,radius:box?(+$("#presetRadius").value||0):0,padding:+$("#presetPadding").value||7,prefix:$("#presetPrefix").value||""};
+ const i=arr.findIndex(x=>x.id===editId);if(i>=0)arr[i]=obj;else arr.push(obj);
+ localStorage.setItem("schoolbloom-canvas-styles",JSON.stringify(arr));closeModal();renderStylePresets();
+}
+window.deleteCustomStylePreset=function(idv){
+ let arr=JSON.parse(localStorage.getItem("schoolbloom-canvas-styles")||"[]");arr=arr.filter(x=>x.id!==idv);
+ localStorage.setItem("schoolbloom-canvas-styles",JSON.stringify(arr));closeModal();renderStylePresets();
+}
+
+function nextCanvasZ(){
+ const zs=[...canvasState.objects.map(x=>x.z||0),...canvasState.vectors.map(x=>x.z||0)];return (zs.length?Math.max(...zs):0)+1;
+}
+function newCanvasObject(styleId){
+ const s=canvasPresets().find(x=>x.id===styleId)||canvasStylesDefault[2];
+ return {id:id(),z:nextCanvasZ(),kind:s.type==="block"?"block":"text",formatId:s.id,x:80,y:90,w:s.type==="block"?430:360,h:s.type==="block"?100:70,
+ text:s.prefix||"",rotation:0,locked:false,editing:false,
+ style:{fontSize:s.fontSize,fontWeight:s.fontWeight,color:s.color,fontFamily:s.fontFamily||"Arial",background:s.bg||"transparent",
+ borderColor:s.borderColor||"transparent",borderWidth:s.borderWidth||0,borderRadius:s.radius||0,padding:s.padding??7,textAlign:"left"}};
+}
+window.addCanvasText=function(styleId){
+ const o=newCanvasObject(styleId);
+ if(styleId==="h1")o.text="Überschrift";
+ else if(styleId==="h2")o.text="Unterüberschrift";
+ else if(styleId==="body")o.text="Text eingeben …";
+ else if(styleId==="task"&&!o.text)o.text="Aufgabe: ";
+ else if(styleId==="merke"&&!o.text)o.text="Merke: ";
+ else if(!o.text)o.text="Text eingeben …";
+ canvasState.objects.push(o);renderCanvasObjects();selectCanvasObject(o.id);
+ markCanvasDirty();
+}
+window.addCanvasImage=function(file){
+ if(!file)return;
+ const r=new FileReader();r.onload=()=>{const o={id:id(),z:nextCanvasZ(),kind:"image",x:110,y:150,w:300,h:200,src:r.result};canvasState.objects.push(o);renderCanvasObjects();selectCanvasObject(o.id);pushHistory()};r.readAsDataURL(file)
+}
+window.openTableDialog=function(){
+ openModal(`<h2>Tabelle einfügen</h2><div class="formGrid"><div><label>Spalten</label><input id="tblCols" type="number" min="1" max="12" value="3"></div><div><label>Zeilen</label><input id="tblRows" type="number" min="1" max="30" value="4"></div></div><button class="primary" style="margin-top:10px" onclick="insertCanvasTable()">Einfügen</button>`);
+}
+window.insertCanvasTable=function(){
+ const cols=Math.max(1,Math.min(12,+$("#tblCols").value||3)),rows=Math.max(1,Math.min(30,+$("#tblRows").value||4));
+ const cells=Array.from({length:rows},()=>Array.from({length:cols},()=>"..."));
+ const o={id:id(),z:nextCanvasZ(),kind:"table",x:90,y:180,w:520,h:Math.max(100,rows*38),rows,cols,cells};canvasState.objects.push(o);closeModal();renderCanvasObjects();selectCanvasObject(o.id);pushHistory();
+}
+const stickers=["🌸","🌷","🎀","🧸","⭐","✨","🍀","🍓","🫐","☁️","🌙","💗","📚","✏️","📝","🌼","🐻","🐰","🍵","💫","🌱"];
+function renderStickerPicker(){const el=$("#stickerPicker");if(el)el.innerHTML=stickers.map(s=>`<button onclick="addSticker('${s}')">${s}</button>`).join("")}
+window.toggleStickerPanel=function(){const p=$("#stickerPanel");p.style.display=p.style.display==="none"?"block":"none"}
+
+window.addPaperSticker=function(type){
+ const o={id:id(),z:nextCanvasZ(),kind:"paper",paperType:type,x:110,y:160,w:420,h:230,spacing:type==="grid"?20:28};
+ canvasState.objects.push(o);renderCanvasObjects();selectCanvasObject(o.id);pushHistory();
+}
+window.addTapeSticker=function(){
+ const o={id:id(),z:nextCanvasZ(),kind:"tape",x:160,y:110,w:150,h:38,rotation:-5};
+ canvasState.objects.push(o);renderCanvasObjects();selectCanvasObject(o.id);pushHistory();
+}
+
+window.addSticker=function(s){const o={id:id(),z:nextCanvasZ(),kind:"sticker",x:120,y:120,w:80,h:80,text:s};canvasState.objects.push(o);renderCanvasObjects();selectCanvasObject(o.id);pushHistory()}
+
+
+function layerName(o){
+ if(o.kind==="text")return "Text";
+ if(o.kind==="task")return "Aufgabe";
+ if(o.kind==="merke")return "Merke";
+ if(o.kind==="image")return "Bild";
+ if(o.kind==="sticker")return "Sticker "+(o.text||"");
+ if(o.kind==="table")return "Tabelle";
+ if(o.kind==="paper")return o.paperType==="grid"?"Karo-Zettel":o.paperType==="line"?"Linierter Zettel":"Leerer Zettel";
+ if(o.kind==="tape")return "Klebeband";
+ return o.kind;
+}
+function renderLayerList(){
+ const el=$("#layerList");if(!el)return;
+ const all=[
+   ...canvasState.objects.map(o=>({kind:"object",id:o.id,z:o.z||0,locked:o.locked,name:layerName(o)})),
+   ...canvasState.vectors.map(v=>({kind:"vector",id:v.id,z:v.z||0,locked:v.locked,name:"Form · "+v.type}))
+ ].sort((a,b)=>b.z-a.z);
+ el.innerHTML=all.length?all.map(a=>`<div class="layerItem ${canvasState.selectedType===a.kind&&canvasState.selectedId===a.id?"active":""}">
+   <div class="layerRow">
+     <button style="border:0;background:transparent;flex:1;text-align:left;color:inherit" onclick="${a.kind==="object"?`selectCanvasObject('${a.id}')`:`selectVector('${a.id}')`}"><span class="layerMeta">${a.locked?"🔒":""}<span class="layerName">${esc(a.name)}</span></span></button>
+     <div class="layerTools">
+       <button title="Nach vorne" onclick="event.stopPropagation();${a.kind==="object"?`selectCanvasObject('${a.id}')`:`selectVector('${a.id}')`};moveSelectedLayer(1)">↑</button>
+       <button title="Nach hinten" onclick="event.stopPropagation();${a.kind==="object"?`selectCanvasObject('${a.id}')`:`selectVector('${a.id}')`};moveSelectedLayer(-1)">↓</button>
+       <button title="Sperren" onclick="event.stopPropagation();${a.kind==="object"?`selectCanvasObject('${a.id}')`:`selectVector('${a.id}')`};toggleSelectedLock()">${a.locked?"🔓":"🔒"}</button>
+       <button title="Löschen" onclick="event.stopPropagation();${a.kind==="object"?`selectCanvasObject('${a.id}')`:`selectVector('${a.id}')`};deleteSelectedCanvasItem()">×</button>
+     </div>
+   </div>
+ </div>`).join(""):'<div class="small">Noch keine Elemente.</div>';
+}
+
+function renderCanvasObjects(){
+ const root=$("#canvasObjects");if(!root)return;
+ root.innerHTML=canvasState.objects.map(o=>{
+   const sel=canvasState.selectedType==="object"&&canvasState.selectedId===o.id?"selected":"";
+   const lockCls=o.locked?" locked":"";
+   const base=`left:${o.x}px;top:${o.y}px;width:${o.w}px;height:${o.h}px;z-index:${o.z||0};`;
+   if(o.kind==="image")return `<div class="cobj imageObj ${sel}${lockCls}" data-id="${o.id}" style="${base}"><img src="${o.src}"><span class="rotateHandle"></span><span class="resizeHandle"></span></div>`;
+   if(o.kind==="sticker")return `<div class="cobj stickerObj ${sel}${lockCls}" data-id="${o.id}" style="${base}">${o.text}<span class="rotateHandle"></span><span class="resizeHandle"></span></div>`;
+   if(o.kind==="paper"){
+     const cls=o.paperType==="grid"?"gridPaper":o.paperType==="line"?"linePaper":"blankPaper";
+     const vars=(o.paperType==="grid"?`--gridSize:${o.spacing||20}px`:o.paperType==="line"?`--lineSize:${o.spacing||28}px`:"")+`;background-color:${o.paperColor||"#fffdf7"};`;
+     return `<div class="cobj paperSticker ${cls} ${sel}${lockCls}" data-id="${o.id}" style="${base}${vars}"><span class="rotateHandle"></span><span class="resizeHandle"></span></div>`;
+   }
+   if(o.kind==="tape")return `<div class="cobj tapeSticker ${sel}${lockCls}" data-id="${o.id}" style="${base}--rot:${o.rotation||-4}deg;background:${o.color||"#f2beb2"}"><span class="rotateHandle"></span><span class="resizeHandle"></span></div>`;
+   if(o.kind==="table"){
+     const table=`<table>${o.cells.map((row,ri)=>`<tr>${row.map((c,ci)=>`<td contenteditable="true" data-r="${ri}" data-c="${ci}">${esc(c)}</td>`).join("")}</tr>`).join("")}</table>`;
+     return `<div class="cobj tableObj ${sel}${lockCls}" data-id="${o.id}" style="${base}">${table}<span class="rotateHandle"></span><span class="resizeHandle"></span></div>`;
+   }
+   const cls=o.kind==="block"?"calloutObj":o.kind==="task"?"taskObj":o.kind==="merke"?"merkeObj":"textObj";
+   const s=o.style||{};
+   const editCls=o.editing?" editing":"";
+   return `<div class="cobj ${cls} ${sel}${lockCls}${editCls}" data-id="${o.id}" contenteditable="${o.editing?"true":"false"}" style="${base}transform:rotate(${o.rotation||0}deg);font-size:${s.fontSize||16}px;font-weight:${s.fontWeight||400};color:${s.color||"#333"};font-family:${s.fontFamily||"Arial"};background:${s.background||"transparent"};border:${s.borderWidth||0}px solid ${s.borderColor||"transparent"};border-radius:${s.borderRadius||0}px;padding:${s.padding??7}px;text-align:${s.textAlign||"left"}">${o.text||""}<span class="rotateHandle"></span><span class="resizeHandle"></span></div>`;
+ }).join("");
+ attachCanvasObjectEvents();renderLayerList();
+}
+function attachCanvasObjectEvents(){
+ $$("#canvasObjects .cobj").forEach(el=>{
+   const oid=el.dataset.id;
+   el.addEventListener("pointerdown",e=>{
+     const o=canvasState.objects.find(x=>x.id===oid);if(!o)return;
+     if(e.target.classList.contains("rotateHandle")){if(o.locked)return;e.preventDefault();e.stopPropagation();startRotateObject(e,oid);return}
+     if(e.target.classList.contains("resizeHandle")){if(o.locked)return;e.preventDefault();e.stopPropagation();startResizeObject(e,oid);return}
+     if(e.target.tagName==="TD")return;
+     const already=canvasState.selectedType==="object"&&canvasState.selectedId===oid;
+     if(!already){canvasState.objects.forEach(x=>x.editing=false);selectCanvasObject(oid);return}
+     if(o.locked)return;
+     if(o.editing)return;
+     const start=canvasPoint(e),ox=o.x,oy=o.y;let moved=false;
+     const move=ev=>{const q=canvasPoint(ev);if(Math.hypot(q.x-start.x,q.y-start.y)>6)moved=true;if(moved){const rawX=Math.max(0,Math.min(794-o.w,ox+q.x-start.x)),rawY=Math.max(0,Math.min(1123-o.h,oy+q.y-start.y)),sn=snapObjectPosition(o,rawX,rawY);o.x=sn.x;o.y=sn.y;el.style.left=o.x+"px";el.style.top=o.y+"px";markCanvasDirty(false)}};
+     const up=()=>{window.removeEventListener("pointermove",move);window.removeEventListener("pointerup",up);clearGuides();if(moved){pushHistory();return}if(["text","block","task","merke"].includes(o.kind)){o.editing=true;renderCanvasObjects();setTimeout(()=>document.querySelector(`.cobj[data-id="${oid}"]`)?.focus(),0)}};
+     window.addEventListener("pointermove",move);window.addEventListener("pointerup",up);
+   });
+   if(el.isContentEditable)el.addEventListener("input",()=>{const o=canvasState.objects.find(x=>x.id===oid);if(o)o.text=el.innerHTML;markCanvasDirty()});
+   el.querySelectorAll("td").forEach(td=>td.addEventListener("input",()=>{const o=canvasState.objects.find(x=>x.id===oid);if(o)o.cells[+td.dataset.r][+td.dataset.c]=td.innerText;markCanvasDirty()}));
+ });
+}
+
+function clearGuides(){const g=$("#canvasGuides");if(g)g.innerHTML=""}
+function drawGuideX(x,label=""){const g=$("#canvasGuides");if(!g)return;g.insertAdjacentHTML("beforeend",`<div class="guideLine guideV" style="left:${x}px"></div>${label?`<div class="guideLabel" style="left:${x}px;top:18px">${label}</div>`:""}`)}
+function drawGuideY(y,label=""){const g=$("#canvasGuides");if(!g)return;g.insertAdjacentHTML("beforeend",`<div class="guideLine guideH" style="top:${y}px"></div>${label?`<div class="guideLabel" style="left:38px;top:${y}px">${label}</div>`:""}`)}
+function snapObjectPosition(o,x,y){
+ clearGuides();if(!canvasState.snap)return{x,y};const th=7;const cx=[0,397-o.w/2,794-o.w],cy=[0,561.5-o.h/2,1123-o.h];
+ for(const a of canvasState.objects){if(a.id===o.id)continue;cx.push(a.x,a.x+a.w/2-o.w/2,a.x+a.w-o.w);cy.push(a.y,a.y+a.h/2-o.h/2,a.y+a.h-o.h)}
+ let sx=x,sy=y,bx=th+1,by=th+1;for(const c of cx){const d=Math.abs(x-c);if(d<bx){bx=d;sx=c}}for(const c of cy){const d=Math.abs(y-c);if(d<by){by=d;sy=c}}
+ if(bx<=th)drawGuideX(sx+o.w/2,Math.abs(sx+o.w/2-397)<2?"Mitte":"");if(by<=th)drawGuideY(sy+o.h/2,Math.abs(sy+o.h/2-561.5)<2?"Mitte":"");return{x:sx,y:sy};
+}
+
+function canvasPoint(e){const stage=$("#canvasStage"),r=stage.getBoundingClientRect(),sc=Number(stage.dataset.scale||1);return{x:(e.clientX-r.left)/sc,y:(e.clientY-r.top)/sc}}
+function startDragObject(e,oid){
+ const o=canvasState.objects.find(x=>x.id===oid);if(!o||o.locked)return;const p=canvasPoint(e),ox=o.x,oy=o.y;
+ const move=ev=>{const q=canvasPoint(ev),rawX=Math.max(0,Math.min(794-o.w,ox+q.x-p.x)),rawY=Math.max(0,Math.min(1123-o.h,oy+q.y-p.y)),sn=snapObjectPosition(o,rawX,rawY);o.x=sn.x;o.y=sn.y;const el=document.querySelector(`.cobj[data-id="${oid}"]`);if(el){el.style.left=o.x+"px";el.style.top=o.y+"px"}markCanvasDirty(false)};
+ const up=()=>{clearGuides();window.removeEventListener("pointermove",move);window.removeEventListener("pointerup",up);pushHistory()};window.addEventListener("pointermove",move);window.addEventListener("pointerup",up);
+}
+
+function startRotateObject(e,oid){
+ const o=canvasState.objects.find(x=>x.id===oid);if(!o||o.locked)return;const center={x:o.x+o.w/2,y:o.y+o.h/2},start=canvasPoint(e),startAngle=Math.atan2(start.y-center.y,start.x-center.x),base=o.rotation||0;
+ const move=ev=>{const q=canvasPoint(ev),ang=Math.atan2(q.y-center.y,q.x-center.x);o.rotation=base+(ang-startAngle)*180/Math.PI;const el=document.querySelector(`.cobj[data-id="${oid}"]`);if(el)el.style.transform=`rotate(${o.rotation}deg)`;markCanvasDirty(false)};
+ const up=()=>{window.removeEventListener("pointermove",move);window.removeEventListener("pointerup",up);pushHistory()};window.addEventListener("pointermove",move);window.addEventListener("pointerup",up);
+}
+
+function startResizeObject(e,oid){
+ const o=canvasState.objects.find(x=>x.id===oid);if(!o||o.locked)return;const p=canvasPoint(e),ow=o.w,oh=o.h;
+ const move=ev=>{const q=canvasPoint(ev);o.w=Math.max(40,ow+q.x-p.x);o.h=Math.max(30,oh+q.y-p.y);const el=document.querySelector(`.cobj[data-id="${oid}"]`);if(el){el.style.width=o.w+"px";el.style.height=o.h+"px"}markCanvasDirty(false)};
+ const up=()=>{window.removeEventListener("pointermove",move);window.removeEventListener("pointerup",up);pushHistory();renderCanvasInspector()};window.addEventListener("pointermove",move);window.addEventListener("pointerup",up);
+}
+window.selectCanvasObject=function(oid){
+ const same=canvasState.selectedType==="object"&&canvasState.selectedId===oid;
+ canvasState.selectedType="object";canvasState.selectedId=oid;
+ if(!same)renderCanvasObjects();
+ renderCanvasInspector();renderLayerList();
+}
+function renderCanvasInspector(){
+ const el=$("#canvasInspector");if(!el)return;
+ if(canvasState.selectedType==="object"){
+   const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(!o){el.textContent="Keine Auswahl";return}
+   if(["text","block","task","merke"].includes(o.kind)){
+     const s=o.style||{};
+     el.innerHTML=`<div class="editorHintStrong"><b>1× tippen:</b> auswählen/verschieben · <b>2× tippen:</b> Text bearbeiten.</div>
+       ${o.formatId?`<div class="editRow"><span class="badge">${esc(canvasPresets().find(x=>x.id===o.formatId)?.name||"Textformat")}</span>${String(o.formatId).startsWith("custom-")?`<button class="miniIcon" title="Format bearbeiten" onclick="createCustomStylePreset('${o.formatId}')">✎</button>`:""}</div>`:""}
+       <div class="inlineFormatBar" style="margin:8px 0">
+         <button onclick="formatSelectedText('bold')"><b>B</b></button>
+         <button onclick="formatSelectedText('italic')"><i>I</i></button>
+         <button onclick="formatSelectedText('underline')"><u>U</u></button>
+         <button onclick="formatSelectedText('insertUnorderedList')">• Liste</button>
+         <button onclick="formatSelectedText('insertOrderedList')">1. Liste</button>
+       </div>
+       <div class="objectPanelGrid">
+       <div><label>Schriftgröße</label><input id="insFontSize" type="number" min="8" max="72" value="${s.fontSize||16}" onchange="applyTextProperty('fontSize',+this.value)"></div>
+       <div><label>Schriftfarbe</label><input id="insColor" type="color" value="${s.color||"#333333"}" onchange="applyTextProperty('color',this.value)"></div>
+       <div><label>Schrift</label><select class="fontSelect" onchange="applyTextProperty('fontFamily',this.value)"><option value="Arial" ${String(s.fontFamily).includes("Arial")?"selected":""}>Arial</option><option value="Georgia" ${String(s.fontFamily).includes("Georgia")?"selected":""}>Georgia</option><option value="Trebuchet MS" ${String(s.fontFamily).includes("Trebuchet")?"selected":""}>Trebuchet</option><option value="Verdana" ${String(s.fontFamily).includes("Verdana")?"selected":""}>Verdana</option><option value="Times New Roman" ${String(s.fontFamily).includes("Times")?"selected":""}>Times</option><option value="Courier New" ${String(s.fontFamily).includes("Courier")?"selected":""}>Courier</option></select></div>
+       <div><label>Ausrichtung</label><select onchange="updateObjStyle('textAlign',this.value)"><option value="left" ${s.textAlign==="left"?"selected":""}>Links</option><option value="center" ${s.textAlign==="center"?"selected":""}>Mitte</option><option value="right" ${s.textAlign==="right"?"selected":""}>Rechts</option></select></div>
+       <div><label>Fett</label><select onchange="applyTextProperty('fontWeight',this.value)"><option value="400">Normal</option><option value="700" ${s.fontWeight=="700"?"selected":""}>Fett</option><option value="900" ${s.fontWeight=="900"?"selected":""}>Sehr fett</option></select></div>
+       <div><label>Hintergrund</label><input type="color" value="${s.background&&s.background!=="transparent"?s.background:"#ffffff"}" onchange="updateObjStyle('background',this.value)"></div>
+       <div><label>Kontur</label><input type="color" value="${s.borderColor&&s.borderColor!=="transparent"?s.borderColor:"#ffffff"}" onchange="updateObjStyle('borderColor',this.value)"></div>
+       <div><label>Ecken</label><input type="number" min="0" max="80" value="${s.borderRadius||0}" onchange="updateObjStyle('borderRadius',+this.value)"></div>
+       <div><label>Konturdicke</label><input type="number" min="0" max="15" value="${s.borderWidth||0}" onchange="updateObjStyle('borderWidth',+this.value)"></div>
+     </div>
+     <div class="positionGrid" style="margin-top:8px"><div><label>X</label><input type="number" value="${Math.round(o.x)}" onchange="setSelectedGeometry('x',+this.value)"></div><div><label>Y</label><input type="number" value="${Math.round(o.y)}" onchange="setSelectedGeometry('y',+this.value)"></div><div><label>W</label><input type="number" value="${Math.round(o.w)}" onchange="setSelectedGeometry('w',+this.value)"></div><div><label>H</label><input type="number" value="${Math.round(o.h)}" onchange="setSelectedGeometry('h',+this.value)"></div></div>
+     <div class="alignRow" style="margin-top:8px"><button onclick="alignSelected('centerX')">↔ Mitte</button><button onclick="alignSelected('centerY')">↕ Mitte</button><button onclick="duplicateSelected()">⧉ Duplizieren</button></div>`;
+   }else if(o.kind==="table"){
+     el.innerHTML=`Tabelle: ${o.rows} Zeilen × ${o.cols} Spalten. Zellen direkt antippen und bearbeiten.`;
+   }else if(o.kind==="paper"){
+     el.innerHTML=`<div class="objectPanelGrid">
+       <div><label>Breite</label><input type="number" value="${Math.round(o.w)}" onchange="setSelectedObjectSize('w',+this.value)"></div>
+       <div><label>Höhe</label><input type="number" value="${Math.round(o.h)}" onchange="setSelectedObjectSize('h',+this.value)"></div>
+       ${o.paperType!=="blank"?`<div><label>${o.paperType==="grid"?"Karo-Größe":"Linienabstand"}</label><input type="number" min="8" max="80" value="${o.spacing||20}" onchange="setPaperSpacing(+this.value)"></div>`:""}
+       <div><label>Zettelfarbe</label><input type="color" value="${o.paperColor||"#fffdf7"}" onchange="setPaperColor(this.value)"></div>
+     </div><div class="editorHint" style="margin-top:8px">Zettel frei ziehen und am Punkt unten rechts skalieren.</div>`;
+   }else if(o.kind==="tape"){
+     el.innerHTML=`<div class="objectPanelGrid"><div><label>Breite</label><input type="number" value="${Math.round(o.w)}" onchange="setSelectedObjectSize('w',+this.value)"></div><div><label>Höhe</label><input type="number" value="${Math.round(o.h)}" onchange="setSelectedObjectSize('h',+this.value)"></div><div><label>Farbe</label><input type="color" value="${o.color||"#f2beb2"}" onchange="setTapeColor(this.value)"></div><div><label>Drehung</label><input type="number" min="-45" max="45" value="${o.rotation||-5}" onchange="setTapeRotation(+this.value)"></div></div>`;
+   }else el.innerHTML=`${o.kind==="image"?"Bild":"Sticker"} ausgewählt. Ziehen zum Verschieben, Punkt unten rechts zum Skalieren.`;
+ }else if(canvasState.selectedType==="vector"){
+   const v=canvasState.vectors.find(x=>x.id===canvasState.selectedId);if(!v){el.textContent="Keine Auswahl";return}
+   el.innerHTML=`<div class="vectorControls">
+     <div><label>Füllung</label><input type="color" value="${v.fill||"#f7d2cf"}" onchange="updateVectorStyle('fill',this.value)"></div>
+     <div><label>Kontur</label><input type="color" value="${v.stroke||"#8d7369"}" onchange="updateVectorStyle('stroke',this.value)"></div>
+     <div><label>Dicke</label><input type="number" min="0" max="30" value="${v.strokeWidth||2}" onchange="updateVectorStyle('strokeWidth',+this.value)"></div>
+     <div><label>Drehung</label><input type="number" min="-180" max="180" value="${Math.round(v.rotation||0)}" onchange="updateVectorStyle('rotation',+this.value)"></div>
+     ${v.type==="rect"?`<div><label>Ecken rund</label><input type="number" min="0" max="100" value="${v.rx||0}" onchange="updateVectorStyle('rx',+this.value)"></div>`:""}
+     <div><label>Linie</label><select onchange="updateVectorStyle('dash',this.value)"><option value="solid">Durchgezogen</option><option value="dashed" ${v.dash==="dashed"?"selected":""}>Gestrichelt</option><option value="dotted" ${v.dash==="dotted"?"selected":""}>Gepunktet</option></select></div>
+     <div class="full vectorToolbar"><button onclick="duplicateSelectedVector()">Duplizieren</button><button onclick="pathfinderSubtract()">Subtrahieren</button><button onclick="toggleNodeEdit()">Ankerpunkte</button></div>
+   </div>`;
+ }else el.textContent="Wähle ein Element aus.";
+}
+
+window.formatSelectedText=function(cmd){
+ const el=$(`.cobj[data-id="${canvasState.selectedId}"]`);
+ if(!el||!el.isContentEditable)return;
+ el.focus();document.execCommand(cmd,false,null);
+ const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(o)o.text=el.innerText;
+ markCanvasDirty();
+}
+window.applyTextProperty=function(prop,value){
+ const el=$(`.cobj[data-id="${canvasState.selectedId}"]`);
+ if(!el)return;
+ const sel=window.getSelection();
+ const hasSelection=sel&&sel.rangeCount&& !sel.getRangeAt(0).collapsed && el.contains(sel.anchorNode);
+ if(hasSelection){
+   el.focus();
+   if(prop==="color")document.execCommand("foreColor",false,value);
+   else if(prop==="fontFamily")document.execCommand("fontName",false,value);
+   else if(prop==="fontWeight"&&String(value)!=="400")document.execCommand("bold",false,null);
+   else if(prop==="fontSize"){
+     document.execCommand("fontSize",false,"7");
+     el.querySelectorAll('font[size="7"]').forEach(n=>{n.removeAttribute("size");n.style.fontSize=value+"px"});
+   }
+ }else{
+   updateObjStyle(prop,value);
+ }
+ const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(o)o.text=el.innerHTML;
+ markCanvasDirty();
+}
+window.setSelectedObjectSize=function(k,v){const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(!o)return;o[k]=Math.max(20,v||20);renderCanvasObjects();renderCanvasInspector();markCanvasDirty()}
+window.setPaperColor=function(v){const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(!o)return;o.paperColor=v;renderCanvasObjects();renderCanvasInspector();markCanvasDirty()}
+window.setPaperSpacing=function(v){const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(!o)return;o.spacing=Math.max(8,Math.min(80,v||20));renderCanvasObjects();renderCanvasInspector();markCanvasDirty()}
+window.setTapeColor=function(v){const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(!o)return;o.color=v;renderCanvasObjects();renderCanvasInspector();markCanvasDirty()}
+window.setTapeRotation=function(v){const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(!o)return;o.rotation=Math.max(-45,Math.min(45,v||0));renderCanvasObjects();renderCanvasInspector();markCanvasDirty()}
+
+window.updateObjStyle=function(k,v){const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(!o)return;o.style||={};o.style[k]=v;renderCanvasObjects();markCanvasDirty()}
+window.deleteSelectedCanvasItem=function(){
+ if(canvasState.selectedType==="object")canvasState.objects=canvasState.objects.filter(x=>x.id!==canvasState.selectedId);
+ else if(canvasState.selectedType==="vector")canvasState.vectors=canvasState.vectors.filter(x=>x.id!==canvasState.selectedId);
+ canvasState.selectedType=null;canvasState.selectedId=null;renderCanvasObjects();renderVectors();renderCanvasInspector();markCanvasDirty();
+}
+
+$("#canvasPage")?.addEventListener("pointerdown",e=>{if(e.target!==e.currentTarget)return;clearCanvasSelection()});
+function clearCanvasSelection(){canvasState.objects.forEach(x=>x.editing=false);canvasState.selectedType=null;canvasState.selectedId=null;renderCanvasObjects();renderVectors();renderCanvasInspector();renderLayerList()}
+
+
+
+window.setSelectedGeometry=function(k,v){if(canvasState.selectedType!=="object")return;const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(!o)return;if(k==="w"||k==="h")o[k]=Math.max(20,v);else o[k]=v;renderCanvasObjects();renderCanvasInspector();pushHistory()}
+window.alignSelected=function(mode){if(canvasState.selectedType==="object"){const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(!o)return;if(mode==="centerX")o.x=(794-o.w)/2;if(mode==="centerY")o.y=(1123-o.h)/2;renderCanvasObjects()}else if(canvasState.selectedType==="vector"){const v=canvasState.vectors.find(x=>x.id===canvasState.selectedId);if(!v)return;const b=vectorBounds(v),dx=mode==="centerX"?397-b.cx:0,dy=mode==="centerY"?561.5-b.cy:0;if(v.type==="rect"){v.x+=dx;v.y+=dy}else if(v.type==="ellipse"){v.cx+=dx;v.cy+=dy}else if(v.points)v.points=v.points.map(p=>[p[0]+dx,p[1]+dy]);renderVectors()}pushHistory()}
+window.duplicateSelected=function(){if(canvasState.selectedType==="object"){const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(!o)return;const n=JSON.parse(JSON.stringify(o));n.id=id();n.x+=18;n.y+=18;n.z=nextCanvasZ();n.locked=false;n.editing=false;canvasState.objects.push(n);selectCanvasObject(n.id)}else if(canvasState.selectedType==="vector"){const v=canvasState.vectors.find(x=>x.id===canvasState.selectedId);if(!v)return;const n=JSON.parse(JSON.stringify(v));n.id=id();n.z=nextCanvasZ();n.locked=false;if(n.x!=null){n.x+=18;n.y+=18}if(n.cx!=null){n.cx+=18;n.cy+=18}if(n.points)n.points=n.points.map(p=>[p[0]+18,p[1]+18]);canvasState.vectors.push(n);selectVector(n.id)}pushHistory()}
+
+window.toggleSelectedLock=function(){
+ if(canvasState.selectedType==="object"){
+  const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(!o)return;o.locked=!o.locked;
+ }else if(canvasState.selectedType==="vector"){
+  const v=canvasState.vectors.find(x=>x.id===canvasState.selectedId);if(!v)return;v.locked=!v.locked;
+ }
+ renderCanvasObjects();renderVectors();renderCanvasInspector();markCanvasDirty();
+}
+window.moveSelectedLayer=function(dir){
+ const all=[...canvasState.objects.map(x=>({kind:"object",x})),...canvasState.vectors.map(x=>({kind:"vector",x}))].sort((a,b)=>(a.x.z||0)-(b.x.z||0));
+ const idx=all.findIndex(a=>a.kind===canvasState.selectedType&&a.x.id===canvasState.selectedId);if(idx<0)return;
+ const ni=Math.max(0,Math.min(all.length-1,idx+dir));if(ni===idx)return;
+ const targetZ=all[ni].x.z||0,currentZ=all[idx].x.z||0;all[ni].x.z=currentZ;all[idx].x.z=targetZ;
+ renderCanvasObjects();renderVectors();renderLayerList();markCanvasDirty();
+}
+window.addVectorShape=function(type){
+ let v={id:id(),z:nextCanvasZ(),type,fill:"#f7d2cf",stroke:"#8d7369",strokeWidth:2,dash:"solid",rotation:0,locked:false};
+ if(type==="rect")Object.assign(v,{x:220,y:260,w:260,h:150,rx:14});
+ if(type==="ellipse")Object.assign(v,{cx:397,cy:330,rx:120,ry:80});
+ if(type==="triangle")Object.assign(v,{points:[[397,230],[520,410],[274,410]]});
+ canvasState.vectors.push(v);canvasState.vectorTool="select";selectVector(v.id);pushHistory();
+}
+
+// Vector editor (SVG)
+
+function vectorBounds(v){
+ if(v.type==="rect")return{x:v.x,y:v.y,w:v.w,h:v.h,cx:v.x+v.w/2,cy:v.y+v.h/2};
+ if(v.type==="ellipse")return{x:v.cx-v.rx,y:v.cy-v.ry,w:v.rx*2,h:v.ry*2,cx:v.cx,cy:v.cy};
+ const pts=v.points||[];if(!pts.length)return{x:0,y:0,w:0,h:0,cx:0,cy:0};
+ const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]),x=Math.min(...xs),y=Math.min(...ys),w=Math.max(...xs)-x,h=Math.max(...ys)-y;
+ return{x,y,w,h,cx:x+w/2,cy:y+h/2};
+}
+
+function vectorEl(v){
+ const dash=v.dash==="dashed"?"10 7":v.dash==="dotted"?"2 6":"";
+ if(v.type==="rect")return `<rect data-vid="${v.id}" x="${v.x}" y="${v.y}" width="${v.w}" height="${v.h}" rx="${v.rx||0}" fill="${v.fill}" stroke="${v.stroke}" stroke-width="${v.strokeWidth}" stroke-dasharray="${dash}" class="${canvasState.selectedType==="vector"&&canvasState.selectedId===v.id?"vectorSelected":""}"/>`;
+ if(v.type==="ellipse")return `<ellipse data-vid="${v.id}" cx="${v.cx}" cy="${v.cy}" rx="${v.rx}" ry="${v.ry}" fill="${v.fill}" stroke="${v.stroke}" stroke-width="${v.strokeWidth}" stroke-dasharray="${dash}" class="${canvasState.selectedType==="vector"&&canvasState.selectedId===v.id?"vectorSelected":""}"/>`;
+ if(v.type==="triangle")return `<polygon data-vid="${v.id}" points="${v.points.map(p=>p.join(",")).join(" ")}" fill="${v.fill}" stroke="${v.stroke}" stroke-width="${v.strokeWidth}" stroke-dasharray="${dash}" class="${canvasState.selectedType==="vector"&&canvasState.selectedId===v.id?"vectorSelected":""}"/>`;
+ if(v.type==="path")return `<path data-vid="${v.id}" d="${pathD(v.points)}" fill="${v.closed?v.fill:"none"}" stroke="${v.stroke}" stroke-width="${v.strokeWidth}" stroke-dasharray="${dash}" stroke-linecap="round" stroke-linejoin="round" class="${canvasState.selectedType==="vector"&&canvasState.selectedId===v.id?"vectorSelected":""}"/>`;
+ return "";
+}
+function pathD(points){if(!points?.length)return"";return "M "+points.map((p,i)=>(i?"L ":"")+p[0]+" "+p[1]).join(" ")}
+function renderVectors(){
+ const root=$("#canvasObjects");if(!root)return;root.querySelectorAll(".vectorObj").forEach(x=>x.remove());
+ for(const v of [...canvasState.vectors].sort((a,b)=>(a.z||0)-(b.z||0))){
+   const b=vectorBounds(v),selected=canvasState.selectedType==="vector"&&canvasState.selectedId===v.id;
+   const raw=vectorEl(v),visible=raw.replace('data-vid="'+v.id+'"',`data-vid="${v.id}" class="shapeVisible" style="pointer-events:none"`);
+   let proxy="";
+   if(v.type==="rect")proxy=`<rect data-vid="${v.id}" class="shapeHit vectorTouchProxy" x="${v.x}" y="${v.y}" width="${v.w}" height="${v.h}" rx="${v.rx||0}"/>`;
+   if(v.type==="ellipse")proxy=`<ellipse data-vid="${v.id}" class="shapeHit vectorTouchProxy" cx="${v.cx}" cy="${v.cy}" rx="${v.rx}" ry="${v.ry}"/>`;
+   if(v.type==="triangle")proxy=`<polygon data-vid="${v.id}" class="shapeHit vectorTouchProxy" points="${v.points.map(p=>p.join(",")).join(" ")}"/>`;
+   if(v.type==="path")proxy=`<path data-vid="${v.id}" class="shapeHit vectorTouchProxy" d="${pathD(v.points)}"/>`;
+   const selMarkup=selected?`<rect class="vectorSelectBox" x="${b.x-7}" y="${b.y-7}" width="${b.w+14}" height="${b.h+14}"/><line class="vectorRotateLine" x1="${b.x+b.w}" y1="${b.y-7}" x2="${b.x+b.w+24}" y2="${b.y-31}"/><circle class="vectorHandle vectorRotateHandle" data-vid="${v.id}" cx="${b.x+b.w+24}" cy="${b.y-31}" r="8"/><circle class="vectorHandle vectorResizeHandle" data-vid="${v.id}" cx="${b.x+b.w+9}" cy="${b.y+b.h+9}" r="8"/>`:"";
+   root.insertAdjacentHTML("beforeend",`<svg class="vectorObj ${selected?"selected":""} ${v.locked?"locked":""}" data-vector-wrap="${v.id}" viewBox="0 0 794 1123" style="z-index:${selected?9998:(v.z||0)};transform:rotate(${v.rotation||0}deg);transform-origin:${b.cx}px ${b.cy}px">${visible}${proxy}${selMarkup}</svg>`);
+ }
+ attachVectorEvents();renderLayerList();
+}
+window.setVectorTool=function(t){
+ canvasState.vectorTool=t;const svg=$("#canvasSvg"),hint=$("#pathDrawHint");svg?.classList.toggle("drawing",t!=="select");
+ if(hint)hint.style.display=t==="pen"?"block":"none";if(t==="pen"){canvasState.selectedType=null;canvasState.selectedId=null;renderCanvasObjects();renderVectors()}renderCanvasInspector();
+}
+function selectVector(idv){canvasState.selectedType="vector";canvasState.selectedId=idv;renderVectors();renderCanvasInspector()}
+function startVectorDraw(e){
+ const p=canvasPoint(e),tool=canvasState.vectorTool;if(tool!=="pen")return;
+ const pts=[[p.x,p.y]],draw=$("#canvasSvg");if(draw)draw.innerHTML=`<path id="livePath" d="M ${p.x} ${p.y}" fill="none" stroke="#8d7369" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>`;
+ const move=ev=>{const q=canvasPoint(ev),last=pts[pts.length-1];if(Math.hypot(q.x-last[0],q.y-last[1])>3){pts.push([q.x,q.y]);$("#livePath")?.setAttribute("d",pathD(pts))}};
+ const up=()=>{window.removeEventListener("pointermove",move);window.removeEventListener("pointerup",up);if(draw)draw.innerHTML="";canvasState.vectorTool="select";$("#canvasSvg")?.classList.remove("drawing");if($("#pathDrawHint"))$("#pathDrawHint").style.display="none";if(pts.length>1){const v={id:id(),z:nextCanvasZ(),type:"path",points:pts,fill:"none",stroke:"#8d7369",strokeWidth:4,dash:"solid",closed:false,rotation:0,locked:false};canvasState.vectors.push(v);selectVector(v.id);pushHistory()}};
+ window.addEventListener("pointermove",move);window.addEventListener("pointerup",up);
+}
+
+function startVectorRotate(e,vid){
+ const v=canvasState.vectors.find(x=>x.id===vid);if(!v||v.locked)return;
+ const b=vectorBounds(v),p=canvasPoint(e),startA=Math.atan2(p.y-b.cy,p.x-b.cx),base=v.rotation||0;
+ const move=ev=>{const q=canvasPoint(ev),a=Math.atan2(q.y-b.cy,q.x-b.cx);v.rotation=base+(a-startA)*180/Math.PI;renderVectors();markCanvasDirty()};
+ const up=()=>{window.removeEventListener("pointermove",move);window.removeEventListener("pointerup",up)};
+ window.addEventListener("pointermove",move);window.addEventListener("pointerup",up);
+}
+function startVectorResize(e,vid){
+ const v=canvasState.vectors.find(x=>x.id===vid);if(!v||v.locked)return;
+ const b=vectorBounds(v),p=canvasPoint(e),snap=JSON.parse(JSON.stringify(v));
+ const move=ev=>{
+   const q=canvasPoint(ev),sx=Math.max(.1,(b.w+(q.x-p.x))/Math.max(1,b.w)),sy=Math.max(.1,(b.h+(q.y-p.y))/Math.max(1,b.h));
+   if(v.type==="rect"){v.w=snap.w*sx;v.h=snap.h*sy}
+   else if(v.type==="ellipse"){v.rx=snap.rx*sx;v.ry=snap.ry*sy}
+   else if(v.points)v.points=snap.points.map(pt=>[b.x+(pt[0]-b.x)*sx,b.y+(pt[1]-b.y)*sy]);
+   renderVectors();markCanvasDirty();
+ };
+ const up=()=>{window.removeEventListener("pointermove",move);window.removeEventListener("pointerup",up)};
+ window.addEventListener("pointermove",move);window.addEventListener("pointerup",up);
+}
+
+function startVectorDrag(e,vid){
+ const v=canvasState.vectors.find(x=>x.id===vid);if(!v||v.locked)return;const p=canvasPoint(e),snap=JSON.parse(JSON.stringify(v));
+ const move=ev=>{const q=canvasPoint(ev),dx=q.x-p.x,dy=q.y-p.y;if(v.type==="rect"){v.x=snap.x+dx;v.y=snap.y+dy}if(v.type==="ellipse"){v.cx=snap.cx+dx;v.cy=snap.cy+dy}if(v.type==="triangle"||v.type==="path")v.points=snap.points.map(pt=>[pt[0]+dx,pt[1]+dy]);renderVectors();markCanvasDirty(false)};
+ const up=()=>{window.removeEventListener("pointermove",move);window.removeEventListener("pointerup",up);pushHistory()};window.addEventListener("pointermove",move);window.addEventListener("pointerup",up);
+}
+window.updateVectorStyle=function(k,v){const x=canvasState.vectors.find(x=>x.id===canvasState.selectedId);if(!x)return;x[k]=v;renderVectors();markCanvasDirty()}
+window.duplicateSelectedVector=function(){const v=canvasState.vectors.find(x=>x.id===canvasState.selectedId);if(!v)return;const n=JSON.parse(JSON.stringify(v));n.id=id();if(n.x!=null){n.x+=18;n.y+=18}if(n.cx!=null){n.cx+=18;n.cy+=18}if(n.points)n.points=n.points.map(p=>[p[0]+18,p[1]+18]);canvasState.vectors.push(n);selectVector(n.id);markCanvasDirty()}
+window.toggleNodeEdit=function(){canvasState.nodeEdit=!canvasState.nodeEdit;renderVectors()}
+function startNodeDrag(e,index){const v=canvasState.vectors.find(x=>x.id===canvasState.selectedId);if(!v)return;
+ const move=ev=>{const q=canvasPoint(ev);v.points[index]=[q.x,q.y];renderVectors();markCanvasDirty()};
+ const up=()=>{window.removeEventListener("pointermove",move);window.removeEventListener("pointerup",up)};
+ window.addEventListener("pointermove",move);window.addEventListener("pointerup",up);
+}
+// Basic Paper.js Pathfinder
+function vectorToPaper(v){
+ if(typeof paper==="undefined")return null;
+ if(v.type==="rect")return new paper.Path.Rectangle(new paper.Rectangle(v.x,v.y,v.w,v.h),new paper.Size(v.rx||0,v.rx||0));
+ if(v.type==="ellipse")return new paper.Path.Ellipse(new paper.Rectangle(v.cx-v.rx,v.cy-v.ry,v.rx*2,v.ry*2));
+ if(v.type==="triangle"){const p=new paper.Path();v.points.forEach(pt=>p.add(new paper.Point(pt[0],pt[1])));p.closed=true;return p}
+ if(v.type==="path"){const p=new paper.Path();v.points.forEach(pt=>p.add(new paper.Point(pt[0],pt[1])));p.closed=!!v.closed;return p}
+}
+function paperToVector(item){
+ const pts=item.segments?.map(s=>[s.point.x,s.point.y])||[];
+ return {id:id(),type:"path",points:pts,closed:item.closed,fill:"#f7d2cf",stroke:"#8d7369",strokeWidth:2,dash:"solid"};
+}
+window.pathfinderUnion=function(){
+ if(typeof paper==="undefined")return alert("Vektor-Modul noch nicht geladen.");
+ const sel=canvasState.vectors.filter(v=>v._pf);
+ if(sel.length<2)return alert("Für Pathfinder: erst zwei Formen markieren. Tipp eine Form an, dann halte Shift beim Antippen der zweiten Form – diese Mehrfachauswahl kommt in der nächsten Feinstufe. Vorerst dupliziere zwei Formen und nutze Subtrahieren über die letzten zwei Formen.");
+}
+window.pathfinderSubtract=function(){
+ if(typeof paper==="undefined")return alert("Vektor-Modul noch nicht geladen.");
+ if(canvasState.vectors.length<2)return alert("Du brauchst mindestens zwei Formen.");
+ paper.setup(document.createElement("canvas"));
+ const b=canvasState.vectors.at(-1),a=canvasState.vectors.at(-2),pa=vectorToPaper(a),pb=vectorToPaper(b);
+ if(!pa||!pb||!pa.closed||!pb.closed)return alert("Subtrahieren funktioniert mit geschlossenen Formen.");
+ const result=pa.subtract(pb);const nv=paperToVector(result);
+ canvasState.vectors=canvasState.vectors.slice(0,-2);canvasState.vectors.push(nv);selectVector(nv.id);markCanvasDirty();
+}
+
+function canvasSheetKey(){return selectedSheetId||"new"}
+function renderSheetEditor(){
+ const {s,t}=currentTopic();if(!s||!t)return;
+ renderStylePresets();renderStickerPicker();
+ const sh=selectedSheetId?(data.studySheets||[]).find(x=>x.id===selectedSheetId):null;
+ const saved=sh?.canvasData||null;
+ canvasState.objects=saved?.objects||[];
+ canvasState.vectors=saved?.vectors||[];
+ canvasState.selectedType=null;canvasState.selectedId=null;canvasState.vectorTool="select";canvasState.nodeEdit=false;canvasState.history=[];canvasState.historyIndex=-1;
+ if(!saved && sh?.html){
+   canvasState.objects=[{id:id(),kind:"text",x:70,y:70,w:650,h:850,text:stripHTML(sh.html),style:{fontSize:16,fontWeight:"400",color:"#333333",fontFamily:sh.font||"Arial",textAlign:"left"}}];
+ }
+ if(!saved&&!sh)applyCanvasTemplate("clean",true);
+ $("#wordStatus").textContent=sh?"Gespeichert":"Neues Lernblatt";
+ renderCanvasObjects();renderVectors();renderCanvasInspector();pushHistory(true);canvasState.lastSavedHash=canvasSnapshot();setTimeout(fitCanvasStage,60);
+}
+function stripHTML(x){const d=document.createElement("div");d.innerHTML=x;return d.innerText}
+function markCanvasDirty(schedule=true){const x=$("#autosaveState");if(x){x.textContent="Nicht gespeichert";x.className="autosaveState saving"}if(schedule)scheduleAutosave()}
+window.addEventListener("resize",()=>{if($("#view-sheet-editor")?.classList.contains("active"))fitCanvasStage()})
+function saveCanvasSheetCore(auto=false){
+ const {s,t}=currentTopic();if(!s||!t)return;const title=canvasState.objects.find(o=>["text","block"].includes(o.kind)&&(o.style?.fontSize||0)>=28)?.text?.replace(/<[^>]*>/g,"").slice(0,80)||t.title;const dataObj={objects:canvasState.objects,vectors:canvasState.vectors};
+ if(selectedSheetId){const sh=data.studySheets.find(x=>x.id===selectedSheetId);if(sh){sh.title=title;sh.canvasData=dataObj;sh.html=""}}else{const sh={id:id(),subject:s.name,topicId:t.id,title,html:"",canvasData:dataObj,created:Date.now()};data.studySheets.push(sh);selectedSheetId=sh.id}save();if(!auto){const el=$("#autosaveState");if(el){el.textContent="Gespeichert ✓";el.className="autosaveState saved"}}
+}
+window.saveCanvasSheet=function(){saveCanvasSheetCore(false);canvasState.lastSavedHash=canvasSnapshot()}
+function serializedCanvas(){
+ const objs=canvasState.objects.map(o=>{
+   const base=`position:absolute;left:${o.x}px;top:${o.y}px;width:${o.w}px;height:${o.h}px;box-sizing:border-box;`;
+   if(o.kind==="image")return `<div style="${base}"><img src="${o.src}" style="width:100%;height:100%;object-fit:contain"></div>`;
+   if(o.kind==="sticker")return `<div style="${base}display:grid;place-items:center;font-size:${Math.min(o.w,o.h)*.65}px">${o.text}</div>`;
+   if(o.kind==="paper"){
+     const bg=o.paperType==="grid"?`background-color:#fffdf7;background-image:linear-gradient(rgba(187,205,169,.35) 1px,transparent 1px),linear-gradient(90deg,rgba(187,205,169,.35) 1px,transparent 1px);background-size:${o.spacing||20}px ${o.spacing||20}px`:o.paperType==="line"?`background-color:#fffdf7;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent ${(o.spacing||28)-1}px,rgba(168,190,210,.38) ${(o.spacing||28)-1}px,rgba(168,190,210,.38) ${o.spacing||28}px)`:`background:#fffdf7`;
+     return `<div style="${base}${bg};border:1px solid rgba(130,105,90,.14)"></div>`;
+   }
+   if(o.kind==="tape")return `<div style="${base}background:rgba(242,190,178,.62);transform:rotate(${o.rotation||-4}deg)"></div>`;
+   if(o.kind==="table")return `<div style="${base}"><table style="border-collapse:collapse;width:100%;height:100%">${o.cells.map(r=>`<tr>${r.map(c=>`<td style="border:1px solid #aaa;padding:6px">${esc(c)}</td>`).join("")}</tr>`).join("")}</table></div>`;
+   const s=o.style||{},bg=o.kind==="task"?"#fff5eb":o.kind==="merke"?"#fff0ef":s.background||"transparent";
+   return `<div style="${base}transform:rotate(${o.rotation||0}deg);padding:${s.padding??7}px;font-size:${s.fontSize||16}px;font-weight:${s.fontWeight||400};color:${s.color||"#333"};font-family:${s.fontFamily||"Arial"};background:${s.background||bg};text-align:${s.textAlign||"left"};border:${s.borderWidth||0}px solid ${s.borderColor||"transparent"};border-radius:${s.borderRadius||0}px">${o.text||""}</div>`;
+ }).join("");
+ const vec=`<svg style="position:absolute;inset:0;width:794px;height:1123px" viewBox="0 0 794 1123">${canvasState.vectors.map(vectorEl).join("")}</svg>`;
+ return vec+objs;
+}
+window.exportCanvasHTML=function(){
+ const title=(data.studySheets.find(x=>x.id===selectedSheetId)?.title)||"Lernblatt";
+ const html=`<!doctype html><html><head><meta charset="utf-8"><style>@page{size:A4;margin:0}body{margin:0;background:#ddd}.page{position:relative;width:794px;height:1123px;margin:auto;background:white;overflow:hidden}@media print{body{background:white}.page{margin:0}}
+/* ===== V10 stable canvas UX ===== */
+.toolSections{display:grid;gap:8px}
+.toolSection{border:1px solid #ead1ca;background:#fffaf6;border-radius:16px;padding:8px}
+.toolSectionTitle{font-size:11px;font-weight:900;color:#a07e74;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.toolButtons{display:flex;gap:6px;flex-wrap:wrap}
+.toolButtons button,.toolButtons label{border:1px solid #e6cec6;background:white;color:#725e55;border-radius:11px;padding:8px 9px;font-weight:850;margin:0}
+.quickAddGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.quickAddGrid button{min-height:62px;border:1px solid #ead1ca;border-radius:14px;background:#fffdf9;color:#725e55;font-weight:850}
+.paperSticker{position:absolute;box-sizing:border-box;background:#fffdf7;border:1px solid rgba(130,105,90,.14);box-shadow:0 6px 15px rgba(110,82,70,.08);pointer-events:auto;touch-action:none}
+.paperSticker.gridPaper{
+ background-color:#fffdf7;
+ background-image:linear-gradient(rgba(187,205,169,.35) 1px,transparent 1px),linear-gradient(90deg,rgba(187,205,169,.35) 1px,transparent 1px);
+ background-size:var(--gridSize,20px) var(--gridSize,20px);
+}
+.paperSticker.linePaper{
+ background-color:#fffdf7;
+ background-image:repeating-linear-gradient(to bottom,transparent 0,transparent calc(var(--lineSize,28px) - 1px),rgba(168,190,210,.38) calc(var(--lineSize,28px) - 1px),rgba(168,190,210,.38) var(--lineSize,28px));
+}
+.paperSticker.blankPaper{background:#fffdf7}
+.tapeSticker{
+ position:absolute;box-sizing:border-box;background:rgba(242,190,178,.62);border:1px solid rgba(200,145,135,.18);
+ transform:rotate(var(--rot,-4deg));box-shadow:0 2px 6px rgba(120,90,80,.08);pointer-events:auto;touch-action:none
+}
+.tapeSticker:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent 0 7px,rgba(255,255,255,.18) 7px 9px)}
+.selectionHelp{font-size:11px;color:#9c8278;line-height:1.5}
+.inlineFormatBar{display:flex;gap:5px;flex-wrap:wrap}
+.inlineFormatBar button{border:1px solid #e6cec6;background:white;border-radius:9px;padding:6px 8px;color:#725f56}
+.layerList{display:grid;gap:5px;max-height:220px;overflow:auto}
+.layerItem{display:flex;justify-content:space-between;align-items:center;gap:7px;padding:7px 9px;border:1px solid #ead5ce;border-radius:10px;background:white;font-size:11px}
+.layerItem.active{border-color:#e9a7a4;background:#fff0ee}
+.editorHint{border-radius:14px;padding:10px 12px;background:#f5f8eb;border:1px solid #dce5c5;color:#748758;font-size:11px}
+@media(max-width:850px){
+ .quickAddGrid{grid-template-columns:repeat(2,1fr)}
+ .toolSection{padding:7px}
+}
+
+
+/* ===== V11 Canva-like editor ===== */
+body.editorMode .header,body.editorMode #nav{display:none!important}
+body.editorMode main{max-width:none;padding:8px 8px 30px}
+body.editorMode .view#view-sheet-editor{padding-bottom:20px}
+.canvasEditorShell{max-width:1180px;margin:auto}
+.canvasTopbar{position:sticky;top:0;z-index:120;background:rgba(255,250,246,.94);backdrop-filter:blur(18px);padding:6px;border:1px solid #ead3cc;border-radius:16px}
+.editorTitle{display:grid;text-align:center;font-size:13px}.editorTitle .wordStatus{font-size:9px}
+.editorActions{display:flex;gap:5px}
+.editorIcon,.miniIcon{border:1px solid #e7cec7;background:#fffdf9;color:#745f57;border-radius:11px;width:38px;height:38px;padding:0;font-size:20px;font-weight:900}
+.primaryIcon{background:#eda6a4;color:white}.dangerMini{color:#b96f6d}
+.editorDock{display:flex;gap:5px;overflow-x:auto;padding:6px;position:sticky;top:58px;z-index:110;background:rgba(255,250,246,.94);backdrop-filter:blur(16px);border:1px solid #ead3cc;border-radius:15px}
+.editorDock button,.editorDock label{flex:0 0 42px;width:42px;height:42px;display:grid;place-items:center;border:1px solid #e7cec7;background:white;color:#715e56;border-radius:11px;font-size:19px;font-weight:900;margin:0;padding:0}
+.iconOnlyBtn{width:52px;font-size:24px}
+.cobj.locked{outline-style:dashed!important}
+.cobj.locked .resizeHandle{display:none!important}
+.layerItem{border:0;width:100%;cursor:pointer}
+.layerItem .layerBtns{display:flex;gap:3px}
+.layerItem .layerBtns span{display:grid;place-items:center;min-width:24px;height:24px;border-radius:7px;background:#fff7f4}
+.canvasPage{pointer-events:auto}
+.canvasSvg{pointer-events:auto}
+.fontSelect{width:100%}
+@media(max-width:600px){
+ .canvasViewport{border-radius:12px;padding:4px}
+ .objectPanel{border-radius:14px;padding:8px}
+ .editorDock{top:55px}
+ .stylePresetBar{gap:5px}
+ .stylePreset{font-size:11px;padding:7px 9px}
+}
+
+
+/* ===== V12 interaction + icon overhaul ===== */
+:root{--icon:#8e7168}
+.nav button b{display:none!important}
+.nav button svg{width:22px;height:22px;display:block;margin:auto;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nav button.active svg{stroke:currentColor}
+.editorDock button svg,.editorDock label svg,.editorIcon svg,.miniIcon svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.editorDock button,.editorDock label{font-size:0}
+.editorIcon,.miniIcon{display:grid;place-items:center;font-size:0}
+.editorDock{scrollbar-width:none}
+.editorDock::-webkit-scrollbar{display:none}
+.formatStrip{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none}
+.formatStrip::-webkit-scrollbar{display:none}
+.formatChip{flex:0 0 auto;border:1px solid #e7cec7;background:#fffdf9;border-radius:999px;padding:7px 10px;color:#765f56;font-size:11px;font-weight:850}
+.formatAdd{width:34px;height:34px;border-radius:50%!important;padding:0!important;font-size:20px!important;display:grid!important;place-items:center!important}
+.cobj{cursor:grab}
+.cobj.editing{cursor:text;outline:2px solid #9eb8e9!important}
+.cobj.selected:not(.editing){outline:2px solid #e99e9a;outline-offset:3px}
+.cobj .resizeHandle,.cobj .rotateHandle{display:none;position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid #e99e9a;z-index:50}
+.cobj .resizeHandle{right:-9px;bottom:-9px}
+.cobj .rotateHandle{right:-9px;top:-30px;background:#fff}
+.cobj .rotateHandle:after{content:"";position:absolute;left:6px;top:14px;width:2px;height:15px;background:#e99e9a}
+.cobj.selected:not(.locked) .resizeHandle,.cobj.selected:not(.locked) .rotateHandle{display:block}
+.cobj.locked{cursor:default;outline-style:dashed!important}
+.vectorObj{position:absolute;inset:0;width:794px;height:1123px;pointer-events:none;overflow:visible}
+.vectorObj .shapeHit{pointer-events:all;cursor:grab}
+.vectorObj.locked .shapeHit{cursor:default}
+.vectorSelectBox{fill:none;stroke:#e99e9a;stroke-width:2;stroke-dasharray:6 4;pointer-events:none}
+.vectorHandle{fill:#fff;stroke:#e99e9a;stroke-width:2;pointer-events:all;cursor:pointer}
+.vectorRotateLine{stroke:#e99e9a;stroke-width:2;pointer-events:none}
+.vectorObj.selected .shapeHit{filter:drop-shadow(0 0 2px rgba(233,158,154,.8))}
+.canvasSvg{pointer-events:none!important;z-index:30}
+.canvasSvg.drawing{pointer-events:auto!important}
+.canvasObjects{z-index:20}
+.inspectorGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.layerItem{padding:6px 8px}
+.layerRow{display:flex;align-items:center;justify-content:space-between;gap:6px;width:100%}
+.layerMeta{display:flex;align-items:center;gap:6px;min-width:0}
+.layerName{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.layerTools{display:flex;gap:3px}
+.layerTools button{width:27px;height:27px;border:0;background:#fff7f3;border-radius:8px;color:#80675e;padding:0;font-size:13px}
+.editorHintStrong{border:1px solid #d9e4c4;background:#f5f9eb;color:#6e8453;border-radius:12px;padding:8px 10px;font-size:11px}
+.customFormatPreview{padding:10px;border-radius:12px;margin:8px 0}
+@media(max-width:600px){
+ .editorDock button,.editorDock label{flex-basis:38px;width:38px;height:38px}
+ .editorDock button svg,.editorDock label svg{width:18px;height:18px}
+ .objectPanel{margin-top:4px}
+}
+
+
+/* ===== V13 stability + snapping + history ===== */
+.canvasGuides{position:absolute;inset:0;z-index:95;pointer-events:none}
+.guideLine{position:absolute;background:#e78fa0;box-shadow:0 0 0 1px rgba(255,255,255,.75)}
+.guideV{top:0;bottom:0;width:1px}.guideH{left:0;right:0;height:1px}
+.guideLabel{position:absolute;font-size:9px;font-weight:900;color:#b56d7a;background:#fff7f8;border:1px solid #efb7c0;border-radius:999px;padding:2px 5px;transform:translate(-50%,-50%)}
+.historyBar{display:flex;gap:5px;align-items:center}.historyBtn{width:38px;height:38px;border:1px solid #e7cec7;background:#fffdf9;color:#735f56;border-radius:11px;display:grid;place-items:center}.historyBtn:disabled{opacity:.35}
+.autosaveState{font-size:10px;font-weight:800;color:#8b756d}.autosaveState.saving{color:#b48b59}.autosaveState.saved{color:#738c58}
+.cobj.selected{z-index:9999!important}.cobj .resizeHandle,.cobj .rotateHandle{touch-action:none}.vectorObj.selected{z-index:9998!important}.vectorObj .shapeHit{pointer-events:all!important}.canvasSvg.drawing{z-index:100!important;background:rgba(255,255,255,.001)}
+.positionGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.positionGrid input{padding:7px 8px}.alignRow{display:flex;gap:5px;flex-wrap:wrap}.alignRow button{border:1px solid #e5cec7;background:white;border-radius:9px;padding:7px 8px;color:#745f56}.snapToggle{display:flex;align-items:center;gap:6px;font-size:11px;color:#806a61}.snapToggle input{width:auto}.pathHint{padding:8px 10px;border:1px solid #d8e3c4;background:#f5f9eb;color:#708652;border-radius:12px;font-size:11px}
+@media(max-width:600px){.positionGrid{grid-template-columns:repeat(2,1fr)}}
+
+
+/* ===== V14 usability / zoom / pet / nav ===== */
+.nav{width:min(92vw,560px);padding:5px 6px;border-radius:18px;grid-template-columns:repeat(6,1fr);gap:2px}
+.nav button{height:46px;border-radius:12px;padding:3px;color:#a2857b}
+.nav button.active{background:#eca7a3;color:#fff}
+.nav button svg{width:20px;height:20px}
+.navLabel{display:block;font-size:8px;line-height:1;margin-top:2px;font-weight:800}
+.petRoom{min-height:260px;background:linear-gradient(#f8e6e4 0 65%,#e3c99e 65%);border:1px solid #eccdc5;overflow:hidden}
+.petShelf{position:absolute;right:18px;top:78px;font-size:26px}.petPlant{position:absolute;left:28px;bottom:38px;font-size:32px}
+.petAvatarCute{position:absolute;left:50%;bottom:42px;transform:translateX(-50%);width:118px;height:112px;border-radius:48% 48% 45% 45%;background:#dcebb9;border:5px solid #bed393;z-index:4;display:grid;place-items:center;box-shadow:0 8px 0 rgba(175,190,130,.18)}
+.petEar{position:absolute;top:-17px;width:45px;height:45px;border-radius:50%;background:#dcebb9;border:5px solid #bed393}.petEar.left{left:5px}.petEar.right{right:5px}
+.petFace{font-size:28px;color:#68594f;position:relative;z-index:2;letter-spacing:3px}.petBlush{position:absolute;bottom:33px;width:18px;height:10px;border-radius:50%;background:#efb7b0;opacity:.8}.petBlush.left{left:20px}.petBlush.right{right:20px}.petBow{position:absolute;top:-8px;right:-10px;font-size:28px;z-index:5}
+.zoomPanel{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.zoomPanel input[type="range"]{width:150px}.zoomPct{font-size:11px;font-weight:900;color:#846d64;min-width:42px;text-align:right}
+.vectorTouchProxy{fill:none;stroke:transparent;stroke-width:26;pointer-events:stroke!important;cursor:grab}
+.vectorObj.selected .vectorTouchProxy{stroke:rgba(233,158,154,.06)}
+.pathDrawHint{position:absolute;left:50%;top:12px;transform:translateX(-50%);z-index:130;background:#fff8f5;border:1px solid #efcbc5;color:#7a635a;padding:7px 10px;border-radius:999px;font-size:10px;font-weight:850;pointer-events:none}
+
+
+/* ===== V15 timetable freshness + cancellations ===== */
+.lesson.cancelled{
+ --subject:#d6cfc9!important;
+ background:linear-gradient(135deg,#fffaf7,#f4f0ed);
+ border-style:dashed;
+ opacity:.9;
+}
+.lesson.cancelled .subject{color:#9a7f74}
+.lesson.cancelled .small{color:#b09b92}
+.planFreshBadge{
+ display:inline-flex;align-items:center;gap:6px;
+ padding:6px 9px;border-radius:999px;
+ background:#f3f8e9;border:1px solid #d5e3bc;
+ color:#728957;font-size:10px;font-weight:900;
+ margin-top:8px;
+}
+.planFreshBadge.placeholder{
+ background:#fff3df;border-color:#efd7a5;color:#9c7b42;
+}
+
+
+/* V16 timetable */
+.specialLesson{background:linear-gradient(135deg,#fffaf1,#fff1d5);border:1px solid #efd8a5}
+.specialLesson .subject{color:#8d6f38}
+.lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
+
+/* ===== VERSION 28: echter Live-Refresh ===== */
+.liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
+.liveRefreshStatus.loading{color:#a77d4b}
+.liveRefreshStatus.ok{color:#6f8956}
+.liveRefreshStatus.error{color:#b06d68}
+
+/* ===== VERSION 28 timetable parser ===== */
+.doubleBadge{
+ display:inline-flex;align-items:center;gap:4px;margin-top:5px;
+ padding:3px 7px;border-radius:999px;background:#f7e7ee;
+ border:1px solid #edcad8;color:#9a687a;font-size:9px;font-weight:900;
+}
+.lesson.doubleLesson{min-height:118px}
+.specialLesson{min-height:96px}
+
+/* ===== VERSION 28: dynamic classes ===== */
+.classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
+.classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
+.classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
+.specialOnlyDay{margin-top:12px}
+.specialOnlyCard{background:linear-gradient(135deg,#fff9e9,#fff0c9);border:1px solid #ecd397;border-radius:22px;padding:20px 18px;color:#846428}
+.specialOnlyCard .specialTime{font-size:22px;font-weight:950}
+.specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
+
+/* ===== VERSION 28: raster-exact timetable ===== */
+.liveRefreshStatus.warn{color:#a77d4b}
+.parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
+</style></head><body><div class="page">${serializedCanvas()}</div></body></html>`;
+ const blob=new Blob([html],{type:"text/html"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=title.replace(/[^\wäöüÄÖÜß-]+/g,"_")+".html";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
+}
+window.printCanvasSheet=function(){
+ const w=window.open("","_blank");w.document.write(`<!doctype html><html><head><meta charset="utf-8"><style>@page{size:A4;margin:0}body{margin:0}.page{position:relative;width:794px;height:1123px;overflow:hidden}
+/* ===== V10 stable canvas UX ===== */
+.toolSections{display:grid;gap:8px}
+.toolSection{border:1px solid #ead1ca;background:#fffaf6;border-radius:16px;padding:8px}
+.toolSectionTitle{font-size:11px;font-weight:900;color:#a07e74;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.toolButtons{display:flex;gap:6px;flex-wrap:wrap}
+.toolButtons button,.toolButtons label{border:1px solid #e6cec6;background:white;color:#725e55;border-radius:11px;padding:8px 9px;font-weight:850;margin:0}
+.quickAddGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.quickAddGrid button{min-height:62px;border:1px solid #ead1ca;border-radius:14px;background:#fffdf9;color:#725e55;font-weight:850}
+.paperSticker{position:absolute;box-sizing:border-box;background:#fffdf7;border:1px solid rgba(130,105,90,.14);box-shadow:0 6px 15px rgba(110,82,70,.08);pointer-events:auto;touch-action:none}
+.paperSticker.gridPaper{
+ background-color:#fffdf7;
+ background-image:linear-gradient(rgba(187,205,169,.35) 1px,transparent 1px),linear-gradient(90deg,rgba(187,205,169,.35) 1px,transparent 1px);
+ background-size:var(--gridSize,20px) var(--gridSize,20px);
+}
+.paperSticker.linePaper{
+ background-color:#fffdf7;
+ background-image:repeating-linear-gradient(to bottom,transparent 0,transparent calc(var(--lineSize,28px) - 1px),rgba(168,190,210,.38) calc(var(--lineSize,28px) - 1px),rgba(168,190,210,.38) var(--lineSize,28px));
+}
+.paperSticker.blankPaper{background:#fffdf7}
+.tapeSticker{
+ position:absolute;box-sizing:border-box;background:rgba(242,190,178,.62);border:1px solid rgba(200,145,135,.18);
+ transform:rotate(var(--rot,-4deg));box-shadow:0 2px 6px rgba(120,90,80,.08);pointer-events:auto;touch-action:none
+}
+.tapeSticker:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent 0 7px,rgba(255,255,255,.18) 7px 9px)}
+.selectionHelp{font-size:11px;color:#9c8278;line-height:1.5}
+.inlineFormatBar{display:flex;gap:5px;flex-wrap:wrap}
+.inlineFormatBar button{border:1px solid #e6cec6;background:white;border-radius:9px;padding:6px 8px;color:#725f56}
+.layerList{display:grid;gap:5px;max-height:220px;overflow:auto}
+.layerItem{display:flex;justify-content:space-between;align-items:center;gap:7px;padding:7px 9px;border:1px solid #ead5ce;border-radius:10px;background:white;font-size:11px}
+.layerItem.active{border-color:#e9a7a4;background:#fff0ee}
+.editorHint{border-radius:14px;padding:10px 12px;background:#f5f8eb;border:1px solid #dce5c5;color:#748758;font-size:11px}
+@media(max-width:850px){
+ .quickAddGrid{grid-template-columns:repeat(2,1fr)}
+ .toolSection{padding:7px}
+}
+
+
+/* ===== V11 Canva-like editor ===== */
+body.editorMode .header,body.editorMode #nav{display:none!important}
+body.editorMode main{max-width:none;padding:8px 8px 30px}
+body.editorMode .view#view-sheet-editor{padding-bottom:20px}
+.canvasEditorShell{max-width:1180px;margin:auto}
+.canvasTopbar{position:sticky;top:0;z-index:120;background:rgba(255,250,246,.94);backdrop-filter:blur(18px);padding:6px;border:1px solid #ead3cc;border-radius:16px}
+.editorTitle{display:grid;text-align:center;font-size:13px}.editorTitle .wordStatus{font-size:9px}
+.editorActions{display:flex;gap:5px}
+.editorIcon,.miniIcon{border:1px solid #e7cec7;background:#fffdf9;color:#745f57;border-radius:11px;width:38px;height:38px;padding:0;font-size:20px;font-weight:900}
+.primaryIcon{background:#eda6a4;color:white}.dangerMini{color:#b96f6d}
+.editorDock{display:flex;gap:5px;overflow-x:auto;padding:6px;position:sticky;top:58px;z-index:110;background:rgba(255,250,246,.94);backdrop-filter:blur(16px);border:1px solid #ead3cc;border-radius:15px}
+.editorDock button,.editorDock label{flex:0 0 42px;width:42px;height:42px;display:grid;place-items:center;border:1px solid #e7cec7;background:white;color:#715e56;border-radius:11px;font-size:19px;font-weight:900;margin:0;padding:0}
+.iconOnlyBtn{width:52px;font-size:24px}
+.cobj.locked{outline-style:dashed!important}
+.cobj.locked .resizeHandle{display:none!important}
+.layerItem{border:0;width:100%;cursor:pointer}
+.layerItem .layerBtns{display:flex;gap:3px}
+.layerItem .layerBtns span{display:grid;place-items:center;min-width:24px;height:24px;border-radius:7px;background:#fff7f4}
+.canvasPage{pointer-events:auto}
+.canvasSvg{pointer-events:auto}
+.fontSelect{width:100%}
+@media(max-width:600px){
+ .canvasViewport{border-radius:12px;padding:4px}
+ .objectPanel{border-radius:14px;padding:8px}
+ .editorDock{top:55px}
+ .stylePresetBar{gap:5px}
+ .stylePreset{font-size:11px;padding:7px 9px}
+}
+
+
+/* ===== V12 interaction + icon overhaul ===== */
+:root{--icon:#8e7168}
+.nav button b{display:none!important}
+.nav button svg{width:22px;height:22px;display:block;margin:auto;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nav button.active svg{stroke:currentColor}
+.editorDock button svg,.editorDock label svg,.editorIcon svg,.miniIcon svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.editorDock button,.editorDock label{font-size:0}
+.editorIcon,.miniIcon{display:grid;place-items:center;font-size:0}
+.editorDock{scrollbar-width:none}
+.editorDock::-webkit-scrollbar{display:none}
+.formatStrip{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none}
+.formatStrip::-webkit-scrollbar{display:none}
+.formatChip{flex:0 0 auto;border:1px solid #e7cec7;background:#fffdf9;border-radius:999px;padding:7px 10px;color:#765f56;font-size:11px;font-weight:850}
+.formatAdd{width:34px;height:34px;border-radius:50%!important;padding:0!important;font-size:20px!important;display:grid!important;place-items:center!important}
+.cobj{cursor:grab}
+.cobj.editing{cursor:text;outline:2px solid #9eb8e9!important}
+.cobj.selected:not(.editing){outline:2px solid #e99e9a;outline-offset:3px}
+.cobj .resizeHandle,.cobj .rotateHandle{display:none;position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid #e99e9a;z-index:50}
+.cobj .resizeHandle{right:-9px;bottom:-9px}
+.cobj .rotateHandle{right:-9px;top:-30px;background:#fff}
+.cobj .rotateHandle:after{content:"";position:absolute;left:6px;top:14px;width:2px;height:15px;background:#e99e9a}
+.cobj.selected:not(.locked) .resizeHandle,.cobj.selected:not(.locked) .rotateHandle{display:block}
+.cobj.locked{cursor:default;outline-style:dashed!important}
+.vectorObj{position:absolute;inset:0;width:794px;height:1123px;pointer-events:none;overflow:visible}
+.vectorObj .shapeHit{pointer-events:all;cursor:grab}
+.vectorObj.locked .shapeHit{cursor:default}
+.vectorSelectBox{fill:none;stroke:#e99e9a;stroke-width:2;stroke-dasharray:6 4;pointer-events:none}
+.vectorHandle{fill:#fff;stroke:#e99e9a;stroke-width:2;pointer-events:all;cursor:pointer}
+.vectorRotateLine{stroke:#e99e9a;stroke-width:2;pointer-events:none}
+.vectorObj.selected .shapeHit{filter:drop-shadow(0 0 2px rgba(233,158,154,.8))}
+.canvasSvg{pointer-events:none!important;z-index:30}
+.canvasSvg.drawing{pointer-events:auto!important}
+.canvasObjects{z-index:20}
+.inspectorGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.layerItem{padding:6px 8px}
+.layerRow{display:flex;align-items:center;justify-content:space-between;gap:6px;width:100%}
+.layerMeta{display:flex;align-items:center;gap:6px;min-width:0}
+.layerName{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.layerTools{display:flex;gap:3px}
+.layerTools button{width:27px;height:27px;border:0;background:#fff7f3;border-radius:8px;color:#80675e;padding:0;font-size:13px}
+.editorHintStrong{border:1px solid #d9e4c4;background:#f5f9eb;color:#6e8453;border-radius:12px;padding:8px 10px;font-size:11px}
+.customFormatPreview{padding:10px;border-radius:12px;margin:8px 0}
+@media(max-width:600px){
+ .editorDock button,.editorDock label{flex-basis:38px;width:38px;height:38px}
+ .editorDock button svg,.editorDock label svg{width:18px;height:18px}
+ .objectPanel{margin-top:4px}
+}
+
+
+/* ===== V13 stability + snapping + history ===== */
+.canvasGuides{position:absolute;inset:0;z-index:95;pointer-events:none}
+.guideLine{position:absolute;background:#e78fa0;box-shadow:0 0 0 1px rgba(255,255,255,.75)}
+.guideV{top:0;bottom:0;width:1px}.guideH{left:0;right:0;height:1px}
+.guideLabel{position:absolute;font-size:9px;font-weight:900;color:#b56d7a;background:#fff7f8;border:1px solid #efb7c0;border-radius:999px;padding:2px 5px;transform:translate(-50%,-50%)}
+.historyBar{display:flex;gap:5px;align-items:center}.historyBtn{width:38px;height:38px;border:1px solid #e7cec7;background:#fffdf9;color:#735f56;border-radius:11px;display:grid;place-items:center}.historyBtn:disabled{opacity:.35}
+.autosaveState{font-size:10px;font-weight:800;color:#8b756d}.autosaveState.saving{color:#b48b59}.autosaveState.saved{color:#738c58}
+.cobj.selected{z-index:9999!important}.cobj .resizeHandle,.cobj .rotateHandle{touch-action:none}.vectorObj.selected{z-index:9998!important}.vectorObj .shapeHit{pointer-events:all!important}.canvasSvg.drawing{z-index:100!important;background:rgba(255,255,255,.001)}
+.positionGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.positionGrid input{padding:7px 8px}.alignRow{display:flex;gap:5px;flex-wrap:wrap}.alignRow button{border:1px solid #e5cec7;background:white;border-radius:9px;padding:7px 8px;color:#745f56}.snapToggle{display:flex;align-items:center;gap:6px;font-size:11px;color:#806a61}.snapToggle input{width:auto}.pathHint{padding:8px 10px;border:1px solid #d8e3c4;background:#f5f9eb;color:#708652;border-radius:12px;font-size:11px}
+@media(max-width:600px){.positionGrid{grid-template-columns:repeat(2,1fr)}}
+
+
+/* ===== V14 usability / zoom / pet / nav ===== */
+.nav{width:min(92vw,560px);padding:5px 6px;border-radius:18px;grid-template-columns:repeat(6,1fr);gap:2px}
+.nav button{height:46px;border-radius:12px;padding:3px;color:#a2857b}
+.nav button.active{background:#eca7a3;color:#fff}
+.nav button svg{width:20px;height:20px}
+.navLabel{display:block;font-size:8px;line-height:1;margin-top:2px;font-weight:800}
+.petRoom{min-height:260px;background:linear-gradient(#f8e6e4 0 65%,#e3c99e 65%);border:1px solid #eccdc5;overflow:hidden}
+.petShelf{position:absolute;right:18px;top:78px;font-size:26px}.petPlant{position:absolute;left:28px;bottom:38px;font-size:32px}
+.petAvatarCute{position:absolute;left:50%;bottom:42px;transform:translateX(-50%);width:118px;height:112px;border-radius:48% 48% 45% 45%;background:#dcebb9;border:5px solid #bed393;z-index:4;display:grid;place-items:center;box-shadow:0 8px 0 rgba(175,190,130,.18)}
+.petEar{position:absolute;top:-17px;width:45px;height:45px;border-radius:50%;background:#dcebb9;border:5px solid #bed393}.petEar.left{left:5px}.petEar.right{right:5px}
+.petFace{font-size:28px;color:#68594f;position:relative;z-index:2;letter-spacing:3px}.petBlush{position:absolute;bottom:33px;width:18px;height:10px;border-radius:50%;background:#efb7b0;opacity:.8}.petBlush.left{left:20px}.petBlush.right{right:20px}.petBow{position:absolute;top:-8px;right:-10px;font-size:28px;z-index:5}
+.zoomPanel{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.zoomPanel input[type="range"]{width:150px}.zoomPct{font-size:11px;font-weight:900;color:#846d64;min-width:42px;text-align:right}
+.vectorTouchProxy{fill:none;stroke:transparent;stroke-width:26;pointer-events:stroke!important;cursor:grab}
+.vectorObj.selected .vectorTouchProxy{stroke:rgba(233,158,154,.06)}
+.pathDrawHint{position:absolute;left:50%;top:12px;transform:translateX(-50%);z-index:130;background:#fff8f5;border:1px solid #efcbc5;color:#7a635a;padding:7px 10px;border-radius:999px;font-size:10px;font-weight:850;pointer-events:none}
+
+
+/* ===== V15 timetable freshness + cancellations ===== */
+.lesson.cancelled{
+ --subject:#d6cfc9!important;
+ background:linear-gradient(135deg,#fffaf7,#f4f0ed);
+ border-style:dashed;
+ opacity:.9;
+}
+.lesson.cancelled .subject{color:#9a7f74}
+.lesson.cancelled .small{color:#b09b92}
+.planFreshBadge{
+ display:inline-flex;align-items:center;gap:6px;
+ padding:6px 9px;border-radius:999px;
+ background:#f3f8e9;border:1px solid #d5e3bc;
+ color:#728957;font-size:10px;font-weight:900;
+ margin-top:8px;
+}
+.planFreshBadge.placeholder{
+ background:#fff3df;border-color:#efd7a5;color:#9c7b42;
+}
+
+
+/* V16 timetable */
+.specialLesson{background:linear-gradient(135deg,#fffaf1,#fff1d5);border:1px solid #efd8a5}
+.specialLesson .subject{color:#8d6f38}
+.lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
+
+/* ===== VERSION 28: echter Live-Refresh ===== */
+.liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
+.liveRefreshStatus.loading{color:#a77d4b}
+.liveRefreshStatus.ok{color:#6f8956}
+.liveRefreshStatus.error{color:#b06d68}
+
+/* ===== VERSION 28 timetable parser ===== */
+.doubleBadge{
+ display:inline-flex;align-items:center;gap:4px;margin-top:5px;
+ padding:3px 7px;border-radius:999px;background:#f7e7ee;
+ border:1px solid #edcad8;color:#9a687a;font-size:9px;font-weight:900;
+}
+.lesson.doubleLesson{min-height:118px}
+.specialLesson{min-height:96px}
+
+/* ===== VERSION 28: dynamic classes ===== */
+.classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
+.classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
+.classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
+.specialOnlyDay{margin-top:12px}
+.specialOnlyCard{background:linear-gradient(135deg,#fff9e9,#fff0c9);border:1px solid #ecd397;border-radius:22px;padding:20px 18px;color:#846428}
+.specialOnlyCard .specialTime{font-size:22px;font-weight:950}
+.specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
+
+/* ===== VERSION 28: raster-exact timetable ===== */
+.liveRefreshStatus.warn{color:#a77d4b}
+.parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
+</style></head><body><div class="page">${serializedCanvas()}</div></body></html>`);w.document.close();setTimeout(()=>w.print(),300)
+}
+window.applyCanvasTemplate=function(name,silent=false){
+ if(name==="blank"){canvasState.objects=[];canvasState.vectors=[]}
+ if(name==="clean"){
+   canvasState.objects=[
+    {...newCanvasObject("h1"),x:70,y:70,w:650,text:"Thema"},
+    {...newCanvasObject("h2"),x:70,y:145,w:500,text:"Unterthema"},
+    {...newCanvasObject("body"),x:70,y:205,w:650,h:120,text:"Schreibe hier deine wichtigsten Punkte …"},
+    {...newCanvasObject("merke"),x:70,y:350,w:650,h:95,text:"Merke: Wichtigster Zusammenhang oder Definition."}
+   ];
+ }
+ if(name==="cute"){
+   canvasState.objects=[
+    {...newCanvasObject("h1"),x:70,y:65,w:600,text:"Mein Lernblatt"},
+    {id:id(),kind:"sticker",x:650,y:55,w:70,h:70,text:"🌸"},
+    {...newCanvasObject("body"),x:70,y:155,w:650,h:130,text:"Kurze Zusammenfassung …"},
+    {...newCanvasObject("task"),x:70,y:320,w:650,h:95,text:"Aufgabe: Prüfe dich selbst mit einer kleinen Frage."}
+   ];
+ }
+ if(name==="exam"){
+   canvasState.objects=[
+    {...newCanvasObject("h1"),x:70,y:65,w:600,text:"Prüfungsvorbereitung"},
+    {...newCanvasObject("h2"),x:70,y:145,w:450,text:"Definitionen"},
+    {...newCanvasObject("body"),x:70,y:200,w:650,h:170,text:"1. Begriff – Erklärung\n2. Begriff – Erklärung"},
+    {...newCanvasObject("task"),x:70,y:400,w:650,h:110,text:"Aufgabe: Erkläre das Thema ohne nachzuschauen."}
+   ];
+ }
+ renderCanvasObjects();renderVectors();if(!silent)markCanvasDirty();
+}
+
+window.deleteStudySheet=function(sid){data.studySheets=data.studySheets.filter(x=>x.id!==sid);save();renderTopicDetail()}
+
+window.openNewTopic=function(sid){
+ openModal(`<h2>Themen-Ordner erstellen</h2><label>Name</label><input id="newTopicName" placeholder="z. B. Gestaltgesetze"><label style="margin-top:10px">Kurze Beschreibung</label><textarea id="newTopicText" placeholder="optional"></textarea><button class="primary" style="margin-top:10px" onclick="createTopicFolder('${sid}')">Erstellen</button>`);
+}
+window.createTopicFolder=function(sid){
+ const s=data.subjects.find(x=>x.id===sid),title=$("#newTopicName").value.trim();if(!s||!title)return;
+ ensureSubjectShape(s);s.topics.push({id:id(),title,text:$("#newTopicText").value.trim(),materials:[],files:[]});save();closeModal();renderSubjectDetail();
+}
+
+window.createDeckPrompt=function(){
+ const {s,t}=currentTopic();if(!s||!t)return;
+ openModal(`<h2>Karteikarten-Ordner</h2><label>Name</label><input id="deckName" placeholder="z. B. Gestaltgesetze"><label style="margin-top:10px">Symbol</label><select id="deckEmoji"><option>🌸</option><option>🎀</option><option>⭐</option><option>🍀</option><option>🫐</option></select><button class="primary" style="margin-top:10px" onclick="createDeck()">Erstellen</button>`);
+}
+window.createDeck=function(){
+ const {s,t}=currentTopic(),name=$("#deckName").value.trim();if(!s||!t||!name)return;
+ const d={id:id(),subject:s.name,topicId:t.id,name,emoji:$("#deckEmoji").value};data.flashDecks.push(d);save();closeModal();selectedDeckId=d.id;openView("deck-detail")
+}
+
+window.goBackFromDeck=function(){
+ const d=data.flashDecks.find(x=>x.id===selectedDeckId);
+ if(d?.topicId){
+   const s=data.subjects.find(x=>x.name===d.subject);
+   if(s){selectedSubjectId=s.id;selectedTopicId=d.topicId;openView("topic-detail");return}
+ }
+ const s=data.subjects.find(x=>x.name===d?.subject);
+ if(s){selectedSubjectId=s.id;openView("subject-detail");return}
+ openView("study");
+}
+window.editDeckCard=function(cid){
+ const c=data.flashcards.find(x=>x.id===cid);if(!c)return;
+ openModal(`<h2>Karte bearbeiten</h2><label>Frage</label><textarea id="editCardQ">${esc(c.q)}</textarea><label style="margin-top:10px">Antwort</label><textarea id="editCardA">${esc(c.a)}</textarea><button class="primary" style="margin-top:10px" onclick="saveDeckCardEdit('${cid}')">Speichern</button>`);
+}
+window.saveDeckCardEdit=function(cid){
+ const c=data.flashcards.find(x=>x.id===cid);if(!c)return;
+ c.q=$("#editCardQ").value.trim();c.a=$("#editCardA").value.trim();save();closeModal();renderDeckDetail();
+}
+
+window.openDeck=function(did){selectedDeckId=did;currentFlash=0;flashFlipped=false;openView("deck-detail")}
+function renderDeckDetail(){
+ const root=$("#deckDetail");if(!root)return;const d=data.flashDecks.find(x=>x.id===selectedDeckId);if(!d){root.innerHTML='<div class="empty">Ordner nicht gefunden.</div>';return}
+ const cards=data.flashcards.filter(c=>c.deckId===d.id);
+ if(currentFlash>=cards.length)currentFlash=0;
+ const c=cards[currentFlash];
+ root.innerHTML=`<div class="topicHero"><div class="eyebrow">${esc(d.subject)}</div><h2>${esc(d.emoji||"🌸")} ${esc(d.name)}</h2><div class="small">${cards.length} Karten</div></div>
+ <div class="section">${c?`<div class="flashScene" onclick="flipDeckCard()"><div class="flashInner ${flashFlipped?"flipped":""}" id="deckFlashInner">
+   <div class="flashFace"><div><div class="badge">${esc(d.name)}</div><div class="flashQuestion" style="margin-top:16px">${esc(c.q)}</div><div class="small" style="margin-top:12px">Antippen zum Umdrehen ✿</div></div></div>
+   <div class="flashFace flashBack"><div><div class="badge">Antwort</div><div class="flashAnswer" style="margin-top:16px">${esc(c.a)}</div><div class="small" style="margin-top:12px">Antippen zum Zurückdrehen ♡</div></div></div>
+ </div></div>
+ <div class="row" style="justify-content:center;margin-top:10px"><button class="ghost" onclick="event.stopPropagation();moveDeckCard(-1)">←</button><span class="badge">${currentFlash+1}/${cards.length}</span><button class="ghost" onclick="event.stopPropagation();moveDeckCard(1)">→</button><button class="ghost" onclick="event.stopPropagation();editDeckCard('${c.id}')">Bearbeiten</button><button class="dangerBtn" onclick="event.stopPropagation();deleteDeckCard('${c.id}')">Löschen</button></div>`:'<div class="empty">Noch keine Karten.</div>'}</div>`;
+ const add=$("#addCardToDeckBtn");if(add)add.onclick=()=>openAddCardToDeck(d.id);
+}
+window.flipDeckCard=function(){flashFlipped=!flashFlipped;const x=$("#deckFlashInner");if(x)x.classList.toggle("flipped",flashFlipped)}
+window.moveDeckCard=function(dir){const cards=data.flashcards.filter(c=>c.deckId===selectedDeckId);if(!cards.length)return;currentFlash=(currentFlash+dir+cards.length)%cards.length;flashFlipped=false;renderDeckDetail()}
+window.openAddCardToDeck=function(did){
+ const d=data.flashDecks.find(x=>x.id===did);if(!d)return;
+ openModal(`<h2>Karte hinzufügen</h2><label>Frage</label><textarea id="deckQ"></textarea><label style="margin-top:10px">Antwort</label><textarea id="deckA"></textarea><button class="primary" style="margin-top:10px" onclick="saveCardToDeck('${did}')">Speichern</button>`);
+}
+window.saveCardToDeck=function(did){const d=data.flashDecks.find(x=>x.id===did),q=$("#deckQ").value.trim(),a=$("#deckA").value.trim();if(!d||!q||!a)return;data.flashcards.push({id:id(),subject:d.subject,deckId:did,q,a,created:Date.now()});save();closeModal();renderDeckDetail()}
+window.deleteDeckCard=function(cid){data.flashcards=data.flashcards.filter(x=>x.id!==cid);save();renderDeckDetail()}
+
+
+
+window.createQuizPrompt=function(){
+ const {s,t}=currentTopic();if(!s||!t)return;
+ openModal(`<h2>Quiz erstellen</h2><label>Name</label><input id="quizName" placeholder="z. B. Gestaltgesetze Test"><button class="primary" style="margin-top:10px" onclick="createQuiz()">Erstellen</button>`);
+}
+window.createQuiz=function(){const {s,t}=currentTopic(),name=$("#quizName").value.trim();if(!s||!t||!name)return;const q={id:id(),subject:s.name,topicId:t.id,name,questions:[]};data.quizzes.push(q);save();closeModal();editQuiz(q.id)}
+window.editQuiz=function(qid){
+ const q=data.quizzes.find(x=>x.id===qid);if(!q)return;
+ const items=q.questions.map((x,i)=>`<div class="quizEditorQuestion"><div class="rowBetween"><b>${i+1}. ${esc(x.q)}</b><button class="dangerBtn" onclick="deleteQuizQuestion('${qid}','${x.id}')">×</button></div><div class="small">${x.type==="mc"?"Multiple Choice":"Freitext"} · Lösung: ${esc(x.a)}</div></div>`).join("")||'<div class="empty">Noch keine Fragen.</div>';
+ openModal(`<div class="rowBetween"><h2>${esc(q.name)}</h2><button class="primary" onclick="startQuiz('${qid}')">Test starten</button></div>
+ <div class="stack" style="margin-top:12px">${items}</div>
+ <div class="section"><h3>Frage hinzufügen</h3>
+  <label style="margin-top:8px">Fragentyp</label><select id="quizQType"><option value="text">Antwort eingeben</option><option value="mc">Multiple Choice</option></select>
+  <label style="margin-top:8px">Frage</label><textarea id="newQuizQ"></textarea>
+  <div id="mcOptionsBox" style="display:none"><label style="margin-top:8px">Antwortmöglichkeiten (eine pro Zeile)</label><textarea id="newQuizOptions" placeholder="Antwort A&#10;Antwort B&#10;Antwort C"></textarea></div>
+  <label style="margin-top:8px">Richtige Antwort</label><input id="newQuizA">
+  <button class="primary" style="margin-top:8px" onclick="addQuizQuestion('${qid}')">Frage speichern</button>
+ </div>`);
+ $("#quizQType").onchange=()=>$("#mcOptionsBox").style.display=$("#quizQType").value==="mc"?"block":"none";
+}
+window.addQuizQuestion=function(qid){
+ const q=data.quizzes.find(x=>x.id===qid),type=$("#quizQType").value,qq=$("#newQuizQ").value.trim(),a=$("#newQuizA").value.trim();
+ if(!q||!qq||!a)return;
+ let options=[];if(type==="mc"){options=$("#newQuizOptions").value.split(/\n+/).map(x=>x.trim()).filter(Boolean);if(!options.includes(a))options.push(a);if(options.length<2)return alert("Bitte mindestens zwei Antwortmöglichkeiten eintragen.")}
+ q.questions.push({id:id(),type,q:qq,a,options});save();editQuiz(qid)
+}
+window.deleteQuizQuestion=function(qid,itemId){const q=data.quizzes.find(x=>x.id===qid);if(!q)return;q.questions=q.questions.filter(x=>x.id!==itemId);save();editQuiz(qid)}
+window.startQuiz=function(qid){
+ const q=data.quizzes.find(x=>x.id===qid);if(!q||!q.questions.length)return alert("Füge zuerst mindestens eine Frage hinzu.");
+ selectedQuizId=qid;quizSession={index:0,score:0,answers:[],submitted:false,selected:null};closeModal();openView("quiz-player");
+}
+function renderQuizPlayer(){
+ const root=$("#quizPlayerRoot");if(!root)return;const q=data.quizzes.find(x=>x.id===selectedQuizId);if(!q||!quizSession){root.innerHTML='<div class="empty">Quiz nicht gefunden.</div>';return}
+ if(quizSession.index>=q.questions.length){
+   root.innerHTML=`<div class="panel" style="text-align:center"><div class="eyebrow">Fertig</div><h2 style="font-size:34px;margin-top:8px">${quizSession.score}/${q.questions.length} richtig</h2><p class="muted">Du kannst das Quiz direkt nochmal machen.</p><button class="primary" onclick="startQuiz('${q.id}')">Nochmal</button></div>`;
+   $("#quizScoreBadge").textContent=`${quizSession.score}/${q.questions.length}`;return;
+ }
+ const x=q.questions[quizSession.index],progress=((quizSession.index)/q.questions.length)*100;
+ $("#quizScoreBadge").textContent=`${quizSession.score} Punkte`;
+ let answerUI="";
+ if(x.type==="mc"){
+   answerUI=`<div class="choiceList">${(x.options||[]).map(o=>`<button class="choiceBtn ${quizSession.selected===o?"selected":""}" onclick="selectQuizChoice(${JSON.stringify(o)})">${esc(o)}</button>`).join("")}</div>`;
+ }else{
+   answerUI=`<input id="quizTextAnswer" placeholder="Deine Antwort …" ${quizSession.submitted?"disabled":""}>`;
+ }
+ let fb="";
+ if(quizSession.submitted){
+   const given=quizSession.answers[quizSession.answers.length-1]?.given||"";
+   const ok=normalizeAnswer(given)===normalizeAnswer(x.a);
+   fb=`<div class="quizFeedback ${ok?"ok":"bad"}">${ok?"✓ Richtig!":`✗ Nicht ganz. Richtige Antwort: ${esc(x.a)}`}</div><button class="primary" style="margin-top:10px" onclick="nextQuizQuestion()">Weiter</button>`;
+ }
+ root.innerHTML=`<div class="quizPlayer"><div class="rowBetween"><div><div class="eyebrow">${esc(q.name)}</div><h2>Frage ${quizSession.index+1} von ${q.questions.length}</h2></div></div><div class="quizProgress"><div style="width:${progress}%"></div></div><div class="quizQuestion"><h3>${esc(x.q)}</h3>${answerUI}${!quizSession.submitted?`<button class="primary" style="margin-top:12px" onclick="submitQuizAnswer()">Antwort prüfen</button>`:""}${fb}</div></div>`;
+}
+function normalizeAnswer(s){return String(s||"").trim().toLowerCase().replace(/\s+/g," ")}
+window.selectQuizChoice=function(o){if(quizSession.submitted)return;quizSession.selected=o;renderQuizPlayer()}
+window.submitQuizAnswer=function(){
+ const q=data.quizzes.find(x=>x.id===selectedQuizId),x=q.questions[quizSession.index];
+ const given=x.type==="mc"?quizSession.selected:$("#quizTextAnswer").value.trim();
+ if(!given)return alert("Bitte zuerst eine Antwort eingeben.");
+ const ok=normalizeAnswer(given)===normalizeAnswer(x.a);if(ok)quizSession.score++;
+ quizSession.answers.push({qid:x.id,given,ok});quizSession.submitted=true;renderQuizPlayer()
+}
+window.nextQuizQuestion=function(){quizSession.index++;quizSession.submitted=false;quizSession.selected=null;renderQuizPlayer()}
+
+window.deleteQuiz=function(qid){data.quizzes=data.quizzes.filter(x=>x.id!==qid);save();renderTopicDetail()}
+
+
+
+window.openTopic=function(sid,tid){selectedSubjectId=sid;selectedTopicId=tid;openView("topic-detail")}
+function currentTopic(){
+ const s=data.subjects.find(x=>x.id===selectedSubjectId);return {s,t:s?.topics?.find(x=>x.id===selectedTopicId)}
+}
+function renderTopicDetail(){
+ const root=$("#topicDetail");if(!root)return;const {s,t}=currentTopic();if(!s||!t){root.innerHTML='<div class="empty">Thema nicht gefunden.</div>';return}
+ t.materials ||= [];t.files ||= [];
+ const sheets=(data.studySheets||[]).filter(x=>x.subject===s.name&&x.topicId===t.id);
+ const decks=(data.flashDecks||[]).filter(x=>x.subject===s.name&&x.topicId===t.id);
+ const quizzes=(data.quizzes||[]).filter(x=>x.subject===s.name&&x.topicId===t.id);
+ const files=(t.files||[]).map(f=>`<div class="fileChip"><div><b>📎 ${esc(f.name)}</b><div class="small">${esc(f.type||"Datei")}</div></div><div class="row"><button class="ghost" onclick="openStoredFile('${f.id}')">Öffnen</button><button class="dangerBtn" onclick="deleteTopicFile('${f.id}')">×</button></div></div>`).join("")||'<div class="empty">Noch keine Dateien.</div>';
+ root.innerHTML=`<div class="topicHero"><div class="eyebrow">${esc(s.name)}</div><h2>${esc(t.title)}</h2>${t.text?`<p class="small">${esc(t.text)}</p>`:""}</div>
+ <div class="resourceSections section">
+   <div class="resourceSection">
+     <div class="resourceSectionHead"><h3>📄 Lernblätter</h3><button class="primary" onclick="openStudySheetEditor()">+ Lernblatt</button></div>
+     <div class="stack">${sheets.length?sheets.map(x=>`<div class="sheetCard"><b>📄 ${esc(x.title)}</b><div class="small">${x.canvasData?"A4 Canvas-Lernblatt":"A4 Lernblatt"}</div><div class="editRow"><button class="ghost" onclick="openStudySheetEditor('${x.id}')">Bearbeiten</button><button class="ghost" onclick="openStudySheetEditor('${x.id}',true)">Öffnen</button><button class="dangerBtn" onclick="deleteStudySheet('${x.id}')">Löschen</button></div></div>`).join(""):'<div class="empty">Noch kein Lernblatt.</div>'}</div>
+   </div>
+
+   <div class="resourceSection">
+     <div class="resourceSectionHead"><h3>🗂️ Karteikarten</h3><button class="primary" onclick="createDeckPrompt()">+ Ordner</button></div>
+     <div class="deckGrid">${decks.length?decks.map(d=>`<button class="deckCard" onclick="openDeck('${d.id}')"><div class="deckIcon">${esc(d.emoji||"🌸")}</div><div class="deckName">${esc(d.name)}</div><div class="deckMeta">${data.flashcards.filter(c=>c.deckId===d.id).length} Karten</div></button>`).join(""):'<div class="empty">Noch kein Kartenordner.</div>'}</div>
+   </div>
+
+   <div class="resourceSection">
+     <div class="resourceSectionHead"><h3>🧠 Quiz & Testfragen</h3><button class="primary" onclick="createQuizPrompt()">+ Quiz</button></div>
+     <div class="stack">${quizzes.length?quizzes.map(q=>`<div class="quizCard"><div class="rowBetween"><div><b>${esc(q.name)}</b><div class="small">${q.questions.length} Fragen</div></div><span class="badge">${q.questions.some(x=>x.type==="mc")?"Multiple Choice + Freitext":"Freitext"}</span></div><div class="editRow"><button class="primary" onclick="startQuiz('${q.id}')">Starten</button><button class="ghost" onclick="editQuiz('${q.id}')">Bearbeiten</button><button class="dangerBtn" onclick="deleteQuiz('${q.id}')">Löschen</button></div></div>`).join(""):'<div class="empty">Noch kein Quiz.</div>'}</div>
+   </div>
+
+   <div class="resourceSection">
+     <div class="resourceSectionHead"><h3>📎 Dateien & Arbeitsblätter</h3><button class="primary" onclick="document.querySelector('#topicFileInput').click()">+ Datei</button></div>
+     <input id="topicFileInput" type="file" multiple accept="image/*,.pdf,.doc,.docx,.ppt,.pptx" style="display:none" onchange="addTopicFiles(this.files)">
+     <div class="fileList">${files}</div>
+   </div>
+ </div>`;
+ const del=$("#deleteCurrentTopicBtn");if(del)del.onclick=()=>deleteCurrentTopic();
+}
+window.deleteCurrentTopic=function(){const {s,t}=currentTopic();if(!s||!t)return;if(!confirm("Themen-Ordner löschen?"))return;s.topics=s.topics.filter(x=>x.id!==t.id);save();selectedTopicId=null;openSubject(s.id)}
+window.addTopicFiles=async function(files){const {t}=currentTopic();if(!t)return;t.files ||= [];for(const f of [...files]){const fid=id();await dbPut({id:fid,name:f.name,type:f.type,blob:f});t.files.push({id:fid,name:f.name,type:f.type||"Datei"})}save();renderTopicDetail()}
+window.deleteTopicFile=async function(fid){const {t}=currentTopic();if(!t)return;await dbDelete(fid);t.files=t.files.filter(x=>x.id!==fid);save();renderTopicDetail()}
+
+window.saveMaterial=function(sid){
+ const s=data.subjects.find(x=>x.id===sid);if(!s)return;ensureSubjectShape(s);
+ const type=$("#materialType").value,title=$("#materialTitle").value.trim(),text=$("#materialText").value.trim();
+ if(!title&&!text)return alert("Schreib einen Titel oder Inhalt hinein.");
+ if(type==="topic")s.topics.push({id:id(),title:title||"Neues Thema",text});
+ else s.notes.push({id:id(),title:title||"Notiz",text});
+ save();renderSubjectDetail();
+}
+window.editTopic=function(sid,tid){
+ const s=data.subjects.find(x=>x.id===sid),t=s?.topics?.find(x=>x.id===tid);if(!t)return;
+ openModal(`<h2>Thema bearbeiten</h2><label>Titel</label><input id="editMatTitle" value="${esc(t.title)}"><label style="margin-top:10px">Inhalt</label><textarea id="editMatText">${esc(t.text||"")}</textarea><button class="primary" style="margin-top:10px" onclick="saveTopicEdit('${sid}','${tid}')">Speichern</button>`);
+}
+window.saveTopicEdit=function(sid,tid){const s=data.subjects.find(x=>x.id===sid),t=s?.topics?.find(x=>x.id===tid);if(!t)return;t.title=$("#editMatTitle").value.trim()||"Thema";t.text=$("#editMatText").value.trim();save();closeModal();renderSubjectDetail()}
+window.editNote=function(sid,nid){
+ const s=data.subjects.find(x=>x.id===sid),n=s?.notes?.find(x=>x.id===nid);if(!n)return;
+ openModal(`<h2>Notiz bearbeiten</h2><label>Titel</label><input id="editMatTitle" value="${esc(n.title||"Notiz")}"><label style="margin-top:10px">Inhalt</label><textarea id="editMatText">${esc(n.text||"")}</textarea><button class="primary" style="margin-top:10px" onclick="saveNoteEdit('${sid}','${nid}')">Speichern</button>`);
+}
+window.saveNoteEdit=function(sid,nid){const s=data.subjects.find(x=>x.id===sid),n=s?.notes?.find(x=>x.id===nid);if(!n)return;n.title=$("#editMatTitle").value.trim()||"Notiz";n.text=$("#editMatText").value.trim();save();closeModal();renderSubjectDetail()}
+window.openCoverEditor=function(sid){
+ const s=data.subjects.find(x=>x.id===sid);if(!s)return;ensureSubjectShape(s);
+ openModal(`<h2>Notizbuch gestalten</h2><div class="formGrid"><div><label>Coverfarbe</label><input id="editCover" type="color" value="${s.cover}"></div><div><label>Farbe</label><input id="editFolderColor" type="color" value="${s.color}"></div><div><label>Symbol</label><select id="editEmoji">${["🌸","🌷","🍀","🧸","⭐","🎀","🫐","🍓"].map(e=>`<option ${e===s.emoji?"selected":""}>${e}</option>`).join("")}</select></div></div><button class="primary" style="margin-top:10px" onclick="saveCover('${sid}')">Speichern</button>`);
+}
+window.deleteSubjectFromPage=function(sid){
+ if(!confirm("Dieses Fach mit allen lokalen Themen und Notizen löschen?"))return;
+ data.subjects=data.subjects.filter(x=>x.id!==sid);selectedSubjectId=null;save();openView("subjects");
+}
+
+window.addTopic=function(sid){
+ const s=data.subjects.find(x=>x.id===sid),title=$("#topicTitle").value.trim(),text=$("#topicText").value.trim();
+ if(!s||!title)return;ensureSubjectShape(s);s.topics.push({id:id(),title,text});save();renderSubjectDetail()
+}
+window.deleteTopic=function(sid,tid){const s=data.subjects.find(x=>x.id===sid);if(!s)return;s.topics=(s.topics||[]).filter(t=>t.id!==tid);save();renderSubjectDetail()}
+window.saveCover=function(sid){const s=data.subjects.find(x=>x.id===sid);if(!s)return;s.cover=$("#editCover").value;s.color=$("#editFolderColor").value;s.emoji=$("#editEmoji").value;save();closeModal();renderSubjectDetail()}
+
+const DBNAME="schoolbloom-files", STORE="files";
+function dbOpen(){return new Promise((res,rej)=>{const r=indexedDB.open(DBNAME,1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains(STORE))r.result.createObjectStore(STORE,{keyPath:"id"})};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+async function dbPut(obj){const db=await dbOpen();return new Promise((res,rej)=>{const tx=db.transaction(STORE,"readwrite");tx.objectStore(STORE).put(obj);tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error)})}
+async function dbGet(id){const db=await dbOpen();return new Promise((res,rej)=>{const r=db.transaction(STORE).objectStore(STORE).get(id);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+async function dbDelete(id){const db=await dbOpen();return new Promise((res,rej)=>{const tx=db.transaction(STORE,"readwrite");tx.objectStore(STORE).delete(id);tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error)})}
+
+async function storeEntityFiles(entity,fileList){
+ entity.files ||= [];
+ for(const f of [...fileList]){
+   const fid=id(); await dbPut({id:fid,name:f.name,type:f.type,blob:f});
+   entity.files.push({id:fid,name:f.name,type:f.type||"Datei"});
+ }
+}
+window.openStoredFile=async function(fid){
+ const obj=await dbGet(fid);if(!obj)return alert("Datei nicht gefunden.");
+ const url=URL.createObjectURL(obj.blob),a=document.createElement("a");a.href=url;a.target="_blank";a.download=obj.name;a.click();setTimeout(()=>URL.revokeObjectURL(url),5000)
+}
+function fileChips(files=[]){
+ return files.length?`<div class="attachmentRow">${files.map(f=>`<button class="attachmentChip" onclick="event.stopPropagation();openStoredFile('${f.id}')">📎 ${esc(f.name)}</button>`).join("")}</div>`:"";
+}
+window.addSubjectFiles=async function(sid,files){
+ const s=data.subjects.find(x=>x.id===sid);if(!s)return;ensureSubjectShape(s);
+ for(const f of [...files]){
+   const fid=id(); await dbPut({id:fid,name:f.name,type:f.type,blob:f});
+   s.files.push({id:fid,name:f.name,type:f.type||"Datei"});
+ }
+ save();renderSubjectDetail()
+}
+window.downloadSubjectFile=async function(sid,fid){
+ const obj=await dbGet(fid);if(!obj)return alert("Datei nicht gefunden.");
+ const url=URL.createObjectURL(obj.blob),a=document.createElement("a");a.href=url;a.download=obj.name;a.target="_blank";a.click();setTimeout(()=>URL.revokeObjectURL(url),5000)
+}
+window.deleteSubjectFile=async function(sid,fid){
+ const s=data.subjects.find(x=>x.id===sid);if(!s)return;await dbDelete(fid);s.files=(s.files||[]).filter(f=>f.id!==fid);save();renderSubjectDetail()
+}
+
+window.openAddAbsence=function(){
+ openModal(`<h2>Abwesenheit</h2><div class="formGrid">
+ <div><label>Von</label><input id="aFrom" type="date" value="${todayISO()}"></div>
+ <div><label>Bis</label><input id="aTo" type="date" value="${todayISO()}"></div>
+ <div><label>Grund</label><select id="aReason"><option>Krank</option><option>Arzttermin</option><option>Privat</option><option>Sonstiges</option></select></div>
+ <div><label>Status</label><select id="aStatus"><option>Entschuldigung offen</option><option>Entschuldigt</option></select></div>
+ <div class="full"><label>Notiz</label><textarea id="aNote"></textarea></div></div>
+ <button class="primary" style="margin-top:12px" onclick="addAbsence()">Speichern</button>`)
+}
+window.addAbsence=function(){data.absences.push({id:id(),from:$("#aFrom").value,to:$("#aTo").value,reason:$("#aReason").value,status:$("#aStatus").value,note:$("#aNote").value.trim()});save();closeModal()}
+window.toggleAbsence=function(i){const x=data.absences.find(x=>x.id===i);if(x){x.status=x.status==="Entschuldigt"?"Entschuldigung offen":"Entschuldigt";save()}}
+window.deleteAbsence=i=>{data.absences=data.absences.filter(x=>x.id!==i);save()}
+
+
+const timetableSlots=[
+ {start:"08:00",end:"08:45"},
+ {start:"08:45",end:"09:30"},
+ {start:"09:45",end:"10:30"},
+ {start:"10:30",end:"11:15"},
+ {start:"11:30",end:"12:15"},
+ {start:"12:15",end:"13:00"},
+ {start:"13:30",end:"14:15"},
+ {start:"14:15",end:"15:00"},
+ {start:"15:00",end:"15:45"},
+ {start:"15:45",end:"16:30"}
+];
+function fillCancelledSlots(lessons){
+ // VERSION 28:
+ // SchoolBloom darf NIE aus einer nicht erkannten/leeren PDF-Zelle
+ // automatisch "Entfall" erfinden.
+ // Nur Einträge, die wirklich aus der PDF gelesen wurden, werden gezeigt.
+ return [...(lessons||[])];
 }
 
 function renderHome(){
@@ -1073,18 +2628,19 @@ function renderHome(){
  const now=new Date(),min=now.getHours()*60+now.getMinutes();
  let next=lessons.find(x=>x.raw!=="__ENTFALL__"&&(()=>{const [h,m]=x.end.split(":").map(Number);return h*60+m>min})());
  if(next){
-  const raw=cleanPdfCellText(next.raw);
-  const specialMatch=raw.match(/\b(\d{1,2}(?::\d{2})?\s*Uhr)\b\s*(.*)$/i);
+  const raw=String(next.raw||"").replace(/\s+/g," ").trim();
+  const specialTime=raw.match(/\b(\d{1,2}(?::\d{2})?\s*Uhr)\b/i);
 
-  if((next.specialOnly||isSpecialScheduleText(raw)) && specialMatch){
-   const specialTime=specialMatch[1];
-   const specialText=(specialMatch[2]||"")
+  if((next.specialOnly||isSpecialScheduleText(raw)) && specialTime){
+   let text=raw
+     .replace(specialTime[0],"")
      .replace(/Klassenleitungs-\s*stunden/ig,"Klassenleitungsstunden")
      .replace(/Klassenleitungs\s+stunden/ig,"Klassenleitungsstunden")
+     .replace(/\s+/g," ")
      .trim();
 
    $("#nextPanel").innerHTML=`<div class="eyebrow">Als Nächstes</div>
-    <div style="font-size:27px;font-weight:950;letter-spacing:-.04em;margin-top:5px">${esc(specialTime)} · ${esc(specialText)}</div>`;
+    <div style="font-size:27px;font-weight:950;letter-spacing:-.04em;margin-top:5px">${esc(specialTime[0])} · ${esc(text)}</div>`;
   }else{
    const p=splitCell(next.raw),[h,m]=next.start.split(":").map(Number),active=h*60+m<=min;
    $("#nextPanel").innerHTML=`<div class="eyebrow">${data.timetable.isPlaceholder?"Lückenfüller-Plan":"Als Nächstes"}</div>
@@ -1916,8 +3472,8 @@ window.loadRemotePlan=async function(manual=false){
 
 loadRemotePlan(false);
 
-if(localStorage.getItem("schoolbloom-plan-parser-version")!=="27"){
- localStorage.setItem("schoolbloom-plan-parser-version","27");
+if(localStorage.getItem("schoolbloom-plan-parser-version")!=="26"){
+ localStorage.setItem("schoolbloom-plan-parser-version","26");
  setTimeout(()=>loadRemotePlan(true),250);
 }
 if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});
