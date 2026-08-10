@@ -1,11 +1,6 @@
-# VERSION 26
+# VERSION 27
 
-- „10:00 Uhr Klassenleitungsstunden“ wird als genau eine gelbe Sondernotiz angezeigt.
-- Einzelnes „stunden“ wird nie mehr als Unterrichtskarte dargestellt.
-- Doppelstunden werden niemals über eine echte Pause hinweg zu einer Karte zusammengezogen.
-- Liegt zwischen zwei gleichen Fachblöcken eine Pause, bleiben es zwei Unterrichtskarten und die Pause bleibt sichtbar.
-- Offizielle Pausen:
-  - 09:30–09:45
-  - 11:15–11:30
-  - 13:00–13:30
-- MUS = Herr Mussler-Ochsenfeld bleibt erhalten.
+- Pause 11:15–11:30 wird auch angezeigt, wenn direkt davor oder danach eine freie Lücke liegt.
+- Dasselbe gilt für 09:30–09:45 und 13:00–13:30.
+- Auf „Heute“ wird bei „10:00 Uhr Klassenleitungsstunden“ ausschließlich diese echte Uhrzeit/Notiz gezeigt.
+- Keine erfundene Parser-Zeitspanne wie 09:45–13:00 unter Sonderhinweisen.
