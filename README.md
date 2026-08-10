@@ -1,18 +1,13 @@
-# VERSION 28
+# VERSION 29
 
-Stabile Reparatur auf Basis von VERSION 26.
+Lernblatt-Editor:
+- A4-Seite kann an den Bildschirm angepasst werden.
+- Zoom-Steuerung: 50%, 75%, 100%, 125%, 150%, zusätzlich + / -.
+- Editor-Bereich ist scrollbar, wenn man bewusst hineinzoomt.
+- Formen bekommen sichtbare Auswahl.
+- Formen lassen sich bewegen, skalieren und drehen.
+- Füllfarbe, Konturfarbe und Konturstil können geändert werden.
+- Formen können gelöscht und in der Ebene nach vorne/hinten verschoben werden.
+- Tippen auf freie A4-Fläche hebt die Auswahl auf.
 
-Geändert wurden ausschließlich:
-1. Pausenanzeige:
-   - 09:30–09:45
-   - 11:15–11:30
-   - 13:00–13:30
-   Eine Pause wird gezeigt, sobald der Tagesplan zeitlich über sie hinweg läuft,
-   auch wenn direkt davor/danach keine Unterrichtskarte existiert.
-
-2. Heute-Karte:
-   Bei „10:00 Uhr Klassenleitungsstunden“ wird nur
-   „10:00 Uhr · Klassenleitungsstunden“ angezeigt.
-   Keine erfundene Parser-Zeitspanne darunter.
-
-Der Stundenplan-Parser selbst entspricht VERSION 26.
+Stundenplan basiert weiterhin auf der stabilen Version 28.

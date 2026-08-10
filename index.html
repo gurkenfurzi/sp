@@ -633,13 +633,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 28: echter Live-Refresh ===== */
+/* ===== VERSION 29: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 28 timetable parser ===== */
+/* ===== VERSION 29 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -648,7 +648,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 28: dynamic classes ===== */
+/* ===== VERSION 29: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -657,9 +657,74 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 28: raster-exact timetable ===== */
+/* ===== VERSION 29: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
+
+/* ===== VERSION 29 — Lernblatt-Editor ===== */
+.editorViewBar{
+ display:flex;gap:8px;align-items:center;flex-wrap:wrap;
+ margin:8px 0 12px;
+}
+.editorViewBar button,.editorViewBar select{
+ border:1px solid #e8cec7;background:#fffaf6;color:#765f56;
+ border-radius:12px;padding:9px 11px;font-weight:850;
+}
+.editorViewBar .zoomValue{min-width:58px;text-align:center;font-weight:900;color:#8d7369}
+.editorCanvasWrap{
+ overflow:auto!important;
+ -webkit-overflow-scrolling:touch;
+ touch-action:pan-x pan-y;
+ display:flex;
+ justify-content:center;
+ align-items:flex-start;
+ padding:18px!important;
+ max-height:72vh;
+}
+.editorPaper{
+ transform-origin:top center!important;
+ flex:0 0 auto;
+ box-shadow:0 10px 30px rgba(91,68,61,.12);
+}
+.editorShape{
+ position:absolute;
+ min-width:36px;min-height:36px;
+ touch-action:none;
+ user-select:none;
+ -webkit-user-select:none;
+ box-sizing:border-box;
+ cursor:move;
+}
+.editorShape.selected{
+ outline:2px dashed #df9e9b;
+ outline-offset:5px;
+}
+.editorShapeHandle{
+ position:absolute;width:18px;height:18px;border-radius:50%;
+ background:#fff;border:2px solid #d79494;
+ box-shadow:0 2px 8px rgba(0,0,0,.12);
+ z-index:3;
+}
+.editorShapeHandle.resize{right:-11px;bottom:-11px;cursor:nwse-resize}
+.editorShapeHandle.rotate{
+ left:50%;top:-34px;transform:translateX(-50%);
+ cursor:grab;
+}
+.editorShapeHandle.rotate:after{
+ content:"↻";position:absolute;inset:0;display:grid;place-items:center;
+ font-size:11px;color:#a67570;font-weight:900;
+}
+.editorShapeToolbar{
+ display:none;gap:7px;align-items:center;flex-wrap:wrap;
+ padding:9px;border:1px solid #ead4ce;border-radius:14px;
+ background:#fffaf6;margin:8px 0;
+}
+.editorShapeToolbar.active{display:flex}
+.editorShapeToolbar input[type="color"]{width:38px;height:34px;border:0;background:transparent}
+.editorShapeToolbar button,.editorShapeToolbar select{
+ border:1px solid #e5cbc4;background:white;border-radius:10px;
+ padding:8px 10px;font-weight:800;color:#765f56;
+}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.18/paper-full.min.js"></script>
 </head>
@@ -667,7 +732,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 28</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 29</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -957,6 +1022,210 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 </div>
 
 <script type="module">
+/* ===== V29 EDITOR PATCH ===== */
+let editorZoom=1;
+let editorSelectedObject=null;
+let editorPointerState=null;
+let editorZCounter=20;
+
+function getEditorPaper(){
+ return document.querySelector(".editorPaper")
+   || document.querySelector(".sheetPage")
+   || document.querySelector(".a4Page")
+   || document.querySelector("#editorPage")
+   || document.querySelector("[data-editor-page]");
+}
+function getEditorWrap(){
+ const paper=getEditorPaper();
+ if(!paper)return null;
+ let p=paper.parentElement;
+ if(p && !p.classList.contains("editorCanvasWrap"))p.classList.add("editorCanvasWrap");
+ return p;
+}
+window.editorSetZoom=function(z){
+ z=Math.max(.3,Math.min(2,Number(z)||1));
+ editorZoom=z;
+ const paper=getEditorPaper(); if(!paper)return;
+ paper.style.transform=`scale(${z})`;
+ const zoom=document.querySelector("#editorZoomValue");
+ if(zoom)zoom.textContent=Math.round(z*100)+"%";
+ const select=document.querySelector("#editorZoomSelect");
+ if(select){
+   const vals=[.5,.75,1,1.25,1.5];
+   const closest=vals.reduce((a,b)=>Math.abs(b-z)<Math.abs(a-z)?b:a,1);
+   if(Math.abs(closest-z)<.03)select.value=String(closest);
+ }
+ // Reserve scaled size so scrolling stays natural.
+ const baseW=paper.offsetWidth,baseH=paper.offsetHeight;
+ const wrap=getEditorWrap();
+ if(wrap){
+   wrap.style.setProperty("--scaled-w",(baseW*z)+"px");
+   wrap.style.setProperty("--scaled-h",(baseH*z)+"px");
+ }
+}
+window.editorZoomBy=function(delta){editorSetZoom(editorZoom+delta)}
+window.editorFitToScreen=function(){
+ const paper=getEditorPaper(),wrap=getEditorWrap();
+ if(!paper||!wrap)return;
+ // fit with some padding; width is the important dimension on phones.
+ const available=Math.max(240,wrap.clientWidth-36);
+ const z=Math.min(1,available/paper.offsetWidth);
+ editorSetZoom(z);
+}
+window.addEventListener("resize",()=>{
+ if(editorZoom<1)requestAnimationFrame(()=>editorFitToScreen());
+});
+
+function editorObjectRect(el){
+ return {
+   left:parseFloat(el.style.left)||el.offsetLeft||0,
+   top:parseFloat(el.style.top)||el.offsetTop||0,
+   width:parseFloat(el.style.width)||el.offsetWidth||100,
+   height:parseFloat(el.style.height)||el.offsetHeight||80,
+   rotation:parseFloat(el.dataset.rotation)||0
+ };
+}
+function editorEnsureShapeUI(el){
+ if(!el||el.dataset.v29ShapeReady==="1")return;
+ el.dataset.v29ShapeReady="1";
+ el.classList.add("editorShape");
+ if(!el.style.position)el.style.position="absolute";
+ if(!el.style.width)el.style.width=Math.max(70,el.offsetWidth||100)+"px";
+ if(!el.style.height)el.style.height=Math.max(55,el.offsetHeight||80)+"px";
+ if(!el.style.zIndex)el.style.zIndex=String(++editorZCounter);
+
+ const resize=document.createElement("span");
+ resize.className="editorShapeHandle resize";
+ resize.dataset.handle="resize";
+ const rotate=document.createElement("span");
+ rotate.className="editorShapeHandle rotate";
+ rotate.dataset.handle="rotate";
+ el.append(resize,rotate);
+
+ el.addEventListener("pointerdown",editorShapePointerDown);
+}
+function editorSelectObject(el){
+ if(editorSelectedObject===el)return;
+ if(editorSelectedObject)editorSelectedObject.classList.remove("selected");
+ editorSelectedObject=el||null;
+ const bar=document.querySelector("#editorShapeToolbar");
+ if(el){
+   el.classList.add("selected");
+   if(bar)bar.classList.add("active");
+   const fill=document.querySelector("#shapeFill");
+   const stroke=document.querySelector("#shapeStroke");
+   const style=document.querySelector("#shapeStrokeStyle");
+   const cs=getComputedStyle(el);
+   if(fill && /^rgb/.test(cs.backgroundColor)){
+     fill.value=rgbToHex(cs.backgroundColor);
+   }
+   if(stroke && /^rgb/.test(cs.borderColor)){
+     stroke.value=rgbToHex(cs.borderColor);
+   }
+   if(style)style.value=cs.borderStyle==="dashed"?"dashed":cs.borderStyle==="dotted"?"dotted":"solid";
+ }else if(bar){
+   bar.classList.remove("active");
+ }
+}
+function rgbToHex(rgb){
+ const m=rgb.match(/\d+/g); if(!m)return "#000000";
+ return "#"+m.slice(0,3).map(x=>(+x).toString(16).padStart(2,"0")).join("");
+}
+function editorShapePointerDown(e){
+ const el=e.currentTarget;
+ editorSelectObject(el);
+ const r=editorObjectRect(el);
+ const paper=getEditorPaper(); if(!paper)return;
+ const paperRect=paper.getBoundingClientRect();
+ const handle=e.target?.dataset?.handle||"move";
+ editorPointerState={
+   el,handle,
+   startX:e.clientX,startY:e.clientY,
+   left:r.left,top:r.top,width:r.width,height:r.height,rotation:r.rotation,
+   cx:(el.getBoundingClientRect().left+el.getBoundingClientRect().right)/2,
+   cy:(el.getBoundingClientRect().top+el.getBoundingClientRect().bottom)/2,
+   paperRect
+ };
+ el.setPointerCapture?.(e.pointerId);
+ e.preventDefault();
+ e.stopPropagation();
+}
+window.addEventListener("pointermove",e=>{
+ const s=editorPointerState;if(!s)return;
+ const dx=(e.clientX-s.startX)/editorZoom;
+ const dy=(e.clientY-s.startY)/editorZoom;
+ if(s.handle==="resize"){
+   s.el.style.width=Math.max(24,s.width+dx)+"px";
+   s.el.style.height=Math.max(24,s.height+dy)+"px";
+ }else if(s.handle==="rotate"){
+   const a0=Math.atan2(s.startY-s.cy,s.startX-s.cx);
+   const a1=Math.atan2(e.clientY-s.cy,e.clientX-s.cx);
+   const deg=s.rotation+(a1-a0)*180/Math.PI;
+   s.el.dataset.rotation=String(deg);
+   s.el.style.transform=`rotate(${deg}deg)`;
+ }else{
+   s.el.style.left=Math.max(0,s.left+dx)+"px";
+   s.el.style.top=Math.max(0,s.top+dy)+"px";
+ }
+});
+window.addEventListener("pointerup",()=>{editorPointerState=null});
+
+window.editorApplyShapeStyle=function(){
+ const el=editorSelectedObject;if(!el)return;
+ const fill=document.querySelector("#shapeFill")?.value;
+ const stroke=document.querySelector("#shapeStroke")?.value;
+ const style=document.querySelector("#shapeStrokeStyle")?.value||"solid";
+ if(fill)el.style.background=fill;
+ if(stroke)el.style.borderColor=stroke;
+ el.style.borderStyle=style;
+ if(!el.style.borderWidth)el.style.borderWidth="2px";
+}
+window.editorDeleteSelected=function(){
+ if(!editorSelectedObject)return;
+ editorSelectedObject.remove();
+ editorSelectedObject=null;
+ document.querySelector("#editorShapeToolbar")?.classList.remove("active");
+}
+window.editorBringForward=function(){
+ if(editorSelectedObject)editorSelectedObject.style.zIndex=String(++editorZCounter);
+}
+window.editorSendBackward=function(){
+ if(editorSelectedObject)editorSelectedObject.style.zIndex=String(Math.max(1,(parseInt(editorSelectedObject.style.zIndex)||2)-1));
+}
+
+function editorAdoptExistingShapes(){
+ const paper=getEditorPaper(); if(!paper)return;
+ paper.classList.add("editorPaper");
+ const wrap=paper.parentElement;if(wrap)wrap.classList.add("editorCanvasWrap");
+
+ // Adopt objects that look like shapes, while excluding text/editable elements.
+ const selectors=[
+   ".shape",".editor-object.shape",".canvas-shape",
+   "[data-type='shape']","[data-shape]",
+   ".rectShape",".circleShape",".triangleShape"
+ ];
+ paper.querySelectorAll(selectors.join(",")).forEach(editorEnsureShapeUI);
+
+ // Allow tapping empty paper to deselect.
+ if(paper.dataset.v29Deselect!=="1"){
+   paper.dataset.v29Deselect="1";
+   paper.addEventListener("pointerdown",e=>{
+     if(e.target===paper)editorSelectObject(null);
+   });
+ }
+}
+const editorObserver=new MutationObserver(()=>editorAdoptExistingShapes());
+document.addEventListener("DOMContentLoaded",()=>{
+ setTimeout(()=>{
+   editorAdoptExistingShapes();
+   const paper=getEditorPaper();
+   if(paper){
+     editorObserver.observe(paper,{subtree:true,childList:true});
+     editorFitToScreen();
+   }
+ },500);
+});
+
 const SCHOOLBLOOM_PLAN_WORKER="https://dry-surf-fec5.muelliaccc.workers.dev";
 
 import * as pdfjsLib from "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs";
@@ -1189,7 +1458,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 28";
+ $("#headerEyebrow").textContent="VERSION 29";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -1379,7 +1648,33 @@ function renderSubjectDetail(){
    <div class="meta">${(s.topics||[]).length} Themen-Ordner</div>
  </div>
  <div class="section"><div class="sectionHead"><h2>Themen</h2><button class="primary" onclick="openNewTopic('${s.id}')">+ Thema</button></div><div class="topicFolderGrid">${folders}</div></div>
- <div class="section panel"><h3>Notizbuch gestalten</h3><p class="small">Farbe, Cover und Symbol des Fachs.</p><button class="ghost" onclick="openCoverEditor('${s.id}')">🎨 Cover ändern</button></div>`;
+ 
+<div class="editorViewBar">
+  <button type="button" onclick="editorFitToScreen()">⊡ Anpassen</button>
+  <button type="button" onclick="editorZoomBy(-0.1)">−</button>
+  <span id="editorZoomValue" class="zoomValue">100%</span>
+  <button type="button" onclick="editorZoomBy(0.1)">＋</button>
+  <select id="editorZoomSelect" onchange="editorSetZoom(parseFloat(this.value))">
+    <option value="0.5">50%</option>
+    <option value="0.75">75%</option>
+    <option value="1" selected>100%</option>
+    <option value="1.25">125%</option>
+    <option value="1.5">150%</option>
+  </select>
+</div>
+<div id="editorShapeToolbar" class="editorShapeToolbar">
+  <button type="button" onclick="editorDeleteSelected()">🗑</button>
+  <label>Füllung <input id="shapeFill" type="color" value="#f7cfcc" oninput="editorApplyShapeStyle()"></label>
+  <label>Kontur <input id="shapeStroke" type="color" value="#8f756b" oninput="editorApplyShapeStyle()"></label>
+  <select id="shapeStrokeStyle" onchange="editorApplyShapeStyle()">
+    <option value="solid">—</option>
+    <option value="dashed">- - -</option>
+    <option value="dotted">····</option>
+  </select>
+  <button type="button" onclick="editorBringForward()">⬆ Ebene</button>
+  <button type="button" onclick="editorSendBackward()">⬇ Ebene</button>
+</div>
+<div class="section panel"><h3>Notizbuch gestalten</h3><p class="small">Farbe, Cover und Symbol des Fachs.</p><button class="ghost" onclick="openCoverEditor('${s.id}')">🎨 Cover ändern</button></div>`;
  const del=$("#deleteCurrentSubjectBtn");if(del)del.onclick=()=>deleteSubjectFromPage(s.id);
 }
 
@@ -2087,13 +2382,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 28: echter Live-Refresh ===== */
+/* ===== VERSION 29: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 28 timetable parser ===== */
+/* ===== VERSION 29 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -2102,7 +2397,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 28: dynamic classes ===== */
+/* ===== VERSION 29: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -2111,9 +2406,74 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 28: raster-exact timetable ===== */
+/* ===== VERSION 29: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
+
+/* ===== VERSION 29 — Lernblatt-Editor ===== */
+.editorViewBar{
+ display:flex;gap:8px;align-items:center;flex-wrap:wrap;
+ margin:8px 0 12px;
+}
+.editorViewBar button,.editorViewBar select{
+ border:1px solid #e8cec7;background:#fffaf6;color:#765f56;
+ border-radius:12px;padding:9px 11px;font-weight:850;
+}
+.editorViewBar .zoomValue{min-width:58px;text-align:center;font-weight:900;color:#8d7369}
+.editorCanvasWrap{
+ overflow:auto!important;
+ -webkit-overflow-scrolling:touch;
+ touch-action:pan-x pan-y;
+ display:flex;
+ justify-content:center;
+ align-items:flex-start;
+ padding:18px!important;
+ max-height:72vh;
+}
+.editorPaper{
+ transform-origin:top center!important;
+ flex:0 0 auto;
+ box-shadow:0 10px 30px rgba(91,68,61,.12);
+}
+.editorShape{
+ position:absolute;
+ min-width:36px;min-height:36px;
+ touch-action:none;
+ user-select:none;
+ -webkit-user-select:none;
+ box-sizing:border-box;
+ cursor:move;
+}
+.editorShape.selected{
+ outline:2px dashed #df9e9b;
+ outline-offset:5px;
+}
+.editorShapeHandle{
+ position:absolute;width:18px;height:18px;border-radius:50%;
+ background:#fff;border:2px solid #d79494;
+ box-shadow:0 2px 8px rgba(0,0,0,.12);
+ z-index:3;
+}
+.editorShapeHandle.resize{right:-11px;bottom:-11px;cursor:nwse-resize}
+.editorShapeHandle.rotate{
+ left:50%;top:-34px;transform:translateX(-50%);
+ cursor:grab;
+}
+.editorShapeHandle.rotate:after{
+ content:"↻";position:absolute;inset:0;display:grid;place-items:center;
+ font-size:11px;color:#a67570;font-weight:900;
+}
+.editorShapeToolbar{
+ display:none;gap:7px;align-items:center;flex-wrap:wrap;
+ padding:9px;border:1px solid #ead4ce;border-radius:14px;
+ background:#fffaf6;margin:8px 0;
+}
+.editorShapeToolbar.active{display:flex}
+.editorShapeToolbar input[type="color"]{width:38px;height:34px;border:0;background:transparent}
+.editorShapeToolbar button,.editorShapeToolbar select{
+ border:1px solid #e5cbc4;background:white;border-radius:10px;
+ padding:8px 10px;font-weight:800;color:#765f56;
+}
 </style></head><body><div class="page">${serializedCanvas()}</div></body></html>`;
  const blob=new Blob([html],{type:"text/html"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=title.replace(/[^\wäöüÄÖÜß-]+/g,"_")+".html";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
 }
@@ -2290,13 +2650,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 28: echter Live-Refresh ===== */
+/* ===== VERSION 29: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 28 timetable parser ===== */
+/* ===== VERSION 29 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -2305,7 +2665,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 28: dynamic classes ===== */
+/* ===== VERSION 29: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -2314,9 +2674,74 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 28: raster-exact timetable ===== */
+/* ===== VERSION 29: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
+
+/* ===== VERSION 29 — Lernblatt-Editor ===== */
+.editorViewBar{
+ display:flex;gap:8px;align-items:center;flex-wrap:wrap;
+ margin:8px 0 12px;
+}
+.editorViewBar button,.editorViewBar select{
+ border:1px solid #e8cec7;background:#fffaf6;color:#765f56;
+ border-radius:12px;padding:9px 11px;font-weight:850;
+}
+.editorViewBar .zoomValue{min-width:58px;text-align:center;font-weight:900;color:#8d7369}
+.editorCanvasWrap{
+ overflow:auto!important;
+ -webkit-overflow-scrolling:touch;
+ touch-action:pan-x pan-y;
+ display:flex;
+ justify-content:center;
+ align-items:flex-start;
+ padding:18px!important;
+ max-height:72vh;
+}
+.editorPaper{
+ transform-origin:top center!important;
+ flex:0 0 auto;
+ box-shadow:0 10px 30px rgba(91,68,61,.12);
+}
+.editorShape{
+ position:absolute;
+ min-width:36px;min-height:36px;
+ touch-action:none;
+ user-select:none;
+ -webkit-user-select:none;
+ box-sizing:border-box;
+ cursor:move;
+}
+.editorShape.selected{
+ outline:2px dashed #df9e9b;
+ outline-offset:5px;
+}
+.editorShapeHandle{
+ position:absolute;width:18px;height:18px;border-radius:50%;
+ background:#fff;border:2px solid #d79494;
+ box-shadow:0 2px 8px rgba(0,0,0,.12);
+ z-index:3;
+}
+.editorShapeHandle.resize{right:-11px;bottom:-11px;cursor:nwse-resize}
+.editorShapeHandle.rotate{
+ left:50%;top:-34px;transform:translateX(-50%);
+ cursor:grab;
+}
+.editorShapeHandle.rotate:after{
+ content:"↻";position:absolute;inset:0;display:grid;place-items:center;
+ font-size:11px;color:#a67570;font-weight:900;
+}
+.editorShapeToolbar{
+ display:none;gap:7px;align-items:center;flex-wrap:wrap;
+ padding:9px;border:1px solid #ead4ce;border-radius:14px;
+ background:#fffaf6;margin:8px 0;
+}
+.editorShapeToolbar.active{display:flex}
+.editorShapeToolbar input[type="color"]{width:38px;height:34px;border:0;background:transparent}
+.editorShapeToolbar button,.editorShapeToolbar select{
+ border:1px solid #e5cbc4;background:white;border-radius:10px;
+ padding:8px 10px;font-weight:800;color:#765f56;
+}
 </style></head><body><div class="page">${serializedCanvas()}</div></body></html>`);w.document.close();setTimeout(()=>w.print(),300)
 }
 window.applyCanvasTemplate=function(name,silent=false){
@@ -2615,7 +3040,7 @@ const timetableSlots=[
  {start:"15:45",end:"16:30"}
 ];
 function fillCancelledSlots(lessons){
- // VERSION 28:
+ // VERSION 29:
  // SchoolBloom darf NIE aus einer nicht erkannten/leeren PDF-Zelle
  // automatisch "Entfall" erfinden.
  // Nur Einträge, die wirklich aus der PDF gelesen wurden, werden gezeigt.
