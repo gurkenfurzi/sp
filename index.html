@@ -633,13 +633,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 29: echter Live-Refresh ===== */
+/* ===== VERSION 31: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 29 timetable parser ===== */
+/* ===== VERSION 31 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -648,7 +648,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 29: dynamic classes ===== */
+/* ===== VERSION 31: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -657,82 +657,42 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 29: raster-exact timetable ===== */
+/* ===== VERSION 31: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 29 — Lernblatt-Editor ===== */
-.editorViewBar{
- display:flex;gap:8px;align-items:center;flex-wrap:wrap;
- margin:8px 0 12px;
-}
-.editorViewBar button,.editorViewBar select{
- border:1px solid #e8cec7;background:#fffaf6;color:#765f56;
- border-radius:12px;padding:9px 11px;font-weight:850;
-}
-.editorViewBar .zoomValue{min-width:58px;text-align:center;font-weight:900;color:#8d7369}
-.editorCanvasWrap{
- overflow:auto!important;
- -webkit-overflow-scrolling:touch;
- touch-action:pan-x pan-y;
- display:flex;
- justify-content:center;
- align-items:flex-start;
- padding:18px!important;
- max-height:72vh;
-}
-.editorPaper{
- transform-origin:top center!important;
- flex:0 0 auto;
- box-shadow:0 10px 30px rgba(91,68,61,.12);
-}
-.editorShape{
- position:absolute;
- min-width:36px;min-height:36px;
- touch-action:none;
- user-select:none;
- -webkit-user-select:none;
- box-sizing:border-box;
- cursor:move;
-}
-.editorShape.selected{
- outline:2px dashed #df9e9b;
- outline-offset:5px;
-}
-.editorShapeHandle{
- position:absolute;width:18px;height:18px;border-radius:50%;
- background:#fff;border:2px solid #d79494;
- box-shadow:0 2px 8px rgba(0,0,0,.12);
- z-index:3;
-}
-.editorShapeHandle.resize{right:-11px;bottom:-11px;cursor:nwse-resize}
-.editorShapeHandle.rotate{
- left:50%;top:-34px;transform:translateX(-50%);
- cursor:grab;
-}
-.editorShapeHandle.rotate:after{
- content:"↻";position:absolute;inset:0;display:grid;place-items:center;
- font-size:11px;color:#a67570;font-weight:900;
-}
-.editorShapeToolbar{
- display:none;gap:7px;align-items:center;flex-wrap:wrap;
- padding:9px;border:1px solid #ead4ce;border-radius:14px;
- background:#fffaf6;margin:8px 0;
-}
-.editorShapeToolbar.active{display:flex}
-.editorShapeToolbar input[type="color"]{width:38px;height:34px;border:0;background:transparent}
-.editorShapeToolbar button,.editorShapeToolbar select{
- border:1px solid #e5cbc4;background:white;border-radius:10px;
- padding:8px 10px;font-weight:800;color:#765f56;
-}
+/* ===== VERSION 31 stability fixes ===== */
+.editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
+.editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
+.editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
+.canvasViewport{overscroll-behavior:contain}
+.canvasStage{transform:none!important}
+.vectorTouchProxy{fill:rgba(255,255,255,.001)!important;stroke:rgba(255,255,255,.001)!important;stroke-width:16!important;pointer-events:all!important;touch-action:none}
+.vectorObj .vectorHandle{touch-action:none}
+.vectorObj.selected .shapeVisible{filter:drop-shadow(0 0 3px rgba(233,158,154,.9))}
+.canvasSvg.drawing{cursor:crosshair}
+.pathDrawHint{z-index:140!important}
+@media(max-width:600px){.editorZoomBar{top:103px}}
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.18/paper-full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.18/paper-full.min.js">
+let homeClockTimer=null;
+function ensureHomeClockTimer(){
+ if(homeClockTimer)return;
+ homeClockTimer=setInterval(()=>{
+   const homeView=$("#view-home");
+   if(homeView && !homeView.classList.contains("hidden")){
+     try{renderHome()}catch(e){console.warn("Home clock refresh",e)}
+   }
+ },30000);
+}
+ensureHomeClockTimer();
+</script>
 </head>
 <body>
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 29</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 31</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -845,7 +805,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 
   <section class="view" id="view-subject-detail">
     <div class="sectionHead">
-      <button class="ghost" onclick="openView('subjects')">← Fächer</button>
+      <button class="ghost" onclick="leaveSubjectNotebook()">← Fächer</button>
       <button class="dangerBtn" id="deleteCurrentSubjectBtn">Fach löschen</button>
     </div>
     <div id="subjectDetail"></div>
@@ -854,7 +814,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 
   <section class="view" id="view-topic-detail">
     <div class="sectionHead">
-      <button class="ghost" onclick="openSubject(selectedSubjectId)">← Notizbuch</button>
+      <button class="ghost" onclick="backToNotebook()">← Notizbuch</button>
       <button class="dangerBtn" id="deleteCurrentTopicBtn">Thema löschen</button>
     </div>
     <div id="topicDetail"></div>
@@ -903,6 +863,20 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
       </div>
 
       <div class="stylePresetBar" id="stylePresetBar"></div>
+
+      <div class="editorZoomBar">
+        <button type="button" onclick="fitCanvasStage()" title="A4 an Bildschirm anpassen">⊡ Anpassen</button>
+        <button type="button" onclick="canvasZoomBy(-0.1)" title="Herauszoomen">−</button>
+        <span id="canvasZoomLabel">100%</span>
+        <button type="button" onclick="canvasZoomBy(0.1)" title="Hineinzoomen">＋</button>
+        <select id="canvasZoomSelect" onchange="setCanvasZoom(+this.value)">
+          <option value="0.5">50%</option>
+          <option value="0.75">75%</option>
+          <option value="1">100%</option>
+          <option value="1.25">125%</option>
+          <option value="1.5">150%</option>
+        </select>
+      </div>
 
       <div class="canvasViewport" id="canvasViewport">
         <div class="canvasStage" id="canvasStage">
@@ -1022,210 +996,6 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 </div>
 
 <script type="module">
-/* ===== V29 EDITOR PATCH ===== */
-let editorZoom=1;
-let editorSelectedObject=null;
-let editorPointerState=null;
-let editorZCounter=20;
-
-function getEditorPaper(){
- return document.querySelector(".editorPaper")
-   || document.querySelector(".sheetPage")
-   || document.querySelector(".a4Page")
-   || document.querySelector("#editorPage")
-   || document.querySelector("[data-editor-page]");
-}
-function getEditorWrap(){
- const paper=getEditorPaper();
- if(!paper)return null;
- let p=paper.parentElement;
- if(p && !p.classList.contains("editorCanvasWrap"))p.classList.add("editorCanvasWrap");
- return p;
-}
-window.editorSetZoom=function(z){
- z=Math.max(.3,Math.min(2,Number(z)||1));
- editorZoom=z;
- const paper=getEditorPaper(); if(!paper)return;
- paper.style.transform=`scale(${z})`;
- const zoom=document.querySelector("#editorZoomValue");
- if(zoom)zoom.textContent=Math.round(z*100)+"%";
- const select=document.querySelector("#editorZoomSelect");
- if(select){
-   const vals=[.5,.75,1,1.25,1.5];
-   const closest=vals.reduce((a,b)=>Math.abs(b-z)<Math.abs(a-z)?b:a,1);
-   if(Math.abs(closest-z)<.03)select.value=String(closest);
- }
- // Reserve scaled size so scrolling stays natural.
- const baseW=paper.offsetWidth,baseH=paper.offsetHeight;
- const wrap=getEditorWrap();
- if(wrap){
-   wrap.style.setProperty("--scaled-w",(baseW*z)+"px");
-   wrap.style.setProperty("--scaled-h",(baseH*z)+"px");
- }
-}
-window.editorZoomBy=function(delta){editorSetZoom(editorZoom+delta)}
-window.editorFitToScreen=function(){
- const paper=getEditorPaper(),wrap=getEditorWrap();
- if(!paper||!wrap)return;
- // fit with some padding; width is the important dimension on phones.
- const available=Math.max(240,wrap.clientWidth-36);
- const z=Math.min(1,available/paper.offsetWidth);
- editorSetZoom(z);
-}
-window.addEventListener("resize",()=>{
- if(editorZoom<1)requestAnimationFrame(()=>editorFitToScreen());
-});
-
-function editorObjectRect(el){
- return {
-   left:parseFloat(el.style.left)||el.offsetLeft||0,
-   top:parseFloat(el.style.top)||el.offsetTop||0,
-   width:parseFloat(el.style.width)||el.offsetWidth||100,
-   height:parseFloat(el.style.height)||el.offsetHeight||80,
-   rotation:parseFloat(el.dataset.rotation)||0
- };
-}
-function editorEnsureShapeUI(el){
- if(!el||el.dataset.v29ShapeReady==="1")return;
- el.dataset.v29ShapeReady="1";
- el.classList.add("editorShape");
- if(!el.style.position)el.style.position="absolute";
- if(!el.style.width)el.style.width=Math.max(70,el.offsetWidth||100)+"px";
- if(!el.style.height)el.style.height=Math.max(55,el.offsetHeight||80)+"px";
- if(!el.style.zIndex)el.style.zIndex=String(++editorZCounter);
-
- const resize=document.createElement("span");
- resize.className="editorShapeHandle resize";
- resize.dataset.handle="resize";
- const rotate=document.createElement("span");
- rotate.className="editorShapeHandle rotate";
- rotate.dataset.handle="rotate";
- el.append(resize,rotate);
-
- el.addEventListener("pointerdown",editorShapePointerDown);
-}
-function editorSelectObject(el){
- if(editorSelectedObject===el)return;
- if(editorSelectedObject)editorSelectedObject.classList.remove("selected");
- editorSelectedObject=el||null;
- const bar=document.querySelector("#editorShapeToolbar");
- if(el){
-   el.classList.add("selected");
-   if(bar)bar.classList.add("active");
-   const fill=document.querySelector("#shapeFill");
-   const stroke=document.querySelector("#shapeStroke");
-   const style=document.querySelector("#shapeStrokeStyle");
-   const cs=getComputedStyle(el);
-   if(fill && /^rgb/.test(cs.backgroundColor)){
-     fill.value=rgbToHex(cs.backgroundColor);
-   }
-   if(stroke && /^rgb/.test(cs.borderColor)){
-     stroke.value=rgbToHex(cs.borderColor);
-   }
-   if(style)style.value=cs.borderStyle==="dashed"?"dashed":cs.borderStyle==="dotted"?"dotted":"solid";
- }else if(bar){
-   bar.classList.remove("active");
- }
-}
-function rgbToHex(rgb){
- const m=rgb.match(/\d+/g); if(!m)return "#000000";
- return "#"+m.slice(0,3).map(x=>(+x).toString(16).padStart(2,"0")).join("");
-}
-function editorShapePointerDown(e){
- const el=e.currentTarget;
- editorSelectObject(el);
- const r=editorObjectRect(el);
- const paper=getEditorPaper(); if(!paper)return;
- const paperRect=paper.getBoundingClientRect();
- const handle=e.target?.dataset?.handle||"move";
- editorPointerState={
-   el,handle,
-   startX:e.clientX,startY:e.clientY,
-   left:r.left,top:r.top,width:r.width,height:r.height,rotation:r.rotation,
-   cx:(el.getBoundingClientRect().left+el.getBoundingClientRect().right)/2,
-   cy:(el.getBoundingClientRect().top+el.getBoundingClientRect().bottom)/2,
-   paperRect
- };
- el.setPointerCapture?.(e.pointerId);
- e.preventDefault();
- e.stopPropagation();
-}
-window.addEventListener("pointermove",e=>{
- const s=editorPointerState;if(!s)return;
- const dx=(e.clientX-s.startX)/editorZoom;
- const dy=(e.clientY-s.startY)/editorZoom;
- if(s.handle==="resize"){
-   s.el.style.width=Math.max(24,s.width+dx)+"px";
-   s.el.style.height=Math.max(24,s.height+dy)+"px";
- }else if(s.handle==="rotate"){
-   const a0=Math.atan2(s.startY-s.cy,s.startX-s.cx);
-   const a1=Math.atan2(e.clientY-s.cy,e.clientX-s.cx);
-   const deg=s.rotation+(a1-a0)*180/Math.PI;
-   s.el.dataset.rotation=String(deg);
-   s.el.style.transform=`rotate(${deg}deg)`;
- }else{
-   s.el.style.left=Math.max(0,s.left+dx)+"px";
-   s.el.style.top=Math.max(0,s.top+dy)+"px";
- }
-});
-window.addEventListener("pointerup",()=>{editorPointerState=null});
-
-window.editorApplyShapeStyle=function(){
- const el=editorSelectedObject;if(!el)return;
- const fill=document.querySelector("#shapeFill")?.value;
- const stroke=document.querySelector("#shapeStroke")?.value;
- const style=document.querySelector("#shapeStrokeStyle")?.value||"solid";
- if(fill)el.style.background=fill;
- if(stroke)el.style.borderColor=stroke;
- el.style.borderStyle=style;
- if(!el.style.borderWidth)el.style.borderWidth="2px";
-}
-window.editorDeleteSelected=function(){
- if(!editorSelectedObject)return;
- editorSelectedObject.remove();
- editorSelectedObject=null;
- document.querySelector("#editorShapeToolbar")?.classList.remove("active");
-}
-window.editorBringForward=function(){
- if(editorSelectedObject)editorSelectedObject.style.zIndex=String(++editorZCounter);
-}
-window.editorSendBackward=function(){
- if(editorSelectedObject)editorSelectedObject.style.zIndex=String(Math.max(1,(parseInt(editorSelectedObject.style.zIndex)||2)-1));
-}
-
-function editorAdoptExistingShapes(){
- const paper=getEditorPaper(); if(!paper)return;
- paper.classList.add("editorPaper");
- const wrap=paper.parentElement;if(wrap)wrap.classList.add("editorCanvasWrap");
-
- // Adopt objects that look like shapes, while excluding text/editable elements.
- const selectors=[
-   ".shape",".editor-object.shape",".canvas-shape",
-   "[data-type='shape']","[data-shape]",
-   ".rectShape",".circleShape",".triangleShape"
- ];
- paper.querySelectorAll(selectors.join(",")).forEach(editorEnsureShapeUI);
-
- // Allow tapping empty paper to deselect.
- if(paper.dataset.v29Deselect!=="1"){
-   paper.dataset.v29Deselect="1";
-   paper.addEventListener("pointerdown",e=>{
-     if(e.target===paper)editorSelectObject(null);
-   });
- }
-}
-const editorObserver=new MutationObserver(()=>editorAdoptExistingShapes());
-document.addEventListener("DOMContentLoaded",()=>{
- setTimeout(()=>{
-   editorAdoptExistingShapes();
-   const paper=getEditorPaper();
-   if(paper){
-     editorObserver.observe(paper,{subtree:true,childList:true});
-     editorFitToScreen();
-   }
- },500);
-});
-
 const SCHOOLBLOOM_PLAN_WORKER="https://dry-surf-fec5.muelliaccc.workers.dev";
 
 import * as pdfjsLib from "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs";
@@ -1458,7 +1228,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 29";
+ $("#headerEyebrow").textContent="VERSION 31";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -1648,33 +1418,7 @@ function renderSubjectDetail(){
    <div class="meta">${(s.topics||[]).length} Themen-Ordner</div>
  </div>
  <div class="section"><div class="sectionHead"><h2>Themen</h2><button class="primary" onclick="openNewTopic('${s.id}')">+ Thema</button></div><div class="topicFolderGrid">${folders}</div></div>
- 
-<div class="editorViewBar">
-  <button type="button" onclick="editorFitToScreen()">⊡ Anpassen</button>
-  <button type="button" onclick="editorZoomBy(-0.1)">−</button>
-  <span id="editorZoomValue" class="zoomValue">100%</span>
-  <button type="button" onclick="editorZoomBy(0.1)">＋</button>
-  <select id="editorZoomSelect" onchange="editorSetZoom(parseFloat(this.value))">
-    <option value="0.5">50%</option>
-    <option value="0.75">75%</option>
-    <option value="1" selected>100%</option>
-    <option value="1.25">125%</option>
-    <option value="1.5">150%</option>
-  </select>
-</div>
-<div id="editorShapeToolbar" class="editorShapeToolbar">
-  <button type="button" onclick="editorDeleteSelected()">🗑</button>
-  <label>Füllung <input id="shapeFill" type="color" value="#f7cfcc" oninput="editorApplyShapeStyle()"></label>
-  <label>Kontur <input id="shapeStroke" type="color" value="#8f756b" oninput="editorApplyShapeStyle()"></label>
-  <select id="shapeStrokeStyle" onchange="editorApplyShapeStyle()">
-    <option value="solid">—</option>
-    <option value="dashed">- - -</option>
-    <option value="dotted">····</option>
-  </select>
-  <button type="button" onclick="editorBringForward()">⬆ Ebene</button>
-  <button type="button" onclick="editorSendBackward()">⬇ Ebene</button>
-</div>
-<div class="section panel"><h3>Notizbuch gestalten</h3><p class="small">Farbe, Cover und Symbol des Fachs.</p><button class="ghost" onclick="openCoverEditor('${s.id}')">🎨 Cover ändern</button></div>`;
+ <div class="section panel"><h3>Notizbuch gestalten</h3><p class="small">Farbe, Cover und Symbol des Fachs.</p><button class="ghost" onclick="openCoverEditor('${s.id}')">🎨 Cover ändern</button></div>`;
  const del=$("#deleteCurrentSubjectBtn");if(del)del.onclick=()=>deleteSubjectFromPage(s.id);
 }
 
@@ -1700,7 +1444,29 @@ window.openStudySheetEditor=function(sheetId=null){
  selectedSheetId=sheetId||null;
  openView("sheet-editor");
 }
-window.closeSheetEditor=function(){openTopic(selectedSubjectId,selectedTopicId)}
+window.closeSheetEditor=function(){
+ canvasState.vectorTool="select";
+ $("#canvasSvg")?.classList.remove("drawing");
+ if($("#pathDrawHint"))$("#pathDrawHint").style.display="none";
+
+ const s=data.subjects.find(x=>x.id===selectedSubjectId);
+ const t=s?.topics?.find(x=>x.id===selectedTopicId);
+ if(s&&t){openTopic(s.id,t.id);return}
+ if(s){openSubject(s.id);return}
+
+ selectedSubjectId=null;selectedTopicId=null;selectedSheetId=null;
+ openView("subjects");
+}
+window.leaveSubjectNotebook=function(){
+ selectedTopicId=null;selectedSheetId=null;selectedDeckId=null;selectedQuizId=null;selectedSubjectId=null;
+ openView("subjects");
+}
+window.backToNotebook=function(){
+ const sid=selectedSubjectId;
+ selectedTopicId=null;selectedSheetId=null;
+ if(sid&&data.subjects.some(x=>x.id===sid)){openSubject(sid);return}
+ openView("subjects");
+}
 
 let canvasState={objects:[],vectors:[],selectedType:null,selectedId:null,vectorTool:"select",drawing:null,drag:null,snap:true,history:[],historyIndex:-1,historyLock:false,autosaveTimer:null,lastSavedHash:""};
 const canvasStylesDefault=[
@@ -1909,7 +1675,37 @@ function snapObjectPosition(o,x,y){
  if(bx<=th)drawGuideX(sx+o.w/2,Math.abs(sx+o.w/2-397)<2?"Mitte":"");if(by<=th)drawGuideY(sy+o.h/2,Math.abs(sy+o.h/2-561.5)<2?"Mitte":"");return{x:sx,y:sy};
 }
 
-function canvasPoint(e){const stage=$("#canvasStage"),r=stage.getBoundingClientRect(),sc=Number(stage.dataset.scale||1);return{x:(e.clientX-r.left)/sc,y:(e.clientY-r.top)/sc}}
+
+let canvasZoom=1;
+
+window.setCanvasZoom=function(value){
+ const stage=$("#canvasStage"),viewport=$("#canvasViewport");
+ if(!stage||!viewport)return;
+ const z=Math.max(.3,Math.min(2,Number(value)||1));
+ canvasZoom=z;
+ stage.dataset.scale=String(z);
+ stage.style.zoom=String(z);
+ stage.style.transform="none";
+
+ const label=$("#canvasZoomLabel");
+ if(label)label.textContent=Math.round(z*100)+"%";
+
+ const select=$("#canvasZoomSelect");
+ if(select){
+   const choices=[.5,.75,1,1.25,1.5];
+   const closest=choices.reduce((a,b)=>Math.abs(b-z)<Math.abs(a-z)?b:a,1);
+   if(Math.abs(closest-z)<.035)select.value=String(closest);
+ }
+}
+window.canvasZoomBy=function(delta){setCanvasZoom(canvasZoom+Number(delta||0))}
+window.fitCanvasStage=function(){
+ const viewport=$("#canvasViewport"),stage=$("#canvasStage");
+ if(!viewport||!stage)return;
+ const available=Math.max(230,viewport.clientWidth-18);
+ setCanvasZoom(Math.min(1,available/794));
+ viewport.scrollLeft=0;viewport.scrollTop=0;
+}
+function canvasPoint(e){const stage=$("#canvasStage"),r=stage.getBoundingClientRect(),sc=Number(stage.dataset.scale||canvasZoom||1);return{x:(e.clientX-r.left)/sc,y:(e.clientY-r.top)/sc}}
 function startDragObject(e,oid){
  const o=canvasState.objects.find(x=>x.id===oid);if(!o||o.locked)return;const p=canvasPoint(e),ox=o.x,oy=o.y;
  const move=ev=>{const q=canvasPoint(ev),rawX=Math.max(0,Math.min(794-o.w,ox+q.x-p.x)),rawY=Math.max(0,Math.min(1123-o.h,oy+q.y-p.y)),sn=snapObjectPosition(o,rawX,rawY);o.x=sn.x;o.y=sn.y;const el=document.querySelector(`.cobj[data-id="${oid}"]`);if(el){el.style.left=o.x+"px";el.style.top=o.y+"px"}markCanvasDirty(false)};
@@ -2028,6 +1824,12 @@ window.deleteSelectedCanvasItem=function(){
 }
 
 $("#canvasPage")?.addEventListener("pointerdown",e=>{if(e.target!==e.currentTarget)return;clearCanvasSelection()});
+$("#canvasStage")?.addEventListener("pointerdown",e=>{
+ if(canvasState.vectorTool==="pen")return;
+ if(e.target.closest?.(".cobj,.vectorTouchProxy,.vectorHandle,.pathNode"))return;
+ if(e.target.id==="canvasStage"||e.target.id==="canvasPage"||e.target.id==="canvasObjects")clearCanvasSelection();
+});
+
 function clearCanvasSelection(){canvasState.objects.forEach(x=>x.editing=false);canvasState.selectedType=null;canvasState.selectedId=null;renderCanvasObjects();renderVectors();renderCanvasInspector();renderLayerList()}
 
 
@@ -2053,10 +1855,16 @@ window.moveSelectedLayer=function(dir){
 }
 window.addVectorShape=function(type){
  let v={id:id(),z:nextCanvasZ(),type,fill:"#f7d2cf",stroke:"#8d7369",strokeWidth:2,dash:"solid",rotation:0,locked:false};
- if(type==="rect")Object.assign(v,{x:220,y:260,w:260,h:150,rx:14});
- if(type==="ellipse")Object.assign(v,{cx:397,cy:330,rx:120,ry:80});
- if(type==="triangle")Object.assign(v,{points:[[397,230],[520,410],[274,410]]});
- canvasState.vectors.push(v);canvasState.vectorTool="select";selectVector(v.id);pushHistory();
+ if(type==="rect")Object.assign(v,{x:267,y:330,w:260,h:150,rx:14});
+ else if(type==="ellipse")Object.assign(v,{cx:397,cy:405,rx:120,ry:80});
+ else if(type==="triangle")Object.assign(v,{points:[[397,310],[520,490],[274,490]]});
+ else return;
+
+ canvasState.vectors.push(v);
+ canvasState.vectorTool="select";
+ $("#canvasSvg")?.classList.remove("drawing");
+ if($("#pathDrawHint"))$("#pathDrawHint").style.display="none";
+ selectVector(v.id);pushHistory();
 }
 
 // Vector editor (SVG)
@@ -2088,32 +1896,111 @@ function renderVectors(){
    if(v.type==="ellipse")proxy=`<ellipse data-vid="${v.id}" class="shapeHit vectorTouchProxy" cx="${v.cx}" cy="${v.cy}" rx="${v.rx}" ry="${v.ry}"/>`;
    if(v.type==="triangle")proxy=`<polygon data-vid="${v.id}" class="shapeHit vectorTouchProxy" points="${v.points.map(p=>p.join(",")).join(" ")}"/>`;
    if(v.type==="path")proxy=`<path data-vid="${v.id}" class="shapeHit vectorTouchProxy" d="${pathD(v.points)}"/>`;
-   const selMarkup=selected?`<rect class="vectorSelectBox" x="${b.x-7}" y="${b.y-7}" width="${b.w+14}" height="${b.h+14}"/><line class="vectorRotateLine" x1="${b.x+b.w}" y1="${b.y-7}" x2="${b.x+b.w+24}" y2="${b.y-31}"/><circle class="vectorHandle vectorRotateHandle" data-vid="${v.id}" cx="${b.x+b.w+24}" cy="${b.y-31}" r="8"/><circle class="vectorHandle vectorResizeHandle" data-vid="${v.id}" cx="${b.x+b.w+9}" cy="${b.y+b.h+9}" r="8"/>`:"";
+   const nodes=(selected&&canvasState.nodeEdit&&v.points)?v.points.map((p,i)=>`<circle class="pathNode" data-index="${i}" cx="${p[0]}" cy="${p[1]}" r="7"/>`).join(""):"";
+   const selMarkup=selected?`<rect class="vectorSelectBox" x="${b.x-7}" y="${b.y-7}" width="${b.w+14}" height="${b.h+14}"/><line class="vectorRotateLine" x1="${b.x+b.w}" y1="${b.y-7}" x2="${b.x+b.w+24}" y2="${b.y-31}"/><circle class="vectorHandle vectorRotateHandle" data-vid="${v.id}" cx="${b.x+b.w+24}" cy="${b.y-31}" r="9"/><circle class="vectorHandle vectorResizeHandle" data-vid="${v.id}" cx="${b.x+b.w+9}" cy="${b.y+b.h+9}" r="9"/>${nodes}`:"";
    root.insertAdjacentHTML("beforeend",`<svg class="vectorObj ${selected?"selected":""} ${v.locked?"locked":""}" data-vector-wrap="${v.id}" viewBox="0 0 794 1123" style="z-index:${selected?9998:(v.z||0)};transform:rotate(${v.rotation||0}deg);transform-origin:${b.cx}px ${b.cy}px">${visible}${proxy}${selMarkup}</svg>`);
  }
  attachVectorEvents();renderLayerList();
 }
+
+function attachVectorEvents(){
+ const root=$("#canvasObjects");if(!root)return;
+
+ root.querySelectorAll(".vectorTouchProxy").forEach(el=>{
+   if(el.dataset.bound==="1")return;el.dataset.bound="1";
+   el.addEventListener("pointerdown",e=>{
+     const vid=el.dataset.vid,v=canvasState.vectors.find(x=>x.id===vid);if(!v)return;
+     e.preventDefault();e.stopPropagation();
+     selectVector(vid);
+     if(!v.locked)startVectorDrag(e,vid);
+   });
+ });
+
+ root.querySelectorAll(".vectorResizeHandle").forEach(el=>{
+   if(el.dataset.bound==="1")return;el.dataset.bound="1";
+   el.addEventListener("pointerdown",e=>{
+     e.preventDefault();e.stopPropagation();selectVector(el.dataset.vid);startVectorResize(e,el.dataset.vid);
+   });
+ });
+
+ root.querySelectorAll(".vectorRotateHandle").forEach(el=>{
+   if(el.dataset.bound==="1")return;el.dataset.bound="1";
+   el.addEventListener("pointerdown",e=>{
+     e.preventDefault();e.stopPropagation();selectVector(el.dataset.vid);startVectorRotate(e,el.dataset.vid);
+   });
+ });
+
+ root.querySelectorAll(".pathNode").forEach(el=>{
+   if(el.dataset.bound==="1")return;el.dataset.bound="1";
+   el.addEventListener("pointerdown",e=>{
+     e.preventDefault();e.stopPropagation();startNodeDrag(e,+el.dataset.index);
+   });
+ });
+}
+
+function ensurePathDrawingListener(){
+ const svg=$("#canvasSvg");if(!svg||svg.dataset.pathBound==="1")return;
+ svg.dataset.pathBound="1";
+ svg.addEventListener("pointerdown",e=>{
+   if(canvasState.vectorTool!=="pen")return;
+   e.preventDefault();e.stopPropagation();startVectorDraw(e);
+ });
+}
 window.setVectorTool=function(t){
- canvasState.vectorTool=t;const svg=$("#canvasSvg"),hint=$("#pathDrawHint");svg?.classList.toggle("drawing",t!=="select");
- if(hint)hint.style.display=t==="pen"?"block":"none";if(t==="pen"){canvasState.selectedType=null;canvasState.selectedId=null;renderCanvasObjects();renderVectors()}renderCanvasInspector();
+ canvasState.vectorTool=t;
+ const svg=$("#canvasSvg"),hint=$("#pathDrawHint");
+ ensurePathDrawingListener();
+ svg?.classList.toggle("drawing",t==="pen");
+ if(hint)hint.style.display=t==="pen"?"block":"none";
+ if(t==="pen"){
+   canvasState.objects.forEach(x=>x.editing=false);
+   canvasState.selectedType=null;canvasState.selectedId=null;
+   renderCanvasObjects();renderVectors();
+ }
+ renderCanvasInspector();
 }
 function selectVector(idv){canvasState.selectedType="vector";canvasState.selectedId=idv;renderVectors();renderCanvasInspector()}
 function startVectorDraw(e){
- const p=canvasPoint(e),tool=canvasState.vectorTool;if(tool!=="pen")return;
- const pts=[[p.x,p.y]],draw=$("#canvasSvg");if(draw)draw.innerHTML=`<path id="livePath" d="M ${p.x} ${p.y}" fill="none" stroke="#8d7369" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>`;
- const move=ev=>{const q=canvasPoint(ev),last=pts[pts.length-1];if(Math.hypot(q.x-last[0],q.y-last[1])>3){pts.push([q.x,q.y]);$("#livePath")?.setAttribute("d",pathD(pts))}};
- const up=()=>{window.removeEventListener("pointermove",move);window.removeEventListener("pointerup",up);if(draw)draw.innerHTML="";canvasState.vectorTool="select";$("#canvasSvg")?.classList.remove("drawing");if($("#pathDrawHint"))$("#pathDrawHint").style.display="none";if(pts.length>1){const v={id:id(),z:nextCanvasZ(),type:"path",points:pts,fill:"none",stroke:"#8d7369",strokeWidth:4,dash:"solid",closed:false,rotation:0,locked:false};canvasState.vectors.push(v);selectVector(v.id);pushHistory()}};
- window.addEventListener("pointermove",move);window.addEventListener("pointerup",up);
+ if(canvasState.vectorTool!=="pen")return;
+ const p=canvasPoint(e),pts=[[p.x,p.y]],draw=$("#canvasSvg");if(!draw)return;
+ draw.setPointerCapture?.(e.pointerId);
+ draw.innerHTML=`<path id="livePath" d="M ${p.x} ${p.y}" fill="none" stroke="#8d7369" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>`;
+
+ const move=ev=>{
+   const q=canvasPoint(ev),last=pts[pts.length-1];
+   if(Math.hypot(q.x-last[0],q.y-last[1])>2.5){
+     pts.push([q.x,q.y]);
+     $("#livePath")?.setAttribute("d",pathD(pts));
+   }
+ };
+ const finish=()=>{
+   window.removeEventListener("pointermove",move);
+   window.removeEventListener("pointerup",finish);
+   window.removeEventListener("pointercancel",finish);
+   draw.innerHTML="";
+   canvasState.vectorTool="select";
+   draw.classList.remove("drawing");
+   if($("#pathDrawHint"))$("#pathDrawHint").style.display="none";
+   if(pts.length>2){
+     const v={id:id(),z:nextCanvasZ(),type:"path",points:pts,fill:"none",stroke:"#8d7369",strokeWidth:4,dash:"solid",closed:false,rotation:0,locked:false};
+     canvasState.vectors.push(v);selectVector(v.id);pushHistory();
+   }else renderVectors();
+ };
+ window.addEventListener("pointermove",move,{passive:false});
+ window.addEventListener("pointerup",finish,{once:true});
+ window.addEventListener("pointercancel",finish,{once:true});
 }
 
 function startVectorRotate(e,vid){
+ e.preventDefault();e.stopPropagation();
  const v=canvasState.vectors.find(x=>x.id===vid);if(!v||v.locked)return;
  const b=vectorBounds(v),p=canvasPoint(e),startA=Math.atan2(p.y-b.cy,p.x-b.cx),base=v.rotation||0;
  const move=ev=>{const q=canvasPoint(ev),a=Math.atan2(q.y-b.cy,q.x-b.cx);v.rotation=base+(a-startA)*180/Math.PI;renderVectors();markCanvasDirty()};
- const up=()=>{window.removeEventListener("pointermove",move);window.removeEventListener("pointerup",up)};
+ const up=()=>{window.removeEventListener("pointermove",move);window.removeEventListener("pointerup",up);pushHistory()};
  window.addEventListener("pointermove",move);window.addEventListener("pointerup",up);
 }
 function startVectorResize(e,vid){
+ e.preventDefault();e.stopPropagation();
  const v=canvasState.vectors.find(x=>x.id===vid);if(!v||v.locked)return;
  const b=vectorBounds(v),p=canvasPoint(e),snap=JSON.parse(JSON.stringify(v));
  const move=ev=>{
@@ -2123,11 +2010,12 @@ function startVectorResize(e,vid){
    else if(v.points)v.points=snap.points.map(pt=>[b.x+(pt[0]-b.x)*sx,b.y+(pt[1]-b.y)*sy]);
    renderVectors();markCanvasDirty();
  };
- const up=()=>{window.removeEventListener("pointermove",move);window.removeEventListener("pointerup",up)};
+ const up=()=>{window.removeEventListener("pointermove",move);window.removeEventListener("pointerup",up);pushHistory()};
  window.addEventListener("pointermove",move);window.addEventListener("pointerup",up);
 }
 
 function startVectorDrag(e,vid){
+ e.preventDefault();e.stopPropagation();
  const v=canvasState.vectors.find(x=>x.id===vid);if(!v||v.locked)return;const p=canvasPoint(e),snap=JSON.parse(JSON.stringify(v));
  const move=ev=>{const q=canvasPoint(ev),dx=q.x-p.x,dy=q.y-p.y;if(v.type==="rect"){v.x=snap.x+dx;v.y=snap.y+dy}if(v.type==="ellipse"){v.cx=snap.cx+dx;v.cy=snap.cy+dy}if(v.type==="triangle"||v.type==="path")v.points=snap.points.map(pt=>[pt[0]+dx,pt[1]+dy]);renderVectors();markCanvasDirty(false)};
  const up=()=>{window.removeEventListener("pointermove",move);window.removeEventListener("pointerup",up);pushHistory()};window.addEventListener("pointermove",move);window.addEventListener("pointerup",up);
@@ -2181,7 +2069,7 @@ function renderSheetEditor(){
  }
  if(!saved&&!sh)applyCanvasTemplate("clean",true);
  $("#wordStatus").textContent=sh?"Gespeichert":"Neues Lernblatt";
- renderCanvasObjects();renderVectors();renderCanvasInspector();pushHistory(true);canvasState.lastSavedHash=canvasSnapshot();setTimeout(fitCanvasStage,60);
+ renderCanvasObjects();renderVectors();renderCanvasInspector();pushHistory(true);canvasState.lastSavedHash=canvasSnapshot();ensurePathDrawingListener();setTimeout(()=>fitCanvasStage(),80);
 }
 function stripHTML(x){const d=document.createElement("div");d.innerHTML=x;return d.innerText}
 function markCanvasDirty(schedule=true){const x=$("#autosaveState");if(x){x.textContent="Nicht gespeichert";x.className="autosaveState saving"}if(schedule)scheduleAutosave()}
@@ -2382,13 +2270,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 29: echter Live-Refresh ===== */
+/* ===== VERSION 31: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 29 timetable parser ===== */
+/* ===== VERSION 31 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -2397,7 +2285,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 29: dynamic classes ===== */
+/* ===== VERSION 31: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -2406,74 +2294,22 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 29: raster-exact timetable ===== */
+/* ===== VERSION 31: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 29 — Lernblatt-Editor ===== */
-.editorViewBar{
- display:flex;gap:8px;align-items:center;flex-wrap:wrap;
- margin:8px 0 12px;
-}
-.editorViewBar button,.editorViewBar select{
- border:1px solid #e8cec7;background:#fffaf6;color:#765f56;
- border-radius:12px;padding:9px 11px;font-weight:850;
-}
-.editorViewBar .zoomValue{min-width:58px;text-align:center;font-weight:900;color:#8d7369}
-.editorCanvasWrap{
- overflow:auto!important;
- -webkit-overflow-scrolling:touch;
- touch-action:pan-x pan-y;
- display:flex;
- justify-content:center;
- align-items:flex-start;
- padding:18px!important;
- max-height:72vh;
-}
-.editorPaper{
- transform-origin:top center!important;
- flex:0 0 auto;
- box-shadow:0 10px 30px rgba(91,68,61,.12);
-}
-.editorShape{
- position:absolute;
- min-width:36px;min-height:36px;
- touch-action:none;
- user-select:none;
- -webkit-user-select:none;
- box-sizing:border-box;
- cursor:move;
-}
-.editorShape.selected{
- outline:2px dashed #df9e9b;
- outline-offset:5px;
-}
-.editorShapeHandle{
- position:absolute;width:18px;height:18px;border-radius:50%;
- background:#fff;border:2px solid #d79494;
- box-shadow:0 2px 8px rgba(0,0,0,.12);
- z-index:3;
-}
-.editorShapeHandle.resize{right:-11px;bottom:-11px;cursor:nwse-resize}
-.editorShapeHandle.rotate{
- left:50%;top:-34px;transform:translateX(-50%);
- cursor:grab;
-}
-.editorShapeHandle.rotate:after{
- content:"↻";position:absolute;inset:0;display:grid;place-items:center;
- font-size:11px;color:#a67570;font-weight:900;
-}
-.editorShapeToolbar{
- display:none;gap:7px;align-items:center;flex-wrap:wrap;
- padding:9px;border:1px solid #ead4ce;border-radius:14px;
- background:#fffaf6;margin:8px 0;
-}
-.editorShapeToolbar.active{display:flex}
-.editorShapeToolbar input[type="color"]{width:38px;height:34px;border:0;background:transparent}
-.editorShapeToolbar button,.editorShapeToolbar select{
- border:1px solid #e5cbc4;background:white;border-radius:10px;
- padding:8px 10px;font-weight:800;color:#765f56;
-}
+/* ===== VERSION 31 stability fixes ===== */
+.editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
+.editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
+.editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
+.canvasViewport{overscroll-behavior:contain}
+.canvasStage{transform:none!important}
+.vectorTouchProxy{fill:rgba(255,255,255,.001)!important;stroke:rgba(255,255,255,.001)!important;stroke-width:16!important;pointer-events:all!important;touch-action:none}
+.vectorObj .vectorHandle{touch-action:none}
+.vectorObj.selected .shapeVisible{filter:drop-shadow(0 0 3px rgba(233,158,154,.9))}
+.canvasSvg.drawing{cursor:crosshair}
+.pathDrawHint{z-index:140!important}
+@media(max-width:600px){.editorZoomBar{top:103px}}
 </style></head><body><div class="page">${serializedCanvas()}</div></body></html>`;
  const blob=new Blob([html],{type:"text/html"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=title.replace(/[^\wäöüÄÖÜß-]+/g,"_")+".html";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
 }
@@ -2650,13 +2486,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 29: echter Live-Refresh ===== */
+/* ===== VERSION 31: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 29 timetable parser ===== */
+/* ===== VERSION 31 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -2665,7 +2501,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 29: dynamic classes ===== */
+/* ===== VERSION 31: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -2674,74 +2510,22 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 29: raster-exact timetable ===== */
+/* ===== VERSION 31: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 29 — Lernblatt-Editor ===== */
-.editorViewBar{
- display:flex;gap:8px;align-items:center;flex-wrap:wrap;
- margin:8px 0 12px;
-}
-.editorViewBar button,.editorViewBar select{
- border:1px solid #e8cec7;background:#fffaf6;color:#765f56;
- border-radius:12px;padding:9px 11px;font-weight:850;
-}
-.editorViewBar .zoomValue{min-width:58px;text-align:center;font-weight:900;color:#8d7369}
-.editorCanvasWrap{
- overflow:auto!important;
- -webkit-overflow-scrolling:touch;
- touch-action:pan-x pan-y;
- display:flex;
- justify-content:center;
- align-items:flex-start;
- padding:18px!important;
- max-height:72vh;
-}
-.editorPaper{
- transform-origin:top center!important;
- flex:0 0 auto;
- box-shadow:0 10px 30px rgba(91,68,61,.12);
-}
-.editorShape{
- position:absolute;
- min-width:36px;min-height:36px;
- touch-action:none;
- user-select:none;
- -webkit-user-select:none;
- box-sizing:border-box;
- cursor:move;
-}
-.editorShape.selected{
- outline:2px dashed #df9e9b;
- outline-offset:5px;
-}
-.editorShapeHandle{
- position:absolute;width:18px;height:18px;border-radius:50%;
- background:#fff;border:2px solid #d79494;
- box-shadow:0 2px 8px rgba(0,0,0,.12);
- z-index:3;
-}
-.editorShapeHandle.resize{right:-11px;bottom:-11px;cursor:nwse-resize}
-.editorShapeHandle.rotate{
- left:50%;top:-34px;transform:translateX(-50%);
- cursor:grab;
-}
-.editorShapeHandle.rotate:after{
- content:"↻";position:absolute;inset:0;display:grid;place-items:center;
- font-size:11px;color:#a67570;font-weight:900;
-}
-.editorShapeToolbar{
- display:none;gap:7px;align-items:center;flex-wrap:wrap;
- padding:9px;border:1px solid #ead4ce;border-radius:14px;
- background:#fffaf6;margin:8px 0;
-}
-.editorShapeToolbar.active{display:flex}
-.editorShapeToolbar input[type="color"]{width:38px;height:34px;border:0;background:transparent}
-.editorShapeToolbar button,.editorShapeToolbar select{
- border:1px solid #e5cbc4;background:white;border-radius:10px;
- padding:8px 10px;font-weight:800;color:#765f56;
-}
+/* ===== VERSION 31 stability fixes ===== */
+.editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
+.editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
+.editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
+.canvasViewport{overscroll-behavior:contain}
+.canvasStage{transform:none!important}
+.vectorTouchProxy{fill:rgba(255,255,255,.001)!important;stroke:rgba(255,255,255,.001)!important;stroke-width:16!important;pointer-events:all!important;touch-action:none}
+.vectorObj .vectorHandle{touch-action:none}
+.vectorObj.selected .shapeVisible{filter:drop-shadow(0 0 3px rgba(233,158,154,.9))}
+.canvasSvg.drawing{cursor:crosshair}
+.pathDrawHint{z-index:140!important}
+@media(max-width:600px){.editorZoomBar{top:103px}}
 </style></head><body><div class="page">${serializedCanvas()}</div></body></html>`);w.document.close();setTimeout(()=>w.print(),300)
 }
 window.applyCanvasTemplate=function(name,silent=false){
@@ -3040,7 +2824,7 @@ const timetableSlots=[
  {start:"15:45",end:"16:30"}
 ];
 function fillCancelledSlots(lessons){
- // VERSION 29:
+ // VERSION 31:
  // SchoolBloom darf NIE aus einer nicht erkannten/leeren PDF-Zelle
  // automatisch "Entfall" erfinden.
  // Nur Einträge, die wirklich aus der PDF gelesen wurden, werden gezeigt.
@@ -3048,6 +2832,25 @@ function fillCancelledSlots(lessons){
 }
 
 function renderHome(){
+
+ const timeToMin=t=>{
+   const [hh,mm]=String(t||"00:00").split(":").map(Number);
+   return hh*60+mm;
+ };
+ const minsText=n=>{
+   n=Math.max(0,Math.round(n));
+   return n===1?"1 Min.":`${n} Min.`;
+ };
+ const nowMin=new Date().getHours()*60+new Date().getMinutes();
+ const todayCode=dayCode(new Date());
+ const todayLessons=(data.timetable.lessons||[])
+   .filter(x=>x.day===todayCode)
+   .sort((a,b)=>a.start.localeCompare(b.start));
+ const breaksToday=[
+   {start:"09:30",end:"09:45",label:"Pause"},
+   {start:"11:15",end:"11:30",label:"Pause"},
+   {start:"13:00",end:"13:30",label:"Mittagspause"}
+ ];
  $("#todayDate").textContent=new Date().toLocaleDateString("de-DE",{weekday:"long",day:"2-digit",month:"long"});
  const today=dayCode(new Date()), lessons=fillCancelledSlots(mergeLessons((data.timetable.lessons||[]).filter(x=>x.day===today)));
  const now=new Date(),min=now.getHours()*60+now.getMinutes();
@@ -3064,13 +2867,36 @@ function renderHome(){
      .replace(/\s+/g," ")
      .trim();
 
+   const sm=specialTime[0].match(/(\d{1,2})(?::(\d{2}))?/);
+   const specialMin=sm?Number(sm[1])*60+Number(sm[2]||0):null;
+   const diff=specialMin!=null?specialMin-nowMin:null;
+
    $("#nextPanel").innerHTML=`<div class="eyebrow">Als Nächstes</div>
-    <div style="font-size:27px;font-weight:950;letter-spacing:-.04em;margin-top:5px">${esc(specialTime[0])} · ${esc(text)}</div>`;
+    <div style="font-size:27px;font-weight:950;letter-spacing:-.04em;margin-top:5px">${esc(specialTime[0])} · ${esc(text)}</div>
+    ${diff!=null&&diff>0?`<div class="muted" style="margin-top:6px">in ${minsText(diff)}</div>`:""}`;
   }else{
-   const p=splitCell(next.raw),[h,m]=next.start.split(":").map(Number),active=h*60+m<=min;
-   $("#nextPanel").innerHTML=`<div class="eyebrow">${data.timetable.isPlaceholder?"Lückenfüller-Plan":"Als Nächstes"}</div>
-    <div style="font-size:27px;font-weight:950;letter-spacing:-.04em;margin-top:5px">${active?"Jetzt: ":"Nächste Stunde: "}${esc(prettySubject(p.subject))}</div>
-    <div class="muted" style="margin-top:5px">${next.start}–${next.end}${p.room?" · "+esc(p.room):""}${p.meta?" · "+esc(p.meta):""}</div>`;
+   const current=todayLessons.find(l=>timeToMin(l.start)<=nowMin && nowMin<timeToMin(l.end));
+   const activeBreak=breaksToday.find(b=>timeToMin(b.start)<=nowMin && nowMin<timeToMin(b.end));
+
+   if(current){
+     const p=splitCell(current.raw);
+     const remaining=timeToMin(current.end)-nowMin;
+     $("#nextPanel").innerHTML=`<div class="eyebrow">Jetzt</div>
+      <div style="font-size:27px;font-weight:950;letter-spacing:-.04em;margin-top:5px">${esc(prettySubject(p.subject))}</div>
+      <div class="muted" style="margin-top:6px">noch ${minsText(remaining)} · bis ${current.end} Uhr${p.room?" · "+esc(p.room):""}</div>`;
+   }else if(activeBreak){
+     const after=todayLessons.find(l=>timeToMin(l.start)>=timeToMin(activeBreak.end));
+     const remaining=timeToMin(activeBreak.end)-nowMin;
+     $("#nextPanel").innerHTML=`<div class="eyebrow">${esc(activeBreak.label)}</div>
+      <div style="font-size:27px;font-weight:950;letter-spacing:-.04em;margin-top:5px">Noch ${minsText(remaining)}</div>
+      <div class="muted" style="margin-top:6px">${after?`Nächste Stunde um ${after.start} Uhr`:`Danach frei`}</div>`;
+   }else{
+     const p=splitCell(next.raw);
+     const diff=timeToMin(next.start)-nowMin;
+     $("#nextPanel").innerHTML=`<div class="eyebrow">Als Nächstes</div>
+      <div style="font-size:27px;font-weight:950;letter-spacing:-.04em;margin-top:5px">Nächste Stunde: ${esc(prettySubject(p.subject))}</div>
+      <div class="muted" style="margin-top:6px">${diff>0?`in ${minsText(diff)} · `:""}${next.start} Uhr${p.room?" · "+esc(p.room):""}</div>`;
+   }
   }
  }else $("#nextPanel").innerHTML=`<div class="eyebrow">Heute</div><div style="font-size:25px;font-weight:900;margin-top:5px">Kein weiterer Unterricht.</div>`;
  $("#todayLessons").innerHTML=lessons.length?renderLessonsWithPauses(lessons):'<div class="empty">Heute kein Unterricht.</div>';
