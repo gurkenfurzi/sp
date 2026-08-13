@@ -1,10 +1,19 @@
-# VERSION 52
+# VERSION 53
 
-Matheformeln komplett vereinfacht:
-- Kein sichtbares `sqrt`, `frac`, LaTeX oder Befehlsfeld mehr.
-- Die Formel wird direkt in der großen Vorschau geschrieben und bearbeitet.
-- Wurzel, Bruch, Hochzahl, Index, Pi, ±, × und ÷ sind visuelle Buttons.
-- Tippt man z. B. auf „Wurzel“, erscheint direkt eine sichtbare Wurzel im Editor.
-- Tippt man auf „Bruch“, erscheint direkt ein echter Bruch mit Zähler und Nenner.
-- Fertige Beispiele für Pythagoras, Mitternachtsformel und Prozentrechnung.
-- Gespeicherte Formeln lassen sich später wieder direkt visuell bearbeiten.
+Formel-Editor erweitert:
+
+- Wurzel kann auf einen ganzen markierten Ausdruck angewendet werden.
+- Wenn der Cursor direkt an einem Bruch/Klammer-Ausdruck steht und man Wurzel antippt,
+  wird der komplette Ausdruck unter die Wurzel genommen.
+- Neuer direkter Baustein `√½` = Wurzel über einem ganzen Bruch.
+- `Hochzahl` heißt jetzt korrekt `Exponent`.
+- Exponenten sind frei editierbar: x², x⁵, xⁿ, x¹² usw.
+- Index/Tiefstellung ist ebenfalls frei editierbar.
+- Auswahl + Exponent/Index funktioniert direkt.
+- Neue visuelle Bausteine:
+  - Klammer
+  - Betrag
+  - Unendlich
+- Markierte Ausdrücke können in Bruch, Wurzel, Klammer oder Betrag umgewandelt werden.
+- Neues Beispiel `Wurzel über Bruch`.
+- Editierbare Teile bekommen eine dezente rosa Markierung, damit man sofort sieht, wo man tippen kann.
