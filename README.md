@@ -1,27 +1,27 @@
-# VERSION 32 — Canva/Word-Lernblatt-Editor
+# VERSION 34 — Cute UX + Sticker Library
 
-Neue Oberfläche:
-- Canva-artige kompakte Hauptleiste: Einfügen, Text, Elemente, Stile, Ebenen, Seite, Ansicht.
-- Werkzeugbereiche öffnen sich nur bei Bedarf statt alles gleichzeitig anzuzeigen.
-- Kontext-Textleiste erscheint nur bei ausgewähltem Text.
+Basis: stabile VERSION 33.
 
-Textfunktionen:
-- Schriftfamilie
-- eigene Schriftdateien (.woff/.woff2/.ttf/.otf, lokal gespeichert)
-- Schriftgröße
-- Fett, Kursiv, Unterstrichen, Durchgestrichen
-- Textfarbe und Markerfarbe
-- Links, Zentriert, Rechts, Blocksatz
-- Aufzählungs- und nummerierte Listen
-- Zeilenabstand
-- Buchstabenabstand
-- Links
-- Format entfernen
-- Duplizieren, Sperren, Ebenen, Löschen
+Neu:
+- Study Pet: sichtbarer „☕ Pause starten“-Button.
+- Lernzeit und Pausenzeit bleiben frei einstellbar.
+- Timer zeigt klar Fokus / Pause und passende Start-/Fortsetzen-Texte.
 
-Wichtig:
-- Markierter Teil eines Textes kann separat formatiert werden.
-- Textauswahl wird beim Tippen auf die Werkzeugleiste gespeichert und wiederhergestellt.
-- Seite: Hintergrundfarbe + A4-Zoom.
-- Formen/Pfade aus VERSION 30 bleiben erhalten.
-- Home-Zeitstatus aus VERSION 31 bleibt erhalten.
+Sticker:
+- neue SchoolBloom-eigene Stickerbibliothek, inspiriert von Retro-Computer-, Papier- und Study-Aesthetic,
+  aber komplett neu gezeichnet statt Bilder zu kopieren.
+- Kategorien: Study, Retro, Papier, Cute, Emoji.
+- u.a. Mini Browser, Search Bar, Folder, Photo Window, Popup, Spiral Note, Checklist,
+  Memo, Tab Note, Love Letter, Lined Card, Washi Tape, Flower Row, Bow, Cloud.
+- Sticker sind skalierbar/drehbar wie andere Editor-Objekte.
+
+Notizbücher:
+- süßerer echter Notizbuch-Look mit Spiralbindung, Ribbon, Innenrand und Papierdetails.
+- Themenordner ebenfalls weicher und übersichtlicher gestaltet.
+
+Übersicht:
+- Study-Bereich klarer gruppiert.
+- More-Karten heller und ruhiger.
+- Sticker-Menü in Kategorien statt einer großen unsortierten Wand.
+
+Stundenplan bleibt auf VERSION-33-Logik.
