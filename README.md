@@ -1,20 +1,26 @@
-# SchoolBloom VERSION 57
+# VERSION 58
+
+## Graph-Funktionen
+- Das direkte Syntax-Eingabefeld ist nicht mehr der Haupteditor.
+- Klick auf eine Funktion öffnet jetzt ein eigenes visuelles Formel-Menü.
+- Bausteine: x, Exponent, Wurzel, Bruch, sin, cos, tan, Betrag, Exponential, +, −, ×, ÷, Klammer, Pi.
+- Kleine Presets für x, x², x³, sin(x), cos(x), 1/x.
+- Danach wird die Funktion übernommen und der Graph aktualisiert.
+
+## Seite
+- `Abstand` wurde verständlicher gemacht:
+  - liniert → Linienabstand
+  - kariert → Karogröße
+  - gepunktet → Punktabstand
+- Slider statt Zahleneingabe.
+- Lernblatt passt sich standardmäßig automatisch an die verfügbare Bildschirmfläche an.
+- Manuelles Zoomen hebt diese Automatik auf.
 
 ## Desktop
-Der Lernblatt-Editor ist auf Laptop/Desktop jetzt als echter Vollbild-Arbeitsbereich aufgebaut:
-- Toolbar über die komplette Breite
-- große Canva/Word-artige graue Arbeitsfläche
-- Dokument zentriert
-- feste Eigenschaften-Seitenleiste rechts
-- Einfügen-/Text-/Elemente-Menüs oben statt mobilem Kartenlayout
-- responsive für größere Monitore
-
-## Graphen
-- Graph-Menü ist oben.
-- Mathe-Baukasten benutzt dieselbe visuelle Sprache wie der Formel-Editor.
-- Gerade/Parabel/Wellen/Hyperbel/Exponential werden als neue Funktion hinzugefügt und ersetzen vorhandene Funktionen nicht mehr.
-- Neue Funktion startet leer.
-- Aktive Funktion wird hervorgehoben.
-- Beim Vergrößern/Verkleinern wird der sichtbare x/y-Bereich automatisch erweitert, damit keine leeren weißen Streifen entstehen.
-- Rasterabstände passen sich automatisch an die sichtbare Skala an.
-- Visuelle Buttons für x, Exponent, Wurzel, Bruch, sin, cos, tan, Betrag, e^x und Rechenoperatoren.
+- Vollbild-Editor neu aufgebaut:
+  - schmale Werkzeugleiste links
+  - obere Toolbar
+  - Ribbon-Leiste
+  - große zentrale Arbeitsfläche
+  - feste Eigenschaftenleiste rechts
+- Keine mobile Karten-Anordnung mehr als Desktop-Grundlayout.
