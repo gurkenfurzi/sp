@@ -1,32 +1,41 @@
-# VERSION 39
+# VERSION 40
 
-## Fix: Montag Ethik + MINT
-Die PDF-Gitterlinie zwischen zwei echten Stunden kann beim Rendern manchmal zu schwach sein.
-Dadurch konnte der Parser zwei echte Zeilen zusammenfassen und die zweite Stunde (z. B. MINT) verschlucken.
+## Der MINT-Doppelstunden-Bug ist gezielt repariert
 
-V39 nutzt zusätzlich Textbeweise:
-Wenn zwei benachbarte Zeilen derselben Klassenspalte jeweils eigenen sinnvollen Unterrichtstext
-enthalten, dürfen sie nicht zusammengeführt werden.
+Problem bis V39:
+Eine zusammenhängende Zelle im PHS-Stundenplan konnte über zwei Unterrichtszeilen laufen,
+obwohl zwischen diesen Unterrichtszeilen eine Pause liegt.
 
-Damit bleiben z. B.:
-- Ethik / ROE / R14
-- MINT / MUS / R14
+Beispiel:
+- MINT 10:30–11:15
+- Pause 11:15–11:30
+- MINT 11:30–12:15
 
-zwei getrennte Stunden.
+Der Parser stoppte bisher allein wegen der Pause. Dadurch verschwand die zweite Hälfte.
 
-Echte Doppel-, Dreifach- und längere Stunden bleiben möglich, weil eine echte zusammengeführte
-Untis-Zelle typischerweise einen gemeinsamen Textblock besitzt, nicht einen separaten Textblock pro Zeile.
+V40 trennt Erkennung und Darstellung:
 
-## Entfall
-Entfall gilt ausschließlich, wenn die ursprüngliche Basisplan-Zeile im aktuellen Plan leer ist.
-Wenn dort stattdessen ein anderes Fach steht, ist es eine Änderung/Ersetzung und KEIN Entfall.
+### Erkennung
+Eine PDF-Zelle darf über eine Pause hinweg als eine echte Doppel-/Mehrfachstunde erkannt werden.
+Sie wird nur getrennt, wenn
+- eine echte horizontale PDF-Gitterlinie erkannt wird, oder
+- die nächste Zeile eigenen Unterrichtstext enthält.
 
-Solche aktuell stattfindenden Ersatz-/Änderungsstunden bekommen klein `geändert`.
+### Darstellung
+Wenn eine erkannte Mehrfachstunde eine Pause überquert, wird sie nur für die Anzeige aufgeteilt:
 
-## Weiterhin
-- verschobene Stunden sind kein Entfall
-- Aktuell & Änderungen / Basisplan Umschalter
-- echte Entfälle durchgestrichen
+MINT 10:30–11:15 · Doppelstunde 1/2
+Pause 11:15–11:30
+MINT 11:30–12:15 · Doppelstunde 2/2
+
+Intern bleibt sie weiterhin eine Doppelstunde. Dadurch bleiben auch Basisplan-Vergleich,
+Verschiebungen und Entfallzählung korrekt.
+
+Das funktioniert auch für Dreifach- und längere Stunden mit Pausen dazwischen.
+
+Weiterhin:
+- Aktuell & Änderungen / Basisplan
+- Entfall nur bei wirklich leerer Stelle
+- ersetzte Stunden = geändert, nicht Entfall
 - Hitzestunden
-- Mehrfachstunden
 - Klassenwechsel
