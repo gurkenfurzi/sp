@@ -633,13 +633,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 36: echter Live-Refresh ===== */
+/* ===== VERSION 37: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 36 timetable parser ===== */
+/* ===== VERSION 37 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -648,7 +648,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 36: dynamic classes ===== */
+/* ===== VERSION 37: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -657,11 +657,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 36: raster-exact timetable ===== */
+/* ===== VERSION 37: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 36 stability fixes ===== */
+/* ===== VERSION 37 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -674,7 +674,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
 
-/* ===== VERSION 36 — stable redesign ===== */
+/* ===== VERSION 37 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -743,7 +743,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 36 — notebook label + timetable repair ===== */
+/* ===== VERSION 37 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -809,6 +809,44 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .notebookBelow strong{font-size:13px}
  .notebookAbbr{font-size:16px}
 }
+
+/* ===== VERSION 37 — Basisplan / Entfall / Hitzestunden ===== */
+.basisCancelled{
+ opacity:.82;
+ border-style:dashed!important;
+ background:#f8f4f1!important;
+}
+.basisCancelled .cancelTag{
+ display:inline-flex;
+ padding:3px 8px;
+ border-radius:999px;
+ background:#eadeda;
+ color:#986e66;
+ font-size:9px;
+ font-weight:950;
+ text-transform:uppercase;
+ letter-spacing:.08em;
+ margin-bottom:3px;
+}
+.cancelledSubject{
+ text-decoration-line:line-through;
+ text-decoration-thickness:2.5px;
+ text-decoration-color:#b87872;
+ color:#9a8179!important;
+}
+.cancelledTeacher{
+ text-decoration:line-through;
+ opacity:.7
+}
+.cancelledRoom{
+ text-decoration:line-through;
+ opacity:.65
+}
+.cancelledBadge{
+ background:#eee4df!important;
+ color:#9e7c73!important;
+ border-color:#dbc8c1!important
+}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.18/paper-full.min.js">
 let homeClockTimer=null;
@@ -828,7 +866,7 @@ ensureHomeClockTimer();
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 36</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 37</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -1233,6 +1271,9 @@ const pauses=[
  {start:"11:15",end:"11:30",label:"Pause"},
  {start:"13:00",end:"13:30",label:"Mittagspause"}
 ];
+function getActivePauses(){
+ return (data.timetable?.activePauses?.length?data.timetable.activePauses:pauses);
+}
 function renderLessonsWithPauses(ls){
  const merged=mergeLessons(ls);
  if(!merged.length)return "";
@@ -1254,7 +1295,7 @@ function renderLessonsWithPauses(ls){
  // Pausen werden unabhängig davon eingesetzt, ob direkt vor/nach ihnen
  // eine erkannte Stunde steht. Entscheidend ist nur:
  // Der Tagesplan beginnt davor und läuft danach noch weiter.
- for(const p of pauses){
+ for(const p of getActivePauses()){
    const ps=toMin(p.start),pe=toMin(p.end);
    if(firstStart < pe && lastEnd > ps){
      events.push({
@@ -1322,6 +1363,7 @@ const officialBreaks=[
 ];
 
 function breakBetween(endA,startB){
+ if(getActivePauses().some(p=>endA===p.start && startB===p.end))return true;
  return officialBreaks.some(([s,e])=>endA===s && startB===e);
 }
 
@@ -1389,7 +1431,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 36";
+ $("#headerEyebrow").textContent="VERSION 37";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -2485,13 +2527,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 36: echter Live-Refresh ===== */
+/* ===== VERSION 37: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 36 timetable parser ===== */
+/* ===== VERSION 37 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -2500,7 +2542,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 36: dynamic classes ===== */
+/* ===== VERSION 37: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -2509,11 +2551,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 36: raster-exact timetable ===== */
+/* ===== VERSION 37: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 36 stability fixes ===== */
+/* ===== VERSION 37 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -2526,7 +2568,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
 
-/* ===== VERSION 36 — stable redesign ===== */
+/* ===== VERSION 37 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -2595,7 +2637,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 36 — notebook label + timetable repair ===== */
+/* ===== VERSION 37 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -2660,6 +2702,44 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .notebookGrid{gap:16px 8px!important}
  .notebookBelow strong{font-size:13px}
  .notebookAbbr{font-size:16px}
+}
+
+/* ===== VERSION 37 — Basisplan / Entfall / Hitzestunden ===== */
+.basisCancelled{
+ opacity:.82;
+ border-style:dashed!important;
+ background:#f8f4f1!important;
+}
+.basisCancelled .cancelTag{
+ display:inline-flex;
+ padding:3px 8px;
+ border-radius:999px;
+ background:#eadeda;
+ color:#986e66;
+ font-size:9px;
+ font-weight:950;
+ text-transform:uppercase;
+ letter-spacing:.08em;
+ margin-bottom:3px;
+}
+.cancelledSubject{
+ text-decoration-line:line-through;
+ text-decoration-thickness:2.5px;
+ text-decoration-color:#b87872;
+ color:#9a8179!important;
+}
+.cancelledTeacher{
+ text-decoration:line-through;
+ opacity:.7
+}
+.cancelledRoom{
+ text-decoration:line-through;
+ opacity:.65
+}
+.cancelledBadge{
+ background:#eee4df!important;
+ color:#9e7c73!important;
+ border-color:#dbc8c1!important
 }
 </style></head><body><div class="page">${serializedCanvas()}</div></body></html>`;
  const blob=new Blob([html],{type:"text/html"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=title.replace(/[^\wäöüÄÖÜß-]+/g,"_")+".html";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
@@ -2837,13 +2917,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 36: echter Live-Refresh ===== */
+/* ===== VERSION 37: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 36 timetable parser ===== */
+/* ===== VERSION 37 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -2852,7 +2932,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 36: dynamic classes ===== */
+/* ===== VERSION 37: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -2861,11 +2941,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 36: raster-exact timetable ===== */
+/* ===== VERSION 37: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 36 stability fixes ===== */
+/* ===== VERSION 37 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -2878,7 +2958,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
 
-/* ===== VERSION 36 — stable redesign ===== */
+/* ===== VERSION 37 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -2947,7 +3027,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 36 — notebook label + timetable repair ===== */
+/* ===== VERSION 37 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -3012,6 +3092,44 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .notebookGrid{gap:16px 8px!important}
  .notebookBelow strong{font-size:13px}
  .notebookAbbr{font-size:16px}
+}
+
+/* ===== VERSION 37 — Basisplan / Entfall / Hitzestunden ===== */
+.basisCancelled{
+ opacity:.82;
+ border-style:dashed!important;
+ background:#f8f4f1!important;
+}
+.basisCancelled .cancelTag{
+ display:inline-flex;
+ padding:3px 8px;
+ border-radius:999px;
+ background:#eadeda;
+ color:#986e66;
+ font-size:9px;
+ font-weight:950;
+ text-transform:uppercase;
+ letter-spacing:.08em;
+ margin-bottom:3px;
+}
+.cancelledSubject{
+ text-decoration-line:line-through;
+ text-decoration-thickness:2.5px;
+ text-decoration-color:#b87872;
+ color:#9a8179!important;
+}
+.cancelledTeacher{
+ text-decoration:line-through;
+ opacity:.7
+}
+.cancelledRoom{
+ text-decoration:line-through;
+ opacity:.65
+}
+.cancelledBadge{
+ background:#eee4df!important;
+ color:#9e7c73!important;
+ border-color:#dbc8c1!important
 }
 </style></head><body><div class="page">${serializedCanvas()}</div></body></html>`);w.document.close();setTimeout(()=>w.print(),300)
 }
@@ -3330,7 +3448,7 @@ const timetableSlots=[
  {start:"15:45",end:"16:30"}
 ];
 function fillCancelledSlots(lessons){
- // VERSION 36:
+ // VERSION 37:
  // SchoolBloom darf NIE aus einer nicht erkannten/leeren PDF-Zelle
  // automatisch "Entfall" erfinden.
  // Nur Einträge, die wirklich aus der PDF gelesen wurden, werden gezeigt.
@@ -3352,11 +3470,7 @@ function renderHome(){
  const todayLessons=stableTimetableDay((data.timetable.lessons||[])
    .filter(x=>x.day===todayCode))
    .sort((a,b)=>a.start.localeCompare(b.start));
- const breaksToday=[
-   {start:"09:30",end:"09:45",label:"Pause"},
-   {start:"11:15",end:"11:30",label:"Pause"},
-   {start:"13:00",end:"13:30",label:"Mittagspause"}
- ];
+ const breaksToday=getActivePauses();
  $("#todayDate").textContent=new Date().toLocaleDateString("de-DE",{weekday:"long",day:"2-digit",month:"long"});
  const today=dayCode(new Date()), lessons=fillCancelledSlots(mergeLessons((data.timetable.lessons||[]).filter(x=>x.day===today)));
  const now=new Date(),min=now.getHours()*60+now.getMinutes();
@@ -3420,6 +3534,22 @@ function renderHome(){
 function lessonHtml(l){
  const rawText=String(l.raw||"").replace(/\s+/g," ").trim();
 
+ if(l.cancelledFromBasis){
+   const p=splitCell(rawText);
+   const teacher=p.teacher||p.meta||"";
+   const blocks=Math.max(1,Number(l.blocks||1));
+   return `<div class="lesson cancelled basisCancelled" style="--subject:#d6cfc9">
+     <div class="time">${l.start}<br>${l.end}</div>
+     <div>
+       <div class="cancelTag">Entfall</div>
+       <div class="subject cancelledSubject">${esc(prettySubject(p.subject||rawText))}</div>
+       ${teacher?`<div class="small cancelledTeacher">🎀 ${esc(teacher)}</div>`:""}
+       ${blocks>1?`<div class="doubleBadge cancelledBadge">▥ ${blocks===2?"Doppelstunde":blocks+" Stunden"}</div>`:""}
+     </div>
+     ${p.room?`<div class="room cancelledRoom">${esc(p.room)}</div>`:`<div class="room">—</div>`}
+   </div>`;
+ }
+
  // Entfall/Ausfall nur dann, wenn genau das in der PDF steht.
  const explicitCancelled=/\b(entfall|entfällt|ausfall|fällt\s+aus)\b/i.test(rawText);
  if(explicitCancelled){
@@ -3453,7 +3583,7 @@ function lessonHtml(l){
    <div>
      <div class="subject">${esc(prettySubject(p.subject))}</div>
      <div class="small">${teacher?`🎀 ${esc(teacher)}`:""}</div>
-     ${double?`<div class="doubleBadge">▥ ${(l.blocks||2)>2?(l.blocks+" Blöcke"):"Doppelstunde"}</div>`:""}
+     ${double?`<div class="doubleBadge">▥ ${(l.blocks||2)>2?(l.blocks+" Stunden"):"Doppelstunde"}</div>`:""}
      ${count?`<div class="lessonBadge"><span class="lessonExtraDot">✿ ${count} Eintrag${count===1?"":"e"}</span></div>`:""}
    </div>
    ${p.room?`<div class="room">${esc(p.room)}</div>`:""}
@@ -3495,7 +3625,7 @@ function stableTimetableDay(list){
 function renderPlan(){
  $("#planStatus").textContent=data.timetable.isPlaceholder
    ? "Automatischer Stundenplan wird vorbereitet."
-   : `Aktueller PHS-Plan geladen${data.timetable.sourceLabel?" · "+data.timetable.sourceLabel:""}.`;
+   : `Aktueller PHS-Plan geladen${data.timetable.sourceLabel?" · "+data.timetable.sourceLabel:""}${data.timetable.heatSchedule?" · ☀️ Hitzestunden aktiv":""}.`;
 
  $("#placeholderBanner").style.display=data.timetable.isPlaceholder?"block":"none";
 
@@ -3534,7 +3664,7 @@ function renderPlan(){
    return;
  }
 
- const ls=fillCancelledSlots(mergeLessons(rawDay));
+ const ls=mergeLessons(rawDay);
  $("#planLessons").innerHTML=ls.length?renderLessonsWithPauses(ls):'<div class="empty">Kein Unterricht.</div>';
 }
 
@@ -3666,7 +3796,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
         stroke-width: 13px;
       }
     
-/* ===== VERSION 36 — stable redesign ===== */
+/* ===== VERSION 37 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -3735,7 +3865,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 36 — notebook label + timetable repair ===== */
+/* ===== VERSION 37 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -3800,6 +3930,44 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  .notebookGrid{gap:16px 8px!important}
  .notebookBelow strong{font-size:13px}
  .notebookAbbr{font-size:16px}
+}
+
+/* ===== VERSION 37 — Basisplan / Entfall / Hitzestunden ===== */
+.basisCancelled{
+ opacity:.82;
+ border-style:dashed!important;
+ background:#f8f4f1!important;
+}
+.basisCancelled .cancelTag{
+ display:inline-flex;
+ padding:3px 8px;
+ border-radius:999px;
+ background:#eadeda;
+ color:#986e66;
+ font-size:9px;
+ font-weight:950;
+ text-transform:uppercase;
+ letter-spacing:.08em;
+ margin-bottom:3px;
+}
+.cancelledSubject{
+ text-decoration-line:line-through;
+ text-decoration-thickness:2.5px;
+ text-decoration-color:#b87872;
+ color:#9a8179!important;
+}
+.cancelledTeacher{
+ text-decoration:line-through;
+ opacity:.7
+}
+.cancelledRoom{
+ text-decoration:line-through;
+ opacity:.65
+}
+.cancelledBadge{
+ background:#eee4df!important;
+ color:#9e7c73!important;
+ border-color:#dbc8c1!important
 }
 </style>
   </defs>
@@ -4168,13 +4336,18 @@ function parsePageItems(items,raster){
        // unbegrenzt mehrere Stunden verschlucken.
        // Ein normales zusammengeführtes Feld darf zunächst höchstens
        // zwei Unterrichtsblöcke umfassen.
-       while(j<dayRows.length-1 && (j-i)<1){
-         // Don't let a merged PDF cell visually swallow an official school break.
-         if(breakBetween(dayRows[j].end,dayRows[j+1].start))break;
+       while(j<dayRows.length-1){
+         // A merged Untis cell can span 2, 3 or more lesson rows.
+         // We only stop at an actual horizontal grid border or school break.
+         if(officialBreaks.some(([s,e])=>dayRows[j].end===s && dayRows[j+1].start===e))break;
 
          const boundary=(dayRows[j].y+dayRows[j+1].y)/2;
          const border=hasHorizontalGridBorder(raster,bd.left,bd.right,boundary);
          if(border)break;
+
+         // Safety: never swallow an implausibly huge vertical jump.
+         const localGap=Math.abs(dayRows[j].y-dayRows[j+1].y);
+         if(localGap>gap*1.85)break;
          j++;
        }
 
@@ -4269,7 +4442,7 @@ function parsePageItems(items,raster){
    }
    schedule[className]=rebuilt;
  }
-return {classes,schedule};
+return {classes,schedule,rows};
 }
 
 function consolidateSpecialDayNotes(list){
@@ -4368,30 +4541,213 @@ window.switchTimetableClass=function(name){
  save();renderHome();renderPlan();
 }
 
+
+function detectHeatSchedule(items){
+ const arr=(items||[]).map(it=>({
+   text:String(it.str||"").replace(/\s+/g," ").trim(),
+   x:it.transform?.[4]||0,
+   y:it.transform?.[5]||0,
+   w:it.width||0
+ })).filter(x=>x.text);
+
+ const marker=arr.find(x=>/Hitzebedingte\s+Kurzstunden/i.test(x.text))
+   || arr.find(x=>/Hitzebedingte|Kurzstunden/i.test(x.text));
+ if(!marker)return null;
+
+ // The time table is printed below/right of the "Hitzebedingte Kurzstunden" marker.
+ const right=arr.filter(x=>x.x>=marker.x-65 && x.y<=marker.y+25);
+ const groups=[];
+ for(const x of right){
+   let g=groups.find(q=>Math.abs(q.y-x.y)<=3.5);
+   if(!g){g={y:x.y,items:[]};groups.push(g)}
+   g.items.push(x);
+ }
+ groups.sort((a,b)=>b.y-a.y);
+
+ const lessons={},heatPauses=[];
+ for(const g of groups){
+   const line=g.items.sort((a,b)=>a.x-b.x).map(x=>x.text).join(" ").replace(/\s+/g," ").trim();
+   const times=[...line.matchAll(/\b([01]?\d|2[0-3]):[0-5]\d\b/g)].map(m=>m[0].padStart(5,"0"));
+   if(times.length<2)continue;
+
+   const num=line.match(/(?:^|\s)([1-8])(?:\s|$)/);
+   if(num){
+     lessons[Number(num[1])]={start:times[0],end:times[1]};
+   }else if(/Pause/i.test(line)){
+     heatPauses.push({
+       start:times[0],
+       end:times[1],
+       label:/gro(?:ß|ss)e\s+Pause/i.test(line)?"Große Pause":"Pause"
+     });
+   }
+ }
+
+ // Fallback only when the PDF clearly says heat-shortened lessons are active
+ // but PDF.js cannot extract the small table cleanly.
+ if(Object.keys(lessons).length<8){
+   Object.assign(lessons,{
+     1:{start:"08:00",end:"08:35"},
+     2:{start:"08:35",end:"09:10"},
+     3:{start:"09:25",end:"10:00"},
+     4:{start:"10:00",end:"10:35"},
+     5:{start:"10:50",end:"11:25"},
+     6:{start:"11:25",end:"12:00"},
+     7:{start:"12:25",end:"13:00"},
+     8:{start:"13:00",end:"13:35"}
+   });
+ }
+ if(heatPauses.length<3){
+   heatPauses.splice(0,heatPauses.length,
+     {start:"09:10",end:"09:25",label:"Pause"},
+     {start:"10:35",end:"10:50",label:"Pause"},
+     {start:"12:00",end:"12:25",label:"Große Pause"}
+   );
+ }
+
+ heatPauses.sort((a,b)=>a.start.localeCompare(b.start));
+ return {active:true,lessons,pauses:heatPauses};
+}
+
+function applyHeatTimesToSchedule(schedule,heat){
+ if(!heat?.active)return schedule;
+ const out={};
+ for(const [className,list] of Object.entries(schedule||{})){
+   out[className]=(list||[]).map(l=>{
+     if(l.specialOnly||l.rowNum==null)return {...l};
+     const from=Number(l.rowNum);
+     const blocks=Math.max(1,Number(l.blocks||1));
+     const to=from+blocks-1;
+     const a=heat.lessons[from],b=heat.lessons[to];
+     if(!a||!b)return {...l};
+     return {...l,start:a.start,end:b.end,heatSchedule:true};
+   });
+ }
+ return out;
+}
+
+function lessonCoveredRows(l){
+ if(l?.rowNum==null)return [];
+ const n=Math.max(1,Number(l.blocks||1));
+ return Array.from({length:n},(_,i)=>Number(l.rowNum)+i);
+}
+
+function rowTimeFromMaps(rowNum,rowMaps,heat){
+ if(heat?.active && heat.lessons[rowNum])return heat.lessons[rowNum];
+ for(const rows of (rowMaps||[])){
+   const r=(rows||[]).find(x=>Number(x.num)===Number(rowNum));
+   if(r)return {start:r.start,end:r.end};
+ }
+ return null;
+}
+
+function addBasisCancellations(current,basis,rowMaps,heat){
+ const result=[...(current||[])];
+ const currentRows=new Set();
+ for(const l of current||[]){
+   if(l.specialOnly)continue;
+   for(const r of lessonCoveredRows(l))currentRows.add(r);
+ }
+
+ for(const b of basis||[]){
+   if(b.specialOnly||b.rowNum==null)continue;
+   const rows=lessonCoveredRows(b);
+   const missing=rows.filter(r=>!currentRows.has(r));
+   if(!missing.length)continue;
+
+   // Turn consecutive missing base rows into one struck-through cancellation card.
+   let group=[];
+   const flush=()=>{
+     if(!group.length)return;
+     const first=group[0],last=group[group.length-1];
+     const a=rowTimeFromMaps(first,rowMaps,heat);
+     const z=rowTimeFromMaps(last,rowMaps,heat);
+     if(a&&z){
+       result.push({
+         ...b,
+         start:a.start,
+         end:z.end,
+         rowNum:first,
+         blocks:group.length,
+         isDouble:group.length>=2,
+         cancelledFromBasis:true,
+         cancellationLabel:"Entfall"
+       });
+     }
+     group=[];
+   };
+
+   for(const r of missing){
+     if(group.length && r!==group[group.length-1]+1)flush();
+     group.push(r);
+   }
+   flush();
+ }
+ return result;
+}
 async function parsePdfDocument(pdf){
- const combined={},allText=[];
+ const currentPages=[],basisPages=[],allText=[],rowMaps=[];
+ let heat=null;
 
  for(let p=1;p<=pdf.numPages;p++){
    const page=await pdf.getPage(p);
    const content=await page.getTextContent();
    const raster=await renderPdfRaster(page);
-   allText.push(content.items.map(x=>(x.str||"").trim()).filter(Boolean).join(" "));
+   const pageText=content.items.map(x=>(x.str||"").trim()).filter(Boolean).join(" ");
+   allText.push(pageText);
+
+   if(!heat){
+     const detectedHeat=detectHeatSchedule(content.items);
+     if(detectedHeat)heat=detectedHeat;
+   }
 
    const parsed=parsePageItems(content.items,raster);
    if(!parsed)continue;
+   rowMaps.push(parsed.rows||[]);
 
-   for(const [className,lessons] of Object.entries(parsed.schedule)){
-     const normalized=className.replace(/\s+/g," ").trim();
-     combined[normalized]||=[];
-     combined[normalized].push(...lessons);
-   }
+   // "Basisplan ab ... siehe Seite 2" can occur on page 1, therefore
+   // classify only a page that itself is headed as the basis plan.
+   const isBasis=/\b1\.\s*BASISPLAN\b|\bBASISPLAN\s+UW\b/i.test(pageText);
+   (isBasis?basisPages:currentPages).push(parsed);
  }
 
- let keys=Object.keys(combined);
+ // If a PDF only contains one timetable page, it is the current plan.
+ // If classification failed but there are multiple parsed pages, first page wins as current.
+ if(!currentPages.length && basisPages.length){
+   currentPages.push(basisPages.shift());
+ }
+
+ const mergePages=pages=>{
+   const combined={};
+   for(const parsed of pages){
+     for(const [className,lessons] of Object.entries(parsed.schedule||{})){
+       const normalized=className.replace(/\s+/g," ").trim();
+       combined[normalized]||=[];
+       combined[normalized].push(...lessons);
+     }
+   }
+   for(const k of Object.keys(combined)){
+     combined[k]=consolidateSpecialDayNotes(combined[k]);
+   }
+   return combined;
+ };
+
+ let current=mergePages(currentPages);
+ const basis=mergePages(basisPages);
+
+ // Apply the heat-shortened row times to BOTH plans before comparison.
+ current=applyHeatTimesToSchedule(current,heat);
+ const heatBasis=applyHeatTimesToSchedule(basis,heat);
+
+ const keys=[...new Set([...Object.keys(current),...Object.keys(heatBasis)])]
+   .sort((a,b)=>a.localeCompare(b,"de",{numeric:true,sensitivity:"base"}));
  if(!keys.length)throw new Error("Keine Klassen im PHS-Plan erkannt");
 
- for(const k of keys)combined[k]=consolidateSpecialDayNotes(combined[k]);
- keys=keys.sort((a,b)=>a.localeCompare(b,"de",{numeric:true,sensitivity:"base"}));
+ const finalSchedules={};
+ for(const className of keys){
+   const cur=current[className]||[];
+   const base=heatBasis[className]||[];
+   finalSchedules[className]=addBasisCancellations(cur,base,rowMaps,heat);
+ }
 
  const wanted=(data.timetable.selectedClass||data.settings.className||"M U1").replace(/\s+/g," ").toUpperCase();
  let chosen=keys.find(k=>k.replace(/\s+/g," ").toUpperCase()===wanted);
@@ -4403,17 +4759,21 @@ async function parsePdfDocument(pdf){
  data.timetable={
    isPlaceholder:false,
    classes:keys,
-   schedules:combined,
+   schedules:finalSchedules,
+   basisSchedules:heatBasis,
    selectedClass:chosen,
-   lessons:combined[chosen]||[],
+   lessons:finalSchedules[chosen]||[],
    sourceLabel:dm?dm[1]:"",
    fetchedAt:Date.now(),
-   parserVersion:36
+   parserVersion:37,
+   heatSchedule:!!heat?.active,
+   activePauses:heat?.active?heat.pauses:pauses,
+   currentPageCount:currentPages.length,
+   basisPageCount:basisPages.length
  };
  data.settings.className=chosen;
  save();
 }
-
 async function parsePdfBytes(bytes){
  const pdf=await pdfjsLib.getDocument({data:bytes}).promise;
  await parsePdfDocument(pdf);
@@ -4497,8 +4857,8 @@ window.loadRemotePlan=async function(manual=false){
 
 loadRemotePlan(false);
 
-if(localStorage.getItem("schoolbloom-plan-parser-version")!=="26"){
- localStorage.setItem("schoolbloom-plan-parser-version","26");
+if(localStorage.getItem("schoolbloom-plan-parser-version")!=="37"){
+ localStorage.setItem("schoolbloom-plan-parser-version","37");
  setTimeout(()=>loadRemotePlan(true),250);
 }
 if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});
