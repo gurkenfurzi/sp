@@ -1,30 +1,23 @@
-# VERSION 59
+# VERSION 60
 
-Diese Version repariert zwei grundlegende Probleme statt weitere CSS-Schichten darüberzulegen.
+## Graph-Funktionseditor
+- Größer und dichter aufgebaut.
+- Unnötige/doppelte Buttons entfernt.
+- Drei klare Gruppen:
+  - Bausteine
+  - Funktionen
+  - Rechnen
+- Quick-Preset-Chips unten entfernt.
+- Zusätzliche sinnvolle Symbole: ∞ und →.
+- Wurzel-über-Bruch-Bug mit einem versehentlichen Minus vor der Wurzel behoben.
+- Visueller Editor bleibt der Hauptweg, keine sichtbare sqrt-Syntax.
 
-## Desktop
-Der Editor nutzt jetzt die echte vorhandene DOM-Struktur:
-- obere Leiste über volle Breite
-- linke echte Werkzeugleiste
-- große zentrale Arbeitsfläche
-- Eigenschaften, Ebenen und Textformate in EINER festen rechten Sidebar
-- Sidebar ist separat scrollbar
-- Arbeitsfläche ist separat scrollbar
-- Einfügen/Text/Elemente öffnen als linkes Canva-artiges Panel
-- kein gestapeltes riesiges Eigenschaften-Layout mehr
-- keine erfundenen/nonexistenten `canvasWorkspace`-Container mehr
+## Seite
+- Bei leerem Papier wird der Größen-Regler ausgeblendet.
+- Bei liniert: Linienabstand.
+- Bei kariert: Karogröße.
+- Bei gepunktet: Punktabstand.
+- Handy stellt das Lernblatt beim Öffnen und nach Orientierungswechsel automatisch auf „An Bildschirm“.
 
-## Handy / Modals
-- Modal-Fenster sind jetzt wirklich vertikal scrollbar.
-- iPhone `100dvh`, Safe Areas, Momentum-Scrolling und `touch-action: pan-y`.
-- Graph-Funktionseditor hat sticky Kopf und sticky Übernehmen-Leiste.
-
-## Graph-Funktionen
-- sichtbarer sqrt-/Code-Ansatz entfernt.
-- Wurzel ist eine echte visuelle Wurzel.
-- Bruch ist ein echter visueller Bruch.
-- Exponent ist ein echter Exponent.
-- sin/cos/tan/Betrag/e^x sind mathematisch dargestellt.
-- Markieren + Wurzel/Bruch/Exponent funktioniert wie beim normalen Formel-Editor.
-- Erst beim Speichern übersetzt SchoolBloom die visuellen Bausteine intern in die Rechenfunktion.
-- In der Funktionsliste wird die Funktion ebenfalls mathematisch angezeigt, nicht als `sqrt(...)`.
+## Notizbücher
+- Fachkürzel auf den Notizbuch-Covern sind jetzt serifenlos und cleaner.
