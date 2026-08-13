@@ -1,13 +1,62 @@
-const CACHE="schoolbloom-v42";
-const CORE=["./","./index.html","./icon-192.png","./icon-512.png"];
-self.addEventListener("install",e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)))});
-self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
-self.addEventListener("fetch",e=>{
- const u=new URL(e.request.url);
- if(u.hostname.includes("workers.dev") || u.hostname.includes("phs-lu.de") || u.pathname.endsWith("/Stundenplan.pdf")) return;
- if(e.request.mode==="navigate"){
-   e.respondWith(fetch(e.request).then(r=>{caches.open(CACHE).then(c=>c.put("./index.html",r.clone()));return r}).catch(()=>caches.match("./index.html")));
-   return;
- }
- e.respondWith(caches.match(e.request).then(c=>c||fetch(e.request)));
+const CACHE = "schoolbloom-v62";
+const CORE = [
+  "./",
+  "./index.html",
+  "./manifest.webmanifest",
+  "./apple-touch-icon.png",
+  "./icon-192.png",
+  "./icon-512.png"
+];
+
+self.addEventListener("install", event => {
+  self.skipWaiting();
+  event.waitUntil(
+    caches.open(CACHE).then(cache => cache.addAll(CORE).catch(()=>{}))
+  );
+});
+
+self.addEventListener("activate", event => {
+  event.waitUntil((async()=>{
+    const keys=await caches.keys();
+    await Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)));
+    await self.clients.claim();
+  })());
+});
+
+self.addEventListener("message", event => {
+  if(event.data?.type==="SKIP_WAITING") self.skipWaiting();
+});
+
+self.addEventListener("fetch", event => {
+  const req=event.request;
+  if(req.method!=="GET") return;
+
+  // HTML/navigation is NETWORK FIRST so GitHub updates are visible immediately.
+  if(req.mode==="navigate" || new URL(req.url).pathname.endsWith("/index.html")){
+    event.respondWith((async()=>{
+      try{
+        const fresh=await fetch(req,{cache:"no-store"});
+        const cache=await caches.open(CACHE);
+        cache.put("./index.html",fresh.clone()).catch(()=>{});
+        return fresh;
+      }catch(e){
+        return (await caches.match(req)) || (await caches.match("./index.html"));
+      }
+    })());
+    return;
+  }
+
+  // Assets: cache first, then update.
+  event.respondWith((async()=>{
+    const cached=await caches.match(req);
+    if(cached) return cached;
+    try{
+      const fresh=await fetch(req);
+      const cache=await caches.open(CACHE);
+      cache.put(req,fresh.clone()).catch(()=>{});
+      return fresh;
+    }catch(e){
+      return cached;
+    }
+  })());
 });
