@@ -1,25 +1,20 @@
-# VERSION 56
+# SchoolBloom VERSION 57
 
-## Desktop / Laptop
-- Desktop-Editor nutzt die verfügbare Bildschirmbreite deutlich stärker.
-- Große graue Arbeitsfläche wie Word/Canva.
-- Eigenschaften als feste rechte Seitenleiste.
-- Werkzeugleiste und Einfügen-Menüs über die Breite.
-- Lernblatt bleibt zentriert und bekommt eine klare Dokument-Schattenkante.
-- Auf großen Monitoren wird die rechte Eigenschaftenleiste breiter.
+## Desktop
+Der Lernblatt-Editor ist auf Laptop/Desktop jetzt als echter Vollbild-Arbeitsbereich aufgebaut:
+- Toolbar über die komplette Breite
+- große Canva/Word-artige graue Arbeitsfläche
+- Dokument zentriert
+- feste Eigenschaften-Seitenleiste rechts
+- Einfügen-/Text-/Elemente-Menüs oben statt mobilem Kartenlayout
+- responsive für größere Monitore
 
 ## Graphen
-- Hilfslinien/Asymptoten zeigen direkt `x = …` bzw. `y = …` am Graphen.
-- Neuer visueller Funktions-Baukasten:
-  x, x², x³, √, sin, cos, tan, |x|, 1/x, eˣ, +, −, ×, ÷ und Klammern.
-- Man muss dadurch deutlich weniger Syntax selbst schreiben.
-- Bis zu vier Funktionen bleiben möglich.
-
-## Neue Word-artige Elemente
-- Textfeld
-- Checkliste
-- Trennlinie
-- Datum
-- Seitenzahl
-
-Diese Elemente befinden sich unter `Hinzufügen`.
+- Graph-Menü ist oben.
+- Mathe-Baukasten benutzt dieselbe visuelle Sprache wie der Formel-Editor.
+- Gerade/Parabel/Wellen/Hyperbel/Exponential werden als neue Funktion hinzugefügt und ersetzen vorhandene Funktionen nicht mehr.
+- Neue Funktion startet leer.
+- Aktive Funktion wird hervorgehoben.
+- Beim Vergrößern/Verkleinern wird der sichtbare x/y-Bereich automatisch erweitert, damit keine leeren weißen Streifen entstehen.
+- Rasterabstände passen sich automatisch an die sichtbare Skala an.
+- Visuelle Buttons für x, Exponent, Wurzel, Bruch, sin, cos, tan, Betrag, e^x und Rechenoperatoren.

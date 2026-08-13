@@ -633,13 +633,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 56: echter Live-Refresh ===== */
+/* ===== VERSION 57: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 56 timetable parser ===== */
+/* ===== VERSION 57 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -648,7 +648,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 56: dynamic classes ===== */
+/* ===== VERSION 57: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -657,11 +657,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 56: raster-exact timetable ===== */
+/* ===== VERSION 57: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 56 stability fixes ===== */
+/* ===== VERSION 57 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -674,7 +674,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
 
-/* ===== VERSION 56 — stable redesign ===== */
+/* ===== VERSION 57 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -743,7 +743,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 56 — notebook label + timetable repair ===== */
+/* ===== VERSION 57 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -810,7 +810,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .notebookAbbr{font-size:16px}
 }
 
-/* ===== VERSION 56 — Basisplan / Entfall / Hitzestunden ===== */
+/* ===== VERSION 57 — Basisplan / Entfall / Hitzestunden ===== */
 .basisCancelled{
  opacity:.82;
  border-style:dashed!important;
@@ -848,7 +848,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  border-color:#dbc8c1!important
 }
 
-/* ===== VERSION 56 — Current vs Basis + moved lesson logic ===== */
+/* ===== VERSION 57 — Current vs Basis + moved lesson logic ===== */
 .planModeSwitch{
  display:grid;
  grid-template-columns:1.35fr 1fr;
@@ -917,7 +917,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .planModeSwitch button b{font-size:10px}
 }
 
-/* ===== VERSION 56 — safer row split / replacement handling ===== */
+/* ===== VERSION 57 — safer row split / replacement handling ===== */
 .changedLesson{
  background:linear-gradient(90deg,#fffdfa,#fffaf6)!important;
 }
@@ -935,13 +935,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  margin-bottom:3px;
 }
 
-/* ===== VERSION 56 — Mehrfachstunden mit Pause dazwischen ===== */
+/* ===== VERSION 57 — Mehrfachstunden mit Pause dazwischen ===== */
 .splitMultiBadge{
  opacity:.86;
  font-size:8px!important;
 }
 
-/* ===== VERSION 56 — Auto / Manuell Hitzestunden ===== */
+/* ===== VERSION 57 — Auto / Manuell Hitzestunden ===== */
 .heatPlanControl{
  display:flex;
  align-items:center;
@@ -1017,7 +1017,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .heatModeButtons button{min-width:31px;padding:7px 5px}
 }
 
-/* ===== VERSION 56 — clearer navigation + polish ===== */
+/* ===== VERSION 57 — clearer navigation + polish ===== */
 :root{
  --sb-panel:#fffdfa;
  --sb-panel-soft:#fff8f4;
@@ -1207,7 +1207,7 @@ ensureHomeClockTimer();
 </script>
 
 <style id="v43-compact-ui">
-/* VERSION 56 — compact information architecture */
+/* VERSION 57 — compact information architecture */
 #nav{grid-template-columns:repeat(5,1fr)!important;width:min(94vw,520px)!important}
 #nav button{min-width:0!important}
 .view{padding-bottom:100px!important}
@@ -1240,7 +1240,7 @@ ensureHomeClockTimer();
 
 
 <style id="v44-learning-navigation">
-/* VERSION 56 — Fächer / Lernsets / Study sauber getrennt */
+/* VERSION 57 — Fächer / Lernsets / Study sauber getrennt */
 .learningBackRow{
  display:flex;
  margin:-2px 0 12px;
@@ -1425,7 +1425,7 @@ body.editorMode{-webkit-text-size-adjust:100%;overscroll-behavior:none}
 
 
 <style id="v46-editor">
-/* VERSION 56 — one toolbar, top view, tables + multiselect */
+/* VERSION 57 — one toolbar, top view, tables + multiselect */
 .canvasQuickNav{grid-template-columns:repeat(4,1fr)!important}
 .stylePresetBar,#stylePresetBar{display:none!important}
 .topViewMenu{
@@ -2102,12 +2102,86 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
 .graphHintTiny{font-size:8px;color:#9b8279;line-height:1.35}
 </style>
 
+
+<style id="v57-desktop-and-graph">
+/* Real desktop workspace — not a stretched mobile card */
+@media (min-width:900px){
+ html,body{width:100%;height:100%;margin:0}
+ body{overflow:hidden!important;background:#f2f0ee!important}
+ .canvasTopBar,.sheetTopBar{
+   position:sticky!important;top:0!important;z-index:40!important;
+   width:100vw!important;max-width:none!important;margin:0!important;
+   padding:8px 22px!important;min-height:62px!important;
+   border-radius:0!important;border-left:0!important;border-right:0!important;
+   background:rgba(255,252,249,.97)!important;box-shadow:0 1px 0 #ded8d4!important;
+ }
+ .canvasQuickNav{
+   position:sticky!important;top:62px!important;z-index:39!important;
+   width:100vw!important;max-width:none!important;margin:0!important;
+   padding:0 22px!important;height:52px!important;border-radius:0!important;
+   background:#fffaf7!important;border-left:0!important;border-right:0!important;
+   box-shadow:0 1px 0 #ded8d4!important;
+ }
+ .canvasQuickNav button{
+   min-width:96px!important;height:44px!important;border-radius:8px!important;
+   border:0!important;background:transparent!important;box-shadow:none!important;
+ }
+ .canvasQuickNav button.active,.canvasQuickNav button:hover{background:#f3dedb!important}
+ #canvasWorkspace{
+   display:grid!important;grid-template-columns:minmax(0,1fr) 330px!important;
+   width:100vw!important;max-width:none!important;height:calc(100vh - 114px)!important;
+   margin:0!important;overflow:hidden!important;background:#e8e6e4!important
+ }
+ #canvasStageWrap{
+   width:auto!important;max-width:none!important;height:100%!important;overflow:auto!important;
+   padding:34px 56px 110px!important;background:#e8e6e4!important;
+ }
+ #canvasPage{
+   margin:0 auto!important;transform-origin:top center!important;
+   box-shadow:0 3px 18px rgba(47,41,38,.18)!important;border:1px solid #d6d2cf!important
+ }
+ #canvasInspector{
+   display:block!important;position:relative!important;inset:auto!important;
+   width:330px!important;max-width:330px!important;height:100%!important;overflow:auto!important;
+   margin:0!important;padding:18px 16px 100px!important;border-radius:0!important;
+   border:0!important;border-left:1px solid #ddd5d0!important;background:#fffaf7!important;
+   box-shadow:none!important
+ }
+ #canvasQuickDrawer{
+   position:fixed!important;left:0!important;right:330px!important;top:114px!important;
+   width:auto!important;max-width:none!important;margin:0!important;padding:10px 22px!important;
+   border-radius:0!important;z-index:38!important;background:#fffaf7!important;
+   border-bottom:1px solid #ded8d4!important;box-shadow:0 7px 15px rgba(50,40,35,.08)!important
+ }
+ #canvasQuickDrawer.open{display:flex!important;gap:7px!important;flex-wrap:wrap!important}
+ .graphModal{width:min(1180px,94vw)!important;max-width:1180px!important}
+ .graphBuilderLayout{grid-template-columns:minmax(390px,.9fr) minmax(480px,1.25fr)!important;align-items:start!important}
+ .graphPreviewWrap{position:sticky!important;top:8px!important}
+}
+@media (min-width:1400px){
+ #canvasWorkspace{grid-template-columns:minmax(0,1fr) 380px!important}
+ #canvasInspector{width:380px!important;max-width:380px!important}
+ #canvasQuickDrawer{right:380px!important}
+ #canvasStageWrap{padding-left:80px!important;padding-right:80px!important}
+}
+.graphModal .presetModalHead{position:sticky;top:0;z-index:5;background:#fffaf7;padding-bottom:6px}
+.graphTopTools{display:grid;gap:8px;position:sticky;top:54px;z-index:4;background:#fffaf7;padding:4px 0 10px}
+.graphTopTools .graphPresets{order:1}
+.graphTopTools .formulaTemplateGrid{order:2}
+.graphTopTools .formulaTemplateGrid button{min-height:58px!important}
+.graphTopTools .formulaTemplateGrid button b{font-size:19px!important}
+.graphBuilderLayout{margin-top:4px}
+.graphControls .graphVisualBuilder{display:none!important}
+.graphCurveRow.activeCurve{outline:2px solid #e8aaa9;outline-offset:2px;background:#fff3f1}
+.graphAutoRangeNote{font-size:8px;color:#998078;margin-top:4px}
+</style>
+
 </head>
-<body>
+<body class="v57">
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 56</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 57</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -2919,7 +2993,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 56";
+ $("#headerEyebrow").textContent="VERSION 57";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -3761,7 +3835,18 @@ function graphEval(expr,x){
 function graphSvg(settings,w=520,h=330){
  const g={...graphDefault(),...(settings||{})};
  const pad=34,plotW=w-pad*2,plotH=h-pad*2;
- const xMin=Number(g.xMin),xMax=Number(g.xMax),yMin=Number(g.yMin),yMax=Number(g.yMax);
+ let xMin=Number(g.xMin),xMax=Number(g.xMax),yMin=Number(g.yMin),yMax=Number(g.yMax);
+ // Preserve equal visual units and automatically reveal more x/y when the object is resized.
+ const dataAspect=(xMax-xMin)/(yMax-yMin), viewAspect=plotW/plotH;
+ if(Number.isFinite(dataAspect)&&Number.isFinite(viewAspect)&&dataAspect>0&&viewAspect>0){
+   if(viewAspect>dataAspect){
+     const cx=(xMin+xMax)/2,newSpan=(yMax-yMin)*viewAspect;
+     xMin=cx-newSpan/2;xMax=cx+newSpan/2;
+   }else{
+     const cy=(yMin+yMax)/2,newSpan=(xMax-xMin)/viewAspect;
+     yMin=cy-newSpan/2;yMax=cy+newSpan/2;
+   }
+ }
  const sx=x=>pad+(x-xMin)/(xMax-xMin)*plotW;
  const sy=y=>h-pad-(y-yMin)/(yMax-yMin)*plotH;
  const escAttr=s=>String(s).replace(/"/g,"&quot;");
@@ -3770,8 +3855,8 @@ function graphSvg(settings,w=520,h=330){
  out+=`<rect x="0" y="0" width="${w}" height="${h}" rx="12" fill="#fffefb"/>`;
 
  if(g.showGrid){
-   const xStep=(xMax-xMin)<=12?1:(xMax-xMin)<=30?2:5;
-   const yStep=(yMax-yMin)<=12?1:(yMax-yMin)<=30?2:5;
+   const niceStep=span=>{const raw=span/10,p=10**Math.floor(Math.log10(raw)),n=raw/p;return (n<=1?1:n<=2?2:n<=5?5:10)*p};
+   const xStep=niceStep(xMax-xMin),yStep=niceStep(yMax-yMin);
    for(let x=Math.ceil(xMin/xStep)*xStep;x<=xMax;x+=xStep){
      out+=`<line x1="${sx(x)}" y1="${pad}" x2="${sx(x)}" y2="${h-pad}" stroke="${Math.abs(x)<1e-9?"#c8c2bd":"#ece8e4"}" stroke-width="${Math.abs(x)<1e-9?1.2:.8}"/>`;
      if(g.showLabels&&Math.abs(x)>1e-9)out+=`<text x="${sx(x)}" y="${h-pad+16}" text-anchor="middle" font-size="9" fill="#8b847f">${x}</text>`;
@@ -3841,13 +3926,29 @@ window.openGraphDialog=function(editId=""){
  graphDraft=JSON.parse(JSON.stringify(old?.graph||graphDefault()));
  openModal(`<div class="graphModal">
    <div class="presetModalHead"><div><span class="eyebrow">MATHEMATIK</span><h2>${old?"Graph bearbeiten":"Graph erstellen"}</h2></div><button class="miniIcon" onclick="closeModal()">×</button></div>
-   <div class="graphPresets">
-     <button onclick="applyGraphPreset('linear')">╱ Gerade</button>
-     <button onclick="applyGraphPreset('parabola')">∪ Parabel</button>
-     <button onclick="applyGraphPreset('waves')">〰 Sin + Cos</button>
-     <button onclick="applyGraphPreset('crazyWaves')">≋ Mehrere Wellen</button>
-     <button onclick="applyGraphPreset('reciprocal')">⌁ Hyperbel</button>
-     <button onclick="applyGraphPreset('exp')">↗ Exponential</button>
+   <div class="graphTopTools">
+     <div class="graphPresets">
+       <button onclick="applyGraphPreset('linear')">╱ Gerade</button>
+       <button onclick="applyGraphPreset('parabola')">∪ Parabel</button>
+       <button onclick="applyGraphPreset('waves')">〰 Sin + Cos</button>
+       <button onclick="applyGraphPreset('crazyWaves')">≋ Mehrere Wellen</button>
+       <button onclick="applyGraphPreset('reciprocal')">⌁ Hyperbel</button>
+       <button onclick="applyGraphPreset('exp')">↗ Exponential</button>
+     </div>
+     <div class="formulaTemplateGrid visualOnly">
+       <button onclick="graphVisualInsert('x')"><b>x</b><span>Variable</span></button>
+       <button onclick="graphVisualInsert('power')"><b>xⁿ</b><span>Exponent</span></button>
+       <button onclick="graphVisualInsert('sqrt')"><b>√x</b><span>Wurzel</span></button>
+       <button onclick="graphVisualInsert('frac')"><b>½</b><span>Bruch</span></button>
+       <button onclick="graphVisualInsert('sin')"><b>sin</b><span>Sinus</span></button>
+       <button onclick="graphVisualInsert('cos')"><b>cos</b><span>Cosinus</span></button>
+       <button onclick="graphVisualInsert('tan')"><b>tan</b><span>Tangens</span></button>
+       <button onclick="graphVisualInsert('abs')"><b>|x|</b><span>Betrag</span></button>
+       <button onclick="graphVisualInsert('exp')"><b>eˣ</b><span>Exponential</span></button>
+       <button onclick="graphVisualInsert('plus')"><b>＋</b><span>Plus</span></button>
+       <button onclick="graphVisualInsert('minus')"><b>−</b><span>Minus</span></button>
+       <button onclick="graphVisualInsert('times')"><b>×</b><span>Mal</span></button>
+     </div>
    </div>
    <div class="graphBuilderLayout">
      <div class="graphControls">
@@ -3859,6 +3960,7 @@ window.openGraphDialog=function(editId=""){
          <label>y min<input id="gyMin" type="number" step="any" value="${graphDraft.yMin}" onchange="syncGraphDraft()"></label>
          <label>y max<input id="gyMax" type="number" step="any" value="${graphDraft.yMax}" onchange="syncGraphDraft()"></label>
        </div>
+       <div class="graphAutoRangeNote">Beim Skalieren des Graph-Objekts werden automatisch mehr/weniger x- und y-Bereiche gezeigt – keine weißen Lücken.</div>
        <div class="graphSwitches">
          <label><input id="gGrid" type="checkbox" ${graphDraft.showGrid?"checked":""} onchange="syncGraphDraft()"> Gitternetz</label>
          <label><input id="gAxes" type="checkbox" ${graphDraft.showAxes?"checked":""} onchange="syncGraphDraft()"> Achsen</label>
@@ -3899,7 +4001,7 @@ window.openGraphDialog=function(editId=""){
 }
 function renderGraphCurveRows(){
  const root=$("#graphCurveRows");if(!root)return;
- root.innerHTML=(graphDraft.curves||[]).map((c,i)=>`<div class="graphCurveRow">
+ root.innerHTML=(graphDraft.curves||[]).map((c,i)=>`<div class="graphCurveRow ${i===graphActiveCurve?"activeCurve":""}" onclick="graphActiveCurve=${i};renderGraphCurveRows()">
    <span>f${i+1}(x)</span>
    <input class="graphExpr graphTokenInput" data-curve="${i}" value="${esc(c.expr||"")}" onfocus="graphActiveCurve=${i}" oninput="graphActiveCurve=${i};updateGraphCurve(${i},'expr',this.value)">
    <input class="graphColor" type="color" value="${c.color||"#e58f98"}" onchange="updateGraphCurve(${i},'color',this.value)">
@@ -3910,6 +4012,42 @@ function renderGraphCurveRows(){
 window.updateGraphCurve=function(i,prop,value){graphDraft.curves[i][prop]=value;renderGraphPreview()}
 
 let graphActiveCurve=0;
+
+window.graphVisualInsert=function(kind){
+ const inputs=$$(".graphExpr");
+ let input=inputs.find(x=>+x.dataset.curve===graphActiveCurve);
+ if(!input){
+   if(graphDraft.curves.length<4){addGraphCurve();input=$$(".graphExpr").find(x=>+x.dataset.curve===graphActiveCurve)}
+ }
+ if(!input)return;
+ input.focus();
+ const start=input.selectionStart??input.value.length,end=input.selectionEnd??start;
+ const selected=input.value.slice(start,end);
+ let insert="",cursor=null;
+ const inner=selected||"x";
+ if(kind==="x")insert="x";
+ if(kind==="power")insert=selected?`(${selected})^2`:"x^2";
+ if(kind==="sqrt")insert=`sqrt(${inner})`;
+ if(kind==="frac")insert=selected?`(${selected})/(x)`:"1/x";
+ if(kind==="sin")insert=`sin(${inner})`;
+ if(kind==="cos")insert=`cos(${inner})`;
+ if(kind==="tan")insert=`tan(${inner})`;
+ if(kind==="abs")insert=`abs(${inner})`;
+ if(kind==="exp")insert=`exp(${inner})`;
+ if(kind==="plus")insert="+";
+ if(kind==="minus")insert="-";
+ if(kind==="times")insert="*";
+ input.setRangeText(insert,start,end,"end");
+ if(!selected && ["sqrt","sin","cos","tan","abs","exp"].includes(kind)){
+   cursor=start+insert.length-2; input.setSelectionRange(cursor,cursor+1);
+ }else if(!selected&&kind==="power"){
+   cursor=start+2;input.setSelectionRange(cursor,cursor+1);
+ }
+ graphDraft.curves[+input.dataset.curve].expr=input.value;
+ renderGraphCurveRows();renderGraphPreview();
+ const again=$$(".graphExpr").find(x=>+x.dataset.curve===graphActiveCurve);if(again){again.focus()}
+}
+
 window.graphInsertToken=function(token){
  const inputs=$$(".graphExpr");
  const input=inputs.find(x=>+x.dataset.curve===graphActiveCurve)||inputs[0];
@@ -3935,7 +4073,7 @@ window.graphInsertToken=function(token){
 window.addGraphCurve=function(){
  if(graphDraft.curves.length>=4){cuteToast("Maximal 4 Funktionen");return}
  const colors=["#e58f98","#8ca8ce","#93a96f","#9a7db0"];
- graphDraft.curves.push({expr:"sin(x)",color:colors[graphDraft.curves.length]||"#777777",style:"solid",visible:true});
+ graphDraft.curves.push({expr:"",color:colors[graphDraft.curves.length]||"#777777",style:"solid",visible:true});graphActiveCurve=graphDraft.curves.length-1;
  renderGraphCurveRows();renderGraphPreview();
 }
 window.removeGraphCurve=function(i){if(graphDraft.curves.length<=1)return;graphDraft.curves.splice(i,1);renderGraphCurveRows();renderGraphPreview()}
@@ -3946,7 +4084,24 @@ window.syncGraphDraft=function(){
  graphDraft.showGrid=$("#gGrid").checked;graphDraft.showAxes=$("#gAxes").checked;graphDraft.showLabels=$("#gLabels").checked;
  graphDraft.asymX=$("#gAsymX").value;graphDraft.asymY=$("#gAsymY").value;renderGraphPreview();
 }
-window.applyGraphPreset=function(name){graphDraft=graphPreset(name);renderGraphCurveRows();openGraphDialogRefreshFields();renderGraphPreview();cuteToast("Graph-Vorlage eingesetzt ♡")}
+window.applyGraphPreset=function(name){
+ const preset=graphPreset(name), incoming=preset.curves||[];
+ const colors=["#e58f98","#8ca8ce","#93a96f","#9a7db0"];
+ // If the initial untouched default is still present, use it as the first slot.
+ const untouched=graphDraft.curves.length===1&&graphDraft.curves[0].expr==="x^2";
+ if(untouched)graphDraft.curves=[];
+ incoming.forEach(c=>{
+   if(graphDraft.curves.length>=4)return;
+   graphDraft.curves.push({...c,color:c.color||colors[graphDraft.curves.length]});
+ });
+ graphActiveCurve=Math.max(0,graphDraft.curves.length-1);
+ // expand range instead of replacing user's existing range
+ graphDraft.xMin=Math.min(graphDraft.xMin,preset.xMin);graphDraft.xMax=Math.max(graphDraft.xMax,preset.xMax);
+ graphDraft.yMin=Math.min(graphDraft.yMin,preset.yMin);graphDraft.yMax=Math.max(graphDraft.yMax,preset.yMax);
+ if(preset.asymX)graphDraft.asymX=[graphDraft.asymX,preset.asymX].filter(Boolean).join(",");
+ if(preset.asymY)graphDraft.asymY=[graphDraft.asymY,preset.asymY].filter(Boolean).join(",");
+ renderGraphCurveRows();openGraphDialogRefreshFields();renderGraphPreview();cuteToast("Als neue Funktion hinzugefügt ♡");
+}
 function openGraphDialogRefreshFields(){
  [["gxMin","xMin"],["gxMax","xMax"],["gyMin","yMin"],["gyMax","yMax"],["gAsymX","asymX"],["gAsymY","asymY"]].forEach(([idv,p])=>{if($("#"+idv))$("#"+idv).value=graphDraft[p]??""});
  if($("#gGrid"))$("#gGrid").checked=!!graphDraft.showGrid;if($("#gAxes"))$("#gAxes").checked=!!graphDraft.showAxes;if($("#gLabels"))$("#gLabels").checked=!!graphDraft.showLabels;
@@ -5134,13 +5289,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 56: echter Live-Refresh ===== */
+/* ===== VERSION 57: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 56 timetable parser ===== */
+/* ===== VERSION 57 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -5149,7 +5304,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 56: dynamic classes ===== */
+/* ===== VERSION 57: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -5158,11 +5313,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 56: raster-exact timetable ===== */
+/* ===== VERSION 57: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 56 stability fixes ===== */
+/* ===== VERSION 57 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -5175,7 +5330,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
 
-/* ===== VERSION 56 — stable redesign ===== */
+/* ===== VERSION 57 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -5244,7 +5399,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 56 — notebook label + timetable repair ===== */
+/* ===== VERSION 57 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -5311,7 +5466,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .notebookAbbr{font-size:16px}
 }
 
-/* ===== VERSION 56 — Basisplan / Entfall / Hitzestunden ===== */
+/* ===== VERSION 57 — Basisplan / Entfall / Hitzestunden ===== */
 .basisCancelled{
  opacity:.82;
  border-style:dashed!important;
@@ -5349,7 +5504,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  border-color:#dbc8c1!important
 }
 
-/* ===== VERSION 56 — Current vs Basis + moved lesson logic ===== */
+/* ===== VERSION 57 — Current vs Basis + moved lesson logic ===== */
 .planModeSwitch{
  display:grid;
  grid-template-columns:1.35fr 1fr;
@@ -5418,7 +5573,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .planModeSwitch button b{font-size:10px}
 }
 
-/* ===== VERSION 56 — safer row split / replacement handling ===== */
+/* ===== VERSION 57 — safer row split / replacement handling ===== */
 .changedLesson{
  background:linear-gradient(90deg,#fffdfa,#fffaf6)!important;
 }
@@ -5436,13 +5591,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  margin-bottom:3px;
 }
 
-/* ===== VERSION 56 — Mehrfachstunden mit Pause dazwischen ===== */
+/* ===== VERSION 57 — Mehrfachstunden mit Pause dazwischen ===== */
 .splitMultiBadge{
  opacity:.86;
  font-size:8px!important;
 }
 
-/* ===== VERSION 56 — Auto / Manuell Hitzestunden ===== */
+/* ===== VERSION 57 — Auto / Manuell Hitzestunden ===== */
 .heatPlanControl{
  display:flex;
  align-items:center;
@@ -5518,7 +5673,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .heatModeButtons button{min-width:31px;padding:7px 5px}
 }
 
-/* ===== VERSION 56 — clearer navigation + polish ===== */
+/* ===== VERSION 57 — clearer navigation + polish ===== */
 :root{
  --sb-panel:#fffdfa;
  --sb-panel-soft:#fff8f4;
@@ -5694,7 +5849,7 @@ button.primary,button.ghost,.iconbtn{
 }
 </style>
 <style id="v43-compact-ui">
-/* VERSION 56 — compact information architecture */
+/* VERSION 57 — compact information architecture */
 #nav{grid-template-columns:repeat(5,1fr)!important;width:min(94vw,520px)!important}
 #nav button{min-width:0!important}
 .view{padding-bottom:100px!important}
@@ -5727,7 +5882,7 @@ button.primary,button.ghost,.iconbtn{
 
 
 <style id="v44-learning-navigation">
-/* VERSION 56 — Fächer / Lernsets / Study sauber getrennt */
+/* VERSION 57 — Fächer / Lernsets / Study sauber getrennt */
 .learningBackRow{
  display:flex;
  margin:-2px 0 12px;
@@ -6057,13 +6212,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 56: echter Live-Refresh ===== */
+/* ===== VERSION 57: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 56 timetable parser ===== */
+/* ===== VERSION 57 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -6072,7 +6227,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 56: dynamic classes ===== */
+/* ===== VERSION 57: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -6081,11 +6236,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 56: raster-exact timetable ===== */
+/* ===== VERSION 57: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 56 stability fixes ===== */
+/* ===== VERSION 57 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -6098,7 +6253,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
 
-/* ===== VERSION 56 — stable redesign ===== */
+/* ===== VERSION 57 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -6167,7 +6322,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 56 — notebook label + timetable repair ===== */
+/* ===== VERSION 57 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -6234,7 +6389,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .notebookAbbr{font-size:16px}
 }
 
-/* ===== VERSION 56 — Basisplan / Entfall / Hitzestunden ===== */
+/* ===== VERSION 57 — Basisplan / Entfall / Hitzestunden ===== */
 .basisCancelled{
  opacity:.82;
  border-style:dashed!important;
@@ -6272,7 +6427,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  border-color:#dbc8c1!important
 }
 
-/* ===== VERSION 56 — Current vs Basis + moved lesson logic ===== */
+/* ===== VERSION 57 — Current vs Basis + moved lesson logic ===== */
 .planModeSwitch{
  display:grid;
  grid-template-columns:1.35fr 1fr;
@@ -6341,7 +6496,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .planModeSwitch button b{font-size:10px}
 }
 
-/* ===== VERSION 56 — safer row split / replacement handling ===== */
+/* ===== VERSION 57 — safer row split / replacement handling ===== */
 .changedLesson{
  background:linear-gradient(90deg,#fffdfa,#fffaf6)!important;
 }
@@ -6359,13 +6514,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  margin-bottom:3px;
 }
 
-/* ===== VERSION 56 — Mehrfachstunden mit Pause dazwischen ===== */
+/* ===== VERSION 57 — Mehrfachstunden mit Pause dazwischen ===== */
 .splitMultiBadge{
  opacity:.86;
  font-size:8px!important;
 }
 
-/* ===== VERSION 56 — Auto / Manuell Hitzestunden ===== */
+/* ===== VERSION 57 — Auto / Manuell Hitzestunden ===== */
 .heatPlanControl{
  display:flex;
  align-items:center;
@@ -6441,7 +6596,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .heatModeButtons button{min-width:31px;padding:7px 5px}
 }
 
-/* ===== VERSION 56 — clearer navigation + polish ===== */
+/* ===== VERSION 57 — clearer navigation + polish ===== */
 :root{
  --sb-panel:#fffdfa;
  --sb-panel-soft:#fff8f4;
@@ -6617,7 +6772,7 @@ button.primary,button.ghost,.iconbtn{
 }
 </style>
 <style id="v43-compact-ui">
-/* VERSION 56 — compact information architecture */
+/* VERSION 57 — compact information architecture */
 #nav{grid-template-columns:repeat(5,1fr)!important;width:min(94vw,520px)!important}
 #nav button{min-width:0!important}
 .view{padding-bottom:100px!important}
@@ -6650,7 +6805,7 @@ button.primary,button.ghost,.iconbtn{
 
 
 <style id="v44-learning-navigation">
-/* VERSION 56 — Fächer / Lernsets / Study sauber getrennt */
+/* VERSION 57 — Fächer / Lernsets / Study sauber getrennt */
 .learningBackRow{
  display:flex;
  margin:-2px 0 12px;
@@ -7121,7 +7276,7 @@ const timetableSlots=[
  {start:"15:45",end:"16:30"}
 ];
 function fillCancelledSlots(lessons){
- // VERSION 56:
+ // VERSION 57:
  // SchoolBloom darf NIE aus einer nicht erkannten/leeren PDF-Zelle
  // automatisch "Entfall" erfinden.
  // Nur Einträge, die wirklich aus der PDF gelesen wurden, werden gezeigt.
@@ -7483,7 +7638,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
         stroke-width: 13px;
       }
     
-/* ===== VERSION 56 — stable redesign ===== */
+/* ===== VERSION 57 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -7552,7 +7707,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 56 — notebook label + timetable repair ===== */
+/* ===== VERSION 57 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -7619,7 +7774,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  .notebookAbbr{font-size:16px}
 }
 
-/* ===== VERSION 56 — Basisplan / Entfall / Hitzestunden ===== */
+/* ===== VERSION 57 — Basisplan / Entfall / Hitzestunden ===== */
 .basisCancelled{
  opacity:.82;
  border-style:dashed!important;
@@ -7657,7 +7812,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  border-color:#dbc8c1!important
 }
 
-/* ===== VERSION 56 — Current vs Basis + moved lesson logic ===== */
+/* ===== VERSION 57 — Current vs Basis + moved lesson logic ===== */
 .planModeSwitch{
  display:grid;
  grid-template-columns:1.35fr 1fr;
@@ -7726,7 +7881,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  .planModeSwitch button b{font-size:10px}
 }
 
-/* ===== VERSION 56 — safer row split / replacement handling ===== */
+/* ===== VERSION 57 — safer row split / replacement handling ===== */
 .changedLesson{
  background:linear-gradient(90deg,#fffdfa,#fffaf6)!important;
 }
@@ -7744,13 +7899,13 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  margin-bottom:3px;
 }
 
-/* ===== VERSION 56 — Mehrfachstunden mit Pause dazwischen ===== */
+/* ===== VERSION 57 — Mehrfachstunden mit Pause dazwischen ===== */
 .splitMultiBadge{
  opacity:.86;
  font-size:8px!important;
 }
 
-/* ===== VERSION 56 — Auto / Manuell Hitzestunden ===== */
+/* ===== VERSION 57 — Auto / Manuell Hitzestunden ===== */
 .heatPlanControl{
  display:flex;
  align-items:center;
@@ -7826,7 +7981,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  .heatModeButtons button{min-width:31px;padding:7px 5px}
 }
 
-/* ===== VERSION 56 — clearer navigation + polish ===== */
+/* ===== VERSION 57 — clearer navigation + polish ===== */
 :root{
  --sb-panel:#fffdfa;
  --sb-panel-soft:#fff8f4;
