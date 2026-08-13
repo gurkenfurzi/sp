@@ -1,27 +1,31 @@
-# VERSION 34 — Cute UX + Sticker Library
+# VERSION 35 — Stabiler Neuaufbau
 
-Basis: stabile VERSION 33.
+Basis: VERSION 31 (nicht V34).
 
-Neu:
-- Study Pet: sichtbarer „☕ Pause starten“-Button.
-- Lernzeit und Pausenzeit bleiben frei einstellbar.
-- Timer zeigt klar Fokus / Pause und passende Start-/Fortsetzen-Texte.
+Wichtigste Reparaturen
+- Stundenplan: V33/V34-Overlap-Logik entfernt. Wieder V31-PDF-Engine.
+- Nur exakt doppelte Parser-Datensätze werden herausgefiltert; nichts wird geraten, zusammengeführt oder umbenannt.
+- Formen-Bug an der Ursache repariert: Normales Text-/Objekt-Rendering stellt SVG-Formen danach automatisch wieder her.
+- Formen verschwinden beim Einfügen/Auswählen von Text nicht mehr.
 
-Sticker:
-- neue SchoolBloom-eigene Stickerbibliothek, inspiriert von Retro-Computer-, Papier- und Study-Aesthetic,
-  aber komplett neu gezeichnet statt Bilder zu kopieren.
-- Kategorien: Study, Retro, Papier, Cute, Emoji.
-- u.a. Mini Browser, Search Bar, Folder, Photo Window, Popup, Spiral Note, Checklist,
-  Memo, Tab Note, Love Letter, Lined Card, Washi Tape, Flower Row, Bow, Cloud.
-- Sticker sind skalierbar/drehbar wie andere Editor-Objekte.
+Notizbücher
+- Verwendet direkt das vom Nutzer hochgeladene Notebook-SVG.
+- Die ursprünglichen zwei Rosatöne sind pro Fach separat einstellbar:
+  - Hauptfarbe
+  - dunkle Akzentfarbe
+- Live-Vorschau im Cover-Editor.
 
-Notizbücher:
-- süßerer echter Notizbuch-Look mit Spiralbindung, Ribbon, Innenrand und Papierdetails.
-- Themenordner ebenfalls weicher und übersichtlicher gestaltet.
+Editor / Übersicht
+- Stabiler Canva-artiger Schnellbereich ohne DOM-Umbauten:
+  - Hinzufügen
+  - Text
+  - Elemente
+  - Anordnen
+  - Ansicht
+- Darunter nur die Werkzeuge der ausgewählten Kategorie.
+- Bestehende V30/V31 Zeichen-, Auswahl-, Zoom- und Pfadlogik bleibt erhalten.
+- Fächer sind über einen direkten Home-Shortcut leichter erreichbar.
+- Study Pet hat einen sichtbaren „Pause starten“-Button.
 
-Übersicht:
-- Study-Bereich klarer gruppiert.
-- More-Karten heller und ruhiger.
-- Sticker-Menü in Kategorien statt einer großen unsortierten Wand.
-
-Stundenplan bleibt auf VERSION-33-Logik.
+Hinweis
+- Diese Version priorisiert Stabilität und klare Navigation.

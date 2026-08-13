@@ -633,13 +633,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 34: echter Live-Refresh ===== */
+/* ===== VERSION 35: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 34 timetable parser ===== */
+/* ===== VERSION 35 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -648,7 +648,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 34: dynamic classes ===== */
+/* ===== VERSION 35: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -657,11 +657,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 34: raster-exact timetable ===== */
+/* ===== VERSION 35: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 34 stability fixes ===== */
+/* ===== VERSION 35 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -674,166 +674,73 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
 
-/* ===== VERSION 34 — stable editor cleanup ===== */
-.canvasTopbar{
- position:sticky;top:0;z-index:120;
- background:rgba(255,250,246,.96);
- backdrop-filter:blur(18px);
- border-bottom:1px solid #edd8d2;
+/* ===== VERSION 35 — stable redesign ===== */
+.newSvgNotebook{
+ position:relative!important;min-height:230px!important;padding:0!important;
+ border:0!important;background:transparent!important;overflow:visible!important;
+ box-shadow:none!important;display:block!important;text-align:left!important;
 }
-.editorDock{
- position:sticky;top:86px;z-index:112;
- display:flex!important;gap:6px!important;
- overflow-x:auto!important;
- padding:7px!important;
- background:rgba(255,250,246,.96)!important;
- backdrop-filter:blur(16px);
- border:1px solid #ead2cb!important;
- border-radius:14px!important;
- scrollbar-width:none;
+.newSvgNotebook:before,.newSvgNotebook:after{display:none!important}
+.notebookArt{display:block;width:100%;height:100%;position:absolute;inset:0}
+.subjectNotebookSvg{width:100%;height:100%;display:block;filter:drop-shadow(0 10px 12px rgba(115,70,86,.12))}
+.notebookLabel{
+ position:absolute;z-index:3;left:30%;right:17%;top:22%;height:24%;
+ display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;
+ align-items:center;gap:2px 8px;color:#6b4d58;text-align:left
 }
-.editorDock::-webkit-scrollbar{display:none}
-.editorDock button{
- flex:0 0 auto!important;
- min-width:44px!important;
- min-height:42px!important;
- border-radius:10px!important;
- padding:7px!important;
-}
-.stylePresetBar{
- position:sticky;top:138px;z-index:111;
- display:flex!important;gap:6px!important;overflow-x:auto!important;
- padding:6px 2px!important;scrollbar-width:none;
- background:rgba(255,250,246,.92);
- backdrop-filter:blur(12px);
-}
-.stylePresetBar::-webkit-scrollbar{display:none}
-.stylePresetBar button{
- flex:0 0 auto!important;
- padding:8px 12px!important;
- border-radius:999px!important;
- font-size:11px!important;
-}
-.editorZoomBar{
- position:sticky!important;top:183px!important;z-index:110!important;
- margin:4px 0 8px!important;
-}
-.canvasViewport{
- max-height:70vh!important;
- overflow:auto!important;
- overscroll-behavior:contain;
- padding:12px!important;
- background:#f2ebe7!important;
- border-radius:16px!important;
-}
-.canvasStage{
- flex:0 0 auto!important;
- transform-origin:top center!important;
-}
-.objectPanel{
- border-radius:14px!important;
- padding:10px!important;
- margin-top:8px!important;
-}
-.canvasInspector{
- max-height:42vh;
- overflow:auto;
-}
-@media(max-width:600px){
- .canvasTopbar{padding:7px!important}
- .editorDock{top:82px}
- .stylePresetBar{top:132px}
- .editorZoomBar{top:176px!important}
- .canvasViewport{max-height:64vh!important}
-}
+.notebookLabel .notebookEmoji{grid-row:1/3;font-size:25px!important}
+.notebookLabel strong{font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.notebookLabel small{font-size:9px;opacity:.68;white-space:nowrap}
+.coverPreview{width:180px;height:180px;margin:8px auto 14px}
+.coverPreview svg{width:100%;height:100%}
 
-/* ===== VERSION 34 — cute organized UI ===== */
-.studyFocusPanel{padding:16px!important}
-.studyTimerActions{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:center;margin-top:8px}
-.breakStartBtn{border:1px solid #d8dfbd;background:#f6f8e9;color:#758356;border-radius:14px;padding:12px 13px;font-weight:900;box-shadow:0 4px 0 rgba(188,199,148,.14)}
-#timerBtn{min-width:0}
-.durationControls{gap:8px!important;margin-top:12px}
-.durationControls .mini{border:1px solid #ead5ce;background:#fffaf6;border-radius:15px;padding:10px!important}
-.durationControls input{background:white!important}
-#view-study>.section{background:rgba(255,250,246,.55);border:1px solid rgba(233,207,199,.55);border-radius:20px;padding:13px}
-#view-more .grid2 .card{border:1px solid #ead4cd!important;background:#fffaf5!important;color:#765f56!important;box-shadow:0 6px 16px rgba(132,95,84,.06)!important}
-#view-more .grid2 .card h3{color:#715a52}
-
-.notebookGrid{gap:14px!important}
-.notebook{
- min-height:180px!important;
- border-radius:11px 24px 24px 11px!important;
- padding:20px 15px 17px 34px!important;
- background:
-   linear-gradient(90deg,rgba(255,255,255,.16),transparent 26%),
-   var(--cover)!important;
- border:1px solid rgba(130,88,78,.16)!important;
- box-shadow:0 11px 24px rgba(121,88,79,.10), inset 0 0 0 6px rgba(255,255,255,.15)!important;
+.canvasQuickNav{
+ display:flex;gap:5px;overflow-x:auto;padding:6px;margin:6px 0 0;
+ position:sticky;top:82px;z-index:118;background:rgba(255,250,246,.97);
+ backdrop-filter:blur(16px);border:1px solid #ead2cb;border-radius:15px;scrollbar-width:none
 }
-.notebook:before{
- left:13px!important;width:10px!important;opacity:.9!important;
- background:
-  radial-gradient(circle at 50% 10px,#fffaf5 0 4px,#b8877f 4.6px 5.8px,transparent 6px) 0 0/10px 22px repeat-y!important;
+.canvasQuickNav::-webkit-scrollbar{display:none}
+.canvasQuickNav button{
+ flex:1 0 64px;border:0;background:transparent;color:#80685f;border-radius:10px;
+ min-height:50px;padding:5px;display:grid;place-items:center;font-size:18px;font-weight:900
 }
-.notebook:after{
- inset:12px 10px 11px 28px!important;
- border:1.5px dashed rgba(122,82,72,.14)!important;
- border-radius:8px 18px 18px 8px!important;
+.canvasQuickNav button span{font-size:8px;font-weight:800}
+.canvasQuickNav button.active{background:#f5c1bd;color:#fff}
+.canvasQuickDrawer{
+ display:flex;gap:6px;overflow-x:auto;padding:7px;margin:5px 0 7px;
+ position:sticky;top:140px;z-index:117;background:rgba(255,250,246,.97);
+ backdrop-filter:blur(16px);border:1px solid #ead2cb;border-radius:15px;scrollbar-width:none
 }
-.notebookEmoji{position:relative;z-index:2;font-size:31px!important}
-.notebookName{position:relative;z-index:2;font-family:Georgia,serif;font-size:21px!important;margin-top:16px!important;letter-spacing:-.02em}
-.notebookMeta{position:relative;z-index:2;background:rgba(255,255,255,.38);display:inline-block;padding:5px 8px;border-radius:999px;margin-top:10px!important}
-.notebook .notebookCorner{position:absolute;right:-13px;top:-13px;width:55px;height:55px;border-radius:50%;background:rgba(255,255,255,.25)}
-.notebook .notebookRibbon{position:absolute;right:18px;top:0;width:26px;height:42px;background:rgba(255,255,255,.35);clip-path:polygon(0 0,100% 0,100% 100%,50% 78%,0 100%)}
-
-.subjectHero{
- position:relative;overflow:hidden!important;
- border-radius:26px 26px 18px 18px!important;
- box-shadow:0 10px 24px rgba(130,90,82,.10)!important
+.canvasQuickDrawer::-webkit-scrollbar{display:none}
+.canvasQuickDrawer button{
+ flex:0 0 74px;min-height:58px;border:1px solid #ead6d0;background:white;color:#745e56;
+ border-radius:12px;padding:6px;display:grid;place-items:center;gap:2px
 }
-.subjectHero:after{
- content:"";position:absolute;right:-35px;top:-35px;width:120px;height:120px;border-radius:50%;
- background:rgba(255,255,255,.25);pointer-events:none
+.canvasQuickDrawer button b{font-size:17px}
+.canvasQuickDrawer button span{font-size:8px;font-weight:800}
+.editorDock{display:none!important}
+.stylePresetBar{display:none!important}
+.canvasViewport{max-height:67vh!important;margin-top:4px!important}
+.objectPanel{margin-top:7px!important}
+.studyTimerActions{display:grid;grid-template-columns:1fr 1fr 48px;gap:7px;margin-top:8px}
+.breakBtn{background:#f5f7e9!important;border-color:#d9e0b8!important;color:#768255!important}
+.homeSubjectsShortcut{
+ width:100%;border:1px solid #ead5cf;background:#fffaf5;color:#735d55;border-radius:18px;
+ padding:13px 15px;margin:0 0 17px;display:grid;grid-template-columns:40px 1fr auto;gap:9px;align-items:center;text-align:left
 }
-.topicFolderGrid{gap:12px!important}
-.topicFolder{
- min-height:126px!important;border-radius:17px 23px 20px 17px!important;
- position:relative;overflow:hidden;padding:19px 14px 14px!important;
- box-shadow:0 7px 16px rgba(121,89,78,.08)!important
-}
-.topicFolder:before{
- content:"";position:absolute;left:18px;top:0;width:74px;height:14px;border-radius:10px 10px 0 0;
- background:color-mix(in srgb,var(--topicbg),#fff 32%);
-}
-.topicFolder:after{
- content:"";position:absolute;inset:8px;border:1px dashed rgba(112,80,70,.14);border-radius:12px 18px 16px 12px;pointer-events:none
-}
-.topicFolder .ticon,.topicFolder .tname,.topicFolder .tmeta{position:relative;z-index:2}
-.topicFolder .ticon{font-size:24px!important}
-.topicFolder .tname{font-family:Georgia,serif;font-size:17px!important}
-.topicFolder .tmeta{background:rgba(255,255,255,.35);display:inline-block;padding:4px 7px;border-radius:999px}
-
-.stickerLibraryPanel{position:relative}
-.stickerTabs{display:flex;gap:6px;overflow-x:auto;margin:10px 0 9px;scrollbar-width:none}
-.stickerTabs::-webkit-scrollbar{display:none}
-.stickerTabs button{flex:0 0 auto;border:1px solid #e8d0c8;background:#fff;color:#826a61;border-radius:999px;padding:7px 11px;font-size:10px;font-weight:850}
-.stickerTabs button.active{background:#efb1ae;color:white;border-color:#efb1ae}
-.artStickerPicker{grid-template-columns:repeat(3,1fr)!important;gap:8px!important}
-.artStickerBtn{min-height:92px!important;padding:5px!important;display:flex!important;flex-direction:column;gap:2px;align-items:center;justify-content:center}
-.artStickerBtn span{display:block;width:68px;height:59px}
-.artStickerBtn svg{width:100%;height:100%;display:block}
-.artStickerBtn small{font-size:8px;color:#8a7168;font-weight:800}
-.emojiStickerBtn{font-size:23px!important}
-.artStickerObj{display:grid;place-items:center;padding:2px!important;background:transparent!important}
-.artStickerObj svg{width:100%;height:100%;display:block;pointer-events:none}
-
-#view-subjects .sectionHead,#view-study .sectionHead{margin-bottom:10px}
+.homeSubjectsShortcut>span:first-child{width:40px;height:40px;border-radius:12px;background:#f2b6b3;display:grid;place-items:center}
+.homeSubjectsShortcut div{display:grid;gap:2px}
+.homeSubjectsShortcut b{font-size:14px}
+.homeSubjectsShortcut small{font-size:10px;color:#a0887f}
+.homeSubjectsShortcut>span:last-child{font-size:24px;color:#b98b83}
+#view-subjects .sectionHead{position:sticky;top:0;z-index:8;background:linear-gradient(var(--bg) 76%,transparent);padding:8px 0}
+.notebookGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
 @media(max-width:520px){
- .studyTimerActions{grid-template-columns:1fr 1fr 48px}
- .studyTimerActions button{font-size:12px;padding:11px 7px}
- .notebook{min-height:168px!important;padding-left:31px!important}
- .notebookName{font-size:18px!important}
- .artStickerPicker{grid-template-columns:repeat(3,1fr)!important}
+ .newSvgNotebook{min-height:200px!important}
+ .notebookLabel{left:29%;right:16%;top:22%}
+ .notebookLabel strong{font-size:14px}
+ .canvasQuickNav{top:78px}
+ .canvasQuickDrawer{top:136px}
 }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.18/paper-full.min.js">
@@ -854,7 +761,7 @@ ensureHomeClockTimer();
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 34</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 35</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -930,8 +837,8 @@ ensureHomeClockTimer();
   </section>
 
   <section class="view" id="view-study">
-    <div class="panel studyFocusPanel">
-      <div class="rowBetween"><div><div class="eyebrow">STUDY PET</div><h2>Fokus & Pause</h2><div class="small">Stell deine Lern- und Pausenzeit selbst ein.</div></div><span class="badge" id="studyTodayBadge">0 min heute</span></div>
+    <div class="panel">
+      <div class="rowBetween"><div><div class="eyebrow">Focus</div><h2>Lernzeit</h2></div><span class="badge" id="studyTodayBadge">0 min heute</span></div>
       <div class="rowBetween" style="margin-top:12px"><span class="badge coin" id="coinBadge">🪙 0</span><button class="ghost" onclick="openPetShop()">Shop & Zimmer</button></div>
       <div id="petRoomMini" class="petRoom" style="margin-top:12px"><div class="window"></div><div class="rug"></div><div class="petShelf">📚</div><div class="petPlant">🌷</div><div class="petAvatarCute"><div class="petEar left"></div><div class="petEar right"></div><div class="petFace">• ᴥ •</div><div class="petBlush left"></div><div class="petBlush right"></div></div></div>
       <div class="durationControls">
@@ -940,8 +847,8 @@ ensureHomeClockTimer();
       </div>
       <div class="timer" id="timerDisplay">25:00</div>
       <div class="studyTimerActions">
-        <button class="primary" id="timerBtn" onclick="smartTimerButton()">▶ Fokus starten</button>
-        <button class="breakStartBtn" onclick="startCustomBreak()">☕ Pause starten</button>
+        <button class="primary" id="timerBtn" onclick="smartTimerButton()">▶ Fokus</button>
+        <button class="ghost breakBtn" onclick="startCustomBreak()">☕ Pause starten</button>
         <button class="ghost iconOnlyBtn" aria-label="Reset" title="Reset" onclick="resetTimer()">↻</button>
       </div>
       <div class="small" id="timerModeLabel" style="text-align:center;margin-top:10px">Fokus · fürs Lernen bekommst du Münzen.</div>
@@ -1008,7 +915,15 @@ ensureHomeClockTimer();
         </div>
       </div>
 
-      <div class="editorDock" aria-label="Werkzeuge">
+      <div class="canvasQuickNav">
+  <button class="active" onclick="editorOpenGroup('add',this)">＋<span>Hinzufügen</span></button>
+  <button onclick="editorOpenGroup('text',this)">T<span>Text</span></button>
+  <button onclick="editorOpenGroup('elements',this)">◇<span>Elemente</span></button>
+  <button onclick="editorOpenGroup('arrange',this)">▱<span>Anordnen</span></button>
+  <button onclick="editorOpenGroup('view',this)">⌗<span>Ansicht</span></button>
+</div>
+<div id="canvasQuickDrawer" class="canvasQuickDrawer"></div>
+<div class="editorDock" aria-label="Werkzeuge">
         <button title="Text" onclick="addCanvasText('body')"><svg viewBox="0 0 24 24"><path d="M5 5h14M12 5v14M8 19h8"/></svg></button>
         <button title="Überschrift" onclick="addCanvasText('h1')"><svg viewBox="0 0 24 24"><path d="M5 5v14M15 5v14M5 12h10M19 8v11M17 10l2-2 2 2"/></svg></button>
         <button title="Tabelle" onclick="openTableDialog()"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 10h18M9 4v16M15 4v16"/></svg></button>
@@ -1049,16 +964,9 @@ ensureHomeClockTimer();
         </div>
       </div>
 
-      <div id="stickerPanel" class="objectPanel stickerLibraryPanel" style="display:none">
-        <div class="rowBetween"><div><b>Sticker & Deko</b><div class="small">eigene SchoolBloom-Designs</div></div><button class="ghost" onclick="toggleStickerPanel()">Schließen</button></div>
-        <div class="stickerTabs">
-          <button class="active" onclick="setStickerCategory('study',this)">Study</button>
-          <button onclick="setStickerCategory('retro',this)">Retro</button>
-          <button onclick="setStickerCategory('paper',this)">Papier</button>
-          <button onclick="setStickerCategory('cute',this)">Cute</button>
-          <button onclick="setStickerCategory('emoji',this)">Emoji</button>
-        </div>
-        <div class="stickerPicker artStickerPicker" id="stickerPicker"></div>
+      <div id="stickerPanel" class="objectPanel" style="display:none">
+        <div class="rowBetween"><b>Sticker</b><button class="ghost" onclick="toggleStickerPanel()">Schließen</button></div>
+        <div class="stickerPicker" id="stickerPicker"></div>
       </div>
 
       <div class="objectPanel">
@@ -1398,7 +1306,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 34";
+ $("#headerEyebrow").textContent="VERSION 35";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -1550,8 +1458,8 @@ window.deleteFlash=function(){if(!data.flashcards.length)return;data.flashcards.
 window.openAddSubject=function(){
  openModal(`<h2>Fach erstellen</h2><div class="formGrid">
  <div><label>Name</label><input id="sName" placeholder="z. B. LF 8"></div>
- <div><label>Ordnerfarbe</label><input id="sColor" type="color" value="#f2b6b3"></div>
- <div><label>Coverfarbe</label><input id="sCover" type="color" value="#f7d2cf"></div>
+ <div><label>Ordnerfarbe</label><input id="sColor" type="color" value="#c8568e"></div>
+ <div><label>Coverfarbe</label><input id="sCover" type="color" value="#f4acc5"></div>
  <div><label>Symbol</label><select id="sEmoji"><option>🌸</option><option>🌷</option><option>🍀</option><option>🧸</option><option>⭐</option><option>🎀</option><option>🫐</option><option>🍓</option></select></div>
  </div><button class="primary" style="margin-top:12px" onclick="addSubject()">Erstellen</button>`)
 }
@@ -1742,102 +1650,9 @@ window.insertCanvasTable=function(){
  const cells=Array.from({length:rows},()=>Array.from({length:cols},()=>"..."));
  const o={id:id(),z:nextCanvasZ(),kind:"table",x:90,y:180,w:520,h:Math.max(100,rows*38),rows,cols,cells};canvasState.objects.push(o);closeModal();renderCanvasObjects();selectCanvasObject(o.id);pushHistory();
 }
-
-const emojiStickers=["🌸","🌷","🎀","🧸","⭐","✨","🍀","🍓","☁️","🌙","💗","📚","✏️","📝","🌼","🐻","🐰","🍵","💫","🌱"];
-
-const schoolBloomStickerArt={
- retroBrowser:{
-  category:"retro",name:"Mini Browser",
-  svg:`<svg viewBox="0 0 180 120"><rect x="5" y="8" width="170" height="104" rx="12" fill="#fff7f2" stroke="#9c685d" stroke-width="4"/><rect x="5" y="8" width="170" height="26" rx="12" fill="#f3b1ad" stroke="#9c685d" stroke-width="4"/><circle cx="22" cy="21" r="4" fill="#fff0d7"/><circle cx="36" cy="21" r="4" fill="#ffd8d2"/><rect x="18" y="45" width="144" height="14" rx="7" fill="#fff" stroke="#c48c82" stroke-width="3"/><path d="M24 80c20-24 39 14 58-5s39-8 55 9" fill="none" stroke="#a8c586" stroke-width="5" stroke-linecap="round"/><path d="m144 73 9 10 13-18" fill="none" stroke="#d98f8a" stroke-width="5" stroke-linecap="round"/></svg>`
- },
- searchBar:{
-  category:"retro",name:"Search",
-  svg:`<svg viewBox="0 0 190 70"><rect x="5" y="8" width="180" height="52" rx="21" fill="#fff8f3" stroke="#ae766a" stroke-width="4"/><circle cx="38" cy="34" r="10" fill="none" stroke="#9aa86e" stroke-width="4"/><path d="m46 42 10 10" stroke="#9aa86e" stroke-width="4" stroke-linecap="round"/><path d="M73 34h72" stroke="#d8a19a" stroke-width="4" stroke-linecap="round"/><path d="M151 23c8 4 8 18 0 22" fill="none" stroke="#d9a09a" stroke-width="4"/></svg>`
- },
- folder:{
-  category:"retro",name:"Folder",
-  svg:`<svg viewBox="0 0 150 110"><path d="M10 30h48l13-15h67a8 8 0 0 1 8 8v70a10 10 0 0 1-10 10H14A10 10 0 0 1 4 93V40a10 10 0 0 1 6-10Z" fill="#f6c7a7" stroke="#9e6758" stroke-width="4"/><path d="M10 43h132" stroke="#fff1dc" stroke-width="8" opacity=".6"/><path d="m114 65 7 7 13-15" fill="none" stroke="#a9ba79" stroke-width="5" stroke-linecap="round"/></svg>`
- },
- photoWindow:{
-  category:"retro",name:"Photo Window",
-  svg:`<svg viewBox="0 0 150 150"><rect x="8" y="6" width="134" height="138" rx="14" fill="#fff7f2" stroke="#aa7064" stroke-width="4"/><rect x="8" y="6" width="134" height="28" rx="14" fill="#f5b6af" stroke="#aa7064" stroke-width="4"/><circle cx="125" cy="20" r="4" fill="#fff"/><path d="M25 105c18-25 34-22 50 0 15-28 35-30 54 0" fill="#e3edc9" stroke="#9eae78" stroke-width="3"/><circle cx="49" cy="67" r="15" fill="#ffe4dc"/><circle cx="105" cy="67" r="15" fill="#dbe9b9"/><path d="M43 70h12M99 70h12" stroke="#795d55" stroke-width="3" stroke-linecap="round"/></svg>`
- },
- popup:{
-  category:"retro",name:"Tiny Popup",
-  svg:`<svg viewBox="0 0 170 100"><rect x="6" y="8" width="158" height="84" rx="13" fill="#fff8f3" stroke="#a66d63" stroke-width="4"/><rect x="6" y="8" width="158" height="24" rx="13" fill="#f0b0aa"/><path d="m148 16 8 8m0-8-8 8" stroke="#fff" stroke-width="3"/><text x="25" y="56" font-size="15" font-family="Arial" font-weight="700" fill="#77564d">time for a break?</text><rect x="52" y="66" width="60" height="17" rx="8" fill="#dce8bb"/><text x="73" y="79" font-size="10" font-family="Arial" font-weight="800" fill="#6e7953">okay</text></svg>`
- },
- spiralNote:{
-  category:"paper",name:"Spiral Note",
-  svg:`<svg viewBox="0 0 150 170"><rect x="18" y="15" width="120" height="145" rx="12" fill="#fffdf5" stroke="#b58278" stroke-width="3"/><path d="M42 15v145" stroke="#efb8b3" stroke-width="2"/><g fill="none" stroke="#8f7168" stroke-width="3">${Array.from({length:8},(_,i)=>`<path d="M25 ${27+i*16}c-14 0-14 10 0 10"/>`).join("")}</g><path d="M55 54h65M55 76h65M55 98h65M55 120h65" stroke="#d8aaa1" stroke-width="2"/><path d="m104 138 8-14 8 14Z" fill="#dce9b9" stroke="#91a46b" stroke-width="2"/></svg>`
- },
- checklist:{
-  category:"study",name:"Checklist",
-  svg:`<svg viewBox="0 0 160 190"><rect x="10" y="8" width="140" height="174" rx="15" fill="#fff8f2" stroke="#a87469" stroke-width="4"/><rect x="50" y="3" width="60" height="18" rx="9" fill="#f0b2aa"/><text x="56" y="42" font-size="16" font-family="Arial" font-weight="800" fill="#785c54">TO DO</text>${[0,1,2,3,4].map(i=>`<circle cx="35" cy="${65+i*23}" r="7" fill="#fff" stroke="#9aaa70" stroke-width="3"/><path d="M52 ${65+i*23}h70" stroke="#d4a49b" stroke-width="3" stroke-linecap="round"/>`).join("")}</svg>`
- },
- memo:{
-  category:"study",name:"Memo",
-  svg:`<svg viewBox="0 0 165 125"><rect x="8" y="13" width="149" height="104" rx="16" fill="#fde8e3" stroke="#b87c72" stroke-width="3"/><path d="M38 36h91M38 58h91M38 80h60" stroke="#c79388" stroke-width="3" stroke-linecap="round"/><path d="m15 26 22-12 9 18-23 11Z" fill="#eeb1a8" opacity=".85"/><path d="m125 99 10-18 10 18" fill="#d9e7b5" stroke="#92a46d" stroke-width="2"/></svg>`
- },
- noteTab:{
-  category:"paper",name:"Tab Note",
-  svg:`<svg viewBox="0 0 155 150"><path d="M16 20h87l16 14h21v103H16Z" fill="#fffaf0" stroke="#a97a70" stroke-width="3"/><path d="M103 20v22h37" fill="#f3c1bc" stroke="#a97a70" stroke-width="3"/><path d="M34 65h86M34 86h86M34 107h65" stroke="#d7aaa2" stroke-width="2.5"/></svg>`
- },
- envelope:{
-  category:"paper",name:"Love Letter",
-  svg:`<svg viewBox="0 0 170 120"><rect x="8" y="20" width="154" height="92" rx="12" fill="#fff8f0" stroke="#a56e63" stroke-width="4"/><path d="m12 29 73 55 73-55M12 105l51-45M158 105l-51-45" fill="none" stroke="#c28c81" stroke-width="3"/><path d="M85 70c-17-11-25-23-14-31 8-6 14 1 14 1s6-7 14-1c11 8 3 20-14 31Z" fill="#efaaa9"/></svg>`
- },
- linedCard:{
-  category:"paper",name:"Lined Card",
-  svg:`<svg viewBox="0 0 160 150"><path d="M15 12h130v125l-13 8H15Z" fill="#fffdf5" stroke="#a87970" stroke-width="3"/><path d="M28 42h102M28 64h102M28 86h102M28 108h102" stroke="#dcaea5" stroke-width="2"/><circle cx="35" cy="24" r="5" fill="#efb3ad"/><path d="m124 18 12 7-8 14-12-7z" fill="#dfe9bd"/></svg>`
- },
- tape:{
-  category:"cute",name:"Washi Tape",
-  svg:`<svg viewBox="0 0 180 65"><path d="M12 16 164 7l7 40-154 10Z" fill="#efb4ae" opacity=".86"/><path d="M30 22h20m15-3h20m15-3h20m15-3h20" stroke="#fff4e8" stroke-width="5" stroke-linecap="round" opacity=".75"/></svg>`
- },
- flowers:{
-  category:"cute",name:"Flower Row",
-  svg:`<svg viewBox="0 0 190 80">${[28,72,116,160].map((x,i)=>`<path d="M${x} 65c0-20 ${i%2?8:-8}-28 ${i%2?12:-12}-40" fill="none" stroke="#8fa36b" stroke-width="4"/><circle cx="${x+(i%2?12:-12)}" cy="25" r="10" fill="${i%2?"#f0aaa6":"#f7c2ae"}"/><circle cx="${x+(i%2?12:-12)}" cy="25" r="4" fill="#fff1c6"/>`).join("")}</svg>`
- },
- bow:{
-  category:"cute",name:"Bow",
-  svg:`<svg viewBox="0 0 150 95"><path d="M70 43C46 9 10 14 15 42c4 24 36 22 55 7M80 43c24-34 60-29 55-1-4 24-36 22-55 7" fill="#f2b1b4" stroke="#a6726d" stroke-width="4"/><rect x="63" y="35" width="24" height="24" rx="7" fill="#ffd8d1" stroke="#a6726d" stroke-width="4"/></svg>`
- },
- cloud:{
-  category:"cute",name:"Cloud",
-  svg:`<svg viewBox="0 0 170 90"><path d="M28 68c-25 0-23-32 1-34 6-25 43-27 53-6 16-17 49-5 45 17 27-1 30 23 8 23Z" fill="#fffaf5" stroke="#a77a70" stroke-width="3"/><path d="M66 55c8 7 18 7 26 0" fill="none" stroke="#a77a70" stroke-width="3" stroke-linecap="round"/></svg>`
- }
-};
-
-let stickerCategory="study";
-function renderStickerPicker(){
- const el=$("#stickerPicker");if(!el)return;
- if(stickerCategory==="emoji"){
-   el.innerHTML=emojiStickers.map(s=>`<button class="emojiStickerBtn" onclick="addSticker('${s}')">${s}</button>`).join("");
-   return;
- }
- const entries=Object.entries(schoolBloomStickerArt).filter(([,v])=>v.category===stickerCategory);
- el.innerHTML=entries.map(([id,v])=>`<button class="artStickerBtn" onclick="addArtSticker('${id}')" title="${esc(v.name)}"><span>${v.svg}</span><small>${esc(v.name)}</small></button>`).join("");
-}
-window.setStickerCategory=function(cat,btn){
- stickerCategory=cat;
- $$(".stickerTabs button").forEach(x=>x.classList.remove("active"));
- btn?.classList.add("active");
- renderStickerPicker();
-}
-window.toggleStickerPanel=function(){
- const p=$("#stickerPanel");
- p.style.display=p.style.display==="none"?"block":"none";
- if(p.style.display!=="none")renderStickerPicker();
-}
-window.addArtSticker=function(stickerId){
- if(!schoolBloomStickerArt[stickerId])return;
- const o={id:id(),z:nextCanvasZ(),kind:"artSticker",stickerId,x:125,y:135,w:150,h:110};
- canvasState.objects.push(o);renderCanvasObjects();selectCanvasObject(o.id);pushHistory();
-}
-window.addSticker=function(s){
- const o={id:id(),z:nextCanvasZ(),kind:"sticker",x:120,y:120,w:80,h:80,text:s};
- canvasState.objects.push(o);renderCanvasObjects();selectCanvasObject(o.id);pushHistory();
-}
+const stickers=["🌸","🌷","🎀","🧸","⭐","✨","🍀","🍓","🫐","☁️","🌙","💗","📚","✏️","📝","🌼","🐻","🐰","🍵","💫","🌱"];
+function renderStickerPicker(){const el=$("#stickerPicker");if(el)el.innerHTML=stickers.map(s=>`<button onclick="addSticker('${s}')">${s}</button>`).join("")}
+window.toggleStickerPanel=function(){const p=$("#stickerPanel");p.style.display=p.style.display==="none"?"block":"none"}
 
 window.addPaperSticker=function(type){
  const o={id:id(),z:nextCanvasZ(),kind:"paper",paperType:type,x:110,y:160,w:420,h:230,spacing:type==="grid"?20:28};
@@ -1857,7 +1672,6 @@ function layerName(o){
  if(o.kind==="merke")return "Merke";
  if(o.kind==="image")return "Bild";
  if(o.kind==="sticker")return "Sticker "+(o.text||"");
- if(o.kind==="artSticker")return "Sticker · "+(schoolBloomStickerArt[o.stickerId]?.name||"Deko");
  if(o.kind==="table")return "Tabelle";
  if(o.kind==="paper")return o.paperType==="grid"?"Karo-Zettel":o.paperType==="line"?"Linierter Zettel":"Leerer Zettel";
  if(o.kind==="tape")return "Klebeband";
@@ -1890,11 +1704,6 @@ function renderCanvasObjects(){
    const base=`left:${o.x}px;top:${o.y}px;width:${o.w}px;height:${o.h}px;z-index:${o.z||0};`;
    if(o.kind==="image")return `<div class="cobj imageObj ${sel}${lockCls}" data-id="${o.id}" style="${base}"><img src="${o.src}"><span class="rotateHandle"></span><span class="resizeHandle"></span></div>`;
    if(o.kind==="sticker")return `<div class="cobj stickerObj ${sel}${lockCls}" data-id="${o.id}" style="${base}">${o.text}<span class="rotateHandle"></span><span class="resizeHandle"></span></div>`;
-   if(o.kind==="artSticker"){
-     const art=schoolBloomStickerArt[o.stickerId];
-     if(!art)return "";
-     return `<div class="cobj artStickerObj ${sel}${lockCls}" data-id="${o.id}" style="${base}">${art.svg}<span class="rotateHandle"></span><span class="resizeHandle"></span></div>`;
-   }
    if(o.kind==="paper"){
      const cls=o.paperType==="grid"?"gridPaper":o.paperType==="line"?"linePaper":"blankPaper";
      const vars=(o.paperType==="grid"?`--gridSize:${o.spacing||20}px`:o.paperType==="line"?`--lineSize:${o.spacing||28}px`:"")+`;background-color:${o.paperColor||"#fffdf7"};`;
@@ -1911,6 +1720,8 @@ function renderCanvasObjects(){
    return `<div class="cobj ${cls} ${sel}${lockCls}${editCls}" data-id="${o.id}" contenteditable="${o.editing?"true":"false"}" style="${base}transform:rotate(${o.rotation||0}deg);font-size:${s.fontSize||16}px;font-weight:${s.fontWeight||400};color:${s.color||"#333"};font-family:${s.fontFamily||"Arial"};background:${s.background||"transparent"};border:${s.borderWidth||0}px solid ${s.borderColor||"transparent"};border-radius:${s.borderRadius||0}px;padding:${s.padding??7}px;text-align:${s.textAlign||"left"}">${o.text||""}<span class="rotateHandle"></span><span class="resizeHandle"></span></div>`;
  }).join("");
  attachCanvasObjectEvents();renderLayerList();
+ // V35: renderCanvasObjects replaces the shared layer DOM, so restore vectors every time.
+ if(typeof renderVectors==="function")renderVectors();
 }
 function attachCanvasObjectEvents(){
  $$("#canvasObjects .cobj").forEach(el=>{
@@ -1970,14 +1781,9 @@ window.canvasZoomBy=function(delta){setCanvasZoom(canvasZoom+Number(delta||0))}
 window.fitCanvasStage=function(){
  const viewport=$("#canvasViewport"),stage=$("#canvasStage");
  if(!viewport||!stage)return;
- const available=Math.max(240,viewport.clientWidth-24);
- const baseWidth=794;
- const fit=Math.max(.3,Math.min(1,available/baseWidth));
- setCanvasZoom(fit);
- requestAnimationFrame(()=>{
-   viewport.scrollLeft=Math.max(0,(stage.scrollWidth-viewport.clientWidth)/2);
-   viewport.scrollTop=0;
- });
+ const available=Math.max(230,viewport.clientWidth-18);
+ setCanvasZoom(Math.min(1,available/794));
+ viewport.scrollLeft=0;viewport.scrollTop=0;
 }
 function canvasPoint(e){const stage=$("#canvasStage"),r=stage.getBoundingClientRect(),sc=Number(stage.dataset.scale||canvasZoom||1);return{x:(e.clientX-r.left)/sc,y:(e.clientY-r.top)/sc}}
 function startDragObject(e,oid){
@@ -2330,6 +2136,55 @@ window.pathfinderSubtract=function(){
 }
 
 function canvasSheetKey(){return selectedSheetId||"new"}
+
+window.editorOpenGroup=function(group,btn){
+ $$(".canvasQuickNav button").forEach(x=>x.classList.remove("active"));btn?.classList.add("active");
+ const d=$("#canvasQuickDrawer");if(!d)return;
+ const item=(label,action,icon="•")=>`<button onclick="${action}"><b>${icon}</b><span>${label}</span></button>`;
+ if(group==="add"){
+   d.innerHTML=[
+    item("Bild","document.getElementById('canvasImageInput').click()","▧"),
+    item("Tabelle","openTableDialog()","▦"),
+    item("Karo-Zettel","addPaperSticker('grid')","▩"),
+    item("Liniert","addPaperSticker('line')","≡"),
+    item("Leerer Zettel","addPaperSticker('blank')","□"),
+    item("Klebeband","addTapeSticker()","▰"),
+    item("Sticker","toggleStickerPanel()","✿")
+   ].join("");
+ }else if(group==="text"){
+   d.innerHTML=[
+    item("Überschrift","addCanvasText('h1')","H1"),
+    item("Untertitel","addCanvasText('h2')","H2"),
+    item("Normaler Text","addCanvasText('body')","Aa"),
+    item("Aufgabe","addCanvasText('task')","✓"),
+    item("Merke","addCanvasText('merke')","!")
+   ].join("");
+ }else if(group==="elements"){
+   d.innerHTML=[
+    item("Rechteck","addVectorShape('rect')","□"),
+    item("Kreis","addVectorShape('ellipse')","○"),
+    item("Dreieck","addVectorShape('triangle')","△"),
+    item("Freier Pfad","setVectorTool('pen')","〰"),
+    item("Auswahl","setVectorTool('select')","↖")
+   ].join("");
+ }else if(group==="arrange"){
+   d.innerHTML=[
+    item("Nach vorne","moveSelectedLayer(1)","↑"),
+    item("Nach hinten","moveSelectedLayer(-1)","↓"),
+    item("Duplizieren","duplicateSelected()","⧉"),
+    item("Sperren","toggleSelectedLock()","🔒"),
+    item("Löschen","deleteSelectedCanvasItem()","⌫")
+   ].join("");
+ }else{
+   d.innerHTML=[
+    item("A4 anpassen","fitCanvasStage()","⊡"),
+    item("50 %","setCanvasZoom(.5)","50"),
+    item("75 %","setCanvasZoom(.75)","75"),
+    item("100 %","setCanvasZoom(1)","100"),
+    item("125 %","setCanvasZoom(1.25)","125")
+   ].join("");
+ }
+}
 function renderSheetEditor(){
  const {s,t}=currentTopic();if(!s||!t)return;
  renderStylePresets();renderStickerPicker();
@@ -2343,7 +2198,7 @@ function renderSheetEditor(){
  }
  if(!saved&&!sh)applyCanvasTemplate("clean",true);
  $("#wordStatus").textContent=sh?"Gespeichert":"Neues Lernblatt";
- renderCanvasObjects();renderVectors();renderCanvasInspector();pushHistory(true);canvasState.lastSavedHash=canvasSnapshot();ensurePathDrawingListener();setTimeout(()=>fitCanvasStage(),80);
+ renderCanvasObjects();renderVectors();renderCanvasInspector();pushHistory(true);canvasState.lastSavedHash=canvasSnapshot();ensurePathDrawingListener();setTimeout(()=>{fitCanvasStage();editorOpenGroup("add",document.querySelector(".canvasQuickNav button"))},80);
 }
 function stripHTML(x){const d=document.createElement("div");d.innerHTML=x;return d.innerText}
 function markCanvasDirty(schedule=true){const x=$("#autosaveState");if(x){x.textContent="Nicht gespeichert";x.className="autosaveState saving"}if(schedule)scheduleAutosave()}
@@ -2544,13 +2399,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 34: echter Live-Refresh ===== */
+/* ===== VERSION 35: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 34 timetable parser ===== */
+/* ===== VERSION 35 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -2559,7 +2414,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 34: dynamic classes ===== */
+/* ===== VERSION 35: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -2568,11 +2423,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 34: raster-exact timetable ===== */
+/* ===== VERSION 35: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 34 stability fixes ===== */
+/* ===== VERSION 35 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -2585,166 +2440,73 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
 
-/* ===== VERSION 34 — stable editor cleanup ===== */
-.canvasTopbar{
- position:sticky;top:0;z-index:120;
- background:rgba(255,250,246,.96);
- backdrop-filter:blur(18px);
- border-bottom:1px solid #edd8d2;
+/* ===== VERSION 35 — stable redesign ===== */
+.newSvgNotebook{
+ position:relative!important;min-height:230px!important;padding:0!important;
+ border:0!important;background:transparent!important;overflow:visible!important;
+ box-shadow:none!important;display:block!important;text-align:left!important;
 }
-.editorDock{
- position:sticky;top:86px;z-index:112;
- display:flex!important;gap:6px!important;
- overflow-x:auto!important;
- padding:7px!important;
- background:rgba(255,250,246,.96)!important;
- backdrop-filter:blur(16px);
- border:1px solid #ead2cb!important;
- border-radius:14px!important;
- scrollbar-width:none;
+.newSvgNotebook:before,.newSvgNotebook:after{display:none!important}
+.notebookArt{display:block;width:100%;height:100%;position:absolute;inset:0}
+.subjectNotebookSvg{width:100%;height:100%;display:block;filter:drop-shadow(0 10px 12px rgba(115,70,86,.12))}
+.notebookLabel{
+ position:absolute;z-index:3;left:30%;right:17%;top:22%;height:24%;
+ display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;
+ align-items:center;gap:2px 8px;color:#6b4d58;text-align:left
 }
-.editorDock::-webkit-scrollbar{display:none}
-.editorDock button{
- flex:0 0 auto!important;
- min-width:44px!important;
- min-height:42px!important;
- border-radius:10px!important;
- padding:7px!important;
-}
-.stylePresetBar{
- position:sticky;top:138px;z-index:111;
- display:flex!important;gap:6px!important;overflow-x:auto!important;
- padding:6px 2px!important;scrollbar-width:none;
- background:rgba(255,250,246,.92);
- backdrop-filter:blur(12px);
-}
-.stylePresetBar::-webkit-scrollbar{display:none}
-.stylePresetBar button{
- flex:0 0 auto!important;
- padding:8px 12px!important;
- border-radius:999px!important;
- font-size:11px!important;
-}
-.editorZoomBar{
- position:sticky!important;top:183px!important;z-index:110!important;
- margin:4px 0 8px!important;
-}
-.canvasViewport{
- max-height:70vh!important;
- overflow:auto!important;
- overscroll-behavior:contain;
- padding:12px!important;
- background:#f2ebe7!important;
- border-radius:16px!important;
-}
-.canvasStage{
- flex:0 0 auto!important;
- transform-origin:top center!important;
-}
-.objectPanel{
- border-radius:14px!important;
- padding:10px!important;
- margin-top:8px!important;
-}
-.canvasInspector{
- max-height:42vh;
- overflow:auto;
-}
-@media(max-width:600px){
- .canvasTopbar{padding:7px!important}
- .editorDock{top:82px}
- .stylePresetBar{top:132px}
- .editorZoomBar{top:176px!important}
- .canvasViewport{max-height:64vh!important}
-}
+.notebookLabel .notebookEmoji{grid-row:1/3;font-size:25px!important}
+.notebookLabel strong{font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.notebookLabel small{font-size:9px;opacity:.68;white-space:nowrap}
+.coverPreview{width:180px;height:180px;margin:8px auto 14px}
+.coverPreview svg{width:100%;height:100%}
 
-/* ===== VERSION 34 — cute organized UI ===== */
-.studyFocusPanel{padding:16px!important}
-.studyTimerActions{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:center;margin-top:8px}
-.breakStartBtn{border:1px solid #d8dfbd;background:#f6f8e9;color:#758356;border-radius:14px;padding:12px 13px;font-weight:900;box-shadow:0 4px 0 rgba(188,199,148,.14)}
-#timerBtn{min-width:0}
-.durationControls{gap:8px!important;margin-top:12px}
-.durationControls .mini{border:1px solid #ead5ce;background:#fffaf6;border-radius:15px;padding:10px!important}
-.durationControls input{background:white!important}
-#view-study>.section{background:rgba(255,250,246,.55);border:1px solid rgba(233,207,199,.55);border-radius:20px;padding:13px}
-#view-more .grid2 .card{border:1px solid #ead4cd!important;background:#fffaf5!important;color:#765f56!important;box-shadow:0 6px 16px rgba(132,95,84,.06)!important}
-#view-more .grid2 .card h3{color:#715a52}
-
-.notebookGrid{gap:14px!important}
-.notebook{
- min-height:180px!important;
- border-radius:11px 24px 24px 11px!important;
- padding:20px 15px 17px 34px!important;
- background:
-   linear-gradient(90deg,rgba(255,255,255,.16),transparent 26%),
-   var(--cover)!important;
- border:1px solid rgba(130,88,78,.16)!important;
- box-shadow:0 11px 24px rgba(121,88,79,.10), inset 0 0 0 6px rgba(255,255,255,.15)!important;
+.canvasQuickNav{
+ display:flex;gap:5px;overflow-x:auto;padding:6px;margin:6px 0 0;
+ position:sticky;top:82px;z-index:118;background:rgba(255,250,246,.97);
+ backdrop-filter:blur(16px);border:1px solid #ead2cb;border-radius:15px;scrollbar-width:none
 }
-.notebook:before{
- left:13px!important;width:10px!important;opacity:.9!important;
- background:
-  radial-gradient(circle at 50% 10px,#fffaf5 0 4px,#b8877f 4.6px 5.8px,transparent 6px) 0 0/10px 22px repeat-y!important;
+.canvasQuickNav::-webkit-scrollbar{display:none}
+.canvasQuickNav button{
+ flex:1 0 64px;border:0;background:transparent;color:#80685f;border-radius:10px;
+ min-height:50px;padding:5px;display:grid;place-items:center;font-size:18px;font-weight:900
 }
-.notebook:after{
- inset:12px 10px 11px 28px!important;
- border:1.5px dashed rgba(122,82,72,.14)!important;
- border-radius:8px 18px 18px 8px!important;
+.canvasQuickNav button span{font-size:8px;font-weight:800}
+.canvasQuickNav button.active{background:#f5c1bd;color:#fff}
+.canvasQuickDrawer{
+ display:flex;gap:6px;overflow-x:auto;padding:7px;margin:5px 0 7px;
+ position:sticky;top:140px;z-index:117;background:rgba(255,250,246,.97);
+ backdrop-filter:blur(16px);border:1px solid #ead2cb;border-radius:15px;scrollbar-width:none
 }
-.notebookEmoji{position:relative;z-index:2;font-size:31px!important}
-.notebookName{position:relative;z-index:2;font-family:Georgia,serif;font-size:21px!important;margin-top:16px!important;letter-spacing:-.02em}
-.notebookMeta{position:relative;z-index:2;background:rgba(255,255,255,.38);display:inline-block;padding:5px 8px;border-radius:999px;margin-top:10px!important}
-.notebook .notebookCorner{position:absolute;right:-13px;top:-13px;width:55px;height:55px;border-radius:50%;background:rgba(255,255,255,.25)}
-.notebook .notebookRibbon{position:absolute;right:18px;top:0;width:26px;height:42px;background:rgba(255,255,255,.35);clip-path:polygon(0 0,100% 0,100% 100%,50% 78%,0 100%)}
-
-.subjectHero{
- position:relative;overflow:hidden!important;
- border-radius:26px 26px 18px 18px!important;
- box-shadow:0 10px 24px rgba(130,90,82,.10)!important
+.canvasQuickDrawer::-webkit-scrollbar{display:none}
+.canvasQuickDrawer button{
+ flex:0 0 74px;min-height:58px;border:1px solid #ead6d0;background:white;color:#745e56;
+ border-radius:12px;padding:6px;display:grid;place-items:center;gap:2px
 }
-.subjectHero:after{
- content:"";position:absolute;right:-35px;top:-35px;width:120px;height:120px;border-radius:50%;
- background:rgba(255,255,255,.25);pointer-events:none
+.canvasQuickDrawer button b{font-size:17px}
+.canvasQuickDrawer button span{font-size:8px;font-weight:800}
+.editorDock{display:none!important}
+.stylePresetBar{display:none!important}
+.canvasViewport{max-height:67vh!important;margin-top:4px!important}
+.objectPanel{margin-top:7px!important}
+.studyTimerActions{display:grid;grid-template-columns:1fr 1fr 48px;gap:7px;margin-top:8px}
+.breakBtn{background:#f5f7e9!important;border-color:#d9e0b8!important;color:#768255!important}
+.homeSubjectsShortcut{
+ width:100%;border:1px solid #ead5cf;background:#fffaf5;color:#735d55;border-radius:18px;
+ padding:13px 15px;margin:0 0 17px;display:grid;grid-template-columns:40px 1fr auto;gap:9px;align-items:center;text-align:left
 }
-.topicFolderGrid{gap:12px!important}
-.topicFolder{
- min-height:126px!important;border-radius:17px 23px 20px 17px!important;
- position:relative;overflow:hidden;padding:19px 14px 14px!important;
- box-shadow:0 7px 16px rgba(121,89,78,.08)!important
-}
-.topicFolder:before{
- content:"";position:absolute;left:18px;top:0;width:74px;height:14px;border-radius:10px 10px 0 0;
- background:color-mix(in srgb,var(--topicbg),#fff 32%);
-}
-.topicFolder:after{
- content:"";position:absolute;inset:8px;border:1px dashed rgba(112,80,70,.14);border-radius:12px 18px 16px 12px;pointer-events:none
-}
-.topicFolder .ticon,.topicFolder .tname,.topicFolder .tmeta{position:relative;z-index:2}
-.topicFolder .ticon{font-size:24px!important}
-.topicFolder .tname{font-family:Georgia,serif;font-size:17px!important}
-.topicFolder .tmeta{background:rgba(255,255,255,.35);display:inline-block;padding:4px 7px;border-radius:999px}
-
-.stickerLibraryPanel{position:relative}
-.stickerTabs{display:flex;gap:6px;overflow-x:auto;margin:10px 0 9px;scrollbar-width:none}
-.stickerTabs::-webkit-scrollbar{display:none}
-.stickerTabs button{flex:0 0 auto;border:1px solid #e8d0c8;background:#fff;color:#826a61;border-radius:999px;padding:7px 11px;font-size:10px;font-weight:850}
-.stickerTabs button.active{background:#efb1ae;color:white;border-color:#efb1ae}
-.artStickerPicker{grid-template-columns:repeat(3,1fr)!important;gap:8px!important}
-.artStickerBtn{min-height:92px!important;padding:5px!important;display:flex!important;flex-direction:column;gap:2px;align-items:center;justify-content:center}
-.artStickerBtn span{display:block;width:68px;height:59px}
-.artStickerBtn svg{width:100%;height:100%;display:block}
-.artStickerBtn small{font-size:8px;color:#8a7168;font-weight:800}
-.emojiStickerBtn{font-size:23px!important}
-.artStickerObj{display:grid;place-items:center;padding:2px!important;background:transparent!important}
-.artStickerObj svg{width:100%;height:100%;display:block;pointer-events:none}
-
-#view-subjects .sectionHead,#view-study .sectionHead{margin-bottom:10px}
+.homeSubjectsShortcut>span:first-child{width:40px;height:40px;border-radius:12px;background:#f2b6b3;display:grid;place-items:center}
+.homeSubjectsShortcut div{display:grid;gap:2px}
+.homeSubjectsShortcut b{font-size:14px}
+.homeSubjectsShortcut small{font-size:10px;color:#a0887f}
+.homeSubjectsShortcut>span:last-child{font-size:24px;color:#b98b83}
+#view-subjects .sectionHead{position:sticky;top:0;z-index:8;background:linear-gradient(var(--bg) 76%,transparent);padding:8px 0}
+.notebookGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
 @media(max-width:520px){
- .studyTimerActions{grid-template-columns:1fr 1fr 48px}
- .studyTimerActions button{font-size:12px;padding:11px 7px}
- .notebook{min-height:168px!important;padding-left:31px!important}
- .notebookName{font-size:18px!important}
- .artStickerPicker{grid-template-columns:repeat(3,1fr)!important}
+ .newSvgNotebook{min-height:200px!important}
+ .notebookLabel{left:29%;right:16%;top:22%}
+ .notebookLabel strong{font-size:14px}
+ .canvasQuickNav{top:78px}
+ .canvasQuickDrawer{top:136px}
 }
 </style></head><body><div class="page">${serializedCanvas()}</div></body></html>`;
  const blob=new Blob([html],{type:"text/html"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=title.replace(/[^\wäöüÄÖÜß-]+/g,"_")+".html";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
@@ -2922,13 +2684,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 34: echter Live-Refresh ===== */
+/* ===== VERSION 35: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 34 timetable parser ===== */
+/* ===== VERSION 35 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -2937,7 +2699,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 34: dynamic classes ===== */
+/* ===== VERSION 35: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -2946,11 +2708,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 34: raster-exact timetable ===== */
+/* ===== VERSION 35: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 34 stability fixes ===== */
+/* ===== VERSION 35 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -2963,166 +2725,73 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
 
-/* ===== VERSION 34 — stable editor cleanup ===== */
-.canvasTopbar{
- position:sticky;top:0;z-index:120;
- background:rgba(255,250,246,.96);
- backdrop-filter:blur(18px);
- border-bottom:1px solid #edd8d2;
+/* ===== VERSION 35 — stable redesign ===== */
+.newSvgNotebook{
+ position:relative!important;min-height:230px!important;padding:0!important;
+ border:0!important;background:transparent!important;overflow:visible!important;
+ box-shadow:none!important;display:block!important;text-align:left!important;
 }
-.editorDock{
- position:sticky;top:86px;z-index:112;
- display:flex!important;gap:6px!important;
- overflow-x:auto!important;
- padding:7px!important;
- background:rgba(255,250,246,.96)!important;
- backdrop-filter:blur(16px);
- border:1px solid #ead2cb!important;
- border-radius:14px!important;
- scrollbar-width:none;
+.newSvgNotebook:before,.newSvgNotebook:after{display:none!important}
+.notebookArt{display:block;width:100%;height:100%;position:absolute;inset:0}
+.subjectNotebookSvg{width:100%;height:100%;display:block;filter:drop-shadow(0 10px 12px rgba(115,70,86,.12))}
+.notebookLabel{
+ position:absolute;z-index:3;left:30%;right:17%;top:22%;height:24%;
+ display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;
+ align-items:center;gap:2px 8px;color:#6b4d58;text-align:left
 }
-.editorDock::-webkit-scrollbar{display:none}
-.editorDock button{
- flex:0 0 auto!important;
- min-width:44px!important;
- min-height:42px!important;
- border-radius:10px!important;
- padding:7px!important;
-}
-.stylePresetBar{
- position:sticky;top:138px;z-index:111;
- display:flex!important;gap:6px!important;overflow-x:auto!important;
- padding:6px 2px!important;scrollbar-width:none;
- background:rgba(255,250,246,.92);
- backdrop-filter:blur(12px);
-}
-.stylePresetBar::-webkit-scrollbar{display:none}
-.stylePresetBar button{
- flex:0 0 auto!important;
- padding:8px 12px!important;
- border-radius:999px!important;
- font-size:11px!important;
-}
-.editorZoomBar{
- position:sticky!important;top:183px!important;z-index:110!important;
- margin:4px 0 8px!important;
-}
-.canvasViewport{
- max-height:70vh!important;
- overflow:auto!important;
- overscroll-behavior:contain;
- padding:12px!important;
- background:#f2ebe7!important;
- border-radius:16px!important;
-}
-.canvasStage{
- flex:0 0 auto!important;
- transform-origin:top center!important;
-}
-.objectPanel{
- border-radius:14px!important;
- padding:10px!important;
- margin-top:8px!important;
-}
-.canvasInspector{
- max-height:42vh;
- overflow:auto;
-}
-@media(max-width:600px){
- .canvasTopbar{padding:7px!important}
- .editorDock{top:82px}
- .stylePresetBar{top:132px}
- .editorZoomBar{top:176px!important}
- .canvasViewport{max-height:64vh!important}
-}
+.notebookLabel .notebookEmoji{grid-row:1/3;font-size:25px!important}
+.notebookLabel strong{font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.notebookLabel small{font-size:9px;opacity:.68;white-space:nowrap}
+.coverPreview{width:180px;height:180px;margin:8px auto 14px}
+.coverPreview svg{width:100%;height:100%}
 
-/* ===== VERSION 34 — cute organized UI ===== */
-.studyFocusPanel{padding:16px!important}
-.studyTimerActions{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:center;margin-top:8px}
-.breakStartBtn{border:1px solid #d8dfbd;background:#f6f8e9;color:#758356;border-radius:14px;padding:12px 13px;font-weight:900;box-shadow:0 4px 0 rgba(188,199,148,.14)}
-#timerBtn{min-width:0}
-.durationControls{gap:8px!important;margin-top:12px}
-.durationControls .mini{border:1px solid #ead5ce;background:#fffaf6;border-radius:15px;padding:10px!important}
-.durationControls input{background:white!important}
-#view-study>.section{background:rgba(255,250,246,.55);border:1px solid rgba(233,207,199,.55);border-radius:20px;padding:13px}
-#view-more .grid2 .card{border:1px solid #ead4cd!important;background:#fffaf5!important;color:#765f56!important;box-shadow:0 6px 16px rgba(132,95,84,.06)!important}
-#view-more .grid2 .card h3{color:#715a52}
-
-.notebookGrid{gap:14px!important}
-.notebook{
- min-height:180px!important;
- border-radius:11px 24px 24px 11px!important;
- padding:20px 15px 17px 34px!important;
- background:
-   linear-gradient(90deg,rgba(255,255,255,.16),transparent 26%),
-   var(--cover)!important;
- border:1px solid rgba(130,88,78,.16)!important;
- box-shadow:0 11px 24px rgba(121,88,79,.10), inset 0 0 0 6px rgba(255,255,255,.15)!important;
+.canvasQuickNav{
+ display:flex;gap:5px;overflow-x:auto;padding:6px;margin:6px 0 0;
+ position:sticky;top:82px;z-index:118;background:rgba(255,250,246,.97);
+ backdrop-filter:blur(16px);border:1px solid #ead2cb;border-radius:15px;scrollbar-width:none
 }
-.notebook:before{
- left:13px!important;width:10px!important;opacity:.9!important;
- background:
-  radial-gradient(circle at 50% 10px,#fffaf5 0 4px,#b8877f 4.6px 5.8px,transparent 6px) 0 0/10px 22px repeat-y!important;
+.canvasQuickNav::-webkit-scrollbar{display:none}
+.canvasQuickNav button{
+ flex:1 0 64px;border:0;background:transparent;color:#80685f;border-radius:10px;
+ min-height:50px;padding:5px;display:grid;place-items:center;font-size:18px;font-weight:900
 }
-.notebook:after{
- inset:12px 10px 11px 28px!important;
- border:1.5px dashed rgba(122,82,72,.14)!important;
- border-radius:8px 18px 18px 8px!important;
+.canvasQuickNav button span{font-size:8px;font-weight:800}
+.canvasQuickNav button.active{background:#f5c1bd;color:#fff}
+.canvasQuickDrawer{
+ display:flex;gap:6px;overflow-x:auto;padding:7px;margin:5px 0 7px;
+ position:sticky;top:140px;z-index:117;background:rgba(255,250,246,.97);
+ backdrop-filter:blur(16px);border:1px solid #ead2cb;border-radius:15px;scrollbar-width:none
 }
-.notebookEmoji{position:relative;z-index:2;font-size:31px!important}
-.notebookName{position:relative;z-index:2;font-family:Georgia,serif;font-size:21px!important;margin-top:16px!important;letter-spacing:-.02em}
-.notebookMeta{position:relative;z-index:2;background:rgba(255,255,255,.38);display:inline-block;padding:5px 8px;border-radius:999px;margin-top:10px!important}
-.notebook .notebookCorner{position:absolute;right:-13px;top:-13px;width:55px;height:55px;border-radius:50%;background:rgba(255,255,255,.25)}
-.notebook .notebookRibbon{position:absolute;right:18px;top:0;width:26px;height:42px;background:rgba(255,255,255,.35);clip-path:polygon(0 0,100% 0,100% 100%,50% 78%,0 100%)}
-
-.subjectHero{
- position:relative;overflow:hidden!important;
- border-radius:26px 26px 18px 18px!important;
- box-shadow:0 10px 24px rgba(130,90,82,.10)!important
+.canvasQuickDrawer::-webkit-scrollbar{display:none}
+.canvasQuickDrawer button{
+ flex:0 0 74px;min-height:58px;border:1px solid #ead6d0;background:white;color:#745e56;
+ border-radius:12px;padding:6px;display:grid;place-items:center;gap:2px
 }
-.subjectHero:after{
- content:"";position:absolute;right:-35px;top:-35px;width:120px;height:120px;border-radius:50%;
- background:rgba(255,255,255,.25);pointer-events:none
+.canvasQuickDrawer button b{font-size:17px}
+.canvasQuickDrawer button span{font-size:8px;font-weight:800}
+.editorDock{display:none!important}
+.stylePresetBar{display:none!important}
+.canvasViewport{max-height:67vh!important;margin-top:4px!important}
+.objectPanel{margin-top:7px!important}
+.studyTimerActions{display:grid;grid-template-columns:1fr 1fr 48px;gap:7px;margin-top:8px}
+.breakBtn{background:#f5f7e9!important;border-color:#d9e0b8!important;color:#768255!important}
+.homeSubjectsShortcut{
+ width:100%;border:1px solid #ead5cf;background:#fffaf5;color:#735d55;border-radius:18px;
+ padding:13px 15px;margin:0 0 17px;display:grid;grid-template-columns:40px 1fr auto;gap:9px;align-items:center;text-align:left
 }
-.topicFolderGrid{gap:12px!important}
-.topicFolder{
- min-height:126px!important;border-radius:17px 23px 20px 17px!important;
- position:relative;overflow:hidden;padding:19px 14px 14px!important;
- box-shadow:0 7px 16px rgba(121,89,78,.08)!important
-}
-.topicFolder:before{
- content:"";position:absolute;left:18px;top:0;width:74px;height:14px;border-radius:10px 10px 0 0;
- background:color-mix(in srgb,var(--topicbg),#fff 32%);
-}
-.topicFolder:after{
- content:"";position:absolute;inset:8px;border:1px dashed rgba(112,80,70,.14);border-radius:12px 18px 16px 12px;pointer-events:none
-}
-.topicFolder .ticon,.topicFolder .tname,.topicFolder .tmeta{position:relative;z-index:2}
-.topicFolder .ticon{font-size:24px!important}
-.topicFolder .tname{font-family:Georgia,serif;font-size:17px!important}
-.topicFolder .tmeta{background:rgba(255,255,255,.35);display:inline-block;padding:4px 7px;border-radius:999px}
-
-.stickerLibraryPanel{position:relative}
-.stickerTabs{display:flex;gap:6px;overflow-x:auto;margin:10px 0 9px;scrollbar-width:none}
-.stickerTabs::-webkit-scrollbar{display:none}
-.stickerTabs button{flex:0 0 auto;border:1px solid #e8d0c8;background:#fff;color:#826a61;border-radius:999px;padding:7px 11px;font-size:10px;font-weight:850}
-.stickerTabs button.active{background:#efb1ae;color:white;border-color:#efb1ae}
-.artStickerPicker{grid-template-columns:repeat(3,1fr)!important;gap:8px!important}
-.artStickerBtn{min-height:92px!important;padding:5px!important;display:flex!important;flex-direction:column;gap:2px;align-items:center;justify-content:center}
-.artStickerBtn span{display:block;width:68px;height:59px}
-.artStickerBtn svg{width:100%;height:100%;display:block}
-.artStickerBtn small{font-size:8px;color:#8a7168;font-weight:800}
-.emojiStickerBtn{font-size:23px!important}
-.artStickerObj{display:grid;place-items:center;padding:2px!important;background:transparent!important}
-.artStickerObj svg{width:100%;height:100%;display:block;pointer-events:none}
-
-#view-subjects .sectionHead,#view-study .sectionHead{margin-bottom:10px}
+.homeSubjectsShortcut>span:first-child{width:40px;height:40px;border-radius:12px;background:#f2b6b3;display:grid;place-items:center}
+.homeSubjectsShortcut div{display:grid;gap:2px}
+.homeSubjectsShortcut b{font-size:14px}
+.homeSubjectsShortcut small{font-size:10px;color:#a0887f}
+.homeSubjectsShortcut>span:last-child{font-size:24px;color:#b98b83}
+#view-subjects .sectionHead{position:sticky;top:0;z-index:8;background:linear-gradient(var(--bg) 76%,transparent);padding:8px 0}
+.notebookGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
 @media(max-width:520px){
- .studyTimerActions{grid-template-columns:1fr 1fr 48px}
- .studyTimerActions button{font-size:12px;padding:11px 7px}
- .notebook{min-height:168px!important;padding-left:31px!important}
- .notebookName{font-size:18px!important}
- .artStickerPicker{grid-template-columns:repeat(3,1fr)!important}
+ .newSvgNotebook{min-height:200px!important}
+ .notebookLabel{left:29%;right:16%;top:22%}
+ .notebookLabel strong{font-size:14px}
+ .canvasQuickNav{top:78px}
+ .canvasQuickDrawer{top:136px}
 }
 </style></head><body><div class="page">${serializedCanvas()}</div></body></html>`);w.document.close();setTimeout(()=>w.print(),300)
 }
@@ -3345,7 +3014,20 @@ window.editNote=function(sid,nid){
 window.saveNoteEdit=function(sid,nid){const s=data.subjects.find(x=>x.id===sid),n=s?.notes?.find(x=>x.id===nid);if(!n)return;n.title=$("#editMatTitle").value.trim()||"Notiz";n.text=$("#editMatText").value.trim();save();closeModal();renderSubjectDetail()}
 window.openCoverEditor=function(sid){
  const s=data.subjects.find(x=>x.id===sid);if(!s)return;ensureSubjectShape(s);
- openModal(`<h2>Notizbuch gestalten</h2><div class="formGrid"><div><label>Coverfarbe</label><input id="editCover" type="color" value="${s.cover}"></div><div><label>Farbe</label><input id="editFolderColor" type="color" value="${s.color}"></div><div><label>Symbol</label><select id="editEmoji">${["🌸","🌷","🍀","🧸","⭐","🎀","🫐","🍓"].map(e=>`<option ${e===s.emoji?"selected":""}>${e}</option>`).join("")}</select></div></div><button class="primary" style="margin-top:10px" onclick="saveCover('${sid}')">Speichern</button>`);
+ openModal(`<h2>Notizbuch gestalten</h2>
+ <p class="small">Die beiden Farben ändern direkt die zwei Rosatöne deines Notebook-Designs.</p>
+ <div class="coverPreview" style="--nb-light:${s.cover};--nb-dark:${s.color}">${SUBJECT_NOTEBOOK_SVG}</div>
+ <div class="formGrid">
+   <div><label>Hauptfarbe</label><input id="editCover" type="color" value="${s.cover}" oninput="previewNotebookColors()"></div>
+   <div><label>Dunkle Akzentfarbe</label><input id="editFolderColor" type="color" value="${s.color}" oninput="previewNotebookColors()"></div>
+   <div><label>Symbol</label><select id="editEmoji">${["🌸","🌷","🍀","🧸","⭐","🎀","🫐","🍓","📚","✏️"].map(e=>`<option ${e===s.emoji?"selected":""}>${e}</option>`).join("")}</select></div>
+ </div>
+ <button class="primary" style="margin-top:10px" onclick="saveCover('${sid}')">Speichern</button>`);
+}
+window.previewNotebookColors=function(){
+ const p=document.querySelector(".coverPreview");if(!p)return;
+ p.style.setProperty("--nb-light",$("#editCover")?.value||"#f4acc5");
+ p.style.setProperty("--nb-dark",$("#editFolderColor")?.value||"#c8568e");
 }
 window.deleteSubjectFromPage=function(sid){
  if(!confirm("Dieses Fach mit allen lokalen Themen und Notizen löschen?"))return;
@@ -3422,7 +3104,7 @@ const timetableSlots=[
  {start:"15:45",end:"16:30"}
 ];
 function fillCancelledSlots(lessons){
- // VERSION 34:
+ // VERSION 35:
  // SchoolBloom darf NIE aus einer nicht erkannten/leeren PDF-Zelle
  // automatisch "Entfall" erfinden.
  // Nur Einträge, die wirklich aus der PDF gelesen wurden, werden gezeigt.
@@ -3441,7 +3123,7 @@ function renderHome(){
  };
  const nowMin=new Date().getHours()*60+new Date().getMinutes();
  const todayCode=dayCode(new Date());
- const todayLessons=cleanTimetableOverlaps((data.timetable.lessons||[])
+ const todayLessons=stableTimetableDay((data.timetable.lessons||[])
    .filter(x=>x.day===todayCode))
    .sort((a,b)=>a.start.localeCompare(b.start));
  const breaksToday=[
@@ -3553,84 +3235,16 @@ function lessonHtml(l){
 }
 
 
-function normalizeLessonSubjectForCompare(l){
- const p=splitCell(l.raw||"");
- return [
-   String(p.subject||"").replace(/\s+/g," ").trim().toUpperCase(),
-   String(p.teacherCode||p.meta||"").replace(/\s+/g," ").trim().toUpperCase(),
-   String(p.room||"").replace(/\s+/g," ").trim().toUpperCase()
- ].join("|");
-}
-function minuteValue(t){
- const [hh,mm]=String(t||"00:00").split(":").map(Number);
- return hh*60+mm;
-}
-function cleanTimetableOverlaps(list){
- const src=[...(list||[])].sort((a,b)=>{
-   const d=dayOrder.indexOf(a.day)-dayOrder.indexOf(b.day);
-   if(d)return d;
-   return minuteValue(a.start)-minuteValue(b.start) || minuteValue(b.end)-minuteValue(a.end);
- });
- const out=[];
-
- for(const item of src){
-   const cur={...item};
-   const curKey=normalizeLessonSubjectForCompare(cur);
-   const cs=minuteValue(cur.start),ce=minuteValue(cur.end);
-
-   let skip=false;
-   for(let i=out.length-1;i>=0;i--){
-     const prev=out[i];
-     if(prev.day!==cur.day)break;
-     const ps=minuteValue(prev.start),pe=minuteValue(prev.end);
-     if(pe<=cs)break;
-
-     const prevKey=normalizeLessonSubjectForCompare(prev);
-     const overlaps=cs<pe && ce>ps;
-
-     if(!overlaps)continue;
-
-     // Same actual PDF lesson: keep the most complete/longest block only.
-     if(curKey && curKey===prevKey){
-       const curDur=ce-cs,prevDur=pe-ps;
-       if(curDur>prevDur){
-         out.splice(i,1);
-         continue;
-       }
-       skip=true;
-       break;
-     }
-
-     // Exact same times but parser produced two different readings:
-     // prefer the entry that has more structured info.
-     if(cs===ps && ce===pe){
-       const score=x=>{
-         const p=splitCell(x.raw||"");
-         return (p.subject?3:0)+(p.teacherCode||p.meta?2:0)+(p.room?1:0)+(x.isDouble?1:0);
-       };
-       if(score(cur)>score(prev)){
-         out.splice(i,1);
-         continue;
-       }
-       skip=true;
-       break;
-     }
-
-     // If a shorter lesson is fully contained in a longer one with same raw text root,
-     // discard the contained parser artifact.
-     const a=String(cur.raw||"").replace(/\s+/g," ").trim().toUpperCase();
-     const b=String(prev.raw||"").replace(/\s+/g," ").trim().toUpperCase();
-     if((cs>=ps&&ce<=pe)||(ps>=cs&&pe<=ce)){
-       if(a===b || a.includes(b) || b.includes(a)){
-         const curDur=ce-cs,prevDur=pe-ps;
-         if(curDur>prevDur){out.splice(i,1);continue}
-         skip=true;break;
-       }
-     }
-   }
-   if(!skip)out.push(cur);
+function stableTimetableDay(list){
+ // Do not invent, merge or rename PDF entries here.
+ // Only remove byte-for-byte duplicate parser records.
+ const seen=new Set(),out=[];
+ for(const l of (list||[])){
+   const key=[l.day,l.start,l.end,String(l.raw||"").replace(/\s+/g," ").trim(),!!l.specialOnly].join("|");
+   if(seen.has(key))continue;
+   seen.add(key);out.push(l);
  }
- return out;
+ return out.sort((a,b)=>a.start.localeCompare(b.start)||a.end.localeCompare(b.end));
 }
 function renderPlan(){
  $("#planStatus").textContent=data.timetable.isPlaceholder
@@ -3650,7 +3264,7 @@ function renderPlan(){
  $("#dayTabs").innerHTML=dayOrder.map(d=>`<button class="tab ${d===selectedDay?"active":""}" data-day="${d}">${dayNames[d]}</button>`).join("");
  $$("#dayTabs .tab").forEach(b=>b.onclick=()=>{selectedDay=b.dataset.day;renderPlan()});
 
- const rawDay=cleanTimetableOverlaps((data.timetable.lessons||[]).filter(x=>x.day===selectedDay));
+ const rawDay=stableTimetableDay((data.timetable.lessons||[]).filter(x=>x.day===selectedDay));
 
  // Wenn der Tag ausschließlich eine organisatorische Sondernotiz enthält,
  // KEINE erfundenen Stunden und KEIN Entfall erzeugen.
@@ -3771,30 +3385,154 @@ function completeTimer(){
    alert(`Geschafft! +${mins} Münzen 🪙`);
    const b=Math.max(1,Math.min(60,Number($("#breakMinutes")?.value||5)));timer.mode="break";timer.goal=b*60;timer.seconds=b*60;
  }else{alert("Pause vorbei 🌷");const f=Math.max(1,Math.min(240,Number($("#focusMinutes")?.value||25)));timer.mode="focus";timer.goal=f*60;timer.seconds=f*60}
- save();renderTimer();renderStudy()
+ save();renderTimer();$("#timerBtn").textContent="▶ Start";renderStudy()
 }
 window.startBreak=function(mins){
  clearInterval(timer.handle);timer.running=false;timer.handle=null;timer.mode="break";timer.goal=mins*60;timer.seconds=mins*60;$("#timerBtn").textContent="▶ Start";renderTimer()
 }
-window.resetTimer=function(){clearInterval(timer.handle);timer.running=false;timer.handle=null;const f=Math.max(1,Math.min(240,Number($("#focusMinutes")?.value||25)));timer.mode="focus";timer.goal=f*60;timer.seconds=f*60;renderTimer()}
-function renderTimer(){
- const m=Math.floor(timer.seconds/60),s=timer.seconds%60;
- $("#timerDisplay").textContent=`${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
- const l=$("#timerModeLabel");
- if(l)l.textContent=timer.mode==="focus"?"Fokus · fürs Lernen bekommst du Münzen.":"Pause 🌷 · erhol dich kurz.";
- const b=$("#timerBtn");
- if(b&&!timer.running)b.textContent=timer.mode==="focus"?"▶ Fokus starten":"▶ Pause fortsetzen";
-}
+window.resetTimer=function(){clearInterval(timer.handle);timer.running=false;timer.handle=null;const f=Math.max(1,Math.min(240,Number($("#focusMinutes")?.value||25)));timer.mode="focus";timer.goal=f*60;timer.seconds=f*60;renderTimer();$("#timerBtn").textContent="▶ Start"}
+function renderTimer(){const m=Math.floor(timer.seconds/60),s=timer.seconds%60;$("#timerDisplay").textContent=`${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;const l=$("#timerModeLabel");if(l)l.textContent=timer.mode==="focus"?"Fokus · fürs Lernen bekommst du Münzen.":"Pause 🌷 · erhol dich kurz."}
 
+const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1500">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 22px;
+      }
+
+      .cls-2, .cls-3 {
+        fill: var(--nb-light);
+        stroke: var(--nb-dark);
+      }
+
+      .cls-4 {
+        fill: var(--nb-dark);
+      }
+
+      .cls-3 {
+        stroke-miterlimit: 10;
+        stroke-width: 13px;
+      }
+    
+/* ===== VERSION 35 — stable redesign ===== */
+.newSvgNotebook{
+ position:relative!important;min-height:230px!important;padding:0!important;
+ border:0!important;background:transparent!important;overflow:visible!important;
+ box-shadow:none!important;display:block!important;text-align:left!important;
+}
+.newSvgNotebook:before,.newSvgNotebook:after{display:none!important}
+.notebookArt{display:block;width:100%;height:100%;position:absolute;inset:0}
+.subjectNotebookSvg{width:100%;height:100%;display:block;filter:drop-shadow(0 10px 12px rgba(115,70,86,.12))}
+.notebookLabel{
+ position:absolute;z-index:3;left:30%;right:17%;top:22%;height:24%;
+ display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;
+ align-items:center;gap:2px 8px;color:#6b4d58;text-align:left
+}
+.notebookLabel .notebookEmoji{grid-row:1/3;font-size:25px!important}
+.notebookLabel strong{font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.notebookLabel small{font-size:9px;opacity:.68;white-space:nowrap}
+.coverPreview{width:180px;height:180px;margin:8px auto 14px}
+.coverPreview svg{width:100%;height:100%}
+
+.canvasQuickNav{
+ display:flex;gap:5px;overflow-x:auto;padding:6px;margin:6px 0 0;
+ position:sticky;top:82px;z-index:118;background:rgba(255,250,246,.97);
+ backdrop-filter:blur(16px);border:1px solid #ead2cb;border-radius:15px;scrollbar-width:none
+}
+.canvasQuickNav::-webkit-scrollbar{display:none}
+.canvasQuickNav button{
+ flex:1 0 64px;border:0;background:transparent;color:#80685f;border-radius:10px;
+ min-height:50px;padding:5px;display:grid;place-items:center;font-size:18px;font-weight:900
+}
+.canvasQuickNav button span{font-size:8px;font-weight:800}
+.canvasQuickNav button.active{background:#f5c1bd;color:#fff}
+.canvasQuickDrawer{
+ display:flex;gap:6px;overflow-x:auto;padding:7px;margin:5px 0 7px;
+ position:sticky;top:140px;z-index:117;background:rgba(255,250,246,.97);
+ backdrop-filter:blur(16px);border:1px solid #ead2cb;border-radius:15px;scrollbar-width:none
+}
+.canvasQuickDrawer::-webkit-scrollbar{display:none}
+.canvasQuickDrawer button{
+ flex:0 0 74px;min-height:58px;border:1px solid #ead6d0;background:white;color:#745e56;
+ border-radius:12px;padding:6px;display:grid;place-items:center;gap:2px
+}
+.canvasQuickDrawer button b{font-size:17px}
+.canvasQuickDrawer button span{font-size:8px;font-weight:800}
+.editorDock{display:none!important}
+.stylePresetBar{display:none!important}
+.canvasViewport{max-height:67vh!important;margin-top:4px!important}
+.objectPanel{margin-top:7px!important}
+.studyTimerActions{display:grid;grid-template-columns:1fr 1fr 48px;gap:7px;margin-top:8px}
+.breakBtn{background:#f5f7e9!important;border-color:#d9e0b8!important;color:#768255!important}
+.homeSubjectsShortcut{
+ width:100%;border:1px solid #ead5cf;background:#fffaf5;color:#735d55;border-radius:18px;
+ padding:13px 15px;margin:0 0 17px;display:grid;grid-template-columns:40px 1fr auto;gap:9px;align-items:center;text-align:left
+}
+.homeSubjectsShortcut>span:first-child{width:40px;height:40px;border-radius:12px;background:#f2b6b3;display:grid;place-items:center}
+.homeSubjectsShortcut div{display:grid;gap:2px}
+.homeSubjectsShortcut b{font-size:14px}
+.homeSubjectsShortcut small{font-size:10px;color:#a0887f}
+.homeSubjectsShortcut>span:last-child{font-size:24px;color:#b98b83}
+#view-subjects .sectionHead{position:sticky;top:0;z-index:8;background:linear-gradient(var(--bg) 76%,transparent);padding:8px 0}
+.notebookGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+@media(max-width:520px){
+ .newSvgNotebook{min-height:200px!important}
+ .notebookLabel{left:29%;right:16%;top:22%}
+ .notebookLabel strong{font-size:14px}
+ .canvasQuickNav{top:78px}
+ .canvasQuickDrawer{top:136px}
+}
+</style>
+  </defs>
+  <rect class="cls-3" x="335.96" y="250.98" width="884.21" height="1059.65" rx="60.73" ry="60.73"/>
+  <rect class="cls-3" x="307.89" y="220.18" width="884.21" height="1059.65" rx="42.98" ry="42.98"/>
+  <g>
+    <rect class="cls-4" x="223.74" y="325.44" width="166.67" height="68.42" rx="34.21" ry="34.21"/>
+    <rect class="cls-4" x="223.74" y="481.58" width="166.67" height="68.42" rx="34.21" ry="34.21"/>
+    <rect class="cls-4" x="223.74" y="637.72" width="166.67" height="68.42" rx="34.21" ry="34.21"/>
+    <rect class="cls-4" x="223.74" y="793.86" width="166.67" height="68.42" rx="34.21" ry="34.21"/>
+    <rect class="cls-4" x="223.74" y="950" width="166.67" height="68.42" rx="34.21" ry="34.21"/>
+    <rect class="cls-4" x="223.74" y="1106.14" width="166.67" height="68.42" rx="34.21" ry="34.21"/>
+  </g>
+  <rect class="cls-1" x="417.02" y="341.46" width="680.7" height="238.6" rx="119.3" ry="119.3"/>
+  <g>
+    <g>
+      <path class="cls-2" d="M747.47,973.96c2.58,26.52,15.72,155.87,41.81,201.25,3.62,6.29,11,18.76,22.15,19.74,13.65,1.21,17.36-15.46,39.4-25.67,24.37-11.28,41.68-.86,51.09-13.06,4.99-6.47,5.01-15.73,1.42-30.3-9.31-37.76-31.05-62.98-44.75-79.73-15.61-19.07-37.21-47.19-61.29-84.88-16.6,4.21-33.21,8.43-49.81,12.64Z"/>
+      <path class="cls-2" d="M752.56,974.06c-3.61,26.4-21.77,155.14-49.6,199.48-3.86,6.14-11.72,18.31-22.9,18.87-13.69.68-16.74-16.12-38.37-27.18-23.91-12.22-41.61-2.48-50.54-15.04-4.73-6.65-4.4-15.91-.24-30.33,10.77-37.37,33.47-61.73,47.82-77.93,16.33-18.45,39.01-45.71,64.55-82.43,16.43,4.86,32.86,9.71,49.28,14.57Z"/>
+    </g>
+    <g>
+      <path class="cls-2" d="M753.92,958.75c13.02,26.66,37.74,40.74,49.23,47.11,20.19,11.18,68.32,37.84,113.46,20.94,59.13-22.15,61.37-99.69,61.74-112.62.61-21.29,1.81-62.6-29.36-83.47-38.23-25.61-96.57-1.31-113.58,5.78-32.58,13.57-50.01,33.14-71.61,57.39-7.66,8.61-14.5,17.58-16.61,30.13-2.57,15.3,3.27,27.67,6.73,34.76Z"/>
+      <path class="cls-2" d="M746.71,958.61c-14.05,26.13-39.29,39.24-51.02,45.16-20.61,10.39-69.74,35.16-114.19,16.51-58.22-24.43-57.44-102-57.31-114.93.21-21.3.63-62.62,32.58-82.27,39.2-24.1,96.55,2.45,113.27,10.19,32.03,14.83,48.69,35.06,69.33,60.13,7.32,8.9,13.81,18.13,15.43,30.75,1.98,15.39-4.34,27.52-8.08,34.47Z"/>
+    </g>
+    <path class="cls-2" d="M750.43,961.95c12.52.61,37.19-1.37,42.42-14.29,2.56-6.31-2.23-8.57-.29-22.76,1.23-8.96,3.79-12.8,2.19-20.08-.18-.8-1.49-6.53-5.6-11.37-7.69-9.06-20.24-9.28-36.46-9.56-16.24-.28-29.6-.52-37.98,8.69-4.16,4.57-5.81,10.04-5.92,10.42-2.03,7,.27,10.74.39,20.01.16,11.74-3.43,12.79-2.23,18.22,2.92,13.19,26.99,19.91,43.48,20.72Z"/>
+    <g>
+      <path class="cls-2" d="M709.43,924.76c-11.06-3.28-24.06-6.32-38.75-8.26-10.56-1.4-20.36-2.01-29.21-2.14"/>
+      <path class="cls-2" d="M792.49,926.38c11.18-2.85,24.28-5.38,39.04-6.75,10.6-.98,20.42-1.22,29.27-1"/>
+    </g>
+  </g>
+</svg>`;
 function renderSubjects(){
  data.subjects.forEach(ensureSubjectShape);
  $("#subjectList").className="notebookGrid";
- $("#subjectList").innerHTML=data.subjects.length?data.subjects.map(s=>`<button class="notebook" style="--cover:${s.cover||s.color}" onclick="openSubject('${s.id}')">
-   <span class="notebookCorner"></span><span class="notebookRibbon"></span>
-   <div class="notebookEmoji">${esc(s.emoji||"🌸")}</div>
-   <div class="notebookName">${esc(s.name)}</div>
-   <div class="notebookMeta">${(s.topics||[]).length} Themen · ${(s.files||[]).length} Dateien</div>
- </button>`).join(""):'<div class="empty">Noch keine Fächer.</div>';
+ $("#subjectList").innerHTML=data.subjects.length?data.subjects.map(s=>{
+   ensureSubjectShape(s);
+   const light=s.cover||"#f4acc5";
+   const dark=s.color||"#c8568e";
+   return `<button class="notebook newSvgNotebook" style="--nb-light:${light};--nb-dark:${dark}" onclick="openSubject('${s.id}')">
+     <span class="notebookArt">${SUBJECT_NOTEBOOK_SVG}</span>
+     <span class="notebookLabel">
+       <span class="notebookEmoji">${esc(s.emoji||"🌸")}</span>
+       <strong>${esc(s.name)}</strong>
+       <small>${(s.topics||[]).length} Themen · ${(s.files||[]).length} Dateien</small>
+     </span>
+   </button>`;
+ }).join(""):'<div class="empty">Noch keine Fächer.</div>';
 }
 function daysBetween(a,b){return Math.max(1,Math.round((new Date(b)-new Date(a))/86400000)+1)}
 function renderAbsence(){
