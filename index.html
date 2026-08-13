@@ -633,13 +633,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 51: echter Live-Refresh ===== */
+/* ===== VERSION 52: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 51 timetable parser ===== */
+/* ===== VERSION 52 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -648,7 +648,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 51: dynamic classes ===== */
+/* ===== VERSION 52: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -657,11 +657,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 51: raster-exact timetable ===== */
+/* ===== VERSION 52: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 51 stability fixes ===== */
+/* ===== VERSION 52 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -674,7 +674,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
 
-/* ===== VERSION 51 — stable redesign ===== */
+/* ===== VERSION 52 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -743,7 +743,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 51 — notebook label + timetable repair ===== */
+/* ===== VERSION 52 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -810,7 +810,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .notebookAbbr{font-size:16px}
 }
 
-/* ===== VERSION 51 — Basisplan / Entfall / Hitzestunden ===== */
+/* ===== VERSION 52 — Basisplan / Entfall / Hitzestunden ===== */
 .basisCancelled{
  opacity:.82;
  border-style:dashed!important;
@@ -848,7 +848,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  border-color:#dbc8c1!important
 }
 
-/* ===== VERSION 51 — Current vs Basis + moved lesson logic ===== */
+/* ===== VERSION 52 — Current vs Basis + moved lesson logic ===== */
 .planModeSwitch{
  display:grid;
  grid-template-columns:1.35fr 1fr;
@@ -917,7 +917,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .planModeSwitch button b{font-size:10px}
 }
 
-/* ===== VERSION 51 — safer row split / replacement handling ===== */
+/* ===== VERSION 52 — safer row split / replacement handling ===== */
 .changedLesson{
  background:linear-gradient(90deg,#fffdfa,#fffaf6)!important;
 }
@@ -935,13 +935,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  margin-bottom:3px;
 }
 
-/* ===== VERSION 51 — Mehrfachstunden mit Pause dazwischen ===== */
+/* ===== VERSION 52 — Mehrfachstunden mit Pause dazwischen ===== */
 .splitMultiBadge{
  opacity:.86;
  font-size:8px!important;
 }
 
-/* ===== VERSION 51 — Auto / Manuell Hitzestunden ===== */
+/* ===== VERSION 52 — Auto / Manuell Hitzestunden ===== */
 .heatPlanControl{
  display:flex;
  align-items:center;
@@ -1017,7 +1017,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .heatModeButtons button{min-width:31px;padding:7px 5px}
 }
 
-/* ===== VERSION 51 — clearer navigation + polish ===== */
+/* ===== VERSION 52 — clearer navigation + polish ===== */
 :root{
  --sb-panel:#fffdfa;
  --sb-panel-soft:#fff8f4;
@@ -1207,7 +1207,7 @@ ensureHomeClockTimer();
 </script>
 
 <style id="v43-compact-ui">
-/* VERSION 51 — compact information architecture */
+/* VERSION 52 — compact information architecture */
 #nav{grid-template-columns:repeat(5,1fr)!important;width:min(94vw,520px)!important}
 #nav button{min-width:0!important}
 .view{padding-bottom:100px!important}
@@ -1240,7 +1240,7 @@ ensureHomeClockTimer();
 
 
 <style id="v44-learning-navigation">
-/* VERSION 51 — Fächer / Lernsets / Study sauber getrennt */
+/* VERSION 52 — Fächer / Lernsets / Study sauber getrennt */
 .learningBackRow{
  display:flex;
  margin:-2px 0 12px;
@@ -1425,7 +1425,7 @@ body.editorMode{-webkit-text-size-adjust:100%;overscroll-behavior:none}
 
 
 <style id="v46-editor">
-/* VERSION 51 — one toolbar, top view, tables + multiselect */
+/* VERSION 52 — one toolbar, top view, tables + multiselect */
 .canvasQuickNav{grid-template-columns:repeat(4,1fr)!important}
 .stylePresetBar,#stylePresetBar{display:none!important}
 .topViewMenu{
@@ -1645,12 +1645,117 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
 @media(prefers-reduced-motion:reduce){button.cutePop,.cuteBurst i{animation:none!important}.cuteBurst{display:none!important}}
 </style>
 
+
+<style id="v52-visual-formula">
+.visualFormulaModal{display:grid;gap:11px}
+.formulaEasyHint{
+ margin:0;padding:10px 11px;border-radius:12px;
+ background:#fff4f2;border:1px solid #efd5cf;color:#8d746b;
+ font-size:10px;line-height:1.45
+}
+.formulaVisualEditor{
+ min-height:120px;
+ padding:18px 14px;
+ border:1.5px solid #e8cfc8;
+ border-radius:16px;
+ background:white;
+ color:#4f4642;
+ font:28px/1.35 "Cambria Math","STIX Two Math",Georgia,serif;
+ text-align:center;
+ outline:none;
+ overflow:auto;
+ caret-color:#df8f95;
+ box-shadow:inset 0 0 0 3px rgba(244,208,205,.15);
+}
+.formulaVisualEditor:focus{
+ border-color:#e7a8a7;
+ box-shadow:0 0 0 4px rgba(235,160,164,.12),inset 0 0 0 3px rgba(244,208,205,.12);
+}
+.formulaVisualEditor:empty:before{
+ content:attr(data-placeholder);
+ color:#c2ada6;
+ pointer-events:none;
+}
+.formulaTemplateGrid.visualOnly{
+ display:grid;
+ grid-template-columns:repeat(4,minmax(0,1fr));
+ gap:7px;
+}
+.formulaTemplateGrid.visualOnly button{
+ min-height:68px!important;
+ border:1px solid #ead1ca!important;
+ background:#fffdf9!important;
+ color:#745e56!important;
+ border-radius:14px!important;
+ display:grid!important;
+ place-items:center!important;
+ gap:2px!important;
+ padding:7px 3px!important;
+}
+.formulaTemplateGrid.visualOnly button b{
+ font:900 23px "Cambria Math","STIX Two Math",serif;
+ color:#6d5550;
+}
+.formulaTemplateGrid.visualOnly button span{
+ font-size:8px;
+ font-weight:850;
+}
+.formulaQuickExamples{
+ display:flex;
+ gap:6px;
+ overflow:auto;
+ padding-bottom:2px
+}
+.formulaQuickExamples button{
+ flex:0 0 auto;
+ border:1px solid #ead6d0;
+ background:#fff;
+ color:#856c64;
+ border-radius:999px;
+ padding:7px 10px;
+ font-size:8px;
+ font-weight:850
+}
+.vfFrac,.fracExpr{
+ display:inline-flex;
+ flex-direction:column;
+ vertical-align:middle;
+ text-align:center;
+ line-height:1.05;
+ margin:0 4px;
+}
+.vfFrac>span:first-child,.fracExpr>span:first-child{
+ border-bottom:1.5px solid currentColor;
+ padding:0 5px 2px;
+}
+.vfFrac>span:last-child,.fracExpr>span:last-child{
+ padding:2px 5px 0;
+}
+.vfRoot,.sqrtExpr{
+ display:inline-flex;
+ align-items:flex-start;
+ vertical-align:middle;
+}
+.vfRoot>span,.sqrtExpr>span{
+ border-top:1.5px solid currentColor;
+ padding:1px 4px 0;
+}
+.formulaObj .vfFrac,.formulaObj .vfRoot{pointer-events:none}
+.formulaAdvanced,.formulaCheats,.formulaHelperTitle,.formulaSymbols{display:none!important}
+@media(max-width:520px){
+ .formulaVisualEditor{min-height:105px;font-size:25px;padding:15px 10px}
+ .formulaTemplateGrid.visualOnly{grid-template-columns:repeat(4,1fr)}
+ .formulaTemplateGrid.visualOnly button{min-height:62px!important}
+ .formulaTemplateGrid.visualOnly button b{font-size:20px}
+}
+</style>
+
 </head>
 <body>
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 51</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 52</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -2441,7 +2546,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 51";
+ $("#headerEyebrow").textContent="VERSION 52";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -2907,76 +3012,112 @@ function formulaToHTML(expr){
  s=s.replace(/_\{([^{}]+)\}/g,'<sub>$1</sub>');
  return s;
 }
+
 window.openFormulaDialog=function(editId=""){
  const old=editId?canvasState.objects.find(x=>x.id===editId):null;
- const value=old?.formula||"x = \\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}";
- openModal(`<div class="formulaModal">
-   <div class="presetModalHead"><div><span class="eyebrow">MATHEMATIK</span><h2>${old?"Formel bearbeiten":"Formel einfügen"}</h2></div><button class="miniIcon" onclick="closeModal()">×</button></div>
-   <label>Formel <span class="formulaHint">– normal tippen oder unten Bausteine wählen</span></label>
-   <textarea id="formulaInput" rows="3" oninput="updateFormulaPreview()" placeholder="z. B. E = mc^2">${esc(value)}</textarea>
-   <div class="formulaHelperTitle">Einfach antippen</div>
-   <div class="formulaTemplateGrid">
-     <button onclick="insertFormulaTemplate('sqrt')"><b>√x</b><span>Wurzel</span></button>
-     <button onclick="insertFormulaTemplate('frac')"><b>½</b><span>Bruch</span></button>
-     <button onclick="insertFormulaTemplate('power')"><b>x²</b><span>Hochzahl</span></button>
-     <button onclick="insertFormulaTemplate('sub')"><b>xₙ</b><span>Index</span></button>
-     <button onclick="insertFormulaTemplate('pi')"><b>π</b><span>Pi</span></button>
-     <button onclick="insertFormulaTemplate('pm')"><b>±</b><span>Plus/Minus</span></button>
-     <button onclick="insertFormulaTemplate('times')"><b>×</b><span>Mal</span></button>
-     <button onclick="insertFormulaTemplate('divide')"><b>÷</b><span>Geteilt</span></button>
+ const html=old?.formulaHTML || (old?.formula?formulaToHTML(old.formula):"");
+ openModal(`<div class="formulaModal visualFormulaModal">
+   <div class="presetModalHead">
+     <div><span class="eyebrow">MATHEMATIK</span><h2>${old?"Formel bearbeiten":"Formel einfügen"}</h2></div>
+     <button class="miniIcon" onclick="closeModal()">×</button>
    </div>
-   <details class="formulaAdvanced">
-     <summary>⌨ Befehle anzeigen</summary>
-     <div class="formulaCheats">
-       <span><b>Wurzel</b><code>\sqrt{x}</code></span>
-       <span><b>Bruch</b><code>\frac{a}{b}</code></span>
-       <span><b>Hochzahl</b><code>x^{2}</code></span>
-       <span><b>Index</b><code>x_{1}</code></span>
-     </div>
-   </details>
-   <div class="formulaPreviewBox"><span>Vorschau</span><div id="formulaPreview"></div></div>
+
+   <p class="formulaEasyHint">Tippe direkt in das Feld. Für Bruch, Wurzel oder Hochzahl einfach unten antippen – du musst keine Befehle schreiben.</p>
+
+   <div id="formulaVisualEditor" class="formulaVisualEditor" contenteditable="true" spellcheck="false" data-placeholder="Tippe z. B.  a² + b² = c²">${html}</div>
+
+   <div class="formulaTemplateGrid visualOnly">
+     <button onclick="insertVisualFormula('sqrt')"><b>√x</b><span>Wurzel</span></button>
+     <button onclick="insertVisualFormula('frac')"><b>½</b><span>Bruch</span></button>
+     <button onclick="insertVisualFormula('power')"><b>x²</b><span>Hochzahl</span></button>
+     <button onclick="insertVisualFormula('sub')"><b>xₙ</b><span>Index</span></button>
+     <button onclick="insertVisualFormula('pi')"><b>π</b><span>Pi</span></button>
+     <button onclick="insertVisualFormula('pm')"><b>±</b><span>Plus/Minus</span></button>
+     <button onclick="insertVisualFormula('times')"><b>×</b><span>Mal</span></button>
+     <button onclick="insertVisualFormula('divide')"><b>÷</b><span>Geteilt</span></button>
+   </div>
+
+   <div class="formulaQuickExamples">
+     <button onclick="setFormulaExample('pythagoras')">a² + b² = c²</button>
+     <button onclick="setFormulaExample('quadratic')">Mitternachtsformel</button>
+     <button onclick="setFormulaExample('percent')">Prozentrechnung</button>
+   </div>
+
    <button class="primary" onclick="saveFormulaObject('${editId}')">${old?"Übernehmen":"Einfügen"}</button>
  </div>`);
- setTimeout(updateFormulaPreview,0);
-}
-window.insertFormulaToken=function(token){
- const el=$("#formulaInput");if(!el)return;
- const a=el.selectionStart??el.value.length,b=el.selectionEnd??a;
- el.value=el.value.slice(0,a)+token+el.value.slice(b);
- el.focus();el.selectionStart=el.selectionEnd=a+token.length;updateFormulaPreview();
+ setTimeout(()=>{
+   const ed=$("#formulaVisualEditor");
+   if(ed){ed.focus();placeCaretAtEnd(ed)}
+ },80);
 }
 
-window.insertFormulaTemplate=function(type){
- const el=$("#formulaInput");if(!el)return;
- const a=el.selectionStart??el.value.length,b=el.selectionEnd??a,selected=el.value.slice(a,b);
- let token="",posOffset=0;
- if(type==="sqrt"){token=`\\sqrt{${selected||"x"}}`;posOffset=selected?token.length:6}
- else if(type==="frac"){token=`\\frac{${selected||"a"}}{b}`;posOffset=selected?token.length-2:6}
- else if(type==="power"){token=selected?`${selected}^{2}`:"x^{2}";posOffset=token.length-1}
- else if(type==="sub"){token=selected?`${selected}_{1}`:"x_{1}";posOffset=token.length-1}
- else if(type==="pi"){token="\\pi";posOffset=token.length}
- else if(type==="pm"){token="\\pm";posOffset=token.length}
- else if(type==="times"){token="\\times";posOffset=token.length}
- else if(type==="divide"){token="\\div";posOffset=token.length}
- const before=el.value.slice(0,a),after=el.value.slice(b);
- el.value=before+token+after;
- const pos=before.length+posOffset;
- el.focus();el.selectionStart=el.selectionEnd=pos;updateFormulaPreview();
+function placeCaretAtEnd(el){
+ const range=document.createRange(),sel=window.getSelection();
+ range.selectNodeContents(el);range.collapse(false);
+ sel.removeAllRanges();sel.addRange(range);
 }
 
-window.updateFormulaPreview=function(){
- const el=$("#formulaInput"),out=$("#formulaPreview");if(out)out.innerHTML=formulaToHTML(el?.value||"");
-}
-window.saveFormulaObject=function(editId=""){
- const expr=$("#formulaInput")?.value.trim();if(!expr)return;
- if(editId){
-   const o=canvasState.objects.find(x=>x.id===editId);if(o){o.formula=expr;o.text=formulaToHTML(expr)}
+function insertHTMLAtCaret(html){
+ const ed=$("#formulaVisualEditor");if(!ed)return;
+ ed.focus();
+ const sel=window.getSelection();
+ let range;
+ if(sel && sel.rangeCount && ed.contains(sel.anchorNode)){
+   range=sel.getRangeAt(0);
  }else{
-   const o={id:id(),z:nextCanvasZ(),kind:"formula",x:110,y:150,w:360,h:90,formula:expr,text:formulaToHTML(expr),rotation:0,locked:false,editing:false,
-     style:{fontSize:28,color:"#4f4642",fontFamily:"Cambria Math, STIX Two Math, serif",textAlign:"center"}};
-   canvasState.objects.push(o);canvasState.selectedType="object";canvasState.selectedId=o.id;canvasState.selectedIds=[o.id];
+   range=document.createRange();range.selectNodeContents(ed);range.collapse(false);
  }
- closeModal();renderCanvasObjects();renderCanvasInspector();markCanvasDirty();pushHistory();
+ range.deleteContents();
+ const temp=document.createElement("div");temp.innerHTML=html;
+ const frag=document.createDocumentFragment();let node,last;
+ while((node=temp.firstChild)){last=frag.appendChild(node)}
+ range.insertNode(frag);
+ if(last){
+   range.setStartAfter(last);range.collapse(true);
+   sel.removeAllRanges();sel.addRange(range);
+ }
+ ed.dispatchEvent(new Event("input",{bubbles:true}));
+}
+
+window.insertVisualFormula=function(type){
+ if(type==="sqrt") insertHTMLAtCaret('<span class="vfRoot">√<span contenteditable="true">x</span></span>&nbsp;');
+ else if(type==="frac") insertHTMLAtCaret('<span class="vfFrac"><span contenteditable="true">a</span><span contenteditable="true">b</span></span>&nbsp;');
+ else if(type==="power") insertHTMLAtCaret('x<sup contenteditable="true">2</sup>&nbsp;');
+ else if(type==="sub") insertHTMLAtCaret('x<sub contenteditable="true">1</sub>&nbsp;');
+ else if(type==="pi") insertHTMLAtCaret('π');
+ else if(type==="pm") insertHTMLAtCaret('±');
+ else if(type==="times") insertHTMLAtCaret('×');
+ else if(type==="divide") insertHTMLAtCaret('÷');
+ const ed=$("#formulaVisualEditor");if(ed)ed.focus();
+}
+
+window.setFormulaExample=function(type){
+ const ed=$("#formulaVisualEditor");if(!ed)return;
+ if(type==="pythagoras") ed.innerHTML='a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup>';
+ else if(type==="quadratic") ed.innerHTML='x = <span class="vfFrac"><span>−b ± <span class="vfRoot">√<span>b<sup>2</sup> − 4ac</span></span></span><span>2a</span></span>';
+ else if(type==="percent") ed.innerHTML='W = <span class="vfFrac"><span>p · G</span><span>100</span></span>';
+ placeCaretAtEnd(ed);
+ cuteToast("Beispiel eingesetzt ♡");
+}
+
+window.saveFormulaObject=function(editId=""){
+ const ed=$("#formulaVisualEditor");if(!ed)return;
+ const html=ed.innerHTML.trim();
+ const plain=(ed.textContent||"").trim();
+ if(!plain)return;
+ if(editId){
+   const o=canvasState.objects.find(x=>x.id===editId);
+   if(o){o.formulaHTML=html;o.formula="";o.text=plain}
+ }else{
+   const o={
+     id:id(),z:nextCanvasZ(),kind:"formula",x:110,y:150,w:360,h:90,
+     formulaHTML:html,formula:"",text:plain,rotation:0,locked:false,editing:false,
+     style:{fontSize:28,color:"#4f4642",fontFamily:"Cambria Math, STIX Two Math, serif",textAlign:"center"}
+   };
+   canvasState.objects.push(o);
+   canvasState.selectedType="object";canvasState.selectedId=o.id;canvasState.selectedIds=[o.id];
+ }
+ closeModal();renderCanvasObjects();renderCanvasInspector();markCanvasDirty();pushHistory();cuteToast("Formel gespeichert ♡");
 }
 
 function nextCanvasZ(){
@@ -3074,7 +3215,7 @@ function renderCanvasObjects(){
    if(o.kind==="tape")return `<div class="cobj tapeSticker ${sel}${lockCls}" data-id="${o.id}" style="${base}--rot:${o.rotation||-4}deg;background:${o.color||"#f2beb2"}"><span class="rotateHandle"></span><span class="resizeHandle"></span></div>`;
    if(o.kind==="formula"){
      const s=o.style||{};
-     return `<div class="cobj formulaObj ${sel}${lockCls}" data-id="${o.id}" style="${base}transform:rotate(${o.rotation||0}deg);font-size:${s.fontSize||28}px;color:${s.color||"#4f4642"};font-family:${s.fontFamily||"Cambria Math, serif"};text-align:${s.textAlign||"center"}">${formulaToHTML(o.formula||o.text||"")}<span class="rotateHandle"></span><span class="resizeHandle"></span></div>`;
+     return `<div class="cobj formulaObj ${sel}${lockCls}" data-id="${o.id}" style="${base}transform:rotate(${o.rotation||0}deg);font-size:${s.fontSize||28}px;color:${s.color||"#4f4642"};font-family:${s.fontFamily||"Cambria Math, serif"};text-align:${s.textAlign||"center"}">${o.formulaHTML||formulaToHTML(o.formula||o.text||"")}<span class="rotateHandle"></span><span class="resizeHandle"></span></div>`;
    }
    if(o.kind==="table"){
      const bw=o.borderWidth??1,bc=o.borderColor||"#aaa7a2",bg=o.cellBackground||"#ffffff",fs=o.fontSize||16;
@@ -4056,13 +4197,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 51: echter Live-Refresh ===== */
+/* ===== VERSION 52: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 51 timetable parser ===== */
+/* ===== VERSION 52 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -4071,7 +4212,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 51: dynamic classes ===== */
+/* ===== VERSION 52: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -4080,11 +4221,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 51: raster-exact timetable ===== */
+/* ===== VERSION 52: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 51 stability fixes ===== */
+/* ===== VERSION 52 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -4097,7 +4238,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
 
-/* ===== VERSION 51 — stable redesign ===== */
+/* ===== VERSION 52 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -4166,7 +4307,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 51 — notebook label + timetable repair ===== */
+/* ===== VERSION 52 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -4233,7 +4374,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .notebookAbbr{font-size:16px}
 }
 
-/* ===== VERSION 51 — Basisplan / Entfall / Hitzestunden ===== */
+/* ===== VERSION 52 — Basisplan / Entfall / Hitzestunden ===== */
 .basisCancelled{
  opacity:.82;
  border-style:dashed!important;
@@ -4271,7 +4412,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  border-color:#dbc8c1!important
 }
 
-/* ===== VERSION 51 — Current vs Basis + moved lesson logic ===== */
+/* ===== VERSION 52 — Current vs Basis + moved lesson logic ===== */
 .planModeSwitch{
  display:grid;
  grid-template-columns:1.35fr 1fr;
@@ -4340,7 +4481,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .planModeSwitch button b{font-size:10px}
 }
 
-/* ===== VERSION 51 — safer row split / replacement handling ===== */
+/* ===== VERSION 52 — safer row split / replacement handling ===== */
 .changedLesson{
  background:linear-gradient(90deg,#fffdfa,#fffaf6)!important;
 }
@@ -4358,13 +4499,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  margin-bottom:3px;
 }
 
-/* ===== VERSION 51 — Mehrfachstunden mit Pause dazwischen ===== */
+/* ===== VERSION 52 — Mehrfachstunden mit Pause dazwischen ===== */
 .splitMultiBadge{
  opacity:.86;
  font-size:8px!important;
 }
 
-/* ===== VERSION 51 — Auto / Manuell Hitzestunden ===== */
+/* ===== VERSION 52 — Auto / Manuell Hitzestunden ===== */
 .heatPlanControl{
  display:flex;
  align-items:center;
@@ -4440,7 +4581,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .heatModeButtons button{min-width:31px;padding:7px 5px}
 }
 
-/* ===== VERSION 51 — clearer navigation + polish ===== */
+/* ===== VERSION 52 — clearer navigation + polish ===== */
 :root{
  --sb-panel:#fffdfa;
  --sb-panel-soft:#fff8f4;
@@ -4616,7 +4757,7 @@ button.primary,button.ghost,.iconbtn{
 }
 </style>
 <style id="v43-compact-ui">
-/* VERSION 51 — compact information architecture */
+/* VERSION 52 — compact information architecture */
 #nav{grid-template-columns:repeat(5,1fr)!important;width:min(94vw,520px)!important}
 #nav button{min-width:0!important}
 .view{padding-bottom:100px!important}
@@ -4649,7 +4790,7 @@ button.primary,button.ghost,.iconbtn{
 
 
 <style id="v44-learning-navigation">
-/* VERSION 51 — Fächer / Lernsets / Study sauber getrennt */
+/* VERSION 52 — Fächer / Lernsets / Study sauber getrennt */
 .learningBackRow{
  display:flex;
  margin:-2px 0 12px;
@@ -4979,13 +5120,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 51: echter Live-Refresh ===== */
+/* ===== VERSION 52: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 51 timetable parser ===== */
+/* ===== VERSION 52 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -4994,7 +5135,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 51: dynamic classes ===== */
+/* ===== VERSION 52: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -5003,11 +5144,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 51: raster-exact timetable ===== */
+/* ===== VERSION 52: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 51 stability fixes ===== */
+/* ===== VERSION 52 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -5020,7 +5161,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
 
-/* ===== VERSION 51 — stable redesign ===== */
+/* ===== VERSION 52 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -5089,7 +5230,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 51 — notebook label + timetable repair ===== */
+/* ===== VERSION 52 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -5156,7 +5297,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .notebookAbbr{font-size:16px}
 }
 
-/* ===== VERSION 51 — Basisplan / Entfall / Hitzestunden ===== */
+/* ===== VERSION 52 — Basisplan / Entfall / Hitzestunden ===== */
 .basisCancelled{
  opacity:.82;
  border-style:dashed!important;
@@ -5194,7 +5335,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  border-color:#dbc8c1!important
 }
 
-/* ===== VERSION 51 — Current vs Basis + moved lesson logic ===== */
+/* ===== VERSION 52 — Current vs Basis + moved lesson logic ===== */
 .planModeSwitch{
  display:grid;
  grid-template-columns:1.35fr 1fr;
@@ -5263,7 +5404,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .planModeSwitch button b{font-size:10px}
 }
 
-/* ===== VERSION 51 — safer row split / replacement handling ===== */
+/* ===== VERSION 52 — safer row split / replacement handling ===== */
 .changedLesson{
  background:linear-gradient(90deg,#fffdfa,#fffaf6)!important;
 }
@@ -5281,13 +5422,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  margin-bottom:3px;
 }
 
-/* ===== VERSION 51 — Mehrfachstunden mit Pause dazwischen ===== */
+/* ===== VERSION 52 — Mehrfachstunden mit Pause dazwischen ===== */
 .splitMultiBadge{
  opacity:.86;
  font-size:8px!important;
 }
 
-/* ===== VERSION 51 — Auto / Manuell Hitzestunden ===== */
+/* ===== VERSION 52 — Auto / Manuell Hitzestunden ===== */
 .heatPlanControl{
  display:flex;
  align-items:center;
@@ -5363,7 +5504,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .heatModeButtons button{min-width:31px;padding:7px 5px}
 }
 
-/* ===== VERSION 51 — clearer navigation + polish ===== */
+/* ===== VERSION 52 — clearer navigation + polish ===== */
 :root{
  --sb-panel:#fffdfa;
  --sb-panel-soft:#fff8f4;
@@ -5539,7 +5680,7 @@ button.primary,button.ghost,.iconbtn{
 }
 </style>
 <style id="v43-compact-ui">
-/* VERSION 51 — compact information architecture */
+/* VERSION 52 — compact information architecture */
 #nav{grid-template-columns:repeat(5,1fr)!important;width:min(94vw,520px)!important}
 #nav button{min-width:0!important}
 .view{padding-bottom:100px!important}
@@ -5572,7 +5713,7 @@ button.primary,button.ghost,.iconbtn{
 
 
 <style id="v44-learning-navigation">
-/* VERSION 51 — Fächer / Lernsets / Study sauber getrennt */
+/* VERSION 52 — Fächer / Lernsets / Study sauber getrennt */
 .learningBackRow{
  display:flex;
  margin:-2px 0 12px;
@@ -6043,7 +6184,7 @@ const timetableSlots=[
  {start:"15:45",end:"16:30"}
 ];
 function fillCancelledSlots(lessons){
- // VERSION 51:
+ // VERSION 52:
  // SchoolBloom darf NIE aus einer nicht erkannten/leeren PDF-Zelle
  // automatisch "Entfall" erfinden.
  // Nur Einträge, die wirklich aus der PDF gelesen wurden, werden gezeigt.
@@ -6405,7 +6546,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
         stroke-width: 13px;
       }
     
-/* ===== VERSION 51 — stable redesign ===== */
+/* ===== VERSION 52 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -6474,7 +6615,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 51 — notebook label + timetable repair ===== */
+/* ===== VERSION 52 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -6541,7 +6682,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  .notebookAbbr{font-size:16px}
 }
 
-/* ===== VERSION 51 — Basisplan / Entfall / Hitzestunden ===== */
+/* ===== VERSION 52 — Basisplan / Entfall / Hitzestunden ===== */
 .basisCancelled{
  opacity:.82;
  border-style:dashed!important;
@@ -6579,7 +6720,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  border-color:#dbc8c1!important
 }
 
-/* ===== VERSION 51 — Current vs Basis + moved lesson logic ===== */
+/* ===== VERSION 52 — Current vs Basis + moved lesson logic ===== */
 .planModeSwitch{
  display:grid;
  grid-template-columns:1.35fr 1fr;
@@ -6648,7 +6789,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  .planModeSwitch button b{font-size:10px}
 }
 
-/* ===== VERSION 51 — safer row split / replacement handling ===== */
+/* ===== VERSION 52 — safer row split / replacement handling ===== */
 .changedLesson{
  background:linear-gradient(90deg,#fffdfa,#fffaf6)!important;
 }
@@ -6666,13 +6807,13 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  margin-bottom:3px;
 }
 
-/* ===== VERSION 51 — Mehrfachstunden mit Pause dazwischen ===== */
+/* ===== VERSION 52 — Mehrfachstunden mit Pause dazwischen ===== */
 .splitMultiBadge{
  opacity:.86;
  font-size:8px!important;
 }
 
-/* ===== VERSION 51 — Auto / Manuell Hitzestunden ===== */
+/* ===== VERSION 52 — Auto / Manuell Hitzestunden ===== */
 .heatPlanControl{
  display:flex;
  align-items:center;
@@ -6748,7 +6889,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  .heatModeButtons button{min-width:31px;padding:7px 5px}
 }
 
-/* ===== VERSION 51 — clearer navigation + polish ===== */
+/* ===== VERSION 52 — clearer navigation + polish ===== */
 :root{
  --sb-panel:#fffdfa;
  --sb-panel-soft:#fff8f4;

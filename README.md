@@ -1,9 +1,10 @@
-# VERSION 51
+# VERSION 52
 
-- Ebenen-Löschen für Formen und freie Pfade repariert: Löschen erfolgt direkt über die Element-ID.
-- Sicherheitsabfrage bleibt.
-- Formel-Editor jetzt mit sichtbaren Bausteinen: Wurzel, Bruch, Hochzahl, Index, Pi, Plus/Minus, Mal, Geteilt.
-- Die passenden Befehle werden automatisch eingesetzt; `sqrt`/`frac` muss man nicht selbst schreiben.
-- Optionale Befehlsübersicht bleibt unter „Befehle anzeigen“.
-- Alle Buttons haben eine kleine Pop-Microanimation mit dezenten ✦/♡ Partikeln.
-- Gruppieren, Gruppierung lösen und Textformat speichern zeigen zusätzlich ein kleines Bestätigungs-Pop-up.
+Matheformeln komplett vereinfacht:
+- Kein sichtbares `sqrt`, `frac`, LaTeX oder Befehlsfeld mehr.
+- Die Formel wird direkt in der großen Vorschau geschrieben und bearbeitet.
+- Wurzel, Bruch, Hochzahl, Index, Pi, ±, × und ÷ sind visuelle Buttons.
+- Tippt man z. B. auf „Wurzel“, erscheint direkt eine sichtbare Wurzel im Editor.
+- Tippt man auf „Bruch“, erscheint direkt ein echter Bruch mit Zähler und Nenner.
+- Fertige Beispiele für Pythagoras, Mitternachtsformel und Prozentrechnung.
+- Gespeicherte Formeln lassen sich später wieder direkt visuell bearbeiten.
