@@ -1,46 +1,48 @@
-# VERSION 41
+# VERSION 42
 
-## Hitzestunden: automatisch + manuell
+## Neue Lehrer
+- HIR = Herr Hirstein
+- MÜN / MUN = Herr Münzer
 
-SchoolBloom hat jetzt drei Modi:
+## Hitzestunden-Erkennung
+Die Auto-Erkennung wurde robuster gemacht.
 
-### Auto
-Standard.
-Wenn in der PHS-PDF `Hitzebedingte Kurzstunden` erkannt wird, werden automatisch
-die Kurzstundenzeiten verwendet. Wenn nicht, gelten die normalen Zeiten.
+SchoolBloom erkennt jetzt mehrere Hinweise:
+- `Hitzebedingte Kurzstunden`
+- `Hitzebedingte`
+- `Kurzstunden`
+- `Temperaturen` + `Unterrichtszeiten`
+- die typische Hitzestunden-Uhrzeitentabelle
 
-### An
-Hitzestunden werden manuell erzwungen, auch wenn PDF.js die Kennzeichnung oder
-kleine Tabelle nicht erkannt hat.
+Dadurch funktioniert Auto auch dann eher, wenn PDF.js den Titel in mehrere Textfragmente zerlegt.
 
-### Aus
-Normale Unterrichtszeiten werden manuell erzwungen.
+Der manuelle Schalter bleibt:
+- Auto
+- An
+- Aus
 
-Die Auswahl wird auf dem Gerät gespeichert.
+## Übersicht / Navigation
+Auf Home gibt es jetzt einen sichtbaren Schnellzugriff für:
+- Stundenplan
+- Fächer
+- Aufgaben
+- Lernen
+- Karteikarten
+- Noten
 
-## Hitzestundenzeiten
-1. 08:00–08:35
-2. 08:35–09:10
-Pause 09:10–09:25
-3. 09:25–10:00
-4. 10:00–10:35
-Pause 10:35–10:50
-5. 10:50–11:25
-6. 11:25–12:00
-Große Pause 12:00–12:25
-7. 12:25–13:00
-8. 13:00–13:35
+Im Mehr-Bereich stehen wichtige zusätzliche Funktionen direkt als Karten.
 
-## Wichtig
-Die gespeicherten Unterrichtsdaten werden nicht mehr dauerhaft auf Hitzestundenzeiten
-umgeschrieben. Die Zeiten werden nur für die aktuelle Anzeige berechnet.
-Dadurch kann Auto/An/Aus sofort umgeschaltet werden, ohne die PDF neu laden zu müssen.
+Die Bottom-Navigation wurde aufgeräumt:
+- größere Tap-Flächen
+- klare Icons
+- nur eine kurze sichtbare Beschriftung pro Punkt
+- weniger visuelle Doppelungen
 
-Home / nächste Stunde verwendet denselben aktiven Modus.
-
-Weiterhin enthalten:
+## Weiterhin
 - Aktuell & Änderungen / Basisplan
-- Mehrfachstunden über Pausen
 - echte Entfälle
-- Verschiebungen
+- verschobene Stunden
+- Mehrfachstunden über Pausen
+- Hitzestunden Auto/An/Aus
+- Notebook-Abkürzungen
 - Klassenwechsel
