@@ -633,13 +633,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 35: echter Live-Refresh ===== */
+/* ===== VERSION 36: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 35 timetable parser ===== */
+/* ===== VERSION 36 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -648,7 +648,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 35: dynamic classes ===== */
+/* ===== VERSION 36: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -657,11 +657,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 35: raster-exact timetable ===== */
+/* ===== VERSION 36: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 35 stability fixes ===== */
+/* ===== VERSION 36 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -674,7 +674,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
 
-/* ===== VERSION 35 — stable redesign ===== */
+/* ===== VERSION 36 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -742,6 +742,73 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .canvasQuickNav{top:78px}
  .canvasQuickDrawer{top:136px}
 }
+
+/* ===== VERSION 36 — notebook label + timetable repair ===== */
+.notebookGrid{
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ gap:18px 12px!important;
+ align-items:start!important
+}
+.newSvgNotebook{
+ min-height:0!important;
+ display:flex!important;
+ flex-direction:column!important;
+ gap:5px!important;
+ overflow:visible!important;
+}
+.notebookVisual{
+ position:relative;
+ display:block;
+ width:100%;
+ aspect-ratio:1/1;
+}
+.notebookVisual .notebookArt{position:absolute;inset:0;width:100%;height:100%}
+.notebookAbbr{
+ position:absolute;
+ left:27%;
+ right:15%;
+ top:20.5%;
+ height:18%;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ z-index:5;
+ font-family:Georgia,serif;
+ font-size:clamp(14px,4vw,22px);
+ font-weight:900;
+ color:#6d4e59;
+ text-align:center;
+ white-space:nowrap;
+ overflow:hidden;
+ text-overflow:ellipsis;
+ padding:0 4px;
+}
+.notebookBelow{
+ display:grid;
+ gap:1px;
+ text-align:center;
+ color:#6c5750;
+ padding:0 4px;
+}
+.notebookBelow strong{
+ font-size:15px;
+ line-height:1.15;
+ white-space:nowrap;
+ overflow:hidden;
+ text-overflow:ellipsis;
+}
+.notebookBelow small{font-size:9px;color:#a0877e}
+.coverPreview{position:relative}
+.coverPreviewAbbr{
+ position:absolute;left:27%;right:15%;top:20.5%;height:18%;
+ display:flex;align-items:center;justify-content:center;
+ font-family:Georgia,serif;font-size:18px;font-weight:900;color:#6d4e59
+}
+@media(max-width:520px){
+ .notebookGrid{gap:16px 8px!important}
+ .notebookBelow strong{font-size:13px}
+ .notebookAbbr{font-size:16px}
+}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.18/paper-full.min.js">
 let homeClockTimer=null;
@@ -761,7 +828,7 @@ ensureHomeClockTimer();
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 35</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 36</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -1084,9 +1151,9 @@ const KEY="schoolhub-v1";
 const defaultData={
   settings:{name:"",type:"school",className:"M U1",school:"PHS Ludwigshafen",pet:"on",pdf:"https://www.phs-lu.de/wp-content/uploads/2023/04/Stundenplan.pdf"},
   homework:[], tests:[], grades:[], flashcards:[], subjects:[
-    {id:"s1",name:"Deutsch",color:"#f2b6b3",cover:"#f7d2cf",emoji:"🌷",notes:[],topics:[],files:[]},
-    {id:"s2",name:"Mathematik",color:"#b8c9ef",cover:"#dce4f7",emoji:"🫐",notes:[],topics:[],files:[]},
-    {id:"s3",name:"Englisch",color:"#bfd9a3",cover:"#e2edc7",emoji:"🍀",notes:[],topics:[],files:[]}
+    {id:"s1",name:"Deutsch",abbr:"D",color:"#f2b6b3",cover:"#f7d2cf",emoji:"🌷",notes:[],topics:[],files:[]},
+    {id:"s2",name:"Mathematik",abbr:"M",color:"#b8c9ef",cover:"#dce4f7",emoji:"🫐",notes:[],topics:[],files:[]},
+    {id:"s3",name:"Englisch",abbr:"E",color:"#bfd9a3",cover:"#e2edc7",emoji:"🍀",notes:[],topics:[],files:[]}
   ],
   absences:[], studySessions:[],
   lessonExtras:{},
@@ -1112,7 +1179,23 @@ let selectedQuizId=null;
 let quizSession=null;
 let aiCloudAvailable=false;
 
-function ensureSubjectShapeRaw(s){s.notes ||= [];s.topics ||= [];s.files ||= [];s.cover ||= s.color||"#f7d2cf";s.emoji ||= "🌸";for(const t of s.topics){t.materials ||= [];t.files ||= [];}}
+function defaultSubjectAbbr(name){
+ const n=String(name||"").trim();
+ if(!n)return "";
+ if(/^LF\s*\d+/i.test(n))return n.toUpperCase();
+ if(/^SSPU\s*\d*/i.test(n))return n.toUpperCase();
+ if(/^(ET|M-FHR|E-FHR|SK|SGL|MINT)$/i.test(n))return n.toUpperCase();
+ const words=n.split(/\s+/).filter(Boolean);
+ if(words.length>1)return words.map(x=>x[0]).join("").slice(0,4).toUpperCase();
+ return n.slice(0,3).toUpperCase();
+}
+function ensureSubjectShapeRaw(s){
+ s.notes ||= [];s.topics ||= [];s.files ||= [];
+ s.cover ||= s.color||"#f7d2cf";
+ s.emoji ||= "🌸";
+ if(typeof s.abbr!=="string")s.abbr=defaultSubjectAbbr(s.name);
+ for(const t of s.topics){t.materials ||= [];t.files ||= [];}
+}
 function load(){
  try{
    const saved=JSON.parse(localStorage.getItem(KEY)||"{}"), d=Object.assign(structuredClone(defaultData),saved);
@@ -1306,7 +1389,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 35";
+ $("#headerEyebrow").textContent="VERSION 36";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -1457,15 +1540,18 @@ window.deleteFlash=function(){if(!data.flashcards.length)return;data.flashcards.
 
 window.openAddSubject=function(){
  openModal(`<h2>Fach erstellen</h2><div class="formGrid">
- <div><label>Name</label><input id="sName" placeholder="z. B. LF 8"></div>
- <div><label>Ordnerfarbe</label><input id="sColor" type="color" value="#c8568e"></div>
- <div><label>Coverfarbe</label><input id="sCover" type="color" value="#f4acc5"></div>
+ <div><label>Fachname</label><input id="sName" placeholder="z. B. Lernfach 6"></div>
+ <div><label>Abkürzung</label><input id="sAbbr" maxlength="8" placeholder="z. B. LF 6"></div>
+ <div><label>Dunkle Farbe</label><input id="sColor" type="color" value="#c8568e"></div>
+ <div><label>Hauptfarbe</label><input id="sCover" type="color" value="#f4acc5"></div>
  <div><label>Symbol</label><select id="sEmoji"><option>🌸</option><option>🌷</option><option>🍀</option><option>🧸</option><option>⭐</option><option>🎀</option><option>🫐</option><option>🍓</option></select></div>
- </div><button class="primary" style="margin-top:12px" onclick="addSubject()">Erstellen</button>`)
+ </div><p class="small" style="margin-top:8px">Die Abkürzung steht später im weißen Feld des Notizbuchs.</p>
+ <button class="primary" style="margin-top:12px" onclick="addSubject()">Erstellen</button>`)
 }
 window.addSubject=function(){
  const n=$("#sName").value.trim();if(!n)return;
- data.subjects.push({id:id(),name:n,color:$("#sColor").value,cover:$("#sCover").value,emoji:$("#sEmoji").value,notes:[],topics:[],files:[]});
+ const ab=($("#sAbbr")?.value||"").trim()||defaultSubjectAbbr(n);
+ data.subjects.push({id:id(),name:n,abbr:ab,color:$("#sColor").value,cover:$("#sCover").value,emoji:$("#sEmoji").value,notes:[],topics:[],files:[]});
  save();closeModal()
 }
 window.addNote=function(sid){const s=data.subjects.find(x=>x.id===sid),title=$("#nTitle").value.trim(),text=$("#nText").value.trim();if(!s||(!title&&!text))return;(s.notes||(s.notes=[])).push({id:id(),title:title||"Notiz",text});save();openSubject(sid)}
@@ -2399,13 +2485,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 35: echter Live-Refresh ===== */
+/* ===== VERSION 36: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 35 timetable parser ===== */
+/* ===== VERSION 36 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -2414,7 +2500,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 35: dynamic classes ===== */
+/* ===== VERSION 36: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -2423,11 +2509,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 35: raster-exact timetable ===== */
+/* ===== VERSION 36: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 35 stability fixes ===== */
+/* ===== VERSION 36 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -2440,7 +2526,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
 
-/* ===== VERSION 35 — stable redesign ===== */
+/* ===== VERSION 36 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -2507,6 +2593,73 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .notebookLabel strong{font-size:14px}
  .canvasQuickNav{top:78px}
  .canvasQuickDrawer{top:136px}
+}
+
+/* ===== VERSION 36 — notebook label + timetable repair ===== */
+.notebookGrid{
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ gap:18px 12px!important;
+ align-items:start!important
+}
+.newSvgNotebook{
+ min-height:0!important;
+ display:flex!important;
+ flex-direction:column!important;
+ gap:5px!important;
+ overflow:visible!important;
+}
+.notebookVisual{
+ position:relative;
+ display:block;
+ width:100%;
+ aspect-ratio:1/1;
+}
+.notebookVisual .notebookArt{position:absolute;inset:0;width:100%;height:100%}
+.notebookAbbr{
+ position:absolute;
+ left:27%;
+ right:15%;
+ top:20.5%;
+ height:18%;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ z-index:5;
+ font-family:Georgia,serif;
+ font-size:clamp(14px,4vw,22px);
+ font-weight:900;
+ color:#6d4e59;
+ text-align:center;
+ white-space:nowrap;
+ overflow:hidden;
+ text-overflow:ellipsis;
+ padding:0 4px;
+}
+.notebookBelow{
+ display:grid;
+ gap:1px;
+ text-align:center;
+ color:#6c5750;
+ padding:0 4px;
+}
+.notebookBelow strong{
+ font-size:15px;
+ line-height:1.15;
+ white-space:nowrap;
+ overflow:hidden;
+ text-overflow:ellipsis;
+}
+.notebookBelow small{font-size:9px;color:#a0877e}
+.coverPreview{position:relative}
+.coverPreviewAbbr{
+ position:absolute;left:27%;right:15%;top:20.5%;height:18%;
+ display:flex;align-items:center;justify-content:center;
+ font-family:Georgia,serif;font-size:18px;font-weight:900;color:#6d4e59
+}
+@media(max-width:520px){
+ .notebookGrid{gap:16px 8px!important}
+ .notebookBelow strong{font-size:13px}
+ .notebookAbbr{font-size:16px}
 }
 </style></head><body><div class="page">${serializedCanvas()}</div></body></html>`;
  const blob=new Blob([html],{type:"text/html"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=title.replace(/[^\wäöüÄÖÜß-]+/g,"_")+".html";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
@@ -2684,13 +2837,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 35: echter Live-Refresh ===== */
+/* ===== VERSION 36: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 35 timetable parser ===== */
+/* ===== VERSION 36 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -2699,7 +2852,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 35: dynamic classes ===== */
+/* ===== VERSION 36: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -2708,11 +2861,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 35: raster-exact timetable ===== */
+/* ===== VERSION 36: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 35 stability fixes ===== */
+/* ===== VERSION 36 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -2725,7 +2878,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
 
-/* ===== VERSION 35 — stable redesign ===== */
+/* ===== VERSION 36 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -2792,6 +2945,73 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .notebookLabel strong{font-size:14px}
  .canvasQuickNav{top:78px}
  .canvasQuickDrawer{top:136px}
+}
+
+/* ===== VERSION 36 — notebook label + timetable repair ===== */
+.notebookGrid{
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ gap:18px 12px!important;
+ align-items:start!important
+}
+.newSvgNotebook{
+ min-height:0!important;
+ display:flex!important;
+ flex-direction:column!important;
+ gap:5px!important;
+ overflow:visible!important;
+}
+.notebookVisual{
+ position:relative;
+ display:block;
+ width:100%;
+ aspect-ratio:1/1;
+}
+.notebookVisual .notebookArt{position:absolute;inset:0;width:100%;height:100%}
+.notebookAbbr{
+ position:absolute;
+ left:27%;
+ right:15%;
+ top:20.5%;
+ height:18%;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ z-index:5;
+ font-family:Georgia,serif;
+ font-size:clamp(14px,4vw,22px);
+ font-weight:900;
+ color:#6d4e59;
+ text-align:center;
+ white-space:nowrap;
+ overflow:hidden;
+ text-overflow:ellipsis;
+ padding:0 4px;
+}
+.notebookBelow{
+ display:grid;
+ gap:1px;
+ text-align:center;
+ color:#6c5750;
+ padding:0 4px;
+}
+.notebookBelow strong{
+ font-size:15px;
+ line-height:1.15;
+ white-space:nowrap;
+ overflow:hidden;
+ text-overflow:ellipsis;
+}
+.notebookBelow small{font-size:9px;color:#a0877e}
+.coverPreview{position:relative}
+.coverPreviewAbbr{
+ position:absolute;left:27%;right:15%;top:20.5%;height:18%;
+ display:flex;align-items:center;justify-content:center;
+ font-family:Georgia,serif;font-size:18px;font-weight:900;color:#6d4e59
+}
+@media(max-width:520px){
+ .notebookGrid{gap:16px 8px!important}
+ .notebookBelow strong{font-size:13px}
+ .notebookAbbr{font-size:16px}
 }
 </style></head><body><div class="page">${serializedCanvas()}</div></body></html>`);w.document.close();setTimeout(()=>w.print(),300)
 }
@@ -3015,9 +3235,14 @@ window.saveNoteEdit=function(sid,nid){const s=data.subjects.find(x=>x.id===sid),
 window.openCoverEditor=function(sid){
  const s=data.subjects.find(x=>x.id===sid);if(!s)return;ensureSubjectShape(s);
  openModal(`<h2>Notizbuch gestalten</h2>
- <p class="small">Die beiden Farben ändern direkt die zwei Rosatöne deines Notebook-Designs.</p>
- <div class="coverPreview" style="--nb-light:${s.cover};--nb-dark:${s.color}">${SUBJECT_NOTEBOOK_SVG}</div>
+ <p class="small">Abkürzung = weißes Feld · die zwei Farben ändern direkt dein Notebook.</p>
+ <div class="coverPreview" style="--nb-light:${s.cover};--nb-dark:${s.color}">
+   ${SUBJECT_NOTEBOOK_SVG}
+   <span class="coverPreviewAbbr">${esc(s.abbr||defaultSubjectAbbr(s.name))}</span>
+ </div>
  <div class="formGrid">
+   <div><label>Fachname</label><input id="editSubjectName" value="${esc(s.name)}"></div>
+   <div><label>Abkürzung</label><input id="editSubjectAbbr" maxlength="8" value="${esc(s.abbr||defaultSubjectAbbr(s.name))}"></div>
    <div><label>Hauptfarbe</label><input id="editCover" type="color" value="${s.cover}" oninput="previewNotebookColors()"></div>
    <div><label>Dunkle Akzentfarbe</label><input id="editFolderColor" type="color" value="${s.color}" oninput="previewNotebookColors()"></div>
    <div><label>Symbol</label><select id="editEmoji">${["🌸","🌷","🍀","🧸","⭐","🎀","🫐","🍓","📚","✏️"].map(e=>`<option ${e===s.emoji?"selected":""}>${e}</option>`).join("")}</select></div>
@@ -3028,18 +3253,19 @@ window.previewNotebookColors=function(){
  const p=document.querySelector(".coverPreview");if(!p)return;
  p.style.setProperty("--nb-light",$("#editCover")?.value||"#f4acc5");
  p.style.setProperty("--nb-dark",$("#editFolderColor")?.value||"#c8568e");
+ const ab=p.querySelector(".coverPreviewAbbr");
+ if(ab)ab.textContent=($("#editSubjectAbbr")?.value||"").trim();
 }
-window.deleteSubjectFromPage=function(sid){
- if(!confirm("Dieses Fach mit allen lokalen Themen und Notizen löschen?"))return;
- data.subjects=data.subjects.filter(x=>x.id!==sid);selectedSubjectId=null;save();openView("subjects");
+window.saveCover=function(sid){
+ const s=data.subjects.find(x=>x.id===sid);if(!s)return;
+ const name=($("#editSubjectName")?.value||"").trim();
+ if(name)s.name=name;
+ s.abbr=($("#editSubjectAbbr")?.value||"").trim()||defaultSubjectAbbr(s.name);
+ s.cover=$("#editCover").value;
+ s.color=$("#editFolderColor").value;
+ s.emoji=$("#editEmoji").value;
+ save();closeModal();renderSubjectDetail();
 }
-
-window.addTopic=function(sid){
- const s=data.subjects.find(x=>x.id===sid),title=$("#topicTitle").value.trim(),text=$("#topicText").value.trim();
- if(!s||!title)return;ensureSubjectShape(s);s.topics.push({id:id(),title,text});save();renderSubjectDetail()
-}
-window.deleteTopic=function(sid,tid){const s=data.subjects.find(x=>x.id===sid);if(!s)return;s.topics=(s.topics||[]).filter(t=>t.id!==tid);save();renderSubjectDetail()}
-window.saveCover=function(sid){const s=data.subjects.find(x=>x.id===sid);if(!s)return;s.cover=$("#editCover").value;s.color=$("#editFolderColor").value;s.emoji=$("#editEmoji").value;save();closeModal();renderSubjectDetail()}
 
 const DBNAME="schoolbloom-files", STORE="files";
 function dbOpen(){return new Promise((res,rej)=>{const r=indexedDB.open(DBNAME,1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains(STORE))r.result.createObjectStore(STORE,{keyPath:"id"})};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
@@ -3104,7 +3330,7 @@ const timetableSlots=[
  {start:"15:45",end:"16:30"}
 ];
 function fillCancelledSlots(lessons){
- // VERSION 35:
+ // VERSION 36:
  // SchoolBloom darf NIE aus einer nicht erkannten/leeren PDF-Zelle
  // automatisch "Entfall" erfinden.
  // Nur Einträge, die wirklich aus der PDF gelesen wurden, werden gezeigt.
@@ -3236,13 +3462,33 @@ function lessonHtml(l){
 
 
 function stableTimetableDay(list){
- // Do not invent, merge or rename PDF entries here.
- // Only remove byte-for-byte duplicate parser records.
- const seen=new Set(),out=[];
- for(const l of (list||[])){
-   const key=[l.day,l.start,l.end,String(l.raw||"").replace(/\s+/g," ").trim(),!!l.specialOnly].join("|");
-   if(seen.has(key))continue;
-   seen.add(key);out.push(l);
+ const src=[...(list||[])].sort((a,b)=>a.start.localeCompare(b.start)||a.end.localeCompare(b.end));
+ const exactSeen=new Set();
+ const out=[];
+
+ for(const l of src){
+   const exact=[l.day,l.start,l.end,String(l.raw||"").replace(/\s+/g," ").trim(),!!l.specialOnly].join("|");
+   if(exactSeen.has(exact))continue;
+   exactSeen.add(exact);
+
+   // Same PDF row / same start can never contain two different lessons
+   // for one class. Keep the stronger geometry candidate.
+   const clash=out.findIndex(x=>
+     x.day===l.day &&
+     !x.specialOnly && !l.specialOnly &&
+     ((x.rowNum!=null&&l.rowNum!=null&&x.rowNum===l.rowNum) || x.start===l.start)
+   );
+
+   if(clash<0){out.push(l);continue}
+
+   const old=out[clash];
+   const score=x=>
+     Number(x.geometryConfidence||0)*10 +
+     (Number(x.blocks||1)>1?2:0) +
+     (x.gridExact?1:0) +
+     (String(x.raw||"").trim()?0.5:0);
+
+   if(score(l)>score(old))out[clash]=l;
  }
  return out.sort((a,b)=>a.start.localeCompare(b.start)||a.end.localeCompare(b.end));
 }
@@ -3420,7 +3666,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
         stroke-width: 13px;
       }
     
-/* ===== VERSION 35 — stable redesign ===== */
+/* ===== VERSION 36 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -3488,6 +3734,73 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  .canvasQuickNav{top:78px}
  .canvasQuickDrawer{top:136px}
 }
+
+/* ===== VERSION 36 — notebook label + timetable repair ===== */
+.notebookGrid{
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ gap:18px 12px!important;
+ align-items:start!important
+}
+.newSvgNotebook{
+ min-height:0!important;
+ display:flex!important;
+ flex-direction:column!important;
+ gap:5px!important;
+ overflow:visible!important;
+}
+.notebookVisual{
+ position:relative;
+ display:block;
+ width:100%;
+ aspect-ratio:1/1;
+}
+.notebookVisual .notebookArt{position:absolute;inset:0;width:100%;height:100%}
+.notebookAbbr{
+ position:absolute;
+ left:27%;
+ right:15%;
+ top:20.5%;
+ height:18%;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ z-index:5;
+ font-family:Georgia,serif;
+ font-size:clamp(14px,4vw,22px);
+ font-weight:900;
+ color:#6d4e59;
+ text-align:center;
+ white-space:nowrap;
+ overflow:hidden;
+ text-overflow:ellipsis;
+ padding:0 4px;
+}
+.notebookBelow{
+ display:grid;
+ gap:1px;
+ text-align:center;
+ color:#6c5750;
+ padding:0 4px;
+}
+.notebookBelow strong{
+ font-size:15px;
+ line-height:1.15;
+ white-space:nowrap;
+ overflow:hidden;
+ text-overflow:ellipsis;
+}
+.notebookBelow small{font-size:9px;color:#a0877e}
+.coverPreview{position:relative}
+.coverPreviewAbbr{
+ position:absolute;left:27%;right:15%;top:20.5%;height:18%;
+ display:flex;align-items:center;justify-content:center;
+ font-family:Georgia,serif;font-size:18px;font-weight:900;color:#6d4e59
+}
+@media(max-width:520px){
+ .notebookGrid{gap:16px 8px!important}
+ .notebookBelow strong{font-size:13px}
+ .notebookAbbr{font-size:16px}
+}
 </style>
   </defs>
   <rect class="cls-3" x="335.96" y="250.98" width="884.21" height="1059.65" rx="60.73" ry="60.73"/>
@@ -3524,10 +3837,13 @@ function renderSubjects(){
    ensureSubjectShape(s);
    const light=s.cover||"#f4acc5";
    const dark=s.color||"#c8568e";
+   const abbr=s.abbr||defaultSubjectAbbr(s.name);
    return `<button class="notebook newSvgNotebook" style="--nb-light:${light};--nb-dark:${dark}" onclick="openSubject('${s.id}')">
-     <span class="notebookArt">${SUBJECT_NOTEBOOK_SVG}</span>
-     <span class="notebookLabel">
-       <span class="notebookEmoji">${esc(s.emoji||"🌸")}</span>
+     <span class="notebookVisual">
+       <span class="notebookArt">${SUBJECT_NOTEBOOK_SVG}</span>
+       <span class="notebookAbbr">${esc(abbr)}</span>
+     </span>
+     <span class="notebookBelow">
        <strong>${esc(s.name)}</strong>
        <small>${(s.topics||[]).length} Themen · ${(s.files||[]).length} Dateien</small>
      </span>
@@ -3771,7 +4087,21 @@ function parsePageItems(items,raster){
    g.items.push(x);
  }
  const headerGroup=headerGroups.sort((a,b)=>b.items.length-a.items.length)[0];
- const headers=headerGroup.items.sort((a,b)=>a.x-b.x);
+ const rawHeaders=headerGroup.items.sort((a,b)=>a.x-b.x);
+
+ // PDF.js can occasionally expose the same printed class header twice.
+ // One duplicate header used to make two timetable columns feed the SAME class.
+ const headers=[];
+ const seenHeaderNames=new Set();
+ for(const x of rawHeaders){
+   const name=x.text.replace(/\s+/g," ").trim();
+   const key=name.toUpperCase();
+   if(seenHeaderNames.has(key))continue;
+   // Also collapse near-identical overlaid text objects at nearly the same x.
+   if(headers.some(h=>Math.abs((h.x+h.w/2)-(x.x+x.w/2))<4))continue;
+   seenHeaderNames.add(key);
+   headers.push(x);
+ }
  if(headers.length<3)return null;
 
  const classes=headers.map(x=>x.text.replace(/\s+/g," ").trim());
@@ -3857,29 +4187,35 @@ function parsePageItems(items,raster){
        const top=first.y+(grp.from>0?Math.abs(dayRows[grp.from-1].y-first.y)/2:gap/2);
        const bottom=last.y-(grp.to<dayRows.length-1?Math.abs(last.y-dayRows[grp.to+1].y)/2:gap/2);
 
-       const parts=arr.filter(x=>{
+       const partItems=arr.filter(x=>{
          const cx=x.x+x.w/2;
          if(cx<bd.left||cx>bd.right)return false;
          if(x.y>top||x.y<bottom)return false;
          if(Math.abs(x.y-headerGroup.y)<9)return false;
          if(/\b(?:Mo|Di|Mi|Do|Fr)\s*[-–]?\s*\d+/i.test(x.text))return false;
          return true;
-       }).sort((a,b)=>b.y-a.y||a.x-b.x)
-         .map(x=>x.text.trim())
-         .filter(Boolean);
+       }).sort((a,b)=>b.y-a.y||a.x-b.x);
 
-       const seen=new Set(),uniqueParts=[];
-       for(const part of parts){
-         const key=part;
-         if(seen.has(key))continue;
-         seen.add(key);
+       const seen=new Set(),uniqueParts=[],usedItems=[];
+       for(const item of partItems){
+         const part=item.text.trim();
+         if(!part||seen.has(part))continue;
+         seen.add(part);
          uniqueParts.push(part);
+         usedItems.push(item);
        }
 
        const raw=cleanPdfCellText(uniqueParts.join(" "));
        if(!raw)continue;
 
-       schedule[classes[ci]].push({
+       const classCenter=centers[ci];
+       const halfWidth=Math.max(1,(bd.right-bd.left)/2);
+       const distances=usedItems.map(x=>Math.abs((x.x+x.w/2)-classCenter)/halfWidth);
+       const geometryConfidence=distances.length
+         ? Math.max(0,1-(distances.reduce((a,b)=>a+b,0)/distances.length))
+         : 0;
+
+       const candidate={
          day,
          start:first.start,
          end:last.end,
@@ -3887,8 +4223,22 @@ function parsePageItems(items,raster){
          rowNum:first.num,
          blocks:grp.to-grp.from+1,
          isDouble:(grp.to-grp.from+1)>=2,
-         gridExact:true
-       });
+         gridExact:true,
+         geometryConfidence
+       };
+
+       // A class has exactly one printed cell per timetable row.
+       // If PDF.js produced two candidates for the same row, keep the one
+       // whose text is geometrically centered inside THIS class column.
+       const existingIndex=schedule[classes[ci]].findIndex(x=>x.day===day&&x.rowNum===first.num);
+       if(existingIndex<0){
+         schedule[classes[ci]].push(candidate);
+       }else{
+         const old=schedule[classes[ci]][existingIndex];
+         const oldScore=Number(old.geometryConfidence||0)+(old.raw?0.05:0);
+         const newScore=geometryConfidence+(raw?0.05:0);
+         if(newScore>oldScore)schedule[classes[ci]][existingIndex]=candidate;
+       }
      }
    }
  }
@@ -4058,7 +4408,7 @@ async function parsePdfDocument(pdf){
    lessons:combined[chosen]||[],
    sourceLabel:dm?dm[1]:"",
    fetchedAt:Date.now(),
-   parserVersion:24
+   parserVersion:36
  };
  data.settings.className=chosen;
  save();
