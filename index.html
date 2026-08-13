@@ -633,13 +633,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 49: echter Live-Refresh ===== */
+/* ===== VERSION 50: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 49 timetable parser ===== */
+/* ===== VERSION 50 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -648,7 +648,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 49: dynamic classes ===== */
+/* ===== VERSION 50: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -657,11 +657,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 49: raster-exact timetable ===== */
+/* ===== VERSION 50: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 49 stability fixes ===== */
+/* ===== VERSION 50 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -674,7 +674,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
 
-/* ===== VERSION 49 — stable redesign ===== */
+/* ===== VERSION 50 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -743,7 +743,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 49 — notebook label + timetable repair ===== */
+/* ===== VERSION 50 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -810,7 +810,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .notebookAbbr{font-size:16px}
 }
 
-/* ===== VERSION 49 — Basisplan / Entfall / Hitzestunden ===== */
+/* ===== VERSION 50 — Basisplan / Entfall / Hitzestunden ===== */
 .basisCancelled{
  opacity:.82;
  border-style:dashed!important;
@@ -848,7 +848,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  border-color:#dbc8c1!important
 }
 
-/* ===== VERSION 49 — Current vs Basis + moved lesson logic ===== */
+/* ===== VERSION 50 — Current vs Basis + moved lesson logic ===== */
 .planModeSwitch{
  display:grid;
  grid-template-columns:1.35fr 1fr;
@@ -917,7 +917,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .planModeSwitch button b{font-size:10px}
 }
 
-/* ===== VERSION 49 — safer row split / replacement handling ===== */
+/* ===== VERSION 50 — safer row split / replacement handling ===== */
 .changedLesson{
  background:linear-gradient(90deg,#fffdfa,#fffaf6)!important;
 }
@@ -935,13 +935,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  margin-bottom:3px;
 }
 
-/* ===== VERSION 49 — Mehrfachstunden mit Pause dazwischen ===== */
+/* ===== VERSION 50 — Mehrfachstunden mit Pause dazwischen ===== */
 .splitMultiBadge{
  opacity:.86;
  font-size:8px!important;
 }
 
-/* ===== VERSION 49 — Auto / Manuell Hitzestunden ===== */
+/* ===== VERSION 50 — Auto / Manuell Hitzestunden ===== */
 .heatPlanControl{
  display:flex;
  align-items:center;
@@ -1017,7 +1017,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .heatModeButtons button{min-width:31px;padding:7px 5px}
 }
 
-/* ===== VERSION 49 — clearer navigation + polish ===== */
+/* ===== VERSION 50 — clearer navigation + polish ===== */
 :root{
  --sb-panel:#fffdfa;
  --sb-panel-soft:#fff8f4;
@@ -1207,7 +1207,7 @@ ensureHomeClockTimer();
 </script>
 
 <style id="v43-compact-ui">
-/* VERSION 49 — compact information architecture */
+/* VERSION 50 — compact information architecture */
 #nav{grid-template-columns:repeat(5,1fr)!important;width:min(94vw,520px)!important}
 #nav button{min-width:0!important}
 .view{padding-bottom:100px!important}
@@ -1240,7 +1240,7 @@ ensureHomeClockTimer();
 
 
 <style id="v44-learning-navigation">
-/* VERSION 49 — Fächer / Lernsets / Study sauber getrennt */
+/* VERSION 50 — Fächer / Lernsets / Study sauber getrennt */
 .learningBackRow{
  display:flex;
  margin:-2px 0 12px;
@@ -1425,7 +1425,7 @@ body.editorMode{-webkit-text-size-adjust:100%;overscroll-behavior:none}
 
 
 <style id="v46-editor">
-/* VERSION 49 — one toolbar, top view, tables + multiselect */
+/* VERSION 50 — one toolbar, top view, tables + multiselect */
 .canvasQuickNav{grid-template-columns:repeat(4,1fr)!important}
 .stylePresetBar,#stylePresetBar{display:none!important}
 .topViewMenu{
@@ -1590,12 +1590,40 @@ body.editorMode{-webkit-text-size-adjust:100%;overscroll-behavior:none}
 }
 </style>
 
+
+<style id="v50-grouping">
+.formatManagerList{display:grid;gap:7px;margin:8px 0 12px}
+.formatManagerRow{
+ display:grid;grid-template-columns:40px 1fr auto 38px;align-items:center;gap:7px;
+ border:1px solid #ead4ce;background:#fffdf9;border-radius:13px;padding:8px;
+}
+.formatManagerPreview{
+ width:38px;height:38px;border-radius:11px;background:#f6dfdc;color:#846961;
+ display:grid;place-items:center;font-size:16px;font-weight:900
+}
+.formatManagerRow b{display:block;font-size:11px;color:#725e56}
+.formatManagerRow small{display:block;font-size:8px;color:#a58b82;margin-top:2px}
+.formatManagerRow button{
+ border:1px solid #e7d0c9;background:#fff;color:#7d655e;border-radius:9px;
+ padding:7px;font-size:8px;font-weight:850
+}
+.formatManagerRow .formatDeleteBtn{color:#bd686c;background:#fff4f4}
+.managerEmpty{
+ padding:22px;text-align:center;border:1px dashed #e5cec7;border-radius:14px;
+ color:#a0877e;font-size:10px;margin:8px 0 12px
+}
+.vectorDeleteBtn{color:#b96065!important;border-color:#e9c3c4!important;background:#fff3f3!important}
+.cobj.selected[data-id]{outline-offset:3px}
+.multiInspector .alignRow{display:flex;flex-wrap:wrap!important}
+.multiInspector .alignRow button{flex:1 1 110px}
+</style>
+
 </head>
 <body>
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 49</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 50</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -2386,7 +2414,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 49";
+ $("#headerEyebrow").textContent="VERSION 50";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -2696,18 +2724,20 @@ window.saveSelectionAsTextFormat=function(){
    openModal(`<div class="compactPresetModal"><h2>Text fehlt</h2><p class="small">Ein Textformat braucht mindestens ein ausgewähltes Textobjekt. Formen, Zettel, Sticker oder Bilder können zusätzlich dazugehören.</p><button class="primary" onclick="closeModal()">OK</button></div>`);
    return;
  }
+ // A multi-selection saved as a text format becomes a real group immediately.
+ if(ids.length+selectedV.length>1)groupSelectedItems(true);
  const vb=vectors.map(v=>vectorBounds(v));
  const allMinX=[...items.map(o=>o.x),...vb.map(b=>b.x)],allMinY=[...items.map(o=>o.y),...vb.map(b=>b.y)];
  const allMaxX=[...items.map(o=>o.x+o.w),...vb.map(b=>b.x+b.w)],allMaxY=[...items.map(o=>o.y+o.h),...vb.map(b=>b.y+b.h)];
  const minX=Math.min(...allMinX),minY=Math.min(...allMinY),maxX=Math.max(...allMaxX),maxY=Math.max(...allMaxY);
  const bundle=items.map(o=>{
    const n=JSON.parse(JSON.stringify(o));
-   delete n.id;delete n.z;delete n.locked;delete n.editing;
+   delete n.id;delete n.z;delete n.locked;delete n.editing;delete n.groupId;
    n.relX=o.x-minX;n.relY=o.y-minY;
    delete n.x;delete n.y;
    return n;
  });
- const vectorBundle=vectors.map(v=>{const n=JSON.parse(JSON.stringify(v));delete n.id;delete n.z;const b=vectorBounds(v);n.relX=b.x-minX;n.relY=b.y-minY;n.origBounds=b;return n});
+ const vectorBundle=vectors.map(v=>{const n=JSON.parse(JSON.stringify(v));delete n.id;delete n.z;delete n.groupId;const b=vectorBounds(v);n.relX=b.x-minX;n.relY=b.y-minY;n.origBounds=b;return n});
  const payload=JSON.stringify({bundle,vectorBundle,w:maxX-minX,h:maxY-minY}).replace(/'/g,"&#39;");
  openModal(`<div class="compactPresetModal">
    <div class="presetModalHead"><div><span class="eyebrow">MEHRFACHAUSWAHL</span><h2>Als Textformat speichern</h2></div><button class="miniIcon" onclick="closeModal()">×</button></div>
@@ -2740,19 +2770,19 @@ window.insertSavedTextFormat=function(presetId){
  const W=canvasPageWidth(),H=canvasPageHeight();
  const ox=Math.max(20,(W-(preset.bundleW||300))/2);
  const oy=Math.max(20,Math.min(H-(preset.bundleH||160)-20,150));
- const newIds=[];
+ const newIds=[],freshGroupId=makeGroupId();
  let z=nextCanvasZ();
  for(const src of preset.bundle){
    const o=JSON.parse(JSON.stringify(src));
    o.id=id();o.x=ox+(o.relX||0);o.y=oy+(o.relY||0);delete o.relX;delete o.relY;
-   o.z=z++;o.locked=false;o.editing=false;
+   o.z=z++;o.locked=false;o.editing=false;o.groupId=freshGroupId;
    canvasState.objects.push(o);newIds.push(o.id);
  }
  const newVids=[];
  for(const src of (preset.vectorBundle||[])){
    const v=JSON.parse(JSON.stringify(src)),b=v.origBounds||{x:0,y:0,w:100,h:100};delete v.origBounds;
    const dx=ox+(v.relX||0)-b.x,dy=oy+(v.relY||0)-b.y;delete v.relX;delete v.relY;
-   v.id=id();v.z=z++;
+   v.id=id();v.z=z++;v.groupId=freshGroupId;
    if(v.type==="rect"){v.x+=dx;v.y+=dy}
    else if(v.type==="ellipse"){v.cx+=dx;v.cy+=dy}
    else if(v.points)v.points=v.points.map(p=>[p[0]+dx,p[1]+dy]);
@@ -2761,8 +2791,25 @@ window.insertSavedTextFormat=function(presetId){
  canvasState.selectedIds=newIds;canvasState.selectedVectorIds=newVids;
  canvasState.selectedType=newIds.length?"object":newVids.length?"vector":null;
  canvasState.selectedId=newIds.at(-1)||newVids.at(-1)||null;
- canvasState.multiMode=(newIds.length+newVids.length)>1;
+ canvasState.multiMode=false;
  renderCanvasObjects();renderVectors();renderCanvasInspector();renderLayerList();updateMultiSelectStatus();markCanvasDirty();pushHistory();
+}
+
+
+window.openTextFormatManager=function(){
+ const custom=JSON.parse(localStorage.getItem("schoolbloom-canvas-styles")||"[]");
+ openModal(`<div class="textFormatManager">
+   <div class="presetModalHead"><div><span class="eyebrow">TEXT</span><h2>Textformate verwalten</h2></div><button class="miniIcon" onclick="closeModal()">×</button></div>
+   ${custom.length?`<div class="formatManagerList">${custom.map(s=>`
+    <div class="formatManagerRow">
+      <div class="formatManagerPreview">${s.bundle?"▣":(s.type==="block"?"Aa":"T")}</div>
+      <div><b>${esc(s.name||"Eigenes Format")}</b><small>${s.bundle?"Gruppiertes Textformat":"Textformat"}</small></div>
+      ${s.bundle?`<button onclick="insertSavedTextFormat('${s.id}');closeModal()">Einfügen</button>`:`<button onclick="closeModal();createCustomStylePreset('${s.id}')">Bearbeiten</button>`}
+      <button class="formatDeleteBtn" onclick="deleteCustomStylePreset('${s.id}')">⌫</button>
+    </div>`).join("")}</div>`:
+    `<div class="managerEmpty">Noch keine eigenen Textformate.</div>`}
+   <button class="primary" onclick="closeModal();createCustomStylePreset()">＋ Neues Textformat</button>
+ </div>`);
 }
 
 window.createCustomStylePreset=function(editId=null){
@@ -2801,7 +2848,7 @@ window.deleteCustomStylePreset=function(idv){
 }
 window.performDeleteCustomStylePreset=function(idv){
  let arr=JSON.parse(localStorage.getItem("schoolbloom-canvas-styles")||"[]");arr=arr.filter(x=>x.id!==idv);
- localStorage.setItem("schoolbloom-canvas-styles",JSON.stringify(arr));closeModal();renderStylePresets();
+ localStorage.setItem("schoolbloom-canvas-styles",JSON.stringify(arr));closeModal();renderStylePresets();setTimeout(()=>openTextFormatManager(),0);
 }
 
 
@@ -2976,9 +3023,10 @@ function attachCanvasObjectEvents(){
        if(!(canvasState.selectedType==="object"&&canvasState.selectedId===oid))selectCanvasObject(oid);
        return;
      }
-     const already=canvasState.selectedType==="object"&&canvasState.selectedId===oid;
+     const already=(canvasState.selectedIds||[]).includes(oid);
      if(!already){canvasState.objects.forEach(x=>x.editing=false);selectCanvasObject(oid);return}
      if(o.locked)return;
+     if((canvasState.selectedIds.length+canvasState.selectedVectorIds.length)>1){e.preventDefault();e.stopPropagation();startDragSelection(e);return}
      if(o.editing)return;
      const start=canvasPoint(e),ox=o.x,oy=o.y;let moved=false;
      const move=ev=>{const q=canvasPoint(ev);if(Math.hypot(q.x-start.x,q.y-start.y)>6)moved=true;if(moved){const rawX=Math.max(0,Math.min(canvasPageWidth()-o.w,ox+q.x-start.x)),rawY=Math.max(0,Math.min(canvasPageHeight()-o.h,oy+q.y-start.y)),sn=snapObjectPosition(o,rawX,rawY);o.x=sn.x;o.y=sn.y;el.style.left=o.x+"px";el.style.top=o.y+"px";markCanvasDirty(false)}};
@@ -3093,16 +3141,18 @@ function startResizeObject(e,oid){
  const up=()=>{window.removeEventListener("pointermove",move);window.removeEventListener("pointerup",up);pushHistory();renderCanvasInspector()};window.addEventListener("pointermove",move);window.addEventListener("pointerup",up);
 }
 window.selectCanvasObject=function(oid){
+ const o=canvasState.objects.find(x=>x.id===oid);
+ if(o?.groupId&&!canvasState.multiMode){selectWholeGroup(o.groupId);return}
  const same=canvasState.selectedType==="object"&&canvasState.selectedId===oid&&canvasState.selectedIds.length===1;
- canvasState.selectedType="object";canvasState.selectedId=oid;canvasState.selectedIds=[oid];
+ canvasState.selectedType="object";canvasState.selectedId=oid;canvasState.selectedIds=[oid];canvasState.selectedVectorIds=[];
  if(!same)renderCanvasObjects();
- renderCanvasInspector();renderLayerList();
+ renderVectors();renderCanvasInspector();renderLayerList();updateMultiSelectStatus();
 }
 function renderCanvasInspector(){
  const el=$("#canvasInspector");if(!el)return;
  if(canvasState.multiMode&&((canvasState.selectedIds?.length||0)+(canvasState.selectedVectorIds?.length||0)>1)){
    const multiCount=(canvasState.selectedIds?.length||0)+(canvasState.selectedVectorIds?.length||0);
-   el.innerHTML=`<div class="multiInspector"><b>${multiCount} Objekte ausgewählt</b><span>Ziehe eines der ausgewählten Objekte, um die Gruppe gemeinsam zu bewegen.</span><div class="alignRow"><button onclick="duplicateSelected()">⧉ Duplizieren</button><button onclick="toggleSelectedLock()">🔒 Sperren</button><button onclick="deleteSelectedCanvasItem()">⌫ Löschen</button></div></div>`;
+   el.innerHTML=`<div class="multiInspector"><b>${multiCount} Objekte ausgewählt</b><span>Ziehe eines der ausgewählten Objekte, um die Gruppe gemeinsam zu bewegen.</span><div class="alignRow"><button onclick="groupSelectedItems()">▣ Gruppieren</button><button onclick="ungroupSelectedItems()">▢ Lösen</button><button onclick="saveSelectionAsTextFormat()">＋ Textformat</button><button onclick="duplicateSelected()">⧉ Duplizieren</button><button onclick="toggleSelectedLock()">🔒 Sperren</button><button onclick="deleteSelectedCanvasItem()">⌫ Löschen</button></div></div>`;
    return;
  }
  if(canvasState.selectedType==="object"){
@@ -3177,7 +3227,7 @@ function renderCanvasInspector(){
      <div><label>Drehung</label><input type="number" min="-180" max="180" value="${Math.round(v.rotation||0)}" onchange="updateVectorStyle('rotation',+this.value)"></div>
      ${v.type==="rect"?`<div><label>Ecken rund</label><input type="number" min="0" max="100" value="${v.rx||0}" onchange="updateVectorStyle('rx',+this.value)"></div>`:""}
      <div><label>Linie</label><select onchange="updateVectorStyle('dash',this.value)"><option value="solid">Durchgezogen</option><option value="dashed" ${v.dash==="dashed"?"selected":""}>Gestrichelt</option><option value="dotted" ${v.dash==="dotted"?"selected":""}>Gepunktet</option></select></div>
-     <div class="full vectorToolbar"><button onclick="duplicateSelectedVector()">Duplizieren</button><button onclick="pathfinderSubtract()">Subtrahieren</button><button onclick="toggleNodeEdit()">Ankerpunkte</button></div>
+     <div class="full vectorToolbar"><button onclick="duplicateSelectedVector()">Duplizieren</button><button onclick="pathfinderSubtract()">Subtrahieren</button><button onclick="toggleNodeEdit()">Ankerpunkte</button><button class="vectorDeleteBtn" onclick="deleteSelectedCanvasItem()">⌫ Löschen</button></div>
    </div>`;
  }else el.textContent="Wähle ein Element aus.";
 }
@@ -3259,6 +3309,73 @@ function updateMultiSelectStatus(){
  const n=(canvasState.selectedIds?.length||0)+(canvasState.selectedVectorIds?.length||0);
  el.classList.add("show");
  el.innerHTML=`<span>☑ Mehrfachauswahl</span><b>${n} ausgewählt</b><button onclick="saveSelectionAsTextFormat()" ${n?"":"disabled"}>Als Textformat ＋</button><button onclick="toggleMultiSelectMode()">Fertig</button>`;
+}
+
+
+function makeGroupId(){return "grp-"+Date.now()+"-"+Math.random().toString(36).slice(2,7)}
+function getGroupMembers(groupId){
+ return {
+   objects:canvasState.objects.filter(o=>o.groupId===groupId),
+   vectors:canvasState.vectors.filter(v=>v.groupId===groupId)
+ };
+}
+function selectWholeGroup(groupId){
+ if(!groupId)return false;
+ const g=getGroupMembers(groupId);
+ if(!g.objects.length&&!g.vectors.length)return false;
+ canvasState.selectedIds=g.objects.map(o=>o.id);
+ canvasState.selectedVectorIds=g.vectors.map(v=>v.id);
+ canvasState.selectedType=g.objects.length?"object":"vector";
+ canvasState.selectedId=(g.objects.at(-1)?.id||g.vectors.at(-1)?.id||null);
+ renderCanvasObjects();renderVectors();renderCanvasInspector();renderLayerList();updateMultiSelectStatus();
+ return true;
+}
+window.groupSelectedItems=function(silent=false){
+ const ids=selectedObjectIds(),vids=selectedVectorIds();
+ if(ids.length+vids.length<2){
+   if(!silent)openModal(`<div class="compactPresetModal"><h2>Mindestens 2 Elemente</h2><p class="small">Wähle mehrere Texte, Formen, Pfade, Sticker oder andere Elemente aus und gruppiere sie dann.</p><button class="primary" onclick="closeModal()">OK</button></div>`);
+   return null;
+ }
+ const gid=makeGroupId();
+ canvasState.objects.filter(o=>ids.includes(o.id)).forEach(o=>o.groupId=gid);
+ canvasState.vectors.filter(v=>vids.includes(v.id)).forEach(v=>v.groupId=gid);
+ canvasState.selectedIds=ids;canvasState.selectedVectorIds=vids;
+ if(!silent){renderCanvasObjects();renderVectors();renderCanvasInspector();renderLayerList();markCanvasDirty();pushHistory()}
+ return gid;
+}
+window.ungroupSelectedItems=function(){
+ const ids=selectedObjectIds(),vids=selectedVectorIds();
+ const gids=new Set([
+   ...canvasState.objects.filter(o=>ids.includes(o.id)&&o.groupId).map(o=>o.groupId),
+   ...canvasState.vectors.filter(v=>vids.includes(v.id)&&v.groupId).map(v=>v.groupId)
+ ]);
+ if(!gids.size)return;
+ canvasState.objects.filter(o=>gids.has(o.groupId)).forEach(o=>delete o.groupId);
+ canvasState.vectors.filter(v=>gids.has(v.groupId)).forEach(v=>delete v.groupId);
+ renderCanvasObjects();renderVectors();renderCanvasInspector();renderLayerList();markCanvasDirty();pushHistory();
+}
+function startDragSelection(e){
+ const ids=selectedObjectIds(),vids=selectedVectorIds();
+ const objects=canvasState.objects.filter(o=>ids.includes(o.id)&&!o.locked);
+ const vectors=canvasState.vectors.filter(v=>vids.includes(v.id)&&!v.locked);
+ if(!objects.length&&!vectors.length)return;
+ const p=canvasPoint(e);
+ const oStarts=objects.map(o=>({o,x:o.x,y:o.y}));
+ const vStarts=vectors.map(v=>({v,data:JSON.parse(JSON.stringify(v))}));
+ const move=ev=>{
+   const q=canvasPoint(ev),dx=q.x-p.x,dy=q.y-p.y,W=canvasPageWidth(),H=canvasPageHeight();
+   oStarts.forEach(({o,x,y})=>{
+     o.x=Math.max(0,Math.min(W-o.w,x+dx));o.y=Math.max(0,Math.min(H-o.h,y+dy));
+   });
+   vStarts.forEach(({v,data})=>{
+     if(v.type==="rect"){v.x=data.x+dx;v.y=data.y+dy}
+     else if(v.type==="ellipse"){v.cx=data.cx+dx;v.cy=data.cy+dy}
+     else if(v.points)v.points=data.points.map(pt=>[pt[0]+dx,pt[1]+dy]);
+   });
+   renderCanvasObjects();renderVectors();markCanvasDirty(false);
+ };
+ const up=()=>{window.removeEventListener("pointermove",move);window.removeEventListener("pointerup",up);pushHistory()};
+ window.addEventListener("pointermove",move);window.addEventListener("pointerup",up);
 }
 
 function selectedVectorIds(){
@@ -3352,17 +3469,16 @@ window.alignSelected=function(mode){if(canvasState.selectedType==="object"){cons
 window.duplicateSelected=function(){if(canvasState.selectedType==="object"){const ids=selectedObjectIds();if(!ids.length)return;const newIds=[];for(const oid of ids){const o=canvasState.objects.find(x=>x.id===oid);if(!o)continue;const n=JSON.parse(JSON.stringify(o));n.id=id();n.x+=18;n.y+=18;n.z=nextCanvasZ();n.locked=false;n.editing=false;canvasState.objects.push(n);newIds.push(n.id)}canvasState.selectedIds=newIds;canvasState.selectedId=newIds.at(-1)||null;canvasState.selectedType=newIds.length?"object":null;renderCanvasObjects();renderCanvasInspector()}else if(canvasState.selectedType==="vector"){const v=canvasState.vectors.find(x=>x.id===canvasState.selectedId);if(!v)return;const n=JSON.parse(JSON.stringify(v));n.id=id();n.z=nextCanvasZ();n.locked=false;if(n.x!=null){n.x+=18;n.y+=18}if(n.cx!=null){n.cx+=18;n.cy+=18}if(n.points)n.points=n.points.map(p=>[p[0]+18,p[1]+18]);canvasState.vectors.push(n);selectVector(n.id)}pushHistory()}
 
 window.toggleSelectedLock=function(){
- if(canvasState.selectedType==="object"){
-  const ids=selectedObjectIds();if(!ids.length)return;
-  const items=canvasState.objects.filter(x=>ids.includes(x.id));const shouldLock=items.some(x=>!x.locked);items.forEach(x=>x.locked=shouldLock);
- }else if(canvasState.selectedType==="vector"){
-  const v=canvasState.vectors.find(x=>x.id===canvasState.selectedId);if(!v)return;v.locked=!v.locked;
+ const ids=selectedObjectIds(),vids=selectedVectorIds();
+ if(ids.length||vids.length){
+  const items=[...canvasState.objects.filter(x=>ids.includes(x.id)),...canvasState.vectors.filter(x=>vids.includes(x.id))];
+  if(!items.length)return;const shouldLock=items.some(x=>!x.locked);items.forEach(x=>x.locked=shouldLock);
  }
  renderCanvasObjects();renderVectors();renderCanvasInspector();markCanvasDirty();
 }
 window.moveSelectedLayer=function(dir){
- const ids=selectedObjectIds();
- if(ids.length>1){const step=dir>0?1000:-1000;canvasState.objects.filter(x=>ids.includes(x.id)).forEach(x=>x.z=(x.z||0)+step);renderCanvasObjects();renderLayerList();markCanvasDirty();pushHistory();return}
+ const ids=selectedObjectIds(),vids=selectedVectorIds();
+ if(ids.length+vids.length>1){const step=dir>0?1000:-1000;canvasState.objects.filter(x=>ids.includes(x.id)).forEach(x=>x.z=(x.z||0)+step);canvasState.vectors.filter(x=>vids.includes(x.id)).forEach(x=>x.z=(x.z||0)+step);renderCanvasObjects();renderVectors();renderLayerList();markCanvasDirty();pushHistory();return}
  const all=[...canvasState.objects.map(x=>({kind:"object",x})),...canvasState.vectors.map(x=>({kind:"vector",x}))].sort((a,b)=>(a.x.z||0)-(b.x.z||0));
  const idx=all.findIndex(a=>a.kind===canvasState.selectedType&&a.x.id===canvasState.selectedId);if(idx<0)return;
  const ni=Math.max(0,Math.min(all.length-1,idx+dir));if(ni===idx)return;
@@ -3429,7 +3545,10 @@ function attachVectorEvents(){
      e.preventDefault();e.stopPropagation();
      if(canvasState.multiMode||e.shiftKey){toggleVectorInMultiSelection(vid);return}
      selectVector(vid);
-     if(!v.locked)startVectorDrag(e,vid);
+     if(!v.locked){
+       if((canvasState.selectedIds.length+canvasState.selectedVectorIds.length)>1)startDragSelection(e);
+       else startVectorDrag(e,vid);
+     }
    });
  });
 
@@ -3476,7 +3595,12 @@ window.setVectorTool=function(t){
  }
  renderCanvasInspector();
 }
-function selectVector(idv){canvasState.selectedType="vector";canvasState.selectedId=idv;canvasState.selectedIds=[];canvasState.selectedVectorIds=[idv];renderVectors();renderCanvasObjects();renderCanvasInspector();updateMultiSelectStatus()}
+function selectVector(idv){
+ const v=canvasState.vectors.find(x=>x.id===idv);
+ if(v?.groupId&&!canvasState.multiMode){selectWholeGroup(v.groupId);return}
+ canvasState.selectedType="vector";canvasState.selectedId=idv;canvasState.selectedIds=[];canvasState.selectedVectorIds=[idv];
+ renderVectors();renderCanvasObjects();renderCanvasInspector();renderLayerList();updateMultiSelectStatus();
+}
 function startVectorDraw(e){
  if(canvasState.vectorTool!=="pen")return;
  const p=canvasPoint(e),pts=[[p.x,p.y]],draw=$("#canvasSvg");if(!draw)return;
@@ -3597,7 +3721,8 @@ window.editorOpenGroup=function(group,btn){
    ].join("");
  }else if(group==="text"){
    d.innerHTML=canvasPresets().map(s=>item(s.name,s.bundle?`insertSavedTextFormat('${s.id}')`:`addCanvasText('${s.id}')`,s.id==="h1"?"H1":s.id==="h2"?"H2":s.id==="task"?"✓":s.id==="merke"?"!":"Aa")).join("")+
-    item("Neues Textformat","createCustomStylePreset()","＋");
+    item("Neues Textformat","createCustomStylePreset()","＋")+
+    item("Textformate verwalten","openTextFormatManager()","⚙");
  }else if(group==="elements"){
    d.innerHTML=[
     item("Rechteck","addVectorShape('rect')","□"),
@@ -3609,6 +3734,8 @@ window.editorOpenGroup=function(group,btn){
  }else if(group==="arrange"){
    d.innerHTML=[
     item(canvasState.multiMode?"Mehrfach aus":"Mehrfachauswahl","toggleMultiSelectMode()","☑"),
+    item("Gruppieren","groupSelectedItems()","▣"),
+    item("Gruppierung lösen","ungroupSelectedItems()","▢"),
     item("Als Textformat","saveSelectionAsTextFormat()","＋"),
     item("Nach vorne","moveSelectedLayer(1)","↑"),
     item("Nach hinten","moveSelectedLayer(-1)","↓"),
@@ -3833,13 +3960,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 49: echter Live-Refresh ===== */
+/* ===== VERSION 50: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 49 timetable parser ===== */
+/* ===== VERSION 50 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -3848,7 +3975,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 49: dynamic classes ===== */
+/* ===== VERSION 50: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -3857,11 +3984,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 49: raster-exact timetable ===== */
+/* ===== VERSION 50: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 49 stability fixes ===== */
+/* ===== VERSION 50 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -3874,7 +4001,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
 
-/* ===== VERSION 49 — stable redesign ===== */
+/* ===== VERSION 50 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -3943,7 +4070,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 49 — notebook label + timetable repair ===== */
+/* ===== VERSION 50 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -4010,7 +4137,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .notebookAbbr{font-size:16px}
 }
 
-/* ===== VERSION 49 — Basisplan / Entfall / Hitzestunden ===== */
+/* ===== VERSION 50 — Basisplan / Entfall / Hitzestunden ===== */
 .basisCancelled{
  opacity:.82;
  border-style:dashed!important;
@@ -4048,7 +4175,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  border-color:#dbc8c1!important
 }
 
-/* ===== VERSION 49 — Current vs Basis + moved lesson logic ===== */
+/* ===== VERSION 50 — Current vs Basis + moved lesson logic ===== */
 .planModeSwitch{
  display:grid;
  grid-template-columns:1.35fr 1fr;
@@ -4117,7 +4244,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .planModeSwitch button b{font-size:10px}
 }
 
-/* ===== VERSION 49 — safer row split / replacement handling ===== */
+/* ===== VERSION 50 — safer row split / replacement handling ===== */
 .changedLesson{
  background:linear-gradient(90deg,#fffdfa,#fffaf6)!important;
 }
@@ -4135,13 +4262,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  margin-bottom:3px;
 }
 
-/* ===== VERSION 49 — Mehrfachstunden mit Pause dazwischen ===== */
+/* ===== VERSION 50 — Mehrfachstunden mit Pause dazwischen ===== */
 .splitMultiBadge{
  opacity:.86;
  font-size:8px!important;
 }
 
-/* ===== VERSION 49 — Auto / Manuell Hitzestunden ===== */
+/* ===== VERSION 50 — Auto / Manuell Hitzestunden ===== */
 .heatPlanControl{
  display:flex;
  align-items:center;
@@ -4217,7 +4344,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .heatModeButtons button{min-width:31px;padding:7px 5px}
 }
 
-/* ===== VERSION 49 — clearer navigation + polish ===== */
+/* ===== VERSION 50 — clearer navigation + polish ===== */
 :root{
  --sb-panel:#fffdfa;
  --sb-panel-soft:#fff8f4;
@@ -4393,7 +4520,7 @@ button.primary,button.ghost,.iconbtn{
 }
 </style>
 <style id="v43-compact-ui">
-/* VERSION 49 — compact information architecture */
+/* VERSION 50 — compact information architecture */
 #nav{grid-template-columns:repeat(5,1fr)!important;width:min(94vw,520px)!important}
 #nav button{min-width:0!important}
 .view{padding-bottom:100px!important}
@@ -4426,7 +4553,7 @@ button.primary,button.ghost,.iconbtn{
 
 
 <style id="v44-learning-navigation">
-/* VERSION 49 — Fächer / Lernsets / Study sauber getrennt */
+/* VERSION 50 — Fächer / Lernsets / Study sauber getrennt */
 .learningBackRow{
  display:flex;
  margin:-2px 0 12px;
@@ -4756,13 +4883,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 49: echter Live-Refresh ===== */
+/* ===== VERSION 50: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 49 timetable parser ===== */
+/* ===== VERSION 50 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -4771,7 +4898,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 49: dynamic classes ===== */
+/* ===== VERSION 50: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -4780,11 +4907,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 49: raster-exact timetable ===== */
+/* ===== VERSION 50: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 49 stability fixes ===== */
+/* ===== VERSION 50 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -4797,7 +4924,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
 
-/* ===== VERSION 49 — stable redesign ===== */
+/* ===== VERSION 50 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -4866,7 +4993,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 49 — notebook label + timetable repair ===== */
+/* ===== VERSION 50 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -4933,7 +5060,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .notebookAbbr{font-size:16px}
 }
 
-/* ===== VERSION 49 — Basisplan / Entfall / Hitzestunden ===== */
+/* ===== VERSION 50 — Basisplan / Entfall / Hitzestunden ===== */
 .basisCancelled{
  opacity:.82;
  border-style:dashed!important;
@@ -4971,7 +5098,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  border-color:#dbc8c1!important
 }
 
-/* ===== VERSION 49 — Current vs Basis + moved lesson logic ===== */
+/* ===== VERSION 50 — Current vs Basis + moved lesson logic ===== */
 .planModeSwitch{
  display:grid;
  grid-template-columns:1.35fr 1fr;
@@ -5040,7 +5167,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .planModeSwitch button b{font-size:10px}
 }
 
-/* ===== VERSION 49 — safer row split / replacement handling ===== */
+/* ===== VERSION 50 — safer row split / replacement handling ===== */
 .changedLesson{
  background:linear-gradient(90deg,#fffdfa,#fffaf6)!important;
 }
@@ -5058,13 +5185,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  margin-bottom:3px;
 }
 
-/* ===== VERSION 49 — Mehrfachstunden mit Pause dazwischen ===== */
+/* ===== VERSION 50 — Mehrfachstunden mit Pause dazwischen ===== */
 .splitMultiBadge{
  opacity:.86;
  font-size:8px!important;
 }
 
-/* ===== VERSION 49 — Auto / Manuell Hitzestunden ===== */
+/* ===== VERSION 50 — Auto / Manuell Hitzestunden ===== */
 .heatPlanControl{
  display:flex;
  align-items:center;
@@ -5140,7 +5267,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .heatModeButtons button{min-width:31px;padding:7px 5px}
 }
 
-/* ===== VERSION 49 — clearer navigation + polish ===== */
+/* ===== VERSION 50 — clearer navigation + polish ===== */
 :root{
  --sb-panel:#fffdfa;
  --sb-panel-soft:#fff8f4;
@@ -5316,7 +5443,7 @@ button.primary,button.ghost,.iconbtn{
 }
 </style>
 <style id="v43-compact-ui">
-/* VERSION 49 — compact information architecture */
+/* VERSION 50 — compact information architecture */
 #nav{grid-template-columns:repeat(5,1fr)!important;width:min(94vw,520px)!important}
 #nav button{min-width:0!important}
 .view{padding-bottom:100px!important}
@@ -5349,7 +5476,7 @@ button.primary,button.ghost,.iconbtn{
 
 
 <style id="v44-learning-navigation">
-/* VERSION 49 — Fächer / Lernsets / Study sauber getrennt */
+/* VERSION 50 — Fächer / Lernsets / Study sauber getrennt */
 .learningBackRow{
  display:flex;
  margin:-2px 0 12px;
@@ -5820,7 +5947,7 @@ const timetableSlots=[
  {start:"15:45",end:"16:30"}
 ];
 function fillCancelledSlots(lessons){
- // VERSION 49:
+ // VERSION 50:
  // SchoolBloom darf NIE aus einer nicht erkannten/leeren PDF-Zelle
  // automatisch "Entfall" erfinden.
  // Nur Einträge, die wirklich aus der PDF gelesen wurden, werden gezeigt.
@@ -6182,7 +6309,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
         stroke-width: 13px;
       }
     
-/* ===== VERSION 49 — stable redesign ===== */
+/* ===== VERSION 50 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -6251,7 +6378,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 49 — notebook label + timetable repair ===== */
+/* ===== VERSION 50 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -6318,7 +6445,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  .notebookAbbr{font-size:16px}
 }
 
-/* ===== VERSION 49 — Basisplan / Entfall / Hitzestunden ===== */
+/* ===== VERSION 50 — Basisplan / Entfall / Hitzestunden ===== */
 .basisCancelled{
  opacity:.82;
  border-style:dashed!important;
@@ -6356,7 +6483,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  border-color:#dbc8c1!important
 }
 
-/* ===== VERSION 49 — Current vs Basis + moved lesson logic ===== */
+/* ===== VERSION 50 — Current vs Basis + moved lesson logic ===== */
 .planModeSwitch{
  display:grid;
  grid-template-columns:1.35fr 1fr;
@@ -6425,7 +6552,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  .planModeSwitch button b{font-size:10px}
 }
 
-/* ===== VERSION 49 — safer row split / replacement handling ===== */
+/* ===== VERSION 50 — safer row split / replacement handling ===== */
 .changedLesson{
  background:linear-gradient(90deg,#fffdfa,#fffaf6)!important;
 }
@@ -6443,13 +6570,13 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  margin-bottom:3px;
 }
 
-/* ===== VERSION 49 — Mehrfachstunden mit Pause dazwischen ===== */
+/* ===== VERSION 50 — Mehrfachstunden mit Pause dazwischen ===== */
 .splitMultiBadge{
  opacity:.86;
  font-size:8px!important;
 }
 
-/* ===== VERSION 49 — Auto / Manuell Hitzestunden ===== */
+/* ===== VERSION 50 — Auto / Manuell Hitzestunden ===== */
 .heatPlanControl{
  display:flex;
  align-items:center;
@@ -6525,7 +6652,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  .heatModeButtons button{min-width:31px;padding:7px 5px}
 }
 
-/* ===== VERSION 49 — clearer navigation + polish ===== */
+/* ===== VERSION 50 — clearer navigation + polish ===== */
 :root{
  --sb-panel:#fffdfa;
  --sb-panel-soft:#fff8f4;
