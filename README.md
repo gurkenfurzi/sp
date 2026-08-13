@@ -1,11 +1,9 @@
-# VERSION 50
+# VERSION 51
 
-- Formen und Pfade haben im Eigenschaften-Bereich jetzt einen klaren Löschen-Button.
-- Löschen bleibt mit Sicherheitsabfrage.
-- Eigene Textformate können unter Text → Textformate verwalten gelöscht werden.
-- Mehrfachauswahl kann allgemein gruppiert und wieder gelöst werden.
-- Eine Gruppe kann Text, Bilder, Sticker, Zettel, Tabellen, Formeln, Formen und Pfade enthalten.
-- Beim Antippen eines gruppierten Elements wird automatisch die ganze Gruppe ausgewählt.
-- Gruppen lassen sich gemeinsam verschieben, sperren, löschen und in Ebenen verschieben.
-- Wird eine Mehrfachauswahl als Textformat gespeichert, wird die aktuelle Auswahl automatisch gruppiert.
-- Beim späteren Einfügen eines solchen Textformats wird automatisch eine neue Gruppe erstellt.
+- Ebenen-Löschen für Formen und freie Pfade repariert: Löschen erfolgt direkt über die Element-ID.
+- Sicherheitsabfrage bleibt.
+- Formel-Editor jetzt mit sichtbaren Bausteinen: Wurzel, Bruch, Hochzahl, Index, Pi, Plus/Minus, Mal, Geteilt.
+- Die passenden Befehle werden automatisch eingesetzt; `sqrt`/`frac` muss man nicht selbst schreiben.
+- Optionale Befehlsübersicht bleibt unter „Befehle anzeigen“.
+- Alle Buttons haben eine kleine Pop-Microanimation mit dezenten ✦/♡ Partikeln.
+- Gruppieren, Gruppierung lösen und Textformat speichern zeigen zusätzlich ein kleines Bestätigungs-Pop-up.
