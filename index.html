@@ -633,13 +633,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 38: echter Live-Refresh ===== */
+/* ===== VERSION 39: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 38 timetable parser ===== */
+/* ===== VERSION 39 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -648,7 +648,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 38: dynamic classes ===== */
+/* ===== VERSION 39: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -657,11 +657,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 38: raster-exact timetable ===== */
+/* ===== VERSION 39: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 38 stability fixes ===== */
+/* ===== VERSION 39 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -674,7 +674,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
 
-/* ===== VERSION 38 — stable redesign ===== */
+/* ===== VERSION 39 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -743,7 +743,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 38 — notebook label + timetable repair ===== */
+/* ===== VERSION 39 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -810,7 +810,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .notebookAbbr{font-size:16px}
 }
 
-/* ===== VERSION 38 — Basisplan / Entfall / Hitzestunden ===== */
+/* ===== VERSION 39 — Basisplan / Entfall / Hitzestunden ===== */
 .basisCancelled{
  opacity:.82;
  border-style:dashed!important;
@@ -848,7 +848,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  border-color:#dbc8c1!important
 }
 
-/* ===== VERSION 38 — Current vs Basis + moved lesson logic ===== */
+/* ===== VERSION 39 — Current vs Basis + moved lesson logic ===== */
 .planModeSwitch{
  display:grid;
  grid-template-columns:1.35fr 1fr;
@@ -916,6 +916,24 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .planModeSwitch button>span{width:27px;height:27px}
  .planModeSwitch button b{font-size:10px}
 }
+
+/* ===== VERSION 39 — safer row split / replacement handling ===== */
+.changedLesson{
+ background:linear-gradient(90deg,#fffdfa,#fffaf6)!important;
+}
+.changeTag{
+ display:inline-flex;
+ padding:2px 7px;
+ border-radius:999px;
+ background:#eaf0d8;
+ color:#748052;
+ border:1px solid #d9e3bc;
+ font-size:8px;
+ font-weight:900;
+ text-transform:uppercase;
+ letter-spacing:.07em;
+ margin-bottom:3px;
+}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.18/paper-full.min.js">
 let homeClockTimer=null;
@@ -935,7 +953,7 @@ ensureHomeClockTimer();
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 38</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 39</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -1513,7 +1531,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 38";
+ $("#headerEyebrow").textContent="VERSION 39";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -2609,13 +2627,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 38: echter Live-Refresh ===== */
+/* ===== VERSION 39: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 38 timetable parser ===== */
+/* ===== VERSION 39 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -2624,7 +2642,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 38: dynamic classes ===== */
+/* ===== VERSION 39: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -2633,11 +2651,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 38: raster-exact timetable ===== */
+/* ===== VERSION 39: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 38 stability fixes ===== */
+/* ===== VERSION 39 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -2650,7 +2668,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
 
-/* ===== VERSION 38 — stable redesign ===== */
+/* ===== VERSION 39 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -2719,7 +2737,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 38 — notebook label + timetable repair ===== */
+/* ===== VERSION 39 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -2786,7 +2804,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .notebookAbbr{font-size:16px}
 }
 
-/* ===== VERSION 38 — Basisplan / Entfall / Hitzestunden ===== */
+/* ===== VERSION 39 — Basisplan / Entfall / Hitzestunden ===== */
 .basisCancelled{
  opacity:.82;
  border-style:dashed!important;
@@ -2824,7 +2842,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  border-color:#dbc8c1!important
 }
 
-/* ===== VERSION 38 — Current vs Basis + moved lesson logic ===== */
+/* ===== VERSION 39 — Current vs Basis + moved lesson logic ===== */
 .planModeSwitch{
  display:grid;
  grid-template-columns:1.35fr 1fr;
@@ -2891,6 +2909,24 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .planModeSwitch button{padding:7px;column-gap:5px}
  .planModeSwitch button>span{width:27px;height:27px}
  .planModeSwitch button b{font-size:10px}
+}
+
+/* ===== VERSION 39 — safer row split / replacement handling ===== */
+.changedLesson{
+ background:linear-gradient(90deg,#fffdfa,#fffaf6)!important;
+}
+.changeTag{
+ display:inline-flex;
+ padding:2px 7px;
+ border-radius:999px;
+ background:#eaf0d8;
+ color:#748052;
+ border:1px solid #d9e3bc;
+ font-size:8px;
+ font-weight:900;
+ text-transform:uppercase;
+ letter-spacing:.07em;
+ margin-bottom:3px;
 }
 </style></head><body><div class="page">${serializedCanvas()}</div></body></html>`;
  const blob=new Blob([html],{type:"text/html"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=title.replace(/[^\wäöüÄÖÜß-]+/g,"_")+".html";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
@@ -3068,13 +3104,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 38: echter Live-Refresh ===== */
+/* ===== VERSION 39: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 38 timetable parser ===== */
+/* ===== VERSION 39 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -3083,7 +3119,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 38: dynamic classes ===== */
+/* ===== VERSION 39: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -3092,11 +3128,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 38: raster-exact timetable ===== */
+/* ===== VERSION 39: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 38 stability fixes ===== */
+/* ===== VERSION 39 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -3109,7 +3145,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
 
-/* ===== VERSION 38 — stable redesign ===== */
+/* ===== VERSION 39 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -3178,7 +3214,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 38 — notebook label + timetable repair ===== */
+/* ===== VERSION 39 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -3245,7 +3281,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .notebookAbbr{font-size:16px}
 }
 
-/* ===== VERSION 38 — Basisplan / Entfall / Hitzestunden ===== */
+/* ===== VERSION 39 — Basisplan / Entfall / Hitzestunden ===== */
 .basisCancelled{
  opacity:.82;
  border-style:dashed!important;
@@ -3283,7 +3319,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  border-color:#dbc8c1!important
 }
 
-/* ===== VERSION 38 — Current vs Basis + moved lesson logic ===== */
+/* ===== VERSION 39 — Current vs Basis + moved lesson logic ===== */
 .planModeSwitch{
  display:grid;
  grid-template-columns:1.35fr 1fr;
@@ -3350,6 +3386,24 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .planModeSwitch button{padding:7px;column-gap:5px}
  .planModeSwitch button>span{width:27px;height:27px}
  .planModeSwitch button b{font-size:10px}
+}
+
+/* ===== VERSION 39 — safer row split / replacement handling ===== */
+.changedLesson{
+ background:linear-gradient(90deg,#fffdfa,#fffaf6)!important;
+}
+.changeTag{
+ display:inline-flex;
+ padding:2px 7px;
+ border-radius:999px;
+ background:#eaf0d8;
+ color:#748052;
+ border:1px solid #d9e3bc;
+ font-size:8px;
+ font-weight:900;
+ text-transform:uppercase;
+ letter-spacing:.07em;
+ margin-bottom:3px;
 }
 </style></head><body><div class="page">${serializedCanvas()}</div></body></html>`);w.document.close();setTimeout(()=>w.print(),300)
 }
@@ -3668,7 +3722,7 @@ const timetableSlots=[
  {start:"15:45",end:"16:30"}
 ];
 function fillCancelledSlots(lessons){
- // VERSION 38:
+ // VERSION 39:
  // SchoolBloom darf NIE aus einer nicht erkannten/leeren PDF-Zelle
  // automatisch "Entfall" erfinden.
  // Nur Einträge, die wirklich aus der PDF gelesen wurden, werden gezeigt.
@@ -3798,10 +3852,10 @@ function lessonHtml(l){
    </div>`;
  }
 
- return `<div class="lesson lessonClickable ${double?"doubleLesson":""}" style="--subject:${hashColor(p.subject)}" onclick='openLessonDetails(${JSON.stringify(JSON.stringify(l))})'>
+ return `<div class="lesson lessonClickable ${double?"doubleLesson":""} ${l.changedFromBasis?"changedLesson":""}" style="--subject:${hashColor(p.subject)}" onclick='openLessonDetails(${JSON.stringify(JSON.stringify(l))})'>
    <div class="time">${l.start}<br>${l.end}</div>
    <div>
-     <div class="subject">${esc(prettySubject(p.subject))}</div>
+     ${l.changedFromBasis?`<div class="changeTag">geändert</div>`:""}<div class="subject">${esc(prettySubject(p.subject))}</div>
      <div class="small">${teacher?`🎀 ${esc(teacher)}`:""}</div>
      ${double?`<div class="doubleBadge">▥ ${(l.blocks||2)>2?(l.blocks+" Stunden"):"Doppelstunde"}</div>`:""}
      ${count?`<div class="lessonBadge"><span class="lessonExtraDot">✿ ${count} Eintrag${count===1?"":"e"}</span></div>`:""}
@@ -4026,7 +4080,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
         stroke-width: 13px;
       }
     
-/* ===== VERSION 38 — stable redesign ===== */
+/* ===== VERSION 39 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -4095,7 +4149,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 38 — notebook label + timetable repair ===== */
+/* ===== VERSION 39 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -4162,7 +4216,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  .notebookAbbr{font-size:16px}
 }
 
-/* ===== VERSION 38 — Basisplan / Entfall / Hitzestunden ===== */
+/* ===== VERSION 39 — Basisplan / Entfall / Hitzestunden ===== */
 .basisCancelled{
  opacity:.82;
  border-style:dashed!important;
@@ -4200,7 +4254,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  border-color:#dbc8c1!important
 }
 
-/* ===== VERSION 38 — Current vs Basis + moved lesson logic ===== */
+/* ===== VERSION 39 — Current vs Basis + moved lesson logic ===== */
 .planModeSwitch{
  display:grid;
  grid-template-columns:1.35fr 1fr;
@@ -4267,6 +4321,24 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  .planModeSwitch button{padding:7px;column-gap:5px}
  .planModeSwitch button>span{width:27px;height:27px}
  .planModeSwitch button b{font-size:10px}
+}
+
+/* ===== VERSION 39 — safer row split / replacement handling ===== */
+.changedLesson{
+ background:linear-gradient(90deg,#fffdfa,#fffaf6)!important;
+}
+.changeTag{
+ display:inline-flex;
+ padding:2px 7px;
+ border-radius:999px;
+ background:#eaf0d8;
+ color:#748052;
+ border:1px solid #d9e3bc;
+ font-size:8px;
+ font-weight:900;
+ text-transform:uppercase;
+ letter-spacing:.07em;
+ margin-bottom:3px;
 }
 </style>
   </defs>
@@ -4529,6 +4601,32 @@ function cleanPdfCellText(raw){
    .trim();
 }
 
+
+function meaningfulCellTokensInRow(arr,bd,row,dayRows,rowIndex,gap,headerY){
+ const top=row.y+(rowIndex>0?Math.abs(dayRows[rowIndex-1].y-row.y)/2:gap/2);
+ const bottom=row.y-(rowIndex<dayRows.length-1?Math.abs(row.y-dayRows[rowIndex+1].y)/2:gap/2);
+
+ return arr.filter(x=>{
+   const cx=x.x+x.w/2;
+   if(cx<bd.left||cx>bd.right)return false;
+   if(x.y>top||x.y<bottom)return false;
+   if(Math.abs(x.y-headerY)<9)return false;
+   if(/\b(?:Mo|Di|Mi|Do|Fr)\s*[-–]?\s*\d+/i.test(x.text))return false;
+   const t=String(x.text||"").trim();
+   if(!t||/^[|:;.,\-–—]+$/.test(t))return false;
+   return true;
+ }).map(x=>String(x.text||"").trim()).filter(Boolean);
+}
+
+function rowHasIndependentLessonText(arr,bd,row,dayRows,rowIndex,gap,headerY){
+ const tokens=meaningfulCellTokensInRow(arr,bd,row,dayRows,rowIndex,gap,headerY);
+ if(!tokens.length)return false;
+ const raw=cleanPdfCellText(tokens.join(" "));
+ if(!raw)return false;
+
+ // Recognizable lesson/special-cell evidence.
+ return /\b(?:LF\s*\d+|SSPU|MINT|ET|ETHIK|SGL|SK|FHR|[A-ZÄÖÜ]{2,5}|R\d{2}|KLASSENLEIT|AUSFLUG|PRAKTIK|PROJEKT)\b/i.test(raw);
+}
 function parsePageItems(items,raster){
  const arr=items.map(it=>({
    text:String(it.str||"").trim(),
@@ -4644,7 +4742,17 @@ function parsePageItems(items,raster){
          const border=hasHorizontalGridBorder(raster,bd.left,bd.right,boundary);
          if(border)break;
 
-         // Safety: never swallow an implausibly huge vertical jump.
+         // V39: if BOTH neighboring rows contain their own meaningful text
+         // in this exact class column, they are separate lessons even if
+         // raster line detection missed the border.
+         const currentHasText=rowHasIndependentLessonText(
+           arr,bd,dayRows[j],dayRows,j,gap,headerGroup.y
+         );
+         const nextHasText=rowHasIndependentLessonText(
+           arr,bd,dayRows[j+1],dayRows,j+1,gap,headerGroup.y
+         );
+         if(currentHasText && nextHasText)break;
+
          const localGap=Math.abs(dayRows[j].y-dayRows[j+1].y);
          if(localGap>gap*1.85)break;
          j++;
@@ -4981,7 +5089,7 @@ function lessonBlockCount(l){
 }
 
 function addBasisCancellations(current,basis,rowMaps,heat){
- const result=[...(current||[])];
+ const result=(current||[]).map(x=>({...x}));
 
  // Rows occupied by the CURRENT plan. A different current lesson in the
  // old position means "changed/replaced", not an invented cancellation card.
@@ -4991,6 +5099,26 @@ function addBasisCancellations(current,basis,rowMaps,heat){
    const set=currentRowsByDay.get(l.day)||new Set();
    for(const r of lessonCoveredRows(l))set.add(r);
    currentRowsByDay.set(l.day,set);
+ }
+
+ // If another subject fills a basis row, that is a change/replacement.
+ // It must never create an Entfall card.
+ const basisByDayRow=new Map();
+ for(const b of basis||[]){
+   if(b.specialOnly)continue;
+   for(const r of lessonCoveredRows(b))basisByDayRow.set(`${b.day}|${r}`,b);
+ }
+ for(const cur of result){
+   if(cur.specialOnly)continue;
+   const replaced=[];
+   for(const r of lessonCoveredRows(cur)){
+     const base=basisByDayRow.get(`${cur.day}|${r}`);
+     if(base && compareLessonIdentity(base)!==compareLessonIdentity(cur))replaced.push(base);
+   }
+   if(replaced.length){
+     cur.changedFromBasis=true;
+     cur.changedFromRaw=replaced[0].raw||"";
+   }
  }
 
  // Count how many lesson BLOCKS of the same subject+teacher exist per day.
@@ -5152,7 +5280,7 @@ async function parsePdfDocument(pdf){
    lessons:finalSchedules[chosen]||[],
    sourceLabel:dm?dm[1]:"",
    fetchedAt:Date.now(),
-   parserVersion:38,
+   parserVersion:39,
    heatSchedule:!!heat?.active,
    activePauses:heat?.active?heat.pauses:pauses,
    currentPageCount:currentPages.length,
@@ -5244,8 +5372,8 @@ window.loadRemotePlan=async function(manual=false){
 
 loadRemotePlan(false);
 
-if(localStorage.getItem("schoolbloom-plan-parser-version")!=="38"){
- localStorage.setItem("schoolbloom-plan-parser-version","38");
+if(localStorage.getItem("schoolbloom-plan-parser-version")!=="39"){
+ localStorage.setItem("schoolbloom-plan-parser-version","39");
  setTimeout(()=>loadRemotePlan(true),250);
 }
 if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});
