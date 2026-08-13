@@ -1,8 +1,11 @@
-# VERSION 47
+# VERSION 48
 
-- Textformat-Dialog auf iPhone kompakter und scrollbar.
-- Mehrfachauswahl kann als eigenes Textformat gespeichert werden.
-- Ausgewählte Textobjekte + Formen/Zettel/Sticker/Bilder werden gemeinsam gespeichert.
-- Das gespeicherte Format erscheint danach unter Text.
-- Beim Einfügen werden alle enthaltenen Objekte zusammen wieder eingefügt.
-- Statusleiste für Mehrfachauswahl mit Anzahl und direktem Button „Als Textformat +“.
+Neu:
+- Löschen braucht jetzt eine Bestätigung.
+- Auch gespeicherte Textformate werden nicht mehr sofort gelöscht.
+- Mathematische Formeln können über Hinzufügen → Formel eingefügt werden.
+- Formel-Editor mit Vorschau und Symbolen für π, √, Bruch, x², ±, ×, ÷ usw.
+- Formeln können später wieder bearbeitet werden.
+- Mobile Modal-Anzeige wurde komplett neu begrenzt und zentriert, damit sie nicht mehr hinter/über Werkzeugleisten verbuggt.
+- Mehrfachauswahl kann jetzt neben normalen Objekten auch Vektorformen/Pfade auswählen.
+- Text + Form + Sticker/Zettel + Formel können gemeinsam als eigenes Textformat gespeichert und wieder eingefügt werden.
