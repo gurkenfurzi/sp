@@ -1,4 +1,4 @@
-# VERSION 48
+# VERSION 49
 
 Neu:
 - Löschen braucht jetzt eine Bestätigung.
@@ -9,3 +9,5 @@ Neu:
 - Mobile Modal-Anzeige wurde komplett neu begrenzt und zentriert, damit sie nicht mehr hinter/über Werkzeugleisten verbuggt.
 - Mehrfachauswahl kann jetzt neben normalen Objekten auch Vektorformen/Pfade auswählen.
 - Text + Form + Sticker/Zettel + Formel können gemeinsam als eigenes Textformat gespeichert und wieder eingefügt werden.
+
+- Neues Home-Bildschirm-App-Icon: das rosa SchoolBloom-Notizbuch aus der gelieferten Grafik.
