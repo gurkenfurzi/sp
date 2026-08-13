@@ -633,13 +633,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 40: echter Live-Refresh ===== */
+/* ===== VERSION 41: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 40 timetable parser ===== */
+/* ===== VERSION 41 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -648,7 +648,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 40: dynamic classes ===== */
+/* ===== VERSION 41: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -657,11 +657,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 40: raster-exact timetable ===== */
+/* ===== VERSION 41: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 40 stability fixes ===== */
+/* ===== VERSION 41 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -674,7 +674,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
 
-/* ===== VERSION 40 — stable redesign ===== */
+/* ===== VERSION 41 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -743,7 +743,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 40 — notebook label + timetable repair ===== */
+/* ===== VERSION 41 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -810,7 +810,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .notebookAbbr{font-size:16px}
 }
 
-/* ===== VERSION 40 — Basisplan / Entfall / Hitzestunden ===== */
+/* ===== VERSION 41 — Basisplan / Entfall / Hitzestunden ===== */
 .basisCancelled{
  opacity:.82;
  border-style:dashed!important;
@@ -848,7 +848,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  border-color:#dbc8c1!important
 }
 
-/* ===== VERSION 40 — Current vs Basis + moved lesson logic ===== */
+/* ===== VERSION 41 — Current vs Basis + moved lesson logic ===== */
 .planModeSwitch{
  display:grid;
  grid-template-columns:1.35fr 1fr;
@@ -917,7 +917,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .planModeSwitch button b{font-size:10px}
 }
 
-/* ===== VERSION 40 — safer row split / replacement handling ===== */
+/* ===== VERSION 41 — safer row split / replacement handling ===== */
 .changedLesson{
  background:linear-gradient(90deg,#fffdfa,#fffaf6)!important;
 }
@@ -935,10 +935,86 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  margin-bottom:3px;
 }
 
-/* ===== VERSION 40 — Mehrfachstunden mit Pause dazwischen ===== */
+/* ===== VERSION 41 — Mehrfachstunden mit Pause dazwischen ===== */
 .splitMultiBadge{
  opacity:.86;
  font-size:8px!important;
+}
+
+/* ===== VERSION 41 — Auto / Manuell Hitzestunden ===== */
+.heatPlanControl{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:10px;
+ margin:8px 0 8px;
+ padding:9px 10px;
+ border:1px solid #ead9c4;
+ border-radius:16px;
+ background:#fffaf1;
+}
+.heatPlanInfo{
+ display:flex;
+ align-items:center;
+ gap:8px;
+ min-width:0;
+}
+.heatSun{
+ width:34px;height:34px;
+ border-radius:11px;
+ background:#fff0bd;
+ display:grid;place-items:center;
+ font-size:17px;
+}
+.heatPlanInfo>div{
+ display:grid;
+ min-width:0;
+}
+.heatPlanInfo b{
+ font-size:11px;
+ color:#80694e;
+}
+.heatPlanInfo small{
+ font-size:8px;
+ color:#a38a68;
+ white-space:nowrap;
+ overflow:hidden;
+ text-overflow:ellipsis;
+ max-width:175px;
+}
+.heatModeButtons{
+ display:flex;
+ gap:4px;
+ padding:3px;
+ border-radius:11px;
+ background:#f5eadb;
+}
+.heatModeButtons button{
+ border:0;
+ background:transparent;
+ color:#947d60;
+ border-radius:8px;
+ min-width:36px;
+ padding:7px 7px;
+ font-size:9px;
+ font-weight:900;
+}
+.heatModeButtons button.active{
+ background:white;
+ color:#795f3e;
+ box-shadow:0 2px 7px rgba(131,100,56,.12);
+}
+.heatPlanControl.heatActive{
+ background:#fff6d9;
+ border-color:#ead18c;
+}
+.heatPlanControl.heatActive .heatSun{
+ background:#ffd978;
+}
+@media(max-width:520px){
+ .heatPlanControl{gap:6px;padding:8px}
+ .heatPlanInfo small{max-width:130px}
+ .heatModeButtons button{min-width:31px;padding:7px 5px}
 }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.18/paper-full.min.js">
@@ -959,7 +1035,7 @@ ensureHomeClockTimer();
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 40</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 41</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -1014,6 +1090,20 @@ ensureHomeClockTimer();
     </div>
     <div id="placeholderBanner" class="card warn" style="display:none;margin-top:12px">
       <b>↻ Automatischer Import</b><div class="small" style="margin-top:4px;color:inherit">Automatisch im Hintergrund · zusätzlich jederzeit live aktualisierbar.</div>
+    </div>
+    <div class="heatPlanControl" id="heatPlanControl">
+      <div class="heatPlanInfo">
+        <span class="heatSun">☀️</span>
+        <div>
+          <b>Hitzestunden</b>
+          <small id="heatPlanState">Automatisch</small>
+        </div>
+      </div>
+      <div class="heatModeButtons">
+        <button data-heatmode="auto" onclick="setHeatMode('auto',this)">Auto</button>
+        <button data-heatmode="on" onclick="setHeatMode('on',this)">An</button>
+        <button data-heatmode="off" onclick="setHeatMode('off',this)">Aus</button>
+      </div>
     </div>
     <div id="planModeHint" class="planModeHint">
       <span class="modeCurrentHint">✦ Zeigt den aktuellen Wochenplan, Verschiebungen und echte Entfälle.</span>
@@ -1313,6 +1403,35 @@ let data=load();
 let taskFilter="open";
 let selectedDay=dayCode(new Date())||"Mo";
 let timetableViewMode="current"; // current = wichtiger Plan inkl. Änderungen, basis = normaler Basisplan
+let heatModeOverride=localStorage.getItem("schoolbloom-heat-mode")||"auto";
+
+const HEAT_LESSON_TIMES={
+ 1:{start:"08:00",end:"08:35"},
+ 2:{start:"08:35",end:"09:10"},
+ 3:{start:"09:25",end:"10:00"},
+ 4:{start:"10:00",end:"10:35"},
+ 5:{start:"10:50",end:"11:25"},
+ 6:{start:"11:25",end:"12:00"},
+ 7:{start:"12:25",end:"13:00"},
+ 8:{start:"13:00",end:"13:35"}
+};
+const HEAT_PAUSES=[
+ {start:"09:10",end:"09:25",label:"Pause"},
+ {start:"10:35",end:"10:50",label:"Pause"},
+ {start:"12:00",end:"12:25",label:"Große Pause"}
+];
+
+function isHeatScheduleActive(){
+ if(heatModeOverride==="on")return true;
+ if(heatModeOverride==="off")return false;
+ return !!data.timetable?.heatSchedule;
+}
+function effectiveHeatModeLabel(){
+ if(heatModeOverride==="on")return "manuell";
+ if(heatModeOverride==="off")return "aus";
+ return data.timetable?.heatSchedule?"automatisch":"bereit";
+}
+
 let timer={seconds:25*60,running:false,handle:null,startedAt:null,mode:"focus",goal:25*60};
 let currentFlash=0, flashFlipped=false;
 let selectedSubjectId=null;
@@ -1378,32 +1497,40 @@ const pauses=[
  {start:"13:00",end:"13:30",label:"Mittagspause"}
 ];
 function getActivePauses(){
- return (data.timetable?.activePauses?.length?data.timetable.activePauses:pauses);
+ if(isHeatScheduleActive())return HEAT_PAUSES;
+ return pauses;
 }
 
-function timetableTimeForRow(rowNum){
- // Prefer the actual rows parsed from the PDF.
+
+function normalTimeForRow(rowNum){
  for(const rows of (data.timetable?.rowMaps||[])){
    const r=(rows||[]).find(x=>Number(x.num)===Number(rowNum));
    if(r)return {start:r.start,end:r.end};
  }
-
- // Heat plan fallback: these times are only active when the PDF itself
- // enabled the heat-shortened schedule.
- if(data.timetable?.heatSchedule){
-   const heat={
-     1:{start:"08:00",end:"08:35"},
-     2:{start:"08:35",end:"09:10"},
-     3:{start:"09:25",end:"10:00"},
-     4:{start:"10:00",end:"10:35"},
-     5:{start:"10:50",end:"11:25"},
-     6:{start:"11:25",end:"12:00"},
-     7:{start:"12:25",end:"13:00"},
-     8:{start:"13:00",end:"13:35"}
-   };
-   if(heat[rowNum])return heat[rowNum];
- }
  return null;
+}
+
+function effectiveTimeForRow(rowNum){
+ if(isHeatScheduleActive() && HEAT_LESSON_TIMES[rowNum])return HEAT_LESSON_TIMES[rowNum];
+ return normalTimeForRow(rowNum);
+}
+
+function applyEffectiveDisplayTimes(list){
+ return (list||[]).map(l=>{
+   if(l.specialOnly||l.rowNum==null)return {...l};
+
+   const blocks=Math.max(1,Number(l.blocks||1));
+   const first=Number(l.rowNum);
+   const last=first+blocks-1;
+   const a=effectiveTimeForRow(first);
+   const b=effectiveTimeForRow(last);
+   if(!a||!b)return {...l};
+
+   return {...l,start:a.start,end:b.end};
+ });
+}
+function timetableTimeForRow(rowNum){
+ return effectiveTimeForRow(rowNum);
 }
 
 function splitMultiLessonForVisibleBreaks(lesson){
@@ -1602,7 +1729,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 40";
+ $("#headerEyebrow").textContent="VERSION 41";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -2698,13 +2825,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 40: echter Live-Refresh ===== */
+/* ===== VERSION 41: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 40 timetable parser ===== */
+/* ===== VERSION 41 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -2713,7 +2840,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 40: dynamic classes ===== */
+/* ===== VERSION 41: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -2722,11 +2849,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 40: raster-exact timetable ===== */
+/* ===== VERSION 41: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 40 stability fixes ===== */
+/* ===== VERSION 41 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -2739,7 +2866,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
 
-/* ===== VERSION 40 — stable redesign ===== */
+/* ===== VERSION 41 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -2808,7 +2935,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 40 — notebook label + timetable repair ===== */
+/* ===== VERSION 41 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -2875,7 +3002,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .notebookAbbr{font-size:16px}
 }
 
-/* ===== VERSION 40 — Basisplan / Entfall / Hitzestunden ===== */
+/* ===== VERSION 41 — Basisplan / Entfall / Hitzestunden ===== */
 .basisCancelled{
  opacity:.82;
  border-style:dashed!important;
@@ -2913,7 +3040,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  border-color:#dbc8c1!important
 }
 
-/* ===== VERSION 40 — Current vs Basis + moved lesson logic ===== */
+/* ===== VERSION 41 — Current vs Basis + moved lesson logic ===== */
 .planModeSwitch{
  display:grid;
  grid-template-columns:1.35fr 1fr;
@@ -2982,7 +3109,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .planModeSwitch button b{font-size:10px}
 }
 
-/* ===== VERSION 40 — safer row split / replacement handling ===== */
+/* ===== VERSION 41 — safer row split / replacement handling ===== */
 .changedLesson{
  background:linear-gradient(90deg,#fffdfa,#fffaf6)!important;
 }
@@ -3000,10 +3127,86 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  margin-bottom:3px;
 }
 
-/* ===== VERSION 40 — Mehrfachstunden mit Pause dazwischen ===== */
+/* ===== VERSION 41 — Mehrfachstunden mit Pause dazwischen ===== */
 .splitMultiBadge{
  opacity:.86;
  font-size:8px!important;
+}
+
+/* ===== VERSION 41 — Auto / Manuell Hitzestunden ===== */
+.heatPlanControl{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:10px;
+ margin:8px 0 8px;
+ padding:9px 10px;
+ border:1px solid #ead9c4;
+ border-radius:16px;
+ background:#fffaf1;
+}
+.heatPlanInfo{
+ display:flex;
+ align-items:center;
+ gap:8px;
+ min-width:0;
+}
+.heatSun{
+ width:34px;height:34px;
+ border-radius:11px;
+ background:#fff0bd;
+ display:grid;place-items:center;
+ font-size:17px;
+}
+.heatPlanInfo>div{
+ display:grid;
+ min-width:0;
+}
+.heatPlanInfo b{
+ font-size:11px;
+ color:#80694e;
+}
+.heatPlanInfo small{
+ font-size:8px;
+ color:#a38a68;
+ white-space:nowrap;
+ overflow:hidden;
+ text-overflow:ellipsis;
+ max-width:175px;
+}
+.heatModeButtons{
+ display:flex;
+ gap:4px;
+ padding:3px;
+ border-radius:11px;
+ background:#f5eadb;
+}
+.heatModeButtons button{
+ border:0;
+ background:transparent;
+ color:#947d60;
+ border-radius:8px;
+ min-width:36px;
+ padding:7px 7px;
+ font-size:9px;
+ font-weight:900;
+}
+.heatModeButtons button.active{
+ background:white;
+ color:#795f3e;
+ box-shadow:0 2px 7px rgba(131,100,56,.12);
+}
+.heatPlanControl.heatActive{
+ background:#fff6d9;
+ border-color:#ead18c;
+}
+.heatPlanControl.heatActive .heatSun{
+ background:#ffd978;
+}
+@media(max-width:520px){
+ .heatPlanControl{gap:6px;padding:8px}
+ .heatPlanInfo small{max-width:130px}
+ .heatModeButtons button{min-width:31px;padding:7px 5px}
 }
 </style></head><body><div class="page">${serializedCanvas()}</div></body></html>`;
  const blob=new Blob([html],{type:"text/html"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=title.replace(/[^\wäöüÄÖÜß-]+/g,"_")+".html";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
@@ -3181,13 +3384,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 40: echter Live-Refresh ===== */
+/* ===== VERSION 41: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 40 timetable parser ===== */
+/* ===== VERSION 41 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -3196,7 +3399,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 40: dynamic classes ===== */
+/* ===== VERSION 41: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -3205,11 +3408,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 40: raster-exact timetable ===== */
+/* ===== VERSION 41: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 40 stability fixes ===== */
+/* ===== VERSION 41 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -3222,7 +3425,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
 
-/* ===== VERSION 40 — stable redesign ===== */
+/* ===== VERSION 41 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -3291,7 +3494,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 40 — notebook label + timetable repair ===== */
+/* ===== VERSION 41 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -3358,7 +3561,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .notebookAbbr{font-size:16px}
 }
 
-/* ===== VERSION 40 — Basisplan / Entfall / Hitzestunden ===== */
+/* ===== VERSION 41 — Basisplan / Entfall / Hitzestunden ===== */
 .basisCancelled{
  opacity:.82;
  border-style:dashed!important;
@@ -3396,7 +3599,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  border-color:#dbc8c1!important
 }
 
-/* ===== VERSION 40 — Current vs Basis + moved lesson logic ===== */
+/* ===== VERSION 41 — Current vs Basis + moved lesson logic ===== */
 .planModeSwitch{
  display:grid;
  grid-template-columns:1.35fr 1fr;
@@ -3465,7 +3668,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .planModeSwitch button b{font-size:10px}
 }
 
-/* ===== VERSION 40 — safer row split / replacement handling ===== */
+/* ===== VERSION 41 — safer row split / replacement handling ===== */
 .changedLesson{
  background:linear-gradient(90deg,#fffdfa,#fffaf6)!important;
 }
@@ -3483,10 +3686,86 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  margin-bottom:3px;
 }
 
-/* ===== VERSION 40 — Mehrfachstunden mit Pause dazwischen ===== */
+/* ===== VERSION 41 — Mehrfachstunden mit Pause dazwischen ===== */
 .splitMultiBadge{
  opacity:.86;
  font-size:8px!important;
+}
+
+/* ===== VERSION 41 — Auto / Manuell Hitzestunden ===== */
+.heatPlanControl{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:10px;
+ margin:8px 0 8px;
+ padding:9px 10px;
+ border:1px solid #ead9c4;
+ border-radius:16px;
+ background:#fffaf1;
+}
+.heatPlanInfo{
+ display:flex;
+ align-items:center;
+ gap:8px;
+ min-width:0;
+}
+.heatSun{
+ width:34px;height:34px;
+ border-radius:11px;
+ background:#fff0bd;
+ display:grid;place-items:center;
+ font-size:17px;
+}
+.heatPlanInfo>div{
+ display:grid;
+ min-width:0;
+}
+.heatPlanInfo b{
+ font-size:11px;
+ color:#80694e;
+}
+.heatPlanInfo small{
+ font-size:8px;
+ color:#a38a68;
+ white-space:nowrap;
+ overflow:hidden;
+ text-overflow:ellipsis;
+ max-width:175px;
+}
+.heatModeButtons{
+ display:flex;
+ gap:4px;
+ padding:3px;
+ border-radius:11px;
+ background:#f5eadb;
+}
+.heatModeButtons button{
+ border:0;
+ background:transparent;
+ color:#947d60;
+ border-radius:8px;
+ min-width:36px;
+ padding:7px 7px;
+ font-size:9px;
+ font-weight:900;
+}
+.heatModeButtons button.active{
+ background:white;
+ color:#795f3e;
+ box-shadow:0 2px 7px rgba(131,100,56,.12);
+}
+.heatPlanControl.heatActive{
+ background:#fff6d9;
+ border-color:#ead18c;
+}
+.heatPlanControl.heatActive .heatSun{
+ background:#ffd978;
+}
+@media(max-width:520px){
+ .heatPlanControl{gap:6px;padding:8px}
+ .heatPlanInfo small{max-width:130px}
+ .heatModeButtons button{min-width:31px;padding:7px 5px}
 }
 </style></head><body><div class="page">${serializedCanvas()}</div></body></html>`);w.document.close();setTimeout(()=>w.print(),300)
 }
@@ -3805,7 +4084,7 @@ const timetableSlots=[
  {start:"15:45",end:"16:30"}
 ];
 function fillCancelledSlots(lessons){
- // VERSION 40:
+ // VERSION 41:
  // SchoolBloom darf NIE aus einer nicht erkannten/leeren PDF-Zelle
  // automatisch "Entfall" erfinden.
  // Nur Einträge, die wirklich aus der PDF gelesen wurden, werden gezeigt.
@@ -3824,9 +4103,9 @@ function renderHome(){
  };
  const nowMin=new Date().getHours()*60+new Date().getMinutes();
  const todayCode=dayCode(new Date());
- const todayLessons=stableTimetableDay((data.timetable.lessons||[])
-   .filter(x=>x.day===todayCode))
-   .sort((a,b)=>a.start.localeCompare(b.start));
+ const todayLessons=stableTimetableDay(
+   applyEffectiveDisplayTimes((data.timetable.lessons||[]).filter(x=>x.day===todayCode))
+ ).sort((a,b)=>a.start.localeCompare(b.start));
  const breaksToday=getActivePauses();
  $("#todayDate").textContent=new Date().toLocaleDateString("de-DE",{weekday:"long",day:"2-digit",month:"long"});
  const today=dayCode(new Date()), lessons=fillCancelledSlots(mergeLessons((data.timetable.lessons||[]).filter(x=>x.day===today)));
@@ -3984,8 +4263,8 @@ function renderPlan(){
  $("#planStatus").textContent=data.timetable.isPlaceholder
    ? "Automatischer Stundenplan wird vorbereitet."
    : timetableViewMode==="basis"
-     ? `Basisplan · regulärer Normalplan${data.timetable.heatSchedule?" · ☀️ Hitzestunden-Zeiten":""}.`
-     : `Aktueller Plan & Änderungen${data.timetable.sourceLabel?" · "+data.timetable.sourceLabel:""}${data.timetable.heatSchedule?" · ☀️ Hitzestunden aktiv":""}.`;
+     ? `Basisplan · regulärer Normalplan${isHeatScheduleActive()?" · ☀️ Hitzestunden":""}.`
+     : `Aktueller Plan & Änderungen${data.timetable.sourceLabel?" · "+data.timetable.sourceLabel:""}${isHeatScheduleActive()?" · ☀️ Hitzestunden aktiv":""}.`;
 
  $("#placeholderBanner").style.display=data.timetable.isPlaceholder?"block":"none";
 
@@ -4001,6 +4280,7 @@ function renderPlan(){
  $$("#dayTabs .tab").forEach(b=>b.onclick=()=>{selectedDay=b.dataset.day;renderPlan()});
 
  $$("#planModeSwitch button").forEach(x=>x.classList.toggle("active",x.dataset.planmode===timetableViewMode));
+ updateHeatModeUI();
  const hint=$("#planModeHint");
  if(hint)hint.dataset.mode=timetableViewMode;
 
@@ -4008,7 +4288,9 @@ function renderPlan(){
  const viewLessons=timetableViewMode==="basis"
    ? basisScheduleForClass(selectedClass)
    : currentScheduleForClass(selectedClass);
- const rawDay=stableTimetableDay((viewLessons||[]).filter(x=>x.day===selectedDay));
+ const rawDay=stableTimetableDay(
+   applyEffectiveDisplayTimes((viewLessons||[]).filter(x=>x.day===selectedDay))
+ );
 
  // Wenn der Tag ausschließlich eine organisatorische Sondernotiz enthält,
  // KEINE erfundenen Stunden und KEIN Entfall erzeugen.
@@ -4164,7 +4446,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
         stroke-width: 13px;
       }
     
-/* ===== VERSION 40 — stable redesign ===== */
+/* ===== VERSION 41 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -4233,7 +4515,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 40 — notebook label + timetable repair ===== */
+/* ===== VERSION 41 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -4300,7 +4582,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  .notebookAbbr{font-size:16px}
 }
 
-/* ===== VERSION 40 — Basisplan / Entfall / Hitzestunden ===== */
+/* ===== VERSION 41 — Basisplan / Entfall / Hitzestunden ===== */
 .basisCancelled{
  opacity:.82;
  border-style:dashed!important;
@@ -4338,7 +4620,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  border-color:#dbc8c1!important
 }
 
-/* ===== VERSION 40 — Current vs Basis + moved lesson logic ===== */
+/* ===== VERSION 41 — Current vs Basis + moved lesson logic ===== */
 .planModeSwitch{
  display:grid;
  grid-template-columns:1.35fr 1fr;
@@ -4407,7 +4689,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  .planModeSwitch button b{font-size:10px}
 }
 
-/* ===== VERSION 40 — safer row split / replacement handling ===== */
+/* ===== VERSION 41 — safer row split / replacement handling ===== */
 .changedLesson{
  background:linear-gradient(90deg,#fffdfa,#fffaf6)!important;
 }
@@ -4425,10 +4707,86 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  margin-bottom:3px;
 }
 
-/* ===== VERSION 40 — Mehrfachstunden mit Pause dazwischen ===== */
+/* ===== VERSION 41 — Mehrfachstunden mit Pause dazwischen ===== */
 .splitMultiBadge{
  opacity:.86;
  font-size:8px!important;
+}
+
+/* ===== VERSION 41 — Auto / Manuell Hitzestunden ===== */
+.heatPlanControl{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:10px;
+ margin:8px 0 8px;
+ padding:9px 10px;
+ border:1px solid #ead9c4;
+ border-radius:16px;
+ background:#fffaf1;
+}
+.heatPlanInfo{
+ display:flex;
+ align-items:center;
+ gap:8px;
+ min-width:0;
+}
+.heatSun{
+ width:34px;height:34px;
+ border-radius:11px;
+ background:#fff0bd;
+ display:grid;place-items:center;
+ font-size:17px;
+}
+.heatPlanInfo>div{
+ display:grid;
+ min-width:0;
+}
+.heatPlanInfo b{
+ font-size:11px;
+ color:#80694e;
+}
+.heatPlanInfo small{
+ font-size:8px;
+ color:#a38a68;
+ white-space:nowrap;
+ overflow:hidden;
+ text-overflow:ellipsis;
+ max-width:175px;
+}
+.heatModeButtons{
+ display:flex;
+ gap:4px;
+ padding:3px;
+ border-radius:11px;
+ background:#f5eadb;
+}
+.heatModeButtons button{
+ border:0;
+ background:transparent;
+ color:#947d60;
+ border-radius:8px;
+ min-width:36px;
+ padding:7px 7px;
+ font-size:9px;
+ font-weight:900;
+}
+.heatModeButtons button.active{
+ background:white;
+ color:#795f3e;
+ box-shadow:0 2px 7px rgba(131,100,56,.12);
+}
+.heatPlanControl.heatActive{
+ background:#fff6d9;
+ border-color:#ead18c;
+}
+.heatPlanControl.heatActive .heatSun{
+ background:#ffd978;
+}
+@media(max-width:520px){
+ .heatPlanControl{gap:6px;padding:8px}
+ .heatPlanInfo small{max-width:130px}
+ .heatModeButtons button{min-width:31px;padding:7px 5px}
 }
 </style>
   </defs>
@@ -5042,6 +5400,29 @@ function currentScheduleForClass(name){
 function basisScheduleForClass(name){
  return scheduleForClass(name,"basis");
 }
+
+window.setHeatMode=function(mode,btn){
+ heatModeOverride=["auto","on","off"].includes(mode)?mode:"auto";
+ localStorage.setItem("schoolbloom-heat-mode",heatModeOverride);
+ updateHeatModeUI();
+ renderHome();
+ renderPlan();
+}
+function updateHeatModeUI(){
+ $$("#heatPlanControl button").forEach(x=>
+   x.classList.toggle("active",x.dataset.heatmode===heatModeOverride)
+ );
+ const state=$("#heatPlanState");
+ if(state){
+   if(heatModeOverride==="on")state.textContent="Manuell aktiviert";
+   else if(heatModeOverride==="off")state.textContent="Manuell deaktiviert";
+   else state.textContent=data.timetable?.heatSchedule
+     ?"Automatisch aus PDF erkannt"
+     :"Automatik · normaler Plan";
+ }
+ const box=$("#heatPlanControl");
+ if(box)box.classList.toggle("heatActive",isHeatScheduleActive());
+}
 window.setTimetableViewMode=function(mode,btn){
  timetableViewMode=mode==="basis"?"basis":"current";
  $$("#planModeSwitch button").forEach(x=>x.classList.toggle("active",x.dataset.planmode===timetableViewMode));
@@ -5337,9 +5718,9 @@ async function parsePdfDocument(pdf){
  let current=mergePages(currentPages);
  const basis=mergePages(basisPages);
 
- // Apply the heat-shortened row times to BOTH plans before comparison.
- current=applyHeatTimesToSchedule(current,heat);
- const heatBasis=applyHeatTimesToSchedule(basis,heat);
+ // Keep the original row structure/times in storage.
+ // Heat times are applied dynamically so Auto/An/Aus can switch instantly.
+ const heatBasis=basis;
 
  const keys=[...new Set([...Object.keys(current),...Object.keys(heatBasis)])]
    .sort((a,b)=>a.localeCompare(b,"de",{numeric:true,sensitivity:"base"}));
@@ -5349,7 +5730,7 @@ async function parsePdfDocument(pdf){
  for(const className of keys){
    const cur=current[className]||[];
    const base=heatBasis[className]||[];
-   finalSchedules[className]=addBasisCancellations(cur,base,rowMaps,heat);
+   finalSchedules[className]=addBasisCancellations(cur,base,rowMaps,null);
  }
 
  const wanted=(data.timetable.selectedClass||data.settings.className||"M U1").replace(/\s+/g," ").toUpperCase();
@@ -5369,7 +5750,7 @@ async function parsePdfDocument(pdf){
    lessons:finalSchedules[chosen]||[],
    sourceLabel:dm?dm[1]:"",
    fetchedAt:Date.now(),
-   parserVersion:40,
+   parserVersion:41,
    heatSchedule:!!heat?.active,
    activePauses:heat?.active?heat.pauses:pauses,
    currentPageCount:currentPages.length,
@@ -5462,8 +5843,8 @@ window.loadRemotePlan=async function(manual=false){
 
 loadRemotePlan(false);
 
-if(localStorage.getItem("schoolbloom-plan-parser-version")!=="40"){
- localStorage.setItem("schoolbloom-plan-parser-version","40");
+if(localStorage.getItem("schoolbloom-plan-parser-version")!=="41"){
+ localStorage.setItem("schoolbloom-plan-parser-version","41");
  setTimeout(()=>loadRemotePlan(true),250);
 }
 if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});

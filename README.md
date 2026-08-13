@@ -1,41 +1,46 @@
-# VERSION 40
+# VERSION 41
 
-## Der MINT-Doppelstunden-Bug ist gezielt repariert
+## Hitzestunden: automatisch + manuell
 
-Problem bis V39:
-Eine zusammenhängende Zelle im PHS-Stundenplan konnte über zwei Unterrichtszeilen laufen,
-obwohl zwischen diesen Unterrichtszeilen eine Pause liegt.
+SchoolBloom hat jetzt drei Modi:
 
-Beispiel:
-- MINT 10:30–11:15
-- Pause 11:15–11:30
-- MINT 11:30–12:15
+### Auto
+Standard.
+Wenn in der PHS-PDF `Hitzebedingte Kurzstunden` erkannt wird, werden automatisch
+die Kurzstundenzeiten verwendet. Wenn nicht, gelten die normalen Zeiten.
 
-Der Parser stoppte bisher allein wegen der Pause. Dadurch verschwand die zweite Hälfte.
+### An
+Hitzestunden werden manuell erzwungen, auch wenn PDF.js die Kennzeichnung oder
+kleine Tabelle nicht erkannt hat.
 
-V40 trennt Erkennung und Darstellung:
+### Aus
+Normale Unterrichtszeiten werden manuell erzwungen.
 
-### Erkennung
-Eine PDF-Zelle darf über eine Pause hinweg als eine echte Doppel-/Mehrfachstunde erkannt werden.
-Sie wird nur getrennt, wenn
-- eine echte horizontale PDF-Gitterlinie erkannt wird, oder
-- die nächste Zeile eigenen Unterrichtstext enthält.
+Die Auswahl wird auf dem Gerät gespeichert.
 
-### Darstellung
-Wenn eine erkannte Mehrfachstunde eine Pause überquert, wird sie nur für die Anzeige aufgeteilt:
+## Hitzestundenzeiten
+1. 08:00–08:35
+2. 08:35–09:10
+Pause 09:10–09:25
+3. 09:25–10:00
+4. 10:00–10:35
+Pause 10:35–10:50
+5. 10:50–11:25
+6. 11:25–12:00
+Große Pause 12:00–12:25
+7. 12:25–13:00
+8. 13:00–13:35
 
-MINT 10:30–11:15 · Doppelstunde 1/2
-Pause 11:15–11:30
-MINT 11:30–12:15 · Doppelstunde 2/2
+## Wichtig
+Die gespeicherten Unterrichtsdaten werden nicht mehr dauerhaft auf Hitzestundenzeiten
+umgeschrieben. Die Zeiten werden nur für die aktuelle Anzeige berechnet.
+Dadurch kann Auto/An/Aus sofort umgeschaltet werden, ohne die PDF neu laden zu müssen.
 
-Intern bleibt sie weiterhin eine Doppelstunde. Dadurch bleiben auch Basisplan-Vergleich,
-Verschiebungen und Entfallzählung korrekt.
+Home / nächste Stunde verwendet denselben aktiven Modus.
 
-Das funktioniert auch für Dreifach- und längere Stunden mit Pausen dazwischen.
-
-Weiterhin:
+Weiterhin enthalten:
 - Aktuell & Änderungen / Basisplan
-- Entfall nur bei wirklich leerer Stelle
-- ersetzte Stunden = geändert, nicht Entfall
-- Hitzestunden
+- Mehrfachstunden über Pausen
+- echte Entfälle
+- Verschiebungen
 - Klassenwechsel
