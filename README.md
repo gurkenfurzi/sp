@@ -1,25 +1,46 @@
-# VERSION 54
+# VERSION 55
 
-Formel-Editor:
-- Wurzel richtet sich jetzt exakt nach der Markierung.
-- Ganzen Bruch markieren + Wurzel = Wurzel über dem ganzen Bruch.
-- Nur Zähler markieren + Wurzel = Wurzel nur über dem Zähler.
-- Extra „Wurzel + Bruch“-Block entfernt.
-- Pfeile ergänzt: → ← ↔ ⇒ ⇔
-- −∞, +∞ und ∞ ergänzt.
-- Exponent und Index bleiben frei editierbar.
+## Seite
+- Der Seitenbereich ist oben jetzt klar als `Seite` beschriftet, nicht mehr nur als Symbol.
+- Dort bleiben Seitenfarbe, leer/liniert/kariert/gepunktet, Abstand, Seitenrand, Hoch-/Querformat und Zoom.
 
-Seitenstil:
-- Seitenfarbe frei wählbar.
-- Hintergrund: Leer, Liniert, Kariert, Gepunktet.
-- Linien-/Raster-/Punktabstand einstellbar.
-- Seitenrand einstellbar.
-- Seitenrand wird als dezente Führung angezeigt.
-- Objekte können an linken/rechten Seitenrand ausgerichtet oder auf die gesamte Inhaltsbreite zwischen den Rändern gesetzt werden.
-- Snap berücksichtigt den eingestellten Seitenrand.
+## Formel-Editor
+- Exponent und Index sind stabiler:
+  - Inhalt (z. B. `n`) kann gelöscht und direkt ersetzt werden.
+  - Das Exponent-/Index-Feld bleibt beim ersten Leeren bestehen.
+  - Erst ein weiterer Backspace/Delete bei bereits leerem Feld entfernt die Struktur.
+- Eigene Formeln können gespeichert werden.
+- Gespeicherte Formeln können im Formel-Editor direkt wieder eingesetzt oder gelöscht werden.
 
-Desktop/Laptop:
-- Eigene Desktop-Darstellung für den Editor.
-- Cleaner Word/Canva-artiger Aufbau: obere Leiste, Ribbon-artige Werkzeugnavigation, graue Arbeitsfläche, weißes Blatt und Eigenschaften rechts.
-- Cleanere Systemschrift auf PC/Laptop.
-- Mobile Darstellung bleibt separat kompakt.
+## Graphen
+Neuer visueller Graphen-Editor unter `Hinzufügen → Graph`.
+
+Unterstützt:
+- bis zu 4 Funktionen gleichzeitig
+- eigene Farben
+- durchgezogen / gestrichelt / gepunktet
+- x-/y-Bereich frei einstellen
+- Gitternetz
+- Achsen mit Pfeilen
+- Zahlenbeschriftungen
+- senkrechte und waagrechte Hilfslinien / Asymptoten
+- Graph später wieder bearbeiten
+- frei skalierbar und verschiebbar auf dem Lernblatt
+
+Funktionen:
+- x^2
+- sin(x), cos(x), tan(x)
+- sqrt(x)
+- abs(x)
+- exp(x)
+- ln(x), log(x)
+- 1/x
+- Kombinationen wie sin(2*x)+cos(x/2)
+
+Presets:
+- Gerade
+- Parabel
+- Sinus + Cosinus
+- mehrere überlagerte Wellen
+- Hyperbel mit Asymptoten
+- Exponentialfunktion
