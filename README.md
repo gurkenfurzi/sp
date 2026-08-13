@@ -1,10 +1,27 @@
-# VERSION 31
+# VERSION 32 — Canva/Word-Lernblatt-Editor
 
-Home-Zeitstatus:
-- Vor der Stunde: „Nächste Stunde: …“ + „in X Min. · HH:MM Uhr“
-- Während der Stunde: „Jetzt: …“ + „noch X Min. · bis HH:MM Uhr“
-- Während einer Pause: Restzeit der Pause + nächste Unterrichtszeit
-- Sonderhinweise wie „10:00 Uhr Klassenleitungsstunden“ zeigen zusätzlich „in X Min.“
-- Home aktualisiert die Restzeit automatisch etwa alle 30 Sekunden.
+Neue Oberfläche:
+- Canva-artige kompakte Hauptleiste: Einfügen, Text, Elemente, Stile, Ebenen, Seite, Ansicht.
+- Werkzeugbereiche öffnen sich nur bei Bedarf statt alles gleichzeitig anzuzeigen.
+- Kontext-Textleiste erscheint nur bei ausgewähltem Text.
 
-Basis: VERSION 30.
+Textfunktionen:
+- Schriftfamilie
+- eigene Schriftdateien (.woff/.woff2/.ttf/.otf, lokal gespeichert)
+- Schriftgröße
+- Fett, Kursiv, Unterstrichen, Durchgestrichen
+- Textfarbe und Markerfarbe
+- Links, Zentriert, Rechts, Blocksatz
+- Aufzählungs- und nummerierte Listen
+- Zeilenabstand
+- Buchstabenabstand
+- Links
+- Format entfernen
+- Duplizieren, Sperren, Ebenen, Löschen
+
+Wichtig:
+- Markierter Teil eines Textes kann separat formatiert werden.
+- Textauswahl wird beim Tippen auf die Werkzeugleiste gespeichert und wiederhergestellt.
+- Seite: Hintergrundfarbe + A4-Zoom.
+- Formen/Pfade aus VERSION 30 bleiben erhalten.
+- Home-Zeitstatus aus VERSION 31 bleibt erhalten.

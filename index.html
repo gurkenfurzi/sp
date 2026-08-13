@@ -633,13 +633,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 31: echter Live-Refresh ===== */
+/* ===== VERSION 32: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 31 timetable parser ===== */
+/* ===== VERSION 32 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -648,7 +648,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 31: dynamic classes ===== */
+/* ===== VERSION 32: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -657,11 +657,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 31: raster-exact timetable ===== */
+/* ===== VERSION 32: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 31 stability fixes ===== */
+/* ===== VERSION 32 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -673,6 +673,86 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .canvasSvg.drawing{cursor:crosshair}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
+
+/* ===== VERSION 32 — Canva/Word-like editor ===== */
+.canvaRibbon{
+ display:flex;gap:5px;overflow-x:auto;padding:6px;
+ position:sticky;top:58px;z-index:115;
+ background:rgba(255,250,246,.97);backdrop-filter:blur(18px);
+ border:1px solid #ead2cb;border-radius:15px;
+ scrollbar-width:none;
+}
+.canvaRibbon::-webkit-scrollbar,.textContextBar::-webkit-scrollbar{display:none}
+.canvaRibbon button{
+ flex:0 0 auto;min-width:58px;height:52px;border:0;background:transparent;
+ color:#765f56;border-radius:11px;padding:5px 8px;
+ display:grid;place-items:center;gap:2px;font-size:9px;font-weight:850;
+}
+.canvaRibbon button:hover,.canvaRibbon button:active,.canvaRibbon .ribbonMain{
+ background:#fff0ee;color:#a36e6e
+}
+.canvaRibbon svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.editorDrawer{
+ position:sticky;top:116px;z-index:114;margin-top:5px;
+ padding:9px;background:rgba(255,250,246,.98);backdrop-filter:blur(18px);
+ border:1px solid #ead2cb;border-radius:15px;
+ box-shadow:0 7px 20px rgba(90,65,55,.08)
+}
+.drawerHeader{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:12px;font-weight:900;color:#715c54}
+.drawerGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+.drawerGrid button,.drawerGrid label{
+ min-height:62px;border:1px solid #ead3cd;background:white;border-radius:13px;
+ display:grid;place-items:center;gap:3px;padding:7px;color:#745f56;
+ font-size:10px;font-weight:850;text-align:center
+}
+.drawerGrid svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.7}
+.textContextBar{
+ display:flex;align-items:center;gap:5px;overflow-x:auto;
+ position:sticky;top:116px;z-index:116;margin-top:5px;padding:7px;
+ background:rgba(255,255,255,.98);backdrop-filter:blur(18px);
+ border:1px solid #e6d0ca;border-radius:14px;
+ box-shadow:0 6px 18px rgba(90,65,55,.08)
+}
+.textContextBar select,.textContextBar input[type=number],.ctxIcon,.ctxColor{
+ flex:0 0 auto;height:35px;border:1px solid #e6d0ca;background:#fff;
+ color:#705b53;border-radius:9px;padding:0 8px;font-size:11px;font-weight:800
+}
+.textContextBar select{max-width:118px}
+.ctxNumber{width:53px;padding:0 5px!important}
+.ctxCompactSelect{max-width:70px!important}
+.ctxIcon{min-width:35px;padding:0 8px!important}
+.ctxSep{width:1px;height:25px;background:#ead9d3;flex:0 0 auto}
+.ctxColor{position:relative;width:38px;padding:0!important;display:grid;place-items:center;overflow:hidden}
+.ctxColor span{font-weight:950;pointer-events:none}
+.ctxColor input{position:absolute;inset:auto 0 0;width:100%;height:7px;border:0;padding:0}
+.ctxColor.marker input{height:10px}
+.dangerCtx{color:#bb6d6d!important;background:#fff3f3!important}
+.editorLegacyPanel{display:none!important}
+.canvasEditorShell.showProperties #editorPropertiesPanel,
+.canvasEditorShell.showLayers #editorLayersPanel,
+.canvasEditorShell.showStyles #editorStylesPanel{display:block!important}
+.canvasEditorShell.showProperties #editorPropertiesPanel{margin-top:7px}
+.canvasEditorShell.showLayers #editorLayersPanel{margin-top:7px}
+.canvasEditorShell.showStyles #editorStylesPanel{margin-top:7px}
+.canvasEditorShell .stylePresetBar{display:none}
+.editorZoomBar{position:static!important;margin-top:5px}
+body.editorMode{overflow-x:hidden}
+@media(min-width:900px){
+ .canvasEditorShell{display:grid;grid-template-columns:72px minmax(0,1fr) 280px;gap:10px;align-items:start}
+ .canvasTopbar{grid-column:1/-1}
+ .canvaRibbon{grid-column:1;grid-row:2/8;position:sticky;top:70px;display:grid;overflow:visible}
+ .canvaRibbon button{width:62px}
+ .editorDrawer{grid-column:3;grid-row:2/8;position:sticky;top:70px}
+ .textContextBar{grid-column:2;position:sticky;top:70px}
+ .editorZoomBar{grid-column:2}
+ .canvasViewport{grid-column:2}
+ .editorLegacyPanel{grid-column:3}
+}
+@media(max-width:600px){
+ .drawerGrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .canvaRibbon{top:58px}
+ .editorDrawer,.textContextBar{top:116px}
+}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.18/paper-full.min.js">
 let homeClockTimer=null;
@@ -692,7 +772,7 @@ ensureHomeClockTimer();
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 31</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 32</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -845,24 +925,76 @@ ensureHomeClockTimer();
         </div>
       </div>
 
-      <div class="editorDock" aria-label="Werkzeuge">
-        <button title="Text" onclick="addCanvasText('body')"><svg viewBox="0 0 24 24"><path d="M5 5h14M12 5v14M8 19h8"/></svg></button>
-        <button title="Überschrift" onclick="addCanvasText('h1')"><svg viewBox="0 0 24 24"><path d="M5 5v14M15 5v14M5 12h10M19 8v11M17 10l2-2 2 2"/></svg></button>
-        <button title="Tabelle" onclick="openTableDialog()"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 10h18M9 4v16M15 4v16"/></svg></button>
-        <label title="Bild" for="canvasImageInput"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="9" r="1.5"/><path d="m5 18 5-5 3 3 2-2 4 4"/></svg></label>
-        <input id="canvasImageInput" type="file" accept="image/*" style="display:none" onchange="addCanvasImage(this.files[0]);this.value=''">
-        <button title="Sticker" onclick="toggleStickerPanel()"><svg viewBox="0 0 24 24"><path d="M12 3c1.8 0 2.5 2.1 3.7 2.8 1.3.8 3.4-.2 4.3 1.1.9 1.4-.6 3.1-.3 4.6.3 1.5 2.3 2.6 1.9 4.2-.4 1.5-2.7 1.5-3.8 2.5-1.1 1-1.1 3.3-2.6 3.7-1.6.4-2.7-1.6-4.2-1.9-1.5-.3-3.2 1.2-4.6.3-1.3-.9-.3-3-.9-4.3C4.8 14.8 2.7 14.1 3 12.5c.3-1.6 2.5-2 3.3-3.3C7.1 8 6.6 5.8 8 5.2 9.4 4.6 10.3 3 12 3Z"/></svg></button>
-        <button title="Karo-Zettel" onclick="addPaperSticker('grid')"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zM8 4v16M12 4v16M16 4v16M4 8h16M4 12h16M4 16h16"/></svg></button>
-        <button title="Linierter Zettel" onclick="addPaperSticker('line')"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg></button>
-        <button title="Leerer Zettel" onclick="addPaperSticker('blank')"><svg viewBox="0 0 24 24"><path d="M6 3h9l3 3v15H6z"/><path d="M15 3v4h4"/></svg></button>
-        <button title="Klebeband" onclick="addTapeSticker()"><svg viewBox="0 0 24 24"><path d="m5 8 14-2 1 9-14 2z"/></svg></button>
-        <button title="Rechteck" onclick="addVectorShape('rect')"><svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="12" rx="1"/></svg></button>
-        <button title="Kreis" onclick="addVectorShape('ellipse')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg></button>
-        <button title="Dreieck" onclick="addVectorShape('triangle')"><svg viewBox="0 0 24 24"><path d="m12 4 9 16H3Z"/></svg></button>
-        <button title="Freier Pfad zeichnen" onclick="setVectorTool('pen')"><svg viewBox="0 0 24 24"><path d="M4 18c4-12 7 3 10-7 2-6 4-2 6-7"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/><circle cx="20" cy="4" r="1.2" fill="currentColor"/></svg></button>
+      <div class="canvaRibbon" aria-label="Editor-Werkzeuge">
+        <button class="ribbonMain" onclick="toggleEditorDrawer('insert')" title="Einfügen">
+          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>Einfügen</span>
+        </button>
+        <button onclick="addCanvasText('body')" title="Text">
+          <svg viewBox="0 0 24 24"><path d="M5 5h14M12 5v14M8 19h8"/></svg><span>Text</span>
+        </button>
+        <button onclick="toggleEditorDrawer('elements')" title="Elemente">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="8" height="8" rx="2"/><circle cx="17" cy="8" r="4"/><path d="m7 20 4-6 4 6Z"/></svg><span>Elemente</span>
+        </button>
+        <button onclick="toggleEditorDrawer('styles')" title="Stile">
+          <svg viewBox="0 0 24 24"><path d="M12 3 4 9l8 6 8-6Z"/><path d="m4 14 8 6 8-6"/></svg><span>Stile</span>
+        </button>
+        <button onclick="toggleEditorDrawer('layers')" title="Ebenen">
+          <svg viewBox="0 0 24 24"><path d="m12 3 8 5-8 5-8-5Z"/><path d="m4 13 8 5 8-5"/></svg><span>Ebenen</span>
+        </button>
+        <button onclick="toggleEditorDrawer('page')" title="Seite"><svg viewBox="0 0 24 24"><path d="M6 3h9l3 3v15H6z"/></svg><span>Seite</span></button>
+        <button onclick="fitCanvasStage()" title="Ansicht">
+          <svg viewBox="0 0 24 24"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/></svg><span>Ansicht</span>
+        </button>
       </div>
 
-      <div class="stylePresetBar" id="stylePresetBar"></div>
+      <div id="editorDrawer" class="editorDrawer" style="display:none"></div>
+
+      <div id="textContextBar" class="textContextBar" style="display:none">
+        <select id="ctxFont" title="Schriftart" onchange="canvasApplyText('fontFamily',this.value)">
+          <option value="Arial">Arial</option>
+          <option value="Georgia">Georgia</option>
+          <option value="Trebuchet MS">Trebuchet</option>
+          <option value="Verdana">Verdana</option>
+          <option value="Times New Roman">Times</option>
+          <option value="Courier New">Courier</option>
+          <option value="Palatino Linotype">Palatino</option>
+          <option value="Baskerville">Baskerville</option>
+          <option value="Avenir Next">Avenir</option>
+        </select>
+        <button class="ctxIcon" onclick="document.getElementById('customFontInput').click()" title="Eigene Schrift hinzufügen">＋Aa</button>
+        <input id="customFontInput" type="file" accept=".woff,.woff2,.ttf,.otf" hidden onchange="addCustomCanvasFont(this.files[0]);this.value=''">
+        <input id="ctxSize" class="ctxNumber" type="number" min="6" max="160" value="16" title="Schriftgröße" onchange="canvasApplyText('fontSize',+this.value)">
+        <span class="ctxSep"></span>
+        <button class="ctxIcon" onclick="canvasTextCommand('bold')" title="Fett"><b>B</b></button>
+        <button class="ctxIcon" onclick="canvasTextCommand('italic')" title="Kursiv"><i>I</i></button>
+        <button class="ctxIcon" onclick="canvasTextCommand('underline')" title="Unterstrichen"><u>U</u></button>
+        <button class="ctxIcon" onclick="canvasTextCommand('strikeThrough')" title="Durchgestrichen"><s>S</s></button>
+        <label class="ctxColor" title="Textfarbe"><span>A</span><input id="ctxTextColor" type="color" value="#333333" oninput="canvasApplyText('color',this.value)"></label>
+        <label class="ctxColor marker" title="Markerfarbe"><span>▰</span><input id="ctxHighlight" type="color" value="#fff1a8" oninput="canvasTextCommand('hiliteColor',this.value)"></label>
+        <span class="ctxSep"></span>
+        <button class="ctxIcon" onclick="canvasTextCommand('justifyLeft')" title="Links">≡</button>
+        <button class="ctxIcon" onclick="canvasTextCommand('justifyCenter')" title="Zentriert">≣</button>
+        <button class="ctxIcon" onclick="canvasTextCommand('justifyRight')" title="Rechts">≡</button>
+        <button class="ctxIcon" onclick="canvasTextCommand('justifyFull')" title="Blocksatz">☷</button>
+        <button class="ctxIcon" onclick="canvasTextCommand('insertUnorderedList')" title="Aufzählung">•≡</button>
+        <button class="ctxIcon" onclick="canvasTextCommand('insertOrderedList')" title="Nummerierung">1≡</button>
+        <select class="ctxCompactSelect" title="Zeilenabstand" onchange="canvasApplyText('lineHeight',this.value)">
+          <option value="1">1.0</option><option value="1.15">1.15</option><option value="1.5">1.5</option><option value="2">2.0</option>
+        </select>
+        <select class="ctxCompactSelect" title="Buchstabenabstand" onchange="canvasApplyText('letterSpacing',this.value)">
+          <option value="0px">Normal</option><option value="0.5px">+0.5</option><option value="1px">+1</option><option value="2px">+2</option>
+        </select>
+        <button class="ctxIcon" onclick="canvasAddLink()" title="Link">🔗</button>
+        <button class="ctxIcon" onclick="canvasTextCommand('removeFormat')" title="Format entfernen">Tx</button>
+        <span class="ctxSep"></span>
+        <button class="ctxIcon" onclick="duplicateSelected()" title="Duplizieren">⧉</button>
+        <button class="ctxIcon" onclick="toggleSelectedLock()" title="Sperren">🔒</button>
+        <button class="ctxIcon" onclick="moveSelectedLayer(1)" title="Nach vorne">↑</button>
+        <button class="ctxIcon" onclick="moveSelectedLayer(-1)" title="Nach hinten">↓</button>
+        <button class="ctxIcon dangerCtx" onclick="deleteSelectedCanvasItem()" title="Löschen">⌫</button>
+      </div>
+
+<div class="stylePresetBar" id="stylePresetBar"></div>
 
       <div class="editorZoomBar">
         <button type="button" onclick="fitCanvasStage()" title="A4 an Bildschirm anpassen">⊡ Anpassen</button>
@@ -886,22 +1018,22 @@ ensureHomeClockTimer();
         </div>
       </div>
 
-      <div id="stickerPanel" class="objectPanel" style="display:none">
+      <div id="stickerPanel" class="objectPanel editorLegacyPanel" style="display:none">
         <div class="rowBetween"><b>Sticker</b><button class="ghost" onclick="toggleStickerPanel()">Schließen</button></div>
         <div class="stickerPicker" id="stickerPicker"></div>
       </div>
 
-      <div class="objectPanel">
+      <div class="objectPanel editorLegacyPanel" id="editorPropertiesPanel">
         <div class="rowBetween"><b>Eigenschaften</b><label class="snapToggle"><input id="snapToggle" type="checkbox" checked onchange="canvasState.snap=this.checked"> Snap</label><div class="row"><button class="miniIcon" title="Sperren/Entsperren" onclick="toggleSelectedLock()"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></button><button class="miniIcon dangerMini" title="Löschen" onclick="deleteSelectedCanvasItem()"><svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M7 7l1 14h8l1-14M10 11v6M14 11v6"/></svg></button></div></div>
         <div id="canvasInspector" class="small">Wähle einen Text, ein Bild, eine Tabelle, einen Sticker oder eine Form aus.</div>
       </div>
 
-      <div class="objectPanel">
+      <div class="objectPanel editorLegacyPanel" id="editorLayersPanel">
         <div class="rowBetween"><b>Ebenen</b><div class="row"><button class="miniIcon" title="Nach vorne" onclick="moveSelectedLayer(1)">↑</button><button class="miniIcon" title="Nach hinten" onclick="moveSelectedLayer(-1)">↓</button></div></div>
         <div id="layerList" class="layerList"></div>
       </div>
 
-      <div class="objectPanel">
+      <div class="objectPanel editorLegacyPanel" id="editorStylesPanel">
         <div class="rowBetween"><b>Textformate</b><button class="miniIcon" title="Eigenes Format" onclick="createCustomStylePreset()">＋</button></div>
         <div class="templatePicker">
           <button class="templateCard" onclick="applyCanvasTemplate('clean')"><b>Clean Notes</b>klare Überschrift + Merkkasten</button>
@@ -996,6 +1128,242 @@ ensureHomeClockTimer();
 </div>
 
 <script type="module">
+/* ===== VERSION 32 EDITOR UI ===== */
+let canvasSavedRange=null;
+
+function currentTextElement(){
+ if(canvasState?.selectedType!=="object")return null;
+ const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);
+ if(!o||!["text","block","task","merke"].includes(o.kind))return null;
+ return document.querySelector(`.cobj[data-id="${o.id}"]`);
+}
+function isTextCanvasObject(){
+ const o=canvasState?.objects?.find(x=>x.id===canvasState.selectedId);
+ return canvasState?.selectedType==="object" && !!o && ["text","block","task","merke"].includes(o.kind);
+}
+function saveCanvasSelection(){
+ const el=currentTextElement(),sel=window.getSelection();
+ if(!el||!sel||!sel.rangeCount)return;
+ const r=sel.getRangeAt(0);
+ if(el.contains(r.commonAncestorContainer))canvasSavedRange=r.cloneRange();
+}
+function restoreCanvasSelection(){
+ const el=currentTextElement();
+ if(!el||!canvasSavedRange)return false;
+ const sel=window.getSelection();
+ try{
+   sel.removeAllRanges();sel.addRange(canvasSavedRange);el.focus();return true;
+ }catch(e){return false}
+}
+document.addEventListener("selectionchange",()=>{
+ if(document.body.classList.contains("editorMode"))saveCanvasSelection();
+});
+
+window.setCanvasPageColor=function(value){
+ canvasState.pageColor=value;
+ const page=$("#canvasPage");if(page)page.style.background=value;
+ markCanvasDirty();
+}
+window.canvasTextCommand=function(cmd,value=null){
+ const el=currentTextElement();if(!el)return;
+ restoreCanvasSelection();
+ el.focus();
+ document.execCommand(cmd,false,value);
+ const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);
+ if(o)o.text=el.innerHTML;
+ saveCanvasSelection();
+ markCanvasDirty();
+}
+
+function wrapSelectedCanvasText(styles){
+ const el=currentTextElement();if(!el)return false;
+ restoreCanvasSelection();
+ const sel=window.getSelection();
+ if(!sel||!sel.rangeCount)return false;
+ const range=sel.getRangeAt(0);
+ if(range.collapsed||!el.contains(range.commonAncestorContainer))return false;
+ const span=document.createElement("span");
+ Object.assign(span.style,styles);
+ try{
+   range.surroundContents(span);
+ }catch(e){
+   const frag=range.extractContents();span.appendChild(frag);range.insertNode(span);
+ }
+ sel.removeAllRanges();
+ const nr=document.createRange();nr.selectNodeContents(span);sel.addRange(nr);
+ canvasSavedRange=nr.cloneRange();
+ return true;
+}
+
+window.canvasApplyText=function(prop,value){
+ const el=currentTextElement();
+ const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);
+ if(!el||!o)return;
+
+ restoreCanvasSelection();
+ const sel=window.getSelection();
+ const hasSelection=sel&&sel.rangeCount&&!sel.getRangeAt(0).collapsed&&el.contains(sel.getRangeAt(0).commonAncestorContainer);
+
+ if(hasSelection){
+   if(prop==="color")document.execCommand("foreColor",false,value);
+   else if(prop==="fontFamily")document.execCommand("fontName",false,value);
+   else if(prop==="fontSize"){
+     document.execCommand("fontSize",false,"7");
+     el.querySelectorAll('font[size="7"]').forEach(n=>{
+       n.removeAttribute("size");n.style.fontSize=Number(value)+"px";
+     });
+   }else if(prop==="lineHeight"){
+     wrapSelectedCanvasText({lineHeight:String(value)});
+   }else if(prop==="letterSpacing"){
+     wrapSelectedCanvasText({letterSpacing:String(value)});
+   }
+ }else{
+   o.style||={};
+   o.style[prop]=prop==="fontSize"?Number(value):value;
+   renderCanvasObjects();
+ }
+ o.text=el.innerHTML;
+ saveCanvasSelection();
+ markCanvasDirty();
+ syncTextContextBar();
+}
+
+window.canvasAddLink=function(){
+ const el=currentTextElement();if(!el)return;
+ restoreCanvasSelection();
+ const sel=window.getSelection();
+ if(!sel||!sel.rangeCount||sel.getRangeAt(0).collapsed){
+   alert("Markiere zuerst den Text, der verlinkt werden soll.");
+   return;
+ }
+ const url=prompt("Link eingeben (z. B. https://...)");
+ if(!url)return;
+ document.execCommand("createLink",false,url);
+ el.querySelectorAll("a").forEach(a=>{a.target="_blank";a.rel="noopener"});
+ const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);
+ if(o)o.text=el.innerHTML;
+ markCanvasDirty();
+}
+
+window.toggleEditorDrawer=function(kind){
+ const drawer=$("#editorDrawer"),shell=document.querySelector(".canvasEditorShell");
+ if(!drawer||!shell)return;
+
+ shell.classList.remove("showProperties","showLayers","showStyles");
+
+ if(drawer.dataset.open===kind && drawer.style.display!=="none"){
+   drawer.style.display="none";drawer.dataset.open="";return;
+ }
+ drawer.dataset.open=kind;drawer.style.display="block";
+
+ const close=`<button class="miniIcon" onclick="toggleEditorDrawer('${kind}')">×</button>`;
+ const icon=(svg,label,action)=>`<button onclick="${action}">${svg}<span>${label}</span></button>`;
+
+ if(kind==="insert"){
+   drawer.innerHTML=`<div class="drawerHeader"><span>Einfügen</span>${close}</div><div class="drawerGrid">
+    ${icon('<svg viewBox="0 0 24 24"><path d="M5 5h14M12 5v14M8 19h8"/></svg>','Text',"addCanvasText('body')")}
+    ${icon('<svg viewBox="0 0 24 24"><path d="M5 5v14M15 5v14M5 12h10"/></svg>','Überschrift',"addCanvasText('h1')")}
+    ${icon('<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16"/><path d="M3 10h18M9 4v16M15 4v16"/></svg>','Tabelle',"openTableDialog()")}
+    <label for="canvasImageInput"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16"/><path d="m5 18 5-5 3 3 2-2 4 4"/></svg><span>Bild</span></label>
+    ${icon('<svg viewBox="0 0 24 24"><path d="M6 3h9l3 3v15H6z"/></svg>','Karo-Zettel',"addPaperSticker('grid')")}
+    ${icon('<svg viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>','Liniert',"addPaperSticker('line')")}
+    ${icon('<svg viewBox="0 0 24 24"><path d="M6 3h9l3 3v15H6z"/></svg>','Leerer Zettel',"addPaperSticker('blank')")}
+    ${icon('<svg viewBox="0 0 24 24"><path d="m5 8 14-2 1 9-14 2z"/></svg>','Klebeband',"addTapeSticker()")}
+   </div>`;
+ }else if(kind==="elements"){
+   drawer.innerHTML=`<div class="drawerHeader"><span>Elemente</span>${close}</div><div class="drawerGrid">
+    ${icon('<svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="12" rx="1"/></svg>','Rechteck',"addVectorShape('rect')")}
+    ${icon('<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg>','Kreis',"addVectorShape('ellipse')")}
+    ${icon('<svg viewBox="0 0 24 24"><path d="m12 4 9 16H3Z"/></svg>','Dreieck',"addVectorShape('triangle')")}
+    ${icon('<svg viewBox="0 0 24 24"><path d="M4 18c4-12 7 3 10-7 2-6 4-2 6-7"/></svg>','Pfad',"setVectorTool('pen')")}
+    ${icon('<svg viewBox="0 0 24 24"><path d="M12 3c5 0 9 4 9 9s-4 9-9 9-9-4-9-9 4-9 9-9Z"/></svg>','Sticker',"toggleStickerPanel();document.getElementById('stickerPanel').style.display='block'")}
+   </div>`;
+ }else if(kind==="styles"){
+   drawer.innerHTML=`<div class="drawerHeader"><span>Stile & Vorlagen</span>${close}</div>
+    <div class="drawerGrid">
+      <button onclick="addCanvasText('h1')"><b>H1</b><span>Überschrift</span></button>
+      <button onclick="addCanvasText('h2')"><b>H2</b><span>Untertitel</span></button>
+      <button onclick="addCanvasText('body')"><b>Aa</b><span>Normal</span></button>
+      <button onclick="addCanvasText('task')"><b>✓</b><span>Aufgabe</span></button>
+      <button onclick="addCanvasText('merke')"><b>!</b><span>Merke</span></button>
+      <button onclick="createCustomStylePreset()"><b>＋</b><span>Eigenes Format</span></button>
+    </div>
+    <div class="templatePicker" style="margin-top:9px">
+      <button class="templateCard" onclick="applyCanvasTemplate('clean')"><b>Clean Notes</b>klar & minimal</button>
+      <button class="templateCard" onclick="applyCanvasTemplate('cute')"><b>Cute Study</b>pastellig</button>
+      <button class="templateCard" onclick="applyCanvasTemplate('exam')"><b>Exam Prep</b>prüfungsorientiert</button>
+      <button class="templateCard" onclick="applyCanvasTemplate('blank')"><b>Leer</b>freie Seite</button>
+    </div>`;
+ }else if(kind==="page"){
+   drawer.innerHTML=`<div class="drawerHeader"><span>Seite</span>${close}</div>
+    <div class="formGrid">
+      <div><label>Hintergrund</label><input type="color" value="${canvasState.pageColor||"#ffffff"}" oninput="setCanvasPageColor(this.value)"></div>
+      <div><label>Ansicht</label><button class="ghost" onclick="fitCanvasStage()">A4 anpassen</button></div>
+    </div>
+    <div class="row" style="margin-top:8px;flex-wrap:wrap">
+      <button class="ghost" onclick="setCanvasZoom(.5)">50%</button>
+      <button class="ghost" onclick="setCanvasZoom(.75)">75%</button>
+      <button class="ghost" onclick="setCanvasZoom(1)">100%</button>
+      <button class="ghost" onclick="setCanvasZoom(1.25)">125%</button>
+    </div>`;
+}else if(kind==="layers"){
+   drawer.innerHTML=`<div class="drawerHeader"><span>Ebenen</span>${close}</div><div id="drawerLayerMount"></div>`;
+   shell.classList.add("showLayers");
+   const panel=$("#editorLayersPanel");
+   const mount=$("#drawerLayerMount");
+   if(panel&&mount)mount.appendChild(panel);
+   panel.style.display="block";
+ }
+}
+
+function syncTextContextBar(){
+ const bar=$("#textContextBar");
+ if(!bar)return;
+ const active=isTextCanvasObject();
+ bar.style.display=active?"flex":"none";
+ if(!active)return;
+
+ const o=canvasState.objects.find(x=>x.id===canvasState.selectedId),s=o?.style||{};
+ if($("#ctxFont"))$("#ctxFont").value=s.fontFamily||"Arial";
+ if($("#ctxSize"))$("#ctxSize").value=s.fontSize||16;
+ if($("#ctxTextColor"))$("#ctxTextColor").value=/^#[0-9a-f]{6}$/i.test(s.color||"")?s.color:"#333333";
+}
+
+async function loadStoredCustomFonts(){
+ data.customFonts ||= [];
+ for(const f of data.customFonts){
+   try{
+     const face=new FontFace(f.name,`url(${f.data})`);
+     await face.load();document.fonts.add(face);
+     addFontOption(f.name);
+   }catch(e){console.warn("Font",f.name,e)}
+ }
+}
+function addFontOption(name){
+ const sel=$("#ctxFont");if(!sel||[...sel.options].some(o=>o.value===name))return;
+ const op=document.createElement("option");op.value=name;op.textContent=name;sel.appendChild(op);
+}
+window.addCustomCanvasFont=function(file){
+ if(!file)return;
+ const max=1.5*1024*1024;
+ if(file.size>max){alert("Die Schrift ist zu groß. Bitte unter 1,5 MB.");return}
+ const reader=new FileReader();
+ reader.onload=async()=>{
+   const name=(file.name.replace(/\.[^.]+$/,"")||"Eigene Schrift").replace(/[^a-z0-9 _-]/gi,"").slice(0,40);
+   try{
+     const face=new FontFace(name,`url(${reader.result})`);
+     await face.load();document.fonts.add(face);
+     data.customFonts ||= [];
+     data.customFonts=data.customFonts.filter(x=>x.name!==name);
+     data.customFonts.push({name,data:reader.result});
+     save();addFontOption(name);
+     $("#ctxFont").value=name;canvasApplyText("fontFamily",name);
+   }catch(e){alert("Die Schrift konnte nicht geladen werden.")}
+ };
+ reader.readAsDataURL(file);
+}
+setTimeout(loadStoredCustomFonts,300);
+
 const SCHOOLBLOOM_PLAN_WORKER="https://dry-surf-fec5.muelliaccc.workers.dev";
 
 import * as pdfjsLib from "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs";
@@ -1228,7 +1596,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 31";
+ $("#headerEyebrow").textContent="VERSION 32";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -1730,6 +2098,7 @@ window.selectCanvasObject=function(oid){
  renderCanvasInspector();renderLayerList();
 }
 function renderCanvasInspector(){
+ syncTextContextBar();
  const el=$("#canvasInspector");if(!el)return;
  if(canvasState.selectedType==="object"){
    const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(!o){el.textContent="Keine Auswahl";return}
@@ -1830,7 +2199,7 @@ $("#canvasStage")?.addEventListener("pointerdown",e=>{
  if(e.target.id==="canvasStage"||e.target.id==="canvasPage"||e.target.id==="canvasObjects")clearCanvasSelection();
 });
 
-function clearCanvasSelection(){canvasState.objects.forEach(x=>x.editing=false);canvasState.selectedType=null;canvasState.selectedId=null;renderCanvasObjects();renderVectors();renderCanvasInspector();renderLayerList()}
+function clearCanvasSelection(){canvasState.objects.forEach(x=>x.editing=false);canvasState.selectedType=null;canvasState.selectedId=null;canvasSavedRange=null;renderCanvasObjects();renderVectors();renderCanvasInspector();renderLayerList();syncTextContextBar()}
 
 
 
@@ -2069,7 +2438,7 @@ function renderSheetEditor(){
  }
  if(!saved&&!sh)applyCanvasTemplate("clean",true);
  $("#wordStatus").textContent=sh?"Gespeichert":"Neues Lernblatt";
- renderCanvasObjects();renderVectors();renderCanvasInspector();pushHistory(true);canvasState.lastSavedHash=canvasSnapshot();ensurePathDrawingListener();setTimeout(()=>fitCanvasStage(),80);
+ if($("#canvasPage"))$("#canvasPage").style.background=canvasState.pageColor||"#ffffff";renderCanvasObjects();renderVectors();renderCanvasInspector();pushHistory(true);canvasState.lastSavedHash=canvasSnapshot();ensurePathDrawingListener();setTimeout(()=>fitCanvasStage(),80);
 }
 function stripHTML(x){const d=document.createElement("div");d.innerHTML=x;return d.innerText}
 function markCanvasDirty(schedule=true){const x=$("#autosaveState");if(x){x.textContent="Nicht gespeichert";x.className="autosaveState saving"}if(schedule)scheduleAutosave()}
@@ -2270,13 +2639,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 31: echter Live-Refresh ===== */
+/* ===== VERSION 32: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 31 timetable parser ===== */
+/* ===== VERSION 32 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -2285,7 +2654,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 31: dynamic classes ===== */
+/* ===== VERSION 32: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -2294,11 +2663,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 31: raster-exact timetable ===== */
+/* ===== VERSION 32: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 31 stability fixes ===== */
+/* ===== VERSION 32 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -2310,6 +2679,86 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .canvasSvg.drawing{cursor:crosshair}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
+
+/* ===== VERSION 32 — Canva/Word-like editor ===== */
+.canvaRibbon{
+ display:flex;gap:5px;overflow-x:auto;padding:6px;
+ position:sticky;top:58px;z-index:115;
+ background:rgba(255,250,246,.97);backdrop-filter:blur(18px);
+ border:1px solid #ead2cb;border-radius:15px;
+ scrollbar-width:none;
+}
+.canvaRibbon::-webkit-scrollbar,.textContextBar::-webkit-scrollbar{display:none}
+.canvaRibbon button{
+ flex:0 0 auto;min-width:58px;height:52px;border:0;background:transparent;
+ color:#765f56;border-radius:11px;padding:5px 8px;
+ display:grid;place-items:center;gap:2px;font-size:9px;font-weight:850;
+}
+.canvaRibbon button:hover,.canvaRibbon button:active,.canvaRibbon .ribbonMain{
+ background:#fff0ee;color:#a36e6e
+}
+.canvaRibbon svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.editorDrawer{
+ position:sticky;top:116px;z-index:114;margin-top:5px;
+ padding:9px;background:rgba(255,250,246,.98);backdrop-filter:blur(18px);
+ border:1px solid #ead2cb;border-radius:15px;
+ box-shadow:0 7px 20px rgba(90,65,55,.08)
+}
+.drawerHeader{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:12px;font-weight:900;color:#715c54}
+.drawerGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+.drawerGrid button,.drawerGrid label{
+ min-height:62px;border:1px solid #ead3cd;background:white;border-radius:13px;
+ display:grid;place-items:center;gap:3px;padding:7px;color:#745f56;
+ font-size:10px;font-weight:850;text-align:center
+}
+.drawerGrid svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.7}
+.textContextBar{
+ display:flex;align-items:center;gap:5px;overflow-x:auto;
+ position:sticky;top:116px;z-index:116;margin-top:5px;padding:7px;
+ background:rgba(255,255,255,.98);backdrop-filter:blur(18px);
+ border:1px solid #e6d0ca;border-radius:14px;
+ box-shadow:0 6px 18px rgba(90,65,55,.08)
+}
+.textContextBar select,.textContextBar input[type=number],.ctxIcon,.ctxColor{
+ flex:0 0 auto;height:35px;border:1px solid #e6d0ca;background:#fff;
+ color:#705b53;border-radius:9px;padding:0 8px;font-size:11px;font-weight:800
+}
+.textContextBar select{max-width:118px}
+.ctxNumber{width:53px;padding:0 5px!important}
+.ctxCompactSelect{max-width:70px!important}
+.ctxIcon{min-width:35px;padding:0 8px!important}
+.ctxSep{width:1px;height:25px;background:#ead9d3;flex:0 0 auto}
+.ctxColor{position:relative;width:38px;padding:0!important;display:grid;place-items:center;overflow:hidden}
+.ctxColor span{font-weight:950;pointer-events:none}
+.ctxColor input{position:absolute;inset:auto 0 0;width:100%;height:7px;border:0;padding:0}
+.ctxColor.marker input{height:10px}
+.dangerCtx{color:#bb6d6d!important;background:#fff3f3!important}
+.editorLegacyPanel{display:none!important}
+.canvasEditorShell.showProperties #editorPropertiesPanel,
+.canvasEditorShell.showLayers #editorLayersPanel,
+.canvasEditorShell.showStyles #editorStylesPanel{display:block!important}
+.canvasEditorShell.showProperties #editorPropertiesPanel{margin-top:7px}
+.canvasEditorShell.showLayers #editorLayersPanel{margin-top:7px}
+.canvasEditorShell.showStyles #editorStylesPanel{margin-top:7px}
+.canvasEditorShell .stylePresetBar{display:none}
+.editorZoomBar{position:static!important;margin-top:5px}
+body.editorMode{overflow-x:hidden}
+@media(min-width:900px){
+ .canvasEditorShell{display:grid;grid-template-columns:72px minmax(0,1fr) 280px;gap:10px;align-items:start}
+ .canvasTopbar{grid-column:1/-1}
+ .canvaRibbon{grid-column:1;grid-row:2/8;position:sticky;top:70px;display:grid;overflow:visible}
+ .canvaRibbon button{width:62px}
+ .editorDrawer{grid-column:3;grid-row:2/8;position:sticky;top:70px}
+ .textContextBar{grid-column:2;position:sticky;top:70px}
+ .editorZoomBar{grid-column:2}
+ .canvasViewport{grid-column:2}
+ .editorLegacyPanel{grid-column:3}
+}
+@media(max-width:600px){
+ .drawerGrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .canvaRibbon{top:58px}
+ .editorDrawer,.textContextBar{top:116px}
+}
 </style></head><body><div class="page">${serializedCanvas()}</div></body></html>`;
  const blob=new Blob([html],{type:"text/html"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=title.replace(/[^\wäöüÄÖÜß-]+/g,"_")+".html";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
 }
@@ -2486,13 +2935,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 31: echter Live-Refresh ===== */
+/* ===== VERSION 32: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 31 timetable parser ===== */
+/* ===== VERSION 32 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -2501,7 +2950,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 31: dynamic classes ===== */
+/* ===== VERSION 32: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -2510,11 +2959,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 31: raster-exact timetable ===== */
+/* ===== VERSION 32: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 31 stability fixes ===== */
+/* ===== VERSION 32 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -2526,6 +2975,86 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .canvasSvg.drawing{cursor:crosshair}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
+
+/* ===== VERSION 32 — Canva/Word-like editor ===== */
+.canvaRibbon{
+ display:flex;gap:5px;overflow-x:auto;padding:6px;
+ position:sticky;top:58px;z-index:115;
+ background:rgba(255,250,246,.97);backdrop-filter:blur(18px);
+ border:1px solid #ead2cb;border-radius:15px;
+ scrollbar-width:none;
+}
+.canvaRibbon::-webkit-scrollbar,.textContextBar::-webkit-scrollbar{display:none}
+.canvaRibbon button{
+ flex:0 0 auto;min-width:58px;height:52px;border:0;background:transparent;
+ color:#765f56;border-radius:11px;padding:5px 8px;
+ display:grid;place-items:center;gap:2px;font-size:9px;font-weight:850;
+}
+.canvaRibbon button:hover,.canvaRibbon button:active,.canvaRibbon .ribbonMain{
+ background:#fff0ee;color:#a36e6e
+}
+.canvaRibbon svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.editorDrawer{
+ position:sticky;top:116px;z-index:114;margin-top:5px;
+ padding:9px;background:rgba(255,250,246,.98);backdrop-filter:blur(18px);
+ border:1px solid #ead2cb;border-radius:15px;
+ box-shadow:0 7px 20px rgba(90,65,55,.08)
+}
+.drawerHeader{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:12px;font-weight:900;color:#715c54}
+.drawerGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+.drawerGrid button,.drawerGrid label{
+ min-height:62px;border:1px solid #ead3cd;background:white;border-radius:13px;
+ display:grid;place-items:center;gap:3px;padding:7px;color:#745f56;
+ font-size:10px;font-weight:850;text-align:center
+}
+.drawerGrid svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.7}
+.textContextBar{
+ display:flex;align-items:center;gap:5px;overflow-x:auto;
+ position:sticky;top:116px;z-index:116;margin-top:5px;padding:7px;
+ background:rgba(255,255,255,.98);backdrop-filter:blur(18px);
+ border:1px solid #e6d0ca;border-radius:14px;
+ box-shadow:0 6px 18px rgba(90,65,55,.08)
+}
+.textContextBar select,.textContextBar input[type=number],.ctxIcon,.ctxColor{
+ flex:0 0 auto;height:35px;border:1px solid #e6d0ca;background:#fff;
+ color:#705b53;border-radius:9px;padding:0 8px;font-size:11px;font-weight:800
+}
+.textContextBar select{max-width:118px}
+.ctxNumber{width:53px;padding:0 5px!important}
+.ctxCompactSelect{max-width:70px!important}
+.ctxIcon{min-width:35px;padding:0 8px!important}
+.ctxSep{width:1px;height:25px;background:#ead9d3;flex:0 0 auto}
+.ctxColor{position:relative;width:38px;padding:0!important;display:grid;place-items:center;overflow:hidden}
+.ctxColor span{font-weight:950;pointer-events:none}
+.ctxColor input{position:absolute;inset:auto 0 0;width:100%;height:7px;border:0;padding:0}
+.ctxColor.marker input{height:10px}
+.dangerCtx{color:#bb6d6d!important;background:#fff3f3!important}
+.editorLegacyPanel{display:none!important}
+.canvasEditorShell.showProperties #editorPropertiesPanel,
+.canvasEditorShell.showLayers #editorLayersPanel,
+.canvasEditorShell.showStyles #editorStylesPanel{display:block!important}
+.canvasEditorShell.showProperties #editorPropertiesPanel{margin-top:7px}
+.canvasEditorShell.showLayers #editorLayersPanel{margin-top:7px}
+.canvasEditorShell.showStyles #editorStylesPanel{margin-top:7px}
+.canvasEditorShell .stylePresetBar{display:none}
+.editorZoomBar{position:static!important;margin-top:5px}
+body.editorMode{overflow-x:hidden}
+@media(min-width:900px){
+ .canvasEditorShell{display:grid;grid-template-columns:72px minmax(0,1fr) 280px;gap:10px;align-items:start}
+ .canvasTopbar{grid-column:1/-1}
+ .canvaRibbon{grid-column:1;grid-row:2/8;position:sticky;top:70px;display:grid;overflow:visible}
+ .canvaRibbon button{width:62px}
+ .editorDrawer{grid-column:3;grid-row:2/8;position:sticky;top:70px}
+ .textContextBar{grid-column:2;position:sticky;top:70px}
+ .editorZoomBar{grid-column:2}
+ .canvasViewport{grid-column:2}
+ .editorLegacyPanel{grid-column:3}
+}
+@media(max-width:600px){
+ .drawerGrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .canvaRibbon{top:58px}
+ .editorDrawer,.textContextBar{top:116px}
+}
 </style></head><body><div class="page">${serializedCanvas()}</div></body></html>`);w.document.close();setTimeout(()=>w.print(),300)
 }
 window.applyCanvasTemplate=function(name,silent=false){
@@ -2824,7 +3353,7 @@ const timetableSlots=[
  {start:"15:45",end:"16:30"}
 ];
 function fillCancelledSlots(lessons){
- // VERSION 31:
+ // VERSION 32:
  // SchoolBloom darf NIE aus einer nicht erkannten/leeren PDF-Zelle
  // automatisch "Entfall" erfinden.
  // Nur Einträge, die wirklich aus der PDF gelesen wurden, werden gezeigt.
