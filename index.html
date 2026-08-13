@@ -633,13 +633,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 42: echter Live-Refresh ===== */
+/* ===== VERSION 43: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 42 timetable parser ===== */
+/* ===== VERSION 43 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -648,7 +648,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 42: dynamic classes ===== */
+/* ===== VERSION 43: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -657,11 +657,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 42: raster-exact timetable ===== */
+/* ===== VERSION 43: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 42 stability fixes ===== */
+/* ===== VERSION 43 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -674,7 +674,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
 
-/* ===== VERSION 42 — stable redesign ===== */
+/* ===== VERSION 43 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -743,7 +743,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 42 — notebook label + timetable repair ===== */
+/* ===== VERSION 43 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -810,7 +810,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .notebookAbbr{font-size:16px}
 }
 
-/* ===== VERSION 42 — Basisplan / Entfall / Hitzestunden ===== */
+/* ===== VERSION 43 — Basisplan / Entfall / Hitzestunden ===== */
 .basisCancelled{
  opacity:.82;
  border-style:dashed!important;
@@ -848,7 +848,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  border-color:#dbc8c1!important
 }
 
-/* ===== VERSION 42 — Current vs Basis + moved lesson logic ===== */
+/* ===== VERSION 43 — Current vs Basis + moved lesson logic ===== */
 .planModeSwitch{
  display:grid;
  grid-template-columns:1.35fr 1fr;
@@ -917,7 +917,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .planModeSwitch button b{font-size:10px}
 }
 
-/* ===== VERSION 42 — safer row split / replacement handling ===== */
+/* ===== VERSION 43 — safer row split / replacement handling ===== */
 .changedLesson{
  background:linear-gradient(90deg,#fffdfa,#fffaf6)!important;
 }
@@ -935,13 +935,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  margin-bottom:3px;
 }
 
-/* ===== VERSION 42 — Mehrfachstunden mit Pause dazwischen ===== */
+/* ===== VERSION 43 — Mehrfachstunden mit Pause dazwischen ===== */
 .splitMultiBadge{
  opacity:.86;
  font-size:8px!important;
 }
 
-/* ===== VERSION 42 — Auto / Manuell Hitzestunden ===== */
+/* ===== VERSION 43 — Auto / Manuell Hitzestunden ===== */
 .heatPlanControl{
  display:flex;
  align-items:center;
@@ -1017,7 +1017,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .heatModeButtons button{min-width:31px;padding:7px 5px}
 }
 
-/* ===== VERSION 42 — clearer navigation + polish ===== */
+/* ===== VERSION 43 — clearer navigation + polish ===== */
 :root{
  --sb-panel:#fffdfa;
  --sb-panel-soft:#fff8f4;
@@ -1205,41 +1205,59 @@ function ensureHomeClockTimer(){
 }
 ensureHomeClockTimer();
 </script>
+
+<style id="v43-compact-ui">
+/* VERSION 43 — compact information architecture */
+#nav{grid-template-columns:repeat(5,1fr)!important;width:min(94vw,520px)!important}
+#nav button{min-width:0!important}
+.view{padding-bottom:100px!important}
+.header{margin-bottom:12px!important}
+.header h1{font-size:clamp(34px,8vw,48px)!important}
+.section{margin-top:16px!important}
+.panel,.card{border-radius:22px!important}
+.homeMiniActions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:0 0 12px}
+.homeMiniActions button{border:1px solid #efcfca;background:rgba(255,252,247,.9);color:#7e655e;border-radius:14px;padding:10px 5px;font-weight:850;font-size:11px;box-shadow:0 3px 0 rgba(222,177,169,.14)}
+#nextPanel{margin-top:0!important;padding:18px!important;min-height:0!important}
+#nextPanel h2,#nextPanel h3{margin-top:2px!important}
+#homeKpis{gap:8px!important}
+#homeKpis .card{padding:12px!important}
+.learnHub{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.learnHub button{border:1px solid #edcec7;background:#fffaf5;color:#80665e;border-radius:17px;padding:11px 7px;text-align:left;min-width:0}
+.learnHub button.active{background:#f4bbb6}
+.learnHub span{font-size:20px;display:block;margin-bottom:4px}.learnHub b{display:block;font-size:13px}.learnHub small{display:block;font-size:9px;color:#a98c83;margin-top:2px}
+.moreGroup{background:rgba(255,252,247,.86);border:1px solid #efd6d0;border-radius:22px;padding:10px;margin-bottom:12px}
+.moreGroup>.eyebrow{padding:5px 7px 8px}
+.moreGroup button{width:100%;border:0;border-top:1px solid #f2dfda;background:transparent;color:#775f58;display:grid;grid-template-columns:38px 1fr 20px;align-items:center;gap:8px;text-align:left;padding:12px 7px}
+.moreGroup button:nth-child(2){border-top:0}
+.moreGroup button>span{font-size:19px;text-align:center}.moreGroup button b{display:block;font-size:14px}.moreGroup button small{display:block;color:#ae9188;font-size:10px;margin-top:2px}.moreGroup button i{font-style:normal;font-size:23px;color:#c9aaa2}
+@media(max-width:430px){
+ .homeMiniActions{grid-template-columns:repeat(4,1fr)}
+ .homeMiniActions button{font-size:10px;padding:9px 2px}
+ .learnHub small{display:none}
+ #nav .navLabel{font-size:9px!important}
+}
+</style>
+
 </head>
 <body>
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 42</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 43</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
   </div>
 
   <section class="view active" id="view-home">
-    <section class="homeLauncher">
-      <div class="launcherTop">
-        <div><div class="eyebrow">SCHNELLZUGRIFF</div><h2>Alles direkt erreichbar.</h2></div>
-      </div>
-      <div class="launcherGrid">
-        <button onclick="openView('plan')"><span>🗓️</span><b>Stundenplan</b><small>Aktuell & Basis</small></button>
-        <button onclick="openView('subjects')"><span>📚</span><b>Fächer</b><small>Notizbücher & Dateien</small></button>
-        <button onclick="openView('tasks')"><span>✓</span><b>Aufgaben</b><small>Hausaufgaben & Tests</small></button>
-        <button onclick="openView('study')"><span>⏱️</span><b>Lernen</b><small>Timer & Study Pet</small></button>
-        <button onclick="openView('flashcards')"><span>✦</span><b>Karteikarten</b><small>Lernen & Abfragen</small></button>
-        <button onclick="openView('grades')"><span>1,0</span><b>Noten</b><small>Eintragen & rechnen</small></button>
-      </div>
-    </section>
+    <div class="homeMiniActions">
+      <button onclick="openAddHomework()">＋ Aufgabe</button>
+      <button onclick="openAddTest()">✦ Test</button>
+      <button onclick="openView('subjects')">📝 Notiz</button>
+      <button onclick="openView('study')">⏱ Lernen</button>
+    </div>
     <div class="panel" id="nextPanel"></div>
 
-    <div class="section">
-      <div class="quick">
-        <button onclick="openAddHomework()"><b>✓</b>Hausaufgabe</button>
-        <button onclick="openAddTest()"><b>✦</b>Test / KA</button>
-        <button onclick="openAddGrade()"><b>1,0</b>Note</button>
-        <button onclick="openView('study')"><b>⏱</b>Lernen</button>
-      </div>
-    </div>
 
     <div class="section">
       <div class="grid3" id="homeKpis"></div>
@@ -1325,6 +1343,11 @@ ensureHomeClockTimer();
   </section>
 
   <section class="view" id="view-study">
+    <div class="learnHub">
+      <button onclick="openView('subjects')"><span>📚</span><b>Fächer</b><small>Notizen & Dateien</small></button>
+      <button onclick="document.getElementById('flashArea')?.scrollIntoView({behavior:'smooth'})"><span>✦</span><b>Karteikarten</b><small>Lernen & Abfragen</small></button>
+      <button class="active"><span>⏱</span><b>Study</b><small>Timer & StudyPet</small></button>
+    </div>
     <div class="panel">
       <div class="rowBetween"><div><div class="eyebrow">Focus</div><h2>Lernzeit</h2></div><span class="badge" id="studyTodayBadge">0 min heute</span></div>
       <div class="rowBetween" style="margin-top:12px"><span class="badge coin" id="coinBadge">🪙 0</span><button class="ghost" onclick="openPetShop()">Shop & Zimmer</button></div>
@@ -1349,19 +1372,19 @@ ensureHomeClockTimer();
   </section>
 
   <section class="view" id="view-more">
-    <div class="discoverPanel">
-      <div class="eyebrow">ALLE BEREICHE</div>
-      <h2>Mehr Funktionen.</h2>
-      <div class="discoverGrid">
-        <button onclick="openView('subjects')"><span>📚</span><b>Fächer</b></button>
-        <button onclick="openView('flashcards')"><span>✦</span><b>Karteikarten</b></button>
-        <button onclick="openView('absence')"><span>☁</span><b>Abwesenheit</b></button>
-        <button onclick="openView('settings')"><span>⚙︎</span><b>Einstellungen</b></button>
-      </div>
+    <div class="moreGroup">
+      <div class="eyebrow">SCHULE</div>
+      <button onclick="openView('grades')"><span>1,0</span><div><b>Noten</b><small>Eintragen & Durchschnitt</small></div><i>›</i></button>
+      <button onclick="openView('absence')"><span>☁</span><div><b>Abwesenheiten</b><small>Fehltage & Entschuldigungen</small></div><i>›</i></button>
+      <button onclick="openView('subjects')"><span>📚</span><div><b>Fächer & Dateien</b><small>Notizbücher, Dateien, Lernblätter</small></div><i>›</i></button>
     </div>
-    <div class="grid2">
-      <button class="card" style="text-align:left;color:white" onclick="openView('subjects')"><h3>📁 Fächer & Dateien</h3><div class="small" style="margin-top:5px">Ordner, Notizen und Dokumente</div></button>
-      <button class="card" style="text-align:left;color:white" onclick="openView('absence')"><h3>🗓 Abwesenheiten</h3><div class="small" style="margin-top:5px">Fehltage & Entschuldigungen</div></button>
+    <div class="moreGroup">
+      <div class="eyebrow">LERNEN</div>
+      <button onclick="openView('study')"><span>⏱</span><div><b>StudyPet & Timer</b><small>Fokus- und Pausenzeiten</small></div><i>›</i></button>
+    </div>
+    <div class="moreGroup">
+      <div class="eyebrow">APP</div>
+      <button onclick="openView('settings')"><span>⚙︎</span><div><b>Einstellungen</b><small>Plan, Darstellung, Daten</small></div><i>›</i></button>
     </div>
   </section>
 
@@ -1559,12 +1582,11 @@ ensureHomeClockTimer();
 </div>
 
 <nav class="nav" id="nav">
-  <button class="active" data-view="home"><svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/><path d="M9.5 20v-6h5v6"/></svg><span class="navLabel">Heute</span><span>Home</span></button>
-  <button data-view="plan"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M8 14h2M14 14h2M8 18h2M14 18h2"/></svg><span class="navLabel">Plan</span><span>Plan</span></button>
-  <button data-view="tasks"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg><span class="navLabel">Aufgaben</span><span>Aufgaben</span></button>
-  <button data-view="grades"><svg viewBox="0 0 24 24"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.8 1-6.1-4.4-4.3 6.1-.9Z"/></svg><span class="navLabel">Noten</span><span>Noten</span></button>
-  <button data-view="study"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v5l3 2M9 3h6"/></svg><span class="navLabel">Lernen</span><span>Lernen</span></button>
-  <button data-view="more"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg><span class="navLabel">Mehr</span><span>Mehr</span></button>
+  <button class="active" data-view="home"><svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/><path d="M9.5 20v-6h5v6"/></svg><span class="navLabel">Heute</span></button>
+  <button data-view="plan"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M8 14h2M14 14h2M8 18h2M14 18h2"/></svg><span class="navLabel">Plan</span></button>
+  <button data-view="tasks"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg><span class="navLabel">Aufgaben</span></button>
+  <button data-view="study"><svg viewBox="0 0 24 24"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H20v16H7.5A3.5 3.5 0 0 0 4 21.5z"/><path d="M4 5.5v16"/></svg><span class="navLabel">Lernen</span></button>
+  <button data-view="more"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg><span class="navLabel">Mehr</span></button>
 </nav>
 
 <div class="modalWrap" id="modalWrap" onclick="if(event.target===this)closeModal()">
@@ -1927,7 +1949,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 42";
+ $("#headerEyebrow").textContent="VERSION 43";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -3023,13 +3045,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 42: echter Live-Refresh ===== */
+/* ===== VERSION 43: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 42 timetable parser ===== */
+/* ===== VERSION 43 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -3038,7 +3060,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 42: dynamic classes ===== */
+/* ===== VERSION 43: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -3047,11 +3069,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 42: raster-exact timetable ===== */
+/* ===== VERSION 43: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 42 stability fixes ===== */
+/* ===== VERSION 43 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -3064,7 +3086,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
 
-/* ===== VERSION 42 — stable redesign ===== */
+/* ===== VERSION 43 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -3133,7 +3155,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 42 — notebook label + timetable repair ===== */
+/* ===== VERSION 43 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -3200,7 +3222,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .notebookAbbr{font-size:16px}
 }
 
-/* ===== VERSION 42 — Basisplan / Entfall / Hitzestunden ===== */
+/* ===== VERSION 43 — Basisplan / Entfall / Hitzestunden ===== */
 .basisCancelled{
  opacity:.82;
  border-style:dashed!important;
@@ -3238,7 +3260,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  border-color:#dbc8c1!important
 }
 
-/* ===== VERSION 42 — Current vs Basis + moved lesson logic ===== */
+/* ===== VERSION 43 — Current vs Basis + moved lesson logic ===== */
 .planModeSwitch{
  display:grid;
  grid-template-columns:1.35fr 1fr;
@@ -3307,7 +3329,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .planModeSwitch button b{font-size:10px}
 }
 
-/* ===== VERSION 42 — safer row split / replacement handling ===== */
+/* ===== VERSION 43 — safer row split / replacement handling ===== */
 .changedLesson{
  background:linear-gradient(90deg,#fffdfa,#fffaf6)!important;
 }
@@ -3325,13 +3347,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  margin-bottom:3px;
 }
 
-/* ===== VERSION 42 — Mehrfachstunden mit Pause dazwischen ===== */
+/* ===== VERSION 43 — Mehrfachstunden mit Pause dazwischen ===== */
 .splitMultiBadge{
  opacity:.86;
  font-size:8px!important;
 }
 
-/* ===== VERSION 42 — Auto / Manuell Hitzestunden ===== */
+/* ===== VERSION 43 — Auto / Manuell Hitzestunden ===== */
 .heatPlanControl{
  display:flex;
  align-items:center;
@@ -3407,7 +3429,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .heatModeButtons button{min-width:31px;padding:7px 5px}
 }
 
-/* ===== VERSION 42 — clearer navigation + polish ===== */
+/* ===== VERSION 43 — clearer navigation + polish ===== */
 :root{
  --sb-panel:#fffdfa;
  --sb-panel-soft:#fff8f4;
@@ -3581,7 +3603,40 @@ button.primary,button.ghost,.iconbtn{
  .launcherGrid button{min-height:80px}
  #nav button{min-width:43px!important}
 }
-</style></head><body><div class="page">${serializedCanvas()}</div></body></html>`;
+</style>
+<style id="v43-compact-ui">
+/* VERSION 43 — compact information architecture */
+#nav{grid-template-columns:repeat(5,1fr)!important;width:min(94vw,520px)!important}
+#nav button{min-width:0!important}
+.view{padding-bottom:100px!important}
+.header{margin-bottom:12px!important}
+.header h1{font-size:clamp(34px,8vw,48px)!important}
+.section{margin-top:16px!important}
+.panel,.card{border-radius:22px!important}
+.homeMiniActions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:0 0 12px}
+.homeMiniActions button{border:1px solid #efcfca;background:rgba(255,252,247,.9);color:#7e655e;border-radius:14px;padding:10px 5px;font-weight:850;font-size:11px;box-shadow:0 3px 0 rgba(222,177,169,.14)}
+#nextPanel{margin-top:0!important;padding:18px!important;min-height:0!important}
+#nextPanel h2,#nextPanel h3{margin-top:2px!important}
+#homeKpis{gap:8px!important}
+#homeKpis .card{padding:12px!important}
+.learnHub{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.learnHub button{border:1px solid #edcec7;background:#fffaf5;color:#80665e;border-radius:17px;padding:11px 7px;text-align:left;min-width:0}
+.learnHub button.active{background:#f4bbb6}
+.learnHub span{font-size:20px;display:block;margin-bottom:4px}.learnHub b{display:block;font-size:13px}.learnHub small{display:block;font-size:9px;color:#a98c83;margin-top:2px}
+.moreGroup{background:rgba(255,252,247,.86);border:1px solid #efd6d0;border-radius:22px;padding:10px;margin-bottom:12px}
+.moreGroup>.eyebrow{padding:5px 7px 8px}
+.moreGroup button{width:100%;border:0;border-top:1px solid #f2dfda;background:transparent;color:#775f58;display:grid;grid-template-columns:38px 1fr 20px;align-items:center;gap:8px;text-align:left;padding:12px 7px}
+.moreGroup button:nth-child(2){border-top:0}
+.moreGroup button>span{font-size:19px;text-align:center}.moreGroup button b{display:block;font-size:14px}.moreGroup button small{display:block;color:#ae9188;font-size:10px;margin-top:2px}.moreGroup button i{font-style:normal;font-size:23px;color:#c9aaa2}
+@media(max-width:430px){
+ .homeMiniActions{grid-template-columns:repeat(4,1fr)}
+ .homeMiniActions button{font-size:10px;padding:9px 2px}
+ .learnHub small{display:none}
+ #nav .navLabel{font-size:9px!important}
+}
+</style>
+
+</head><body><div class="page">${serializedCanvas()}</div></body></html>`;
  const blob=new Blob([html],{type:"text/html"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=title.replace(/[^\wäöüÄÖÜß-]+/g,"_")+".html";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
 }
 window.printCanvasSheet=function(){
@@ -3757,13 +3812,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 42: echter Live-Refresh ===== */
+/* ===== VERSION 43: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 42 timetable parser ===== */
+/* ===== VERSION 43 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -3772,7 +3827,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 42: dynamic classes ===== */
+/* ===== VERSION 43: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -3781,11 +3836,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 42: raster-exact timetable ===== */
+/* ===== VERSION 43: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 42 stability fixes ===== */
+/* ===== VERSION 43 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -3798,7 +3853,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
 
-/* ===== VERSION 42 — stable redesign ===== */
+/* ===== VERSION 43 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -3867,7 +3922,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 42 — notebook label + timetable repair ===== */
+/* ===== VERSION 43 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -3934,7 +3989,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .notebookAbbr{font-size:16px}
 }
 
-/* ===== VERSION 42 — Basisplan / Entfall / Hitzestunden ===== */
+/* ===== VERSION 43 — Basisplan / Entfall / Hitzestunden ===== */
 .basisCancelled{
  opacity:.82;
  border-style:dashed!important;
@@ -3972,7 +4027,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  border-color:#dbc8c1!important
 }
 
-/* ===== VERSION 42 — Current vs Basis + moved lesson logic ===== */
+/* ===== VERSION 43 — Current vs Basis + moved lesson logic ===== */
 .planModeSwitch{
  display:grid;
  grid-template-columns:1.35fr 1fr;
@@ -4041,7 +4096,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .planModeSwitch button b{font-size:10px}
 }
 
-/* ===== VERSION 42 — safer row split / replacement handling ===== */
+/* ===== VERSION 43 — safer row split / replacement handling ===== */
 .changedLesson{
  background:linear-gradient(90deg,#fffdfa,#fffaf6)!important;
 }
@@ -4059,13 +4114,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  margin-bottom:3px;
 }
 
-/* ===== VERSION 42 — Mehrfachstunden mit Pause dazwischen ===== */
+/* ===== VERSION 43 — Mehrfachstunden mit Pause dazwischen ===== */
 .splitMultiBadge{
  opacity:.86;
  font-size:8px!important;
 }
 
-/* ===== VERSION 42 — Auto / Manuell Hitzestunden ===== */
+/* ===== VERSION 43 — Auto / Manuell Hitzestunden ===== */
 .heatPlanControl{
  display:flex;
  align-items:center;
@@ -4141,7 +4196,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .heatModeButtons button{min-width:31px;padding:7px 5px}
 }
 
-/* ===== VERSION 42 — clearer navigation + polish ===== */
+/* ===== VERSION 43 — clearer navigation + polish ===== */
 :root{
  --sb-panel:#fffdfa;
  --sb-panel-soft:#fff8f4;
@@ -4315,7 +4370,40 @@ button.primary,button.ghost,.iconbtn{
  .launcherGrid button{min-height:80px}
  #nav button{min-width:43px!important}
 }
-</style></head><body><div class="page">${serializedCanvas()}</div></body></html>`);w.document.close();setTimeout(()=>w.print(),300)
+</style>
+<style id="v43-compact-ui">
+/* VERSION 43 — compact information architecture */
+#nav{grid-template-columns:repeat(5,1fr)!important;width:min(94vw,520px)!important}
+#nav button{min-width:0!important}
+.view{padding-bottom:100px!important}
+.header{margin-bottom:12px!important}
+.header h1{font-size:clamp(34px,8vw,48px)!important}
+.section{margin-top:16px!important}
+.panel,.card{border-radius:22px!important}
+.homeMiniActions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:0 0 12px}
+.homeMiniActions button{border:1px solid #efcfca;background:rgba(255,252,247,.9);color:#7e655e;border-radius:14px;padding:10px 5px;font-weight:850;font-size:11px;box-shadow:0 3px 0 rgba(222,177,169,.14)}
+#nextPanel{margin-top:0!important;padding:18px!important;min-height:0!important}
+#nextPanel h2,#nextPanel h3{margin-top:2px!important}
+#homeKpis{gap:8px!important}
+#homeKpis .card{padding:12px!important}
+.learnHub{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.learnHub button{border:1px solid #edcec7;background:#fffaf5;color:#80665e;border-radius:17px;padding:11px 7px;text-align:left;min-width:0}
+.learnHub button.active{background:#f4bbb6}
+.learnHub span{font-size:20px;display:block;margin-bottom:4px}.learnHub b{display:block;font-size:13px}.learnHub small{display:block;font-size:9px;color:#a98c83;margin-top:2px}
+.moreGroup{background:rgba(255,252,247,.86);border:1px solid #efd6d0;border-radius:22px;padding:10px;margin-bottom:12px}
+.moreGroup>.eyebrow{padding:5px 7px 8px}
+.moreGroup button{width:100%;border:0;border-top:1px solid #f2dfda;background:transparent;color:#775f58;display:grid;grid-template-columns:38px 1fr 20px;align-items:center;gap:8px;text-align:left;padding:12px 7px}
+.moreGroup button:nth-child(2){border-top:0}
+.moreGroup button>span{font-size:19px;text-align:center}.moreGroup button b{display:block;font-size:14px}.moreGroup button small{display:block;color:#ae9188;font-size:10px;margin-top:2px}.moreGroup button i{font-style:normal;font-size:23px;color:#c9aaa2}
+@media(max-width:430px){
+ .homeMiniActions{grid-template-columns:repeat(4,1fr)}
+ .homeMiniActions button{font-size:10px;padding:9px 2px}
+ .learnHub small{display:none}
+ #nav .navLabel{font-size:9px!important}
+}
+</style>
+
+</head><body><div class="page">${serializedCanvas()}</div></body></html>`);w.document.close();setTimeout(()=>w.print(),300)
 }
 window.applyCanvasTemplate=function(name,silent=false){
  if(name==="blank"){canvasState.objects=[];canvasState.vectors=[]}
@@ -4632,7 +4720,7 @@ const timetableSlots=[
  {start:"15:45",end:"16:30"}
 ];
 function fillCancelledSlots(lessons){
- // VERSION 42:
+ // VERSION 43:
  // SchoolBloom darf NIE aus einer nicht erkannten/leeren PDF-Zelle
  // automatisch "Entfall" erfinden.
  // Nur Einträge, die wirklich aus der PDF gelesen wurden, werden gezeigt.
@@ -4994,7 +5082,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
         stroke-width: 13px;
       }
     
-/* ===== VERSION 42 — stable redesign ===== */
+/* ===== VERSION 43 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -5063,7 +5151,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 42 — notebook label + timetable repair ===== */
+/* ===== VERSION 43 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -5130,7 +5218,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  .notebookAbbr{font-size:16px}
 }
 
-/* ===== VERSION 42 — Basisplan / Entfall / Hitzestunden ===== */
+/* ===== VERSION 43 — Basisplan / Entfall / Hitzestunden ===== */
 .basisCancelled{
  opacity:.82;
  border-style:dashed!important;
@@ -5168,7 +5256,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  border-color:#dbc8c1!important
 }
 
-/* ===== VERSION 42 — Current vs Basis + moved lesson logic ===== */
+/* ===== VERSION 43 — Current vs Basis + moved lesson logic ===== */
 .planModeSwitch{
  display:grid;
  grid-template-columns:1.35fr 1fr;
@@ -5237,7 +5325,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  .planModeSwitch button b{font-size:10px}
 }
 
-/* ===== VERSION 42 — safer row split / replacement handling ===== */
+/* ===== VERSION 43 — safer row split / replacement handling ===== */
 .changedLesson{
  background:linear-gradient(90deg,#fffdfa,#fffaf6)!important;
 }
@@ -5255,13 +5343,13 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  margin-bottom:3px;
 }
 
-/* ===== VERSION 42 — Mehrfachstunden mit Pause dazwischen ===== */
+/* ===== VERSION 43 — Mehrfachstunden mit Pause dazwischen ===== */
 .splitMultiBadge{
  opacity:.86;
  font-size:8px!important;
 }
 
-/* ===== VERSION 42 — Auto / Manuell Hitzestunden ===== */
+/* ===== VERSION 43 — Auto / Manuell Hitzestunden ===== */
 .heatPlanControl{
  display:flex;
  align-items:center;
@@ -5337,7 +5425,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  .heatModeButtons button{min-width:31px;padding:7px 5px}
 }
 
-/* ===== VERSION 42 — clearer navigation + polish ===== */
+/* ===== VERSION 43 — clearer navigation + polish ===== */
 :root{
  --sb-panel:#fffdfa;
  --sb-panel-soft:#fff8f4;
