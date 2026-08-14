@@ -1,22 +1,23 @@
-# VERSION 67
+# VERSION 68
 
-Kompletter Editor-Rebuild nach den zwei Referenzbildern.
+Funktions-Rebuild des Canva/Word-artigen Editors.
 
-Desktop:
-- Bloom-Studio/Canva-artiger Header
-- feste linke Hauptnavigation
-- feste Vorlagen-/Inhalte-Spalte
-- breite Formatleiste oben
-- große zentrale Seite
-- festes Design/Seite/Ebene-Panel rechts
-- Seiten-/Zoomleiste unten
-- keine alte 4er-Navigation mehr
+Wichtig:
+- V67 hatte viele optische Buttons, die nicht an die echte Editor-Logik gekoppelt waren.
+- V68 koppelt die sichtbaren Werkzeugleisten an die bereits vorhandenen Canvas-Funktionen.
 
 Handy:
-- Header mit Zurück, Titel, Undo, Redo, Vorschau, Speichern
-- schwebende Objektleiste
-- Seite zentral
-- Seiten-Thumbnails darunter
-- große kontextabhängige Text-/Objektleiste
-- Bottom-Navigation mit Text, Elemente, Uploads, Fotos, Seiten, Ebenen, Mehr
-- Editor-Struktur eng am Referenzbild
+- automatische Bildschirm-Anpassung ist Standard
+- wird bei Resize/Rotation neu berechnet
+- Speichern, Undo, Redo und Vorschau funktionieren
+- Textformatierung (Schrift, Größe, Fett, Kursiv, Unterstrichen, Ausrichtung, Listen) funktioniert
+- Uploads/Fotos/Seiten/Ebenen/Mehr öffnen echte Funktionen
+- Objektleiste arbeitet mit der echten Auswahl
+- nur eine reale Seite wird angezeigt statt Fake-Seiten 1/2/3
+
+PC:
+- Fullscreen Canva/Word-Struktur bleibt
+- obere Formatleiste arbeitet mit der echten Auswahl
+- Design-Seite zeigt die echte Inspector-Logik gespiegelt
+- Ebenen und Seiteneinstellungen öffnen echte Werkzeuge
+- Uploads/Fotos und Schnell-Hinzufügen sind mit Editor-Funktionen verbunden
