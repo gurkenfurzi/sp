@@ -1,26 +1,25 @@
-# VERSION 64
+# VERSION 65
 
-## Handy – komplett aufgeräumt
-- „Hinzufügen“ ist jetzt ein echtes Bottom-Sheet statt einer horizontal zerquetschten Desktop-Ansicht.
-- Kategorien bleiben sichtbar, die Werkzeuge stehen in einem kompakten 3-Spalten-Raster.
-- Text, Elemente und Anordnen benutzen auf dem Handy dieselbe kompakte Logik.
-- Ansicht / Seitenstil öffnet ebenfalls als kompaktes Bottom-Sheet.
-- Die lange Eigenschaften-/Ebenen-/Vorlagen-Sidebar wird auf dem Handy nicht mehr unter das Blatt gestapelt.
+## Handy
+- Das große V64-BLATT-Fenster ist wieder entfernt.
+- Bearbeitung ist wieder direkt am Dokument, aber geordneter.
+- Hinzufügen/Text/Elemente/Anordnen öffnen wieder im normalen Seitenfluss.
+- Hinzufügen ist sauber in 3 Spalten sortiert.
+- Ansicht/Seite ist wieder ein normaler kompakter Bereich statt eines riesigen Overlays.
+- Bei einer Auswahl erscheint eine kleine kompakte Leiste mit:
+  Bearbeiten, Duplizieren, Vorne, Hinten, Sperren, Löschen.
+- Die lange Desktop-Seitenleiste bleibt auf dem Handy ausgeblendet.
 
-## Blatt beim ersten Antippen
-- Ein Objekt/Form antippen → die Auswahl-/Eigenschaften-Leiste erscheint sofort.
-- Auf die leere Seite tippen → Ebenen erscheinen sofort.
-- Im mobilen Kontextpanel gibt es direkt:
-  Auswahl, Ebenen, Vorlagen und Seite.
-- Kein zweiter Tap und kein langes Scrollen mehr nötig.
-
-## Symbole
-- Plus und Zahnrad bei Seitenvorlagen explizit sichtbar gemacht.
-- Mini-Icon-Farbe und Schriftfamilie korrigiert, damit keine leeren Buttons mehr entstehen.
-
-## Desktop
-- Ribbon niedriger und kompakter.
-- Linke Werkzeugleiste schmaler.
-- Rechte Sidebar kompakter.
-- Größere nutzbare Arbeitsfläche.
-- SchoolBloom-Pastellverlauf bleibt auf der gesamten Arbeitsfläche erhalten.
+## PC – kompletter Editor-Umbau
+- Fullscreen-Arbeitsfläche über 100vw / 100vh.
+- Neues Canva/Word-artiges Desktop-Ribbon.
+- Schmale Werkzeugleiste links.
+- Große mittlere Dokumentfläche.
+- Feste kompakte Eigenschaften-/Ebenen-/Vorlagenleiste rechts.
+- Kein grauer Workspace mehr:
+  rosa/creme/grüner SchoolBloom-Verlauf über die gesamte Arbeitsfläche.
+- Einfügen-Menü jetzt 430px breit und als echtes großes Canva-artiges Panel.
+- Einfügen-Kategorien in 3 Spalten.
+- Auch Text/Elemente/Anordnen öffnen größer.
+- Seite/Ansicht öffnet als ordentliches Desktop-Panel rechts oben.
+- Ribbon und Buttons deutlich kompakter, damit mehr Platz für das Blatt bleibt.

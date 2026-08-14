@@ -633,13 +633,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 64: echter Live-Refresh ===== */
+/* ===== VERSION 65: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 64 timetable parser ===== */
+/* ===== VERSION 65 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -648,7 +648,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 64: dynamic classes ===== */
+/* ===== VERSION 65: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -657,11 +657,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 64: raster-exact timetable ===== */
+/* ===== VERSION 65: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 64 stability fixes ===== */
+/* ===== VERSION 65 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -674,7 +674,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
 
-/* ===== VERSION 64 — stable redesign ===== */
+/* ===== VERSION 65 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -743,7 +743,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 64 — notebook label + timetable repair ===== */
+/* ===== VERSION 65 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -810,7 +810,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .notebookAbbr{font-size:16px}
 }
 
-/* ===== VERSION 64 — Basisplan / Entfall / Hitzestunden ===== */
+/* ===== VERSION 65 — Basisplan / Entfall / Hitzestunden ===== */
 .basisCancelled{
  opacity:.82;
  border-style:dashed!important;
@@ -848,7 +848,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  border-color:#dbc8c1!important
 }
 
-/* ===== VERSION 64 — Current vs Basis + moved lesson logic ===== */
+/* ===== VERSION 65 — Current vs Basis + moved lesson logic ===== */
 .planModeSwitch{
  display:grid;
  grid-template-columns:1.35fr 1fr;
@@ -917,7 +917,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .planModeSwitch button b{font-size:10px}
 }
 
-/* ===== VERSION 64 — safer row split / replacement handling ===== */
+/* ===== VERSION 65 — safer row split / replacement handling ===== */
 .changedLesson{
  background:linear-gradient(90deg,#fffdfa,#fffaf6)!important;
 }
@@ -935,13 +935,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  margin-bottom:3px;
 }
 
-/* ===== VERSION 64 — Mehrfachstunden mit Pause dazwischen ===== */
+/* ===== VERSION 65 — Mehrfachstunden mit Pause dazwischen ===== */
 .splitMultiBadge{
  opacity:.86;
  font-size:8px!important;
 }
 
-/* ===== VERSION 64 — Auto / Manuell Hitzestunden ===== */
+/* ===== VERSION 65 — Auto / Manuell Hitzestunden ===== */
 .heatPlanControl{
  display:flex;
  align-items:center;
@@ -1017,7 +1017,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .heatModeButtons button{min-width:31px;padding:7px 5px}
 }
 
-/* ===== VERSION 64 — clearer navigation + polish ===== */
+/* ===== VERSION 65 — clearer navigation + polish ===== */
 :root{
  --sb-panel:#fffdfa;
  --sb-panel-soft:#fff8f4;
@@ -1207,7 +1207,7 @@ ensureHomeClockTimer();
 </script>
 
 <style id="v43-compact-ui">
-/* VERSION 64 — compact information architecture */
+/* VERSION 65 — compact information architecture */
 #nav{grid-template-columns:repeat(5,1fr)!important;width:min(94vw,520px)!important}
 #nav button{min-width:0!important}
 .view{padding-bottom:100px!important}
@@ -1240,7 +1240,7 @@ ensureHomeClockTimer();
 
 
 <style id="v44-learning-navigation">
-/* VERSION 64 — Fächer / Lernsets / Study sauber getrennt */
+/* VERSION 65 — Fächer / Lernsets / Study sauber getrennt */
 .learningBackRow{
  display:flex;
  margin:-2px 0 12px;
@@ -1425,7 +1425,7 @@ body.editorMode{-webkit-text-size-adjust:100%;overscroll-behavior:none}
 
 
 <style id="v46-editor">
-/* VERSION 64 — one toolbar, top view, tables + multiselect */
+/* VERSION 65 — one toolbar, top view, tables + multiselect */
 .canvasQuickNav{grid-template-columns:repeat(4,1fr)!important}
 .stylePresetBar,#stylePresetBar{display:none!important}
 .topViewMenu{
@@ -3105,12 +3105,747 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
 }
 </style>
 
+
+<style id="v65-redesign">
+/* ========================================================
+   MOBILE — back to simple editor, but cleaner
+   ======================================================== */
+@media(max-width:899px){
+
+  /* kill the intrusive V64 sheet */
+  .mobileContextPanel{display:none!important}
+  .mobileContextPanel.open{display:none!important}
+
+  body.editorMode main{
+    padding:6px 7px 90px!important;
+  }
+
+  body.editorMode .canvasEditorShell{
+    display:block!important;
+    width:100%!important;
+    max-width:none!important;
+    height:auto!important;
+  }
+
+  /* header smaller */
+  body.editorMode .canvasTopbar{
+    position:sticky!important;
+    top:0!important;
+    z-index:700!important;
+    padding:7px!important;
+    border-radius:16px!important;
+    background:rgba(255,250,247,.97)!important;
+    backdrop-filter:blur(20px)!important;
+    box-shadow:0 8px 22px rgba(115,83,72,.06)!important;
+  }
+
+  body.editorMode .canvasTopbar .topbarTitle{
+    font-size:14px!important;
+  }
+
+  /* 4 primary tools, like before */
+  body.editorMode .canvasQuickNav{
+    position:sticky!important;
+    top:88px!important;
+    z-index:640!important;
+    display:grid!important;
+    grid-template-columns:repeat(4,1fr)!important;
+    gap:5px!important;
+    margin:6px 0!important;
+    padding:5px!important;
+    border-radius:15px!important;
+    border:1px solid #ecd5ce!important;
+    background:rgba(255,251,248,.96)!important;
+    backdrop-filter:blur(18px)!important;
+  }
+
+  body.editorMode .canvasQuickNav button{
+    height:58px!important;
+    min-width:0!important;
+    border-radius:11px!important;
+    display:grid!important;
+    place-items:center!important;
+    align-content:center!important;
+    gap:2px!important;
+  }
+
+  body.editorMode .canvasQuickNav button b{
+    font-size:21px!important;
+    line-height:1!important;
+  }
+
+  body.editorMode .canvasQuickNav button span{
+    font-size:8px!important;
+    line-height:1!important;
+  }
+
+  body.editorMode .canvasQuickNav button.active{
+    background:#eea8a9!important;
+    color:white!important;
+  }
+
+  /* Mobile drawers: no huge category blocks. Just a clean 3-column grid. */
+  body.editorMode #canvasQuickDrawer{
+    position:relative!important;
+    left:auto!important;
+    right:auto!important;
+    bottom:auto!important;
+    top:auto!important;
+    width:100%!important;
+    max-width:none!important;
+    max-height:none!important;
+    margin:0 0 8px!important;
+    padding:8px!important;
+    border-radius:15px!important;
+    border:1px solid #ecd7d1!important;
+    background:
+      linear-gradient(145deg,rgba(255,252,250,.99),rgba(255,248,244,.99) 56%,rgba(248,251,239,.98))!important;
+    box-shadow:none!important;
+    overflow:visible!important;
+  }
+
+  body.editorMode #canvasQuickDrawer.open{
+    display:block!important;
+  }
+
+  .mobileDrawerHead{
+    display:flex!important;
+    position:static!important;
+    margin:0 0 7px!important;
+    padding:2px 2px 7px!important;
+    background:transparent!important;
+    border-bottom:1px solid #f1dfda!important;
+  }
+
+  .mobileDrawerHead b{font-size:13px!important}
+  .mobileDrawerHead small{font-size:7px!important}
+  .mobileDrawerHead button{
+    width:30px!important;height:30px!important;
+    border-radius:9px!important;font-size:17px!important;
+  }
+
+  .drawerSection{
+    margin:0 0 9px!important;
+  }
+
+  .drawerSection h4{
+    margin:0 0 5px 3px!important;
+    font-size:7px!important;
+    letter-spacing:.13em!important;
+  }
+
+  .drawerSectionGrid{
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:5px!important;
+  }
+
+  body.editorMode #canvasQuickDrawer .drawerSectionGrid button,
+  body.editorMode #canvasQuickDrawer > button{
+    min-width:0!important;
+    width:100%!important;
+    min-height:62px!important;
+    padding:6px 3px!important;
+    border-radius:11px!important;
+    border:1px solid #ead8d2!important;
+    background:#fffdfb!important;
+    display:grid!important;
+    place-items:center!important;
+    align-content:center!important;
+    gap:3px!important;
+  }
+
+  body.editorMode #canvasQuickDrawer button b{font-size:18px!important}
+  body.editorMode #canvasQuickDrawer button span{
+    font-size:7.5px!important;
+    line-height:1.05!important;
+    text-align:center!important;
+  }
+
+  /* page menu stays in flow, not giant floating card */
+  body.editorMode #topViewMenu{
+    position:relative!important;
+    left:auto!important;
+    right:auto!important;
+    bottom:auto!important;
+    top:auto!important;
+    width:100%!important;
+    max-width:none!important;
+    max-height:none!important;
+    margin:0 0 8px!important;
+    padding:8px!important;
+    border-radius:15px!important;
+    border:1px solid #ead5cf!important;
+    background:linear-gradient(145deg,#fffdfa,#fff7f3 55%,#f8fbee)!important;
+    box-shadow:none!important;
+    overflow:visible!important;
+  }
+
+  .mobileTopViewHead{
+    display:flex!important;
+    position:static!important;
+    margin:0 0 6px!important;
+    padding:2px 2px 7px!important;
+    background:transparent!important;
+    border-bottom:1px solid #f0dfda!important;
+  }
+
+  .topViewSection{
+    padding:6px!important;
+    margin:0 0 6px!important;
+    border-radius:11px!important;
+  }
+
+  .topViewButtons{
+    display:flex!important;
+    flex-wrap:wrap!important;
+    gap:5px!important;
+  }
+
+  .topViewButtons button{
+    padding:8px 10px!important;
+    font-size:8px!important;
+    border-radius:9px!important;
+  }
+
+  .pageStyleGrid{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:6px!important;
+  }
+
+  .pageStyleGrid input,.pageStyleGrid select{
+    min-height:38px!important;
+    padding:6px!important;
+  }
+
+  /* canvas directly follows tools */
+  body.editorMode .canvasViewport{
+    margin-top:7px!important;
+    padding:7px 0 120px!important;
+    background:transparent!important;
+  }
+
+  body.editorMode .canvasStage{
+    margin:0 auto!important;
+  }
+
+  /* right desktop sidebar hidden on phone */
+  body.editorMode .desktopEditorSidebar{
+    display:none!important;
+  }
+
+  /* selected object gets a tiny toolbar, not a giant inspector sheet */
+  .mobileSelectionBar{
+    display:none;
+    position:sticky;
+    top:154px;
+    z-index:625;
+    margin:0 0 6px;
+    padding:5px;
+    border:1px solid #ead3cc;
+    border-radius:13px;
+    background:rgba(255,251,248,.96);
+    backdrop-filter:blur(17px);
+  }
+
+  .mobileSelectionBar.show{display:block}
+
+  .mobileSelectionBarInner{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:4px;
+  }
+
+  .mobileSelectionBar button{
+    min-width:0;
+    height:48px;
+    padding:3px 1px;
+    border:0;
+    border-radius:9px;
+    background:#fff8f5;
+    color:#775f57;
+    display:grid;
+    place-items:center;
+    align-content:center;
+    gap:1px;
+  }
+
+  .mobileSelectionBar button:first-child{
+    background:#efaaaa;
+    color:white;
+  }
+
+  .mobileSelectionBar b{font-size:15px}
+  .mobileSelectionBar span{font-size:6.5px;font-weight:800}
+
+  /* Existing inspector only appears when explicitly opened,
+     not automatically blocking the sheet. */
+  body.editorMode #canvasInspector{
+    margin-top:7px!important;
+    padding:8px!important;
+    border-radius:14px!important;
+  }
+
+  body.editorMode #canvasInspector .objectPanelGrid{
+    grid-template-columns:1fr 1fr!important;
+    gap:6px!important;
+  }
+
+  body.editorMode #canvasInspector label{
+    font-size:7px!important;
+  }
+
+  body.editorMode #canvasInspector input,
+  body.editorMode #canvasInspector select{
+    min-height:38px!important;
+    padding:6px!important;
+  }
+}
+
+/* ========================================================
+   DESKTOP — actual redesign, Canva/Word inspired
+   ======================================================== */
+@media(min-width:900px){
+
+  body.editorMode{
+    margin:0!important;
+    overflow:hidden!important;
+    background:
+      radial-gradient(circle at 8% 12%,rgba(248,184,192,.52),transparent 28rem),
+      radial-gradient(circle at 90% 14%,rgba(218,235,188,.50),transparent 26rem),
+      radial-gradient(circle at 60% 92%,rgba(247,220,181,.44),transparent 30rem),
+      linear-gradient(135deg,#fff1ef 0%,#fff8ee 46%,#f3f8e9 100%)!important;
+  }
+
+  body.editorMode main{
+    max-width:none!important;
+    width:100vw!important;
+    height:100vh!important;
+    padding:0!important;
+    margin:0!important;
+    overflow:hidden!important;
+    background:transparent!important;
+  }
+
+  body.editorMode .canvasEditorShell{
+    width:100vw!important;
+    max-width:none!important;
+    height:100vh!important;
+    margin:0!important;
+    display:grid!important;
+    grid-template-columns:78px minmax(0,1fr) 340px!important;
+    grid-template-rows:58px 76px minmax(0,1fr)!important;
+    gap:0!important;
+    background:transparent!important;
+    border:0!important;
+    box-shadow:none!important;
+  }
+
+  /* Top title / document bar */
+  body.editorMode .canvasTopbar{
+    grid-column:1/-1!important;
+    grid-row:1!important;
+    height:58px!important;
+    margin:0!important;
+    padding:6px 14px!important;
+    border:0!important;
+    border-bottom:1px solid rgba(218,193,185,.72)!important;
+    border-radius:0!important;
+    background:
+      linear-gradient(90deg,rgba(255,250,248,.98),rgba(255,253,247,.98),rgba(248,251,239,.98))!important;
+    backdrop-filter:blur(24px)!important;
+    box-shadow:0 2px 12px rgba(97,69,60,.04)!important;
+    z-index:300!important;
+  }
+
+  body.editorMode .canvasTopbar .topbarTitle{
+    font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif!important;
+    font-size:14px!important;
+    font-weight:800!important;
+  }
+
+  body.editorMode .canvasTopbar .saveState{
+    font-size:7px!important;
+    color:#7f9a63!important;
+  }
+
+  /* Canva/Word-like ribbon */
+  body.editorMode .desktopCommandBar{
+    grid-column:2/-1!important;
+    grid-row:2!important;
+    height:76px!important;
+    padding:6px 10px!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    border:0!important;
+    border-bottom:1px solid rgba(220,198,191,.78)!important;
+    background:
+      linear-gradient(90deg,rgba(255,251,249,.985),rgba(255,249,244,.985) 54%,rgba(248,251,240,.985))!important;
+    box-shadow:0 3px 16px rgba(86,62,55,.04)!important;
+    z-index:260!important;
+  }
+
+  body.editorMode .desktopCmdGroup{
+    min-width:max-content!important;
+    padding:0 9px!important;
+    border-right:1px solid #efe1dc!important;
+  }
+
+  body.editorMode .desktopCmdLabel{
+    font-size:6.5px!important;
+    letter-spacing:.13em!important;
+    color:#aa877d!important;
+    margin-bottom:2px!important;
+    font-weight:900!important;
+  }
+
+  body.editorMode .desktopCmdButtons{
+    gap:3px!important;
+  }
+
+  body.editorMode .desktopCmdButtons button{
+    width:58px!important;
+    height:48px!important;
+    min-width:58px!important;
+    padding:3px!important;
+    border:0!important;
+    border-radius:9px!important;
+    background:transparent!important;
+    color:#6f5952!important;
+    display:grid!important;
+    place-items:center!important;
+    align-content:center!important;
+    gap:1px!important;
+  }
+
+  body.editorMode .desktopCmdButtons button:hover{
+    background:#f7e7e4!important;
+    transform:translateY(-1px)!important;
+  }
+
+  body.editorMode .desktopCmdButtons button:active{
+    transform:scale(.96)!important;
+  }
+
+  body.editorMode .desktopCmdButtons button span{
+    font-size:6.5px!important;
+    font-weight:800!important;
+  }
+
+  /* Left tool rail */
+  body.editorMode .canvasQuickNav{
+    grid-column:1!important;
+    grid-row:2/4!important;
+    width:78px!important;
+    height:auto!important;
+    margin:0!important;
+    padding:10px 6px!important;
+    border:0!important;
+    border-right:1px solid rgba(220,197,190,.78)!important;
+    border-radius:0!important;
+    background:
+      linear-gradient(180deg,rgba(255,250,248,.985),rgba(255,247,243,.985) 60%,rgba(247,250,238,.985))!important;
+    display:flex!important;
+    flex-direction:column!important;
+    gap:7px!important;
+    overflow-y:auto!important;
+    z-index:270!important;
+  }
+
+  body.editorMode .canvasQuickNav button{
+    flex:0 0 62px!important;
+    width:64px!important;
+    height:62px!important;
+    min-height:62px!important;
+    margin:0 auto!important;
+    border:0!important;
+    border-radius:13px!important;
+    background:transparent!important;
+    color:#735d56!important;
+    display:grid!important;
+    place-items:center!important;
+    align-content:center!important;
+    gap:2px!important;
+  }
+
+  body.editorMode .canvasQuickNav button:hover{
+    background:#f6e7e2!important;
+  }
+
+  body.editorMode .canvasQuickNav button.active{
+    background:#e9a0a2!important;
+    color:white!important;
+    box-shadow:0 8px 18px rgba(217,135,140,.18)!important;
+  }
+
+  body.editorMode .canvasQuickNav button b{font-size:21px!important}
+  body.editorMode .canvasQuickNav button span{font-size:6.5px!important}
+
+  /* Workspace: definitely NOT gray */
+  body.editorMode .canvasViewport{
+    grid-column:2!important;
+    grid-row:3!important;
+    width:100%!important;
+    height:100%!important;
+    margin:0!important;
+    padding:26px 36px 90px!important;
+    overflow:auto!important;
+    background:
+      radial-gradient(circle at 7% 10%,rgba(247,188,194,.55),transparent 24rem),
+      radial-gradient(circle at 94% 10%,rgba(222,237,194,.58),transparent 23rem),
+      radial-gradient(circle at 62% 92%,rgba(247,222,183,.38),transparent 26rem),
+      linear-gradient(135deg,#fff2ef 0%,#fff8ee 48%,#f4f8e9 100%)!important;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)!important;
+  }
+
+  body.editorMode .canvasStage{
+    margin:0 auto!important;
+    filter:drop-shadow(0 20px 26px rgba(87,62,53,.12))!important;
+  }
+
+  body.editorMode .canvasPage{
+    box-shadow:0 0 0 1px rgba(211,191,185,.45),0 18px 40px rgba(90,64,55,.10)!important;
+  }
+
+  /* Right properties sidebar */
+  body.editorMode .desktopEditorSidebar{
+    grid-column:3!important;
+    grid-row:3!important;
+    width:340px!important;
+    height:100%!important;
+    margin:0!important;
+    padding:10px!important;
+    overflow:auto!important;
+    border:0!important;
+    border-left:1px solid rgba(219,196,188,.82)!important;
+    border-radius:0!important;
+    background:
+      linear-gradient(180deg,rgba(255,252,250,.985),rgba(255,248,244,.985) 60%,rgba(249,251,241,.985))!important;
+    box-shadow:-4px 0 18px rgba(83,61,54,.035)!important;
+    z-index:220!important;
+  }
+
+  body.editorMode .desktopEditorSidebar>.objectPanel{
+    padding:10px!important;
+    margin:0 0 8px!important;
+    border-radius:12px!important;
+    background:rgba(255,255,255,.76)!important;
+    border:1px solid rgba(231,210,203,.85)!important;
+    box-shadow:none!important;
+  }
+
+  body.editorMode .desktopEditorSidebar .rowBetween>b{
+    font-size:9px!important;
+    font-weight:900!important;
+  }
+
+  body.editorMode .desktopEditorSidebar input,
+  body.editorMode .desktopEditorSidebar select{
+    min-height:34px!important;
+    padding:6px 8px!important;
+    font-size:9px!important;
+    border-radius:8px!important;
+  }
+
+  body.editorMode .layerItem{
+    min-height:34px!important;
+    padding:4px 5px!important;
+    margin-bottom:4px!important;
+    border-radius:9px!important;
+  }
+
+  body.editorMode .layerTools{
+    gap:2px!important;
+  }
+
+  body.editorMode .layerTools button{
+    width:27px!important;
+    height:27px!important;
+    border-radius:7px!important;
+  }
+
+  body.editorMode .templatePicker{
+    grid-template-columns:1fr!important;
+    gap:5px!important;
+  }
+
+  body.editorMode .templateCard{
+    min-height:46px!important;
+    padding:7px 9px!important;
+    border-radius:9px!important;
+    text-align:left!important;
+  }
+
+  /* BIG popup menus on PC, like Canva */
+  body.editorMode #canvasQuickDrawer{
+    position:fixed!important;
+    left:78px!important;
+    top:134px!important;
+    bottom:auto!important;
+    width:430px!important;
+    max-width:430px!important;
+    max-height:calc(100vh - 154px)!important;
+    margin:0!important;
+    padding:14px!important;
+    overflow:auto!important;
+    border:0!important;
+    border-right:1px solid #ead6cf!important;
+    border-bottom:1px solid #ead6cf!important;
+    border-radius:0 0 18px 0!important;
+    background:
+      radial-gradient(circle at 10% 0%,rgba(247,188,194,.25),transparent 14rem),
+      radial-gradient(circle at 100% 20%,rgba(221,236,194,.24),transparent 15rem),
+      rgba(255,252,249,.99)!important;
+    backdrop-filter:blur(24px)!important;
+    box-shadow:14px 16px 34px rgba(91,64,56,.12)!important;
+    z-index:900!important;
+  }
+
+  body.editorMode #canvasQuickDrawer.open{
+    display:block!important;
+  }
+
+  body.editorMode #canvasQuickDrawer .mobileDrawerHead{
+    display:flex!important;
+    position:sticky!important;
+    top:-14px!important;
+    z-index:5!important;
+    margin:-14px -14px 12px!important;
+    padding:12px 14px 10px!important;
+    background:rgba(255,252,249,.97)!important;
+    border-bottom:1px solid #efdfda!important;
+    backdrop-filter:blur(18px)!important;
+  }
+
+  body.editorMode #canvasQuickDrawer .drawerSection{
+    margin-bottom:15px!important;
+  }
+
+  body.editorMode #canvasQuickDrawer .drawerSection h4{
+    font-size:7px!important;
+    margin:0 0 6px 2px!important;
+    letter-spacing:.14em!important;
+  }
+
+  body.editorMode #canvasQuickDrawer .drawerSectionGrid{
+    display:grid!important;
+    grid-template-columns:repeat(3,1fr)!important;
+    gap:7px!important;
+  }
+
+  body.editorMode #canvasQuickDrawer .drawerSectionGrid button{
+    min-height:86px!important;
+    width:100%!important;
+    padding:8px 5px!important;
+    border:1px solid #ead7d1!important;
+    border-radius:13px!important;
+    background:#fffdfb!important;
+    display:grid!important;
+    place-items:center!important;
+    align-content:center!important;
+    gap:3px!important;
+  }
+
+  body.editorMode #canvasQuickDrawer .drawerSectionGrid button:hover{
+    background:linear-gradient(145deg,#fff4f2,#f7faed)!important;
+    border-color:#e6b9b3!important;
+    transform:translateY(-1px)!important;
+  }
+
+  body.editorMode #canvasQuickDrawer .drawerSectionGrid button b{
+    font-size:23px!important;
+  }
+
+  body.editorMode #canvasQuickDrawer .drawerSectionGrid button span{
+    font-size:8px!important;
+    font-weight:850!important;
+  }
+
+  /* text/elements/arrange popup gets big too */
+  body.editorMode #canvasQuickDrawer.open:not(:has(.drawerSection)){
+    display:grid!important;
+    grid-template-columns:repeat(2,1fr)!important;
+    gap:8px!important;
+  }
+
+  body.editorMode #canvasQuickDrawer.open:not(:has(.drawerSection)) .mobileDrawerHead{
+    grid-column:1/-1!important;
+  }
+
+  body.editorMode #canvasQuickDrawer.open:not(:has(.drawerSection)) > button{
+    min-height:92px!important;
+    border-radius:13px!important;
+  }
+
+  /* Page / view flyout as proper right-side panel under ribbon */
+  body.editorMode #topViewMenu{
+    position:fixed!important;
+    top:58px!important;
+    right:12px!important;
+    left:auto!important;
+    bottom:auto!important;
+    width:420px!important;
+    max-width:420px!important;
+    max-height:calc(100vh - 76px)!important;
+    overflow:auto!important;
+    padding:13px!important;
+    margin:0!important;
+    border:1px solid #ead6cf!important;
+    border-radius:0 0 16px 16px!important;
+    background:
+      radial-gradient(circle at 90% 0%,rgba(220,236,193,.30),transparent 14rem),
+      linear-gradient(145deg,#fffdfa,#fff7f3)!important;
+    box-shadow:0 18px 35px rgba(91,64,56,.13)!important;
+    z-index:920!important;
+  }
+
+  body.editorMode #topViewMenu .mobileTopViewHead{
+    display:flex!important;
+  }
+
+  body.editorMode .pageStyleGrid{
+    gap:8px!important;
+  }
+}
+
+/* make mobile/desktop buttons a little sweeter */
+body.editorMode button{
+  transition:transform .12s ease,background .14s ease,border-color .14s ease,box-shadow .14s ease!important;
+}
+body.editorMode button:active{
+  transform:scale(.965)!important;
+}
+</style>
+
+
+<style id="v65-desktop-app-shell">
+@media(min-width:900px){
+  body:not(.editorMode){
+    background:
+      radial-gradient(circle at 10% 12%,rgba(248,187,194,.28),transparent 28rem),
+      radial-gradient(circle at 90% 15%,rgba(221,236,193,.28),transparent 28rem),
+      linear-gradient(135deg,#fff5f2,#fffaf0 48%,#f5f9eb)!important;
+  }
+  body:not(.editorMode) main{
+    max-width:1120px!important;
+    margin:0 auto!important;
+  }
+  body:not(.editorMode) .bottomNav{
+    max-width:680px!important;
+    left:50%!important;
+    transform:translateX(-50%)!important;
+    bottom:18px!important;
+  }
+}
+</style>
+
 </head>
 <body class="v57">
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 64</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 65</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -3434,6 +4169,7 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
   <button onclick="editorOpenGroup('elements',this)">◇<span>Elemente</span></button>
   <button onclick="editorOpenGroup('arrange',this)">▱<span>Anordnen</span></button>
 </div>
+<div id="mobileSelectionBar" class="mobileSelectionBar"></div>
 <div id="canvasQuickDrawer" class="canvasQuickDrawer"></div>
 <div id="mobileContextPanel" class="mobileContextPanel" aria-live="polite"></div>
 <div id="multiSelectStatus" class="multiSelectStatus"></div>
@@ -3971,7 +4707,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 64";
+ $("#headerEyebrow").textContent="VERSION 65";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -4367,7 +5103,7 @@ window.insertSavedTextFormat=function(presetId){
  canvasState.selectedType=newIds.length?"object":newVids.length?"vector":null;
  canvasState.selectedId=newIds.at(-1)||newVids.at(-1)||null;
  canvasState.multiMode=false;
- renderCanvasObjects();renderVectors();renderCanvasInspector();renderLayerList();updateMultiSelectStatus();markCanvasDirty();pushHistory();
+ renderCanvasObjects();renderVectors();renderCanvasInspector();renderLayerList();updateMultiSelectStatus();renderMobileSelectionBar();renderMobileSelectionBar();markCanvasDirty();pushHistory();
 }
 
 
@@ -5839,8 +6575,26 @@ window.selectCanvasObject=function(oid){
  canvasState.selectedType="object";canvasState.selectedId=oid;canvasState.selectedIds=[oid];canvasState.selectedVectorIds=[];
  if(!same)renderCanvasObjects();
  renderVectors();renderCanvasInspector();renderLayerList();updateMultiSelectStatus();
- if(window.innerWidth<=899)openMobileContextPanel("selection");
+
 }
+
+function renderMobileSelectionBar(){
+ const bar=$("#mobileSelectionBar");if(!bar)return;
+ if(window.innerWidth>899){bar.innerHTML="";bar.classList.remove("show");return}
+ const ids=selectedObjectIds(),vids=selectedVectorIds(),total=ids.length+vids.length;
+ if(total===0){bar.innerHTML="";bar.classList.remove("show");return}
+ const isMulti=total>1;
+ bar.classList.add("show");
+ bar.innerHTML=`<div class="mobileSelectionBarInner">
+   <button onclick="renderCanvasInspector();document.querySelector('.mobileInspectorSheet')?.classList.add('show')" title="Bearbeiten"><b>✎</b><span>${isMulti?total+" ausgewählt":"Bearbeiten"}</span></button>
+   <button onclick="duplicateSelected()" title="Duplizieren"><b>⧉</b><span>Duplizieren</span></button>
+   <button onclick="bringSelectedForward()" title="Nach vorne"><b>↑</b><span>Vorne</span></button>
+   <button onclick="sendSelectedBackward()" title="Nach hinten"><b>↓</b><span>Hinten</span></button>
+   <button onclick="toggleSelectedLock()" title="Sperren"><b>🔒</b><span>Sperren</span></button>
+   <button onclick="deleteSelectedCanvasItem()" title="Löschen"><b>⌫</b><span>Löschen</span></button>
+ </div>`;
+}
+
 function renderCanvasInspector(){
  const el=$("#canvasInspector");if(!el)return;
  if(canvasState.multiMode&&((canvasState.selectedIds?.length||0)+(canvasState.selectedVectorIds?.length||0)>1)){
@@ -6208,7 +6962,7 @@ function startMarqueeSelection(e){
 $("#canvasPage")?.addEventListener("pointerdown",e=>{
  if(e.target!==e.currentTarget)return;
  clearCanvasSelection();
- if(window.innerWidth<=899)setTimeout(()=>openMobileContextPanel("layers"),0);
+
 });
 $("#canvasStage")?.addEventListener("pointerdown",e=>{
  if(canvasState.vectorTool==="pen")return;
@@ -6231,6 +6985,7 @@ window.copySelectedCanvasItems=function(){
  const ids=selectedObjectIds(),vids=selectedVectorIds();
  canvasInternalClipboard={objects:canvasState.objects.filter(x=>ids.includes(x.id)).map(x=>JSON.parse(JSON.stringify(x))),vectors:canvasState.vectors.filter(x=>vids.includes(x.id)).map(x=>JSON.parse(JSON.stringify(x)))};
  if((canvasInternalClipboard.objects.length+canvasInternalClipboard.vectors.length)>0)cuteToast("Kopiert ♡");
+ renderMobileSelectionBar();
 }
 window.pasteCanvasItems=function(){
  if(!canvasInternalClipboard)return;
@@ -6416,7 +7171,7 @@ function selectVector(idv){
  const v=canvasState.vectors.find(x=>x.id===idv);
  if(v?.groupId&&!canvasState.multiMode){selectWholeGroup(v.groupId);return}
  canvasState.selectedType="vector";canvasState.selectedId=idv;canvasState.selectedIds=[];canvasState.selectedVectorIds=[idv];
- renderVectors();renderCanvasObjects();renderCanvasInspector();renderLayerList();updateMultiSelectStatus();if(window.innerWidth<=899)openMobileContextPanel("selection");
+ renderVectors();renderCanvasObjects();renderCanvasInspector();renderLayerList();updateMultiSelectStatus();
 }
 function startVectorDraw(e){
  if(canvasState.vectorTool!=="pen")return;
@@ -6783,13 +7538,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 64: echter Live-Refresh ===== */
+/* ===== VERSION 65: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 64 timetable parser ===== */
+/* ===== VERSION 65 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -6798,7 +7553,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 64: dynamic classes ===== */
+/* ===== VERSION 65: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -6807,11 +7562,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 64: raster-exact timetable ===== */
+/* ===== VERSION 65: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 64 stability fixes ===== */
+/* ===== VERSION 65 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -6824,7 +7579,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
 
-/* ===== VERSION 64 — stable redesign ===== */
+/* ===== VERSION 65 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -6893,7 +7648,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 64 — notebook label + timetable repair ===== */
+/* ===== VERSION 65 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -6960,7 +7715,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .notebookAbbr{font-size:16px}
 }
 
-/* ===== VERSION 64 — Basisplan / Entfall / Hitzestunden ===== */
+/* ===== VERSION 65 — Basisplan / Entfall / Hitzestunden ===== */
 .basisCancelled{
  opacity:.82;
  border-style:dashed!important;
@@ -6998,7 +7753,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  border-color:#dbc8c1!important
 }
 
-/* ===== VERSION 64 — Current vs Basis + moved lesson logic ===== */
+/* ===== VERSION 65 — Current vs Basis + moved lesson logic ===== */
 .planModeSwitch{
  display:grid;
  grid-template-columns:1.35fr 1fr;
@@ -7067,7 +7822,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .planModeSwitch button b{font-size:10px}
 }
 
-/* ===== VERSION 64 — safer row split / replacement handling ===== */
+/* ===== VERSION 65 — safer row split / replacement handling ===== */
 .changedLesson{
  background:linear-gradient(90deg,#fffdfa,#fffaf6)!important;
 }
@@ -7085,13 +7840,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  margin-bottom:3px;
 }
 
-/* ===== VERSION 64 — Mehrfachstunden mit Pause dazwischen ===== */
+/* ===== VERSION 65 — Mehrfachstunden mit Pause dazwischen ===== */
 .splitMultiBadge{
  opacity:.86;
  font-size:8px!important;
 }
 
-/* ===== VERSION 64 — Auto / Manuell Hitzestunden ===== */
+/* ===== VERSION 65 — Auto / Manuell Hitzestunden ===== */
 .heatPlanControl{
  display:flex;
  align-items:center;
@@ -7167,7 +7922,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .heatModeButtons button{min-width:31px;padding:7px 5px}
 }
 
-/* ===== VERSION 64 — clearer navigation + polish ===== */
+/* ===== VERSION 65 — clearer navigation + polish ===== */
 :root{
  --sb-panel:#fffdfa;
  --sb-panel-soft:#fff8f4;
@@ -7343,7 +8098,7 @@ button.primary,button.ghost,.iconbtn{
 }
 </style>
 <style id="v43-compact-ui">
-/* VERSION 64 — compact information architecture */
+/* VERSION 65 — compact information architecture */
 #nav{grid-template-columns:repeat(5,1fr)!important;width:min(94vw,520px)!important}
 #nav button{min-width:0!important}
 .view{padding-bottom:100px!important}
@@ -7376,7 +8131,7 @@ button.primary,button.ghost,.iconbtn{
 
 
 <style id="v44-learning-navigation">
-/* VERSION 64 — Fächer / Lernsets / Study sauber getrennt */
+/* VERSION 65 — Fächer / Lernsets / Study sauber getrennt */
 .learningBackRow{
  display:flex;
  margin:-2px 0 12px;
@@ -7530,7 +8285,7 @@ button.primary,button.ghost,.iconbtn{
 }
 </style>
 
-</head><body><div class="page">${serializedCanvas()}</div><div id="buildVersionBadge" style="position:fixed;right:8px;bottom:8px;z-index:9999;font:800 9px Inter,sans-serif;color:#9b7d74;background:rgba(255,250,247,.88);border:1px solid #ead4cd;border-radius:999px;padding:5px 8px;pointer-events:none">V64</div>
+</head><body><div class="page">${serializedCanvas()}</div><div id="buildVersionBadge" style="position:fixed;right:8px;bottom:8px;z-index:9999;font:800 9px Inter,sans-serif;color:#9b7d74;background:rgba(255,250,247,.88);border:1px solid #ead4cd;border-radius:999px;padding:5px 8px;pointer-events:none">V65</div>
 </body></html>`;
  const blob=new Blob([html],{type:"text/html"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=title.replace(/[^\wäöüÄÖÜß-]+/g,"_")+".html";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
 }
@@ -7707,13 +8462,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialLesson .subject{color:#8d6f38}
 .lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
 
-/* ===== VERSION 64: echter Live-Refresh ===== */
+/* ===== VERSION 65: echter Live-Refresh ===== */
 .liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
 .liveRefreshStatus.loading{color:#a77d4b}
 .liveRefreshStatus.ok{color:#6f8956}
 .liveRefreshStatus.error{color:#b06d68}
 
-/* ===== VERSION 64 timetable parser ===== */
+/* ===== VERSION 65 timetable parser ===== */
 .doubleBadge{
  display:inline-flex;align-items:center;gap:4px;margin-top:5px;
  padding:3px 7px;border-radius:999px;background:#f7e7ee;
@@ -7722,7 +8477,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .lesson.doubleLesson{min-height:118px}
 .specialLesson{min-height:96px}
 
-/* ===== VERSION 64: dynamic classes ===== */
+/* ===== VERSION 65: dynamic classes ===== */
 .classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
 .classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
 .classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
@@ -7731,11 +8486,11 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .specialOnlyCard .specialTime{font-size:22px;font-weight:950}
 .specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
 
-/* ===== VERSION 64: raster-exact timetable ===== */
+/* ===== VERSION 65: raster-exact timetable ===== */
 .liveRefreshStatus.warn{color:#a77d4b}
 .parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
 
-/* ===== VERSION 64 stability fixes ===== */
+/* ===== VERSION 65 stability fixes ===== */
 .editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
@@ -7748,7 +8503,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .pathDrawHint{z-index:140!important}
 @media(max-width:600px){.editorZoomBar{top:103px}}
 
-/* ===== VERSION 64 — stable redesign ===== */
+/* ===== VERSION 65 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -7817,7 +8572,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 64 — notebook label + timetable repair ===== */
+/* ===== VERSION 65 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -7884,7 +8639,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .notebookAbbr{font-size:16px}
 }
 
-/* ===== VERSION 64 — Basisplan / Entfall / Hitzestunden ===== */
+/* ===== VERSION 65 — Basisplan / Entfall / Hitzestunden ===== */
 .basisCancelled{
  opacity:.82;
  border-style:dashed!important;
@@ -7922,7 +8677,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  border-color:#dbc8c1!important
 }
 
-/* ===== VERSION 64 — Current vs Basis + moved lesson logic ===== */
+/* ===== VERSION 65 — Current vs Basis + moved lesson logic ===== */
 .planModeSwitch{
  display:grid;
  grid-template-columns:1.35fr 1fr;
@@ -7991,7 +8746,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .planModeSwitch button b{font-size:10px}
 }
 
-/* ===== VERSION 64 — safer row split / replacement handling ===== */
+/* ===== VERSION 65 — safer row split / replacement handling ===== */
 .changedLesson{
  background:linear-gradient(90deg,#fffdfa,#fffaf6)!important;
 }
@@ -8009,13 +8764,13 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  margin-bottom:3px;
 }
 
-/* ===== VERSION 64 — Mehrfachstunden mit Pause dazwischen ===== */
+/* ===== VERSION 65 — Mehrfachstunden mit Pause dazwischen ===== */
 .splitMultiBadge{
  opacity:.86;
  font-size:8px!important;
 }
 
-/* ===== VERSION 64 — Auto / Manuell Hitzestunden ===== */
+/* ===== VERSION 65 — Auto / Manuell Hitzestunden ===== */
 .heatPlanControl{
  display:flex;
  align-items:center;
@@ -8091,7 +8846,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
  .heatModeButtons button{min-width:31px;padding:7px 5px}
 }
 
-/* ===== VERSION 64 — clearer navigation + polish ===== */
+/* ===== VERSION 65 — clearer navigation + polish ===== */
 :root{
  --sb-panel:#fffdfa;
  --sb-panel-soft:#fff8f4;
@@ -8267,7 +9022,7 @@ button.primary,button.ghost,.iconbtn{
 }
 </style>
 <style id="v43-compact-ui">
-/* VERSION 64 — compact information architecture */
+/* VERSION 65 — compact information architecture */
 #nav{grid-template-columns:repeat(5,1fr)!important;width:min(94vw,520px)!important}
 #nav button{min-width:0!important}
 .view{padding-bottom:100px!important}
@@ -8300,7 +9055,7 @@ button.primary,button.ghost,.iconbtn{
 
 
 <style id="v44-learning-navigation">
-/* VERSION 64 — Fächer / Lernsets / Study sauber getrennt */
+/* VERSION 65 — Fächer / Lernsets / Study sauber getrennt */
 .learningBackRow{
  display:flex;
  margin:-2px 0 12px;
@@ -8817,7 +9572,7 @@ const timetableSlots=[
  {start:"15:45",end:"16:30"}
 ];
 function fillCancelledSlots(lessons){
- // VERSION 64:
+ // VERSION 65:
  // SchoolBloom darf NIE aus einer nicht erkannten/leeren PDF-Zelle
  // automatisch "Entfall" erfinden.
  // Nur Einträge, die wirklich aus der PDF gelesen wurden, werden gezeigt.
@@ -9179,7 +9934,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
         stroke-width: 13px;
       }
     
-/* ===== VERSION 64 — stable redesign ===== */
+/* ===== VERSION 65 — stable redesign ===== */
 .newSvgNotebook{
  position:relative!important;min-height:230px!important;padding:0!important;
  border:0!important;background:transparent!important;overflow:visible!important;
@@ -9248,7 +10003,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  .canvasQuickDrawer{top:136px}
 }
 
-/* ===== VERSION 64 — notebook label + timetable repair ===== */
+/* ===== VERSION 65 — notebook label + timetable repair ===== */
 .notebookGrid{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
  gap:18px 12px!important;
@@ -9315,7 +10070,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  .notebookAbbr{font-size:16px}
 }
 
-/* ===== VERSION 64 — Basisplan / Entfall / Hitzestunden ===== */
+/* ===== VERSION 65 — Basisplan / Entfall / Hitzestunden ===== */
 .basisCancelled{
  opacity:.82;
  border-style:dashed!important;
@@ -9353,7 +10108,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  border-color:#dbc8c1!important
 }
 
-/* ===== VERSION 64 — Current vs Basis + moved lesson logic ===== */
+/* ===== VERSION 65 — Current vs Basis + moved lesson logic ===== */
 .planModeSwitch{
  display:grid;
  grid-template-columns:1.35fr 1fr;
@@ -9422,7 +10177,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  .planModeSwitch button b{font-size:10px}
 }
 
-/* ===== VERSION 64 — safer row split / replacement handling ===== */
+/* ===== VERSION 65 — safer row split / replacement handling ===== */
 .changedLesson{
  background:linear-gradient(90deg,#fffdfa,#fffaf6)!important;
 }
@@ -9440,13 +10195,13 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  margin-bottom:3px;
 }
 
-/* ===== VERSION 64 — Mehrfachstunden mit Pause dazwischen ===== */
+/* ===== VERSION 65 — Mehrfachstunden mit Pause dazwischen ===== */
 .splitMultiBadge{
  opacity:.86;
  font-size:8px!important;
 }
 
-/* ===== VERSION 64 — Auto / Manuell Hitzestunden ===== */
+/* ===== VERSION 65 — Auto / Manuell Hitzestunden ===== */
 .heatPlanControl{
  display:flex;
  align-items:center;
@@ -9522,7 +10277,7 @@ const SUBJECT_NOTEBOOK_SVG=`<svg class="subjectNotebookSvg" xmlns="http://www.w3
  .heatModeButtons button{min-width:31px;padding:7px 5px}
 }
 
-/* ===== VERSION 64 — clearer navigation + polish ===== */
+/* ===== VERSION 65 — clearer navigation + polish ===== */
 :root{
  --sb-panel:#fffdfa;
  --sb-panel-soft:#fff8f4;
