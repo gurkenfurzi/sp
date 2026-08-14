@@ -3034,7 +3034,7 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 88</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 89</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -3486,8 +3486,18 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
 <script type="module">
 const SCHOOLBLOOM_PLAN_WORKER="https://dry-surf-fec5.muelliaccc.workers.dev";
 
-import * as pdfjsLib from "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs";
-pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
+let pdfjsLib=null;
+async function ensurePdfJs(){
+ if(pdfjsLib)return pdfjsLib;
+ try{
+  pdfjsLib=await import("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs");
+  pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
+  return pdfjsLib;
+ }catch(err){
+  console.warn("PDF.js konnte nicht geladen werden – SchoolBloom startet trotzdem.",err);
+  throw new Error("PDF-Modul momentan nicht verfügbar. Die App bleibt nutzbar; versuche die Stundenplan-Aktualisierung später erneut.");
+ }
+}
 
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const KEY="schoolhub-v1";
@@ -3510,6 +3520,7 @@ const defaultData={
   timetable:{isPlaceholder:true,classes:["M U1"],selectedClass:"M U1",lessons:[]}
 };
 let data=load();
+normalizeAppData(data);
 let taskFilter="open";
 let selectedDay=dayCode(new Date())||"Mo";
 let timetableViewMode="current"; // current = wichtiger Plan inkl. Änderungen, basis = normaler Basisplan
@@ -3587,7 +3598,24 @@ function load(){
    return d;
  }catch{return structuredClone(defaultData)}
 }
-function save(){localStorage.setItem(KEY,JSON.stringify(data));renderAll()}
+function normalizeAppData(d){
+ if(!d||typeof d!=="object")return;
+ for(const k of ["homework","tests","grades","flashcards","subjects","absences","studySessions","reminders","flashDecks","quizzes","studySheets"]){if(!Array.isArray(d[k]))d[k]=[]}
+ if(!d.settings||typeof d.settings!=="object")d.settings=structuredClone(defaultData.settings);
+ if(!d.customization||typeof d.customization!=="object")d.customization={theme:"blossom",compact:false};
+ if(!d.economy||typeof d.economy!=="object")d.economy={coins:0,owned:["base-room"],equipped:[]};
+ if(!d.lessonExtras||typeof d.lessonExtras!=="object")d.lessonExtras={};
+ if(!d.canvasSheets||typeof d.canvasSheets!=="object")d.canvasSheets={};
+ if(!d.timetable||typeof d.timetable!=="object")d.timetable=structuredClone(defaultData.timetable);
+ if(!Array.isArray(d.timetable.lessons))d.timetable.lessons=[];
+ if(!Array.isArray(d.timetable.classes))d.timetable.classes=[d.timetable.selectedClass||d.settings.className||"M U1"];
+ if(!d.timetable.selectedClass)d.timetable.selectedClass=d.settings.className||d.timetable.classes[0]||"M U1";
+ if(d.timetable.schedules&&typeof d.timetable.schedules!=="object")d.timetable.schedules={};
+ if(d.timetable.currentSchedules&&typeof d.timetable.currentSchedules!=="object")d.timetable.currentSchedules={};
+ if(d.timetable.basisSchedules&&typeof d.timetable.basisSchedules!=="object")d.timetable.basisSchedules={};
+ for(const sub of d.subjects){if(sub&&typeof sub==="object")ensureSubjectShapeRaw(sub)}
+}
+function save(){normalizeAppData(data);localStorage.setItem(KEY,JSON.stringify(data));renderAll()}
 function id(){return Math.random().toString(36).slice(2)+Date.now().toString(36)}
 function esc(s=""){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
 function fmtDate(s){if(!s)return"";return new Date(s+"T12:00:00").toLocaleDateString("de-DE",{day:"2-digit",month:"2-digit",year:"2-digit"})}
@@ -3897,7 +3925,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 88";
+ $("#headerEyebrow").textContent="VERSION 89";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -9820,7 +9848,8 @@ window.exportData=function(){
 $("#importData").onchange=async e=>{const f=e.target.files?.[0];if(!f)return;try{data=JSON.parse(await f.text());save();alert("Backup importiert")}catch{alert("Backup konnte nicht gelesen werden.")}}
 window.resetAll=function(){if(confirm("Wirklich alle SchoolHub-Daten auf diesem Gerät löschen?")){localStorage.removeItem(KEY);location.reload()}}
 
-function renderAll(){renderHome();renderPlan();renderTasks();renderGrades();renderStudy();renderSubjects();renderAbsence();renderSettings();renderLearnsetsLists();if(selectedSubjectId)renderSubjectDetail();if(selectedTopicId)renderTopicDetail();if(selectedDeckId)renderDeckDetail();if(selectedQuizId&&quizSession)renderQuizPlayer()}
+function renderSectionSafe(name,fn){try{fn()}catch(err){console.error("SchoolBloom render error:",name,err);if(name==="home"){const next=$("#nextPanel"),kpis=$("#homeKpis"),open=$("#homeOpen"),lessons=$("#todayLessons");if(next)next.innerHTML=`<div class="eyebrow">Heute</div><div style="font-size:23px;font-weight:900;margin-top:5px">SchoolBloom ist bereit.</div><div class="muted" style="margin-top:6px">Ein Bereich konnte gerade nicht geladen werden. Deine Daten bleiben gespeichert.</div>`;if(kpis&&!kpis.innerHTML)kpis.innerHTML=`<div class="kpi"><div class="big">${Array.isArray(data.homework)?data.homework.filter(x=>!x.done).length:0}</div><div class="small">Hausaufgaben offen</div></div><div class="kpi"><div class="big">${Array.isArray(data.tests)?data.tests.length:0}</div><div class="small">Tests</div></div><div class="kpi"><div class="big">–</div><div class="small">Notenschnitt</div></div>`;if(open&&!open.innerHTML)open.innerHTML='<div class="empty">Keine offenen Einträge.</div>';if(lessons&&!lessons.innerHTML)lessons.innerHTML='<div class="empty">Stundenplan konnte gerade nicht angezeigt werden.</div>'}}}
+function renderAll(){normalizeAppData(data);renderSectionSafe("home",renderHome);renderSectionSafe("plan",renderPlan);renderSectionSafe("tasks",renderTasks);renderSectionSafe("grades",renderGrades);renderSectionSafe("study",renderStudy);renderSectionSafe("subjects",renderSubjects);renderSectionSafe("absence",renderAbsence);renderSectionSafe("settings",renderSettings);renderSectionSafe("learnsets",renderLearnsetsLists);if(selectedSubjectId)renderSectionSafe("subject-detail",renderSubjectDetail);if(selectedTopicId)renderSectionSafe("topic-detail",renderTopicDetail);if(selectedDeckId)renderSectionSafe("deck-detail",renderDeckDetail);if(selectedQuizId&&quizSession)renderSectionSafe("quiz-player",renderQuizPlayer)}
 applyCustomization();renderTimer();renderAll();
 if(localStorage.getItem("schoolbloom-plan-parser-version")!=="17"){localStorage.setItem("schoolbloom-plan-parser-version","17");setTimeout(()=>loadRemotePlan(),300)}
 
@@ -10660,7 +10689,8 @@ async function parsePdfDocument(pdf){
  save();
 }
 async function parsePdfBytes(bytes){
- const pdf=await pdfjsLib.getDocument({data:bytes}).promise;
+ const lib=await ensurePdfJs();
+ const pdf=await lib.getDocument({data:bytes}).promise;
  await parsePdfDocument(pdf);
 }
 
