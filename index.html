@@ -3236,12 +3236,195 @@ body.editorMode button:active{transform:scale(.97)}
 }
 </style>
 
+
+<style id="sb76-mobile-editor">
+@media(max-width:899px){
+  body.editorMode{
+    --sb76-text:#6f584f;
+    --sb76-muted:#a48b81;
+    --sb76-line:#ead7d1;
+    --sb76-pink:#eba2a5;
+    --sb76-pink-soft:#f8dedd;
+    --sb76-bg:#fffaf7;
+    background:
+      radial-gradient(circle at 12% 12%,rgba(248,210,213,.34),transparent 26%),
+      radial-gradient(circle at 88% 28%,rgba(231,240,207,.22),transparent 23%),
+      linear-gradient(155deg,#fff8f5 0%,#fffdf9 54%,#fbfaef 100%)!important;
+  }
+
+  /* Clean top bar: only back, title, undo, redo, print, save */
+  body.editorMode .canvasTopbar{
+    position:sticky!important;top:0!important;z-index:900!important;
+    min-height:74px!important;
+    padding:9px 10px!important;
+    display:grid!important;
+    grid-template-columns:46px minmax(120px,1fr) 40px 40px 40px auto!important;
+    gap:6px!important;align-items:center!important;
+    background:rgba(255,252,249,.94)!important;
+    border-bottom:1px solid var(--sb76-line)!important;
+    backdrop-filter:blur(22px)!important;
+    box-shadow:none!important;
+  }
+  body.editorMode .canvasTopbar .backBtn{
+    width:44px!important;height:44px!important;border-radius:14px!important;
+    border:1px solid var(--sb76-line)!important;background:#fff!important;color:var(--sb76-text)!important;
+  }
+  body.editorMode .canvasTopbar .canvasTitleWrap{min-width:0!important}
+  body.editorMode .canvasTopbar .canvasTitle{font-size:15px!important;font-weight:900!important;color:var(--sb76-text)!important}
+  body.editorMode .canvasTopbar .autosaveState{font-size:8px!important;color:#8ba06a!important;font-weight:800!important}
+  body.editorMode .historyBtn,
+  body.editorMode .sb75EditorActions .editorIcon{
+    width:40px!important;height:40px!important;border:1px solid var(--sb76-line)!important;
+    border-radius:13px!important;background:#fff!important;color:var(--sb76-text)!important;
+    box-shadow:none!important;
+  }
+  body.editorMode .sb75EditorActions{display:contents!important}
+  body.editorMode .sb75ViewButton{display:none!important}
+  body.editorMode .sb75PrintButton{grid-column:5!important}
+  body.editorMode .sb72SaveButton{
+    grid-column:6!important;width:auto!important;min-width:96px!important;height:42px!important;
+    padding:0 13px!important;border-radius:14px!important;background:var(--sb76-pink)!important;color:white!important;
+    border-color:var(--sb76-pink)!important;font-size:12px!important;font-weight:900!important;
+  }
+  body.editorMode .sb72SaveButton span{display:block!important;font-size:10px!important}
+  body.editorMode .sb75MiniPopover{display:none!important}
+
+  body.editorMode .canvasViewport{padding:16px 10px 136px!important}
+  body.editorMode .canvasStage{box-shadow:0 6px 18px rgba(114,85,75,.08)!important}
+
+  /* Main bar like the reference image, one clean row */
+  .sb75MainBar{
+    position:fixed!important;left:9px!important;right:9px!important;bottom:8px!important;z-index:920!important;
+    display:grid!important;grid-template-columns:repeat(6,1fr)!important;
+    height:72px!important;padding:5px!important;
+    background:rgba(255,252,249,.96)!important;backdrop-filter:blur(24px)!important;
+    border:1px solid var(--sb76-line)!important;border-radius:19px!important;
+    box-shadow:0 14px 32px rgba(101,72,62,.10)!important;
+  }
+  .sb75MainBar.hidden{display:none!important}
+  .sb75MainBar button{
+    border:0!important;background:transparent!important;color:var(--sb76-text)!important;
+    border-radius:14px!important;padding:5px 2px!important;
+    display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:center!important;
+    gap:2px!important;font-size:20px!important;font-weight:700!important;min-width:0!important;
+  }
+  .sb75MainBar button span{font-size:7.5px!important;font-weight:850!important;white-space:nowrap!important}
+  .sb75MainBar button.active{background:var(--sb76-pink-soft)!important;color:#a86c71!important}
+
+  /* Context bar REPLACES main menu */
+  .sb76ContextBar{
+    position:fixed!important;left:9px!important;right:9px!important;bottom:8px!important;z-index:940!important;
+    display:none!important;max-height:45vh!important;overflow:auto!important;
+    padding:8px 10px 10px!important;
+    border:1px solid var(--sb76-line)!important;border-radius:20px!important;
+    background:rgba(255,252,249,.975)!important;backdrop-filter:blur(24px)!important;
+    box-shadow:0 14px 34px rgba(96,68,58,.12)!important;
+  }
+  .sb76ContextBar.open{display:block!important}
+  .sb76Grabber{
+    width:38px;height:4px;border-radius:99px;background:#d7c0ba;margin:0 auto 5px;
+  }
+  .sb76ContextHead{
+    display:grid!important;grid-template-columns:34px 1fr 34px!important;gap:8px!important;align-items:center!important;
+    position:sticky!important;top:-8px!important;z-index:5!important;
+    padding:4px 0 7px!important;background:rgba(255,252,249,.97)!important;
+  }
+  .sb76ContextHead>div{display:grid!important;text-align:left!important;gap:0!important}
+  .sb76ContextHead b{font-size:11px!important;color:var(--sb76-text)!important}
+  .sb76ContextHead small{font-size:7px!important;color:var(--sb76-muted)!important}
+  .sb76BackToMain,.sb76ContextClose{
+    width:34px!important;height:34px!important;border:1px solid var(--sb76-line)!important;border-radius:11px!important;
+    background:#fff!important;color:var(--sb76-text)!important;font-size:19px!important;
+  }
+
+  /* Text toolbar – compact, close to reference */
+  .sb76TextTools{display:grid!important;gap:8px!important}
+  .sb76TextTop{
+    display:grid!important;
+    grid-template-columns:minmax(0,1.55fr) 36px 50px 36px repeat(4,36px)!important;
+    gap:5px!important;align-items:center!important;
+  }
+  .sb76TextTop select,.sb76TextTop input,.sb76TextTop button{
+    height:38px!important;border:1px solid var(--sb76-line)!important;border-radius:10px!important;background:#fff!important;
+    color:var(--sb76-text)!important;font-weight:850!important;min-width:0!important;
+  }
+  .sb76TextTop select{padding:0 8px!important;font-size:10px!important}
+  .sb76TextTop input{width:100%!important;text-align:center!important;font-size:13px!important}
+  .sb76TextTop button{font-size:16px!important}
+  .sb76TextRow{
+    display:grid!important;grid-template-columns:42px repeat(4,1fr) repeat(3,1fr)!important;gap:4px!important;
+  }
+  .sb76TextRow button,.sb76TextRow input{
+    height:36px!important;border:0!important;border-radius:9px!important;background:transparent!important;color:var(--sb76-text)!important;
+    font-size:16px!important;font-weight:850!important;
+  }
+  .sb76TextRow button.active{background:var(--sb76-pink-soft)!important}
+  .sb76TextRow input[type=color]{padding:5px!important;background:#fff!important;border:1px solid var(--sb76-line)!important}
+  .sb76PropertyBlocks{
+    display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:5px!important;
+    border-top:1px solid #f0dfda!important;padding-top:6px!important;
+  }
+  .sb76PropertyBlocks button{
+    min-height:50px!important;border:0!important;background:#fff!important;border-radius:10px!important;
+    color:var(--sb76-text)!important;font-size:7.5px!important;font-weight:850!important;padding:4px!important;
+  }
+  .sb76PropertyBlocks button b{display:block!important;font-size:18px!important;margin-bottom:2px!important}
+
+  .sb76Grid{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:6px!important}
+  .sb76Grid button{
+    min-height:56px!important;border:1px solid var(--sb76-line)!important;border-radius:11px!important;background:#fff!important;
+    color:var(--sb76-text)!important;font-size:7.5px!important;font-weight:850!important;padding:5px!important;
+  }
+  .sb76Grid button b{display:block!important;font-size:18px!important;margin-bottom:3px!important}
+  .sb76Section{display:grid!important;gap:7px!important}
+  .sb76Section+.sb76Section{margin-top:8px!important}
+  .sb76SectionTitle{font-size:8px!important;letter-spacing:.12em!important;text-transform:uppercase!important;color:var(--sb76-muted)!important;font-weight:900!important}
+  .sb76ChipRow{display:flex!important;gap:6px!important;overflow:auto!important}
+  .sb76ChipRow button{
+    white-space:nowrap!important;border:1px solid var(--sb76-line)!important;border-radius:999px!important;background:#fff!important;
+    padding:8px 10px!important;font-size:8px!important;font-weight:850!important;color:var(--sb76-text)!important;
+  }
+
+  /* Fix weird page/levels layouts from older code */
+  .sb75PageThumbs,.sb75PageControls,.sb75LayerList,.sb75LayerRow{font-family:inherit!important}
+  .sb75PageControls{display:grid!important;grid-template-columns:1fr 1fr!important;gap:7px!important}
+  .sb75PageControls label{font-size:7px!important;font-weight:850!important;color:var(--sb76-muted)!important}
+  .sb75PageControls input,.sb75PageControls select{height:38px!important;border:1px solid var(--sb76-line)!important;border-radius:9px!important;background:#fff!important}
+  .sb75PageThumbs{display:flex!important;gap:6px!important;overflow:auto!important}
+  .sb75PageThumb{min-width:50px!important;height:60px!important;border:1px solid var(--sb76-line)!important;border-radius:9px!important;background:#fff!important}
+  .sb75PageThumb.current{border:2px solid var(--sb76-pink)!important}
+  .sb75GuideHint{font-size:7.5px!important;line-height:1.4!important;color:var(--sb76-muted)!important}
+  .sb75LayerRow{
+    display:grid!important;grid-template-columns:24px minmax(0,1fr) 30px 30px 30px!important;gap:4px!important;align-items:center!important;
+    min-height:40px!important;padding:4px!important;border:1px solid var(--sb76-line)!important;border-radius:10px!important;background:#fff!important;
+  }
+
+  /* Old V74/V75 overlays that caused ugly duplicate UI */
+  .sb74TopPopover,
+  #sb74PagePanel,
+  #sb74LayersPanel,
+  body.editorMode #desktopEditorSidebar,
+  body.editorMode #topViewMenu{display:none!important}
+
+  /* floating object bar */
+  .sb72SelectionBar{
+    position:fixed!important;z-index:935!important;top:78px!important;left:50%!important;bottom:auto!important;
+    transform:translate(-50%,-6px) scale(.97)!important;opacity:0!important;pointer-events:none!important;
+    width:auto!important;min-width:180px!important;height:46px!important;padding:4px!important;display:flex!important;gap:4px!important;
+    background:rgba(255,252,249,.96)!important;border:1px solid var(--sb76-line)!important;border-radius:999px!important;
+    box-shadow:0 10px 26px rgba(96,68,58,.11)!important;backdrop-filter:blur(20px)!important;
+  }
+  .sb72SelectionBar.visible{opacity:1!important;pointer-events:auto!important;transform:translate(-50%,0) scale(1)!important}
+  .sb72SelectionBar button{width:38px!important;height:38px!important;border:0!important;border-radius:999px!important;background:transparent!important}
+}
+</style>
+
 </head>
 <body class="v57">
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 75</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 76</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -3499,19 +3682,23 @@ body.editorMode button:active{transform:scale(.97)}
 
       
       <nav class="sb72MobileBottom sb75MainBar" id="sb75MainBar" aria-label="Editor">
-        <button onclick="sb75OpenPanel('text',this)">T<span>Text</span></button>
-        <button onclick="sb75OpenPanel('elements',this)">✦<span>Elemente</span></button>
-        <button onclick="sb75OpenPanel('formats',this)">Aa<span>Formate</span></button>
-        <button onclick="sb75OpenPanel('pages',this)">▤<span>Seiten</span></button>
-        <button onclick="sb75OpenPanel('selection',this)">☑<span>Auswahl</span></button>
-        <button onclick="sb75OpenPanel('layers',this)">◇<span>Ebenen</span></button>
+        <button data-panel="text" onclick="sb76OpenPanel('text',this)">T<span>Text</span></button>
+        <button data-panel="elements" onclick="sb76OpenPanel('elements',this)">✦<span>Elemente</span></button>
+        <button data-panel="formats" onclick="sb76OpenPanel('formats',this)">Aa<span>Formate</span></button>
+        <button data-panel="pages" onclick="sb76OpenPanel('pages',this)">▤<span>Seiten</span></button>
+        <button data-panel="selection" onclick="sb76OpenPanel('selection',this)">☑<span>Auswahl</span></button>
+        <button data-panel="layers" onclick="sb76OpenPanel('layers',this)">◇<span>Ebenen</span></button>
       </nav>
 
-      <section class="sb72MobileSheet sb75ContextBar" id="sb72MobileSheet">
-        <div class="sb75ContextHead">
-          <button class="sb75BackToMain" onclick="sb75ClosePanel()">‹</button>
-          <div><b id="sb75ContextTitle">Werkzeuge</b><small id="sb75ContextSubtitle"></small></div>
-          <button class="sb75ContextClose" onclick="sb75ClosePanel()">×</button>
+      <section class="sb72MobileSheet sb76ContextBar" id="sb72MobileSheet">
+        <div class="sb76Grabber"></div>
+        <div class="sb76ContextHead">
+          <button class="sb76BackToMain" onclick="sb76ClosePanel()">‹</button>
+          <div>
+            <b id="sb75ContextTitle">Werkzeuge</b>
+            <small id="sb75ContextSubtitle"></small>
+          </div>
+          <button class="sb76ContextClose" onclick="sb76ClosePanel()">×</button>
         </div>
         <div id="sb72MobileSheetContent"></div>
       </section>
@@ -4181,7 +4368,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 75";
+ $("#headerEyebrow").textContent="VERSION 76";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -8022,6 +8209,335 @@ button.primary,button.ghost,.iconbtn{
   function fit(){if(innerWidth<900&&typeof fitCanvasStage==='function')setTimeout(()=>fitCanvasStage(),80)}
   addEventListener('resize',fit);addEventListener('orientationchange',fit);
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fit);else fit();
+})();
+</script>
+
+
+<script id="sb76-mobile-ui">
+(function(){
+  const $=id=>document.getElementById(id);
+  let activePanel=null;
+
+  function selectedObject(){
+    try{
+      if(!window.canvasState || canvasState.selectedType!=='object') return null;
+      return canvasState.objects.find(o=>o.id===canvasState.selectedId)||null;
+    }catch(e){return null}
+  }
+  function selectedVector(){
+    try{
+      if(!window.canvasState || canvasState.selectedType!=='vector') return null;
+      return canvasState.vectors.find(v=>v.id===canvasState.selectedId)||null;
+    }catch(e){return null}
+  }
+  function isTextObj(o){return o && ['text','block','task','merke'].includes(o.kind)}
+
+  function panelTitle(kind){
+    return {
+      text:['Text','Schrift & Absatz'],
+      elements:['Elemente','Einfügen'],
+      formats:['Formate','Eigene Textformate'],
+      pages:['Seiten','Papier & Vorlagen'],
+      selection:['Auswahl','Mehrfachauswahl & Ausrichten'],
+      layers:['Ebenen','Reihenfolge & Sperren'],
+      shape:['Form','Aussehen & Position']
+    }[kind]||['Werkzeuge',''];
+  }
+
+  function root(){return $('sb72MobileSheetContent')}
+
+  window.sb76ClosePanel=function(){
+    activePanel=null;
+    $('sb72MobileSheet')?.classList.remove('open');
+    $('sb75MainBar')?.classList.remove('hidden');
+    document.querySelectorAll('#sb75MainBar button').forEach(b=>b.classList.remove('active'));
+  };
+
+  window.sb76OpenPanel=function(kind,btn){
+    if(innerWidth>=900)return;
+    activePanel=kind;
+    $('sb75MainBar')?.classList.add('hidden');
+    $('sb72MobileSheet')?.classList.add('open');
+    document.querySelectorAll('#sb75MainBar button').forEach(b=>b.classList.remove('active'));
+    btn?.classList.add('active');
+    const [t,sub]=panelTitle(kind);
+    if($('sb75ContextTitle')) $('sb75ContextTitle').textContent=t;
+    if($('sb75ContextSubtitle')) $('sb75ContextSubtitle').textContent=sub;
+    render(kind);
+  };
+
+  function textPanel(){
+    const o=selectedObject();
+    const st=o?.style||{};
+    const font=(st.fontFamily||'Arial').replaceAll('"','');
+    const size=st.fontSize||16;
+    const align=st.textAlign||'left';
+    return `<div class="sb76TextTools">
+      <div class="sb76TextTop">
+        <select onchange="applyTextProperty('fontFamily',this.value)">
+          ${['Arial','Aptos','Helvetica','Georgia','Playfair Display','Trebuchet MS','Verdana','Times New Roman'].map(f=>`<option ${font.includes(f)?'selected':''}>${f}</option>`).join('')}
+        </select>
+        <button onclick="sb76FontStep(-1)">−</button>
+        <input id="sb76FontSize" type="number" min="6" max="180" value="${size}" onchange="applyTextProperty('fontSize',+this.value)">
+        <button onclick="sb76FontStep(1)">＋</button>
+        <button onclick="formatSelectedText('bold')"><b>B</b></button>
+        <button onclick="formatSelectedText('italic')"><i>I</i></button>
+        <button onclick="formatSelectedText('underline')"><u>U</u></button>
+        <button onclick="formatSelectedText('strikeThrough')"><s>S</s></button>
+      </div>
+      <div class="sb76TextRow">
+        <input type="color" value="${st.color||'#6f584f'}" onchange="applyTextProperty('color',this.value)" title="Farbe">
+        <button class="${align==='left'?'active':''}" onclick="sb76AlignText('left')">⇤</button>
+        <button class="${align==='center'?'active':''}" onclick="sb76AlignText('center')">↔</button>
+        <button class="${align==='right'?'active':''}" onclick="sb76AlignText('right')">⇥</button>
+        <button class="${align==='justify'?'active':''}" onclick="sb76AlignText('justify')">☰</button>
+        <button onclick="formatSelectedText('insertUnorderedList')">•≡</button>
+        <button onclick="sb76DashList()">–≡</button>
+        <button onclick="formatSelectedText('insertOrderedList')">1≡</button>
+      </div>
+      <div class="sb76PropertyBlocks">
+        <button onclick="sb76TextSub('appearance')"><b>◉</b>Aussehen</button>
+        <button onclick="sb76TextSub('spacing')"><b>Vᴬ</b>Abstand</button>
+        <button onclick="sb76TextSub('position')"><b>⌗</b>Position</button>
+        <button onclick="sb76TextSub('effects')"><b>✦</b>Effekte</button>
+      </div>
+      <div id="sb76TextSub"></div>
+    </div>`;
+  }
+
+  window.sb76FontStep=function(d){
+    const x=$('sb76FontSize'); if(!x)return;
+    x.value=Math.max(6,Math.min(180,(+x.value||16)+d));
+    applyTextProperty('fontSize',+x.value);
+  };
+  window.sb76AlignText=function(a){applyTextProperty('textAlign',a);render('text')}
+  window.sb76DashList=function(){
+    const o=selectedObject(); if(!o)return;
+    const el=document.querySelector(`.cobj[data-id="${o.id}"]`);
+    if(!el)return;
+    let t=(el.innerText||o.text||'').split(/\n+/).filter(Boolean).map(v=>v.replace(/^[•\-–]\s*/,'– ')).join('\n');
+    if(!t.trim()) t='– Punkt';
+    o.text=t.replace(/\n/g,'<br>');
+    renderCanvasObjects();selectCanvasObject(o.id);markCanvasDirty();pushHistory();
+  };
+
+  window.sb76TextSub=function(kind){
+    const holder=$('sb76TextSub'); if(!holder)return;
+    const o=selectedObject(), st=o?.style||{};
+    if(kind==='appearance'){
+      holder.innerHTML=`<div class="sb75Subpanel">
+        <div class="sb75SubGrid">
+          <label>Textfarbe<input type="color" value="${st.color||'#6f584f'}" onchange="applyTextProperty('color',this.value)"></label>
+          <label>Hintergrund<input type="color" value="${st.background?.startsWith('#')?st.background:'#fff5f3'}" onchange="updateObjStyle('background',this.value)"></label>
+          <label>Konturfarbe<input type="color" value="${st.borderColor||'#d8b7b0'}" onchange="updateObjStyle('borderColor',this.value)"></label>
+          <label>Konturdicke<input type="number" min="0" max="20" value="${st.borderWidth||0}" onchange="updateObjStyle('borderWidth',+this.value)"></label>
+          <label>Kontur<select onchange="updateObjStyle('borderStyle',this.value)"><option value="solid">Durchgezogen</option><option value="dashed" ${st.borderStyle==='dashed'?'selected':''}>Gestrichelt</option><option value="dotted" ${st.borderStyle==='dotted'?'selected':''}>Gepunktet</option></select></label>
+          <label>Transparenz<input type="range" min="0" max="100" value="${Math.round((st.opacity??1)*100)}" oninput="updateObjStyle('opacity',+this.value/100)"></label>
+        </div>
+        <div class="sb75ToggleRow"><button onclick="sb75SetGradient()">Verlauf</button><button onclick="updateObjStyle('background','transparent')">Hintergrund aus</button><button onclick="updateObjStyle('borderWidth',0)">Kontur aus</button></div>
+      </div>`;
+    } else if(kind==='spacing'){
+      holder.innerHTML=`<div class="sb75Subpanel"><div class="sb75SubGrid">
+        <label>Buchstabenabstand<input type="number" step=".2" min="-5" max="30" value="${st.letterSpacing||0}" onchange="updateObjStyle('letterSpacing',+this.value)"></label>
+        <label>Zeilenabstand<input type="number" step=".05" min=".7" max="4" value="${st.lineHeight||1.25}" onchange="updateObjStyle('lineHeight',+this.value)"></label>
+        <label>Innenabstand<input type="number" min="0" max="100" value="${st.padding??7}" onchange="updateObjStyle('padding',+this.value)"></label>
+        <label>Absatzabstand<input type="number" min="0" max="80" value="${st.paragraphSpacing||0}" onchange="updateObjStyle('paragraphSpacing',+this.value)"></label>
+      </div></div>`;
+    } else if(kind==='position'){
+      holder.innerHTML=`<div class="sb75Subpanel"><div class="sb75SubGrid">
+        <label>X<input type="number" value="${Math.round(o?.x||0)}" onchange="setSelectedGeometry('x',+this.value)"></label>
+        <label>Y<input type="number" value="${Math.round(o?.y||0)}" onchange="setSelectedGeometry('y',+this.value)"></label>
+        <label>Breite<input type="number" value="${Math.round(o?.w||0)}" onchange="setSelectedGeometry('w',+this.value)"></label>
+        <label>Höhe<input type="number" value="${Math.round(o?.h||0)}" onchange="setSelectedGeometry('h',+this.value)"></label>
+      </div></div>`;
+    } else {
+      holder.innerHTML=`<div class="sb75Subpanel"><div class="sb75SubGrid">
+        <label>Schattenfarbe<input id="sb76ShadowColor" type="color" value="#6b4f49"></label>
+        <label>Blur<input id="sb76ShadowBlur" type="number" min="0" max="60" value="12"></label>
+        <label>X<input id="sb76ShadowX" type="number" min="-50" max="50" value="0"></label>
+        <label>Y<input id="sb76ShadowY" type="number" min="-50" max="50" value="5"></label>
+      </div><div class="sb75ToggleRow"><button onclick="sb76Shadow()">Schatten</button><button onclick="updateObjStyle('boxShadow','none')">Aus</button></div></div>`;
+    }
+  };
+  window.sb76Shadow=function(){
+    const c=$('sb76ShadowColor')?.value||'#6b4f49',b=+$('sb76ShadowBlur')?.value||12,x=+$('sb76ShadowX')?.value||0,y=+$('sb76ShadowY')?.value||5;
+    updateObjStyle('boxShadow',`${x}px ${y}px ${b}px ${c}55`);
+  };
+
+  function elementsPanel(){
+    return `<div class="sb76Section"><div class="sb76Grid">
+      <button onclick="sb76ElementSub('shapes')"><b>◇</b>Formen</button>
+      <button onclick="sb76ElementSub('stickers')"><b>✿</b>Sticker</button>
+      <button onclick="sb76ElementSub('media')"><b>▧</b>Bilder / Dateien</button>
+      <button onclick="openTableDialog()"><b>▦</b>Tabelle</button>
+      <button onclick="openFormulaDialog()"><b>ƒx</b>Formel</button>
+      <button onclick="openGraphDialog()"><b>⌁</b>Graph</button>
+      <button onclick="addCanvasChecklist()"><b>☑</b>Checkliste</button>
+      <button onclick="addCanvasDivider()"><b>—</b>Linie</button>
+    </div><div id="sb76ElementSub"></div></div>`;
+  }
+  window.sb76ElementSub=function(kind){
+    const el=$('sb76ElementSub');if(!el)return;
+    if(kind==='shapes'){
+      el.innerHTML=`<div class="sb76Section"><div class="sb76SectionTitle">Formen</div><div class="sb76Grid">
+        <button onclick="addVectorShape('rect')"><b>□</b>Rechteck</button>
+        <button onclick="addVectorShape('ellipse')"><b>○</b>Kreis</button>
+        <button onclick="addVectorShape('triangle')"><b>△</b>Dreieck</button>
+        <button onclick="setVectorTool('pen')"><b>〰</b>Pfad</button>
+      </div></div>`;
+    }else if(kind==='stickers'){
+      el.innerHTML=`<div class="sb76Section"><div class="sb76SectionTitle">Deko</div><div class="sb76Grid">
+        <button onclick="toggleStickerPanel()"><b>✿</b>Sticker</button>
+        <button onclick="addPaperSticker('blank')"><b>▯</b>Zettel</button>
+        <button onclick="addPaperSticker('grid')"><b>▦</b>Karo</button>
+        <button onclick="addTapeSticker()"><b>▰</b>Klebeband</button>
+      </div></div>`;
+    }else{
+      el.innerHTML=`<div class="sb76Section"><div class="sb76SectionTitle">Medien</div><div class="sb76Grid">
+        <button onclick="openCanvasMediaPicker()"><b>▧</b>Bild / Foto</button>
+        <button onclick="document.getElementById('canvasImageInput').click()"><b>▤</b>Galerie</button>
+        <button onclick="document.getElementById('canvasCameraInput').click()"><b>◉</b>Kamera</button>
+        <button onclick="document.getElementById('canvasAnyFileInput').click()"><b>📎</b>Datei</button>
+      </div></div>`;
+    }
+  };
+
+  function formatsPanel(){
+    let ps=[];try{ps=canvasPresets()}catch(e){}
+    return `<div class="sb76Section"><div class="sb76SectionTitle">Textformate</div>
+      <div class="sb76ChipRow">${ps.map(p=>`<button onclick="${p.bundle?`insertSavedTextFormat('${p.id}')`:`addCanvasText('${p.id}')`}">${p.name||p.id}</button>`).join('')}</div>
+      <div class="sb76Grid">
+        <button onclick="saveSelectionAsTextFormat()"><b>Aa＋</b>Auswahl als Format</button>
+        <button onclick="createCustomStylePreset()"><b>＋</b>Neues Format</button>
+        <button onclick="openTextFormatManager()"><b>⚙</b>Verwalten</button>
+      </div></div>`;
+  }
+
+  function pagesPanel(){
+    const ps=canvasState?.pageStyle||{color:'#fff',pattern:'blank',spacing:24,margin:55};
+    return `<div class="sb76Section">
+      <div class="sb75PageThumbs"><button class="sb75PageThumb current">1</button><button class="sb75PageThumb">＋</button></div>
+      <div class="sb76SectionTitle">Seite</div>
+      <div class="sb75PageControls">
+        <label>Format<select onchange="setCanvasOrientation(this.value)"><option value="portrait" ${canvasState.orientation!=='landscape'?'selected':''}>Hochformat</option><option value="landscape" ${canvasState.orientation==='landscape'?'selected':''}>Querformat</option></select></label>
+        <label>Farbe<input type="color" value="${ps.color||'#ffffff'}" onchange="setCanvasPageStyle('color',this.value)"></label>
+        <label>Muster<select onchange="setCanvasPageStyle('pattern',this.value);sb76OpenPanel('pages')"><option value="blank">Leer</option><option value="lined" ${ps.pattern==='lined'?'selected':''}>Liniert</option><option value="grid" ${ps.pattern==='grid'?'selected':''}>Kariert</option><option value="dots" ${ps.pattern==='dots'?'selected':''}>Gepunktet</option></select></label>
+        <label>Rastergröße<input type="number" min="10" max="60" value="${ps.spacing||24}" onchange="setCanvasPageStyle('spacing',+this.value)"></label>
+        <label>Layout-Rand<input type="number" min="0" max="160" value="${ps.margin??55}" onchange="setCanvasPageStyle('margin',+this.value)"></label>
+        <label>Snap<select onchange="canvasState.snap=this.value==='on';markCanvasDirty()"><option value="on" ${canvasState.snap?'selected':''}>An</option><option value="off" ${!canvasState.snap?'selected':''}>Aus</option></select></label>
+      </div>
+      <div class="sb75GuideHint">Der Layout-Rand ist nur im Editor sichtbar und dient als Snap-/Ausrichtungshilfe.</div>
+      <div class="sb76SectionTitle">Vorlagen</div>
+      <div class="sb76Grid">
+        <button onclick="applyCanvasTemplate('clean')"><b>Aa</b>Clean Notes</button>
+        <button onclick="applyCanvasTemplate('cute')"><b>✿</b>Cute Study</button>
+        <button onclick="applyCanvasTemplate('exam')"><b>✓</b>Exam Prep</button>
+        <button onclick="applyCanvasTemplate('blank')"><b>□</b>Leer</button>
+        <button onclick="saveCurrentPageTemplate()"><b>＋</b>Vorlage speichern</button>
+      </div></div>`;
+  }
+
+  function selectionPanel(){
+    return `<div class="sb76Section">
+      <div class="sb76Grid">
+        <button onclick="toggleMultiSelectMode()"><b>☑</b>Mehrfach</button>
+        <button onclick="groupSelectedItems()"><b>▣</b>Gruppieren</button>
+        <button onclick="ungroupSelectedItems()"><b>▢</b>Lösen</button>
+        <button onclick="duplicateSelected()"><b>⧉</b>Duplizieren</button>
+        <button onclick="saveSelectionAsTextFormat()"><b>Aa</b>Als Format</button>
+        <button onclick="toggleSelectedLock()"><b>🔒</b>Sperren</button>
+      </div>
+      <div class="sb76SectionTitle">Ausrichten</div>
+      <div class="sb76Grid">
+        <button onclick="sb75AlignMulti('left')"><b>⇤</b>Links</button>
+        <button onclick="sb75AlignMulti('centerX')"><b>↔</b>Mitte</button>
+        <button onclick="sb75AlignMulti('right')"><b>⇥</b>Rechts</button>
+        <button onclick="sb75AlignMulti('top')"><b>⇧</b>Oben</button>
+        <button onclick="sb75AlignMulti('centerY')"><b>↕</b>Mitte</button>
+        <button onclick="sb75AlignMulti('bottom')"><b>⇩</b>Unten</button>
+        <button onclick="sb75Distribute('x')"><b>↔↔</b>Horizontal</button>
+        <button onclick="sb75Distribute('y')"><b>↕↕</b>Vertikal</button>
+      </div></div>`;
+  }
+
+  function layersPanel(){
+    const items=[];
+    try{
+      canvasState.objects.forEach(o=>items.push({kind:'object',id:o.id,z:o.z||0,name:(typeof layerName==='function'?layerName(o):(o.kind||'Objekt'))}));
+      canvasState.vectors.forEach(v=>items.push({kind:'vector',id:v.id,z:v.z||0,name:'Form · '+v.type}));
+    }catch(e){}
+    items.sort((a,b)=>b.z-a.z);
+    return `<div class="sb75LayerList">${items.map(x=>`<div class="sb75LayerRow">
+      <div class="sb75Drag">≡</div>
+      <button class="sb75LayerName" onclick="sb75SelectLayer('${x.kind}','${x.id}')">${x.name}</button>
+      <button onclick="sb75SelectLayer('${x.kind}','${x.id}');moveSelectedLayer(1);render('layers')">↑</button>
+      <button onclick="sb75SelectLayer('${x.kind}','${x.id}');moveSelectedLayer(-1);render('layers')">↓</button>
+      <button onclick="sb75SelectLayer('${x.kind}','${x.id}');deleteSelectedCanvasItem();render('layers')">⌫</button>
+    </div>`).join('')||'<div class="sb75GuideHint">Noch keine Ebenen.</div>'}</div>`;
+  }
+
+  function shapePanel(){
+    return `<div class="sb76Section">
+      <div class="sb76Grid">
+        <button onclick="sb75OpenPanel('elements')"><b>＋</b>Andere Form</button>
+        <button onclick="toggleSelectedLock()"><b>🔒</b>Sperren</button>
+        <button onclick="duplicateSelected()"><b>⧉</b>Duplizieren</button>
+        <button onclick="deleteSelectedCanvasItem()"><b>⌫</b>Löschen</button>
+        <button onclick="moveSelectedLayer(1)"><b>↑</b>Nach vorne</button>
+        <button onclick="moveSelectedLayer(-1)"><b>↓</b>Nach hinten</button>
+      </div></div>`;
+  }
+
+  window.render=function(kind){
+    const r=root(); if(!r)return;
+    if(kind==='text')r.innerHTML=textPanel();
+    else if(kind==='elements')r.innerHTML=elementsPanel();
+    else if(kind==='formats')r.innerHTML=formatsPanel();
+    else if(kind==='pages')r.innerHTML=pagesPanel();
+    else if(kind==='selection')r.innerHTML=selectionPanel();
+    else if(kind==='layers')r.innerHTML=layersPanel();
+    else if(kind==='shape')r.innerHTML=shapePanel();
+  }
+
+  function autoContext(){
+    if(innerWidth>=900)return;
+    const o=selectedObject(), v=selectedVector();
+    if(isTextObj(o)){
+      sb76OpenPanel('text',document.querySelector('#sb75MainBar [data-panel="text"]'));
+    }else if(v || (o && !isTextObj(o))){
+      sb76OpenPanel('shape',null);
+    }
+  }
+
+  // Wrap object selection
+  if(typeof window.selectCanvasObject==='function'){
+    const orig=window.selectCanvasObject;
+    window.selectCanvasObject=function(id){
+      const out=orig(id);
+      setTimeout(autoContext,0);
+      return out;
+    };
+  }
+  if(typeof window.selectVector==='function'){
+    const origV=window.selectVector;
+    window.selectVector=function(id){
+      const out=origV(id);
+      setTimeout(autoContext,0);
+      return out;
+    };
+  }
+
+  // Fit screen by default on phone, keep on resize/orientation
+  function fit(){ if(innerWidth<900 && typeof fitCanvasStage==='function') setTimeout(()=>fitCanvasStage(),80); }
+  addEventListener('resize',fit);addEventListener('orientationchange',fit);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fit);else fit();
+
+  // Remove old duplicate mobile bar items created by previous versions after DOM loads
+  function cleanup(){
+    document.querySelectorAll('.sb72MobileBottom').forEach((n,i)=>{if(n.id!=='sb75MainBar')n.remove()});
+    const sheet=$('sb72MobileSheet'); if(sheet && !sheet.classList.contains('sb76ContextBar')) sheet.className='sb72MobileSheet sb76ContextBar';
+  }
+  setTimeout(cleanup,50);
 })();
 </script>
 

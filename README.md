@@ -1,55 +1,19 @@
-# SchoolBloom V75 – Editor Design
+# SchoolBloom V76 – Mobile editor cleanup
 
-Mobile editor redesigned around one contextual toolbar at a time.
-
-Main bar:
-- Text
-- Elemente
-- Formate
-- Seiten
-- Auswahl
-- Ebenen
-
-Text:
-- font, size, bold, italic, underline, strike-through
-- color
-- left/center/right/justify
-- bullet, dash and numbered lists
-- appearance: colors, gradient, border style/width, opacity
-- spacing: letter, line, paragraph and padding
-- position
-- effects/shadow
-
-Elements:
-- shapes/path/line
-- stickers/paper/tape
-- images/gallery/camera/files
-- table/checklist
-- formula and graph
-- diagram placeholder separated from mathematical graph
-
-Pages:
-- portrait / landscape
-- page color
-- blank/lined/grid/dots
-- spacing / grid size
-- invisible layout margin + snap
-- page templates + own template
-
-Selection:
-- multi-select, group/ungroup, duplicate, lock
-- save selection as text format
-- align and distribute
-
-Layers:
-- drag/drop reorder
-- up/down
-- delete
-- selection/lock state
-
-Top:
-- undo/redo stays
-- view menu
-- print
-- save
-- phone defaults to fit-to-screen
+Changes from V75:
+- clean top bar: back, title/autosave, undo, redo, print, save only
+- removed duplicate/empty top buttons
+- bottom main menu now: Text, Elemente, Formate, Seiten, Auswahl, Ebenen
+- Seite is in the main bottom bar
+- opening any tool REPLACES the main bottom bar instead of stacking on top
+- tapping a text object automatically opens the Text toolbar
+- tapping a form/vector automatically opens the Form toolbar
+- text toolbar now explicitly includes strike-through
+- text toolbar includes color, left/center/right/justify, bullet/dash/numbered lists
+- appearance, spacing, position and effects are compact subpanels
+- elements includes forms, sticker, media/files, table, formula, graph, checklist and line
+- pages includes orientation, paper color/pattern/grid size/layout margin/snap/templates
+- selection includes multi-select/group/ungroup/duplicate/save as format/alignment
+- layers is compact and sortable controls
+- default mobile canvas view stays fit-to-screen
+- old duplicate page/layer/shortcut/extra mobile overlays are hidden/removed
