@@ -1192,19 +1192,7 @@ button.primary,button.ghost,.iconbtn{
  #nav button{min-width:43px!important}
 }
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.18/paper-full.min.js">
-let homeClockTimer=null;
-function ensureHomeClockTimer(){
- if(homeClockTimer)return;
- homeClockTimer=setInterval(()=>{
-   const homeView=$("#view-home");
-   if(homeView && !homeView.classList.contains("hidden")){
-     try{renderHome()}catch(e){console.warn("Home clock refresh",e)}
-   }
- },30000);
-}
-ensureHomeClockTimer();
-</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.18/paper-full.min.js"></script>
 
 <style id="v43-compact-ui">
 /* VERSION 63 — compact information architecture */
@@ -3034,7 +3022,7 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 89</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 90</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -3925,7 +3913,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 89";
+ $("#headerEyebrow").textContent="VERSION 90";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -10869,11 +10857,18 @@ openModal=function(html){document.body.classList.remove('editorDrawerOpen');cons
 const v88CloseModal=window.closeModal;
 window.closeModal=function(){const r=v88CloseModal?.();setTimeout(v88HealEditorChrome,0);return r}
 function v88HealEditorChrome(){
- const editor=document.body.classList.contains('editorMode'),drawer=document.getElementById('canvasQuickDrawer');
- if(!editor){document.body.classList.remove('editorDrawerOpen');return}
- if(!drawer?.classList.contains('open')){document.body.classList.remove('editorDrawerOpen');document.querySelectorAll('.canvasQuickNav button').forEach(b=>b.classList.remove('active'))}
+ const body=document.body,editor=body.classList.contains('editorMode'),drawer=document.getElementById('canvasQuickDrawer');
+ if(!editor){
+   if(body.classList.contains('editorDrawerOpen'))body.classList.remove('editorDrawerOpen');
+   return;
+ }
+ if(!drawer?.classList.contains('open')){
+   if(body.classList.contains('editorDrawerOpen'))body.classList.remove('editorDrawerOpen');
+   document.querySelectorAll('.canvasQuickNav button').forEach(b=>b.classList.remove('active'));
+ }
 }
-new MutationObserver(v88HealEditorChrome).observe(document.body,{attributes:true,attributeFilter:['class']});
+const v90ChromeObserver=new MutationObserver(()=>v88HealEditorChrome());
+v90ChromeObserver.observe(document.body,{attributes:true,attributeFilter:['class']});
 document.addEventListener('click',()=>setTimeout(v88HealEditorChrome,0),true);
 
 // One zoom system only; user zoom survives keyboard/rotation, initial editor open still fits to width.
@@ -10900,7 +10895,32 @@ renderCanvasInspector=function(){const r=v88RenderInspector();setTimeout(()=>{do
 
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{v88EnsureZoom();window.loadCustomFonts?.();v88HealEditorChrome()},{once:true});else{v88EnsureZoom();window.loadCustomFonts?.();v88HealEditorChrome()}
 /* ===== /V88 ===== */
+/* ===== V90 home clock ===== */
+let v90HomeClockTimer=null;
+function v90EnsureHomeClockTimer(){
+ if(v90HomeClockTimer)return;
+ v90HomeClockTimer=setInterval(()=>{
+   const homeView=document.querySelector('#view-home');
+   if(homeView&&!homeView.classList.contains('hidden')){try{renderHome()}catch(e){console.warn('Home clock refresh',e)}}
+ },30000);
+}
+v90EnsureHomeClockTimer();
+/* ===== /V90 home clock ===== */
 
+
+
+window.__schoolBloomBooted=true;document.documentElement.dataset.schoolbloomBoot='ok';
+</script>
+
+<script id="v90-boot-watchdog">
+window.__schoolBloomBootErrors=[];
+window.addEventListener('error',e=>{try{window.__schoolBloomBootErrors.push(String(e.message||e.error||'Script error'))}catch(_){}});
+window.addEventListener('unhandledrejection',e=>{try{window.__schoolBloomBootErrors.push(String(e.reason?.message||e.reason||'Promise error'))}catch(_){}});
+setTimeout(()=>{
+ if(window.__schoolBloomBooted)return;
+ const p=document.getElementById('nextPanel');
+ if(p&&!p.textContent.trim())p.innerHTML='<div class="eyebrow">STARTFEHLER</div><div style="font-size:20px;font-weight:900;margin-top:6px">SchoolBloom konnte nicht starten.</div><div class="muted" style="margin-top:6px">Diagnose: '+((window.__schoolBloomBootErrors||[]).slice(-2).join(' · ')||'unbekannt')+'</div>';
+},1800);
 </script>
 </body>
 </html>
