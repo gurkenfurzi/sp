@@ -1,25 +1,22 @@
-# VERSION 66
+# VERSION 67
 
-Editor-Redesign nach den Referenzbildern.
+Kompletter Editor-Rebuild nach den zwei Referenzbildern.
 
-## Desktop
-- Fullscreen-Editor
-- Canva/Word-artige Struktur:
-  - schmale Hauptnavigation links
-  - zweites Werkzeug-/Inhaltepanel links
-  - breite Objekt-/Text-Toolbar oben
-  - große Dokument-Arbeitsfläche in der Mitte
-  - Design/Seite/Ebene-Sidebar rechts
-- Kein grauer Hintergrund mehr, sondern SchoolBloom Pastell-Verlauf
-- Einfügen/Text/Elemente/Anordnen öffnen als richtiges linkes Panel
-- Arbeitsfläche nutzt den Bildschirm deutlich stärker aus
+Desktop:
+- Bloom-Studio/Canva-artiger Header
+- feste linke Hauptnavigation
+- feste Vorlagen-/Inhalte-Spalte
+- breite Formatleiste oben
+- große zentrale Seite
+- festes Design/Seite/Ebene-Panel rechts
+- Seiten-/Zoomleiste unten
+- keine alte 4er-Navigation mehr
 
-## Mobile
-- altes 4er-Menü entfernt
-- kompakte Kopfzeile
-- schwebende Objektleiste über dem Dokument
-- kontextabhängige Bearbeitungsleiste wie Canva
-- feste Bottom-Navigation:
-  Text / Elemente / Uploads / Fotos / Seiten / Ebenen / Mehr
-- Werkzeug-Menüs öffnen als Bottom-Sheet
-- deutlich näher an der Mobile-Canva-Struktur
+Handy:
+- Header mit Zurück, Titel, Undo, Redo, Vorschau, Speichern
+- schwebende Objektleiste
+- Seite zentral
+- Seiten-Thumbnails darunter
+- große kontextabhängige Text-/Objektleiste
+- Bottom-Navigation mit Text, Elemente, Uploads, Fotos, Seiten, Ebenen, Mehr
+- Editor-Struktur eng am Referenzbild
