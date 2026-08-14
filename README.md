@@ -1,18 +1,10 @@
-# SchoolBloom V70
+# SchoolBloom V71 SAFE
 
-V70 basiert direkt auf dem echten V63-Funktionsstand.
+Basis: direkt die funktionierende V63-Datei.
 
-Wichtig: Die V63-Logik für Stundenplan, Hitzestunden, Basisplan, Home, Fächer,
-Karteikarten/Quiz, StudyPet, Canvas, Textformate, Formeln, Graphen, Tabellen,
-Pfade, Medien, Mehrfachauswahl, Gruppierung, Ebenen, Undo/Redo, Autosave,
-Vorlagen, Shortcuts und Export bleibt erhalten.
+In diesem Build wurde die V63-Funktionslogik NICHT ersetzt und es wurden keine neuen JavaScript-Wrapper in die App geschoben. Die Änderung ist bewusst CSS-only, damit Stundenplan, Home, Fächer, Study, Canvas, Tabellen, Pfade, Mehrfachauswahl, Gruppierung, Ebenen, Textformate, Formeln, Graphen, Medien, Undo/Redo, Autosave, Vorlagen und Shortcuts aus V63 erhalten bleiben.
 
-Neu ist die Editor-Oberfläche:
-- Desktop: sehr nah an der gelieferten Bloom-Studio/Canva-Referenz
-  mit linker Werkzeugleiste, großem Inhalts-Panel, Top-Toolbar,
-  zentraler Arbeitsfläche und rechtem Design/Seite/Ebene-Panel.
-- Handy: sehr nah an der gelieferten mobilen Referenz
-  mit kompaktem Header, freier Arbeitsfläche, schwebender Objektleiste
-  und 7-teiligem Bottom-Menü (Text, Elemente, Uploads, Fotos, Seiten, Ebenen, Mehr).
-- Textformate, eigene Textformate, Formeln und Graphen sind sichtbar erreichbar.
-- Handy passt das Blatt weiterhin automatisch an den Bildschirm an.
+Design:
+- Desktop: Canva/Word/Bloom-Studio Aufbau mit linker Werkzeugleiste, großem Inhaltsdrawer, oberer Kontextleiste, zentralem Canvas und rechtem Eigenschaftenbereich.
+- Handy: Referenz-orientierte Kopfzeile, große Arbeitsfläche, V63-Funktionsdrawer als Bottom-Sheet und Bottom-Navigation.
+- Pastell-Verlauf statt grauer Editor-Fläche.

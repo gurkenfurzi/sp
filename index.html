@@ -2903,215 +2903,161 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
 </style>
 
 
-<style id="v70-bloom-exact-ui">
+<style id="schoolbloom-v71-safe-ui">
+/* V71 SAFE: CSS-only redesign. V63 JS/HTML logic remains untouched. */
 :root{
- --b-bg:#fffaf6;--b-panel:#fffdfa;--b-line:#eadbd6;--b-line2:#f3e9e5;
- --b-text:#705b53;--b-muted:#a38c83;--b-accent:#e9999f;--b-accent2:#f7d8d6;
- --b-shadow:0 16px 42px rgba(111,77,66,.10)
+  --sb71-bg:#fff9f5; --sb71-panel:#fffdfa; --sb71-border:#eadbd5;
+  --sb71-text:#6f5951; --sb71-muted:#a58d84; --sb71-accent:#e9989e;
+  --sb71-accent-soft:#f7dedb; --sb71-shadow:0 16px 42px rgba(99,68,58,.10);
 }
-body.editorMode{background:linear-gradient(135deg,#fff7f4 0%,#fffaf6 52%,#f7faee 100%)!important;color:var(--b-text)!important}
-body.editorMode button{transition:transform .11s ease,background .11s ease,box-shadow .11s ease}
-body.editorMode button:active{transform:scale(.965)}
+body.editorMode{
+  background:
+    radial-gradient(circle at 18% 11%,rgba(248,208,211,.42),transparent 28%),
+    radial-gradient(circle at 83% 34%,rgba(226,239,200,.28),transparent 24%),
+    linear-gradient(135deg,#fff7f4 0%,#fffaf6 55%,#f8faef 100%)!important;
+  color:var(--sb71-text)!important;
+}
+body.editorMode button{transition:transform .12s ease,background .12s ease,box-shadow .12s ease}
+body.editorMode button:active{transform:scale(.97)}
 
-.bloomDesktopNav,.bloomMobileNav,.bloomMobileSelectionBar{display:none}
-
-/* ===================== DESKTOP ===================== */
+/* ---------- DESKTOP: Canva/Word-style shell ---------- */
 @media (min-width:900px){
- body.editorMode{overflow:hidden!important}
- body.editorMode main{width:100vw!important;max-width:none!important;height:100vh!important;margin:0!important;padding:0!important}
- body.editorMode .canvasEditorShell{
-   position:relative!important;width:100vw!important;max-width:none!important;height:100vh!important;margin:0!important;
-   display:grid!important;
-   grid-template-columns:86px 300px minmax(500px,1fr) 318px!important;
-   grid-template-rows:64px 56px minmax(0,1fr)!important;
-   gap:0!important;overflow:hidden!important;
-   background:
-     radial-gradient(circle at 20% 12%,rgba(248,210,211,.34),transparent 28%),
-     radial-gradient(circle at 78% 36%,rgba(227,239,201,.25),transparent 25%),
-     linear-gradient(135deg,#fff7f4,#fffaf6 55%,#f8faef)!important
- }
+  body.editorMode{overflow:hidden!important}
+  body.editorMode main{width:100vw!important;max-width:none!important;height:100vh!important;margin:0!important;padding:0!important}
+  body.editorMode .canvasEditorShell{
+    width:100vw!important;max-width:none!important;height:100vh!important;margin:0!important;
+    display:grid!important;grid-template-columns:92px 320px minmax(0,1fr) 320px!important;
+    grid-template-rows:66px 58px minmax(0,1fr)!important;gap:0!important;overflow:hidden!important;
+    background:transparent!important;
+  }
+  body.editorMode .canvasTopbar{
+    grid-column:1/-1!important;grid-row:1!important;position:relative!important;inset:auto!important;
+    height:66px!important;min-height:66px!important;margin:0!important;padding:8px 22px 8px 160px!important;
+    border:0!important;border-bottom:1px solid #f0e5e0!important;border-radius:0!important;
+    background:rgba(255,253,250,.98)!important;backdrop-filter:blur(18px)!important;box-shadow:none!important;z-index:300!important;
+  }
+  body.editorMode .canvasTopbar:before{
+    content:"🌷  Bloom Studio";position:absolute;left:24px;top:20px;font:700 18px Georgia,serif;color:#654f48;
+  }
+  body.editorMode .editorTitle{align-items:flex-start!important;text-align:left!important}
+  body.editorMode .editorTitle b{font-size:12px!important}.editorTitle span{font-size:7px!important;color:#93a06e!important}
+  body.editorMode .historyBtn,body.editorMode .editorIcon{
+    width:40px!important;height:40px!important;border:1px solid var(--sb71-border)!important;border-radius:10px!important;
+    background:white!important;color:#705950!important;box-shadow:none!important;
+  }
+  body.editorMode .primaryIcon{background:linear-gradient(180deg,#efa4a9,#e88f96)!important;border-color:#e88f96!important;color:white!important}
 
- /* top app header */
- body.editorMode .canvasTopbar{
-   grid-column:1/-1!important;grid-row:1!important;position:relative!important;inset:auto!important;
-   width:auto!important;height:64px!important;min-height:64px!important;margin:0!important;padding:7px 18px 7px 170px!important;
-   border:0!important;border-bottom:1px solid var(--b-line2)!important;border-radius:0!important;
-   background:rgba(255,253,250,.98)!important;box-shadow:none!important;backdrop-filter:blur(18px)!important;z-index:300!important
- }
- body.editorMode .canvasTopbar:before{
-   content:"🌷  Bloom Studio";position:absolute;left:24px;top:19px;
-   font:700 18px Georgia,serif;color:#674f47;white-space:nowrap
- }
- body.editorMode .editorTitle{align-items:flex-start!important;text-align:left!important}
- body.editorMode .editorTitle b{font-size:11px!important;color:#6a5149!important}
- body.editorMode .editorTitle span{font-size:7px!important;color:#92a06d!important}
- body.editorMode .historyBtn,body.editorMode .editorIcon{
-   width:38px!important;height:38px!important;border:1px solid var(--b-line)!important;border-radius:9px!important;background:#fff!important;
-   color:#715a52!important;box-shadow:none!important
- }
- body.editorMode .primaryIcon{background:linear-gradient(180deg,#efa2a7,#e88e95)!important;border-color:#e88e95!important;color:white!important}
+  /* existing V63 left nav becomes Canva-like narrow rail */
+  body.editorMode .canvasQuickNav{
+    grid-column:1!important;grid-row:2/4!important;position:relative!important;inset:auto!important;width:92px!important;height:auto!important;
+    margin:0!important;padding:12px 7px!important;display:flex!important;flex-direction:column!important;gap:5px!important;
+    border:0!important;border-right:1px solid #f0e5e0!important;border-radius:0!important;background:rgba(255,253,250,.98)!important;box-shadow:none!important;z-index:220!important;
+  }
+  body.editorMode .canvasQuickNav:before{content:"WERKZEUGE";font-size:7px;letter-spacing:.16em;font-weight:900;color:#b0968c;padding:4px 6px 7px}
+  body.editorMode .canvasQuickNav button{
+    width:100%!important;min-width:0!important;height:58px!important;min-height:58px!important;padding:6px!important;
+    border:0!important;border-radius:11px!important;background:transparent!important;color:#705950!important;box-shadow:none!important;
+    display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:3px!important;font-size:19px!important;
+  }
+  body.editorMode .canvasQuickNav button span{font-size:7px!important;font-weight:850!important}
+  body.editorMode .canvasQuickNav button.active,body.editorMode .canvasQuickNav button:hover{background:var(--sb71-accent-soft)!important;color:#b96c72!important}
 
- /* hide old nav: replaced with exact left rail */
- body.editorMode .canvasQuickNav{display:none!important}
- body.editorMode .bloomDesktopNav{
-   display:flex!important;grid-column:1!important;grid-row:2/4!important;position:relative!important;
-   flex-direction:column!important;align-items:stretch!important;gap:3px!important;padding:10px 7px!important;
-   border-right:1px solid var(--b-line2)!important;background:rgba(255,253,250,.98)!important;z-index:220!important;overflow:auto!important
- }
- body.editorMode .bloomDesktopNav button{
-   width:100%!important;height:52px!important;border:0!important;border-radius:9px!important;background:transparent!important;
-   color:#705b53!important;font-size:17px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:2px!important
- }
- body.editorMode .bloomDesktopNav button span{font-size:7px!important;font-weight:800!important}
- body.editorMode .bloomDesktopNav button:hover,body.editorMode .bloomDesktopNav button.active{background:#f8e2df!important;color:#b86d72!important}
+  /* existing V63 drawer becomes large left content panel */
+  body.editorMode #canvasQuickDrawer{
+    grid-column:2!important;grid-row:2/4!important;position:relative!important;inset:auto!important;width:320px!important;max-width:320px!important;height:auto!important;max-height:none!important;
+    margin:0!important;padding:14px!important;border:0!important;border-right:1px solid #f0e5e0!important;border-radius:0!important;
+    background:#fffdfa!important;box-shadow:none!important;overflow:auto!important;z-index:210!important;
+  }
+  body.editorMode #canvasQuickDrawer.open{display:flex!important;flex-direction:column!important;gap:8px!important}
+  body.editorMode #canvasQuickDrawer button{
+    width:100%!important;min-width:0!important;max-width:none!important;min-height:56px!important;padding:9px!important;
+    border:1px solid var(--sb71-border)!important;border-radius:11px!important;background:#fff!important;color:#705950!important;box-shadow:none!important;
+  }
+  body.editorMode #canvasQuickDrawer .drawerSection{width:100%!important}
+  body.editorMode #canvasQuickDrawer .drawerSection h4{font-size:8px!important;letter-spacing:.12em;text-transform:uppercase;color:#a58c83;margin:10px 2px 7px!important}
+  body.editorMode #canvasQuickDrawer .drawerSectionGrid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:7px!important}
+  body.editorMode #canvasQuickDrawer .drawerSectionGrid button{min-height:72px!important}
 
- /* left content drawer = actual Canva-like panel */
- body.editorMode #canvasQuickDrawer{
-   display:flex!important;grid-column:2!important;grid-row:2/4!important;position:relative!important;inset:auto!important;
-   width:300px!important;max-width:300px!important;height:auto!important;max-height:none!important;margin:0!important;padding:14px!important;
-   border:0!important;border-right:1px solid var(--b-line2)!important;border-radius:0!important;background:#fffdfa!important;
-   box-shadow:none!important;overflow:auto!important;z-index:210!important;flex-direction:column!important;gap:8px!important
- }
- body.editorMode #canvasQuickDrawer:not(.open):before{
-   content:"Vorlagen";font-size:14px;font-weight:900;color:#6c554e;margin:2px 0 10px
- }
- body.editorMode #canvasQuickDrawer:not(.open):after{
-   content:"Wähle links ein Werkzeug. Textformate, Formeln, Graphen, Medien, Seiten und Ebenen bleiben vollständig verfügbar.";
-   font-size:8px;line-height:1.55;color:#a08a82
- }
- body.editorMode #canvasQuickDrawer button{
-   min-width:0!important;width:100%!important;min-height:54px!important;padding:8px 10px!important;
-   border:1px solid var(--b-line)!important;border-radius:11px!important;background:#fff!important;color:#705b53!important;box-shadow:none!important
- }
- body.editorMode #canvasQuickDrawer button b{font-size:16px!important}
- body.editorMode #canvasQuickDrawer button span{font-size:8px!important;font-weight:800!important}
- body.editorMode #canvasQuickDrawer .drawerSection{width:100%!important}
- body.editorMode #canvasQuickDrawer .drawerSection h4{font-size:8px!important;text-transform:uppercase;letter-spacing:.12em;color:#a58d84;margin:10px 2px 7px}
- body.editorMode #canvasQuickDrawer .drawerSectionGrid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:7px!important}
- body.editorMode #canvasQuickDrawer .drawerSectionGrid button{min-height:70px!important}
+  /* existing V63 context toolbar across canvas */
+  body.editorMode .desktopCommandBar{
+    grid-column:3!important;grid-row:2!important;position:relative!important;inset:auto!important;height:58px!important;min-height:58px!important;
+    margin:0!important;padding:6px 10px!important;display:flex!important;align-items:center!important;gap:9px!important;overflow-x:auto!important;
+    border:0!important;border-bottom:1px solid #f0e5e0!important;border-radius:0!important;background:rgba(255,253,250,.98)!important;box-shadow:none!important;z-index:230!important;
+  }
+  body.editorMode .desktopCmdGroup{display:flex!important;align-items:center!important;gap:4px!important}
+  body.editorMode .desktopCmdLabel{display:none!important}.desktopCmdButtons{display:flex!important;gap:3px!important}
+  body.editorMode .desktopCmdButtons button{
+    min-width:48px!important;height:40px!important;padding:4px 6px!important;border:0!important;border-radius:8px!important;background:transparent!important;color:#705950!important;box-shadow:none!important;
+  }
+  body.editorMode .desktopCmdButtons button:hover{background:#f8e7e3!important}.desktopCmdButtons button span{display:block!important;font-size:6px!important;font-weight:800!important;margin-top:2px!important}
 
- /* main context toolbar like Canva */
- body.editorMode .desktopCommandBar{
-   display:flex!important;grid-column:3!important;grid-row:2!important;position:relative!important;inset:auto!important;
-   height:56px!important;min-height:56px!important;margin:0!important;padding:6px 10px!important;align-items:center!important;gap:10px!important;overflow-x:auto!important;
-   border:0!important;border-bottom:1px solid var(--b-line2)!important;border-radius:0!important;background:rgba(255,253,250,.98)!important;box-shadow:none!important;z-index:230!important
- }
- body.editorMode .desktopCmdGroup{display:flex!important;align-items:center!important;gap:4px!important}
- body.editorMode .desktopCmdLabel{display:none!important}
- body.editorMode .desktopCmdButtons{display:flex!important;gap:3px!important}
- body.editorMode .desktopCmdButtons button{
-   min-width:48px!important;height:40px!important;padding:4px 6px!important;border:0!important;border-radius:8px!important;background:transparent!important;color:#705b53!important;box-shadow:none!important;font-size:14px!important
- }
- body.editorMode .desktopCmdButtons button:hover{background:#f8e7e3!important}
- body.editorMode .desktopCmdButtons button span{display:block!important;font-size:6px!important;font-weight:800!important;margin-top:2px!important}
+  body.editorMode .canvasViewport{
+    grid-column:3!important;grid-row:3!important;width:auto!important;min-width:0!important;height:auto!important;min-height:0!important;max-height:none!important;
+    margin:0!important;padding:28px 38px 86px!important;overflow:auto!important;border:0!important;border-radius:0!important;
+    background:
+      radial-gradient(circle at 18% 16%,rgba(247,210,212,.30),transparent 27%),
+      radial-gradient(circle at 82% 28%,rgba(228,238,203,.25),transparent 24%),
+      linear-gradient(135deg,#fff8f5,#fffaf6 58%,#f8faef)!important;
+  }
+  body.editorMode .canvasStage{margin:0 auto!important;border:1px solid #eee3df!important;box-shadow:0 20px 48px rgba(92,64,55,.14)!important}
 
- /* center canvas */
- body.editorMode .canvasViewport{
-   grid-column:3!important;grid-row:3!important;width:auto!important;height:auto!important;min-width:0!important;min-height:0!important;max-height:none!important;
-   margin:0!important;padding:26px 34px 82px!important;overflow:auto!important;border:0!important;border-radius:0!important;
-   background:
-    radial-gradient(circle at 18% 15%,rgba(248,212,213,.28),transparent 27%),
-    radial-gradient(circle at 84% 28%,rgba(229,239,206,.24),transparent 23%),
-    linear-gradient(135deg,#fff8f5,#fffaf6 58%,#f8faef)!important
- }
- body.editorMode .canvasStage{margin:0 auto!important;border:1px solid #eee3df!important;box-shadow:0 18px 42px rgba(95,66,57,.13)!important}
-
- /* right properties */
- body.editorMode #desktopEditorSidebar{
-   display:block!important;grid-column:4!important;grid-row:2/4!important;position:relative!important;inset:auto!important;
-   width:318px!important;max-width:318px!important;height:auto!important;min-height:0!important;margin:0!important;padding:0 14px 50px!important;
-   overflow:auto!important;border:0!important;border-left:1px solid var(--b-line2)!important;border-radius:0!important;background:#fffdfa!important;box-shadow:none!important;z-index:220!important
- }
- body.editorMode #desktopEditorSidebar:before{
-   content:"Design     Seite     Ebene";display:block;position:sticky;top:0;z-index:5;margin:0 -14px 10px;padding:18px 14px 13px;
-   background:#fffdfa;border-bottom:1px solid var(--b-line2);font-size:8px;font-weight:900;color:#725b53;word-spacing:22px
- }
- body.editorMode .objectPanel{margin:0!important;padding:12px 0!important;border:0!important;border-bottom:1px solid var(--b-line2)!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
- body.editorMode .objectPanelGrid,.positionGrid{grid-template-columns:1fr 1fr!important;gap:7px!important}
- body.editorMode .templatePicker{grid-template-columns:1fr!important;gap:6px!important}
- body.editorMode .templateCard{min-height:54px!important;text-align:left!important;border:1px solid var(--b-line)!important;border-radius:9px!important;background:#fff!important}
- body.editorMode #topViewMenu{
-   position:fixed!important;top:70px!important;right:334px!important;width:410px!important;max-width:410px!important;max-height:78vh!important;overflow:auto!important;
-   padding:14px!important;border:1px solid var(--b-line)!important;border-radius:14px!important;background:#fffdfa!important;box-shadow:var(--b-shadow)!important;z-index:1000!important
- }
-
- body.editorMode .canvasViewport,body.editorMode .canvasViewport *{cursor:default}
- body.editorMode [contenteditable="true"]{cursor:text!important}
+  /* existing V63 right inspector */
+  body.editorMode #desktopEditorSidebar{
+    display:block!important;grid-column:4!important;grid-row:2/4!important;position:relative!important;inset:auto!important;width:320px!important;max-width:320px!important;height:auto!important;min-height:0!important;
+    margin:0!important;padding:0 14px 52px!important;overflow:auto!important;border:0!important;border-left:1px solid #f0e5e0!important;border-radius:0!important;background:#fffdfa!important;box-shadow:none!important;z-index:220!important;
+  }
+  body.editorMode #desktopEditorSidebar:before{
+    content:"Design     Seite     Ebene";display:block;position:sticky;top:0;z-index:4;margin:0 -14px 10px;padding:18px 14px 13px;background:#fffdfa;border-bottom:1px solid #f0e5e0;
+    font-size:8px;font-weight:900;color:#725b53;word-spacing:22px;
+  }
+  body.editorMode .objectPanel{margin:0!important;padding:12px 0!important;border:0!important;border-bottom:1px solid #f0e5e0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+  body.editorMode .objectPanelGrid,.positionGrid{grid-template-columns:1fr 1fr!important;gap:7px!important}
+  body.editorMode .templatePicker{grid-template-columns:1fr!important;gap:6px!important}
+  body.editorMode .templateCard{min-height:54px!important;text-align:left!important;border:1px solid var(--sb71-border)!important;border-radius:9px!important;background:white!important}
+  body.editorMode #topViewMenu{position:fixed!important;right:336px!important;top:72px!important;width:420px!important;max-width:420px!important;max-height:78vh!important;overflow:auto!important;padding:14px!important;border:1px solid var(--sb71-border)!important;border-radius:14px!important;background:#fffdfa!important;box-shadow:var(--sb71-shadow)!important;z-index:1000!important}
+  body.editorMode .canvasViewport,body.editorMode .canvasViewport *{cursor:default}body.editorMode [contenteditable="true"]{cursor:text!important}
 }
 
-/* ===================== MOBILE ===================== */
+/* ---------- MOBILE: same controls, laid out like supplied reference ---------- */
 @media (max-width:899px){
- body.editorMode{overflow-x:hidden!important;background:linear-gradient(135deg,#fff7f4,#fffaf6 58%,#f8faef)!important}
- body.editorMode main{width:100%!important;max-width:none!important;margin:0!important;padding:0 0 82px!important}
- body.editorMode .canvasEditorShell{width:100%!important;max-width:none!important;margin:0!important;display:block!important}
+  body.editorMode{overflow-x:hidden!important}
+  body.editorMode main{width:100%!important;max-width:none!important;margin:0!important;padding:0 0 76px!important}
+  body.editorMode .canvasEditorShell{width:100%!important;max-width:none!important;margin:0!important;display:block!important}
+  body.editorMode .canvasTopbar{
+    position:sticky!important;top:0!important;z-index:600!important;width:100%!important;min-height:76px!important;margin:0!important;padding:9px 10px!important;
+    display:grid!important;grid-template-columns:44px minmax(0,1fr) auto auto!important;gap:5px!important;align-items:center!important;
+    border:0!important;border-bottom:1px solid #f0e5e0!important;border-radius:0!important;background:rgba(255,253,250,.97)!important;backdrop-filter:blur(18px)!important;box-shadow:none!important;
+  }
+  body.editorMode .canvasTopbar:before{content:"🌷";position:absolute;left:57px;top:25px;font-size:18px}
+  body.editorMode .editorTitle{padding-left:25px!important;align-items:flex-start!important;text-align:left!important}.editorTitle b{font-size:11px!important}.editorTitle span{font-size:7px!important;color:#a38c83!important}
+  body.editorMode .historyBar{display:flex!important;gap:4px!important}.historyBtn,.editorIcon{width:41px!important;height:41px!important;border:1px solid var(--sb71-border)!important;border-radius:10px!important;background:white!important;color:#705950!important;box-shadow:none!important}
+  body.editorMode .editorActions{display:flex!important;gap:4px!important}.editorActions .pageTopButton,.editorActions button[title="Exportieren"],.editorActions button[title="PDF / Drucken"]{display:none!important}.editorActions .primaryIcon{width:92px!important;border-radius:10px!important;background:linear-gradient(180deg,#efa3a8,#e99096)!important;border-color:#e99096!important;color:white!important}
+  body.editorMode .desktopCommandBar,body.editorMode #desktopEditorSidebar{display:none!important}
+  body.editorMode .canvasViewport{width:100%!important;min-height:0!important;max-height:none!important;margin:0!important;padding:12px 10px 150px!important;overflow:auto!important;border:0!important;border-radius:0!important;background:transparent!important}
+  body.editorMode .canvasStage{margin:0 auto!important;border:1px solid #eee3df!important;box-shadow:0 14px 34px rgba(94,67,58,.12)!important}
 
- body.editorMode .canvasTopbar{
-   position:sticky!important;top:0!important;z-index:650!important;width:100%!important;min-height:74px!important;margin:0!important;padding:8px 9px!important;
-   display:grid!important;grid-template-columns:42px minmax(0,1fr) auto auto!important;gap:5px!important;align-items:center!important;
-   border:0!important;border-bottom:1px solid var(--b-line2)!important;border-radius:0!important;background:rgba(255,253,250,.97)!important;backdrop-filter:blur(18px)!important;box-shadow:none!important
- }
- body.editorMode .canvasTopbar:before{content:"🌷";position:absolute;left:55px;top:25px;font-size:18px}
- body.editorMode .editorTitle{padding-left:25px!important;align-items:flex-start!important;text-align:left!important}
- body.editorMode .editorTitle b{font-size:10px!important}.editorTitle span{font-size:7px!important;color:#a38b82!important}
- body.editorMode .historyBar{display:flex!important;gap:4px!important}
- body.editorMode .historyBtn,body.editorMode .editorIcon{width:40px!important;height:40px!important;border:1px solid var(--b-line)!important;border-radius:10px!important;background:#fff!important;color:#705b53!important;box-shadow:none!important}
- body.editorMode .editorActions{display:flex!important;gap:4px!important}
- body.editorMode .editorActions .pageTopButton,body.editorMode .editorActions button[title="Exportieren"],body.editorMode .editorActions button[title="PDF / Drucken"]{display:none!important}
- body.editorMode .editorActions .primaryIcon{width:90px!important;border-radius:10px!important;background:linear-gradient(180deg,#efa3a8,#e98e95)!important;border-color:#e98e95!important;color:white!important}
- body.editorMode .editorActions .primaryIcon svg{display:none!important}
- body.editorMode .editorActions .primaryIcon:after{content:"Speichern";font-size:8px;font-weight:800}
+  /* V63 quick nav = bottom app rail, no duplicate custom JS */
+  body.editorMode .canvasQuickNav{
+    position:fixed!important;left:0!important;right:0!important;bottom:0!important;top:auto!important;z-index:800!important;width:100%!important;height:68px!important;
+    margin:0!important;padding:6px 8px calc(6px + env(safe-area-inset-bottom))!important;display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:4px!important;
+    border:0!important;border-top:1px solid #f0e5e0!important;border-radius:0!important;background:rgba(255,253,250,.985)!important;box-shadow:0 -9px 30px rgba(91,63,54,.06)!important;
+  }
+  body.editorMode .canvasQuickNav button{min-width:0!important;width:100%!important;height:54px!important;border:0!important;border-radius:10px!important;background:transparent!important;color:#705950!important;box-shadow:none!important;font-size:18px!important}.canvasQuickNav button span{display:block!important;font-size:7px!important;margin-top:2px!important}.canvasQuickNav button.active{background:#f8dedd!important;color:#b76c72!important}
 
- body.editorMode .desktopCommandBar,body.editorMode .canvasQuickNav,body.editorMode #desktopEditorSidebar{display:none!important}
-
- body.editorMode .canvasViewport{
-   width:100%!important;min-height:0!important;max-height:none!important;margin:0!important;padding:12px 10px 250px!important;overflow:auto!important;border:0!important;border-radius:0!important;background:transparent!important
- }
- body.editorMode .canvasStage{margin:0 auto!important;border:1px solid #eee3df!important;box-shadow:0 14px 34px rgba(94,67,58,.12)!important}
-
- /* selected object mini floating bar */
- body.editorMode .bloomMobileSelectionBar{
-   display:flex!important;position:fixed!important;left:50%!important;transform:translateX(-50%)!important;top:82px!important;z-index:640!important;
-   width:auto!important;padding:5px 8px!important;gap:5px!important;border:1px solid var(--b-line2)!important;border-radius:18px!important;background:rgba(255,253,250,.97)!important;box-shadow:0 8px 24px rgba(93,65,56,.10)!important
- }
- body.editorMode .bloomMobileSelectionBar button{width:42px!important;height:36px!important;border:0!important;border-radius:9px!important;background:transparent!important;color:#705b53!important;font-size:16px!important}
-
- /* exact 7-item bottom nav */
- body.editorMode .bloomMobileNav{
-   display:grid!important;position:fixed!important;left:0!important;right:0!important;bottom:0!important;z-index:800!important;
-   grid-template-columns:repeat(7,1fr)!important;gap:2px!important;padding:6px 6px calc(6px + env(safe-area-inset-bottom))!important;
-   border-top:1px solid var(--b-line2)!important;background:rgba(255,253,250,.985)!important;box-shadow:0 -9px 30px rgba(92,63,54,.06)!important
- }
- body.editorMode .bloomMobileNav button{
-   min-width:0!important;height:58px!important;border:0!important;border-radius:10px!important;background:transparent!important;color:#705b53!important;
-   display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:2px!important;font-size:17px!important
- }
- body.editorMode .bloomMobileNav button span{font-size:6px!important;font-weight:800!important}
- body.editorMode .bloomMobileNav button.active{background:#f8dedd!important;color:#b76c72!important}
-
- /* drawer = reference bottom inspector */
- body.editorMode #canvasQuickDrawer{
-   display:none!important;position:fixed!important;left:8px!important;right:8px!important;bottom:72px!important;top:auto!important;z-index:790!important;
-   width:auto!important;max-width:none!important;max-height:46vh!important;margin:0!important;padding:10px!important;overflow:auto!important;
-   border:1px solid var(--b-line)!important;border-radius:18px!important;background:#fffdfa!important;box-shadow:0 16px 40px rgba(90,63,54,.16)!important
- }
- body.editorMode #canvasQuickDrawer.open{display:flex!important;flex-wrap:wrap!important;gap:7px!important}
- body.editorMode #canvasQuickDrawer button{min-width:calc(33.333% - 6px)!important;flex:1 1 calc(33.333% - 6px)!important;min-height:62px!important;padding:7px!important;border:1px solid var(--b-line)!important;border-radius:11px!important;background:#fff!important;color:#705b53!important;box-shadow:none!important}
- body.editorMode #canvasQuickDrawer button b{font-size:17px!important}.canvasQuickDrawer button span{font-size:7px!important;font-weight:800!important}
- body.editorMode #canvasQuickDrawer .drawerSection{width:100%!important}.canvasQuickDrawer .drawerSection h4{font-size:7px!important;text-transform:uppercase;letter-spacing:.12em;color:#a38b82;margin:9px 2px 5px}
- body.editorMode #canvasQuickDrawer .drawerSectionGrid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:7px!important}.canvasQuickDrawer .drawerSectionGrid button{min-width:0!important}
-
- body.editorMode #topViewMenu{
-   position:fixed!important;left:8px!important;right:8px!important;bottom:72px!important;top:auto!important;z-index:950!important;width:auto!important;max-width:none!important;max-height:66vh!important;overflow:auto!important;
-   padding:12px!important;border:1px solid var(--b-line)!important;border-radius:18px!important;background:#fffdfa!important;box-shadow:0 16px 40px rgba(90,63,54,.16)!important
- }
- body.editorMode .pageStyleGrid{grid-template-columns:1fr 1fr!important}
-
- /* fit automatically and prevent iOS input zoom */
- body.editorMode input,body.editorMode select,body.editorMode textarea,[contenteditable="true"]{font-size:16px!important}
+  /* V63 drawer = reference-style bottom inspector. It contains ALL V63 functions. */
+  body.editorMode #canvasQuickDrawer{
+    position:fixed!important;left:8px!important;right:8px!important;bottom:72px!important;top:auto!important;z-index:790!important;width:auto!important;max-width:none!important;max-height:50vh!important;
+    margin:0!important;padding:10px!important;overflow:auto!important;border:1px solid var(--sb71-border)!important;border-radius:18px!important;background:#fffdfa!important;box-shadow:0 16px 40px rgba(90,63,54,.16)!important;
+  }
+  body.editorMode #canvasQuickDrawer.open{display:flex!important;flex-wrap:wrap!important;gap:7px!important}
+  body.editorMode #canvasQuickDrawer button{min-width:calc(33.333% - 6px)!important;flex:1 1 calc(33.333% - 6px)!important;min-height:62px!important;padding:7px!important;border:1px solid var(--sb71-border)!important;border-radius:11px!important;background:white!important;color:#705950!important;box-shadow:none!important}.canvasQuickDrawer button b{font-size:17px!important}.canvasQuickDrawer button span{font-size:7px!important;font-weight:800!important}
+  body.editorMode #canvasQuickDrawer .drawerSection{width:100%!important}.canvasQuickDrawer .drawerSection h4{font-size:7px!important;letter-spacing:.12em;text-transform:uppercase;color:#a38c83;margin:9px 2px 5px!important}.canvasQuickDrawer .drawerSectionGrid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:7px!important}.canvasQuickDrawer .drawerSectionGrid button{min-width:0!important}
+  body.editorMode #topViewMenu{position:fixed!important;left:8px!important;right:8px!important;bottom:72px!important;top:auto!important;z-index:950!important;width:auto!important;max-width:none!important;max-height:68vh!important;overflow:auto!important;padding:12px!important;border:1px solid var(--sb71-border)!important;border-radius:18px!important;background:#fffdfa!important;box-shadow:0 16px 40px rgba(90,63,54,.17)!important}
+  body.editorMode .pageStyleGrid{grid-template-columns:1fr 1fr!important}
+  body.editorMode input,body.editorMode select,body.editorMode textarea,body.editorMode [contenteditable="true"]{font-size:16px!important}
 }
-
-body.editorMode .cobj.selected,body.editorMode .vSelected{outline-color:#e58d94!important}
-body.editorMode .resizeHandle,body.editorMode .rotateHandle{border-color:#e58d94!important}
+body.editorMode .cobj.selected,body.editorMode .vSelected{outline-color:#e58e94!important}
+body.editorMode .resizeHandle,body.editorMode .rotateHandle{border-color:#e58e94!important}
 </style>
 
 </head>
@@ -3119,7 +3065,7 @@ body.editorMode .resizeHandle,body.editorMode .rotateHandle{border-color:#e58d94
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 63</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 71</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -3443,35 +3389,6 @@ body.editorMode .resizeHandle,body.editorMode .rotateHandle{border-color:#e58d94
   <button onclick="editorOpenGroup('arrange',this)">▱<span>Anordnen</span></button>
 </div>
 <div id="canvasQuickDrawer" class="canvasQuickDrawer"></div>
-<div id="bloomDesktopNav" class="bloomDesktopNav" aria-label="Bloom Studio Werkzeuge">
-  <button onclick="bloomOpenTemplates(this)">▦<span>Vorlagen</span></button>
-  <button onclick="bloomOpenText(this)">T<span>Text</span></button>
-  <button onclick="bloomOpenElements(this)">✣<span>Elemente</span></button>
-  <button onclick="document.getElementById('canvasAnyFileInput').click()">⇧<span>Uploads</span></button>
-  <button onclick="openCanvasMediaPicker()">▧<span>Fotos</span></button>
-  <button onclick="bloomOpenStyles(this)">◉<span>Stile</span></button>
-  <button onclick="bloomOpenPage(this)">▨<span>Hintergründe</span></button>
-  <button onclick="bloomOpenPage(this)">▤<span>Seiten</span></button>
-  <button onclick="bloomOpenMath(this)">∑<span>Mathematik</span></button>
-</div>
-
-<div id="bloomMobileSelectionBar" class="bloomMobileSelectionBar">
-  <button onclick="duplicateSelected()" title="Duplizieren">⧉</button>
-  <button onclick="toggleSelectedLock()" title="Sperren">⌑</button>
-  <button onclick="deleteSelectedCanvasItem()" title="Löschen">⌫</button>
-  <button onclick="bloomOpenArrange(this)" title="Mehr">•••</button>
-</div>
-
-<div id="bloomMobileNav" class="bloomMobileNav" aria-label="Editor Navigation">
-  <button onclick="bloomOpenText(this)">T<span>Text</span></button>
-  <button onclick="bloomOpenElements(this)">✣<span>Elemente</span></button>
-  <button onclick="document.getElementById('canvasAnyFileInput').click()">☁<span>Uploads</span></button>
-  <button onclick="openCanvasMediaPicker()">▧<span>Fotos</span></button>
-  <button onclick="bloomOpenTemplates(this)">▤<span>Seiten</span></button>
-  <button onclick="bloomOpenLayers(this)">◇<span>Ebenen</span></button>
-  <button onclick="bloomOpenMore(this)">•••<span>Mehr</span></button>
-</div>
-
 <div id="multiSelectStatus" class="multiSelectStatus"></div>
       <input id="canvasImageInput" type="file" accept="image/*" style="display:none" onchange="if(this.files?.[0])addCanvasImage(this.files[0]);this.value=''">
       <input id="canvasCameraInput" type="file" accept="image/*" capture="environment" style="display:none" onchange="if(this.files?.[0])addCanvasImage(this.files[0]);this.value=''">
@@ -4007,7 +3924,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 63";
+ $("#headerEyebrow").textContent="VERSION 71";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -7507,122 +7424,7 @@ button.primary,button.ghost,.iconbtn{
 }
 </style>
 
-</head><body><div class="page">${serializedCanvas()}</div><div id="buildVersionBadge" style="position:fixed;right:8px;bottom:8px;z-index:9999;font:800 9px Inter,sans-serif;color:#9b7d74;background:rgba(255,250,247,.88);border:1px solid #ead4cd;border-radius:999px;padding:5px 8px;pointer-events:none">V70</div>
-
-<script id="v70-bloom-ui-js">
-(function(){
-  function q(s){return document.querySelector(s)}
-  function qa(s){return [...document.querySelectorAll(s)]}
-  function setActive(btn){
-    qa('.bloomDesktopNav button,.bloomMobileNav button').forEach(x=>x.classList.remove('active'));
-    if(btn) btn.classList.add('active');
-  }
-  function openDrawerHTML(html,btn){
-    const d=q('#canvasQuickDrawer'); if(!d) return;
-    d.innerHTML=html; d.classList.add('open'); setActive(btn);
-  }
-  window.bloomOpenText=function(btn){
-    setActive(btn); window.editorOpenGroup?.('text');
-  };
-  window.bloomOpenElements=function(btn){
-    setActive(btn); window.editorOpenGroup?.('elements');
-  };
-  window.bloomOpenArrange=function(btn){
-    setActive(btn); window.editorOpenGroup?.('arrange');
-  };
-  window.bloomOpenMath=function(btn){
-    openDrawerHTML(`
-      <div class="drawerSection"><h4>Mathematik</h4><div class="drawerSectionGrid">
-        <button onclick="openFormulaDialog()"><b>ƒx</b><span>Formel</span></button>
-        <button onclick="openGraphDialog()"><b>⌁</b><span>Graph</span></button>
-      </div></div>
-      <div class="drawerSection"><h4>Textformate</h4><div class="drawerSectionGrid">
-        <button onclick="createCustomStylePreset()"><b>＋</b><span>Neues Textformat</span></button>
-        <button onclick="openTextFormatManager()"><b>⚙</b><span>Verwalten</span></button>
-      </div></div>`,btn);
-  };
-  window.bloomOpenTemplates=function(btn){
-    openDrawerHTML(`
-      <div class="drawerSection"><h4>Seitenvorlagen</h4><div class="drawerSectionGrid">
-        <button onclick="applyCanvasTemplate('clean')"><b>Aa</b><span>Clean Notes</span></button>
-        <button onclick="applyCanvasTemplate('cute')"><b>✿</b><span>Cute Study</span></button>
-        <button onclick="applyCanvasTemplate('exam')"><b>✓</b><span>Exam Prep</span></button>
-        <button onclick="applyCanvasTemplate('blank')"><b>□</b><span>Leer</span></button>
-        <button onclick="saveCurrentPageTemplate()"><b>＋</b><span>Eigene Vorlage</span></button>
-        <button onclick="openPageTemplateManager()"><b>⚙</b><span>Verwalten</span></button>
-      </div></div>`,btn);
-  };
-  window.bloomOpenPage=function(btn){
-    setActive(btn); window.toggleTopViewMenu?.();
-  };
-  window.bloomOpenStyles=function(btn){
-    openDrawerHTML(`
-      <div class="drawerSection"><h4>Text & Stil</h4><div class="drawerSectionGrid">
-        <button onclick="editorOpenGroup('text')"><b>T</b><span>Textformate</span></button>
-        <button onclick="createCustomStylePreset()"><b>＋</b><span>Neues Format</span></button>
-        <button onclick="openTextFormatManager()"><b>⚙</b><span>Verwalten</span></button>
-      </div></div>
-      <div class="drawerSection"><h4>Seite</h4><div class="drawerSectionGrid">
-        <button onclick="toggleTopViewMenu()"><b>▨</b><span>Hintergrund</span></button>
-        <button onclick="toggleTopViewMenu()"><b>▤</b><span>Seitenstil</span></button>
-      </div></div>`,btn);
-  };
-  window.bloomOpenLayers=function(btn){
-    if(window.renderLayerList) window.renderLayerList();
-    const layer=q('#layerList');
-    openDrawerHTML(`<div class="drawerSection"><h4>Ebenen</h4>${layer?layer.innerHTML:'<span class="small">Keine Ebenen</span>'}</div>
-      <div class="drawerSection"><h4>Anordnen</h4><div class="drawerSectionGrid">
-      <button onclick="moveSelectedLayer(1)"><b>↑</b><span>Nach vorne</span></button>
-      <button onclick="moveSelectedLayer(-1)"><b>↓</b><span>Nach hinten</span></button>
-      <button onclick="groupSelectedItems()"><b>▣</b><span>Gruppieren</span></button>
-      <button onclick="ungroupSelectedItems()"><b>▢</b><span>Gruppe lösen</span></button>
-      </div></div>`,btn);
-  };
-  window.bloomOpenMore=function(btn){
-    openDrawerHTML(`
-      <div class="drawerSection"><h4>Mathematik</h4><div class="drawerSectionGrid">
-        <button onclick="openFormulaDialog()"><b>ƒx</b><span>Formel</span></button>
-        <button onclick="openGraphDialog()"><b>⌁</b><span>Graph</span></button>
-      </div></div>
-      <div class="drawerSection"><h4>Inhalt</h4><div class="drawerSectionGrid">
-        <button onclick="openTableDialog()"><b>▦</b><span>Tabelle</span></button>
-        <button onclick="addCanvasChecklist()"><b>☑</b><span>Checkliste</span></button>
-        <button onclick="addCanvasDivider()"><b>—</b><span>Linie</span></button>
-        <button onclick="toggleStickerPanel()"><b>✿</b><span>Sticker</span></button>
-      </div></div>
-      <div class="drawerSection"><h4>Textformate</h4><div class="drawerSectionGrid">
-        <button onclick="createCustomStylePreset()"><b>＋</b><span>Textformat</span></button>
-        <button onclick="openTextFormatManager()"><b>⚙</b><span>Verwalten</span></button>
-        <button onclick="saveSelectionAsTextFormat()"><b>▣</b><span>Aus Auswahl</span></button>
-      </div></div>
-      <div class="drawerSection"><h4>Anordnen</h4><div class="drawerSectionGrid">
-        <button onclick="toggleMultiSelectMode()"><b>☑</b><span>Mehrfachauswahl</span></button>
-        <button onclick="groupSelectedItems()"><b>▣</b><span>Gruppieren</span></button>
-        <button onclick="duplicateSelected()"><b>⧉</b><span>Duplizieren</span></button>
-      </div></div>`,btn);
-  };
-
-  // Keep automatic "fit to screen" on phone after orientation/resize.
-  let fitTimer=null;
-  function phoneFit(){
-    if(innerWidth>899) return;
-    if(!q('#view-sheet-editor.active')) return;
-    clearTimeout(fitTimer);
-    fitTimer=setTimeout(()=>window.fitCanvasStage?.(),120);
-  }
-  addEventListener('resize',phoneFit,{passive:true});
-  addEventListener('orientationchange',phoneFit,{passive:true});
-
-  // Refresh mobile layers panel if it is open.
-  document.addEventListener('click',()=>setTimeout(()=>{
-    const d=q('#canvasQuickDrawer');
-    if(d?.classList.contains('open') && d.textContent.includes('Ebenen') && innerWidth<900){
-      // no forced rebuild; existing V63 controls remain authoritative
-    }
-  },0),true);
-})();
-</script>
-
+</head><body><div class="page">${serializedCanvas()}</div><div id="buildVersionBadge" style="position:fixed;right:8px;bottom:8px;z-index:9999;font:800 9px Inter,sans-serif;color:#9b7d74;background:rgba(255,250,247,.88);border:1px solid #ead4cd;border-radius:999px;padding:5px 8px;pointer-events:none">V71</div>
 </body></html>`;
  const blob=new Blob([html],{type:"text/html"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=title.replace(/[^\wäöüÄÖÜß-]+/g,"_")+".html";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
 }
