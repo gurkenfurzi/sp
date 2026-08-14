@@ -2903,161 +2903,178 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
 </style>
 
 
-<style id="schoolbloom-v71-safe-ui">
-/* V71 SAFE: CSS-only redesign. V63 JS/HTML logic remains untouched. */
+<style id="sb72-reference-ui">
 :root{
-  --sb71-bg:#fff9f5; --sb71-panel:#fffdfa; --sb71-border:#eadbd5;
-  --sb71-text:#6f5951; --sb71-muted:#a58d84; --sb71-accent:#e9989e;
-  --sb71-accent-soft:#f7dedb; --sb71-shadow:0 16px 42px rgba(99,68,58,.10);
+  --sb-bg:#fff9f5; --sb-card:#fffdfa; --sb-card2:#fffaf7;
+  --sb-line:#eddeda; --sb-text:#6d5850; --sb-muted:#a89087;
+  --sb-pink:#eb9aa1; --sb-pink2:#f8dedd; --sb-green:#eef4df;
+  --sb-shadow:0 18px 46px rgba(96,65,56,.10);
 }
 body.editorMode{
   background:
-    radial-gradient(circle at 18% 11%,rgba(248,208,211,.42),transparent 28%),
-    radial-gradient(circle at 83% 34%,rgba(226,239,200,.28),transparent 24%),
-    linear-gradient(135deg,#fff7f4 0%,#fffaf6 55%,#f8faef 100%)!important;
-  color:var(--sb71-text)!important;
+    radial-gradient(circle at 14% 9%,rgba(248,210,214,.44),transparent 25%),
+    radial-gradient(circle at 85% 34%,rgba(230,239,207,.34),transparent 22%),
+    linear-gradient(135deg,#fff7f4 0%,#fffaf7 52%,#f7faee 100%)!important;
 }
-body.editorMode button{transition:transform .12s ease,background .12s ease,box-shadow .12s ease}
+body.editorMode button{transition:transform .12s ease,background .15s ease,box-shadow .15s ease}
 body.editorMode button:active{transform:scale(.97)}
+.sb72StudioHeader,.sb72DesktopRail,.sb72LibraryPanel,.sb72MobileBottom,.sb72MobileSheet,.sb72SelectionBar{display:none}
 
-/* ---------- DESKTOP: Canva/Word-style shell ---------- */
+/* desktop */
 @media (min-width:900px){
   body.editorMode{overflow:hidden!important}
   body.editorMode main{width:100vw!important;max-width:none!important;height:100vh!important;margin:0!important;padding:0!important}
+  body.editorMode #view-sheet-editor{height:100vh!important;margin:0!important;padding:0!important}
   body.editorMode .canvasEditorShell{
-    width:100vw!important;max-width:none!important;height:100vh!important;margin:0!important;
-    display:grid!important;grid-template-columns:92px 320px minmax(0,1fr) 320px!important;
-    grid-template-rows:66px 58px minmax(0,1fr)!important;gap:0!important;overflow:hidden!important;
-    background:transparent!important;
+    height:100vh!important;width:100vw!important;max-width:none!important;margin:0!important;padding:0!important;
+    display:grid!important;
+    grid-template-columns:76px 300px minmax(0,1fr) 310px!important;
+    grid-template-rows:68px 58px minmax(0,1fr)!important;
+    gap:0!important;background:transparent!important;overflow:hidden!important;
   }
-  body.editorMode .canvasTopbar{
-    grid-column:1/-1!important;grid-row:1!important;position:relative!important;inset:auto!important;
-    height:66px!important;min-height:66px!important;margin:0!important;padding:8px 22px 8px 160px!important;
-    border:0!important;border-bottom:1px solid #f0e5e0!important;border-radius:0!important;
-    background:rgba(255,253,250,.98)!important;backdrop-filter:blur(18px)!important;box-shadow:none!important;z-index:300!important;
-  }
-  body.editorMode .canvasTopbar:before{
-    content:"🌷  Bloom Studio";position:absolute;left:24px;top:20px;font:700 18px Georgia,serif;color:#654f48;
-  }
-  body.editorMode .editorTitle{align-items:flex-start!important;text-align:left!important}
-  body.editorMode .editorTitle b{font-size:12px!important}.editorTitle span{font-size:7px!important;color:#93a06e!important}
-  body.editorMode .historyBtn,body.editorMode .editorIcon{
-    width:40px!important;height:40px!important;border:1px solid var(--sb71-border)!important;border-radius:10px!important;
-    background:white!important;color:#705950!important;box-shadow:none!important;
-  }
-  body.editorMode .primaryIcon{background:linear-gradient(180deg,#efa4a9,#e88f96)!important;border-color:#e88f96!important;color:white!important}
 
-  /* existing V63 left nav becomes Canva-like narrow rail */
-  body.editorMode .canvasQuickNav{
-    grid-column:1!important;grid-row:2/4!important;position:relative!important;inset:auto!important;width:92px!important;height:auto!important;
-    margin:0!important;padding:12px 7px!important;display:flex!important;flex-direction:column!important;gap:5px!important;
-    border:0!important;border-right:1px solid #f0e5e0!important;border-radius:0!important;background:rgba(255,253,250,.98)!important;box-shadow:none!important;z-index:220!important;
+  .sb72StudioHeader{
+    display:grid;grid-template-columns:230px 260px 1fr auto;align-items:center;gap:16px;
+    grid-column:1/-1;grid-row:1;padding:8px 18px;border-bottom:1px solid var(--sb-line);
+    background:rgba(255,253,250,.985);backdrop-filter:blur(18px);z-index:500;
   }
-  body.editorMode .canvasQuickNav:before{content:"WERKZEUGE";font-size:7px;letter-spacing:.16em;font-weight:900;color:#b0968c;padding:4px 6px 7px}
-  body.editorMode .canvasQuickNav button{
-    width:100%!important;min-width:0!important;height:58px!important;min-height:58px!important;padding:6px!important;
-    border:0!important;border-radius:11px!important;background:transparent!important;color:#705950!important;box-shadow:none!important;
-    display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:3px!important;font-size:19px!important;
+  .sb72Brand{display:flex;align-items:center;gap:9px;font-family:Georgia,serif;font-size:18px;color:#5f4d47}
+  .sb72Brand span{font-size:21px}.sb72DocTitle{display:grid;gap:2px}.sb72DocTitle b{font-size:11px}.sb72DocTitle small{font-size:8px;color:#95a170}
+  .sb72HeaderCenter{display:flex;justify-content:center;gap:7px}
+  .sb72HeaderRight{display:flex;gap:7px;justify-content:flex-end}
+  .sb72StudioHeader button{
+    height:38px;border:1px solid var(--sb-line);border-radius:9px;background:#fff;color:var(--sb-text);padding:0 13px;font-weight:800;font-size:10px
   }
-  body.editorMode .canvasQuickNav button span{font-size:7px!important;font-weight:850!important}
-  body.editorMode .canvasQuickNav button.active,body.editorMode .canvasQuickNav button:hover{background:var(--sb71-accent-soft)!important;color:#b96c72!important}
+  .sb72StudioHeader .share{background:linear-gradient(180deg,#efa3aa,#e88f97);color:#fff;border-color:#e88f97}
 
-  /* existing V63 drawer becomes large left content panel */
-  body.editorMode #canvasQuickDrawer{
-    grid-column:2!important;grid-row:2/4!important;position:relative!important;inset:auto!important;width:320px!important;max-width:320px!important;height:auto!important;max-height:none!important;
-    margin:0!important;padding:14px!important;border:0!important;border-right:1px solid #f0e5e0!important;border-radius:0!important;
-    background:#fffdfa!important;box-shadow:none!important;overflow:auto!important;z-index:210!important;
+  .sb72DesktopRail{
+    display:flex;flex-direction:column;grid-column:1;grid-row:2/4;padding:10px 7px;gap:3px;
+    background:rgba(255,253,250,.985);border-right:1px solid var(--sb-line);z-index:420;overflow:auto
   }
-  body.editorMode #canvasQuickDrawer.open{display:flex!important;flex-direction:column!important;gap:8px!important}
-  body.editorMode #canvasQuickDrawer button{
-    width:100%!important;min-width:0!important;max-width:none!important;min-height:56px!important;padding:9px!important;
-    border:1px solid var(--sb71-border)!important;border-radius:11px!important;background:#fff!important;color:#705950!important;box-shadow:none!important;
+  .sb72DesktopRail button{
+    height:58px;border:0;border-radius:10px;background:transparent;color:#705c54;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:18px
   }
-  body.editorMode #canvasQuickDrawer .drawerSection{width:100%!important}
-  body.editorMode #canvasQuickDrawer .drawerSection h4{font-size:8px!important;letter-spacing:.12em;text-transform:uppercase;color:#a58c83;margin:10px 2px 7px!important}
-  body.editorMode #canvasQuickDrawer .drawerSectionGrid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:7px!important}
-  body.editorMode #canvasQuickDrawer .drawerSectionGrid button{min-height:72px!important}
+  .sb72DesktopRail button span{font-size:7px;font-weight:850}
+  .sb72DesktopRail button:hover,.sb72DesktopRail button.active{background:var(--sb-pink2);color:#b66f75}
 
-  /* existing V63 context toolbar across canvas */
+  .sb72LibraryPanel{
+    display:block;grid-column:2;grid-row:2/4;min-width:0;padding:13px 12px 32px;background:#fffdfa;border-right:1px solid var(--sb-line);
+    overflow:auto;z-index:410
+  }
+  .sb72LibraryPanel .sb72Search{height:39px;border:1px solid var(--sb-line);border-radius:10px;background:white;padding:0 12px;width:100%;font-size:11px}
+  .sb72LibTitle{display:flex;justify-content:space-between;align-items:center;margin:12px 0 8px}
+  .sb72LibTitle b{font-size:11px}.sb72LibTitle span{font-size:8px;color:var(--sb-muted)}
+  .sb72ChipRow{display:flex;gap:5px;overflow:auto;margin-bottom:9px}.sb72Chip{white-space:nowrap;padding:7px 9px;border:0;border-radius:999px;background:#fff4f1;color:#8d6e65;font-size:8px;font-weight:800}
+  .sb72TemplateGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .sb72TemplateThumb{
+    min-height:120px;border:1px solid var(--sb-line);border-radius:10px;background:linear-gradient(145deg,#fff6f2,#f7dfdc 55%,#f6f0dc);
+    padding:10px;text-align:left;color:#705850;position:relative;overflow:hidden
+  }
+  .sb72TemplateThumb:after{content:"";position:absolute;width:65px;height:65px;border-radius:50%;right:-18px;bottom:-20px;background:rgba(233,154,161,.28)}
+  .sb72TemplateThumb b{display:block;font-family:Georgia,serif;font-size:13px}.sb72TemplateThumb small{font-size:7px;color:#9c8179}
+  .sb72LibGrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  .sb72LibGrid button,.sb72WideButton{
+    min-height:64px;border:1px solid var(--sb-line);border-radius:11px;background:#fff;color:var(--sb-text);padding:9px;font-weight:800;font-size:9px
+  }
+  .sb72LibGrid button b{display:block;font-size:20px;margin-bottom:3px}.sb72WideButton{width:100%;margin:4px 0;text-align:left}
+
+  body.editorMode .canvasTopbar{display:none!important}
+  body.editorMode .canvasQuickNav,body.editorMode #canvasQuickDrawer,body.editorMode #multiSelectStatus{display:none!important}
+
   body.editorMode .desktopCommandBar{
-    grid-column:3!important;grid-row:2!important;position:relative!important;inset:auto!important;height:58px!important;min-height:58px!important;
-    margin:0!important;padding:6px 10px!important;display:flex!important;align-items:center!important;gap:9px!important;overflow-x:auto!important;
-    border:0!important;border-bottom:1px solid #f0e5e0!important;border-radius:0!important;background:rgba(255,253,250,.98)!important;box-shadow:none!important;z-index:230!important;
+    grid-column:3;grid-row:2;position:relative!important;inset:auto!important;height:58px!important;margin:0!important;padding:7px 10px!important;
+    display:flex!important;align-items:center!important;gap:8px!important;overflow-x:auto!important;border:0!important;border-bottom:1px solid var(--sb-line)!important;border-radius:0!important;
+    background:rgba(255,253,250,.985)!important;box-shadow:none!important;z-index:430
   }
-  body.editorMode .desktopCmdGroup{display:flex!important;align-items:center!important;gap:4px!important}
-  body.editorMode .desktopCmdLabel{display:none!important}.desktopCmdButtons{display:flex!important;gap:3px!important}
-  body.editorMode .desktopCmdButtons button{
-    min-width:48px!important;height:40px!important;padding:4px 6px!important;border:0!important;border-radius:8px!important;background:transparent!important;color:#705950!important;box-shadow:none!important;
-  }
-  body.editorMode .desktopCmdButtons button:hover{background:#f8e7e3!important}.desktopCmdButtons button span{display:block!important;font-size:6px!important;font-weight:800!important;margin-top:2px!important}
+  .sb72TextContext{display:flex;align-items:center;gap:3px;padding-right:9px;border-right:1px solid var(--sb-line)}
+  .sb72TextContext select{width:120px;height:36px;border:1px solid var(--sb-line);border-radius:8px;padding:0 8px;background:#fff;color:var(--sb-text);font-size:9px}
+  .sb72TextContext input[type=number]{width:48px;height:36px;text-align:center;border:1px solid var(--sb-line);border-radius:8px;background:#fff;color:var(--sb-text)}
+  .sb72TextContext input[type=color]{width:34px;height:34px;padding:4px;border:0;background:transparent}
+  .sb72TextContext button,.desktopCmdButtons button{height:36px!important;min-width:34px!important;border:0!important;border-radius:8px!important;background:transparent!important;color:#705950!important;padding:4px 6px!important}
+  .sb72TextContext button:hover,.desktopCmdButtons button:hover{background:#f8e7e3!important}
+  .desktopCmdLabel{display:none!important}.desktopCmdButtons{display:flex!important;gap:2px!important}.desktopCmdButtons button span{font-size:6px!important;display:block!important;margin-top:1px!important}
 
   body.editorMode .canvasViewport{
-    grid-column:3!important;grid-row:3!important;width:auto!important;min-width:0!important;height:auto!important;min-height:0!important;max-height:none!important;
-    margin:0!important;padding:28px 38px 86px!important;overflow:auto!important;border:0!important;border-radius:0!important;
+    grid-column:3;grid-row:3;width:auto!important;height:auto!important;min-height:0!important;max-height:none!important;margin:0!important;
+    padding:22px 30px 80px!important;overflow:auto!important;border:0!important;border-radius:0!important;
     background:
-      radial-gradient(circle at 18% 16%,rgba(247,210,212,.30),transparent 27%),
-      radial-gradient(circle at 82% 28%,rgba(228,238,203,.25),transparent 24%),
-      linear-gradient(135deg,#fff8f5,#fffaf6 58%,#f8faef)!important;
+      radial-gradient(circle at 12% 16%,rgba(246,210,213,.34),transparent 25%),
+      radial-gradient(circle at 88% 26%,rgba(229,239,204,.32),transparent 23%),
+      linear-gradient(135deg,#fff8f5,#fffaf7 55%,#f7faee)!important
   }
-  body.editorMode .canvasStage{margin:0 auto!important;border:1px solid #eee3df!important;box-shadow:0 20px 48px rgba(92,64,55,.14)!important}
+  body.editorMode .canvasStage{margin:0 auto!important;box-shadow:0 18px 44px rgba(92,62,54,.14)!important;border:1px solid #eee3de!important}
 
-  /* existing V63 right inspector */
   body.editorMode #desktopEditorSidebar{
-    display:block!important;grid-column:4!important;grid-row:2/4!important;position:relative!important;inset:auto!important;width:320px!important;max-width:320px!important;height:auto!important;min-height:0!important;
-    margin:0!important;padding:0 14px 52px!important;overflow:auto!important;border:0!important;border-left:1px solid #f0e5e0!important;border-radius:0!important;background:#fffdfa!important;box-shadow:none!important;z-index:220!important;
+    display:block!important;grid-column:4;grid-row:2/4;position:relative!important;inset:auto!important;width:auto!important;height:auto!important;min-height:0!important;max-height:none!important;
+    padding:0 12px 40px!important;margin:0!important;overflow:auto!important;border:0!important;border-left:1px solid var(--sb-line)!important;border-radius:0!important;background:#fffdfa!important;box-shadow:none!important;z-index:420
   }
   body.editorMode #desktopEditorSidebar:before{
-    content:"Design     Seite     Ebene";display:block;position:sticky;top:0;z-index:4;margin:0 -14px 10px;padding:18px 14px 13px;background:#fffdfa;border-bottom:1px solid #f0e5e0;
-    font-size:8px;font-weight:900;color:#725b53;word-spacing:22px;
+    content:"Design      Seite      Ebene";display:block;position:sticky;top:0;z-index:5;margin:0 -12px 10px;padding:18px 14px 12px;
+    background:#fffdfa;border-bottom:1px solid var(--sb-line);font-size:8px;font-weight:900;color:#725b53;word-spacing:17px
   }
-  body.editorMode .objectPanel{margin:0!important;padding:12px 0!important;border:0!important;border-bottom:1px solid #f0e5e0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
-  body.editorMode .objectPanelGrid,.positionGrid{grid-template-columns:1fr 1fr!important;gap:7px!important}
-  body.editorMode .templatePicker{grid-template-columns:1fr!important;gap:6px!important}
-  body.editorMode .templateCard{min-height:54px!important;text-align:left!important;border:1px solid var(--sb71-border)!important;border-radius:9px!important;background:white!important}
-  body.editorMode #topViewMenu{position:fixed!important;right:336px!important;top:72px!important;width:420px!important;max-width:420px!important;max-height:78vh!important;overflow:auto!important;padding:14px!important;border:1px solid var(--sb71-border)!important;border-radius:14px!important;background:#fffdfa!important;box-shadow:var(--sb71-shadow)!important;z-index:1000!important}
-  body.editorMode .canvasViewport,body.editorMode .canvasViewport *{cursor:default}body.editorMode [contenteditable="true"]{cursor:text!important}
+  body.editorMode .objectPanel{margin:0!important;padding:12px 0!important;border:0!important;border-bottom:1px solid var(--sb-line)!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+  body.editorMode .objectPanelGrid,.positionGrid{grid-template-columns:1fr 1fr!important;gap:6px!important}
+  body.editorMode .objectPanel input,body.editorMode .objectPanel select{min-height:35px!important;border-radius:8px!important;border-color:var(--sb-line)!important}
+  body.editorMode .templatePicker{grid-template-columns:1fr!important;gap:5px!important}.templateCard{min-height:50px!important;border-radius:9px!important}
+
+  body.editorMode #topViewMenu{position:fixed!important;right:322px!important;top:72px!important;width:440px!important;max-width:none!important;max-height:78vh!important;overflow:auto!important;padding:14px!important;border:1px solid var(--sb-line)!important;border-radius:14px!important;background:#fffdfa!important;box-shadow:var(--sb-shadow)!important;z-index:1000!important}
+  body.editorMode .canvasViewport,body.editorMode .canvasViewport *{cursor:default}body.editorMode [contenteditable=true]{cursor:text!important}
 }
 
-/* ---------- MOBILE: same controls, laid out like supplied reference ---------- */
+/* mobile exact-reference layout */
 @media (max-width:899px){
   body.editorMode{overflow-x:hidden!important}
-  body.editorMode main{width:100%!important;max-width:none!important;margin:0!important;padding:0 0 76px!important}
-  body.editorMode .canvasEditorShell{width:100%!important;max-width:none!important;margin:0!important;display:block!important}
+  body.editorMode main{width:100%!important;max-width:none!important;margin:0!important;padding:0 0 82px!important}
+  body.editorMode .canvasEditorShell{display:block!important;width:100%!important;max-width:none!important;margin:0!important;padding:0!important}
+  .sb72StudioHeader,.sb72DesktopRail,.sb72LibraryPanel,.desktopCommandBar{display:none!important}
+
   body.editorMode .canvasTopbar{
-    position:sticky!important;top:0!important;z-index:600!important;width:100%!important;min-height:76px!important;margin:0!important;padding:9px 10px!important;
-    display:grid!important;grid-template-columns:44px minmax(0,1fr) auto auto!important;gap:5px!important;align-items:center!important;
-    border:0!important;border-bottom:1px solid #f0e5e0!important;border-radius:0!important;background:rgba(255,253,250,.97)!important;backdrop-filter:blur(18px)!important;box-shadow:none!important;
+    position:sticky!important;top:0!important;z-index:700!important;min-height:77px!important;width:100%!important;margin:0!important;padding:9px 10px!important;
+    display:grid!important;grid-template-columns:44px minmax(0,1fr) auto auto!important;align-items:center!important;gap:5px!important;
+    border:0!important;border-bottom:1px solid var(--sb-line)!important;border-radius:0!important;background:rgba(255,253,250,.985)!important;backdrop-filter:blur(18px)!important;box-shadow:none!important
   }
-  body.editorMode .canvasTopbar:before{content:"🌷";position:absolute;left:57px;top:25px;font-size:18px}
-  body.editorMode .editorTitle{padding-left:25px!important;align-items:flex-start!important;text-align:left!important}.editorTitle b{font-size:11px!important}.editorTitle span{font-size:7px!important;color:#a38c83!important}
-  body.editorMode .historyBar{display:flex!important;gap:4px!important}.historyBtn,.editorIcon{width:41px!important;height:41px!important;border:1px solid var(--sb71-border)!important;border-radius:10px!important;background:white!important;color:#705950!important;box-shadow:none!important}
-  body.editorMode .editorActions{display:flex!important;gap:4px!important}.editorActions .pageTopButton,.editorActions button[title="Exportieren"],.editorActions button[title="PDF / Drucken"]{display:none!important}.editorActions .primaryIcon{width:92px!important;border-radius:10px!important;background:linear-gradient(180deg,#efa3a8,#e99096)!important;border-color:#e99096!important;color:white!important}
-  body.editorMode .desktopCommandBar,body.editorMode #desktopEditorSidebar{display:none!important}
-  body.editorMode .canvasViewport{width:100%!important;min-height:0!important;max-height:none!important;margin:0!important;padding:12px 10px 150px!important;overflow:auto!important;border:0!important;border-radius:0!important;background:transparent!important}
-  body.editorMode .canvasStage{margin:0 auto!important;border:1px solid #eee3df!important;box-shadow:0 14px 34px rgba(94,67,58,.12)!important}
+  body.editorMode .canvasTopbar:before{content:"🌷";position:absolute;left:58px;top:25px;font-size:18px}
+  body.editorMode .editorTitle{padding-left:26px!important;text-align:left!important;align-items:flex-start!important}.editorTitle b{font-size:11px!important}.editorTitle span{font-size:7px!important;color:#9f887f!important}
+  body.editorMode .historyBar{display:flex!important;gap:4px!important}.historyBtn,.editorIcon{width:41px!important;height:41px!important;border:1px solid var(--sb-line)!important;border-radius:10px!important;background:#fff!important;color:#705950!important;box-shadow:none!important}
+  body.editorMode .editorActions{display:flex!important;gap:4px!important}.editorActions .pageTopButton,.editorActions button[title="Exportieren"],.editorActions button[title="PDF / Drucken"]{display:none!important}
+  body.editorMode .sb72SaveButton{width:91px!important;padding:0 10px!important;border-radius:10px!important;background:linear-gradient(180deg,#efa2a9,#e88f97)!important;border-color:#e88f97!important;color:#fff!important;display:flex!important;gap:5px!important}.sb72SaveButton svg{width:17px!important}.sb72SaveButton span{display:inline!important;font-size:9px!important}
 
-  /* V63 quick nav = bottom app rail, no duplicate custom JS */
-  body.editorMode .canvasQuickNav{
-    position:fixed!important;left:0!important;right:0!important;bottom:0!important;top:auto!important;z-index:800!important;width:100%!important;height:68px!important;
-    margin:0!important;padding:6px 8px calc(6px + env(safe-area-inset-bottom))!important;display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:4px!important;
-    border:0!important;border-top:1px solid #f0e5e0!important;border-radius:0!important;background:rgba(255,253,250,.985)!important;box-shadow:0 -9px 30px rgba(91,63,54,.06)!important;
+  body.editorMode .canvasQuickNav,body.editorMode #canvasQuickDrawer,body.editorMode #multiSelectStatus{display:none!important}
+  body.editorMode .canvasViewport{
+    width:100%!important;min-height:0!important;max-height:none!important;margin:0!important;padding:12px 9px 235px!important;overflow:auto!important;border:0!important;border-radius:0!important;background:transparent!important
   }
-  body.editorMode .canvasQuickNav button{min-width:0!important;width:100%!important;height:54px!important;border:0!important;border-radius:10px!important;background:transparent!important;color:#705950!important;box-shadow:none!important;font-size:18px!important}.canvasQuickNav button span{display:block!important;font-size:7px!important;margin-top:2px!important}.canvasQuickNav button.active{background:#f8dedd!important;color:#b76c72!important}
+  body.editorMode .canvasStage{margin:0 auto!important;border:1px solid #eee3de!important;box-shadow:0 14px 36px rgba(92,62,54,.12)!important}
 
-  /* V63 drawer = reference-style bottom inspector. It contains ALL V63 functions. */
-  body.editorMode #canvasQuickDrawer{
-    position:fixed!important;left:8px!important;right:8px!important;bottom:72px!important;top:auto!important;z-index:790!important;width:auto!important;max-width:none!important;max-height:50vh!important;
-    margin:0!important;padding:10px!important;overflow:auto!important;border:1px solid var(--sb71-border)!important;border-radius:18px!important;background:#fffdfa!important;box-shadow:0 16px 40px rgba(90,63,54,.16)!important;
+  .sb72MobileBottom{
+    display:grid;position:fixed;left:0;right:0;bottom:0;z-index:900;height:72px;padding:5px 8px calc(5px + env(safe-area-inset-bottom));
+    grid-template-columns:repeat(7,1fr);gap:2px;background:rgba(255,253,250,.99);border-top:1px solid var(--sb-line);box-shadow:0 -8px 28px rgba(92,62,54,.06)
   }
-  body.editorMode #canvasQuickDrawer.open{display:flex!important;flex-wrap:wrap!important;gap:7px!important}
-  body.editorMode #canvasQuickDrawer button{min-width:calc(33.333% - 6px)!important;flex:1 1 calc(33.333% - 6px)!important;min-height:62px!important;padding:7px!important;border:1px solid var(--sb71-border)!important;border-radius:11px!important;background:white!important;color:#705950!important;box-shadow:none!important}.canvasQuickDrawer button b{font-size:17px!important}.canvasQuickDrawer button span{font-size:7px!important;font-weight:800!important}
-  body.editorMode #canvasQuickDrawer .drawerSection{width:100%!important}.canvasQuickDrawer .drawerSection h4{font-size:7px!important;letter-spacing:.12em;text-transform:uppercase;color:#a38c83;margin:9px 2px 5px!important}.canvasQuickDrawer .drawerSectionGrid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:7px!important}.canvasQuickDrawer .drawerSectionGrid button{min-width:0!important}
-  body.editorMode #topViewMenu{position:fixed!important;left:8px!important;right:8px!important;bottom:72px!important;top:auto!important;z-index:950!important;width:auto!important;max-width:none!important;max-height:68vh!important;overflow:auto!important;padding:12px!important;border:1px solid var(--sb71-border)!important;border-radius:18px!important;background:#fffdfa!important;box-shadow:0 16px 40px rgba(90,63,54,.17)!important}
-  body.editorMode .pageStyleGrid{grid-template-columns:1fr 1fr!important}
-  body.editorMode input,body.editorMode select,body.editorMode textarea,body.editorMode [contenteditable="true"]{font-size:16px!important}
+  .sb72MobileBottom button{border:0;border-radius:10px;background:transparent;color:#705950;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:18px;min-width:0}
+  .sb72MobileBottom button span{font-size:6px;font-weight:850}.sb72MobileBottom button.active{background:#f7dedb;color:#b76c73}
+
+  .sb72MobileSheet{
+    display:block;position:fixed;left:8px;right:8px;bottom:78px;z-index:850;max-height:41vh;overflow:auto;padding:9px 10px 12px;
+    border:1px solid var(--sb-line);border-radius:18px;background:#fffdfa;box-shadow:0 16px 42px rgba(92,62,54,.16);transform:translateY(calc(100% + 90px));opacity:0;pointer-events:none;transition:.22s ease
+  }
+  .sb72MobileSheet.open{transform:none;opacity:1;pointer-events:auto}
+  .sb72SheetHandle{width:38px;height:4px;background:#dcc9c3;border-radius:999px;margin:1px auto 9px}
+  .sb72MobileSheet h4{font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#a58c83;margin:6px 2px}
+  .sb72MobileGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .sb72MobileGrid button{min-height:57px;border:1px solid var(--sb-line);border-radius:10px;background:#fff;color:#705950;font-size:8px;font-weight:850;padding:6px}.sb72MobileGrid button b{display:block;font-size:18px;margin-bottom:2px}
+  .sb72MobileRows{display:grid;gap:6px}.sb72MobileRows button{min-height:48px;border:1px solid var(--sb-line);border-radius:10px;background:#fff;color:#705950;font-size:9px;font-weight:850;text-align:left;padding:8px 10px}
+  .sb72SelectionBar{
+    display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:calc(72px + 42vh + 8px);z-index:880;padding:5px 7px;gap:3px;border:1px solid var(--sb-line);border-radius:999px;background:#fffdfa;box-shadow:0 10px 26px rgba(92,62,54,.13)
+  }
+  .sb72SelectionBar.visible{display:flex}.sb72SelectionBar button{width:42px;height:36px;border:0;border-radius:999px;background:transparent;color:#705950;font-size:17px}
+  body.editorMode #desktopEditorSidebar{
+    display:none!important;position:fixed!important;left:8px!important;right:8px!important;bottom:78px!important;top:auto!important;z-index:860!important;width:auto!important;height:auto!important;max-height:49vh!important;overflow:auto!important;padding:10px!important;margin:0!important;border:1px solid var(--sb-line)!important;border-radius:18px!important;background:#fffdfa!important;box-shadow:0 16px 42px rgba(92,62,54,.16)!important
+  }
+  body.editorMode #desktopEditorSidebar.sb72MobileInspector{display:block!important}
+  body.editorMode #desktopEditorSidebar:before{content:"";display:none!important}
+  body.editorMode .objectPanel{padding:8px 0!important;border:0!important;border-bottom:1px solid var(--sb-line)!important;background:transparent!important;box-shadow:none!important}
+  body.editorMode #topViewMenu{position:fixed!important;left:8px!important;right:8px!important;bottom:78px!important;top:auto!important;z-index:950!important;width:auto!important;max-width:none!important;max-height:66vh!important;overflow:auto!important;padding:12px!important;border:1px solid var(--sb-line)!important;border-radius:18px!important;background:#fffdfa!important;box-shadow:0 16px 42px rgba(92,62,54,.16)!important}
+  body.editorMode input,body.editorMode select,body.editorMode textarea,body.editorMode [contenteditable=true]{font-size:16px!important}
 }
-body.editorMode .cobj.selected,body.editorMode .vSelected{outline-color:#e58e94!important}
-body.editorMode .resizeHandle,body.editorMode .rotateHandle{border-color:#e58e94!important}
 </style>
 
 </head>
@@ -3065,7 +3082,7 @@ body.editorMode .resizeHandle,body.editorMode .rotateHandle{border-color:#e58e94
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 71</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 72</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -3286,6 +3303,57 @@ body.editorMode .resizeHandle,body.editorMode .rotateHandle{border-color:#e58e94
 
   <section class="view" id="view-sheet-editor">
     <div class="canvasEditorShell">
+      <header class="sb72StudioHeader">
+        <div class="sb72Brand"><span>🌷</span><b>SchoolBloom</b></div>
+        <div class="sb72DocTitle"><b>Lernblatt</b><small>Gespeichert</small></div>
+        <div class="sb72HeaderCenter">
+          <button onclick="undoCanvas()" title="Rückgängig">↶</button>
+          <button onclick="redoCanvas()" title="Wiederholen">↷</button>
+          <button onclick="applyCanvasTemplate('blank')">＋ Neu</button>
+          <button onclick="saveCanvasSheet()">☁ Speichern</button>
+        </div>
+        <div class="sb72HeaderRight">
+          <button onclick="printCanvasSheet()">◉ Vorschau</button>
+          <button class="share" onclick="exportCanvasHTML()">⇧ Teilen</button>
+        </div>
+      </header>
+
+      <nav class="sb72DesktopRail" aria-label="Editor Navigation">
+        <button class="active" onclick="sb72ShowLibrary('templates',this)">▦<span>Vorlagen</span></button>
+        <button onclick="sb72ShowLibrary('text',this)">T<span>Text</span></button>
+        <button onclick="sb72ShowLibrary('elements',this)">◇<span>Elemente</span></button>
+        <button onclick="sb72ShowLibrary('uploads',this)">☁<span>Uploads</span></button>
+        <button onclick="sb72ShowLibrary('photos',this)">▧<span>Fotos</span></button>
+        <button onclick="sb72ShowLibrary('styles',this)">◉<span>Stile</span></button>
+        <button onclick="sb72ShowLibrary('backgrounds',this)">▨<span>Hintergründe</span></button>
+        <button onclick="sb72ShowLibrary('pages',this)">▤<span>Seiten</span></button>
+        <button onclick="sb72ShowLibrary('apps',this)">⊞<span>Apps</span></button>
+      </nav>
+
+      <aside class="sb72LibraryPanel" id="sb72LibraryPanel"></aside>
+
+      <div class="sb72SelectionBar" id="sb72SelectionBar">
+        <button onclick="duplicateSelected()" title="Duplizieren">⧉</button>
+        <button onclick="toggleSelectedLock()" title="Sperren">♙</button>
+        <button onclick="deleteSelectedCanvasItem()" title="Löschen">⌫</button>
+        <button onclick="sb72OpenMobile('more')" title="Mehr">•••</button>
+      </div>
+
+      <nav class="sb72MobileBottom" aria-label="Mobile Editor Navigation">
+        <button class="active" onclick="sb72OpenMobile('text',this)">T<span>Text</span></button>
+        <button onclick="sb72OpenMobile('elements',this)">⌘<span>Elemente</span></button>
+        <button onclick="sb72OpenMobile('uploads',this)">☁<span>Uploads</span></button>
+        <button onclick="sb72OpenMobile('photos',this)">▧<span>Fotos</span></button>
+        <button onclick="sb72OpenMobile('pages',this)">▤<span>Seiten</span></button>
+        <button onclick="sb72OpenMobile('layers',this)">◇<span>Ebenen</span></button>
+        <button onclick="sb72OpenMobile('more',this)">•••<span>Mehr</span></button>
+      </nav>
+
+      <section class="sb72MobileSheet" id="sb72MobileSheet">
+        <div class="sb72SheetHandle"></div>
+        <div id="sb72MobileSheetContent"></div>
+      </section>
+
       <div class="canvasTopbar">
         <button class="editorIcon" title="Zurück" onclick="closeSheetEditor()"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg></button>
         <div class="editorTitle"><b>Lernblatt</b><span class="autosaveState" id="autosaveState">Autosave an</span></div>
@@ -3297,11 +3365,27 @@ body.editorMode .resizeHandle,body.editorMode .rotateHandle{border-color:#e58e94
           <button class="editorIcon viewTopBtn pageTopButton" title="Seite & Ansicht" onclick="toggleTopViewMenu()"><span class="pageTopIcon">▯</span><span class="pageTopLabel">Seite</span></button>
           <button class="editorIcon" title="Exportieren" onclick="exportCanvasHTML()"><svg viewBox="0 0 24 24"><path d="M12 3v12M8 11l4 4 4-4M4 19h16"/></svg></button>
           <button class="editorIcon" title="PDF / Drucken" onclick="printCanvasSheet()"><svg viewBox="0 0 24 24"><path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="7" y="14" width="10" height="7"/></svg></button>
-          <button class="editorIcon primaryIcon" title="Speichern" onclick="saveCanvasSheet()"><svg viewBox="0 0 24 24"><path d="M5 3h12l2 2v16H5z"/><path d="M8 3v6h8V3M8 21v-7h8v7"/></svg></button>
+          <button class="editorIcon primaryIcon sb72SaveButton" title="Speichern" onclick="saveCanvasSheet()"><svg viewBox="0 0 24 24"><path d="M5 3h12l2 2v16H5z"/><path d="M8 3v6h8V3M8 21v-7h8v7"/></svg><span>Speichern</span></button>
         </div>
       </div>
 
       <div class="desktopCommandBar" aria-label="Desktop-Werkzeuge">
+        <div class="sb72TextContext" aria-label="Textformatierung">
+          <select title="Schriftart" onchange="applyTextProperty('fontFamily',this.value)">
+            <option>Arial</option><option>Georgia</option><option>Trebuchet MS</option>
+            <option>Verdana</option><option>Times New Roman</option><option>Courier New</option>
+          </select>
+          <button title="Kleiner" onclick="sb72NudgeFont(-1)">−</button>
+          <input title="Schriftgröße" id="sb72FontSize" type="number" min="8" max="144" value="16" onchange="applyTextProperty('fontSize',+this.value)">
+          <button title="Größer" onclick="sb72NudgeFont(1)">＋</button>
+          <button title="Fett" onclick="formatSelectedText('bold')"><b>B</b></button>
+          <button title="Kursiv" onclick="formatSelectedText('italic')"><i>I</i></button>
+          <button title="Unterstrichen" onclick="formatSelectedText('underline')"><u>U</u></button>
+          <button title="Liste" onclick="formatSelectedText('insertUnorderedList')">☷</button>
+          <button title="Nummerierte Liste" onclick="formatSelectedText('insertOrderedList')">1☷</button>
+          <input title="Textfarbe" type="color" value="#6f5951" onchange="applyTextProperty('color',this.value)">
+        </div>
+
         <div class="desktopCmdGroup">
           <span class="desktopCmdLabel">Einfügen</span>
           <div class="desktopCmdButtons">
@@ -3924,7 +4008,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 71";
+ $("#headerEyebrow").textContent="VERSION 72";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -7424,7 +7508,184 @@ button.primary,button.ghost,.iconbtn{
 }
 </style>
 
-</head><body><div class="page">${serializedCanvas()}</div><div id="buildVersionBadge" style="position:fixed;right:8px;bottom:8px;z-index:9999;font:800 9px Inter,sans-serif;color:#9b7d74;background:rgba(255,250,247,.88);border:1px solid #ead4cd;border-radius:999px;padding:5px 8px;pointer-events:none">V71</div>
+</head><body><div class="page">${serializedCanvas()}</div><div id="buildVersionBadge" style="position:fixed;right:8px;bottom:8px;z-index:9999;font:800 9px Inter,sans-serif;color:#9b7d74;background:rgba(255,250,247,.88);border:1px solid #ead4cd;border-radius:999px;padding:5px 8px;pointer-events:none">V63</div>
+
+<script id="sb72-reference-functions">
+(function(){
+  function B(label, action, icon){
+    return '<button onclick="'+action+'"><b>'+icon+'</b>'+label+'</button>';
+  }
+  function libraryHTML(group){
+    if(group==='templates'){
+      return '<input class="sb72Search" placeholder="Vorlagen suchen">'+
+        '<div class="sb72ChipRow"><span class="sb72Chip">Für dich</span><span class="sb72Chip">Lernzettel</span><span class="sb72Chip">Prüfung</span></div>'+
+        '<div class="sb72LibTitle"><b>Seitenvorlagen</b><span>Alle anzeigen</span></div>'+
+        '<div class="sb72TemplateGrid">'+
+        '<button class="sb72TemplateThumb" onclick="applyCanvasTemplate(\\'clean\\')"><b>Clean Notes</b><small>klare Überschrift + Merkkasten</small></button>'+
+        '<button class="sb72TemplateThumb" onclick="applyCanvasTemplate(\\'cute\\')"><b>Cute Study</b><small>Pastell + Sticker + Aufgabe</small></button>'+
+        '<button class="sb72TemplateThumb" onclick="applyCanvasTemplate(\\'exam\\')"><b>Exam Prep</b><small>Definitionen + Aufgaben</small></button>'+
+        '<button class="sb72TemplateThumb" onclick="applyCanvasTemplate(\\'blank\\')"><b>Leer</b><small>komplett frei gestalten</small></button></div>'+
+        '<button class="sb72WideButton" onclick="saveCurrentPageTemplate()">＋ Aktuelle Seite als Vorlage speichern</button>'+
+        '<button class="sb72WideButton" onclick="openPageTemplateManager()">⚙ Vorlagen verwalten</button>';
+    }
+    if(group==='text'){
+      var presets=(typeof canvasPresets==='function'?canvasPresets():[]);
+      var html='<div class="sb72LibTitle"><b>Text</b><span>Formate</span></div><div class="sb72LibGrid">';
+      presets.forEach(function(x){ html+=B(x.name, x.bundle?"insertSavedTextFormat('"+x.id+"')":"addCanvasText('"+x.id+"')", x.id==='h1'?'H1':x.id==='h2'?'H2':'Aa'); });
+      html+='</div><button class="sb72WideButton" onclick="addCanvasTextBox()">T Neues Textfeld</button>'+
+            '<button class="sb72WideButton" onclick="saveSelectionAsTextFormat()">＋ Auswahl als Textformat</button>'+
+            '<button class="sb72WideButton" onclick="openTextFormatManager()">⚙ Textformate verwalten</button>';
+      return html;
+    }
+    if(group==='elements'){
+      return '<div class="sb72LibTitle"><b>Elemente</b><span>Formen & Inhalt</span></div><div class="sb72LibGrid">'+
+        B('Rechteck',"addVectorShape('rect')",'□')+B('Kreis',"addVectorShape('ellipse')",'○')+
+        B('Dreieck',"addVectorShape('triangle')",'△')+B('Freier Pfad',"setVectorTool('pen')",'〰')+
+        B('Tabelle','openTableDialog()','▦')+B('Checkliste','addCanvasChecklist()','☑')+
+        B('Formel','openFormulaDialog()','ƒx')+B('Graph','openGraphDialog()','⌁')+
+        B('Trennlinie','addCanvasDivider()','—')+B('Sticker','toggleStickerPanel()','✿')+
+        B('Karo-Zettel',"addPaperSticker('grid')",'▩')+B('Liniert',"addPaperSticker('line')",'≡')+
+        '</div>';
+    }
+    if(group==='uploads'){
+      return '<div class="sb72LibTitle"><b>Uploads</b></div><div class="sb72LibGrid">'+
+        B('Bild / Foto','openCanvasMediaPicker()','▧')+B('Datei',"document.getElementById('canvasAnyFileInput').click()",'📎')+
+        B('Kamera',"document.getElementById('canvasCameraInput').click()",'◉')+B('Galerie',"document.getElementById('canvasImageInput').click()",'▤')+
+        '</div>';
+    }
+    if(group==='photos'){
+      return '<div class="sb72LibTitle"><b>Fotos</b></div><div class="sb72LibGrid">'+
+        B('Galerie',"document.getElementById('canvasImageInput').click()",'▧')+B('Kamera',"document.getElementById('canvasCameraInput').click()",'◉')+
+        '</div>';
+    }
+    if(group==='styles'){
+      return '<div class="sb72LibTitle"><b>Stile</b></div>'+
+        '<button class="sb72WideButton" onclick="sb72OpenInspector()">✦ Ausgewähltes Objekt gestalten</button>'+
+        '<button class="sb72WideButton" onclick="sb72ShowLibrary(\\'text\\')">Aa Textformate</button>'+
+        '<button class="sb72WideButton" onclick="toggleStickerPanel()">✿ Sticker</button>';
+    }
+    if(group==='backgrounds'){
+      return '<div class="sb72LibTitle"><b>Hintergründe</b></div>'+
+        '<button class="sb72WideButton" onclick="toggleTopViewMenu()">▨ Seitenfarbe / Papierstil öffnen</button>'+
+        '<div class="sb72LibGrid">'+
+        B('Leer',"setCanvasPageStyle('pattern','blank')",'□')+B('Liniert',"setCanvasPageStyle('pattern','lined')",'≡')+
+        B('Kariert',"setCanvasPageStyle('pattern','grid')",'▦')+B('Gepunktet',"setCanvasPageStyle('pattern','dots')",'⠿')+
+        '</div>';
+    }
+    if(group==='pages'){
+      return '<div class="sb72LibTitle"><b>Seiten</b></div><div class="sb72LibGrid">'+
+        B('Hochformat',"setCanvasOrientation('portrait')",'▯')+B('Querformat',"setCanvasOrientation('landscape')",'▭')+
+        B('An Bildschirm','fitCanvasStage()','⊡')+B('Seite einstellen','toggleTopViewMenu()','⚙')+
+        '</div><button class="sb72WideButton" onclick="saveCurrentPageTemplate()">＋ Als Seitenvorlage speichern</button>';
+    }
+    if(group==='apps'){
+      return '<div class="sb72LibTitle"><b>Mathematik & Tools</b></div><div class="sb72LibGrid">'+
+        B('Formel','openFormulaDialog()','∑')+B('Graph','openGraphDialog()','⌁')+
+        B('Datum','addCanvasDate()','◷')+B('Seitenzahl','addCanvasPageNumber()','#')+
+        '</div><button class="sb72WideButton" onclick="openShortcutHelp()">⌨ Tastenkürzel</button>';
+    }
+    return '';
+  }
+
+  window.sb72ShowLibrary=function(group,btn){
+    var p=document.getElementById('sb72LibraryPanel'); if(!p)return;
+    p.innerHTML=libraryHTML(group);
+    document.querySelectorAll('.sb72DesktopRail button').forEach(function(x){x.classList.remove('active')});
+    if(btn)btn.classList.add('active');
+  };
+
+  window.sb72NudgeFont=function(delta){
+    var inp=document.getElementById('sb72FontSize'); var v=Math.max(8,Math.min(144,(+inp.value||16)+delta));
+    inp.value=v; if(typeof applyTextProperty==='function')applyTextProperty('fontSize',v);
+  };
+
+  function mobileContent(group){
+    if(group==='text'){
+      var presets=(typeof canvasPresets==='function'?canvasPresets():[]);
+      var h='<h4>Text</h4><div class="sb72MobileGrid">';
+      presets.slice(0,7).forEach(function(x){h+=B(x.name,x.bundle?"insertSavedTextFormat('"+x.id+"')":"addCanvasText('"+x.id+"')",x.id==='h1'?'H1':x.id==='h2'?'H2':'Aa')});
+      h+=B('Textfeld','addCanvasTextBox()','T')+'</div><h4>Auswahl</h4><div class="sb72MobileRows">'+
+         '<button onclick="sb72OpenInspector()">Eigenschaften des ausgewählten Textes</button>'+
+         '<button onclick="saveSelectionAsTextFormat()">Auswahl als Textformat speichern</button></div>';
+      return h;
+    }
+    if(group==='elements'){
+      return '<h4>Elemente</h4><div class="sb72MobileGrid">'+
+        B('Rechteck',"addVectorShape('rect')",'□')+B('Kreis',"addVectorShape('ellipse')",'○')+
+        B('Dreieck',"addVectorShape('triangle')",'△')+B('Pfad',"setVectorTool('pen')",'〰')+
+        B('Tabelle','openTableDialog()','▦')+B('Checkliste','addCanvasChecklist()','☑')+
+        B('Formel','openFormulaDialog()','ƒx')+B('Graph','openGraphDialog()','⌁')+
+        B('Sticker','toggleStickerPanel()','✿')+B('Zettel',"addPaperSticker('grid')",'▩')+
+        B('Klebeband','addTapeSticker()','▰')+B('Linie','addCanvasDivider()','—')+'</div>';
+    }
+    if(group==='uploads'||group==='photos'){
+      return '<h4>Medien</h4><div class="sb72MobileGrid">'+
+        B('Galerie',"document.getElementById('canvasImageInput').click()",'▧')+
+        B('Kamera',"document.getElementById('canvasCameraInput').click()",'◉')+
+        B('Datei',"document.getElementById('canvasAnyFileInput').click()",'📎')+
+        B('Medien','openCanvasMediaPicker()','☁')+'</div>';
+    }
+    if(group==='pages'){
+      return '<h4>Seite</h4><div class="sb72MobileGrid">'+
+        B('An Bildschirm','fitCanvasStage()','⊡')+B('Hochformat',"setCanvasOrientation('portrait')",'▯')+
+        B('Querformat',"setCanvasOrientation('landscape')",'▭')+B('Seitenstil','toggleTopViewMenu()','⚙')+
+        B('Vorlage speichern','saveCurrentPageTemplate()','＋')+B('Vorlagen','openPageTemplateManager()','▦')+
+        '</div>';
+    }
+    if(group==='layers'){
+      return '<h4>Ebenen</h4><div class="sb72MobileRows">'+
+        '<button onclick="sb72OpenInspector(\\'layers\\')">Ebenenliste & Objekte öffnen</button>'+
+        '<button onclick="moveSelectedLayer(1)">↑ Nach vorne</button>'+
+        '<button onclick="moveSelectedLayer(-1)">↓ Nach hinten</button>'+
+        '<button onclick="toggleSelectedLock()">🔒 Sperren / entsperren</button></div>';
+    }
+    return '<h4>Mehr</h4><div class="sb72MobileGrid">'+
+      B('Gruppieren','groupSelectedItems()','▣')+B('Lösen','ungroupSelectedItems()','▢')+
+      B('Duplizieren','duplicateSelected()','⧉')+B('Mehrfach',"toggleMultiSelectMode()",'☑')+
+      B('Formel','openFormulaDialog()','∑')+B('Graph','openGraphDialog()','⌁')+
+      B('Shortcuts','openShortcutHelp()','⌨')+B('Drucken','printCanvasSheet()','▧')+
+      '</div>';
+  }
+
+  window.sb72OpenMobile=function(group,btn){
+    var sheet=document.getElementById('sb72MobileSheet'), content=document.getElementById('sb72MobileSheetContent');
+    if(!sheet||!content)return;
+    content.innerHTML=mobileContent(group); sheet.classList.add('open');
+    document.querySelectorAll('.sb72MobileBottom button').forEach(function(x){x.classList.remove('active')});
+    if(btn)btn.classList.add('active');
+  };
+
+  window.sb72OpenInspector=function(which){
+    var side=document.getElementById('desktopEditorSidebar'); if(!side)return;
+    var sheet=document.getElementById('sb72MobileSheet'); if(sheet)sheet.classList.remove('open');
+    side.classList.add('sb72MobileInspector');
+    if(which==='layers'){setTimeout(function(){document.getElementById('layerList')?.scrollIntoView({block:'center'})},50);}
+  };
+
+  document.addEventListener('pointerdown',function(e){
+    if(innerWidth>899)return;
+    var side=document.getElementById('desktopEditorSidebar');
+    if(side && side.classList.contains('sb72MobileInspector') && !side.contains(e.target) && !e.target.closest('.sb72MobileBottom')){
+      side.classList.remove('sb72MobileInspector');
+    }
+  });
+
+  setInterval(function(){
+    if(innerWidth>899)return;
+    var bar=document.getElementById('sb72SelectionBar');
+    if(!bar||typeof canvasState==='undefined')return;
+    var selected=!!canvasState.selectedId || (canvasState.selectedIds&&canvasState.selectedIds.length) || (canvasState.selectedVectorIds&&canvasState.selectedVectorIds.length);
+    bar.classList.toggle('visible',!!selected);
+  },250);
+
+  function init(){
+    if(document.getElementById('sb72LibraryPanel')) sb72ShowLibrary('templates',document.querySelector('.sb72DesktopRail button'));
+    if(innerWidth<900 && typeof fitCanvasStage==='function') setTimeout(fitCanvasStage,180);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+
 </body></html>`;
  const blob=new Blob([html],{type:"text/html"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=title.replace(/[^\wäöüÄÖÜß-]+/g,"_")+".html";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
 }

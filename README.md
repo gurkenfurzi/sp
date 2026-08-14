@@ -1,10 +1,8 @@
-# SchoolBloom V71 SAFE
+# SchoolBloom V72 — Reference UI
 
-Basis: direkt die funktionierende V63-Datei.
+Basis ist direkt V63. V63-Logik bleibt erhalten; der Editor wurde als neue UI-Schicht an die beiden gelieferten Referenzbilder angepasst.
 
-In diesem Build wurde die V63-Funktionslogik NICHT ersetzt und es wurden keine neuen JavaScript-Wrapper in die App geschoben. Die Änderung ist bewusst CSS-only, damit Stundenplan, Home, Fächer, Study, Canvas, Tabellen, Pfade, Mehrfachauswahl, Gruppierung, Ebenen, Textformate, Formeln, Graphen, Medien, Undo/Redo, Autosave, Vorlagen und Shortcuts aus V63 erhalten bleiben.
+Desktop: Topbar + linke Canva-artige Navigation + großes Library-Panel + Kontextleiste + Canvas + rechter Inspector.
+Mobile: kompakte Topbar + Canvas + Selection-Bar + Bottom-Nav mit Text, Elemente, Uploads, Fotos, Seiten, Ebenen und Mehr.
 
-Design:
-- Desktop: Canva/Word/Bloom-Studio Aufbau mit linker Werkzeugleiste, großem Inhaltsdrawer, oberer Kontextleiste, zentralem Canvas und rechtem Eigenschaftenbereich.
-- Handy: Referenz-orientierte Kopfzeile, große Arbeitsfläche, V63-Funktionsdrawer als Bottom-Sheet und Bottom-Navigation.
-- Pastell-Verlauf statt grauer Editor-Fläche.
+V63-Funktionen bleiben verfügbar: Stundenplan, Heat-Mode, Pausen, Home, Fächer, Aufgaben, Tests, Noten, StudyPet, Canvas, Formen/Pfade, Tabellen, Mehrfachauswahl, Gruppierung, Ebenen, Textformate, Formeln, Graphen, Medien, Seitenvorlagen, Undo/Redo, Autosave, Export/Druck und Tastenkürzel.
