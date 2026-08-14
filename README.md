@@ -1,23 +1,22 @@
-# VERSION 68
+# VERSION 69 — V63 Logic + Bloom/Canva UI
 
-Funktions-Rebuild des Canva/Word-artigen Editors.
+Basis ist direkt V63. Die V63-Funktionslogik wurde nicht ersetzt.
 
-Wichtig:
-- V67 hatte viele optische Buttons, die nicht an die echte Editor-Logik gekoppelt waren.
-- V68 koppelt die sichtbaren Werkzeugleisten an die bereits vorhandenen Canvas-Funktionen.
+Enthalten bleiben insbesondere:
+- Stundenplan inkl. Basisplan / aktueller Plan / Änderungen / Entfall / Hitzestunden / Pausen / Mehrfachstunden
+- Home / nächste Stunde / Zeitberechnung
+- Fächer, Notizbücher, Themen, Dateien
+- Karteikarten, Quiz, Lernsets
+- Aufgaben, Tests, Noten, StudyPet, Abwesenheiten
+- A4 Canvas, Hoch/Querformat, Papierstil, Raster, Seitenrand, Snap
+- Text, Formen, Pfade, Tabellen, Medien, Dateien, Checklisten, Sticker, Paper/Deko
+- Mehrfachauswahl, Shift-Auswahl, Gruppieren, Ebenen, Sperren, Löschwarnung
+- Undo/Redo, Autosave, Seitenvorlagen
+- visueller Formel-Editor inkl. Markierungsprinzip, verschachtelten Wurzeln/Brüchen, Exponent/Index-Löschschutz, eigene Formeln
+- Graph-Editor inkl. mehreren Funktionen, visueller Funktionsbearbeitung, Auto-Range, Asymptoten, Beschriftungen
+- Desktop-Shortcuts und Export/Drucken
 
-Handy:
-- automatische Bildschirm-Anpassung ist Standard
-- wird bei Resize/Rotation neu berechnet
-- Speichern, Undo, Redo und Vorschau funktionieren
-- Textformatierung (Schrift, Größe, Fett, Kursiv, Unterstrichen, Ausrichtung, Listen) funktioniert
-- Uploads/Fotos/Seiten/Ebenen/Mehr öffnen echte Funktionen
-- Objektleiste arbeitet mit der echten Auswahl
-- nur eine reale Seite wird angezeigt statt Fake-Seiten 1/2/3
-
-PC:
-- Fullscreen Canva/Word-Struktur bleibt
-- obere Formatleiste arbeitet mit der echten Auswahl
-- Design-Seite zeigt die echte Inspector-Logik gespiegelt
-- Ebenen und Seiteneinstellungen öffnen echte Werkzeuge
-- Uploads/Fotos und Schnell-Hinzufügen sind mit Editor-Funktionen verbunden
+V69 ändert primär die Darstellung des Editors:
+- Desktop: Bloom/Canva/Word-artige Vollbildoberfläche
+- Handy: Bloom-Mobile-Editor mit Bottom-Tools und großen Bottom-Sheets
+- Pastell-Verlauf statt grauer Arbeitsfläche
