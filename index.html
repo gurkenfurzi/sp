@@ -3082,7 +3082,7 @@ body.editorMode button:active{transform:scale(.97)}
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 72</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 73</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -4008,7 +4008,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 72";
+ $("#headerEyebrow").textContent="VERSION 73";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -7510,182 +7510,6 @@ button.primary,button.ghost,.iconbtn{
 
 </head><body><div class="page">${serializedCanvas()}</div><div id="buildVersionBadge" style="position:fixed;right:8px;bottom:8px;z-index:9999;font:800 9px Inter,sans-serif;color:#9b7d74;background:rgba(255,250,247,.88);border:1px solid #ead4cd;border-radius:999px;padding:5px 8px;pointer-events:none">V63</div>
 
-<script id="sb72-reference-functions">
-(function(){
-  function B(label, action, icon){
-    return '<button onclick="'+action+'"><b>'+icon+'</b>'+label+'</button>';
-  }
-  function libraryHTML(group){
-    if(group==='templates'){
-      return '<input class="sb72Search" placeholder="Vorlagen suchen">'+
-        '<div class="sb72ChipRow"><span class="sb72Chip">Für dich</span><span class="sb72Chip">Lernzettel</span><span class="sb72Chip">Prüfung</span></div>'+
-        '<div class="sb72LibTitle"><b>Seitenvorlagen</b><span>Alle anzeigen</span></div>'+
-        '<div class="sb72TemplateGrid">'+
-        '<button class="sb72TemplateThumb" onclick="applyCanvasTemplate(\\'clean\\')"><b>Clean Notes</b><small>klare Überschrift + Merkkasten</small></button>'+
-        '<button class="sb72TemplateThumb" onclick="applyCanvasTemplate(\\'cute\\')"><b>Cute Study</b><small>Pastell + Sticker + Aufgabe</small></button>'+
-        '<button class="sb72TemplateThumb" onclick="applyCanvasTemplate(\\'exam\\')"><b>Exam Prep</b><small>Definitionen + Aufgaben</small></button>'+
-        '<button class="sb72TemplateThumb" onclick="applyCanvasTemplate(\\'blank\\')"><b>Leer</b><small>komplett frei gestalten</small></button></div>'+
-        '<button class="sb72WideButton" onclick="saveCurrentPageTemplate()">＋ Aktuelle Seite als Vorlage speichern</button>'+
-        '<button class="sb72WideButton" onclick="openPageTemplateManager()">⚙ Vorlagen verwalten</button>';
-    }
-    if(group==='text'){
-      var presets=(typeof canvasPresets==='function'?canvasPresets():[]);
-      var html='<div class="sb72LibTitle"><b>Text</b><span>Formate</span></div><div class="sb72LibGrid">';
-      presets.forEach(function(x){ html+=B(x.name, x.bundle?"insertSavedTextFormat('"+x.id+"')":"addCanvasText('"+x.id+"')", x.id==='h1'?'H1':x.id==='h2'?'H2':'Aa'); });
-      html+='</div><button class="sb72WideButton" onclick="addCanvasTextBox()">T Neues Textfeld</button>'+
-            '<button class="sb72WideButton" onclick="saveSelectionAsTextFormat()">＋ Auswahl als Textformat</button>'+
-            '<button class="sb72WideButton" onclick="openTextFormatManager()">⚙ Textformate verwalten</button>';
-      return html;
-    }
-    if(group==='elements'){
-      return '<div class="sb72LibTitle"><b>Elemente</b><span>Formen & Inhalt</span></div><div class="sb72LibGrid">'+
-        B('Rechteck',"addVectorShape('rect')",'□')+B('Kreis',"addVectorShape('ellipse')",'○')+
-        B('Dreieck',"addVectorShape('triangle')",'△')+B('Freier Pfad',"setVectorTool('pen')",'〰')+
-        B('Tabelle','openTableDialog()','▦')+B('Checkliste','addCanvasChecklist()','☑')+
-        B('Formel','openFormulaDialog()','ƒx')+B('Graph','openGraphDialog()','⌁')+
-        B('Trennlinie','addCanvasDivider()','—')+B('Sticker','toggleStickerPanel()','✿')+
-        B('Karo-Zettel',"addPaperSticker('grid')",'▩')+B('Liniert',"addPaperSticker('line')",'≡')+
-        '</div>';
-    }
-    if(group==='uploads'){
-      return '<div class="sb72LibTitle"><b>Uploads</b></div><div class="sb72LibGrid">'+
-        B('Bild / Foto','openCanvasMediaPicker()','▧')+B('Datei',"document.getElementById('canvasAnyFileInput').click()",'📎')+
-        B('Kamera',"document.getElementById('canvasCameraInput').click()",'◉')+B('Galerie',"document.getElementById('canvasImageInput').click()",'▤')+
-        '</div>';
-    }
-    if(group==='photos'){
-      return '<div class="sb72LibTitle"><b>Fotos</b></div><div class="sb72LibGrid">'+
-        B('Galerie',"document.getElementById('canvasImageInput').click()",'▧')+B('Kamera',"document.getElementById('canvasCameraInput').click()",'◉')+
-        '</div>';
-    }
-    if(group==='styles'){
-      return '<div class="sb72LibTitle"><b>Stile</b></div>'+
-        '<button class="sb72WideButton" onclick="sb72OpenInspector()">✦ Ausgewähltes Objekt gestalten</button>'+
-        '<button class="sb72WideButton" onclick="sb72ShowLibrary(\\'text\\')">Aa Textformate</button>'+
-        '<button class="sb72WideButton" onclick="toggleStickerPanel()">✿ Sticker</button>';
-    }
-    if(group==='backgrounds'){
-      return '<div class="sb72LibTitle"><b>Hintergründe</b></div>'+
-        '<button class="sb72WideButton" onclick="toggleTopViewMenu()">▨ Seitenfarbe / Papierstil öffnen</button>'+
-        '<div class="sb72LibGrid">'+
-        B('Leer',"setCanvasPageStyle('pattern','blank')",'□')+B('Liniert',"setCanvasPageStyle('pattern','lined')",'≡')+
-        B('Kariert',"setCanvasPageStyle('pattern','grid')",'▦')+B('Gepunktet',"setCanvasPageStyle('pattern','dots')",'⠿')+
-        '</div>';
-    }
-    if(group==='pages'){
-      return '<div class="sb72LibTitle"><b>Seiten</b></div><div class="sb72LibGrid">'+
-        B('Hochformat',"setCanvasOrientation('portrait')",'▯')+B('Querformat',"setCanvasOrientation('landscape')",'▭')+
-        B('An Bildschirm','fitCanvasStage()','⊡')+B('Seite einstellen','toggleTopViewMenu()','⚙')+
-        '</div><button class="sb72WideButton" onclick="saveCurrentPageTemplate()">＋ Als Seitenvorlage speichern</button>';
-    }
-    if(group==='apps'){
-      return '<div class="sb72LibTitle"><b>Mathematik & Tools</b></div><div class="sb72LibGrid">'+
-        B('Formel','openFormulaDialog()','∑')+B('Graph','openGraphDialog()','⌁')+
-        B('Datum','addCanvasDate()','◷')+B('Seitenzahl','addCanvasPageNumber()','#')+
-        '</div><button class="sb72WideButton" onclick="openShortcutHelp()">⌨ Tastenkürzel</button>';
-    }
-    return '';
-  }
-
-  window.sb72ShowLibrary=function(group,btn){
-    var p=document.getElementById('sb72LibraryPanel'); if(!p)return;
-    p.innerHTML=libraryHTML(group);
-    document.querySelectorAll('.sb72DesktopRail button').forEach(function(x){x.classList.remove('active')});
-    if(btn)btn.classList.add('active');
-  };
-
-  window.sb72NudgeFont=function(delta){
-    var inp=document.getElementById('sb72FontSize'); var v=Math.max(8,Math.min(144,(+inp.value||16)+delta));
-    inp.value=v; if(typeof applyTextProperty==='function')applyTextProperty('fontSize',v);
-  };
-
-  function mobileContent(group){
-    if(group==='text'){
-      var presets=(typeof canvasPresets==='function'?canvasPresets():[]);
-      var h='<h4>Text</h4><div class="sb72MobileGrid">';
-      presets.slice(0,7).forEach(function(x){h+=B(x.name,x.bundle?"insertSavedTextFormat('"+x.id+"')":"addCanvasText('"+x.id+"')",x.id==='h1'?'H1':x.id==='h2'?'H2':'Aa')});
-      h+=B('Textfeld','addCanvasTextBox()','T')+'</div><h4>Auswahl</h4><div class="sb72MobileRows">'+
-         '<button onclick="sb72OpenInspector()">Eigenschaften des ausgewählten Textes</button>'+
-         '<button onclick="saveSelectionAsTextFormat()">Auswahl als Textformat speichern</button></div>';
-      return h;
-    }
-    if(group==='elements'){
-      return '<h4>Elemente</h4><div class="sb72MobileGrid">'+
-        B('Rechteck',"addVectorShape('rect')",'□')+B('Kreis',"addVectorShape('ellipse')",'○')+
-        B('Dreieck',"addVectorShape('triangle')",'△')+B('Pfad',"setVectorTool('pen')",'〰')+
-        B('Tabelle','openTableDialog()','▦')+B('Checkliste','addCanvasChecklist()','☑')+
-        B('Formel','openFormulaDialog()','ƒx')+B('Graph','openGraphDialog()','⌁')+
-        B('Sticker','toggleStickerPanel()','✿')+B('Zettel',"addPaperSticker('grid')",'▩')+
-        B('Klebeband','addTapeSticker()','▰')+B('Linie','addCanvasDivider()','—')+'</div>';
-    }
-    if(group==='uploads'||group==='photos'){
-      return '<h4>Medien</h4><div class="sb72MobileGrid">'+
-        B('Galerie',"document.getElementById('canvasImageInput').click()",'▧')+
-        B('Kamera',"document.getElementById('canvasCameraInput').click()",'◉')+
-        B('Datei',"document.getElementById('canvasAnyFileInput').click()",'📎')+
-        B('Medien','openCanvasMediaPicker()','☁')+'</div>';
-    }
-    if(group==='pages'){
-      return '<h4>Seite</h4><div class="sb72MobileGrid">'+
-        B('An Bildschirm','fitCanvasStage()','⊡')+B('Hochformat',"setCanvasOrientation('portrait')",'▯')+
-        B('Querformat',"setCanvasOrientation('landscape')",'▭')+B('Seitenstil','toggleTopViewMenu()','⚙')+
-        B('Vorlage speichern','saveCurrentPageTemplate()','＋')+B('Vorlagen','openPageTemplateManager()','▦')+
-        '</div>';
-    }
-    if(group==='layers'){
-      return '<h4>Ebenen</h4><div class="sb72MobileRows">'+
-        '<button onclick="sb72OpenInspector(\\'layers\\')">Ebenenliste & Objekte öffnen</button>'+
-        '<button onclick="moveSelectedLayer(1)">↑ Nach vorne</button>'+
-        '<button onclick="moveSelectedLayer(-1)">↓ Nach hinten</button>'+
-        '<button onclick="toggleSelectedLock()">🔒 Sperren / entsperren</button></div>';
-    }
-    return '<h4>Mehr</h4><div class="sb72MobileGrid">'+
-      B('Gruppieren','groupSelectedItems()','▣')+B('Lösen','ungroupSelectedItems()','▢')+
-      B('Duplizieren','duplicateSelected()','⧉')+B('Mehrfach',"toggleMultiSelectMode()",'☑')+
-      B('Formel','openFormulaDialog()','∑')+B('Graph','openGraphDialog()','⌁')+
-      B('Shortcuts','openShortcutHelp()','⌨')+B('Drucken','printCanvasSheet()','▧')+
-      '</div>';
-  }
-
-  window.sb72OpenMobile=function(group,btn){
-    var sheet=document.getElementById('sb72MobileSheet'), content=document.getElementById('sb72MobileSheetContent');
-    if(!sheet||!content)return;
-    content.innerHTML=mobileContent(group); sheet.classList.add('open');
-    document.querySelectorAll('.sb72MobileBottom button').forEach(function(x){x.classList.remove('active')});
-    if(btn)btn.classList.add('active');
-  };
-
-  window.sb72OpenInspector=function(which){
-    var side=document.getElementById('desktopEditorSidebar'); if(!side)return;
-    var sheet=document.getElementById('sb72MobileSheet'); if(sheet)sheet.classList.remove('open');
-    side.classList.add('sb72MobileInspector');
-    if(which==='layers'){setTimeout(function(){document.getElementById('layerList')?.scrollIntoView({block:'center'})},50);}
-  };
-
-  document.addEventListener('pointerdown',function(e){
-    if(innerWidth>899)return;
-    var side=document.getElementById('desktopEditorSidebar');
-    if(side && side.classList.contains('sb72MobileInspector') && !side.contains(e.target) && !e.target.closest('.sb72MobileBottom')){
-      side.classList.remove('sb72MobileInspector');
-    }
-  });
-
-  setInterval(function(){
-    if(innerWidth>899)return;
-    var bar=document.getElementById('sb72SelectionBar');
-    if(!bar||typeof canvasState==='undefined')return;
-    var selected=!!canvasState.selectedId || (canvasState.selectedIds&&canvasState.selectedIds.length) || (canvasState.selectedVectorIds&&canvasState.selectedVectorIds.length);
-    bar.classList.toggle('visible',!!selected);
-  },250);
-
-  function init(){
-    if(document.getElementById('sb72LibraryPanel')) sb72ShowLibrary('templates',document.querySelector('.sb72DesktopRail button'));
-    if(innerWidth<900 && typeof fitCanvasStage==='function') setTimeout(fitCanvasStage,180);
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
-})();
-</script>
-
 </body></html>`;
  const blob=new Blob([html],{type:"text/html"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=title.replace(/[^\wäöüÄÖÜß-]+/g,"_")+".html";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
 }
@@ -10938,6 +10762,182 @@ if("serviceWorker"in navigator&&location.protocol.startsWith("http")){
    }
  });
 }
+</script>
+
+<script id="sb72-reference-functions">
+(function(){
+  function B(label, action, icon){
+    return '<button onclick="'+action+'"><b>'+icon+'</b>'+label+'</button>';
+  }
+  function libraryHTML(group){
+    if(group==='templates'){
+      return '<input class="sb72Search" placeholder="Vorlagen suchen">'+
+        '<div class="sb72ChipRow"><span class="sb72Chip">Für dich</span><span class="sb72Chip">Lernzettel</span><span class="sb72Chip">Prüfung</span></div>'+
+        '<div class="sb72LibTitle"><b>Seitenvorlagen</b><span>Alle anzeigen</span></div>'+
+        '<div class="sb72TemplateGrid">'+
+        '<button class="sb72TemplateThumb" onclick="applyCanvasTemplate(\'clean\')"><b>Clean Notes</b><small>klare Überschrift + Merkkasten</small></button>'+
+        '<button class="sb72TemplateThumb" onclick="applyCanvasTemplate(\'cute\')"><b>Cute Study</b><small>Pastell + Sticker + Aufgabe</small></button>'+
+        '<button class="sb72TemplateThumb" onclick="applyCanvasTemplate(\'exam\')"><b>Exam Prep</b><small>Definitionen + Aufgaben</small></button>'+
+        '<button class="sb72TemplateThumb" onclick="applyCanvasTemplate(\'blank\')"><b>Leer</b><small>komplett frei gestalten</small></button></div>'+
+        '<button class="sb72WideButton" onclick="saveCurrentPageTemplate()">＋ Aktuelle Seite als Vorlage speichern</button>'+
+        '<button class="sb72WideButton" onclick="openPageTemplateManager()">⚙ Vorlagen verwalten</button>';
+    }
+    if(group==='text'){
+      var presets=(typeof canvasPresets==='function'?canvasPresets():[]);
+      var html='<div class="sb72LibTitle"><b>Text</b><span>Formate</span></div><div class="sb72LibGrid">';
+      presets.forEach(function(x){ html+=B(x.name, x.bundle?"insertSavedTextFormat('"+x.id+"')":"addCanvasText('"+x.id+"')", x.id==='h1'?'H1':x.id==='h2'?'H2':'Aa'); });
+      html+='</div><button class="sb72WideButton" onclick="addCanvasTextBox()">T Neues Textfeld</button>'+
+            '<button class="sb72WideButton" onclick="saveSelectionAsTextFormat()">＋ Auswahl als Textformat</button>'+
+            '<button class="sb72WideButton" onclick="openTextFormatManager()">⚙ Textformate verwalten</button>';
+      return html;
+    }
+    if(group==='elements'){
+      return '<div class="sb72LibTitle"><b>Elemente</b><span>Formen & Inhalt</span></div><div class="sb72LibGrid">'+
+        B('Rechteck',"addVectorShape('rect')",'□')+B('Kreis',"addVectorShape('ellipse')",'○')+
+        B('Dreieck',"addVectorShape('triangle')",'△')+B('Freier Pfad',"setVectorTool('pen')",'〰')+
+        B('Tabelle','openTableDialog()','▦')+B('Checkliste','addCanvasChecklist()','☑')+
+        B('Formel','openFormulaDialog()','ƒx')+B('Graph','openGraphDialog()','⌁')+
+        B('Trennlinie','addCanvasDivider()','—')+B('Sticker','toggleStickerPanel()','✿')+
+        B('Karo-Zettel',"addPaperSticker('grid')",'▩')+B('Liniert',"addPaperSticker('line')",'≡')+
+        '</div>';
+    }
+    if(group==='uploads'){
+      return '<div class="sb72LibTitle"><b>Uploads</b></div><div class="sb72LibGrid">'+
+        B('Bild / Foto','openCanvasMediaPicker()','▧')+B('Datei',"document.getElementById('canvasAnyFileInput').click()",'📎')+
+        B('Kamera',"document.getElementById('canvasCameraInput').click()",'◉')+B('Galerie',"document.getElementById('canvasImageInput').click()",'▤')+
+        '</div>';
+    }
+    if(group==='photos'){
+      return '<div class="sb72LibTitle"><b>Fotos</b></div><div class="sb72LibGrid">'+
+        B('Galerie',"document.getElementById('canvasImageInput').click()",'▧')+B('Kamera',"document.getElementById('canvasCameraInput').click()",'◉')+
+        '</div>';
+    }
+    if(group==='styles'){
+      return '<div class="sb72LibTitle"><b>Stile</b></div>'+
+        '<button class="sb72WideButton" onclick="sb72OpenInspector()">✦ Ausgewähltes Objekt gestalten</button>'+
+        '<button class="sb72WideButton" onclick="sb72ShowLibrary(\'text\')">Aa Textformate</button>'+
+        '<button class="sb72WideButton" onclick="toggleStickerPanel()">✿ Sticker</button>';
+    }
+    if(group==='backgrounds'){
+      return '<div class="sb72LibTitle"><b>Hintergründe</b></div>'+
+        '<button class="sb72WideButton" onclick="toggleTopViewMenu()">▨ Seitenfarbe / Papierstil öffnen</button>'+
+        '<div class="sb72LibGrid">'+
+        B('Leer',"setCanvasPageStyle('pattern','blank')",'□')+B('Liniert',"setCanvasPageStyle('pattern','lined')",'≡')+
+        B('Kariert',"setCanvasPageStyle('pattern','grid')",'▦')+B('Gepunktet',"setCanvasPageStyle('pattern','dots')",'⠿')+
+        '</div>';
+    }
+    if(group==='pages'){
+      return '<div class="sb72LibTitle"><b>Seiten</b></div><div class="sb72LibGrid">'+
+        B('Hochformat',"setCanvasOrientation('portrait')",'▯')+B('Querformat',"setCanvasOrientation('landscape')",'▭')+
+        B('An Bildschirm','fitCanvasStage()','⊡')+B('Seite einstellen','toggleTopViewMenu()','⚙')+
+        '</div><button class="sb72WideButton" onclick="saveCurrentPageTemplate()">＋ Als Seitenvorlage speichern</button>';
+    }
+    if(group==='apps'){
+      return '<div class="sb72LibTitle"><b>Mathematik & Tools</b></div><div class="sb72LibGrid">'+
+        B('Formel','openFormulaDialog()','∑')+B('Graph','openGraphDialog()','⌁')+
+        B('Datum','addCanvasDate()','◷')+B('Seitenzahl','addCanvasPageNumber()','#')+
+        '</div><button class="sb72WideButton" onclick="openShortcutHelp()">⌨ Tastenkürzel</button>';
+    }
+    return '';
+  }
+
+  window.sb72ShowLibrary=function(group,btn){
+    var p=document.getElementById('sb72LibraryPanel'); if(!p)return;
+    p.innerHTML=libraryHTML(group);
+    document.querySelectorAll('.sb72DesktopRail button').forEach(function(x){x.classList.remove('active')});
+    if(btn)btn.classList.add('active');
+  };
+
+  window.sb72NudgeFont=function(delta){
+    var inp=document.getElementById('sb72FontSize'); var v=Math.max(8,Math.min(144,(+inp.value||16)+delta));
+    inp.value=v; if(typeof applyTextProperty==='function')applyTextProperty('fontSize',v);
+  };
+
+  function mobileContent(group){
+    if(group==='text'){
+      var presets=(typeof canvasPresets==='function'?canvasPresets():[]);
+      var h='<h4>Text</h4><div class="sb72MobileGrid">';
+      presets.slice(0,7).forEach(function(x){h+=B(x.name,x.bundle?"insertSavedTextFormat('"+x.id+"')":"addCanvasText('"+x.id+"')",x.id==='h1'?'H1':x.id==='h2'?'H2':'Aa')});
+      h+=B('Textfeld','addCanvasTextBox()','T')+'</div><h4>Auswahl</h4><div class="sb72MobileRows">'+
+         '<button onclick="sb72OpenInspector()">Eigenschaften des ausgewählten Textes</button>'+
+         '<button onclick="saveSelectionAsTextFormat()">Auswahl als Textformat speichern</button></div>';
+      return h;
+    }
+    if(group==='elements'){
+      return '<h4>Elemente</h4><div class="sb72MobileGrid">'+
+        B('Rechteck',"addVectorShape('rect')",'□')+B('Kreis',"addVectorShape('ellipse')",'○')+
+        B('Dreieck',"addVectorShape('triangle')",'△')+B('Pfad',"setVectorTool('pen')",'〰')+
+        B('Tabelle','openTableDialog()','▦')+B('Checkliste','addCanvasChecklist()','☑')+
+        B('Formel','openFormulaDialog()','ƒx')+B('Graph','openGraphDialog()','⌁')+
+        B('Sticker','toggleStickerPanel()','✿')+B('Zettel',"addPaperSticker('grid')",'▩')+
+        B('Klebeband','addTapeSticker()','▰')+B('Linie','addCanvasDivider()','—')+'</div>';
+    }
+    if(group==='uploads'||group==='photos'){
+      return '<h4>Medien</h4><div class="sb72MobileGrid">'+
+        B('Galerie',"document.getElementById('canvasImageInput').click()",'▧')+
+        B('Kamera',"document.getElementById('canvasCameraInput').click()",'◉')+
+        B('Datei',"document.getElementById('canvasAnyFileInput').click()",'📎')+
+        B('Medien','openCanvasMediaPicker()','☁')+'</div>';
+    }
+    if(group==='pages'){
+      return '<h4>Seite</h4><div class="sb72MobileGrid">'+
+        B('An Bildschirm','fitCanvasStage()','⊡')+B('Hochformat',"setCanvasOrientation('portrait')",'▯')+
+        B('Querformat',"setCanvasOrientation('landscape')",'▭')+B('Seitenstil','toggleTopViewMenu()','⚙')+
+        B('Vorlage speichern','saveCurrentPageTemplate()','＋')+B('Vorlagen','openPageTemplateManager()','▦')+
+        '</div>';
+    }
+    if(group==='layers'){
+      return '<h4>Ebenen</h4><div class="sb72MobileRows">'+
+        '<button onclick="sb72OpenInspector(\'layers\')">Ebenenliste & Objekte öffnen</button>'+
+        '<button onclick="moveSelectedLayer(1)">↑ Nach vorne</button>'+
+        '<button onclick="moveSelectedLayer(-1)">↓ Nach hinten</button>'+
+        '<button onclick="toggleSelectedLock()">🔒 Sperren / entsperren</button></div>';
+    }
+    return '<h4>Mehr</h4><div class="sb72MobileGrid">'+
+      B('Gruppieren','groupSelectedItems()','▣')+B('Lösen','ungroupSelectedItems()','▢')+
+      B('Duplizieren','duplicateSelected()','⧉')+B('Mehrfach',"toggleMultiSelectMode()",'☑')+
+      B('Formel','openFormulaDialog()','∑')+B('Graph','openGraphDialog()','⌁')+
+      B('Shortcuts','openShortcutHelp()','⌨')+B('Drucken','printCanvasSheet()','▧')+
+      '</div>';
+  }
+
+  window.sb72OpenMobile=function(group,btn){
+    var sheet=document.getElementById('sb72MobileSheet'), content=document.getElementById('sb72MobileSheetContent');
+    if(!sheet||!content)return;
+    content.innerHTML=mobileContent(group); sheet.classList.add('open');
+    document.querySelectorAll('.sb72MobileBottom button').forEach(function(x){x.classList.remove('active')});
+    if(btn)btn.classList.add('active');
+  };
+
+  window.sb72OpenInspector=function(which){
+    var side=document.getElementById('desktopEditorSidebar'); if(!side)return;
+    var sheet=document.getElementById('sb72MobileSheet'); if(sheet)sheet.classList.remove('open');
+    side.classList.add('sb72MobileInspector');
+    if(which==='layers'){setTimeout(function(){document.getElementById('layerList')?.scrollIntoView({block:'center'})},50);}
+  };
+
+  document.addEventListener('pointerdown',function(e){
+    if(innerWidth>899)return;
+    var side=document.getElementById('desktopEditorSidebar');
+    if(side && side.classList.contains('sb72MobileInspector') && !side.contains(e.target) && !e.target.closest('.sb72MobileBottom')){
+      side.classList.remove('sb72MobileInspector');
+    }
+  });
+
+  setInterval(function(){
+    if(innerWidth>899)return;
+    var bar=document.getElementById('sb72SelectionBar');
+    if(!bar||typeof canvasState==='undefined')return;
+    var selected=!!canvasState.selectedId || (canvasState.selectedIds&&canvasState.selectedIds.length) || (canvasState.selectedVectorIds&&canvasState.selectedVectorIds.length);
+    bar.classList.toggle('visible',!!selected);
+  },250);
+
+  function init(){
+    if(document.getElementById('sb72LibraryPanel')) sb72ShowLibrary('templates',document.querySelector('.sb72DesktopRail button'));
+    if(innerWidth<900 && typeof fitCanvasStage==='function') setTimeout(fitCanvasStage,180);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
 </script>
 </body>
 </html>
