@@ -2984,12 +2984,28 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
 }
 </style>
 
+
+<style id="v85-mobile-text-tabs-fix">
+@media (max-width:899px){
+ body.editorMode #canvasQuickDrawer.open{padding-bottom:8px!important;overflow:hidden!important;display:flex!important;flex-direction:column!important;max-height:min(58vh,510px)!important}
+ body.editorMode #canvasQuickDrawer .mobileDrawerHead{flex:0 0 auto!important;margin-bottom:0!important}
+ .mobileTextEditor{display:flex!important;flex-direction:column!important;min-height:0!important;flex:1!important}
+ .mobileTextModeContent{min-height:0!important;overflow:auto!important;padding:10px 2px 10px!important;flex:1!important;-webkit-overflow-scrolling:touch!important}
+ .mobileTextModeTabs{flex:0 0 auto!important;display:grid!important;grid-template-columns:repeat(5,1fr)!important;gap:6px!important;border-top:1px solid #f0e4df!important;padding:9px 0 0!important;background:rgba(255,252,250,.98)!important}
+ .mobileTextModeTabs button{min-width:0!important;min-height:58px!important;border:0!important;border-radius:14px!important;background:transparent!important;color:#745d55!important;padding:6px 2px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:3px!important}
+ .mobileTextModeTabs button b{font-size:18px!important;line-height:1!important}.mobileTextModeTabs button span{font-size:8px!important;font-weight:900!important;white-space:nowrap!important}
+ .mobileTextModeTabs button.on{background:#f7dfde!important;color:#a76f73!important}
+ .mobileModeSection{display:grid!important;gap:10px!important}.mobileModeIntro{display:grid!important;gap:2px!important;padding:0 3px!important}.mobileModeIntro b{font-size:12px!important;color:#6d574f!important}.mobileModeIntro span{font-size:8px!important;color:#9a8077!important}
+ .mobileTextBar{padding:0!important}
+}
+</style>
+
 </head>
 <body class="v57">
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 84</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 85</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -3852,7 +3868,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 84";
+ $("#headerEyebrow").textContent="VERSION 85";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -6362,57 +6378,87 @@ function mobileTextControlsHTML(){
  if(!o){
    return `<div class="mobileDrawerSection"><div class="mobileDrawerTitle">Text hinzufügen</div><div class="mobileToolGrid">${canvasPresets().map(x=>`<button onclick="${x.bundle?`insertSavedTextFormat('${x.id}')`:`addCanvasText('${x.id}')`}"><b>${x.id==="h1"?"H1":x.id==="h2"?"H2":x.id==="task"?"✓":x.id==="merke"?"!":"Aa"}</b><span>${x.name}</span></button>`).join("")}</div></div>`;
  }
- const st=o.style||{};
- const ff=st.fontFamily||"Arial",fs=st.fontSize||16,ta=st.textAlign||"left";
- return `<div class="mobileTextBar">
-   <div class="mobileTextTop">
-     <select onchange="applyTextProperty('fontFamily',this.value)">
-       ${["Arial","Lato","Playfair Display","Georgia","Verdana","Trebuchet MS"].map(f=>`<option ${ff===f?"selected":""}>${f}</option>`).join("")}
-     </select>
-     <div class="mobileSizeStep"><button onclick="mobileFontStep(-1)">−</button><input id="mobileFontSize" type="number" min="6" max="180" value="${fs}" onchange="applyTextProperty('fontSize',+this.value)"><button onclick="mobileFontStep(1)">＋</button></div>
-     <button onclick="formatSelectedText('bold')"><b>B</b></button>
-     <button onclick="formatSelectedText('italic')"><i>I</i></button>
-     <button onclick="formatSelectedText('underline')"><u>U</u></button>
-     <button onclick="formatSelectedText('strikeThrough')"><s>S</s></button>
+ return `<div class="mobileTextEditor">
+   <div id="mobileTextModeContent" class="mobileTextModeContent">${mobileTextModeContentHTML('text')}</div>
+   <div class="mobileTextModeTabs" role="tablist" aria-label="Text-Werkzeuge">
+     <button class="on" data-mode="text" onclick="mobileTextMode('text',this)"><b>T</b><span>Text</span></button>
+     <button data-mode="appearance" onclick="mobileTextMode('appearance',this)"><b>◉</b><span>Aussehen</span></button>
+     <button data-mode="spacing" onclick="mobileTextMode('spacing',this)"><b>Vᴬ</b><span>Abstand</span></button>
+     <button data-mode="position" onclick="mobileTextMode('position',this)"><b>⌗</b><span>Position</span></button>
+     <button data-mode="effects" onclick="mobileTextMode('effects',this)"><b>✦</b><span>Effekte</span></button>
    </div>
-   <div class="mobileTextMiddle">
-     <label class="mobileColorDot" style="--dot:${st.color||'#7a5f57'}"><input type="color" value="${st.color||'#7a5f57'}" onchange="applyTextProperty('color',this.value)"></label>
-     <button class="${ta==='left'?'on':''}" onclick="applyTextProperty('textAlign','left')">≡</button>
-     <button class="${ta==='center'?'on':''}" onclick="applyTextProperty('textAlign','center')">≣</button>
-     <button class="${ta==='right'?'on':''}" onclick="applyTextProperty('textAlign','right')">≡</button>
-     <button class="${ta==='justify'?'on':''}" onclick="applyTextProperty('textAlign','justify')">☷</button>
-     <button onclick="formatSelectedText('insertUnorderedList')">•≡</button>
-     <button onclick="formatSelectedText('insertOrderedList')">1≡</button>
-     <button onclick="mobileDashList()">–≡</button>
-   </div>
-   <div class="mobilePropertyTabs">
-     <button onclick="mobileTextSubpanel('appearance')"><b>◉</b><span>Aussehen</span></button>
-     <button onclick="mobileTextSubpanel('spacing')"><b>Vᴬ</b><span>Abstand</span></button>
-     <button onclick="mobileTextSubpanel('position')"><b>⌗</b><span>Position</span></button>
-     <button onclick="mobileTextSubpanel('effects')"><b>✦</b><span>Effekte</span></button>
-   </div>
-   <div id="mobileTextSubpanel"></div>
  </div>`;
+}
+function mobileTextModeContentHTML(kind){
+ const o=mobileSelectedText();if(!o)return '';
+ const st=o.style||{};
+ if(kind==='text'){
+   const ff=st.fontFamily||"Arial",fs=st.fontSize||16,ta=st.textAlign||"left";
+   return `<div class="mobileTextBar">
+     <div class="mobileTextTop">
+       <select onchange="applyTextProperty('fontFamily',this.value)">
+         ${["Arial","Lato","Playfair Display","Georgia","Verdana","Trebuchet MS"].map(f=>`<option ${ff===f?"selected":""}>${f}</option>`).join("")}
+       </select>
+       <div class="mobileSizeStep"><button onclick="mobileFontStep(-1)">−</button><input id="mobileFontSize" type="number" min="6" max="180" value="${fs}" onchange="applyTextProperty('fontSize',+this.value)"><button onclick="mobileFontStep(1)">＋</button></div>
+       <button onclick="formatSelectedText('bold')"><b>B</b></button>
+       <button onclick="formatSelectedText('italic')"><i>I</i></button>
+       <button onclick="formatSelectedText('underline')"><u>U</u></button>
+       <button onclick="formatSelectedText('strikeThrough')"><s>S</s></button>
+     </div>
+     <div class="mobileTextMiddle">
+       <label class="mobileColorDot" style="--dot:${st.color||'#7a5f57'}"><input type="color" value="${st.color||'#7a5f57'}" onchange="applyTextProperty('color',this.value)"></label>
+       <button class="${ta==='left'?'on':''}" onclick="applyTextProperty('textAlign','left');mobileRefreshTextMode()">≡</button>
+       <button class="${ta==='center'?'on':''}" onclick="applyTextProperty('textAlign','center');mobileRefreshTextMode()">≣</button>
+       <button class="${ta==='right'?'on':''}" onclick="applyTextProperty('textAlign','right');mobileRefreshTextMode()">≡</button>
+       <button class="${ta==='justify'?'on':''}" onclick="applyTextProperty('textAlign','justify');mobileRefreshTextMode()">☷</button>
+       <button onclick="formatSelectedText('insertUnorderedList')">•≡</button>
+       <button onclick="formatSelectedText('insertOrderedList')">1≡</button>
+       <button onclick="mobileDashList()">–≡</button>
+     </div>
+   </div>`;
+ }
+ if(kind==='appearance')return `<div class="mobileModeSection"><div class="mobileModeIntro"><b>Aussehen</b><span>Farbe, Fläche, Kontur und Transparenz.</span></div><div class="mobileSubGrid">
+   <label>Textfarbe<input type="color" value="${st.color||'#7a5f57'}" onchange="applyTextProperty('color',this.value)"></label>
+   <label>Hintergrund<input type="color" value="${st.background&&st.background!=='transparent'?st.background:'#ffffff'}" onchange="updateObjStyle('background',this.value)"></label>
+   <label>Kontur<input type="color" value="${st.borderColor||'#e5aaa9'}" onchange="updateObjStyle('borderColor',this.value)"></label>
+   <label>Dicke<input type="number" min="0" max="20" value="${st.borderWidth||0}" onchange="updateObjStyle('borderWidth',+this.value)"></label>
+   <label>Linie<select onchange="updateObjStyle('borderStyle',this.value)"><option value="solid" ${(!st.borderStyle||st.borderStyle==='solid')?'selected':''}>Durchgezogen</option><option value="dashed" ${st.borderStyle==='dashed'?'selected':''}>Gestrichelt</option><option value="dotted" ${st.borderStyle==='dotted'?'selected':''}>Gepunktet</option></select></label>
+   <label>Transparenz<input type="range" min="0" max="100" value="${Math.round((st.opacity??1)*100)}" oninput="updateObjStyle('opacity',+this.value/100)"></label>
+   <button onclick="mobileGradient()">Verlauf</button><button onclick="updateObjStyle('background','transparent')">Fläche aus</button>
+ </div></div>`;
+ if(kind==='spacing')return `<div class="mobileModeSection"><div class="mobileModeIntro"><b>Abstand</b><span>Text- und Innenabstände fein einstellen.</span></div><div class="mobileSubGrid">
+   <label>Buchstaben<input type="number" step=".5" value="${st.letterSpacing||0}" onchange="updateObjStyle('letterSpacing',+this.value)"></label>
+   <label>Zeilenhöhe<input type="number" step=".05" min=".8" max="3" value="${st.lineHeight||1.25}" onchange="updateObjStyle('lineHeight',+this.value)"></label>
+   <label>Innenabstand<input type="number" min="0" max="80" value="${st.padding??7}" onchange="updateObjStyle('padding',+this.value)"></label>
+   <label>Eckenradius<input type="number" min="0" max="80" value="${st.borderRadius||0}" onchange="updateObjStyle('borderRadius',+this.value)"></label>
+ </div></div>`;
+ if(kind==='position')return `<div class="mobileModeSection"><div class="mobileModeIntro"><b>Position</b><span>Größe, Position und Ausrichtung auf der Seite.</span></div><div class="mobileSubGrid">
+   <label>X<input type="number" value="${Math.round(o.x)}" onchange="setSelectedGeometry('x',+this.value)"></label><label>Y<input type="number" value="${Math.round(o.y)}" onchange="setSelectedGeometry('y',+this.value)"></label>
+   <label>Breite<input type="number" value="${Math.round(o.w)}" onchange="setSelectedGeometry('w',+this.value)"></label><label>Höhe<input type="number" value="${Math.round(o.h)}" onchange="setSelectedGeometry('h',+this.value)"></label>
+   <button onclick="alignSelected('centerX')">Horizontal mittig</button><button onclick="alignSelected('centerY')">Vertikal mittig</button>
+ </div></div>`;
+ if(kind==='effects')return `<div class="mobileModeSection"><div class="mobileModeIntro"><b>Effekte</b><span>Schatten und visuelle Tiefe.</span></div><div class="mobileSubGrid">
+   <label>Schatten Blur<input id="mobileShadowBlur" type="number" min="0" max="60" value="14"></label><label>Schatten Y<input id="mobileShadowY" type="number" min="-30" max="30" value="5"></label>
+   <button onclick="mobileApplyShadow()">Schatten an</button><button onclick="updateObjStyle('boxShadow','none')">Schatten aus</button>
+ </div></div>`;
+ return '';
+}
+window.mobileTextMode=function(kind,btn){
+ const content=$("#mobileTextModeContent");if(!content)return;
+ content.innerHTML=mobileTextModeContentHTML(kind);
+ $$(".mobileTextModeTabs button").forEach(x=>x.classList.toggle("on",x.dataset.mode===kind));
+ const labels={text:"Text bearbeiten",appearance:"Aussehen",spacing:"Abstand",position:"Position",effects:"Effekte"};
+ const head=$("#canvasQuickDrawer .mobileDrawerHead b");if(head)head.textContent=labels[kind]||"Text bearbeiten";
+}
+window.mobileRefreshTextMode=function(){
+ const active=$(".mobileTextModeTabs button.on");const kind=active?.dataset.mode||'text';
+ const content=$("#mobileTextModeContent");if(content)content.innerHTML=mobileTextModeContentHTML(kind);
 }
 window.mobileFontStep=function(n){const x=$("#mobileFontSize");if(!x)return;x.value=Math.max(6,Math.min(180,(+x.value||16)+n));applyTextProperty('fontSize',+x.value)}
 window.mobileDashList=function(){
  const el=$(`.cobj[data-id="${canvasState.selectedId}"]`);if(!el||!el.isContentEditable)return;
  el.focus();document.execCommand('insertUnorderedList',false,null);el.querySelectorAll('ul').forEach(x=>x.style.listStyleType='"–  "');
  const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(o)o.text=el.innerHTML;markCanvasDirty();
-}
-window.mobileTextSubpanel=function(kind){
- const box=$("#mobileTextSubpanel"),o=mobileSelectedText();if(!box||!o)return;const st=o.style||{};
- if(kind==='appearance')box.innerHTML=`<div class="mobileSubGrid">
-   <label>Hintergrund<input type="color" value="${st.background&&st.background!=='transparent'?st.background:'#ffffff'}" onchange="updateObjStyle('background',this.value)"></label>
-   <label>Kontur<input type="color" value="${st.borderColor||'#e5aaa9'}" onchange="updateObjStyle('borderColor',this.value)"></label>
-   <label>Dicke<input type="number" min="0" max="20" value="${st.borderWidth||0}" onchange="updateObjStyle('borderWidth',+this.value)"></label>
-   <label>Linie<select onchange="updateObjStyle('borderStyle',this.value)"><option value="solid" ${(!st.borderStyle||st.borderStyle==='solid')?'selected':''}>Durchgezogen</option><option value="dashed" ${st.borderStyle==='dashed'?'selected':''}>Gestrichelt</option><option value="dotted" ${st.borderStyle==='dotted'?'selected':''}>Gepunktet</option></select></label>
-   <label>Transparenz<input type="range" min="0" max="100" value="${Math.round((st.opacity??1)*100)}" oninput="updateObjStyle('opacity',+this.value/100)"></label>
-   <button onclick="mobileGradient()">Verlauf</button>
- </div>`;
- if(kind==='spacing')box.innerHTML=`<div class="mobileSubGrid"><label>Buchstaben<input type="number" step=".5" value="${st.letterSpacing||0}" onchange="updateObjStyle('letterSpacing',+this.value)"></label><label>Zeilenhöhe<input type="number" step=".05" min=".8" max="3" value="${st.lineHeight||1.25}" onchange="updateObjStyle('lineHeight',+this.value)"></label><label>Innenabstand<input type="number" min="0" max="80" value="${st.padding??7}" onchange="updateObjStyle('padding',+this.value)"></label></div>`;
- if(kind==='position')box.innerHTML=`<div class="mobileSubGrid"><label>X<input type="number" value="${o.x}" onchange="setSelectedGeometry('x',+this.value)"></label><label>Y<input type="number" value="${o.y}" onchange="setSelectedGeometry('y',+this.value)"></label><label>Breite<input type="number" value="${o.w}" onchange="setSelectedGeometry('w',+this.value)"></label><label>Höhe<input type="number" value="${o.h}" onchange="setSelectedGeometry('h',+this.value)"></label><button onclick="alignSelected('centerX')">Horizontal mittig</button><button onclick="alignSelected('centerY')">Vertikal mittig</button></div>`;
- if(kind==='effects')box.innerHTML=`<div class="mobileSubGrid"><label>Schatten Blur<input id="mobileShadowBlur" type="number" min="0" max="60" value="14"></label><label>Schatten Y<input id="mobileShadowY" type="number" min="-30" max="30" value="5"></label><button onclick="mobileApplyShadow()">Schatten an</button><button onclick="updateObjStyle('boxShadow','none')">Schatten aus</button></div>`;
 }
 window.mobileGradient=function(){const a=prompt('Startfarbe','#f2c3c5');if(!a)return;const b=prompt('Endfarbe','#fff6f1');if(!b)return;updateObjStyle('background',`linear-gradient(135deg,${a},${b})`)}
 window.mobileApplyShadow=function(){const blur=+$("#mobileShadowBlur")?.value||14,y=+$("#mobileShadowY")?.value||5;updateObjStyle('boxShadow',`0 ${y}px ${blur}px rgba(94,68,62,.20)`)}
