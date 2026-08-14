@@ -1,33 +1,42 @@
-# VERSION 62
+# VERSION 63
 
-## WICHTIG: Cache-Problem behoben
-Auf dem GitHub-Screenshot war `sw.js` deutlich älter als `index.html`.
-Der alte Service Worker konnte deshalb weiterhin eine alte SchoolBloom-Version aus dem Cache ausliefern.
+## Formeln & Graph-Funktionen
+- Rechenzeichen direkt unter dem Eingabefeld.
+- Normaler Formel-Editor jetzt genauso sortiert wie der Graph-Funktionseditor:
+  Bausteine / Symbole & Pfeile.
+- Undo und Redo direkt im normalen Formel-Editor UND im Graph-Funktionseditor.
+- Wurzel-Artefakt erneut an der Quelle gefixt:
+  Safari/WebKit hinterlässt beim Umschließen einer Auswahl manchmal einen einzelnen Minus-/Dash-Textknoten.
+  Dieser wird jetzt schon VOR dem Einfügen und danach im visuellen DOM entfernt.
 
-VERSION 62 enthält deshalb wieder eine **neue sw.js**:
-- Cache heißt `schoolbloom-v62`
-- alle alten SchoolBloom-Caches werden beim Aktivieren gelöscht
-- `index.html` / Seiten-Navigation benutzt Network-First
-- Service Worker aktualisiert sich mit `updateViaCache: "none"`
-- wartende neue Worker werden sofort aktiviert
-- unten rechts steht sichtbar `V62`, damit man direkt erkennt, welche Version wirklich geladen wurde
+## Desktop
+- Einfügen-Menü größer und in Bereiche sortiert:
+  Medien / Inhalt / Mathematik / Seite / Papier & Deko.
+- Pastell-Verlauf jetzt auch in Topbar, Ribbon, linker Werkzeugleiste, Seitenleiste und geöffneten Menüs.
+- dunkler eigener Mauszeiger auf der hellen Arbeitsfläche.
+- Auswahlrahmen: auf leerer Arbeitsfläche ziehen und mehrere Objekte/Formen auswählen.
+- Shift + Klick erweitert die Auswahl weiterhin.
 
-Beim Upload auf GitHub unbedingt **ALLE Dateien aus dem ZIP ersetzen**, besonders:
-- index.html
-- sw.js
-- README.md
-- manifest.webmanifest
-- icon-Dateien
+## Tastenkürzel
+- Ctrl/Cmd+Z / Y
+- Ctrl/Cmd+C / V
+- Ctrl/Cmd+D
+- Ctrl/Cmd+A
+- Ctrl/Cmd+G / Shift+Ctrl/Cmd+G
+- Ctrl/Cmd+0
+- Ctrl/Cmd+S
+- Delete/Backspace mit Löschwarnung
+- Pfeiltasten 1 px, Shift+Pfeil 10 px
+- ? öffnet Shortcut-Hilfe
 
-## Desktop-Editor
-Komplett neues Word/Canva-artiges Layout:
-- volle Browserfläche
-- Titel-/Speicherleiste oben
-- großes Ribbon mit Einfügen, Formel, Graph, Checkliste, Duplizieren, Gruppieren, Ebenen und Ansicht
-- vertikale Canva-Werkzeugleiste links
-- große zentrale Dokument-Arbeitsfläche
-- Eigenschaften/Ebenen/Textformate rechts
-- Einfügen-Panels öffnen links wie bei Canva
-- warmer SchoolBloom-Verlauf statt grauem/depressivem Hintergrund
-- dezentes Punktraster im Workspace
-- weiße, klare Panels mit Pastell-Akzenten
+## Medien
+- Der fehlende `canvasImageInput` existiert jetzt wirklich.
+- Bild/Foto öffnet einen Medien-Dialog:
+  Galerie/Dateien, Kamera oder allgemeine Datei.
+- Andere Datei-Eingaben mit Bild-Unterstützung bekommen automatisch eine Kamera-Schaltfläche.
+- Nicht-Bild-Dateien können als Datei-Karte ins Lernblatt eingefügt werden.
+
+## Seitenvorlagen
+- `Clean Notes`, `Cute Study`, `Exam Prep`, `Leer` heißen im Interface jetzt korrekt `Seitenvorlagen`.
+- Aktuelle komplette Seite kann als eigene Vorlage gespeichert werden.
+- Eigene Seitenvorlagen können angewendet, verwaltet und gelöscht werden.
