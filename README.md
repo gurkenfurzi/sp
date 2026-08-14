@@ -1,22 +1,18 @@
-# VERSION 69 — V63 Logic + Bloom/Canva UI
+# SchoolBloom V70
 
-Basis ist direkt V63. Die V63-Funktionslogik wurde nicht ersetzt.
+V70 basiert direkt auf dem echten V63-Funktionsstand.
 
-Enthalten bleiben insbesondere:
-- Stundenplan inkl. Basisplan / aktueller Plan / Änderungen / Entfall / Hitzestunden / Pausen / Mehrfachstunden
-- Home / nächste Stunde / Zeitberechnung
-- Fächer, Notizbücher, Themen, Dateien
-- Karteikarten, Quiz, Lernsets
-- Aufgaben, Tests, Noten, StudyPet, Abwesenheiten
-- A4 Canvas, Hoch/Querformat, Papierstil, Raster, Seitenrand, Snap
-- Text, Formen, Pfade, Tabellen, Medien, Dateien, Checklisten, Sticker, Paper/Deko
-- Mehrfachauswahl, Shift-Auswahl, Gruppieren, Ebenen, Sperren, Löschwarnung
-- Undo/Redo, Autosave, Seitenvorlagen
-- visueller Formel-Editor inkl. Markierungsprinzip, verschachtelten Wurzeln/Brüchen, Exponent/Index-Löschschutz, eigene Formeln
-- Graph-Editor inkl. mehreren Funktionen, visueller Funktionsbearbeitung, Auto-Range, Asymptoten, Beschriftungen
-- Desktop-Shortcuts und Export/Drucken
+Wichtig: Die V63-Logik für Stundenplan, Hitzestunden, Basisplan, Home, Fächer,
+Karteikarten/Quiz, StudyPet, Canvas, Textformate, Formeln, Graphen, Tabellen,
+Pfade, Medien, Mehrfachauswahl, Gruppierung, Ebenen, Undo/Redo, Autosave,
+Vorlagen, Shortcuts und Export bleibt erhalten.
 
-V69 ändert primär die Darstellung des Editors:
-- Desktop: Bloom/Canva/Word-artige Vollbildoberfläche
-- Handy: Bloom-Mobile-Editor mit Bottom-Tools und großen Bottom-Sheets
-- Pastell-Verlauf statt grauer Arbeitsfläche
+Neu ist die Editor-Oberfläche:
+- Desktop: sehr nah an der gelieferten Bloom-Studio/Canva-Referenz
+  mit linker Werkzeugleiste, großem Inhalts-Panel, Top-Toolbar,
+  zentraler Arbeitsfläche und rechtem Design/Seite/Ebene-Panel.
+- Handy: sehr nah an der gelieferten mobilen Referenz
+  mit kompaktem Header, freier Arbeitsfläche, schwebender Objektleiste
+  und 7-teiligem Bottom-Menü (Text, Elemente, Uploads, Fotos, Seiten, Ebenen, Mehr).
+- Textformate, eigene Textformate, Formeln und Graphen sind sichtbar erreichbar.
+- Handy passt das Blatt weiterhin automatisch an den Bildschirm an.
