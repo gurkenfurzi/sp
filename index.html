@@ -3005,7 +3005,7 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 86</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 87</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -3325,7 +3325,6 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
       <div class="canvasQuickNav" aria-label="Editor-Werkzeuge">
   <button data-group="text" onclick="editorOpenGroup('text',this)">T<span>Text</span></button>
   <button data-group="elements" onclick="editorOpenGroup('elements',this)">◇<span>Elemente</span></button>
-  <button data-group="formats" onclick="editorOpenGroup('formats',this)">Aa<span>Formate</span></button>
   <button data-group="templates" onclick="editorOpenGroup('templates',this)">▤<span>Vorlagen</span></button>
   <button data-group="pages" onclick="editorOpenGroup('pages',this)">▯<span>Seiten</span></button>
   <button data-group="layers" onclick="editorOpenGroup('layers',this)">◇<span>Ebenen</span></button>
@@ -3870,7 +3869,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 86";
+ $("#headerEyebrow").textContent="VERSION 87";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -7495,6 +7494,182 @@ button.primary,button.ghost,.iconbtn{
 </style>
 
 </head><body><div class="page">${serializedCanvas()}</div><div id="buildVersionBadge" style="position:fixed;right:8px;bottom:8px;z-index:9999;font:800 9px Inter,sans-serif;color:#9b7d74;background:rgba(255,250,247,.88);border:1px solid #ead4cd;border-radius:999px;padding:5px 8px;pointer-events:none">V63</div>
+
+<style id="v87-text-formats-and-mobile-nav-fix">
+@media (max-width:899px){
+  /* Five clean main tools. Text formats now live inside Text. */
+  body.editorMode .canvasQuickNav{
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    left:12px!important;right:12px!important;width:auto!important;
+    overflow:hidden!important;gap:5px!important;padding:8px!important;
+  }
+  body.editorMode .canvasQuickNav button{
+    min-width:0!important;width:auto!important;max-width:none!important;
+    height:62px!important;flex:1 1 0!important;
+  }
+  body.editorMode .canvasQuickNav button span{font-size:8px!important;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+  body.editorMode .canvasViewport{padding-bottom:116px!important}
+
+  /* Drawer stays tidy above Safari controls and never leaves a broken empty strip. */
+  body.editorMode #canvasQuickDrawer.open{
+    max-height:min(60dvh,530px)!important;
+    padding:9px 10px 8px!important;
+    overflow:hidden!important;
+  }
+  body.editorMode #canvasQuickDrawer:not(.open){display:none!important;height:0!important;padding:0!important;margin:0!important;border:0!important}
+  .mobileTextModeTabs{padding:8px 0 0!important;gap:5px!important}
+  .mobileTextModeTabs button{min-height:56px!important;border-radius:13px!important}
+  .mobileTextModeContent{padding:9px 1px 9px!important}
+
+  /* No duplicate font row: the Aa+ control below owns custom-font import. */
+  .v86FontTools{display:none!important}
+  .mobileFontAddButton{
+    height:38px!important;min-width:0!important;padding:0!important;
+    border:1px solid #eadbd6!important;border-radius:11px!important;background:#fff!important;
+    color:#755e56!important;display:flex!important;align-items:center!important;justify-content:center!important;
+    gap:2px!important;flex-direction:column!important;
+  }
+  .mobileFontAddButton b{font-size:12px!important;line-height:1!important}.mobileFontAddButton span{font-size:6.5px!important;font-weight:900!important;line-height:1!important}
+
+  /* Lists must actually look like lists in a canvas text box. */
+  .cobj.textObj ul,.cobj.textObj ol,.cobj.block ul,.cobj.block ol,.cobj.task ul,.cobj.task ol,.cobj.merke ul,.cobj.merke ol{
+    margin:.18em 0!important;padding-left:1.35em!important;list-style-position:outside!important;
+  }
+  .cobj.textObj li,.cobj.block li,.cobj.task li,.cobj.merke li{margin:.08em 0!important;padding-left:.05em!important}
+  .cobj .sbDashList{padding-left:0!important;list-style:none!important}
+
+  /* Text formats inside Text drawer. */
+  .v87TextFormats{display:grid;gap:8px;padding-top:8px;border-top:1px solid #f0e4df}
+  .v87TextFormatsHead{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .v87TextFormatsHead b{font-size:8px;text-transform:uppercase;letter-spacing:.12em;color:#9c8178}
+  .v87TextFormatsHead button{height:30px!important;min-height:30px!important;padding:0 9px!important;border:1px solid #eadbd6!important;border-radius:10px!important;background:#fff!important;color:#735d55!important;font-size:8px!important;font-weight:850!important}
+  .v87FormatGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+  .v87FormatGrid button{min-width:0;min-height:54px;border:1px solid #eadbd6;border-radius:13px;background:#fff;color:#725b53;padding:6px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+  .v87FormatGrid button b{font-size:14px;line-height:1.05}.v87FormatGrid button span{font-size:7px;font-weight:850;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .v87FormatGrid button.bundle b{font-size:12px}
+
+  /* Keep active controls clear and cute, but not oversized. */
+  .mobileTextMiddle{grid-template-columns:38px repeat(7,minmax(0,1fr))!important;gap:5px!important}
+  .mobileTextMiddle>button{overflow:hidden!important}
+}
+</style>
+<script id="v87-text-formats-and-list-behavior">
+(function(){
+  'use strict';
+  const q=(s,r=document)=>r.querySelector(s), qa=(s,r=document)=>Array.from(r.querySelectorAll(s));
+  const esc87=v=>String(v??'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]));
+
+  function selectedText87(){
+    return window.canvasState?.objects?.find(o=>o.id===window.canvasState.selectedId&&['text','block','task','merke'].includes(o.kind))||null;
+  }
+  function textEl87(){return q(`.cobj[data-id="${window.canvasState?.selectedId||''}"]`)}
+  function presetIcon87(x){return x.id==='h1'?'H1':x.id==='h2'?'H2':x.id==='task'?'✓':x.id==='merke'?'!':x.bundle?'Aa✦':'Aa'}
+  function formatGrid87(mode='insert'){
+    const presets=typeof window.canvasPresets==='function'?window.canvasPresets():[];
+    return `<div class="v87FormatGrid">${presets.map(x=>{
+      const action=mode==='apply'&&!x.bundle?`applyTextFormatToSelection('${x.id}')`:(x.bundle?`insertSavedTextFormat('${x.id}')`:`addCanvasText('${x.id}')`);
+      return `<button class="${x.bundle?'bundle':''}" onclick="${action}"><b>${presetIcon87(x)}</b><span>${esc87(x.name||'Format')}</span></button>`;
+    }).join('')}</div>`;
+  }
+  function formatsBlock87(mode='insert'){
+    return `<div class="v87TextFormats"><div class="v87TextFormatsHead"><b>Textformate</b><button onclick="openTextFormatManager()">Verwalten</button></div>${formatGrid87(mode)}<div class="mobileDrawerActions"><button onclick="createCustomStylePreset()">＋ Eigenes Format</button>${mode==='apply'?'<button onclick="saveSelectionAsTextFormat()">＋ Auswahl als Format</button>':''}</div></div>`;
+  }
+
+  /* Main Text panel: add text + formats in one place, so there is no separate Formate tab. */
+  window.mobileTextControlsHTML=function(){
+    const o=selectedText87();
+    if(!o){
+      const presets=(typeof window.canvasPresets==='function'?window.canvasPresets():[]).filter(x=>!x.bundle).slice(0,5);
+      return `<div class="mobileDrawerSection"><div class="mobileDrawerTitle">Text hinzufügen</div><div class="mobileToolGrid">${presets.map(x=>`<button onclick="addCanvasText('${x.id}')"><b>${presetIcon87(x)}</b><span>${esc87(x.name)}</span></button>`).join('')}</div>${formatsBlock87('insert')}</div>`;
+    }
+    return `<div class="mobileTextEditor"><div id="mobileTextModeContent" class="mobileTextModeContent">${window.mobileTextModeContentHTML('text')}</div><div class="mobileTextModeTabs" role="tablist" aria-label="Text-Werkzeuge"><button class="on" data-mode="text" onclick="mobileTextMode('text',this)"><b>T</b><span>Text</span></button><button data-mode="appearance" onclick="mobileTextMode('appearance',this)"><b>◉</b><span>Aussehen</span></button><button data-mode="spacing" onclick="mobileTextMode('spacing',this)"><b>Vᴬ</b><span>Abstand</span></button><button data-mode="position" onclick="mobileTextMode('position',this)"><b>⌗</b><span>Position</span></button><button data-mode="effects" onclick="mobileTextMode('effects',this)"><b>✦</b><span>Effekte</span></button></div></div>`;
+  };
+
+  /* Rebuild only Text mode. Appearance remains the one place for text/background colour. */
+  const oldModeHTML=window.mobileTextModeContentHTML;
+  window.mobileTextModeContentHTML=function(kind){
+    const o=selectedText87();if(!o)return '';
+    if(kind!=='text')return oldModeHTML(kind);
+    const st=o.style||{},ff=st.fontFamily||'Arial',fs=st.fontSize||16,ta=st.textAlign||'left';
+    const built=['Arial','Lato','Playfair Display','Georgia','Verdana','Trebuchet MS'];
+    let custom=[];try{custom=JSON.parse(localStorage.getItem('schoolbloom-custom-font-meta-v1')||'[]')}catch(_){custom=[]}
+    const opts=[...built.map(f=>({family:f,name:f})),...custom.map(m=>({family:m.family,name:'✦ '+m.name}))];
+    return `<div class="mobileTextBar"><div class="mobileTextTop"><select onchange="applyTextProperty('fontFamily',this.value)">${opts.map(f=>`<option value="${esc87(f.family)}" ${ff===f.family?'selected':''}>${esc87(f.name)}</option>`).join('')}</select><div class="mobileSizeStep"><button onclick="mobileFontStep(-1)">−</button><input id="mobileFontSize" type="number" min="6" max="180" value="${fs}" onchange="applyTextProperty('fontSize',+this.value)"><button onclick="mobileFontStep(1)">＋</button></div><button onclick="formatSelectedText('bold')"><b>B</b></button><button onclick="formatSelectedText('italic')"><i>I</i></button><button onclick="formatSelectedText('underline')"><u>U</u></button><button onclick="formatSelectedText('strikeThrough')"><s>S</s></button></div><div class="mobileTextMiddle"><button class="mobileFontAddButton" onclick="openCustomFontPicker()" title="Eigene Schrift hinzufügen"><b>Aa+</b><span>Schrift</span></button><button class="${ta==='left'?'on':''}" onclick="applyTextProperty('textAlign','left');mobileRefreshTextMode()">≡</button><button class="${ta==='center'?'on':''}" onclick="applyTextProperty('textAlign','center');mobileRefreshTextMode()">≣</button><button class="${ta==='right'?'on':''}" onclick="applyTextProperty('textAlign','right');mobileRefreshTextMode()">≡</button><button class="${ta==='justify'?'on':''}" onclick="applyTextProperty('textAlign','justify');mobileRefreshTextMode()">☷</button><button onclick="applyTextList('bullet')" title="Punkte – keine Markierung nötig">•≡</button><button onclick="applyTextList('number')" title="Nummern – keine Markierung nötig">1≡</button><button onclick="applyTextList('dash')" title="Striche – keine Markierung nötig">–≡</button></div>${formatsBlock87('apply')}</div>`;
+  };
+
+  window.applyTextFormatToSelection=function(id){
+    const o=selectedText87();if(!o)return window.cuteToast?.('Wähle zuerst ein Textfeld ♡');
+    const p=(typeof window.canvasPresets==='function'?window.canvasPresets():[]).find(x=>x.id===id);if(!p||p.bundle)return;
+    o.style=o.style||{};
+    const map={fontSize:p.fontSize,fontWeight:p.fontWeight,color:p.color,fontFamily:p.fontFamily,background:p.bg,borderColor:p.borderColor,borderWidth:p.borderWidth,borderRadius:p.radius,padding:p.padding};
+    Object.entries(map).forEach(([k,v])=>{if(v!==undefined)o.style[k]=v});
+    window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.();
+    window.cuteToast?.((p.name||'Format')+' angewendet ♡');
+    setTimeout(()=>window.mobileRefreshTextMode?.(),0);
+  };
+
+  /* Lists work with a selected text box; highlighting text is optional. */
+  function contentLines87(html){
+    const d=document.createElement('div');d.innerHTML=html||'';
+    const lis=Array.from(d.querySelectorAll('li'));if(lis.length)return lis.map(li=>li.innerHTML.replace(/^\s*[–-]\s*/,''));
+    const blocks=Array.from(d.children);if(blocks.length>1)return blocks.map(x=>x.innerHTML).filter(Boolean);
+    const raw=(d.innerText||d.textContent||'').split(/\n+/).map(x=>x.trim()).filter(Boolean);
+    return (raw.length?raw:['Text']).map(esc87);
+  }
+  function placeCaretEnd87(el){
+    const s=window.getSelection();if(!s)return;const r=document.createRange();r.selectNodeContents(el);r.collapse(false);s.removeAllRanges();s.addRange(r);
+  }
+  window.applyTextList=function(type){
+    const o=selectedText87();if(!o)return window.cuteToast?.('Wähle zuerst ein Textfeld ♡');
+    const wasEditing=!!o.editing;
+    if(!wasEditing){
+      const lines=contentLines87(o.text||'Text');
+      if(type==='number')o.text=`<ol>${lines.map(x=>`<li>${x}</li>`).join('')}</ol>`;
+      else if(type==='dash')o.text=`<ul class="sbDashList">${lines.map(x=>`<li>– ${x}</li>`).join('')}</ul>`;
+      else o.text=`<ul>${lines.map(x=>`<li>${x}</li>`).join('')}</ul>`;
+      o.editing=false;window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.();window.cuteToast?.('Liste erstellt ♡');setTimeout(()=>window.mobileRefreshTextMode?.(),0);return;
+    }
+    let el=textEl87();if(!el)return;
+    el.setAttribute('contenteditable','true');el.focus({preventScroll:true});
+    let sel=window.getSelection(),inside=!!(sel&&sel.rangeCount&&el.contains(sel.anchorNode));if(!inside){placeCaretEnd87(el);sel=window.getSelection()}
+    if(type==='bullet'||type==='number'){
+      document.execCommand(type==='bullet'?'insertUnorderedList':'insertOrderedList',false,null);
+    }else{
+      document.execCommand('insertUnorderedList',false,null);
+      const anchor=sel?.anchorNode;const li=anchor?.nodeType===1?anchor.closest?.('li'):anchor?.parentElement?.closest?.('li');const ul=li?.closest?.('ul');if(ul){ul.classList.add('sbDashList');Array.from(ul.children).forEach(x=>{if(!/^\s*–\s*/.test(x.textContent||''))x.insertAdjacentText('afterbegin','– ')})}
+    }
+    o.text=window.cleanCanvasTextHTML?window.cleanCanvasTextHTML(el):el.innerHTML;
+    window.markCanvasDirty?.();window.pushHistory?.();
+  };
+
+  /* Any legacy call to the old Formate tab now routes into Text instead of opening a phantom sixth tab. */
+  const oldOpen=window.editorOpenGroup;
+  window.editorOpenGroup=function(group,btn){
+    if(group==='formats'){
+      const textBtn=qa('.canvasQuickNav button').find(b=>b.dataset.group==='text');
+      group='text';btn=textBtn||btn;
+    }
+    const r=oldOpen.apply(this,[group,btn]);
+    // hard repair of nav/drawer state after every tool transition
+    requestAnimationFrame(()=>{
+      const d=q('#canvasQuickDrawer');
+      if(d?.classList.contains('open'))document.body.classList.add('editorDrawerOpen');else document.body.classList.remove('editorDrawerOpen');
+    });
+    return r;
+  };
+
+  /* If the selected object disappears, never leave a dead drawer or dead bottom bar behind. */
+  function selfHeal87(){
+    if(!document.body.classList.contains('editorMode'))return;
+    const d=q('#canvasQuickDrawer');
+    if(d&&!d.classList.contains('open'))document.body.classList.remove('editorDrawerOpen');
+    if(!d?.classList.contains('open'))qa('.canvasQuickNav button').forEach(b=>b.classList.remove('active'));
+  }
+  document.addEventListener('click',()=>setTimeout(selfHeal87,0),true);
+  document.addEventListener('visibilitychange',selfHeal87);
+})();
+</script>
+
 </body></html>`;
  const blob=new Blob([html],{type:"text/html"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=title.replace(/[^\wäöüÄÖÜß-]+/g,"_")+".html";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
 }
@@ -8418,7 +8593,183 @@ button.primary,button.ghost,.iconbtn{
 }
 </style>
 
-</head><body><div class="page">${serializedCanvas()}</div></body></html>`);w.document.close();setTimeout(()=>w.print(),300)
+</head><body><div class="page">${serializedCanvas()}</div>
+<style id="v87-text-formats-and-mobile-nav-fix">
+@media (max-width:899px){
+  /* Five clean main tools. Text formats now live inside Text. */
+  body.editorMode .canvasQuickNav{
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    left:12px!important;right:12px!important;width:auto!important;
+    overflow:hidden!important;gap:5px!important;padding:8px!important;
+  }
+  body.editorMode .canvasQuickNav button{
+    min-width:0!important;width:auto!important;max-width:none!important;
+    height:62px!important;flex:1 1 0!important;
+  }
+  body.editorMode .canvasQuickNav button span{font-size:8px!important;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+  body.editorMode .canvasViewport{padding-bottom:116px!important}
+
+  /* Drawer stays tidy above Safari controls and never leaves a broken empty strip. */
+  body.editorMode #canvasQuickDrawer.open{
+    max-height:min(60dvh,530px)!important;
+    padding:9px 10px 8px!important;
+    overflow:hidden!important;
+  }
+  body.editorMode #canvasQuickDrawer:not(.open){display:none!important;height:0!important;padding:0!important;margin:0!important;border:0!important}
+  .mobileTextModeTabs{padding:8px 0 0!important;gap:5px!important}
+  .mobileTextModeTabs button{min-height:56px!important;border-radius:13px!important}
+  .mobileTextModeContent{padding:9px 1px 9px!important}
+
+  /* No duplicate font row: the Aa+ control below owns custom-font import. */
+  .v86FontTools{display:none!important}
+  .mobileFontAddButton{
+    height:38px!important;min-width:0!important;padding:0!important;
+    border:1px solid #eadbd6!important;border-radius:11px!important;background:#fff!important;
+    color:#755e56!important;display:flex!important;align-items:center!important;justify-content:center!important;
+    gap:2px!important;flex-direction:column!important;
+  }
+  .mobileFontAddButton b{font-size:12px!important;line-height:1!important}.mobileFontAddButton span{font-size:6.5px!important;font-weight:900!important;line-height:1!important}
+
+  /* Lists must actually look like lists in a canvas text box. */
+  .cobj.textObj ul,.cobj.textObj ol,.cobj.block ul,.cobj.block ol,.cobj.task ul,.cobj.task ol,.cobj.merke ul,.cobj.merke ol{
+    margin:.18em 0!important;padding-left:1.35em!important;list-style-position:outside!important;
+  }
+  .cobj.textObj li,.cobj.block li,.cobj.task li,.cobj.merke li{margin:.08em 0!important;padding-left:.05em!important}
+  .cobj .sbDashList{padding-left:0!important;list-style:none!important}
+
+  /* Text formats inside Text drawer. */
+  .v87TextFormats{display:grid;gap:8px;padding-top:8px;border-top:1px solid #f0e4df}
+  .v87TextFormatsHead{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .v87TextFormatsHead b{font-size:8px;text-transform:uppercase;letter-spacing:.12em;color:#9c8178}
+  .v87TextFormatsHead button{height:30px!important;min-height:30px!important;padding:0 9px!important;border:1px solid #eadbd6!important;border-radius:10px!important;background:#fff!important;color:#735d55!important;font-size:8px!important;font-weight:850!important}
+  .v87FormatGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+  .v87FormatGrid button{min-width:0;min-height:54px;border:1px solid #eadbd6;border-radius:13px;background:#fff;color:#725b53;padding:6px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+  .v87FormatGrid button b{font-size:14px;line-height:1.05}.v87FormatGrid button span{font-size:7px;font-weight:850;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .v87FormatGrid button.bundle b{font-size:12px}
+
+  /* Keep active controls clear and cute, but not oversized. */
+  .mobileTextMiddle{grid-template-columns:38px repeat(7,minmax(0,1fr))!important;gap:5px!important}
+  .mobileTextMiddle>button{overflow:hidden!important}
+}
+</style>
+<script id="v87-text-formats-and-list-behavior">
+(function(){
+  'use strict';
+  const q=(s,r=document)=>r.querySelector(s), qa=(s,r=document)=>Array.from(r.querySelectorAll(s));
+  const esc87=v=>String(v??'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]));
+
+  function selectedText87(){
+    return window.canvasState?.objects?.find(o=>o.id===window.canvasState.selectedId&&['text','block','task','merke'].includes(o.kind))||null;
+  }
+  function textEl87(){return q(`.cobj[data-id="${window.canvasState?.selectedId||''}"]`)}
+  function presetIcon87(x){return x.id==='h1'?'H1':x.id==='h2'?'H2':x.id==='task'?'✓':x.id==='merke'?'!':x.bundle?'Aa✦':'Aa'}
+  function formatGrid87(mode='insert'){
+    const presets=typeof window.canvasPresets==='function'?window.canvasPresets():[];
+    return `<div class="v87FormatGrid">${presets.map(x=>{
+      const action=mode==='apply'&&!x.bundle?`applyTextFormatToSelection('${x.id}')`:(x.bundle?`insertSavedTextFormat('${x.id}')`:`addCanvasText('${x.id}')`);
+      return `<button class="${x.bundle?'bundle':''}" onclick="${action}"><b>${presetIcon87(x)}</b><span>${esc87(x.name||'Format')}</span></button>`;
+    }).join('')}</div>`;
+  }
+  function formatsBlock87(mode='insert'){
+    return `<div class="v87TextFormats"><div class="v87TextFormatsHead"><b>Textformate</b><button onclick="openTextFormatManager()">Verwalten</button></div>${formatGrid87(mode)}<div class="mobileDrawerActions"><button onclick="createCustomStylePreset()">＋ Eigenes Format</button>${mode==='apply'?'<button onclick="saveSelectionAsTextFormat()">＋ Auswahl als Format</button>':''}</div></div>`;
+  }
+
+  /* Main Text panel: add text + formats in one place, so there is no separate Formate tab. */
+  window.mobileTextControlsHTML=function(){
+    const o=selectedText87();
+    if(!o){
+      const presets=(typeof window.canvasPresets==='function'?window.canvasPresets():[]).filter(x=>!x.bundle).slice(0,5);
+      return `<div class="mobileDrawerSection"><div class="mobileDrawerTitle">Text hinzufügen</div><div class="mobileToolGrid">${presets.map(x=>`<button onclick="addCanvasText('${x.id}')"><b>${presetIcon87(x)}</b><span>${esc87(x.name)}</span></button>`).join('')}</div>${formatsBlock87('insert')}</div>`;
+    }
+    return `<div class="mobileTextEditor"><div id="mobileTextModeContent" class="mobileTextModeContent">${window.mobileTextModeContentHTML('text')}</div><div class="mobileTextModeTabs" role="tablist" aria-label="Text-Werkzeuge"><button class="on" data-mode="text" onclick="mobileTextMode('text',this)"><b>T</b><span>Text</span></button><button data-mode="appearance" onclick="mobileTextMode('appearance',this)"><b>◉</b><span>Aussehen</span></button><button data-mode="spacing" onclick="mobileTextMode('spacing',this)"><b>Vᴬ</b><span>Abstand</span></button><button data-mode="position" onclick="mobileTextMode('position',this)"><b>⌗</b><span>Position</span></button><button data-mode="effects" onclick="mobileTextMode('effects',this)"><b>✦</b><span>Effekte</span></button></div></div>`;
+  };
+
+  /* Rebuild only Text mode. Appearance remains the one place for text/background colour. */
+  const oldModeHTML=window.mobileTextModeContentHTML;
+  window.mobileTextModeContentHTML=function(kind){
+    const o=selectedText87();if(!o)return '';
+    if(kind!=='text')return oldModeHTML(kind);
+    const st=o.style||{},ff=st.fontFamily||'Arial',fs=st.fontSize||16,ta=st.textAlign||'left';
+    const built=['Arial','Lato','Playfair Display','Georgia','Verdana','Trebuchet MS'];
+    let custom=[];try{custom=JSON.parse(localStorage.getItem('schoolbloom-custom-font-meta-v1')||'[]')}catch(_){custom=[]}
+    const opts=[...built.map(f=>({family:f,name:f})),...custom.map(m=>({family:m.family,name:'✦ '+m.name}))];
+    return `<div class="mobileTextBar"><div class="mobileTextTop"><select onchange="applyTextProperty('fontFamily',this.value)">${opts.map(f=>`<option value="${esc87(f.family)}" ${ff===f.family?'selected':''}>${esc87(f.name)}</option>`).join('')}</select><div class="mobileSizeStep"><button onclick="mobileFontStep(-1)">−</button><input id="mobileFontSize" type="number" min="6" max="180" value="${fs}" onchange="applyTextProperty('fontSize',+this.value)"><button onclick="mobileFontStep(1)">＋</button></div><button onclick="formatSelectedText('bold')"><b>B</b></button><button onclick="formatSelectedText('italic')"><i>I</i></button><button onclick="formatSelectedText('underline')"><u>U</u></button><button onclick="formatSelectedText('strikeThrough')"><s>S</s></button></div><div class="mobileTextMiddle"><button class="mobileFontAddButton" onclick="openCustomFontPicker()" title="Eigene Schrift hinzufügen"><b>Aa+</b><span>Schrift</span></button><button class="${ta==='left'?'on':''}" onclick="applyTextProperty('textAlign','left');mobileRefreshTextMode()">≡</button><button class="${ta==='center'?'on':''}" onclick="applyTextProperty('textAlign','center');mobileRefreshTextMode()">≣</button><button class="${ta==='right'?'on':''}" onclick="applyTextProperty('textAlign','right');mobileRefreshTextMode()">≡</button><button class="${ta==='justify'?'on':''}" onclick="applyTextProperty('textAlign','justify');mobileRefreshTextMode()">☷</button><button onclick="applyTextList('bullet')" title="Punkte – keine Markierung nötig">•≡</button><button onclick="applyTextList('number')" title="Nummern – keine Markierung nötig">1≡</button><button onclick="applyTextList('dash')" title="Striche – keine Markierung nötig">–≡</button></div>${formatsBlock87('apply')}</div>`;
+  };
+
+  window.applyTextFormatToSelection=function(id){
+    const o=selectedText87();if(!o)return window.cuteToast?.('Wähle zuerst ein Textfeld ♡');
+    const p=(typeof window.canvasPresets==='function'?window.canvasPresets():[]).find(x=>x.id===id);if(!p||p.bundle)return;
+    o.style=o.style||{};
+    const map={fontSize:p.fontSize,fontWeight:p.fontWeight,color:p.color,fontFamily:p.fontFamily,background:p.bg,borderColor:p.borderColor,borderWidth:p.borderWidth,borderRadius:p.radius,padding:p.padding};
+    Object.entries(map).forEach(([k,v])=>{if(v!==undefined)o.style[k]=v});
+    window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.();
+    window.cuteToast?.((p.name||'Format')+' angewendet ♡');
+    setTimeout(()=>window.mobileRefreshTextMode?.(),0);
+  };
+
+  /* Lists work with a selected text box; highlighting text is optional. */
+  function contentLines87(html){
+    const d=document.createElement('div');d.innerHTML=html||'';
+    const lis=Array.from(d.querySelectorAll('li'));if(lis.length)return lis.map(li=>li.innerHTML.replace(/^\s*[–-]\s*/,''));
+    const blocks=Array.from(d.children);if(blocks.length>1)return blocks.map(x=>x.innerHTML).filter(Boolean);
+    const raw=(d.innerText||d.textContent||'').split(/\n+/).map(x=>x.trim()).filter(Boolean);
+    return (raw.length?raw:['Text']).map(esc87);
+  }
+  function placeCaretEnd87(el){
+    const s=window.getSelection();if(!s)return;const r=document.createRange();r.selectNodeContents(el);r.collapse(false);s.removeAllRanges();s.addRange(r);
+  }
+  window.applyTextList=function(type){
+    const o=selectedText87();if(!o)return window.cuteToast?.('Wähle zuerst ein Textfeld ♡');
+    const wasEditing=!!o.editing;
+    if(!wasEditing){
+      const lines=contentLines87(o.text||'Text');
+      if(type==='number')o.text=`<ol>${lines.map(x=>`<li>${x}</li>`).join('')}</ol>`;
+      else if(type==='dash')o.text=`<ul class="sbDashList">${lines.map(x=>`<li>– ${x}</li>`).join('')}</ul>`;
+      else o.text=`<ul>${lines.map(x=>`<li>${x}</li>`).join('')}</ul>`;
+      o.editing=false;window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.();window.cuteToast?.('Liste erstellt ♡');setTimeout(()=>window.mobileRefreshTextMode?.(),0);return;
+    }
+    let el=textEl87();if(!el)return;
+    el.setAttribute('contenteditable','true');el.focus({preventScroll:true});
+    let sel=window.getSelection(),inside=!!(sel&&sel.rangeCount&&el.contains(sel.anchorNode));if(!inside){placeCaretEnd87(el);sel=window.getSelection()}
+    if(type==='bullet'||type==='number'){
+      document.execCommand(type==='bullet'?'insertUnorderedList':'insertOrderedList',false,null);
+    }else{
+      document.execCommand('insertUnorderedList',false,null);
+      const anchor=sel?.anchorNode;const li=anchor?.nodeType===1?anchor.closest?.('li'):anchor?.parentElement?.closest?.('li');const ul=li?.closest?.('ul');if(ul){ul.classList.add('sbDashList');Array.from(ul.children).forEach(x=>{if(!/^\s*–\s*/.test(x.textContent||''))x.insertAdjacentText('afterbegin','– ')})}
+    }
+    o.text=window.cleanCanvasTextHTML?window.cleanCanvasTextHTML(el):el.innerHTML;
+    window.markCanvasDirty?.();window.pushHistory?.();
+  };
+
+  /* Any legacy call to the old Formate tab now routes into Text instead of opening a phantom sixth tab. */
+  const oldOpen=window.editorOpenGroup;
+  window.editorOpenGroup=function(group,btn){
+    if(group==='formats'){
+      const textBtn=qa('.canvasQuickNav button').find(b=>b.dataset.group==='text');
+      group='text';btn=textBtn||btn;
+    }
+    const r=oldOpen.apply(this,[group,btn]);
+    // hard repair of nav/drawer state after every tool transition
+    requestAnimationFrame(()=>{
+      const d=q('#canvasQuickDrawer');
+      if(d?.classList.contains('open'))document.body.classList.add('editorDrawerOpen');else document.body.classList.remove('editorDrawerOpen');
+    });
+    return r;
+  };
+
+  /* If the selected object disappears, never leave a dead drawer or dead bottom bar behind. */
+  function selfHeal87(){
+    if(!document.body.classList.contains('editorMode'))return;
+    const d=q('#canvasQuickDrawer');
+    if(d&&!d.classList.contains('open'))document.body.classList.remove('editorDrawerOpen');
+    if(!d?.classList.contains('open'))qa('.canvasQuickNav button').forEach(b=>b.classList.remove('active'));
+  }
+  document.addEventListener('click',()=>setTimeout(selfHeal87,0),true);
+  document.addEventListener('visibilitychange',selfHeal87);
+})();
+</script>
+
+</body></html>`);w.document.close();setTimeout(()=>w.print(),300)
 }
 
 function customPageTemplates(){
@@ -10916,6 +11267,182 @@ if("serviceWorker"in navigator&&location.protocol.startsWith("http")){
 
   function init(){bindPinch();window.loadCustomFonts?.();updateZoomUI();healEditorBars()}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
+
+
+<style id="v87-text-formats-and-mobile-nav-fix">
+@media (max-width:899px){
+  /* Five clean main tools. Text formats now live inside Text. */
+  body.editorMode .canvasQuickNav{
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    left:12px!important;right:12px!important;width:auto!important;
+    overflow:hidden!important;gap:5px!important;padding:8px!important;
+  }
+  body.editorMode .canvasQuickNav button{
+    min-width:0!important;width:auto!important;max-width:none!important;
+    height:62px!important;flex:1 1 0!important;
+  }
+  body.editorMode .canvasQuickNav button span{font-size:8px!important;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+  body.editorMode .canvasViewport{padding-bottom:116px!important}
+
+  /* Drawer stays tidy above Safari controls and never leaves a broken empty strip. */
+  body.editorMode #canvasQuickDrawer.open{
+    max-height:min(60dvh,530px)!important;
+    padding:9px 10px 8px!important;
+    overflow:hidden!important;
+  }
+  body.editorMode #canvasQuickDrawer:not(.open){display:none!important;height:0!important;padding:0!important;margin:0!important;border:0!important}
+  .mobileTextModeTabs{padding:8px 0 0!important;gap:5px!important}
+  .mobileTextModeTabs button{min-height:56px!important;border-radius:13px!important}
+  .mobileTextModeContent{padding:9px 1px 9px!important}
+
+  /* No duplicate font row: the Aa+ control below owns custom-font import. */
+  .v86FontTools{display:none!important}
+  .mobileFontAddButton{
+    height:38px!important;min-width:0!important;padding:0!important;
+    border:1px solid #eadbd6!important;border-radius:11px!important;background:#fff!important;
+    color:#755e56!important;display:flex!important;align-items:center!important;justify-content:center!important;
+    gap:2px!important;flex-direction:column!important;
+  }
+  .mobileFontAddButton b{font-size:12px!important;line-height:1!important}.mobileFontAddButton span{font-size:6.5px!important;font-weight:900!important;line-height:1!important}
+
+  /* Lists must actually look like lists in a canvas text box. */
+  .cobj.textObj ul,.cobj.textObj ol,.cobj.block ul,.cobj.block ol,.cobj.task ul,.cobj.task ol,.cobj.merke ul,.cobj.merke ol{
+    margin:.18em 0!important;padding-left:1.35em!important;list-style-position:outside!important;
+  }
+  .cobj.textObj li,.cobj.block li,.cobj.task li,.cobj.merke li{margin:.08em 0!important;padding-left:.05em!important}
+  .cobj .sbDashList{padding-left:0!important;list-style:none!important}
+
+  /* Text formats inside Text drawer. */
+  .v87TextFormats{display:grid;gap:8px;padding-top:8px;border-top:1px solid #f0e4df}
+  .v87TextFormatsHead{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .v87TextFormatsHead b{font-size:8px;text-transform:uppercase;letter-spacing:.12em;color:#9c8178}
+  .v87TextFormatsHead button{height:30px!important;min-height:30px!important;padding:0 9px!important;border:1px solid #eadbd6!important;border-radius:10px!important;background:#fff!important;color:#735d55!important;font-size:8px!important;font-weight:850!important}
+  .v87FormatGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+  .v87FormatGrid button{min-width:0;min-height:54px;border:1px solid #eadbd6;border-radius:13px;background:#fff;color:#725b53;padding:6px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+  .v87FormatGrid button b{font-size:14px;line-height:1.05}.v87FormatGrid button span{font-size:7px;font-weight:850;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .v87FormatGrid button.bundle b{font-size:12px}
+
+  /* Keep active controls clear and cute, but not oversized. */
+  .mobileTextMiddle{grid-template-columns:38px repeat(7,minmax(0,1fr))!important;gap:5px!important}
+  .mobileTextMiddle>button{overflow:hidden!important}
+}
+</style>
+<script id="v87-text-formats-and-list-behavior">
+(function(){
+  'use strict';
+  const q=(s,r=document)=>r.querySelector(s), qa=(s,r=document)=>Array.from(r.querySelectorAll(s));
+  const esc87=v=>String(v??'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]));
+
+  function selectedText87(){
+    return window.canvasState?.objects?.find(o=>o.id===window.canvasState.selectedId&&['text','block','task','merke'].includes(o.kind))||null;
+  }
+  function textEl87(){return q(`.cobj[data-id="${window.canvasState?.selectedId||''}"]`)}
+  function presetIcon87(x){return x.id==='h1'?'H1':x.id==='h2'?'H2':x.id==='task'?'✓':x.id==='merke'?'!':x.bundle?'Aa✦':'Aa'}
+  function formatGrid87(mode='insert'){
+    const presets=typeof window.canvasPresets==='function'?window.canvasPresets():[];
+    return `<div class="v87FormatGrid">${presets.map(x=>{
+      const action=mode==='apply'&&!x.bundle?`applyTextFormatToSelection('${x.id}')`:(x.bundle?`insertSavedTextFormat('${x.id}')`:`addCanvasText('${x.id}')`);
+      return `<button class="${x.bundle?'bundle':''}" onclick="${action}"><b>${presetIcon87(x)}</b><span>${esc87(x.name||'Format')}</span></button>`;
+    }).join('')}</div>`;
+  }
+  function formatsBlock87(mode='insert'){
+    return `<div class="v87TextFormats"><div class="v87TextFormatsHead"><b>Textformate</b><button onclick="openTextFormatManager()">Verwalten</button></div>${formatGrid87(mode)}<div class="mobileDrawerActions"><button onclick="createCustomStylePreset()">＋ Eigenes Format</button>${mode==='apply'?'<button onclick="saveSelectionAsTextFormat()">＋ Auswahl als Format</button>':''}</div></div>`;
+  }
+
+  /* Main Text panel: add text + formats in one place, so there is no separate Formate tab. */
+  window.mobileTextControlsHTML=function(){
+    const o=selectedText87();
+    if(!o){
+      const presets=(typeof window.canvasPresets==='function'?window.canvasPresets():[]).filter(x=>!x.bundle).slice(0,5);
+      return `<div class="mobileDrawerSection"><div class="mobileDrawerTitle">Text hinzufügen</div><div class="mobileToolGrid">${presets.map(x=>`<button onclick="addCanvasText('${x.id}')"><b>${presetIcon87(x)}</b><span>${esc87(x.name)}</span></button>`).join('')}</div>${formatsBlock87('insert')}</div>`;
+    }
+    return `<div class="mobileTextEditor"><div id="mobileTextModeContent" class="mobileTextModeContent">${window.mobileTextModeContentHTML('text')}</div><div class="mobileTextModeTabs" role="tablist" aria-label="Text-Werkzeuge"><button class="on" data-mode="text" onclick="mobileTextMode('text',this)"><b>T</b><span>Text</span></button><button data-mode="appearance" onclick="mobileTextMode('appearance',this)"><b>◉</b><span>Aussehen</span></button><button data-mode="spacing" onclick="mobileTextMode('spacing',this)"><b>Vᴬ</b><span>Abstand</span></button><button data-mode="position" onclick="mobileTextMode('position',this)"><b>⌗</b><span>Position</span></button><button data-mode="effects" onclick="mobileTextMode('effects',this)"><b>✦</b><span>Effekte</span></button></div></div>`;
+  };
+
+  /* Rebuild only Text mode. Appearance remains the one place for text/background colour. */
+  const oldModeHTML=window.mobileTextModeContentHTML;
+  window.mobileTextModeContentHTML=function(kind){
+    const o=selectedText87();if(!o)return '';
+    if(kind!=='text')return oldModeHTML(kind);
+    const st=o.style||{},ff=st.fontFamily||'Arial',fs=st.fontSize||16,ta=st.textAlign||'left';
+    const built=['Arial','Lato','Playfair Display','Georgia','Verdana','Trebuchet MS'];
+    let custom=[];try{custom=JSON.parse(localStorage.getItem('schoolbloom-custom-font-meta-v1')||'[]')}catch(_){custom=[]}
+    const opts=[...built.map(f=>({family:f,name:f})),...custom.map(m=>({family:m.family,name:'✦ '+m.name}))];
+    return `<div class="mobileTextBar"><div class="mobileTextTop"><select onchange="applyTextProperty('fontFamily',this.value)">${opts.map(f=>`<option value="${esc87(f.family)}" ${ff===f.family?'selected':''}>${esc87(f.name)}</option>`).join('')}</select><div class="mobileSizeStep"><button onclick="mobileFontStep(-1)">−</button><input id="mobileFontSize" type="number" min="6" max="180" value="${fs}" onchange="applyTextProperty('fontSize',+this.value)"><button onclick="mobileFontStep(1)">＋</button></div><button onclick="formatSelectedText('bold')"><b>B</b></button><button onclick="formatSelectedText('italic')"><i>I</i></button><button onclick="formatSelectedText('underline')"><u>U</u></button><button onclick="formatSelectedText('strikeThrough')"><s>S</s></button></div><div class="mobileTextMiddle"><button class="mobileFontAddButton" onclick="openCustomFontPicker()" title="Eigene Schrift hinzufügen"><b>Aa+</b><span>Schrift</span></button><button class="${ta==='left'?'on':''}" onclick="applyTextProperty('textAlign','left');mobileRefreshTextMode()">≡</button><button class="${ta==='center'?'on':''}" onclick="applyTextProperty('textAlign','center');mobileRefreshTextMode()">≣</button><button class="${ta==='right'?'on':''}" onclick="applyTextProperty('textAlign','right');mobileRefreshTextMode()">≡</button><button class="${ta==='justify'?'on':''}" onclick="applyTextProperty('textAlign','justify');mobileRefreshTextMode()">☷</button><button onclick="applyTextList('bullet')" title="Punkte – keine Markierung nötig">•≡</button><button onclick="applyTextList('number')" title="Nummern – keine Markierung nötig">1≡</button><button onclick="applyTextList('dash')" title="Striche – keine Markierung nötig">–≡</button></div>${formatsBlock87('apply')}</div>`;
+  };
+
+  window.applyTextFormatToSelection=function(id){
+    const o=selectedText87();if(!o)return window.cuteToast?.('Wähle zuerst ein Textfeld ♡');
+    const p=(typeof window.canvasPresets==='function'?window.canvasPresets():[]).find(x=>x.id===id);if(!p||p.bundle)return;
+    o.style=o.style||{};
+    const map={fontSize:p.fontSize,fontWeight:p.fontWeight,color:p.color,fontFamily:p.fontFamily,background:p.bg,borderColor:p.borderColor,borderWidth:p.borderWidth,borderRadius:p.radius,padding:p.padding};
+    Object.entries(map).forEach(([k,v])=>{if(v!==undefined)o.style[k]=v});
+    window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.();
+    window.cuteToast?.((p.name||'Format')+' angewendet ♡');
+    setTimeout(()=>window.mobileRefreshTextMode?.(),0);
+  };
+
+  /* Lists work with a selected text box; highlighting text is optional. */
+  function contentLines87(html){
+    const d=document.createElement('div');d.innerHTML=html||'';
+    const lis=Array.from(d.querySelectorAll('li'));if(lis.length)return lis.map(li=>li.innerHTML.replace(/^\s*[–-]\s*/,''));
+    const blocks=Array.from(d.children);if(blocks.length>1)return blocks.map(x=>x.innerHTML).filter(Boolean);
+    const raw=(d.innerText||d.textContent||'').split(/\n+/).map(x=>x.trim()).filter(Boolean);
+    return (raw.length?raw:['Text']).map(esc87);
+  }
+  function placeCaretEnd87(el){
+    const s=window.getSelection();if(!s)return;const r=document.createRange();r.selectNodeContents(el);r.collapse(false);s.removeAllRanges();s.addRange(r);
+  }
+  window.applyTextList=function(type){
+    const o=selectedText87();if(!o)return window.cuteToast?.('Wähle zuerst ein Textfeld ♡');
+    const wasEditing=!!o.editing;
+    if(!wasEditing){
+      const lines=contentLines87(o.text||'Text');
+      if(type==='number')o.text=`<ol>${lines.map(x=>`<li>${x}</li>`).join('')}</ol>`;
+      else if(type==='dash')o.text=`<ul class="sbDashList">${lines.map(x=>`<li>– ${x}</li>`).join('')}</ul>`;
+      else o.text=`<ul>${lines.map(x=>`<li>${x}</li>`).join('')}</ul>`;
+      o.editing=false;window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.();window.cuteToast?.('Liste erstellt ♡');setTimeout(()=>window.mobileRefreshTextMode?.(),0);return;
+    }
+    let el=textEl87();if(!el)return;
+    el.setAttribute('contenteditable','true');el.focus({preventScroll:true});
+    let sel=window.getSelection(),inside=!!(sel&&sel.rangeCount&&el.contains(sel.anchorNode));if(!inside){placeCaretEnd87(el);sel=window.getSelection()}
+    if(type==='bullet'||type==='number'){
+      document.execCommand(type==='bullet'?'insertUnorderedList':'insertOrderedList',false,null);
+    }else{
+      document.execCommand('insertUnorderedList',false,null);
+      const anchor=sel?.anchorNode;const li=anchor?.nodeType===1?anchor.closest?.('li'):anchor?.parentElement?.closest?.('li');const ul=li?.closest?.('ul');if(ul){ul.classList.add('sbDashList');Array.from(ul.children).forEach(x=>{if(!/^\s*–\s*/.test(x.textContent||''))x.insertAdjacentText('afterbegin','– ')})}
+    }
+    o.text=window.cleanCanvasTextHTML?window.cleanCanvasTextHTML(el):el.innerHTML;
+    window.markCanvasDirty?.();window.pushHistory?.();
+  };
+
+  /* Any legacy call to the old Formate tab now routes into Text instead of opening a phantom sixth tab. */
+  const oldOpen=window.editorOpenGroup;
+  window.editorOpenGroup=function(group,btn){
+    if(group==='formats'){
+      const textBtn=qa('.canvasQuickNav button').find(b=>b.dataset.group==='text');
+      group='text';btn=textBtn||btn;
+    }
+    const r=oldOpen.apply(this,[group,btn]);
+    // hard repair of nav/drawer state after every tool transition
+    requestAnimationFrame(()=>{
+      const d=q('#canvasQuickDrawer');
+      if(d?.classList.contains('open'))document.body.classList.add('editorDrawerOpen');else document.body.classList.remove('editorDrawerOpen');
+    });
+    return r;
+  };
+
+  /* If the selected object disappears, never leave a dead drawer or dead bottom bar behind. */
+  function selfHeal87(){
+    if(!document.body.classList.contains('editorMode'))return;
+    const d=q('#canvasQuickDrawer');
+    if(d&&!d.classList.contains('open'))document.body.classList.remove('editorDrawerOpen');
+    if(!d?.classList.contains('open'))qa('.canvasQuickNav button').forEach(b=>b.classList.remove('active'));
+  }
+  document.addEventListener('click',()=>setTimeout(selfHeal87,0),true);
+  document.addEventListener('visibilitychange',selfHeal87);
 })();
 </script>
 

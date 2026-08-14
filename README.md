@@ -1,11 +1,10 @@
-# SchoolBloom – Version 86
+# SchoolBloom V87
 
-Editor stability build:
-- eigene Schriften (TTF/OTF/WOFF/WOFF2) lokal importieren
-- Listen ohne Textmarkierung
-- manueller Zoom + Zwei-Finger-Pinch-Zoom
-- kein Auto-Zoom beim Tippen / iOS-Tastatur
-- Main-Leiste wird nach Textformat-/Modal-Bearbeitung zuverlässig wiederhergestellt
-- Text-HTML speichert keine Editor-Handles mehr mit
-- einheitliches Zoom-System gegen Safari-Doppelskalierung
-- Netzwerk-first Service Worker gegen alte, festhängende GitHub-Pages-Versionen
+Mobile editor cleanup based on V86.
+
+- Text formats are now inside **Text**; the separate Formate main tab is removed.
+- Custom font upload is directly in the Text toolbar (`Aa+ Schrift`).
+- Text/background colour remains under **Aussehen**.
+- Bullet, numbered and dash lists work without highlighting text first.
+- Bottom editor navigation is reduced to five clean tabs and hardened against disappearing/dead states.
+- Existing V63/V86 formula, graph, canvas, zoom, custom fonts, templates, layers and autosave logic is preserved.
