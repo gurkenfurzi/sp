@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#fff7f5">
+<meta name="theme-color" content="#0b1020">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SchoolBloom">
@@ -3000,12 +3000,41 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
 }
 </style>
 
+
+<style id="v88-editor-final-polish">
+@media (max-width:899px){
+  body.editorMode .canvasQuickNav{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:5px!important;padding:8px!important}
+  body.editorMode .canvasQuickNav button{min-width:0!important;height:62px!important;padding:6px 2px!important}
+  body.editorMode .canvasQuickNav button span{font-size:8px!important}
+  body.editorMode #canvasQuickDrawer{max-height:min(61dvh,540px)!important;overflow:hidden!important;display:none!important;flex-direction:column!important}
+  body.editorMode #canvasQuickDrawer.open{display:flex!important}
+  body.editorMode #canvasQuickDrawer .mobileDrawerHead{flex:0 0 auto!important}
+  body.editorMode .mobileTextEditor{display:flex!important;flex-direction:column!important;min-height:0!important;flex:1 1 auto!important}
+  body.editorMode .mobileTextModeContent{flex:1 1 auto!important;min-height:0!important;overflow:auto!important;-webkit-overflow-scrolling:touch!important;padding:10px 2px 8px!important}
+  body.editorMode .mobileTextModeTabs{flex:0 0 auto!important;position:sticky!important;bottom:0!important;background:rgba(255,252,250,.98)!important;padding:9px 0 0!important}
+  body.editorMode .mobileTextTop{grid-template-columns:minmax(0,1.25fr) 108px repeat(4,38px)!important;gap:6px!important}
+  body.editorMode .mobileTextMiddle{grid-template-columns:44px repeat(7,minmax(0,1fr))!important;gap:6px!important}
+  .v88FontAdd{height:38px!important;border:1px solid #eadbd6!important;border-radius:11px!important;background:#fff8f6!important;color:#8d6864!important;font-size:11px!important;font-weight:950!important;display:grid!important;place-items:center!important;padding:0!important}
+  .v88FormatStrip{display:grid;gap:7px;padding-top:2px}.v88FormatTitle{font-size:8px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:#a2877d}
+  .v88FormatChips{display:flex;gap:6px;overflow:auto;padding-bottom:2px;scrollbar-width:none}.v88FormatChips::-webkit-scrollbar{display:none}
+  .v88FormatChips button{flex:0 0 auto;height:36px;border:1px solid #eadbd6;border-radius:12px;background:white;color:#725b53;padding:0 11px;font-size:9px;font-weight:850;white-space:nowrap}
+  .v88FormatActions{display:flex;gap:6px;overflow:auto}.v88FormatActions button{flex:0 0 auto;height:34px;border:1px dashed #e8cbc6;border-radius:11px;background:#fff7f5;color:#956e69;padding:0 10px;font-size:8px;font-weight:900}
+  .sbDashList{list-style:none!important;padding-left:0!important;margin:.25em 0!important}.sbDashList>li{margin:.08em 0!important}
+  .v88Zoom{position:fixed;right:14px;bottom:calc(94px + env(safe-area-inset-bottom));z-index:619;display:flex;align-items:center;gap:2px;padding:4px;background:rgba(255,252,250,.96);border:1px solid #eadbd6;border-radius:999px;box-shadow:0 10px 25px rgba(92,67,59,.09);backdrop-filter:blur(16px)}
+  .v88Zoom button{height:30px;min-width:31px;border:0;border-radius:999px;background:transparent;color:#735d55;font-weight:900;font-size:14px;padding:0 8px}.v88Zoom .label{min-width:48px;font-size:8px;color:#9b8178}
+  body.editorMode.editorDrawerOpen .v88Zoom{display:none!important} body:not(.editorMode) .v88Zoom{display:none!important}
+  body.editorMode .cobj.textObj{overflow-wrap:anywhere!important;word-break:break-word!important}
+  .v88FontManager{display:grid;gap:9px}.v88FontRow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;padding:10px 12px;border:1px solid #eadbd6;border-radius:14px;background:#fff}.v88FontRow small{display:block;color:#a0867d;font-size:8px;margin-top:2px}.v88FontRow button{height:34px;border:1px solid #f0d7d4;border-radius:10px;background:#fff7f6;color:#a7686c;font-weight:850}
+}
+@media (min-width:900px){.v88Zoom{display:none!important}}
+</style>
+
 </head>
 <body class="v57">
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 87</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 88</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -3275,7 +3304,7 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
         <div class="desktopCmdGroup desktopCmdView">
           <span class="desktopCmdLabel">Ansicht</span>
           <div class="desktopCmdButtons">
-            <button onclick="fitCanvasStage()" title="An Bildschirm">⊡ <span>Anpassen</span></button>
+            <button onclick="fitCanvasStage(true)" title="An Bildschirm">⊡ <span>Anpassen</span></button>
             <button onclick="toggleTopViewMenu()" title="Seite & Ansicht">▯ <span>Seite</span></button>
             <button onclick="openShortcutHelp()" title="Tastenkürzel">⌨ <span>Shortcuts</span></button>
           </div>
@@ -3286,7 +3315,7 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
         <div class="topViewSection">
           <b>Ansicht</b>
           <div class="topViewButtons">
-            <button onclick="fitCanvasStage()">⊡ An Bildschirm</button>
+            <button onclick="fitCanvasStage(true)">⊡ An Bildschirm</button>
             <button onclick="setCanvasZoom(.5)">50%</button>
             <button onclick="setCanvasZoom(.75)">75%</button>
             <button onclick="setCanvasZoom(1)">100%</button>
@@ -3331,7 +3360,6 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
 </div>
 <div id="canvasQuickDrawer" class="canvasQuickDrawer"></div>
 <div id="mobileSelectionTools" class="mobileSelectionTools"></div>
-<div id="v86ZoomControl" class="v86ZoomControl" aria-label="Zoom"><button type="button" onclick="canvasZoomBy(-.1)" title="Rauszoomen">−</button><button type="button" id="v86ZoomLabel" onclick="fitCanvasStage()" title="An Bildschirm">100%</button><button type="button" onclick="canvasZoomBy(.1)" title="Reinzoomen">＋</button></div>
 <div id="multiSelectStatus" class="multiSelectStatus"></div>
       <input id="canvasImageInput" type="file" accept="image/*" style="display:none" onchange="if(this.files?.[0])addCanvasImage(this.files[0]);this.value=''">
       <input id="canvasCameraInput" type="file" accept="image/*" capture="environment" style="display:none" onchange="if(this.files?.[0])addCanvasImage(this.files[0]);this.value=''">
@@ -3869,7 +3897,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 87";
+ $("#headerEyebrow").textContent="VERSION 88";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -3879,7 +3907,6 @@ function openModal(html){
  modalScrollY=window.scrollY;
  $("#topViewMenu")?.classList.remove("open");
  const drawer=$("#canvasQuickDrawer");if(drawer){drawer.classList.remove("open");drawer.innerHTML="";openEditorGroup=null}
- document.body.classList.remove("editorDrawerOpen");
  $$(".canvasQuickNav button").forEach(x=>x.classList.remove("active"));
  $("#modal").innerHTML=html;$("#modalWrap").classList.add("open");
  document.body.classList.add("modalOpen");document.body.style.top=`-${modalScrollY}px`;
@@ -3887,10 +3914,6 @@ function openModal(html){
 window.closeModal=()=>{
  $("#modalWrap").classList.remove("open");
  document.body.classList.remove("modalOpen");document.body.style.top="";
- if(document.body.classList.contains("editorMode") && !$("#canvasQuickDrawer")?.classList.contains("open")){
-   document.body.classList.remove("editorDrawerOpen");
-   $$(".canvasQuickNav button").forEach(x=>x.classList.remove("active"));
- }
  window.scrollTo(0,modalScrollY);
 };
 
@@ -5504,7 +5527,7 @@ function attachCanvasObjectEvents(){
      },0)}};
      window.addEventListener("pointermove",move);window.addEventListener("pointerup",up);
    });
-   if(el.isContentEditable)el.addEventListener("input",()=>{const o=canvasState.objects.find(x=>x.id===oid);if(o)o.text=cleanCanvasTextHTML(el);markCanvasDirty()});
+   if(el.isContentEditable)el.addEventListener("input",()=>{const o=canvasState.objects.find(x=>x.id===oid);if(o)o.text=el.innerHTML;markCanvasDirty()});
    el.querySelectorAll("td").forEach(td=>td.addEventListener("input",()=>{const o=canvasState.objects.find(x=>x.id===oid);if(o)o.cells[+td.dataset.r][+td.dataset.c]=td.innerText;markCanvasDirty()}));
  });
 }
@@ -5638,7 +5661,7 @@ function applyCanvasPageSize(){
  if(stage){stage.style.width=W+"px";stage.style.height=H+"px"}
  if(svg)svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
  updateOrientationButtons();applyCanvasPageStyle();
- if(!canvasState.userZoomTouched) setTimeout(()=>fitCanvasToScreen(),0);
+ if(shouldAutoFitCanvas() || !canvasState.userZoomTouched) setTimeout(()=>fitCanvasToScreen(),0);
 }
 
 window.setCanvasZoom=function(value){
@@ -6417,9 +6440,9 @@ function mobileTextModeContentHTML(kind){
        <button class="${ta==='center'?'on':''}" onclick="applyTextProperty('textAlign','center');mobileRefreshTextMode()">≣</button>
        <button class="${ta==='right'?'on':''}" onclick="applyTextProperty('textAlign','right');mobileRefreshTextMode()">≡</button>
        <button class="${ta==='justify'?'on':''}" onclick="applyTextProperty('textAlign','justify');mobileRefreshTextMode()">☷</button>
-       <button onclick="applyTextList('bullet')" title="Aufzählung mit Punkten">•≡</button>
-       <button onclick="applyTextList('number')" title="Nummerierte Liste">1≡</button>
-       <button onclick="applyTextList('dash')" title="Aufzählung mit Strichen">–≡</button>
+       <button onclick="formatSelectedText('insertUnorderedList')">•≡</button>
+       <button onclick="formatSelectedText('insertOrderedList')">1≡</button>
+       <button onclick="mobileDashList()">–≡</button>
      </div>
    </div>`;
  }
@@ -6496,7 +6519,7 @@ window.editorOpenGroup=function(group,btn){
  }else if(group==="pages"){
    title="Seiten";const ps=canvasState.pageStyle||{};
    html=`<div class="mobilePagePanel">
-    <div class="mobileDrawerActions rowish"><button onclick="fitCanvasStage()">⊡ An Bildschirm</button><button onclick="setCanvasZoom(.5)">50%</button><button onclick="setCanvasZoom(.75)">75%</button><button onclick="setCanvasZoom(1)">100%</button></div>
+    <div class="mobileDrawerActions rowish"><button onclick="fitCanvasStage(true)">⊡ An Bildschirm</button><button onclick="setCanvasZoom(.5)">50%</button><button onclick="setCanvasZoom(.75)">75%</button><button onclick="setCanvasZoom(1)">100%</button></div>
     <div class="mobileSubGrid"><label>Ausrichtung<select onchange="setCanvasOrientation(this.value)"><option value="portrait" ${canvasState.orientation==='portrait'?'selected':''}>Hochformat</option><option value="landscape" ${canvasState.orientation==='landscape'?'selected':''}>Querformat</option></select></label><label>Seitenfarbe<input type="color" value="${ps.color||'#ffffff'}" onchange="setCanvasPageStyle('color',this.value)"></label><label>Muster<select onchange="setCanvasPageStyle('pattern',this.value)"><option value="blank" ${ps.pattern==='blank'?'selected':''}>Leer</option><option value="lined" ${ps.pattern==='lined'?'selected':''}>Liniert</option><option value="grid" ${ps.pattern==='grid'?'selected':''}>Kariert</option><option value="dots" ${ps.pattern==='dots'?'selected':''}>Gepunktet</option></select></label><label>Rastergröße<input type="number" min="10" max="48" value="${ps.spacing||24}" onchange="setCanvasPageStyle('spacing',+this.value)"></label><label>Layout-Rand<input type="number" min="0" max="160" value="${ps.margin??55}" onchange="setCanvasPageStyle('margin',+this.value)"></label></div>
     <div class="mobileDrawerActions rowish"><button onclick="alignSelectedToPageMargin('left')">⇤ Linker Rand</button><button onclick="alignSelectedToPageMargin('right')">Rechter Rand ⇥</button><button onclick="fitSelectedToPageMargins()">↔ Bis Rand</button></div>
    </div>`;
@@ -6538,16 +6561,11 @@ function renderSheetEditor(){
  }
  if(!saved&&!sh)applyCanvasTemplate("clean",true);
  $("#wordStatus").textContent=sh?"Gespeichert":"Neues Lernblatt";
- applyCanvasPageSize();renderCanvasObjects();renderVectors();renderCanvasInspector();renderPageTemplates();enhanceCameraInputs();updateMultiSelectStatus();pushHistory(true);canvasState.lastSavedHash=canvasSnapshot();ensurePathDrawingListener();setTimeout(()=>{canvasState.userZoomTouched=false;fitCanvasToScreen();openEditorGroup=null;const d=$("#canvasQuickDrawer");if(d){d.classList.remove("open");d.innerHTML=""}$$(".canvasQuickNav button").forEach(x=>x.classList.remove("active"))},80);
+ applyCanvasPageSize();renderCanvasObjects();renderVectors();renderCanvasInspector();renderPageTemplates();enhanceCameraInputs();updateMultiSelectStatus();pushHistory(true);canvasState.lastSavedHash=canvasSnapshot();ensurePathDrawingListener();setTimeout(()=>{fitCanvasStage();openEditorGroup=null;const d=$("#canvasQuickDrawer");if(d){d.classList.remove("open");d.innerHTML=""}$$(".canvasQuickNav button").forEach(x=>x.classList.remove("active"))},80);
 }
 function stripHTML(x){const d=document.createElement("div");d.innerHTML=x;return d.innerText}
 function markCanvasDirty(schedule=true){const x=$("#autosaveState");if(x){x.textContent="Nicht gespeichert";x.className="autosaveState saving"}if(schedule)scheduleAutosave()}
-window.addEventListener("resize",()=>{
- if(!$("#view-sheet-editor")?.classList.contains("active"))return;
- const a=document.activeElement;
- const typing=!!(a&&(a.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)));
- if(!typing && !canvasState.userZoomTouched) fitCanvasToScreen();
-})
+window.addEventListener("resize",()=>{if($("#view-sheet-editor")?.classList.contains("active"))fitCanvasStage()})
 function saveCanvasSheetCore(auto=false){
  const {s,t}=currentTopic();if(!s||!t)return;const title=canvasState.objects.find(o=>["text","block"].includes(o.kind)&&(o.style?.fontSize||0)>=28)?.text?.replace(/<[^>]*>/g,"").slice(0,80)||t.title;const dataObj={objects:canvasState.objects,vectors:canvasState.vectors,orientation:canvasState.orientation,pageStyle:canvasState.pageStyle};
  if(selectedSheetId){const sh=data.studySheets.find(x=>x.id===selectedSheetId);if(sh){sh.title=title;sh.canvasData=dataObj;sh.html=""}}else{const sh={id:id(),subject:s.name,topicId:t.id,title,html:"",canvasData:dataObj,created:Date.now()};data.studySheets.push(sh);selectedSheetId=sh.id}save();if(!auto){const el=$("#autosaveState");if(el){el.textContent="Gespeichert ✓";el.className="autosaveState saved"}}
@@ -7494,182 +7512,6 @@ button.primary,button.ghost,.iconbtn{
 </style>
 
 </head><body><div class="page">${serializedCanvas()}</div><div id="buildVersionBadge" style="position:fixed;right:8px;bottom:8px;z-index:9999;font:800 9px Inter,sans-serif;color:#9b7d74;background:rgba(255,250,247,.88);border:1px solid #ead4cd;border-radius:999px;padding:5px 8px;pointer-events:none">V63</div>
-
-<style id="v87-text-formats-and-mobile-nav-fix">
-@media (max-width:899px){
-  /* Five clean main tools. Text formats now live inside Text. */
-  body.editorMode .canvasQuickNav{
-    grid-template-columns:repeat(5,minmax(0,1fr))!important;
-    left:12px!important;right:12px!important;width:auto!important;
-    overflow:hidden!important;gap:5px!important;padding:8px!important;
-  }
-  body.editorMode .canvasQuickNav button{
-    min-width:0!important;width:auto!important;max-width:none!important;
-    height:62px!important;flex:1 1 0!important;
-  }
-  body.editorMode .canvasQuickNav button span{font-size:8px!important;max-width:100%;overflow:hidden;text-overflow:ellipsis}
-  body.editorMode .canvasViewport{padding-bottom:116px!important}
-
-  /* Drawer stays tidy above Safari controls and never leaves a broken empty strip. */
-  body.editorMode #canvasQuickDrawer.open{
-    max-height:min(60dvh,530px)!important;
-    padding:9px 10px 8px!important;
-    overflow:hidden!important;
-  }
-  body.editorMode #canvasQuickDrawer:not(.open){display:none!important;height:0!important;padding:0!important;margin:0!important;border:0!important}
-  .mobileTextModeTabs{padding:8px 0 0!important;gap:5px!important}
-  .mobileTextModeTabs button{min-height:56px!important;border-radius:13px!important}
-  .mobileTextModeContent{padding:9px 1px 9px!important}
-
-  /* No duplicate font row: the Aa+ control below owns custom-font import. */
-  .v86FontTools{display:none!important}
-  .mobileFontAddButton{
-    height:38px!important;min-width:0!important;padding:0!important;
-    border:1px solid #eadbd6!important;border-radius:11px!important;background:#fff!important;
-    color:#755e56!important;display:flex!important;align-items:center!important;justify-content:center!important;
-    gap:2px!important;flex-direction:column!important;
-  }
-  .mobileFontAddButton b{font-size:12px!important;line-height:1!important}.mobileFontAddButton span{font-size:6.5px!important;font-weight:900!important;line-height:1!important}
-
-  /* Lists must actually look like lists in a canvas text box. */
-  .cobj.textObj ul,.cobj.textObj ol,.cobj.block ul,.cobj.block ol,.cobj.task ul,.cobj.task ol,.cobj.merke ul,.cobj.merke ol{
-    margin:.18em 0!important;padding-left:1.35em!important;list-style-position:outside!important;
-  }
-  .cobj.textObj li,.cobj.block li,.cobj.task li,.cobj.merke li{margin:.08em 0!important;padding-left:.05em!important}
-  .cobj .sbDashList{padding-left:0!important;list-style:none!important}
-
-  /* Text formats inside Text drawer. */
-  .v87TextFormats{display:grid;gap:8px;padding-top:8px;border-top:1px solid #f0e4df}
-  .v87TextFormatsHead{display:flex;align-items:center;justify-content:space-between;gap:8px}
-  .v87TextFormatsHead b{font-size:8px;text-transform:uppercase;letter-spacing:.12em;color:#9c8178}
-  .v87TextFormatsHead button{height:30px!important;min-height:30px!important;padding:0 9px!important;border:1px solid #eadbd6!important;border-radius:10px!important;background:#fff!important;color:#735d55!important;font-size:8px!important;font-weight:850!important}
-  .v87FormatGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
-  .v87FormatGrid button{min-width:0;min-height:54px;border:1px solid #eadbd6;border-radius:13px;background:#fff;color:#725b53;padding:6px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
-  .v87FormatGrid button b{font-size:14px;line-height:1.05}.v87FormatGrid button span{font-size:7px;font-weight:850;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .v87FormatGrid button.bundle b{font-size:12px}
-
-  /* Keep active controls clear and cute, but not oversized. */
-  .mobileTextMiddle{grid-template-columns:38px repeat(7,minmax(0,1fr))!important;gap:5px!important}
-  .mobileTextMiddle>button{overflow:hidden!important}
-}
-</style>
-<script id="v87-text-formats-and-list-behavior">
-(function(){
-  'use strict';
-  const q=(s,r=document)=>r.querySelector(s), qa=(s,r=document)=>Array.from(r.querySelectorAll(s));
-  const esc87=v=>String(v??'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]));
-
-  function selectedText87(){
-    return window.canvasState?.objects?.find(o=>o.id===window.canvasState.selectedId&&['text','block','task','merke'].includes(o.kind))||null;
-  }
-  function textEl87(){return q(`.cobj[data-id="${window.canvasState?.selectedId||''}"]`)}
-  function presetIcon87(x){return x.id==='h1'?'H1':x.id==='h2'?'H2':x.id==='task'?'✓':x.id==='merke'?'!':x.bundle?'Aa✦':'Aa'}
-  function formatGrid87(mode='insert'){
-    const presets=typeof window.canvasPresets==='function'?window.canvasPresets():[];
-    return `<div class="v87FormatGrid">${presets.map(x=>{
-      const action=mode==='apply'&&!x.bundle?`applyTextFormatToSelection('${x.id}')`:(x.bundle?`insertSavedTextFormat('${x.id}')`:`addCanvasText('${x.id}')`);
-      return `<button class="${x.bundle?'bundle':''}" onclick="${action}"><b>${presetIcon87(x)}</b><span>${esc87(x.name||'Format')}</span></button>`;
-    }).join('')}</div>`;
-  }
-  function formatsBlock87(mode='insert'){
-    return `<div class="v87TextFormats"><div class="v87TextFormatsHead"><b>Textformate</b><button onclick="openTextFormatManager()">Verwalten</button></div>${formatGrid87(mode)}<div class="mobileDrawerActions"><button onclick="createCustomStylePreset()">＋ Eigenes Format</button>${mode==='apply'?'<button onclick="saveSelectionAsTextFormat()">＋ Auswahl als Format</button>':''}</div></div>`;
-  }
-
-  /* Main Text panel: add text + formats in one place, so there is no separate Formate tab. */
-  window.mobileTextControlsHTML=function(){
-    const o=selectedText87();
-    if(!o){
-      const presets=(typeof window.canvasPresets==='function'?window.canvasPresets():[]).filter(x=>!x.bundle).slice(0,5);
-      return `<div class="mobileDrawerSection"><div class="mobileDrawerTitle">Text hinzufügen</div><div class="mobileToolGrid">${presets.map(x=>`<button onclick="addCanvasText('${x.id}')"><b>${presetIcon87(x)}</b><span>${esc87(x.name)}</span></button>`).join('')}</div>${formatsBlock87('insert')}</div>`;
-    }
-    return `<div class="mobileTextEditor"><div id="mobileTextModeContent" class="mobileTextModeContent">${window.mobileTextModeContentHTML('text')}</div><div class="mobileTextModeTabs" role="tablist" aria-label="Text-Werkzeuge"><button class="on" data-mode="text" onclick="mobileTextMode('text',this)"><b>T</b><span>Text</span></button><button data-mode="appearance" onclick="mobileTextMode('appearance',this)"><b>◉</b><span>Aussehen</span></button><button data-mode="spacing" onclick="mobileTextMode('spacing',this)"><b>Vᴬ</b><span>Abstand</span></button><button data-mode="position" onclick="mobileTextMode('position',this)"><b>⌗</b><span>Position</span></button><button data-mode="effects" onclick="mobileTextMode('effects',this)"><b>✦</b><span>Effekte</span></button></div></div>`;
-  };
-
-  /* Rebuild only Text mode. Appearance remains the one place for text/background colour. */
-  const oldModeHTML=window.mobileTextModeContentHTML;
-  window.mobileTextModeContentHTML=function(kind){
-    const o=selectedText87();if(!o)return '';
-    if(kind!=='text')return oldModeHTML(kind);
-    const st=o.style||{},ff=st.fontFamily||'Arial',fs=st.fontSize||16,ta=st.textAlign||'left';
-    const built=['Arial','Lato','Playfair Display','Georgia','Verdana','Trebuchet MS'];
-    let custom=[];try{custom=JSON.parse(localStorage.getItem('schoolbloom-custom-font-meta-v1')||'[]')}catch(_){custom=[]}
-    const opts=[...built.map(f=>({family:f,name:f})),...custom.map(m=>({family:m.family,name:'✦ '+m.name}))];
-    return `<div class="mobileTextBar"><div class="mobileTextTop"><select onchange="applyTextProperty('fontFamily',this.value)">${opts.map(f=>`<option value="${esc87(f.family)}" ${ff===f.family?'selected':''}>${esc87(f.name)}</option>`).join('')}</select><div class="mobileSizeStep"><button onclick="mobileFontStep(-1)">−</button><input id="mobileFontSize" type="number" min="6" max="180" value="${fs}" onchange="applyTextProperty('fontSize',+this.value)"><button onclick="mobileFontStep(1)">＋</button></div><button onclick="formatSelectedText('bold')"><b>B</b></button><button onclick="formatSelectedText('italic')"><i>I</i></button><button onclick="formatSelectedText('underline')"><u>U</u></button><button onclick="formatSelectedText('strikeThrough')"><s>S</s></button></div><div class="mobileTextMiddle"><button class="mobileFontAddButton" onclick="openCustomFontPicker()" title="Eigene Schrift hinzufügen"><b>Aa+</b><span>Schrift</span></button><button class="${ta==='left'?'on':''}" onclick="applyTextProperty('textAlign','left');mobileRefreshTextMode()">≡</button><button class="${ta==='center'?'on':''}" onclick="applyTextProperty('textAlign','center');mobileRefreshTextMode()">≣</button><button class="${ta==='right'?'on':''}" onclick="applyTextProperty('textAlign','right');mobileRefreshTextMode()">≡</button><button class="${ta==='justify'?'on':''}" onclick="applyTextProperty('textAlign','justify');mobileRefreshTextMode()">☷</button><button onclick="applyTextList('bullet')" title="Punkte – keine Markierung nötig">•≡</button><button onclick="applyTextList('number')" title="Nummern – keine Markierung nötig">1≡</button><button onclick="applyTextList('dash')" title="Striche – keine Markierung nötig">–≡</button></div>${formatsBlock87('apply')}</div>`;
-  };
-
-  window.applyTextFormatToSelection=function(id){
-    const o=selectedText87();if(!o)return window.cuteToast?.('Wähle zuerst ein Textfeld ♡');
-    const p=(typeof window.canvasPresets==='function'?window.canvasPresets():[]).find(x=>x.id===id);if(!p||p.bundle)return;
-    o.style=o.style||{};
-    const map={fontSize:p.fontSize,fontWeight:p.fontWeight,color:p.color,fontFamily:p.fontFamily,background:p.bg,borderColor:p.borderColor,borderWidth:p.borderWidth,borderRadius:p.radius,padding:p.padding};
-    Object.entries(map).forEach(([k,v])=>{if(v!==undefined)o.style[k]=v});
-    window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.();
-    window.cuteToast?.((p.name||'Format')+' angewendet ♡');
-    setTimeout(()=>window.mobileRefreshTextMode?.(),0);
-  };
-
-  /* Lists work with a selected text box; highlighting text is optional. */
-  function contentLines87(html){
-    const d=document.createElement('div');d.innerHTML=html||'';
-    const lis=Array.from(d.querySelectorAll('li'));if(lis.length)return lis.map(li=>li.innerHTML.replace(/^\s*[–-]\s*/,''));
-    const blocks=Array.from(d.children);if(blocks.length>1)return blocks.map(x=>x.innerHTML).filter(Boolean);
-    const raw=(d.innerText||d.textContent||'').split(/\n+/).map(x=>x.trim()).filter(Boolean);
-    return (raw.length?raw:['Text']).map(esc87);
-  }
-  function placeCaretEnd87(el){
-    const s=window.getSelection();if(!s)return;const r=document.createRange();r.selectNodeContents(el);r.collapse(false);s.removeAllRanges();s.addRange(r);
-  }
-  window.applyTextList=function(type){
-    const o=selectedText87();if(!o)return window.cuteToast?.('Wähle zuerst ein Textfeld ♡');
-    const wasEditing=!!o.editing;
-    if(!wasEditing){
-      const lines=contentLines87(o.text||'Text');
-      if(type==='number')o.text=`<ol>${lines.map(x=>`<li>${x}</li>`).join('')}</ol>`;
-      else if(type==='dash')o.text=`<ul class="sbDashList">${lines.map(x=>`<li>– ${x}</li>`).join('')}</ul>`;
-      else o.text=`<ul>${lines.map(x=>`<li>${x}</li>`).join('')}</ul>`;
-      o.editing=false;window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.();window.cuteToast?.('Liste erstellt ♡');setTimeout(()=>window.mobileRefreshTextMode?.(),0);return;
-    }
-    let el=textEl87();if(!el)return;
-    el.setAttribute('contenteditable','true');el.focus({preventScroll:true});
-    let sel=window.getSelection(),inside=!!(sel&&sel.rangeCount&&el.contains(sel.anchorNode));if(!inside){placeCaretEnd87(el);sel=window.getSelection()}
-    if(type==='bullet'||type==='number'){
-      document.execCommand(type==='bullet'?'insertUnorderedList':'insertOrderedList',false,null);
-    }else{
-      document.execCommand('insertUnorderedList',false,null);
-      const anchor=sel?.anchorNode;const li=anchor?.nodeType===1?anchor.closest?.('li'):anchor?.parentElement?.closest?.('li');const ul=li?.closest?.('ul');if(ul){ul.classList.add('sbDashList');Array.from(ul.children).forEach(x=>{if(!/^\s*–\s*/.test(x.textContent||''))x.insertAdjacentText('afterbegin','– ')})}
-    }
-    o.text=window.cleanCanvasTextHTML?window.cleanCanvasTextHTML(el):el.innerHTML;
-    window.markCanvasDirty?.();window.pushHistory?.();
-  };
-
-  /* Any legacy call to the old Formate tab now routes into Text instead of opening a phantom sixth tab. */
-  const oldOpen=window.editorOpenGroup;
-  window.editorOpenGroup=function(group,btn){
-    if(group==='formats'){
-      const textBtn=qa('.canvasQuickNav button').find(b=>b.dataset.group==='text');
-      group='text';btn=textBtn||btn;
-    }
-    const r=oldOpen.apply(this,[group,btn]);
-    // hard repair of nav/drawer state after every tool transition
-    requestAnimationFrame(()=>{
-      const d=q('#canvasQuickDrawer');
-      if(d?.classList.contains('open'))document.body.classList.add('editorDrawerOpen');else document.body.classList.remove('editorDrawerOpen');
-    });
-    return r;
-  };
-
-  /* If the selected object disappears, never leave a dead drawer or dead bottom bar behind. */
-  function selfHeal87(){
-    if(!document.body.classList.contains('editorMode'))return;
-    const d=q('#canvasQuickDrawer');
-    if(d&&!d.classList.contains('open'))document.body.classList.remove('editorDrawerOpen');
-    if(!d?.classList.contains('open'))qa('.canvasQuickNav button').forEach(b=>b.classList.remove('active'));
-  }
-  document.addEventListener('click',()=>setTimeout(selfHeal87,0),true);
-  document.addEventListener('visibilitychange',selfHeal87);
-})();
-</script>
-
 </body></html>`;
  const blob=new Blob([html],{type:"text/html"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=title.replace(/[^\wäöüÄÖÜß-]+/g,"_")+".html";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
 }
@@ -8593,183 +8435,7 @@ button.primary,button.ghost,.iconbtn{
 }
 </style>
 
-</head><body><div class="page">${serializedCanvas()}</div>
-<style id="v87-text-formats-and-mobile-nav-fix">
-@media (max-width:899px){
-  /* Five clean main tools. Text formats now live inside Text. */
-  body.editorMode .canvasQuickNav{
-    grid-template-columns:repeat(5,minmax(0,1fr))!important;
-    left:12px!important;right:12px!important;width:auto!important;
-    overflow:hidden!important;gap:5px!important;padding:8px!important;
-  }
-  body.editorMode .canvasQuickNav button{
-    min-width:0!important;width:auto!important;max-width:none!important;
-    height:62px!important;flex:1 1 0!important;
-  }
-  body.editorMode .canvasQuickNav button span{font-size:8px!important;max-width:100%;overflow:hidden;text-overflow:ellipsis}
-  body.editorMode .canvasViewport{padding-bottom:116px!important}
-
-  /* Drawer stays tidy above Safari controls and never leaves a broken empty strip. */
-  body.editorMode #canvasQuickDrawer.open{
-    max-height:min(60dvh,530px)!important;
-    padding:9px 10px 8px!important;
-    overflow:hidden!important;
-  }
-  body.editorMode #canvasQuickDrawer:not(.open){display:none!important;height:0!important;padding:0!important;margin:0!important;border:0!important}
-  .mobileTextModeTabs{padding:8px 0 0!important;gap:5px!important}
-  .mobileTextModeTabs button{min-height:56px!important;border-radius:13px!important}
-  .mobileTextModeContent{padding:9px 1px 9px!important}
-
-  /* No duplicate font row: the Aa+ control below owns custom-font import. */
-  .v86FontTools{display:none!important}
-  .mobileFontAddButton{
-    height:38px!important;min-width:0!important;padding:0!important;
-    border:1px solid #eadbd6!important;border-radius:11px!important;background:#fff!important;
-    color:#755e56!important;display:flex!important;align-items:center!important;justify-content:center!important;
-    gap:2px!important;flex-direction:column!important;
-  }
-  .mobileFontAddButton b{font-size:12px!important;line-height:1!important}.mobileFontAddButton span{font-size:6.5px!important;font-weight:900!important;line-height:1!important}
-
-  /* Lists must actually look like lists in a canvas text box. */
-  .cobj.textObj ul,.cobj.textObj ol,.cobj.block ul,.cobj.block ol,.cobj.task ul,.cobj.task ol,.cobj.merke ul,.cobj.merke ol{
-    margin:.18em 0!important;padding-left:1.35em!important;list-style-position:outside!important;
-  }
-  .cobj.textObj li,.cobj.block li,.cobj.task li,.cobj.merke li{margin:.08em 0!important;padding-left:.05em!important}
-  .cobj .sbDashList{padding-left:0!important;list-style:none!important}
-
-  /* Text formats inside Text drawer. */
-  .v87TextFormats{display:grid;gap:8px;padding-top:8px;border-top:1px solid #f0e4df}
-  .v87TextFormatsHead{display:flex;align-items:center;justify-content:space-between;gap:8px}
-  .v87TextFormatsHead b{font-size:8px;text-transform:uppercase;letter-spacing:.12em;color:#9c8178}
-  .v87TextFormatsHead button{height:30px!important;min-height:30px!important;padding:0 9px!important;border:1px solid #eadbd6!important;border-radius:10px!important;background:#fff!important;color:#735d55!important;font-size:8px!important;font-weight:850!important}
-  .v87FormatGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
-  .v87FormatGrid button{min-width:0;min-height:54px;border:1px solid #eadbd6;border-radius:13px;background:#fff;color:#725b53;padding:6px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
-  .v87FormatGrid button b{font-size:14px;line-height:1.05}.v87FormatGrid button span{font-size:7px;font-weight:850;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .v87FormatGrid button.bundle b{font-size:12px}
-
-  /* Keep active controls clear and cute, but not oversized. */
-  .mobileTextMiddle{grid-template-columns:38px repeat(7,minmax(0,1fr))!important;gap:5px!important}
-  .mobileTextMiddle>button{overflow:hidden!important}
-}
-</style>
-<script id="v87-text-formats-and-list-behavior">
-(function(){
-  'use strict';
-  const q=(s,r=document)=>r.querySelector(s), qa=(s,r=document)=>Array.from(r.querySelectorAll(s));
-  const esc87=v=>String(v??'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]));
-
-  function selectedText87(){
-    return window.canvasState?.objects?.find(o=>o.id===window.canvasState.selectedId&&['text','block','task','merke'].includes(o.kind))||null;
-  }
-  function textEl87(){return q(`.cobj[data-id="${window.canvasState?.selectedId||''}"]`)}
-  function presetIcon87(x){return x.id==='h1'?'H1':x.id==='h2'?'H2':x.id==='task'?'✓':x.id==='merke'?'!':x.bundle?'Aa✦':'Aa'}
-  function formatGrid87(mode='insert'){
-    const presets=typeof window.canvasPresets==='function'?window.canvasPresets():[];
-    return `<div class="v87FormatGrid">${presets.map(x=>{
-      const action=mode==='apply'&&!x.bundle?`applyTextFormatToSelection('${x.id}')`:(x.bundle?`insertSavedTextFormat('${x.id}')`:`addCanvasText('${x.id}')`);
-      return `<button class="${x.bundle?'bundle':''}" onclick="${action}"><b>${presetIcon87(x)}</b><span>${esc87(x.name||'Format')}</span></button>`;
-    }).join('')}</div>`;
-  }
-  function formatsBlock87(mode='insert'){
-    return `<div class="v87TextFormats"><div class="v87TextFormatsHead"><b>Textformate</b><button onclick="openTextFormatManager()">Verwalten</button></div>${formatGrid87(mode)}<div class="mobileDrawerActions"><button onclick="createCustomStylePreset()">＋ Eigenes Format</button>${mode==='apply'?'<button onclick="saveSelectionAsTextFormat()">＋ Auswahl als Format</button>':''}</div></div>`;
-  }
-
-  /* Main Text panel: add text + formats in one place, so there is no separate Formate tab. */
-  window.mobileTextControlsHTML=function(){
-    const o=selectedText87();
-    if(!o){
-      const presets=(typeof window.canvasPresets==='function'?window.canvasPresets():[]).filter(x=>!x.bundle).slice(0,5);
-      return `<div class="mobileDrawerSection"><div class="mobileDrawerTitle">Text hinzufügen</div><div class="mobileToolGrid">${presets.map(x=>`<button onclick="addCanvasText('${x.id}')"><b>${presetIcon87(x)}</b><span>${esc87(x.name)}</span></button>`).join('')}</div>${formatsBlock87('insert')}</div>`;
-    }
-    return `<div class="mobileTextEditor"><div id="mobileTextModeContent" class="mobileTextModeContent">${window.mobileTextModeContentHTML('text')}</div><div class="mobileTextModeTabs" role="tablist" aria-label="Text-Werkzeuge"><button class="on" data-mode="text" onclick="mobileTextMode('text',this)"><b>T</b><span>Text</span></button><button data-mode="appearance" onclick="mobileTextMode('appearance',this)"><b>◉</b><span>Aussehen</span></button><button data-mode="spacing" onclick="mobileTextMode('spacing',this)"><b>Vᴬ</b><span>Abstand</span></button><button data-mode="position" onclick="mobileTextMode('position',this)"><b>⌗</b><span>Position</span></button><button data-mode="effects" onclick="mobileTextMode('effects',this)"><b>✦</b><span>Effekte</span></button></div></div>`;
-  };
-
-  /* Rebuild only Text mode. Appearance remains the one place for text/background colour. */
-  const oldModeHTML=window.mobileTextModeContentHTML;
-  window.mobileTextModeContentHTML=function(kind){
-    const o=selectedText87();if(!o)return '';
-    if(kind!=='text')return oldModeHTML(kind);
-    const st=o.style||{},ff=st.fontFamily||'Arial',fs=st.fontSize||16,ta=st.textAlign||'left';
-    const built=['Arial','Lato','Playfair Display','Georgia','Verdana','Trebuchet MS'];
-    let custom=[];try{custom=JSON.parse(localStorage.getItem('schoolbloom-custom-font-meta-v1')||'[]')}catch(_){custom=[]}
-    const opts=[...built.map(f=>({family:f,name:f})),...custom.map(m=>({family:m.family,name:'✦ '+m.name}))];
-    return `<div class="mobileTextBar"><div class="mobileTextTop"><select onchange="applyTextProperty('fontFamily',this.value)">${opts.map(f=>`<option value="${esc87(f.family)}" ${ff===f.family?'selected':''}>${esc87(f.name)}</option>`).join('')}</select><div class="mobileSizeStep"><button onclick="mobileFontStep(-1)">−</button><input id="mobileFontSize" type="number" min="6" max="180" value="${fs}" onchange="applyTextProperty('fontSize',+this.value)"><button onclick="mobileFontStep(1)">＋</button></div><button onclick="formatSelectedText('bold')"><b>B</b></button><button onclick="formatSelectedText('italic')"><i>I</i></button><button onclick="formatSelectedText('underline')"><u>U</u></button><button onclick="formatSelectedText('strikeThrough')"><s>S</s></button></div><div class="mobileTextMiddle"><button class="mobileFontAddButton" onclick="openCustomFontPicker()" title="Eigene Schrift hinzufügen"><b>Aa+</b><span>Schrift</span></button><button class="${ta==='left'?'on':''}" onclick="applyTextProperty('textAlign','left');mobileRefreshTextMode()">≡</button><button class="${ta==='center'?'on':''}" onclick="applyTextProperty('textAlign','center');mobileRefreshTextMode()">≣</button><button class="${ta==='right'?'on':''}" onclick="applyTextProperty('textAlign','right');mobileRefreshTextMode()">≡</button><button class="${ta==='justify'?'on':''}" onclick="applyTextProperty('textAlign','justify');mobileRefreshTextMode()">☷</button><button onclick="applyTextList('bullet')" title="Punkte – keine Markierung nötig">•≡</button><button onclick="applyTextList('number')" title="Nummern – keine Markierung nötig">1≡</button><button onclick="applyTextList('dash')" title="Striche – keine Markierung nötig">–≡</button></div>${formatsBlock87('apply')}</div>`;
-  };
-
-  window.applyTextFormatToSelection=function(id){
-    const o=selectedText87();if(!o)return window.cuteToast?.('Wähle zuerst ein Textfeld ♡');
-    const p=(typeof window.canvasPresets==='function'?window.canvasPresets():[]).find(x=>x.id===id);if(!p||p.bundle)return;
-    o.style=o.style||{};
-    const map={fontSize:p.fontSize,fontWeight:p.fontWeight,color:p.color,fontFamily:p.fontFamily,background:p.bg,borderColor:p.borderColor,borderWidth:p.borderWidth,borderRadius:p.radius,padding:p.padding};
-    Object.entries(map).forEach(([k,v])=>{if(v!==undefined)o.style[k]=v});
-    window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.();
-    window.cuteToast?.((p.name||'Format')+' angewendet ♡');
-    setTimeout(()=>window.mobileRefreshTextMode?.(),0);
-  };
-
-  /* Lists work with a selected text box; highlighting text is optional. */
-  function contentLines87(html){
-    const d=document.createElement('div');d.innerHTML=html||'';
-    const lis=Array.from(d.querySelectorAll('li'));if(lis.length)return lis.map(li=>li.innerHTML.replace(/^\s*[–-]\s*/,''));
-    const blocks=Array.from(d.children);if(blocks.length>1)return blocks.map(x=>x.innerHTML).filter(Boolean);
-    const raw=(d.innerText||d.textContent||'').split(/\n+/).map(x=>x.trim()).filter(Boolean);
-    return (raw.length?raw:['Text']).map(esc87);
-  }
-  function placeCaretEnd87(el){
-    const s=window.getSelection();if(!s)return;const r=document.createRange();r.selectNodeContents(el);r.collapse(false);s.removeAllRanges();s.addRange(r);
-  }
-  window.applyTextList=function(type){
-    const o=selectedText87();if(!o)return window.cuteToast?.('Wähle zuerst ein Textfeld ♡');
-    const wasEditing=!!o.editing;
-    if(!wasEditing){
-      const lines=contentLines87(o.text||'Text');
-      if(type==='number')o.text=`<ol>${lines.map(x=>`<li>${x}</li>`).join('')}</ol>`;
-      else if(type==='dash')o.text=`<ul class="sbDashList">${lines.map(x=>`<li>– ${x}</li>`).join('')}</ul>`;
-      else o.text=`<ul>${lines.map(x=>`<li>${x}</li>`).join('')}</ul>`;
-      o.editing=false;window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.();window.cuteToast?.('Liste erstellt ♡');setTimeout(()=>window.mobileRefreshTextMode?.(),0);return;
-    }
-    let el=textEl87();if(!el)return;
-    el.setAttribute('contenteditable','true');el.focus({preventScroll:true});
-    let sel=window.getSelection(),inside=!!(sel&&sel.rangeCount&&el.contains(sel.anchorNode));if(!inside){placeCaretEnd87(el);sel=window.getSelection()}
-    if(type==='bullet'||type==='number'){
-      document.execCommand(type==='bullet'?'insertUnorderedList':'insertOrderedList',false,null);
-    }else{
-      document.execCommand('insertUnorderedList',false,null);
-      const anchor=sel?.anchorNode;const li=anchor?.nodeType===1?anchor.closest?.('li'):anchor?.parentElement?.closest?.('li');const ul=li?.closest?.('ul');if(ul){ul.classList.add('sbDashList');Array.from(ul.children).forEach(x=>{if(!/^\s*–\s*/.test(x.textContent||''))x.insertAdjacentText('afterbegin','– ')})}
-    }
-    o.text=window.cleanCanvasTextHTML?window.cleanCanvasTextHTML(el):el.innerHTML;
-    window.markCanvasDirty?.();window.pushHistory?.();
-  };
-
-  /* Any legacy call to the old Formate tab now routes into Text instead of opening a phantom sixth tab. */
-  const oldOpen=window.editorOpenGroup;
-  window.editorOpenGroup=function(group,btn){
-    if(group==='formats'){
-      const textBtn=qa('.canvasQuickNav button').find(b=>b.dataset.group==='text');
-      group='text';btn=textBtn||btn;
-    }
-    const r=oldOpen.apply(this,[group,btn]);
-    // hard repair of nav/drawer state after every tool transition
-    requestAnimationFrame(()=>{
-      const d=q('#canvasQuickDrawer');
-      if(d?.classList.contains('open'))document.body.classList.add('editorDrawerOpen');else document.body.classList.remove('editorDrawerOpen');
-    });
-    return r;
-  };
-
-  /* If the selected object disappears, never leave a dead drawer or dead bottom bar behind. */
-  function selfHeal87(){
-    if(!document.body.classList.contains('editorMode'))return;
-    const d=q('#canvasQuickDrawer');
-    if(d&&!d.classList.contains('open'))document.body.classList.remove('editorDrawerOpen');
-    if(!d?.classList.contains('open'))qa('.canvasQuickNav button').forEach(b=>b.classList.remove('active'));
-  }
-  document.addEventListener('click',()=>setTimeout(selfHeal87,0),true);
-  document.addEventListener('visibilitychange',selfHeal87);
-})();
-</script>
-
-</body></html>`);w.document.close();setTimeout(()=>w.print(),300)
+</head><body><div class="page">${serializedCanvas()}</div></body></html>`);w.document.close();setTimeout(()=>w.print(),300)
 }
 
 function customPageTemplates(){
@@ -11098,353 +10764,113 @@ if("serviceWorker"in navigator&&location.protocol.startsWith("http")){
    }
  });
 }
-</script>
 
-<style id="v86-editor-stability-and-polish">
-@media (max-width:899px){
-  body.editorMode .canvasViewport{touch-action:pan-x pan-y!important;-webkit-overflow-scrolling:touch!important}
-  body.editorMode .canvasStage{transition:zoom .12s ease!important}
-  body.editorMode .cobj.textObj{overflow-wrap:anywhere!important;word-break:break-word!important}
-  body.editorMode .canvasQuickNav{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:4px!important;padding:8px!important}
-  body.editorMode .canvasQuickNav button{height:60px!important;font-size:19px!important;border-radius:14px!important}
-  body.editorMode .canvasQuickNav button span{font-size:7.5px!important;letter-spacing:.01em!important}
-  body.editorMode #canvasQuickDrawer{max-height:min(60dvh,540px)!important}
-  body.editorMode .mobileTextTop{grid-template-columns:minmax(0,1.35fr) 106px repeat(4,36px)!important;gap:5px!important}
-  body.editorMode .mobileTextMiddle{grid-template-columns:36px repeat(7,minmax(0,1fr))!important;gap:5px!important}
-  .v86FontTools{display:flex;gap:7px;align-items:center;overflow:auto;padding:1px 0 2px}
-  .v86FontTools button{height:36px!important;min-height:36px!important;padding:0 11px!important;border:1px solid #eadbd6!important;border-radius:11px!important;background:#fff!important;color:#725b53!important;font-size:9px!important;font-weight:850!important;white-space:nowrap!important}
-  .v86ZoomControl{position:fixed;right:14px;bottom:calc(92px + env(safe-area-inset-bottom));z-index:619;display:flex;align-items:center;gap:2px;padding:4px;background:rgba(255,252,250,.94);border:1px solid #eadbd6;border-radius:999px;box-shadow:0 10px 25px rgba(92,67,59,.09);backdrop-filter:blur(16px)}
-  .v86ZoomControl button{height:30px;min-width:30px;border:0;border-radius:999px;background:transparent;color:#735d55;font-size:14px;font-weight:900;padding:0 8px}
-  .v86ZoomControl #v86ZoomLabel{min-width:48px;font-size:8px;color:#9b8178}
-  body.editorMode.editorDrawerOpen .v86ZoomControl{display:none!important}
-  body:not(.editorMode) .v86ZoomControl{display:none!important}
-  .v86FontManager{display:grid;gap:10px}.v86FontRow{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;padding:10px 12px;border:1px solid #eadbd6;border-radius:14px;background:#fff}.v86FontRow b{font-size:12px;color:#6f574f}.v86FontRow small{display:block;color:#a0867d;font-size:8px;margin-top:2px}.v86FontRow button{height:34px;border:1px solid #f0d7d4;border-radius:10px;background:#fff7f6;color:#a7686c;font-weight:850}
-  .v86Hint{padding:9px 11px;border-radius:12px;background:#fff7f4;color:#9a7f76;font-size:8px;line-height:1.45}
-  .sbDashList{list-style:none!important;padding-left:0!important;margin:.2em 0!important}.sbDashList>li{margin:.08em 0!important}
+
+/* ===== V88 editor cleanup: text formats inside Text, font upload, stable lists, zoom and chrome ===== */
+const V88_FONT_META='schoolbloom-custom-font-meta-v88';
+const V88_FONT_DB='schoolbloom-user-assets-v88';
+const V88_FONT_STORE='fonts';
+function v88Esc(v){return String(v??'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]||c))}
+function v88FontMeta(){try{return JSON.parse(localStorage.getItem(V88_FONT_META)||'[]')}catch(_){return[]}}
+function v88SaveFontMeta(a){localStorage.setItem(V88_FONT_META,JSON.stringify(a||[]))}
+function v88OpenFontDB(){return new Promise((res,rej)=>{const r=indexedDB.open(V88_FONT_DB,1);r.onupgradeneeded=()=>{const db=r.result;if(!db.objectStoreNames.contains(V88_FONT_STORE))db.createObjectStore(V88_FONT_STORE)};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+async function v88FontPut(id,blob){const db=await v88OpenFontDB();return new Promise((res,rej)=>{const tx=db.transaction(V88_FONT_STORE,'readwrite');tx.objectStore(V88_FONT_STORE).put(blob,id);tx.oncomplete=()=>{db.close();res()};tx.onerror=()=>{db.close();rej(tx.error)}})}
+async function v88FontGet(id){const db=await v88OpenFontDB();return new Promise((res,rej)=>{const tx=db.transaction(V88_FONT_STORE,'readonly'),r=tx.objectStore(V88_FONT_STORE).get(id);r.onsuccess=()=>{db.close();res(r.result||null)};r.onerror=()=>{db.close();rej(r.error)}})}
+async function v88FontDel(id){const db=await v88OpenFontDB();return new Promise((res,rej)=>{const tx=db.transaction(V88_FONT_STORE,'readwrite');tx.objectStore(V88_FONT_STORE).delete(id);tx.oncomplete=()=>{db.close();res()};tx.onerror=()=>{db.close();rej(tx.error)}})}
+async function v88RegisterFont(meta,blob){if(!blob)return false;try{const face=new FontFace(meta.family,await blob.arrayBuffer());await face.load();document.fonts.add(face);return true}catch(e){console.warn('custom font',e);return false}}
+window.loadCustomFonts=async function(){for(const m of v88FontMeta()){try{await v88RegisterFont(m,await v88FontGet(m.id))}catch(e){console.warn(e)}}}
+window.openCustomFontPicker=function(){document.getElementById('canvasCustomFontInput')?.click()}
+window.importCustomFont=async function(file){
+  if(!file)return;if(file.size>12*1024*1024){cuteToast('Schriftdatei zu groß (max. 12 MB) ♡');return}
+  const base=(file.name||'Eigene Schrift').replace(/\.(ttf|otf|woff2?)$/i,'').trim()||'Eigene Schrift';
+  const name=(prompt('Wie soll die Schrift heißen?',base)||'').trim();if(!name)return;
+  const idv='f'+Date.now()+Math.random().toString(36).slice(2,7),family='SB_'+idv;
+  const meta={id:idv,family,name,fileName:file.name,created:Date.now()};
+  try{await v88FontPut(idv,file);if(!await v88RegisterFont(meta,file))throw new Error('FontFace');const a=v88FontMeta();a.push(meta);v88SaveFontMeta(a);cuteToast('Schrift „'+name+'“ hinzugefügt ♡');mobileRefreshTextMode?.();renderCanvasInspector?.()}catch(e){console.error(e);cuteToast('Schrift konnte nicht geladen werden.')}
 }
-@media (min-width:900px){
-  body.editorMode .cobj.textObj{overflow-wrap:anywhere!important;word-break:break-word!important}
-  .v86ZoomControl{display:none!important}
+window.openCustomFontManager=function(){const a=v88FontMeta();openModal(`<div class="v88FontManager"><div class="presetModalHead"><div><span class="eyebrow">SCHRIFTEN</span><h2>Eigene Schriften</h2></div><button class="miniIcon" onclick="closeModal()">×</button></div>${a.length?a.map(m=>`<div class="v88FontRow"><div><b style="font-family:${m.family}">${v88Esc(m.name)}</b><small>${v88Esc(m.fileName)}</small></div><button onclick="deleteCustomFont('${m.id}')">Löschen</button></div>`).join(''):'<div class="managerEmpty">Noch keine eigene Schrift.</div>'}<button class="primary" onclick="closeModal();openCustomFontPicker()">＋ Schrift hinzufügen</button></div>`)}
+window.deleteCustomFont=async function(idv){const a=v88FontMeta();await v88FontDel(idv);v88SaveFontMeta(a.filter(x=>x.id!==idv));closeModal();cuteToast('Schrift entfernt ♡')}
+function v88FontOptions(current){const built=['Arial','Lato','Playfair Display','Georgia','Verdana','Trebuchet MS','Times New Roman','Courier New'];return [...built.map(f=>`<option value="${f}" ${current===f?'selected':''}>${f}</option>`),...v88FontMeta().map(m=>`<option value="${m.family}" ${current===m.family?'selected':''}>✦ ${v88Esc(m.name)}</option>`)].join('')}
+
+function v88PresetChips(){return canvasPresets().map(x=>`<button onclick="${x.bundle?`insertSavedTextFormat('${x.id}')`:`addCanvasText('${x.id}')`}">${v88Esc(x.name)}</button>`).join('')}
+function v88FormatsBlock(){return `<div class="v88FormatStrip"><div class="v88FormatTitle">Textformate</div><div class="v88FormatChips">${v88PresetChips()}</div><div class="v88FormatActions"><button onclick="saveSelectionAsTextFormat()">＋ Auswahl als Textformat</button><button onclick="createCustomStylePreset()">＋ Eigenes Format</button><button onclick="openTextFormatManager()">⚙ Verwalten</button></div></div>`}
+
+mobileTextControlsHTML=function(){
+ const o=mobileSelectedText();
+ if(!o){return `<div class="mobileDrawerSection"><div class="mobileDrawerTitle">Text hinzufügen</div><div class="mobileToolGrid">${canvasPresets().filter(x=>!x.bundle).map(x=>`<button onclick="addCanvasText('${x.id}')"><b>${x.id==='h1'?'H1':x.id==='h2'?'H2':x.id==='task'?'✓':x.id==='merke'?'!':'Aa'}</b><span>${v88Esc(x.name)}</span></button>`).join('')}</div>${v88FormatsBlock()}</div>`}
+ return `<div class="mobileTextEditor"><div id="mobileTextModeContent" class="mobileTextModeContent">${mobileTextModeContentHTML('text')}</div><div class="mobileTextModeTabs" role="tablist" aria-label="Text-Werkzeuge"><button class="on" data-mode="text" onclick="mobileTextMode('text',this)"><b>T</b><span>Text</span></button><button data-mode="appearance" onclick="mobileTextMode('appearance',this)"><b>◉</b><span>Aussehen</span></button><button data-mode="spacing" onclick="mobileTextMode('spacing',this)"><b>Vᴬ</b><span>Abstand</span></button><button data-mode="position" onclick="mobileTextMode('position',this)"><b>⌗</b><span>Position</span></button><button data-mode="effects" onclick="mobileTextMode('effects',this)"><b>✦</b><span>Effekte</span></button></div></div>`
 }
-</style>
-<script id="v86-editor-stability-script">
-(function(){
-  'use strict';
-  const q=(s,r=document)=>r.querySelector(s), qa=(s,r=document)=>Array.from(r.querySelectorAll(s));
-  const BUILTIN_FONTS=['Arial','Lato','Playfair Display','Georgia','Verdana','Trebuchet MS','Times New Roman','Courier New'];
-  const META_KEY='schoolbloom-custom-font-meta-v1';
-  const DB_NAME='schoolbloom-user-assets-v1', STORE='fonts';
-  let pinch=null;
 
-  window.cleanCanvasTextHTML=function(el){
-    if(!el)return '';
-    const clone=el.cloneNode(true);
-    clone.querySelectorAll('.rotateHandle,.resizeHandle,.tableMoveHandle,.vectorHandle').forEach(x=>x.remove());
-    clone.removeAttribute('contenteditable'); clone.classList.remove('selected','editing');
-    return clone.innerHTML;
-  };
-
-  function fontMeta(){try{return JSON.parse(localStorage.getItem(META_KEY)||'[]')}catch(e){return[]}}
-  function saveFontMeta(v){localStorage.setItem(META_KEY,JSON.stringify(v))}
-  function openFontDB(){return new Promise((res,rej)=>{const r=indexedDB.open(DB_NAME,1);r.onupgradeneeded=()=>{const db=r.result;if(!db.objectStoreNames.contains(STORE))db.createObjectStore(STORE)};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
-  async function putFont(id,blob){const db=await openFontDB();return new Promise((res,rej)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).put(blob,id);tx.oncomplete=()=>{db.close();res()};tx.onerror=()=>{db.close();rej(tx.error)}})}
-  async function getFont(id){const db=await openFontDB();return new Promise((res,rej)=>{const tx=db.transaction(STORE,'readonly'),r=tx.objectStore(STORE).get(id);r.onsuccess=()=>{db.close();res(r.result||null)};r.onerror=()=>{db.close();rej(r.error)}})}
-  async function delFont(id){const db=await openFontDB();return new Promise((res,rej)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).delete(id);tx.oncomplete=()=>{db.close();res()};tx.onerror=()=>{db.close();rej(tx.error)}})}
-  async function registerFont(meta,blob){
-    if(!blob)return false;
-    try{const face=new FontFace(meta.family,await blob.arrayBuffer());await face.load();document.fonts.add(face);return true}catch(e){console.warn('Custom font load failed',e);return false}
-  }
-  window.loadCustomFonts=async function(){for(const m of fontMeta()){try{await registerFont(m,await getFont(m.id))}catch(e){console.warn(e)}} refreshFontControls()};
-  window.importCustomFont=async function(file){
-    if(!file)return;
-    if(file.size>12*1024*1024){window.cuteToast?.('Die Schriftdatei ist zu groß (max. 12 MB) ♡');return}
-    const base=(file.name||'Eigene Schrift').replace(/\.(ttf|otf|woff2?|TTF|OTF|WOFF2?)$/,'').trim()||'Eigene Schrift';
-    const display=(prompt('Wie soll die Schrift heißen?',base)||'').trim(); if(!display)return;
-    const id='font-'+Date.now()+'-'+Math.random().toString(36).slice(2,7), family='SB_'+id.replace(/[^a-zA-Z0-9_]/g,'_');
-    const meta={id,family,name:display,fileName:file.name,created:Date.now()};
-    try{await putFont(id,file);const ok=await registerFont(meta,file);if(!ok)throw new Error('FontFace');const arr=fontMeta();arr.push(meta);saveFontMeta(arr);refreshFontControls();if(canvasState?.selectedId&&typeof window.applyTextProperty==='function')window.applyTextProperty('fontFamily',family);window.cuteToast?.('Schrift „'+display+'“ hinzugefügt ♡')}catch(e){console.error(e);window.cuteToast?.('Schrift konnte nicht geladen werden.')}
-  };
-  window.openCustomFontPicker=function(){q('#canvasCustomFontInput')?.click()};
-  window.openCustomFontManager=function(){
-    const arr=fontMeta();
-    if(typeof window.openModal!=='function')return;
-    window.openModal(`<div class="v86FontManager"><div class="presetModalHead"><div><span class="eyebrow">SCHRIFTEN</span><h2>Eigene Schriften</h2></div><button class="miniIcon" onclick="closeModal()">×</button></div><div class="v86Hint">TTF, OTF, WOFF und WOFF2 werden nur auf deinem Gerät gespeichert. Sie bleiben nach einem Neustart verfügbar.</div>${arr.length?arr.map(m=>`<div class="v86FontRow"><div><b style="font-family:${m.family}">${escapeHTML(m.name)}</b><small>${escapeHTML(m.fileName||'Eigene Schrift')}</small></div><button onclick="deleteCustomFont('${m.id}')">Löschen</button></div>`).join(''):'<div class="managerEmpty">Noch keine eigene Schrift.</div>'}<button class="primary" onclick="closeModal();openCustomFontPicker()">＋ Schrift hinzufügen</button></div>`);
-  };
-  window.deleteCustomFont=async function(id){const arr=fontMeta(),m=arr.find(x=>x.id===id);if(!m)return;await delFont(id);saveFontMeta(arr.filter(x=>x.id!==id));window.cuteToast?.('Schrift entfernt ♡');window.closeModal?.();refreshFontControls()};
-  function escapeHTML(v){return String(v||'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
-  function addFontOptions(sel){
-    if(!sel)return; const cur=sel.value, existing=new Set(Array.from(sel.options).map(o=>o.value));
-    for(const m of fontMeta())if(!existing.has(m.family)){const o=document.createElement('option');o.value=m.family;o.textContent='✦ '+m.name;o.style.fontFamily=m.family;sel.appendChild(o)}
-    if(cur)sel.value=cur;
-  }
-  function enhanceMobileFontTools(){
-    const top=q('#canvasQuickDrawer .mobileTextTop'); if(!top)return;
-    addFontOptions(top.querySelector('select'));
-    const editor=top.closest('.mobileTextEditor');if(editor&&!editor.querySelector('.v86FontTools')){const tools=document.createElement('div');tools.className='v86FontTools';tools.innerHTML='<button type="button" onclick="openCustomFontPicker()">＋ Eigene Schrift</button><button type="button" onclick="openCustomFontManager()">⚙ Schriften verwalten</button>';top.insertAdjacentElement('afterend',tools)}
-  }
-  function enhanceDesktopFontTools(){qa('select.fontSelect,#presetFont').forEach(addFontOptions)}
-  function refreshFontControls(){enhanceMobileFontTools();enhanceDesktopFontTools()}
-
-  // Keep the existing UI functions, then decorate their font selectors.
-  const oldOpenGroup=window.editorOpenGroup;
-  if(typeof oldOpenGroup==='function')window.editorOpenGroup=function(group,btn){const r=oldOpenGroup.apply(this,arguments);if(group==='text')setTimeout(enhanceMobileFontTools,0);return r};
-  const oldTextMode=window.mobileTextMode;
-  if(typeof oldTextMode==='function')window.mobileTextMode=function(){const r=oldTextMode.apply(this,arguments);setTimeout(enhanceMobileFontTools,0);return r};
-  const oldInspector=window.renderCanvasInspector;
-  if(typeof oldInspector==='function')window.renderCanvasInspector=function(){const r=oldInspector.apply(this,arguments);setTimeout(enhanceDesktopFontTools,0);return r};
-  const oldPreset=window.createCustomStylePreset;
-  if(typeof oldPreset==='function')window.createCustomStylePreset=function(){const r=oldPreset.apply(this,arguments);setTimeout(enhanceDesktopFontTools,0);return r};
-
-  function selectedTextObject(){return canvasState?.objects?.find(x=>x.id===canvasState.selectedId&&['text','block','task','merke'].includes(x.kind))||null}
-  function textEl(){return q(`.cobj[data-id="${canvasState?.selectedId||''}"]`)}
-  function listLines(html){const d=document.createElement('div');d.innerHTML=html||'';const lis=Array.from(d.querySelectorAll(':scope > ul > li,:scope > ol > li'));if(lis.length)return lis.map(x=>x.innerHTML.replace(/^\s*[–-]\s*/,''));const txt=d.innerText||d.textContent||'';return txt.split(/\n+/).map(x=>x.trim()).filter(Boolean).map(escapeHTML)}
-  window.applyTextList=function(type){
-    const o=selectedTextObject();if(!o)return window.cuteToast?.('Wähle zuerst ein Textfeld ♡');
-    const el=textEl(), sel=window.getSelection();
-    const hasSelection=!!(el&&sel&&sel.rangeCount&&!sel.getRangeAt(0).collapsed&&el.contains(sel.anchorNode));
-    if(hasSelection && (type==='bullet'||type==='number')){el.focus();document.execCommand(type==='bullet'?'insertUnorderedList':'insertOrderedList',false,null);o.text=window.cleanCanvasTextHTML(el);window.markCanvasDirty?.();return}
-    const d=document.createElement('div');d.innerHTML=o.text||'';const first=d.firstElementChild;
-    const same=(type==='bullet'&&first?.tagName==='UL'&&!first.classList.contains('sbDashList'))||(type==='number'&&first?.tagName==='OL')||(type==='dash'&&first?.classList.contains('sbDashList'));
-    const lines=listLines(o.text||'Text');
-    if(same)o.text=lines.map(x=>`<div>${x||'<br>'}</div>`).join('');
-    else if(type==='number')o.text=`<ol>${lines.map(x=>`<li>${x}</li>`).join('')}</ol>`;
-    else if(type==='dash')o.text=`<ul class="sbDashList" style="list-style:none;padding-left:0;margin:.2em 0">${lines.map(x=>`<li>– ${x}</li>`).join('')}</ul>`;
-    else o.text=`<ul>${lines.map(x=>`<li>${x}</li>`).join('')}</ul>`;
-    window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.();
-    setTimeout(()=>{window.editorOpenGroup?.('text',q('.canvasQuickNav [data-group="text"]'));},0);
-  };
-  // Backwards compatibility for the old dash button/function.
-  window.mobileDashList=function(){window.applyTextList('dash')};
-
-  // Formatting commands now work on the whole selected text object if there is no highlighted range.
-  window.formatSelectedText=function(cmd){
-    const o=selectedTextObject(),el=textEl();if(!o||!el)return;
-    const sel=window.getSelection();const hasSelection=!!(sel&&sel.rangeCount&&!sel.getRangeAt(0).collapsed&&el.contains(sel.anchorNode));
-    const wasEditing=!!o.editing;
-    if(!o.editing){o.editing=true;window.renderCanvasObjects?.()}
-    const target=textEl();if(!target)return;
-    target.focus({preventScroll:true});
-    if(!hasSelection){const range=document.createRange();range.selectNodeContents(target);target.querySelectorAll('.rotateHandle,.resizeHandle').forEach(h=>h.setAttribute('contenteditable','false'));sel?.removeAllRanges();sel?.addRange(range)}
-    document.execCommand(cmd,false,null);o.text=window.cleanCanvasTextHTML(target);o.editing=wasEditing;
-    window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.();
-  };
-
-  function updateZoomUI(){const z=Number(canvasZoom||1);const t=Math.round(z*100)+'%';const a=q('#v86ZoomLabel');if(a)a.textContent=t;const b=q('#canvasZoomLabel');if(b)b.textContent=t}
-  // Normalize all zoom paths to one system so Safari cannot double-scale the page.
-  window.setCanvasZoom=function(value,options){
-    const stage=q('#canvasStage'),page=q('#canvasPage');if(!stage)return;
-    const z=Math.max(.25,Math.min(2.5,Number(value)||1));canvasZoom=z;
-    if(!options||options.user!==false)canvasState.userZoomTouched=true;
-    stage.dataset.scale=String(z);stage.style.zoom=String(z);stage.style.transform='none';
-    if(page){page.style.transform='none';page.style.transformOrigin='top center'}
-    updateZoomUI();
-  };
-  window.canvasZoomBy=function(delta){window.setCanvasZoom(Number(canvasZoom||1)+Number(delta||0),{user:true})};
-  window.fitCanvasToScreen=function(){
-    const vp=q('#canvasViewport'),stage=q('#canvasStage');if(!vp||!stage)return;
-    const W=canvasPageWidth(),H=canvasPageHeight();
-    const availW=Math.max(220,vp.clientWidth-20),availH=Math.max(300,vp.clientHeight-32);
-    window.setCanvasZoom(Math.min(1,availW/W,availH/H),{user:false});
-  };
-  window.fitCanvasStage=function(){canvasState.userZoomTouched=true;window.fitCanvasToScreen();canvasState.userZoomTouched=true;const vp=q('#canvasViewport');if(vp){vp.scrollLeft=0;vp.scrollTop=0}};
-
-  function dist(t){const dx=t[0].clientX-t[1].clientX,dy=t[0].clientY-t[1].clientY;return Math.hypot(dx,dy)}
-  function bindPinch(){const vp=q('#canvasViewport');if(!vp||vp.dataset.v86Pinch)return;vp.dataset.v86Pinch='1';
-    vp.addEventListener('touchstart',e=>{if(e.touches.length===2){pinch={d:dist(e.touches),z:Number(canvasZoom||1)};canvasState.userZoomTouched=true}}, {passive:true});
-    vp.addEventListener('touchmove',e=>{if(!pinch||e.touches.length!==2)return;if(e.cancelable)e.preventDefault();const factor=dist(e.touches)/Math.max(1,pinch.d);window.setCanvasZoom(pinch.z*factor,{user:true})},{passive:false});
-    vp.addEventListener('touchend',e=>{if(e.touches.length<2)pinch=null},{passive:true});
-    vp.addEventListener('touchcancel',()=>{pinch=null},{passive:true});
-  }
-
-  // Safari's keyboard changes visual viewport height; never treat that as a zoom request.
-  function editorTyping(){const a=document.activeElement;return !!(a&&(a.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)))}
-  window.visualViewport?.addEventListener('resize',()=>{if(!document.body.classList.contains('editorMode')||editorTyping()||canvasState?.userZoomTouched)return;window.fitCanvasToScreen?.()});
-
-  // Make modal/drawer state self-healing. This specifically fixes the missing main bar after editing a text format.
-  function healEditorBars(){if(!document.body.classList.contains('editorMode'))return;const drawer=q('#canvasQuickDrawer'),modal=q('#modalWrap');if(!drawer?.classList.contains('open')&&!modal?.classList.contains('open'))document.body.classList.remove('editorDrawerOpen')}
-  document.addEventListener('click',()=>setTimeout(healEditorBars,0),true);
-  document.addEventListener('keydown',e=>{if(e.key==='Escape')setTimeout(healEditorBars,0)});
-
-  function init(){bindPinch();window.loadCustomFonts?.();updateZoomUI();healEditorBars()}
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
-})();
-</script>
-
-
-<style id="v87-text-formats-and-mobile-nav-fix">
-@media (max-width:899px){
-  /* Five clean main tools. Text formats now live inside Text. */
-  body.editorMode .canvasQuickNav{
-    grid-template-columns:repeat(5,minmax(0,1fr))!important;
-    left:12px!important;right:12px!important;width:auto!important;
-    overflow:hidden!important;gap:5px!important;padding:8px!important;
-  }
-  body.editorMode .canvasQuickNav button{
-    min-width:0!important;width:auto!important;max-width:none!important;
-    height:62px!important;flex:1 1 0!important;
-  }
-  body.editorMode .canvasQuickNav button span{font-size:8px!important;max-width:100%;overflow:hidden;text-overflow:ellipsis}
-  body.editorMode .canvasViewport{padding-bottom:116px!important}
-
-  /* Drawer stays tidy above Safari controls and never leaves a broken empty strip. */
-  body.editorMode #canvasQuickDrawer.open{
-    max-height:min(60dvh,530px)!important;
-    padding:9px 10px 8px!important;
-    overflow:hidden!important;
-  }
-  body.editorMode #canvasQuickDrawer:not(.open){display:none!important;height:0!important;padding:0!important;margin:0!important;border:0!important}
-  .mobileTextModeTabs{padding:8px 0 0!important;gap:5px!important}
-  .mobileTextModeTabs button{min-height:56px!important;border-radius:13px!important}
-  .mobileTextModeContent{padding:9px 1px 9px!important}
-
-  /* No duplicate font row: the Aa+ control below owns custom-font import. */
-  .v86FontTools{display:none!important}
-  .mobileFontAddButton{
-    height:38px!important;min-width:0!important;padding:0!important;
-    border:1px solid #eadbd6!important;border-radius:11px!important;background:#fff!important;
-    color:#755e56!important;display:flex!important;align-items:center!important;justify-content:center!important;
-    gap:2px!important;flex-direction:column!important;
-  }
-  .mobileFontAddButton b{font-size:12px!important;line-height:1!important}.mobileFontAddButton span{font-size:6.5px!important;font-weight:900!important;line-height:1!important}
-
-  /* Lists must actually look like lists in a canvas text box. */
-  .cobj.textObj ul,.cobj.textObj ol,.cobj.block ul,.cobj.block ol,.cobj.task ul,.cobj.task ol,.cobj.merke ul,.cobj.merke ol{
-    margin:.18em 0!important;padding-left:1.35em!important;list-style-position:outside!important;
-  }
-  .cobj.textObj li,.cobj.block li,.cobj.task li,.cobj.merke li{margin:.08em 0!important;padding-left:.05em!important}
-  .cobj .sbDashList{padding-left:0!important;list-style:none!important}
-
-  /* Text formats inside Text drawer. */
-  .v87TextFormats{display:grid;gap:8px;padding-top:8px;border-top:1px solid #f0e4df}
-  .v87TextFormatsHead{display:flex;align-items:center;justify-content:space-between;gap:8px}
-  .v87TextFormatsHead b{font-size:8px;text-transform:uppercase;letter-spacing:.12em;color:#9c8178}
-  .v87TextFormatsHead button{height:30px!important;min-height:30px!important;padding:0 9px!important;border:1px solid #eadbd6!important;border-radius:10px!important;background:#fff!important;color:#735d55!important;font-size:8px!important;font-weight:850!important}
-  .v87FormatGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
-  .v87FormatGrid button{min-width:0;min-height:54px;border:1px solid #eadbd6;border-radius:13px;background:#fff;color:#725b53;padding:6px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
-  .v87FormatGrid button b{font-size:14px;line-height:1.05}.v87FormatGrid button span{font-size:7px;font-weight:850;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .v87FormatGrid button.bundle b{font-size:12px}
-
-  /* Keep active controls clear and cute, but not oversized. */
-  .mobileTextMiddle{grid-template-columns:38px repeat(7,minmax(0,1fr))!important;gap:5px!important}
-  .mobileTextMiddle>button{overflow:hidden!important}
+mobileTextModeContentHTML=function(kind){
+ const o=mobileSelectedText();if(!o)return '';
+ const st=o.style||{};
+ if(kind==='text'){
+   const ff=st.fontFamily||'Arial',fs=st.fontSize||16,ta=st.textAlign||'left';
+   return `<div class="mobileTextBar"><div class="mobileTextTop"><select onchange="applyTextProperty('fontFamily',this.value)">${v88FontOptions(ff)}</select><div class="mobileSizeStep"><button onclick="mobileFontStep(-1)">−</button><input id="mobileFontSize" type="number" min="6" max="180" value="${fs}" onchange="applyTextProperty('fontSize',+this.value)"><button onclick="mobileFontStep(1)">＋</button></div><button onclick="formatSelectedText('bold')"><b>B</b></button><button onclick="formatSelectedText('italic')"><i>I</i></button><button onclick="formatSelectedText('underline')"><u>U</u></button><button onclick="formatSelectedText('strikeThrough')"><s>S</s></button></div><div class="mobileTextMiddle"><button class="v88FontAdd" onclick="openCustomFontPicker()" title="Eigene Schrift hinzufügen">Aa＋</button><button class="${ta==='left'?'on':''}" onclick="applyTextProperty('textAlign','left');mobileRefreshTextMode()">≡</button><button class="${ta==='center'?'on':''}" onclick="applyTextProperty('textAlign','center');mobileRefreshTextMode()">≣</button><button class="${ta==='right'?'on':''}" onclick="applyTextProperty('textAlign','right');mobileRefreshTextMode()">≡</button><button class="${ta==='justify'?'on':''}" onclick="applyTextProperty('textAlign','justify');mobileRefreshTextMode()">☷</button><button onclick="applyTextList('bullet')" title="Punkte">•≡</button><button onclick="applyTextList('number')" title="Nummern">1≡</button><button onclick="applyTextList('dash')" title="Striche">–≡</button></div>${v88FormatsBlock()}</div>`;
+ }
+ if(kind==='appearance')return `<div class="mobileModeSection"><div class="mobileModeIntro"><b>Aussehen</b><span>Textfarbe, Fläche, Kontur, Verlauf und Transparenz.</span></div><div class="mobileSubGrid"><label>Textfarbe<input type="color" value="${st.color||'#7a5f57'}" onchange="applyTextProperty('color',this.value)"></label><label>Hintergrund<input type="color" value="${st.background&&st.background!=='transparent'?st.background:'#ffffff'}" onchange="updateObjStyle('background',this.value)"></label><label>Kontur<input type="color" value="${st.borderColor||'#e5aaa9'}" onchange="updateObjStyle('borderColor',this.value)"></label><label>Dicke<input type="number" min="0" max="20" value="${st.borderWidth||0}" onchange="updateObjStyle('borderWidth',+this.value)"></label><label>Linie<select onchange="updateObjStyle('borderStyle',this.value)"><option value="solid" ${(!st.borderStyle||st.borderStyle==='solid')?'selected':''}>Durchgezogen</option><option value="dashed" ${st.borderStyle==='dashed'?'selected':''}>Gestrichelt</option><option value="dotted" ${st.borderStyle==='dotted'?'selected':''}>Gepunktet</option></select></label><label>Transparenz<input type="range" min="0" max="100" value="${Math.round((st.opacity??1)*100)}" oninput="updateObjStyle('opacity',+this.value/100)"></label><button onclick="mobileGradient()">Verlauf</button><button onclick="updateObjStyle('background','transparent')">Fläche aus</button></div></div>`;
+ if(kind==='spacing')return `<div class="mobileModeSection"><div class="mobileModeIntro"><b>Abstand</b><span>Buchstaben, Zeilen und Innenabstände.</span></div><div class="mobileSubGrid"><label>Buchstaben<input type="number" step=".5" value="${st.letterSpacing||0}" onchange="updateObjStyle('letterSpacing',+this.value)"></label><label>Zeilenhöhe<input type="number" step=".05" min=".8" max="3" value="${st.lineHeight||1.25}" onchange="updateObjStyle('lineHeight',+this.value)"></label><label>Innenabstand<input type="number" min="0" max="80" value="${st.padding??7}" onchange="updateObjStyle('padding',+this.value)"></label><label>Eckenradius<input type="number" min="0" max="80" value="${st.borderRadius||0}" onchange="updateObjStyle('borderRadius',+this.value)"></label></div></div>`;
+ if(kind==='position')return `<div class="mobileModeSection"><div class="mobileModeIntro"><b>Position</b><span>Größe und Ausrichtung.</span></div><div class="mobileSubGrid"><label>X<input type="number" value="${Math.round(o.x)}" onchange="setSelectedGeometry('x',+this.value)"></label><label>Y<input type="number" value="${Math.round(o.y)}" onchange="setSelectedGeometry('y',+this.value)"></label><label>Breite<input type="number" value="${Math.round(o.w)}" onchange="setSelectedGeometry('w',+this.value)"></label><label>Höhe<input type="number" value="${Math.round(o.h)}" onchange="setSelectedGeometry('h',+this.value)"></label><button onclick="alignSelected('centerX')">Horizontal mittig</button><button onclick="alignSelected('centerY')">Vertikal mittig</button></div></div>`;
+ if(kind==='effects')return `<div class="mobileModeSection"><div class="mobileModeIntro"><b>Effekte</b><span>Schatten und Tiefe.</span></div><div class="mobileSubGrid"><label>Schatten Blur<input id="mobileShadowBlur" type="number" min="0" max="60" value="14"></label><label>Schatten Y<input id="mobileShadowY" type="number" min="-30" max="30" value="5"></label><button onclick="mobileApplyShadow()">Schatten an</button><button onclick="updateObjStyle('boxShadow','none')">Schatten aus</button></div></div>`;
+ return '';
 }
-</style>
-<script id="v87-text-formats-and-list-behavior">
-(function(){
-  'use strict';
-  const q=(s,r=document)=>r.querySelector(s), qa=(s,r=document)=>Array.from(r.querySelectorAll(s));
-  const esc87=v=>String(v??'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]));
 
-  function selectedText87(){
-    return window.canvasState?.objects?.find(o=>o.id===window.canvasState.selectedId&&['text','block','task','merke'].includes(o.kind))||null;
-  }
-  function textEl87(){return q(`.cobj[data-id="${window.canvasState?.selectedId||''}"]`)}
-  function presetIcon87(x){return x.id==='h1'?'H1':x.id==='h2'?'H2':x.id==='task'?'✓':x.id==='merke'?'!':x.bundle?'Aa✦':'Aa'}
-  function formatGrid87(mode='insert'){
-    const presets=typeof window.canvasPresets==='function'?window.canvasPresets():[];
-    return `<div class="v87FormatGrid">${presets.map(x=>{
-      const action=mode==='apply'&&!x.bundle?`applyTextFormatToSelection('${x.id}')`:(x.bundle?`insertSavedTextFormat('${x.id}')`:`addCanvasText('${x.id}')`);
-      return `<button class="${x.bundle?'bundle':''}" onclick="${action}"><b>${presetIcon87(x)}</b><span>${esc87(x.name||'Format')}</span></button>`;
-    }).join('')}</div>`;
-  }
-  function formatsBlock87(mode='insert'){
-    return `<div class="v87TextFormats"><div class="v87TextFormatsHead"><b>Textformate</b><button onclick="openTextFormatManager()">Verwalten</button></div>${formatGrid87(mode)}<div class="mobileDrawerActions"><button onclick="createCustomStylePreset()">＋ Eigenes Format</button>${mode==='apply'?'<button onclick="saveSelectionAsTextFormat()">＋ Auswahl als Format</button>':''}</div></div>`;
-  }
+// Lists apply to the selected text object directly; highlighting text is never required.
+function v88TextLines(html){const d=document.createElement('div');d.innerHTML=html||'';const direct=[...d.querySelectorAll(':scope > ul > li,:scope > ol > li')];if(direct.length)return direct.map(li=>(li.innerText||li.textContent||'').replace(/^\s*[–-]\s*/,''));const text=(d.innerText||d.textContent||'').replace(/\r/g,'');const lines=text.split(/\n+/).map(x=>x.trim()).filter(Boolean);return lines.length?lines:['Text']}
+window.applyTextList=function(type){
+ const o=mobileSelectedText();if(!o){cuteToast('Wähle zuerst ein Textfeld ♡');return}
+ const lines=v88TextLines(o.text);const d=document.createElement('div');d.innerHTML=o.text||'';const first=d.firstElementChild;
+ const same=(type==='bullet'&&first?.tagName==='UL'&&!first.classList.contains('sbDashList'))||(type==='number'&&first?.tagName==='OL')||(type==='dash'&&first?.classList.contains('sbDashList'));
+ if(same)o.text=lines.map(x=>`<div>${v88Esc(x)||'<br>'}</div>`).join('');
+ else if(type==='number')o.text=`<ol>${lines.map(x=>`<li>${v88Esc(x)}</li>`).join('')}</ol>`;
+ else if(type==='dash')o.text=`<ul class="sbDashList">${lines.map(x=>`<li>– ${v88Esc(x)}</li>`).join('')}</ul>`;
+ else o.text=`<ul>${lines.map(x=>`<li>${v88Esc(x)}</li>`).join('')}</ul>`;
+ renderCanvasObjects();renderCanvasInspector();markCanvasDirty();pushHistory();window.mobileRefreshTextMode?.();
+}
+window.mobileDashList=function(){window.applyTextList('dash')}
 
-  /* Main Text panel: add text + formats in one place, so there is no separate Formate tab. */
-  window.mobileTextControlsHTML=function(){
-    const o=selectedText87();
-    if(!o){
-      const presets=(typeof window.canvasPresets==='function'?window.canvasPresets():[]).filter(x=>!x.bundle).slice(0,5);
-      return `<div class="mobileDrawerSection"><div class="mobileDrawerTitle">Text hinzufügen</div><div class="mobileToolGrid">${presets.map(x=>`<button onclick="addCanvasText('${x.id}')"><b>${presetIcon87(x)}</b><span>${esc87(x.name)}</span></button>`).join('')}</div>${formatsBlock87('insert')}</div>`;
-    }
-    return `<div class="mobileTextEditor"><div id="mobileTextModeContent" class="mobileTextModeContent">${window.mobileTextModeContentHTML('text')}</div><div class="mobileTextModeTabs" role="tablist" aria-label="Text-Werkzeuge"><button class="on" data-mode="text" onclick="mobileTextMode('text',this)"><b>T</b><span>Text</span></button><button data-mode="appearance" onclick="mobileTextMode('appearance',this)"><b>◉</b><span>Aussehen</span></button><button data-mode="spacing" onclick="mobileTextMode('spacing',this)"><b>Vᴬ</b><span>Abstand</span></button><button data-mode="position" onclick="mobileTextMode('position',this)"><b>⌗</b><span>Position</span></button><button data-mode="effects" onclick="mobileTextMode('effects',this)"><b>✦</b><span>Effekte</span></button></div></div>`;
-  };
+// Text formats live under Text now; legacy format calls redirect there.
+const v88EditorOpenGroup=window.editorOpenGroup;
+window.editorOpenGroup=function(group,btn){if(group==='formats')group='text';return v88EditorOpenGroup(group,btn||document.querySelector('.canvasQuickNav [data-group="text"]'))}
 
-  /* Rebuild only Text mode. Appearance remains the one place for text/background colour. */
-  const oldModeHTML=window.mobileTextModeContentHTML;
-  window.mobileTextModeContentHTML=function(kind){
-    const o=selectedText87();if(!o)return '';
-    if(kind!=='text')return oldModeHTML(kind);
-    const st=o.style||{},ff=st.fontFamily||'Arial',fs=st.fontSize||16,ta=st.textAlign||'left';
-    const built=['Arial','Lato','Playfair Display','Georgia','Verdana','Trebuchet MS'];
-    let custom=[];try{custom=JSON.parse(localStorage.getItem('schoolbloom-custom-font-meta-v1')||'[]')}catch(_){custom=[]}
-    const opts=[...built.map(f=>({family:f,name:f})),...custom.map(m=>({family:m.family,name:'✦ '+m.name}))];
-    return `<div class="mobileTextBar"><div class="mobileTextTop"><select onchange="applyTextProperty('fontFamily',this.value)">${opts.map(f=>`<option value="${esc87(f.family)}" ${ff===f.family?'selected':''}>${esc87(f.name)}</option>`).join('')}</select><div class="mobileSizeStep"><button onclick="mobileFontStep(-1)">−</button><input id="mobileFontSize" type="number" min="6" max="180" value="${fs}" onchange="applyTextProperty('fontSize',+this.value)"><button onclick="mobileFontStep(1)">＋</button></div><button onclick="formatSelectedText('bold')"><b>B</b></button><button onclick="formatSelectedText('italic')"><i>I</i></button><button onclick="formatSelectedText('underline')"><u>U</u></button><button onclick="formatSelectedText('strikeThrough')"><s>S</s></button></div><div class="mobileTextMiddle"><button class="mobileFontAddButton" onclick="openCustomFontPicker()" title="Eigene Schrift hinzufügen"><b>Aa+</b><span>Schrift</span></button><button class="${ta==='left'?'on':''}" onclick="applyTextProperty('textAlign','left');mobileRefreshTextMode()">≡</button><button class="${ta==='center'?'on':''}" onclick="applyTextProperty('textAlign','center');mobileRefreshTextMode()">≣</button><button class="${ta==='right'?'on':''}" onclick="applyTextProperty('textAlign','right');mobileRefreshTextMode()">≡</button><button class="${ta==='justify'?'on':''}" onclick="applyTextProperty('textAlign','justify');mobileRefreshTextMode()">☷</button><button onclick="applyTextList('bullet')" title="Punkte – keine Markierung nötig">•≡</button><button onclick="applyTextList('number')" title="Nummern – keine Markierung nötig">1≡</button><button onclick="applyTextList('dash')" title="Striche – keine Markierung nötig">–≡</button></div>${formatsBlock87('apply')}</div>`;
-  };
+// Fix the disappearing bottom bar after a text-format modal / style modal closes.
+const v88OpenModal=openModal;
+openModal=function(html){document.body.classList.remove('editorDrawerOpen');const d=document.getElementById('canvasQuickDrawer');if(d){d.classList.remove('open');d.innerHTML=''}openEditorGroup=null;return v88OpenModal(html)}
+const v88CloseModal=window.closeModal;
+window.closeModal=function(){const r=v88CloseModal?.();setTimeout(v88HealEditorChrome,0);return r}
+function v88HealEditorChrome(){
+ const editor=document.body.classList.contains('editorMode'),drawer=document.getElementById('canvasQuickDrawer');
+ if(!editor){document.body.classList.remove('editorDrawerOpen');return}
+ if(!drawer?.classList.contains('open')){document.body.classList.remove('editorDrawerOpen');document.querySelectorAll('.canvasQuickNav button').forEach(b=>b.classList.remove('active'))}
+}
+new MutationObserver(v88HealEditorChrome).observe(document.body,{attributes:true,attributeFilter:['class']});
+document.addEventListener('click',()=>setTimeout(v88HealEditorChrome,0),true);
 
-  window.applyTextFormatToSelection=function(id){
-    const o=selectedText87();if(!o)return window.cuteToast?.('Wähle zuerst ein Textfeld ♡');
-    const p=(typeof window.canvasPresets==='function'?window.canvasPresets():[]).find(x=>x.id===id);if(!p||p.bundle)return;
-    o.style=o.style||{};
-    const map={fontSize:p.fontSize,fontWeight:p.fontWeight,color:p.color,fontFamily:p.fontFamily,background:p.bg,borderColor:p.borderColor,borderWidth:p.borderWidth,borderRadius:p.radius,padding:p.padding};
-    Object.entries(map).forEach(([k,v])=>{if(v!==undefined)o.style[k]=v});
-    window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.();
-    window.cuteToast?.((p.name||'Format')+' angewendet ♡');
-    setTimeout(()=>window.mobileRefreshTextMode?.(),0);
-  };
+// One zoom system only; user zoom survives keyboard/rotation, initial editor open still fits to width.
+let v88Typing=false,v88Pinch=null;
+function v88IsTyping(){const a=document.activeElement;return !!(a&&(a.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)))}
+window.setCanvasZoom=function(value,opts={}){const stage=document.getElementById('canvasStage'),page=document.getElementById('canvasPage');if(!stage)return;const z=Math.max(.25,Math.min(2.5,Number(value)||1));canvasZoom=z;if(opts.user!==false)canvasState.userZoomTouched=true;stage.dataset.scale=String(z);stage.style.zoom=String(z);stage.style.transform='none';if(page){page.style.transform='none';page.style.transformOrigin='top center'}v88UpdateZoomLabel()}
+fitCanvasToScreen=window.fitCanvasToScreen=function(){const vp=document.getElementById('canvasViewport');if(!vp)return;const z=Math.min(1,Math.max(.25,(vp.clientWidth-20)/canvasPageWidth()));window.setCanvasZoom(z,{user:false});return z}
+window.fitCanvasStage=function(force=false){if(!force&&(v88IsTyping()||canvasState.userZoomTouched))return;fitCanvasToScreen();if(force)canvasState.userZoomTouched=true;const vp=document.getElementById('canvasViewport');if(vp){vp.scrollLeft=0;vp.scrollTop=0}}
+window.canvasZoomBy=function(delta){window.setCanvasZoom(Number(canvasZoom||1)+Number(delta||0),{user:true})}
+function v88UpdateZoomLabel(){const t=Math.round(Number(canvasZoom||1)*100)+'%';const x=document.getElementById('v88ZoomLabel');if(x)x.textContent=t;const y=document.getElementById('canvasZoomLabel');if(y)y.textContent=t}
+function v88EnsureZoom(){if(document.getElementById('v88Zoom'))return;const z=document.createElement('div');z.id='v88Zoom';z.className='v88Zoom';z.innerHTML='<button onclick="canvasZoomBy(-.1)">−</button><button id="v88ZoomLabel" class="label" onclick="fitCanvasStage(true)">100%</button><button onclick="canvasZoomBy(.1)">＋</button>';document.body.appendChild(z);v88UpdateZoomLabel()}
+function v88Dist(t){return Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY)}
+function v88BindPinch(){const vp=document.getElementById('canvasViewport');if(!vp||vp.dataset.v88Pinch)return;vp.dataset.v88Pinch='1';vp.addEventListener('touchstart',e=>{if(e.touches.length===2){v88Pinch={d:v88Dist(e.touches),z:Number(canvasZoom||1)};canvasState.userZoomTouched=true}},{passive:true});vp.addEventListener('touchmove',e=>{if(!v88Pinch||e.touches.length!==2)return;if(e.cancelable)e.preventDefault();window.setCanvasZoom(v88Pinch.z*(v88Dist(e.touches)/Math.max(1,v88Pinch.d)),{user:true})},{passive:false});vp.addEventListener('touchend',e=>{if(e.touches.length<2)v88Pinch=null},{passive:true});vp.addEventListener('touchcancel',()=>v88Pinch=null,{passive:true})}
 
-  /* Lists work with a selected text box; highlighting text is optional. */
-  function contentLines87(html){
-    const d=document.createElement('div');d.innerHTML=html||'';
-    const lis=Array.from(d.querySelectorAll('li'));if(lis.length)return lis.map(li=>li.innerHTML.replace(/^\s*[–-]\s*/,''));
-    const blocks=Array.from(d.children);if(blocks.length>1)return blocks.map(x=>x.innerHTML).filter(Boolean);
-    const raw=(d.innerText||d.textContent||'').split(/\n+/).map(x=>x.trim()).filter(Boolean);
-    return (raw.length?raw:['Text']).map(esc87);
-  }
-  function placeCaretEnd87(el){
-    const s=window.getSelection();if(!s)return;const r=document.createRange();r.selectNodeContents(el);r.collapse(false);s.removeAllRanges();s.addRange(r);
-  }
-  window.applyTextList=function(type){
-    const o=selectedText87();if(!o)return window.cuteToast?.('Wähle zuerst ein Textfeld ♡');
-    const wasEditing=!!o.editing;
-    if(!wasEditing){
-      const lines=contentLines87(o.text||'Text');
-      if(type==='number')o.text=`<ol>${lines.map(x=>`<li>${x}</li>`).join('')}</ol>`;
-      else if(type==='dash')o.text=`<ul class="sbDashList">${lines.map(x=>`<li>– ${x}</li>`).join('')}</ul>`;
-      else o.text=`<ul>${lines.map(x=>`<li>${x}</li>`).join('')}</ul>`;
-      o.editing=false;window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.();window.cuteToast?.('Liste erstellt ♡');setTimeout(()=>window.mobileRefreshTextMode?.(),0);return;
-    }
-    let el=textEl87();if(!el)return;
-    el.setAttribute('contenteditable','true');el.focus({preventScroll:true});
-    let sel=window.getSelection(),inside=!!(sel&&sel.rangeCount&&el.contains(sel.anchorNode));if(!inside){placeCaretEnd87(el);sel=window.getSelection()}
-    if(type==='bullet'||type==='number'){
-      document.execCommand(type==='bullet'?'insertUnorderedList':'insertOrderedList',false,null);
-    }else{
-      document.execCommand('insertUnorderedList',false,null);
-      const anchor=sel?.anchorNode;const li=anchor?.nodeType===1?anchor.closest?.('li'):anchor?.parentElement?.closest?.('li');const ul=li?.closest?.('ul');if(ul){ul.classList.add('sbDashList');Array.from(ul.children).forEach(x=>{if(!/^\s*–\s*/.test(x.textContent||''))x.insertAdjacentText('afterbegin','– ')})}
-    }
-    o.text=window.cleanCanvasTextHTML?window.cleanCanvasTextHTML(el):el.innerHTML;
-    window.markCanvasDirty?.();window.pushHistory?.();
-  };
+document.addEventListener('focusin',()=>{v88Typing=v88IsTyping()});document.addEventListener('focusout',()=>setTimeout(()=>{v88Typing=v88IsTyping()},60));
+window.visualViewport?.addEventListener('resize',()=>{if(!document.body.classList.contains('editorMode')||v88IsTyping()||canvasState.userZoomTouched)return;fitCanvasToScreen()});
 
-  /* Any legacy call to the old Formate tab now routes into Text instead of opening a phantom sixth tab. */
-  const oldOpen=window.editorOpenGroup;
-  window.editorOpenGroup=function(group,btn){
-    if(group==='formats'){
-      const textBtn=qa('.canvasQuickNav button').find(b=>b.dataset.group==='text');
-      group='text';btn=textBtn||btn;
-    }
-    const r=oldOpen.apply(this,[group,btn]);
-    // hard repair of nav/drawer state after every tool transition
-    requestAnimationFrame(()=>{
-      const d=q('#canvasQuickDrawer');
-      if(d?.classList.contains('open'))document.body.classList.add('editorDrawerOpen');else document.body.classList.remove('editorDrawerOpen');
-    });
-    return r;
-  };
+const v88RenderSheetEditor=renderSheetEditor;
+renderSheetEditor=function(){canvasState.userZoomTouched=false;const r=v88RenderSheetEditor();setTimeout(()=>{v88EnsureZoom();v88BindPinch();window.loadCustomFonts?.();v88HealEditorChrome();if(!canvasState.userZoomTouched)fitCanvasToScreen()},120);return r}
 
-  /* If the selected object disappears, never leave a dead drawer or dead bottom bar behind. */
-  function selfHeal87(){
-    if(!document.body.classList.contains('editorMode'))return;
-    const d=q('#canvasQuickDrawer');
-    if(d&&!d.classList.contains('open'))document.body.classList.remove('editorDrawerOpen');
-    if(!d?.classList.contains('open'))qa('.canvasQuickNav button').forEach(b=>b.classList.remove('active'));
-  }
-  document.addEventListener('click',()=>setTimeout(selfHeal87,0),true);
-  document.addEventListener('visibilitychange',selfHeal87);
-})();
+// Desktop font selectors also receive user fonts.
+const v88RenderInspector=renderCanvasInspector;
+renderCanvasInspector=function(){const r=v88RenderInspector();setTimeout(()=>{document.querySelectorAll('#canvasInspector select[onchange*="fontFamily"],#presetFont').forEach(sel=>{const cur=sel.value,known=new Set([...sel.options].map(o=>o.value));for(const m of v88FontMeta())if(!known.has(m.family)){const o=document.createElement('option');o.value=m.family;o.textContent='✦ '+m.name;sel.appendChild(o)}if(cur)sel.value=cur})},0);return r}
+
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{v88EnsureZoom();window.loadCustomFonts?.();v88HealEditorChrome()},{once:true});else{v88EnsureZoom();window.loadCustomFonts?.();v88HealEditorChrome()}
+/* ===== /V88 ===== */
+
 </script>
-
 </body>
 </html>
