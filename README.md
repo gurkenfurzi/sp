@@ -1,4 +1,4 @@
-# SchoolBloom V76 – Mobile editor cleanup
+# SchoolBloom V80 – Mobile editor cleanup
 
 Changes from V75:
 - clean top bar: back, title/autosave, undo, redo, print, save only
