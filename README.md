@@ -1,7 +1,11 @@
-# SchoolBloom Version 84
+# SchoolBloom – Version 86
 
-Stable V63 functionality with a scoped mobile editor redesign.
-
-Key fix: the editor toolbar exists only inside the Lernblatt editor. The normal app navigation (Heute / Plan / Aufgaben / Lernen / Mehr) remains unchanged everywhere else.
-
-Mobile editor: Text, Elemente, Formate, Vorlagen, Seiten, Ebenen; contextual text controls; floating selection tools; formulas and graphs remain the V63 editors.
+Editor stability build:
+- eigene Schriften (TTF/OTF/WOFF/WOFF2) lokal importieren
+- Listen ohne Textmarkierung
+- manueller Zoom + Zwei-Finger-Pinch-Zoom
+- kein Auto-Zoom beim Tippen / iOS-Tastatur
+- Main-Leiste wird nach Textformat-/Modal-Bearbeitung zuverlässig wiederhergestellt
+- Text-HTML speichert keine Editor-Handles mehr mit
+- einheitliches Zoom-System gegen Safari-Doppelskalierung
+- Netzwerk-first Service Worker gegen alte, festhängende GitHub-Pages-Versionen

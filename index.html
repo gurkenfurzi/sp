@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#0b1020">
+<meta name="theme-color" content="#fff7f5">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SchoolBloom">
@@ -3005,7 +3005,7 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 85</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 86</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -3332,10 +3332,12 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
 </div>
 <div id="canvasQuickDrawer" class="canvasQuickDrawer"></div>
 <div id="mobileSelectionTools" class="mobileSelectionTools"></div>
+<div id="v86ZoomControl" class="v86ZoomControl" aria-label="Zoom"><button type="button" onclick="canvasZoomBy(-.1)" title="Rauszoomen">−</button><button type="button" id="v86ZoomLabel" onclick="fitCanvasStage()" title="An Bildschirm">100%</button><button type="button" onclick="canvasZoomBy(.1)" title="Reinzoomen">＋</button></div>
 <div id="multiSelectStatus" class="multiSelectStatus"></div>
       <input id="canvasImageInput" type="file" accept="image/*" style="display:none" onchange="if(this.files?.[0])addCanvasImage(this.files[0]);this.value=''">
       <input id="canvasCameraInput" type="file" accept="image/*" capture="environment" style="display:none" onchange="if(this.files?.[0])addCanvasImage(this.files[0]);this.value=''">
       <input id="canvasAnyFileInput" type="file" accept="image/*,.pdf,.doc,.docx,.ppt,.pptx,.txt" style="display:none" onchange="if(this.files?.[0])addCanvasFile(this.files[0]);this.value=''">
+      <input id="canvasCustomFontInput" type="file" accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2" style="display:none" onchange="if(this.files?.[0])importCustomFont(this.files[0]);this.value=''">
       <div class="canvasViewport" id="canvasViewport">
         <div class="canvasStage" id="canvasStage">
           <div class="canvasPage" id="canvasPage"></div>
@@ -3868,7 +3870,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 85";
+ $("#headerEyebrow").textContent="VERSION 86";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -3878,6 +3880,7 @@ function openModal(html){
  modalScrollY=window.scrollY;
  $("#topViewMenu")?.classList.remove("open");
  const drawer=$("#canvasQuickDrawer");if(drawer){drawer.classList.remove("open");drawer.innerHTML="";openEditorGroup=null}
+ document.body.classList.remove("editorDrawerOpen");
  $$(".canvasQuickNav button").forEach(x=>x.classList.remove("active"));
  $("#modal").innerHTML=html;$("#modalWrap").classList.add("open");
  document.body.classList.add("modalOpen");document.body.style.top=`-${modalScrollY}px`;
@@ -3885,6 +3888,10 @@ function openModal(html){
 window.closeModal=()=>{
  $("#modalWrap").classList.remove("open");
  document.body.classList.remove("modalOpen");document.body.style.top="";
+ if(document.body.classList.contains("editorMode") && !$("#canvasQuickDrawer")?.classList.contains("open")){
+   document.body.classList.remove("editorDrawerOpen");
+   $$(".canvasQuickNav button").forEach(x=>x.classList.remove("active"));
+ }
  window.scrollTo(0,modalScrollY);
 };
 
@@ -5498,7 +5505,7 @@ function attachCanvasObjectEvents(){
      },0)}};
      window.addEventListener("pointermove",move);window.addEventListener("pointerup",up);
    });
-   if(el.isContentEditable)el.addEventListener("input",()=>{const o=canvasState.objects.find(x=>x.id===oid);if(o)o.text=el.innerHTML;markCanvasDirty()});
+   if(el.isContentEditable)el.addEventListener("input",()=>{const o=canvasState.objects.find(x=>x.id===oid);if(o)o.text=cleanCanvasTextHTML(el);markCanvasDirty()});
    el.querySelectorAll("td").forEach(td=>td.addEventListener("input",()=>{const o=canvasState.objects.find(x=>x.id===oid);if(o)o.cells[+td.dataset.r][+td.dataset.c]=td.innerText;markCanvasDirty()}));
  });
 }
@@ -5632,7 +5639,7 @@ function applyCanvasPageSize(){
  if(stage){stage.style.width=W+"px";stage.style.height=H+"px"}
  if(svg)svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
  updateOrientationButtons();applyCanvasPageStyle();
- if(shouldAutoFitCanvas() || !canvasState.userZoomTouched) setTimeout(()=>fitCanvasToScreen(),0);
+ if(!canvasState.userZoomTouched) setTimeout(()=>fitCanvasToScreen(),0);
 }
 
 window.setCanvasZoom=function(value){
@@ -6411,9 +6418,9 @@ function mobileTextModeContentHTML(kind){
        <button class="${ta==='center'?'on':''}" onclick="applyTextProperty('textAlign','center');mobileRefreshTextMode()">≣</button>
        <button class="${ta==='right'?'on':''}" onclick="applyTextProperty('textAlign','right');mobileRefreshTextMode()">≡</button>
        <button class="${ta==='justify'?'on':''}" onclick="applyTextProperty('textAlign','justify');mobileRefreshTextMode()">☷</button>
-       <button onclick="formatSelectedText('insertUnorderedList')">•≡</button>
-       <button onclick="formatSelectedText('insertOrderedList')">1≡</button>
-       <button onclick="mobileDashList()">–≡</button>
+       <button onclick="applyTextList('bullet')" title="Aufzählung mit Punkten">•≡</button>
+       <button onclick="applyTextList('number')" title="Nummerierte Liste">1≡</button>
+       <button onclick="applyTextList('dash')" title="Aufzählung mit Strichen">–≡</button>
      </div>
    </div>`;
  }
@@ -6532,11 +6539,16 @@ function renderSheetEditor(){
  }
  if(!saved&&!sh)applyCanvasTemplate("clean",true);
  $("#wordStatus").textContent=sh?"Gespeichert":"Neues Lernblatt";
- applyCanvasPageSize();renderCanvasObjects();renderVectors();renderCanvasInspector();renderPageTemplates();enhanceCameraInputs();updateMultiSelectStatus();pushHistory(true);canvasState.lastSavedHash=canvasSnapshot();ensurePathDrawingListener();setTimeout(()=>{fitCanvasStage();openEditorGroup=null;const d=$("#canvasQuickDrawer");if(d){d.classList.remove("open");d.innerHTML=""}$$(".canvasQuickNav button").forEach(x=>x.classList.remove("active"))},80);
+ applyCanvasPageSize();renderCanvasObjects();renderVectors();renderCanvasInspector();renderPageTemplates();enhanceCameraInputs();updateMultiSelectStatus();pushHistory(true);canvasState.lastSavedHash=canvasSnapshot();ensurePathDrawingListener();setTimeout(()=>{canvasState.userZoomTouched=false;fitCanvasToScreen();openEditorGroup=null;const d=$("#canvasQuickDrawer");if(d){d.classList.remove("open");d.innerHTML=""}$$(".canvasQuickNav button").forEach(x=>x.classList.remove("active"))},80);
 }
 function stripHTML(x){const d=document.createElement("div");d.innerHTML=x;return d.innerText}
 function markCanvasDirty(schedule=true){const x=$("#autosaveState");if(x){x.textContent="Nicht gespeichert";x.className="autosaveState saving"}if(schedule)scheduleAutosave()}
-window.addEventListener("resize",()=>{if($("#view-sheet-editor")?.classList.contains("active"))fitCanvasStage()})
+window.addEventListener("resize",()=>{
+ if(!$("#view-sheet-editor")?.classList.contains("active"))return;
+ const a=document.activeElement;
+ const typing=!!(a&&(a.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)));
+ if(!typing && !canvasState.userZoomTouched) fitCanvasToScreen();
+})
 function saveCanvasSheetCore(auto=false){
  const {s,t}=currentTopic();if(!s||!t)return;const title=canvasState.objects.find(o=>["text","block"].includes(o.kind)&&(o.style?.fontSize||0)>=28)?.text?.replace(/<[^>]*>/g,"").slice(0,80)||t.title;const dataObj={objects:canvasState.objects,vectors:canvasState.vectors,orientation:canvasState.orientation,pageStyle:canvasState.pageStyle};
  if(selectedSheetId){const sh=data.studySheets.find(x=>x.id===selectedSheetId);if(sh){sh.title=title;sh.canvasData=dataObj;sh.html=""}}else{const sh={id:id(),subject:s.name,topicId:t.id,title,html:"",canvasData:dataObj,created:Date.now()};data.studySheets.push(sh);selectedSheetId=sh.id}save();if(!auto){const el=$("#autosaveState");if(el){el.textContent="Gespeichert ✓";el.className="autosaveState saved"}}
@@ -10736,5 +10748,176 @@ if("serviceWorker"in navigator&&location.protocol.startsWith("http")){
  });
 }
 </script>
+
+<style id="v86-editor-stability-and-polish">
+@media (max-width:899px){
+  body.editorMode .canvasViewport{touch-action:pan-x pan-y!important;-webkit-overflow-scrolling:touch!important}
+  body.editorMode .canvasStage{transition:zoom .12s ease!important}
+  body.editorMode .cobj.textObj{overflow-wrap:anywhere!important;word-break:break-word!important}
+  body.editorMode .canvasQuickNav{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:4px!important;padding:8px!important}
+  body.editorMode .canvasQuickNav button{height:60px!important;font-size:19px!important;border-radius:14px!important}
+  body.editorMode .canvasQuickNav button span{font-size:7.5px!important;letter-spacing:.01em!important}
+  body.editorMode #canvasQuickDrawer{max-height:min(60dvh,540px)!important}
+  body.editorMode .mobileTextTop{grid-template-columns:minmax(0,1.35fr) 106px repeat(4,36px)!important;gap:5px!important}
+  body.editorMode .mobileTextMiddle{grid-template-columns:36px repeat(7,minmax(0,1fr))!important;gap:5px!important}
+  .v86FontTools{display:flex;gap:7px;align-items:center;overflow:auto;padding:1px 0 2px}
+  .v86FontTools button{height:36px!important;min-height:36px!important;padding:0 11px!important;border:1px solid #eadbd6!important;border-radius:11px!important;background:#fff!important;color:#725b53!important;font-size:9px!important;font-weight:850!important;white-space:nowrap!important}
+  .v86ZoomControl{position:fixed;right:14px;bottom:calc(92px + env(safe-area-inset-bottom));z-index:619;display:flex;align-items:center;gap:2px;padding:4px;background:rgba(255,252,250,.94);border:1px solid #eadbd6;border-radius:999px;box-shadow:0 10px 25px rgba(92,67,59,.09);backdrop-filter:blur(16px)}
+  .v86ZoomControl button{height:30px;min-width:30px;border:0;border-radius:999px;background:transparent;color:#735d55;font-size:14px;font-weight:900;padding:0 8px}
+  .v86ZoomControl #v86ZoomLabel{min-width:48px;font-size:8px;color:#9b8178}
+  body.editorMode.editorDrawerOpen .v86ZoomControl{display:none!important}
+  body:not(.editorMode) .v86ZoomControl{display:none!important}
+  .v86FontManager{display:grid;gap:10px}.v86FontRow{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;padding:10px 12px;border:1px solid #eadbd6;border-radius:14px;background:#fff}.v86FontRow b{font-size:12px;color:#6f574f}.v86FontRow small{display:block;color:#a0867d;font-size:8px;margin-top:2px}.v86FontRow button{height:34px;border:1px solid #f0d7d4;border-radius:10px;background:#fff7f6;color:#a7686c;font-weight:850}
+  .v86Hint{padding:9px 11px;border-radius:12px;background:#fff7f4;color:#9a7f76;font-size:8px;line-height:1.45}
+  .sbDashList{list-style:none!important;padding-left:0!important;margin:.2em 0!important}.sbDashList>li{margin:.08em 0!important}
+}
+@media (min-width:900px){
+  body.editorMode .cobj.textObj{overflow-wrap:anywhere!important;word-break:break-word!important}
+  .v86ZoomControl{display:none!important}
+}
+</style>
+<script id="v86-editor-stability-script">
+(function(){
+  'use strict';
+  const q=(s,r=document)=>r.querySelector(s), qa=(s,r=document)=>Array.from(r.querySelectorAll(s));
+  const BUILTIN_FONTS=['Arial','Lato','Playfair Display','Georgia','Verdana','Trebuchet MS','Times New Roman','Courier New'];
+  const META_KEY='schoolbloom-custom-font-meta-v1';
+  const DB_NAME='schoolbloom-user-assets-v1', STORE='fonts';
+  let pinch=null;
+
+  window.cleanCanvasTextHTML=function(el){
+    if(!el)return '';
+    const clone=el.cloneNode(true);
+    clone.querySelectorAll('.rotateHandle,.resizeHandle,.tableMoveHandle,.vectorHandle').forEach(x=>x.remove());
+    clone.removeAttribute('contenteditable'); clone.classList.remove('selected','editing');
+    return clone.innerHTML;
+  };
+
+  function fontMeta(){try{return JSON.parse(localStorage.getItem(META_KEY)||'[]')}catch(e){return[]}}
+  function saveFontMeta(v){localStorage.setItem(META_KEY,JSON.stringify(v))}
+  function openFontDB(){return new Promise((res,rej)=>{const r=indexedDB.open(DB_NAME,1);r.onupgradeneeded=()=>{const db=r.result;if(!db.objectStoreNames.contains(STORE))db.createObjectStore(STORE)};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+  async function putFont(id,blob){const db=await openFontDB();return new Promise((res,rej)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).put(blob,id);tx.oncomplete=()=>{db.close();res()};tx.onerror=()=>{db.close();rej(tx.error)}})}
+  async function getFont(id){const db=await openFontDB();return new Promise((res,rej)=>{const tx=db.transaction(STORE,'readonly'),r=tx.objectStore(STORE).get(id);r.onsuccess=()=>{db.close();res(r.result||null)};r.onerror=()=>{db.close();rej(r.error)}})}
+  async function delFont(id){const db=await openFontDB();return new Promise((res,rej)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).delete(id);tx.oncomplete=()=>{db.close();res()};tx.onerror=()=>{db.close();rej(tx.error)}})}
+  async function registerFont(meta,blob){
+    if(!blob)return false;
+    try{const face=new FontFace(meta.family,await blob.arrayBuffer());await face.load();document.fonts.add(face);return true}catch(e){console.warn('Custom font load failed',e);return false}
+  }
+  window.loadCustomFonts=async function(){for(const m of fontMeta()){try{await registerFont(m,await getFont(m.id))}catch(e){console.warn(e)}} refreshFontControls()};
+  window.importCustomFont=async function(file){
+    if(!file)return;
+    if(file.size>12*1024*1024){window.cuteToast?.('Die Schriftdatei ist zu groß (max. 12 MB) ♡');return}
+    const base=(file.name||'Eigene Schrift').replace(/\.(ttf|otf|woff2?|TTF|OTF|WOFF2?)$/,'').trim()||'Eigene Schrift';
+    const display=(prompt('Wie soll die Schrift heißen?',base)||'').trim(); if(!display)return;
+    const id='font-'+Date.now()+'-'+Math.random().toString(36).slice(2,7), family='SB_'+id.replace(/[^a-zA-Z0-9_]/g,'_');
+    const meta={id,family,name:display,fileName:file.name,created:Date.now()};
+    try{await putFont(id,file);const ok=await registerFont(meta,file);if(!ok)throw new Error('FontFace');const arr=fontMeta();arr.push(meta);saveFontMeta(arr);refreshFontControls();if(canvasState?.selectedId&&typeof window.applyTextProperty==='function')window.applyTextProperty('fontFamily',family);window.cuteToast?.('Schrift „'+display+'“ hinzugefügt ♡')}catch(e){console.error(e);window.cuteToast?.('Schrift konnte nicht geladen werden.')}
+  };
+  window.openCustomFontPicker=function(){q('#canvasCustomFontInput')?.click()};
+  window.openCustomFontManager=function(){
+    const arr=fontMeta();
+    if(typeof window.openModal!=='function')return;
+    window.openModal(`<div class="v86FontManager"><div class="presetModalHead"><div><span class="eyebrow">SCHRIFTEN</span><h2>Eigene Schriften</h2></div><button class="miniIcon" onclick="closeModal()">×</button></div><div class="v86Hint">TTF, OTF, WOFF und WOFF2 werden nur auf deinem Gerät gespeichert. Sie bleiben nach einem Neustart verfügbar.</div>${arr.length?arr.map(m=>`<div class="v86FontRow"><div><b style="font-family:${m.family}">${escapeHTML(m.name)}</b><small>${escapeHTML(m.fileName||'Eigene Schrift')}</small></div><button onclick="deleteCustomFont('${m.id}')">Löschen</button></div>`).join(''):'<div class="managerEmpty">Noch keine eigene Schrift.</div>'}<button class="primary" onclick="closeModal();openCustomFontPicker()">＋ Schrift hinzufügen</button></div>`);
+  };
+  window.deleteCustomFont=async function(id){const arr=fontMeta(),m=arr.find(x=>x.id===id);if(!m)return;await delFont(id);saveFontMeta(arr.filter(x=>x.id!==id));window.cuteToast?.('Schrift entfernt ♡');window.closeModal?.();refreshFontControls()};
+  function escapeHTML(v){return String(v||'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+  function addFontOptions(sel){
+    if(!sel)return; const cur=sel.value, existing=new Set(Array.from(sel.options).map(o=>o.value));
+    for(const m of fontMeta())if(!existing.has(m.family)){const o=document.createElement('option');o.value=m.family;o.textContent='✦ '+m.name;o.style.fontFamily=m.family;sel.appendChild(o)}
+    if(cur)sel.value=cur;
+  }
+  function enhanceMobileFontTools(){
+    const top=q('#canvasQuickDrawer .mobileTextTop'); if(!top)return;
+    addFontOptions(top.querySelector('select'));
+    const editor=top.closest('.mobileTextEditor');if(editor&&!editor.querySelector('.v86FontTools')){const tools=document.createElement('div');tools.className='v86FontTools';tools.innerHTML='<button type="button" onclick="openCustomFontPicker()">＋ Eigene Schrift</button><button type="button" onclick="openCustomFontManager()">⚙ Schriften verwalten</button>';top.insertAdjacentElement('afterend',tools)}
+  }
+  function enhanceDesktopFontTools(){qa('select.fontSelect,#presetFont').forEach(addFontOptions)}
+  function refreshFontControls(){enhanceMobileFontTools();enhanceDesktopFontTools()}
+
+  // Keep the existing UI functions, then decorate their font selectors.
+  const oldOpenGroup=window.editorOpenGroup;
+  if(typeof oldOpenGroup==='function')window.editorOpenGroup=function(group,btn){const r=oldOpenGroup.apply(this,arguments);if(group==='text')setTimeout(enhanceMobileFontTools,0);return r};
+  const oldTextMode=window.mobileTextMode;
+  if(typeof oldTextMode==='function')window.mobileTextMode=function(){const r=oldTextMode.apply(this,arguments);setTimeout(enhanceMobileFontTools,0);return r};
+  const oldInspector=window.renderCanvasInspector;
+  if(typeof oldInspector==='function')window.renderCanvasInspector=function(){const r=oldInspector.apply(this,arguments);setTimeout(enhanceDesktopFontTools,0);return r};
+  const oldPreset=window.createCustomStylePreset;
+  if(typeof oldPreset==='function')window.createCustomStylePreset=function(){const r=oldPreset.apply(this,arguments);setTimeout(enhanceDesktopFontTools,0);return r};
+
+  function selectedTextObject(){return canvasState?.objects?.find(x=>x.id===canvasState.selectedId&&['text','block','task','merke'].includes(x.kind))||null}
+  function textEl(){return q(`.cobj[data-id="${canvasState?.selectedId||''}"]`)}
+  function listLines(html){const d=document.createElement('div');d.innerHTML=html||'';const lis=Array.from(d.querySelectorAll(':scope > ul > li,:scope > ol > li'));if(lis.length)return lis.map(x=>x.innerHTML.replace(/^\s*[–-]\s*/,''));const txt=d.innerText||d.textContent||'';return txt.split(/\n+/).map(x=>x.trim()).filter(Boolean).map(escapeHTML)}
+  window.applyTextList=function(type){
+    const o=selectedTextObject();if(!o)return window.cuteToast?.('Wähle zuerst ein Textfeld ♡');
+    const el=textEl(), sel=window.getSelection();
+    const hasSelection=!!(el&&sel&&sel.rangeCount&&!sel.getRangeAt(0).collapsed&&el.contains(sel.anchorNode));
+    if(hasSelection && (type==='bullet'||type==='number')){el.focus();document.execCommand(type==='bullet'?'insertUnorderedList':'insertOrderedList',false,null);o.text=window.cleanCanvasTextHTML(el);window.markCanvasDirty?.();return}
+    const d=document.createElement('div');d.innerHTML=o.text||'';const first=d.firstElementChild;
+    const same=(type==='bullet'&&first?.tagName==='UL'&&!first.classList.contains('sbDashList'))||(type==='number'&&first?.tagName==='OL')||(type==='dash'&&first?.classList.contains('sbDashList'));
+    const lines=listLines(o.text||'Text');
+    if(same)o.text=lines.map(x=>`<div>${x||'<br>'}</div>`).join('');
+    else if(type==='number')o.text=`<ol>${lines.map(x=>`<li>${x}</li>`).join('')}</ol>`;
+    else if(type==='dash')o.text=`<ul class="sbDashList" style="list-style:none;padding-left:0;margin:.2em 0">${lines.map(x=>`<li>– ${x}</li>`).join('')}</ul>`;
+    else o.text=`<ul>${lines.map(x=>`<li>${x}</li>`).join('')}</ul>`;
+    window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.();
+    setTimeout(()=>{window.editorOpenGroup?.('text',q('.canvasQuickNav [data-group="text"]'));},0);
+  };
+  // Backwards compatibility for the old dash button/function.
+  window.mobileDashList=function(){window.applyTextList('dash')};
+
+  // Formatting commands now work on the whole selected text object if there is no highlighted range.
+  window.formatSelectedText=function(cmd){
+    const o=selectedTextObject(),el=textEl();if(!o||!el)return;
+    const sel=window.getSelection();const hasSelection=!!(sel&&sel.rangeCount&&!sel.getRangeAt(0).collapsed&&el.contains(sel.anchorNode));
+    const wasEditing=!!o.editing;
+    if(!o.editing){o.editing=true;window.renderCanvasObjects?.()}
+    const target=textEl();if(!target)return;
+    target.focus({preventScroll:true});
+    if(!hasSelection){const range=document.createRange();range.selectNodeContents(target);target.querySelectorAll('.rotateHandle,.resizeHandle').forEach(h=>h.setAttribute('contenteditable','false'));sel?.removeAllRanges();sel?.addRange(range)}
+    document.execCommand(cmd,false,null);o.text=window.cleanCanvasTextHTML(target);o.editing=wasEditing;
+    window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.();
+  };
+
+  function updateZoomUI(){const z=Number(canvasZoom||1);const t=Math.round(z*100)+'%';const a=q('#v86ZoomLabel');if(a)a.textContent=t;const b=q('#canvasZoomLabel');if(b)b.textContent=t}
+  // Normalize all zoom paths to one system so Safari cannot double-scale the page.
+  window.setCanvasZoom=function(value,options){
+    const stage=q('#canvasStage'),page=q('#canvasPage');if(!stage)return;
+    const z=Math.max(.25,Math.min(2.5,Number(value)||1));canvasZoom=z;
+    if(!options||options.user!==false)canvasState.userZoomTouched=true;
+    stage.dataset.scale=String(z);stage.style.zoom=String(z);stage.style.transform='none';
+    if(page){page.style.transform='none';page.style.transformOrigin='top center'}
+    updateZoomUI();
+  };
+  window.canvasZoomBy=function(delta){window.setCanvasZoom(Number(canvasZoom||1)+Number(delta||0),{user:true})};
+  window.fitCanvasToScreen=function(){
+    const vp=q('#canvasViewport'),stage=q('#canvasStage');if(!vp||!stage)return;
+    const W=canvasPageWidth(),H=canvasPageHeight();
+    const availW=Math.max(220,vp.clientWidth-20),availH=Math.max(300,vp.clientHeight-32);
+    window.setCanvasZoom(Math.min(1,availW/W,availH/H),{user:false});
+  };
+  window.fitCanvasStage=function(){canvasState.userZoomTouched=true;window.fitCanvasToScreen();canvasState.userZoomTouched=true;const vp=q('#canvasViewport');if(vp){vp.scrollLeft=0;vp.scrollTop=0}};
+
+  function dist(t){const dx=t[0].clientX-t[1].clientX,dy=t[0].clientY-t[1].clientY;return Math.hypot(dx,dy)}
+  function bindPinch(){const vp=q('#canvasViewport');if(!vp||vp.dataset.v86Pinch)return;vp.dataset.v86Pinch='1';
+    vp.addEventListener('touchstart',e=>{if(e.touches.length===2){pinch={d:dist(e.touches),z:Number(canvasZoom||1)};canvasState.userZoomTouched=true}}, {passive:true});
+    vp.addEventListener('touchmove',e=>{if(!pinch||e.touches.length!==2)return;if(e.cancelable)e.preventDefault();const factor=dist(e.touches)/Math.max(1,pinch.d);window.setCanvasZoom(pinch.z*factor,{user:true})},{passive:false});
+    vp.addEventListener('touchend',e=>{if(e.touches.length<2)pinch=null},{passive:true});
+    vp.addEventListener('touchcancel',()=>{pinch=null},{passive:true});
+  }
+
+  // Safari's keyboard changes visual viewport height; never treat that as a zoom request.
+  function editorTyping(){const a=document.activeElement;return !!(a&&(a.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)))}
+  window.visualViewport?.addEventListener('resize',()=>{if(!document.body.classList.contains('editorMode')||editorTyping()||canvasState?.userZoomTouched)return;window.fitCanvasToScreen?.()});
+
+  // Make modal/drawer state self-healing. This specifically fixes the missing main bar after editing a text format.
+  function healEditorBars(){if(!document.body.classList.contains('editorMode'))return;const drawer=q('#canvasQuickDrawer'),modal=q('#modalWrap');if(!drawer?.classList.contains('open')&&!modal?.classList.contains('open'))document.body.classList.remove('editorDrawerOpen')}
+  document.addEventListener('click',()=>setTimeout(healEditorBars,0),true);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')setTimeout(healEditorBars,0)});
+
+  function init(){bindPinch();window.loadCustomFonts?.();updateZoomUI();healEditorBars()}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
+
 </body>
 </html>
