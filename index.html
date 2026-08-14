@@ -3082,7 +3082,7 @@ body.editorMode button:active{transform:scale(.97)}
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 73</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 74</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -3323,7 +3323,6 @@ body.editorMode button:active{transform:scale(.97)}
         <button onclick="sb72ShowLibrary('text',this)">T<span>Text</span></button>
         <button onclick="sb72ShowLibrary('elements',this)">◇<span>Elemente</span></button>
         <button onclick="sb72ShowLibrary('uploads',this)">☁<span>Uploads</span></button>
-        <button onclick="sb72ShowLibrary('photos',this)">▧<span>Fotos</span></button>
         <button onclick="sb72ShowLibrary('styles',this)">◉<span>Stile</span></button>
         <button onclick="sb72ShowLibrary('backgrounds',this)">▨<span>Hintergründe</span></button>
         <button onclick="sb72ShowLibrary('pages',this)">▤<span>Seiten</span></button>
@@ -3332,25 +3331,25 @@ body.editorMode button:active{transform:scale(.97)}
 
       <aside class="sb72LibraryPanel" id="sb72LibraryPanel"></aside>
 
+      
       <div class="sb72SelectionBar" id="sb72SelectionBar">
         <button onclick="duplicateSelected()" title="Duplizieren">⧉</button>
-        <button onclick="toggleSelectedLock()" title="Sperren">♙</button>
+        <button onclick="toggleSelectedLock()" title="Sperren">🔒</button>
         <button onclick="deleteSelectedCanvasItem()" title="Löschen">⌫</button>
-        <button onclick="sb72OpenMobile('more')" title="Mehr">•••</button>
       </div>
 
       <nav class="sb72MobileBottom" aria-label="Mobile Editor Navigation">
-        <button class="active" onclick="sb72OpenMobile('text',this)">T<span>Text</span></button>
-        <button onclick="sb72OpenMobile('elements',this)">⌘<span>Elemente</span></button>
-        <button onclick="sb72OpenMobile('uploads',this)">☁<span>Uploads</span></button>
-        <button onclick="sb72OpenMobile('photos',this)">▧<span>Fotos</span></button>
-        <button onclick="sb72OpenMobile('pages',this)">▤<span>Seiten</span></button>
-        <button onclick="sb72OpenMobile('layers',this)">◇<span>Ebenen</span></button>
-        <button onclick="sb72OpenMobile('more',this)">•••<span>Mehr</span></button>
+        <button onclick="sb74OpenMobile('text',this)">T<span>Text</span></button>
+        <button onclick="sb74OpenMobile('insert',this)">＋<span>Einfügen</span></button>
+        <button onclick="sb74OpenMobile('uploads',this)">☁<span>Uploads</span></button>
+        <button onclick="sb74OpenMobile('selection',this)">☑<span>Auswahl</span></button>
       </nav>
 
       <section class="sb72MobileSheet" id="sb72MobileSheet">
-        <div class="sb72SheetHandle"></div>
+        <div class="sb74SheetHead">
+          <div class="sb72SheetHandle"></div>
+          <button class="sb74Close" onclick="sb74CloseMobile()" aria-label="Schließen">×</button>
+        </div>
         <div id="sb72MobileSheetContent"></div>
       </section>
 
@@ -3361,13 +3360,34 @@ body.editorMode button:active{transform:scale(.97)}
           <button class="historyBtn" id="undoBtn" title="Rückgängig" onclick="undoCanvas()">↶</button>
           <button class="historyBtn" id="redoBtn" title="Wiederholen" onclick="redoCanvas()">↷</button>
         </div>
-        <div class="editorActions">
-          <button class="editorIcon viewTopBtn pageTopButton" title="Seite & Ansicht" onclick="toggleTopViewMenu()"><span class="pageTopIcon">▯</span><span class="pageTopLabel">Seite</span></button>
-          <button class="editorIcon" title="Exportieren" onclick="exportCanvasHTML()"><svg viewBox="0 0 24 24"><path d="M12 3v12M8 11l4 4 4-4M4 19h16"/></svg></button>
-          <button class="editorIcon" title="PDF / Drucken" onclick="printCanvasSheet()"><svg viewBox="0 0 24 24"><path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="7" y="14" width="10" height="7"/></svg></button>
+        <div class="editorActions sb74EditorActions">
+          <button class="editorIcon sb74TopIcon" title="Seite" onclick="sb74TogglePagePanel()">▯</button>
+          <button class="editorIcon sb74TopIcon" title="Ebenen" onclick="sb74ToggleLayersPanel()">◇</button>
+          <button class="editorIcon sb74TopIcon" title="Drucken" onclick="printCanvasSheet()">
+            <svg viewBox="0 0 24 24"><path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="7" y="14" width="10" height="7"/></svg>
+          </button>
           <button class="editorIcon primaryIcon sb72SaveButton" title="Speichern" onclick="saveCanvasSheet()"><svg viewBox="0 0 24 24"><path d="M5 3h12l2 2v16H5z"/><path d="M8 3v6h8V3M8 21v-7h8v7"/></svg><span>Speichern</span></button>
         </div>
       </div>
+
+      <aside id="sb74PagePanel" class="sb74TopPopover" aria-label="Seite">
+        <div class="sb74PopoverHead"><div><small>SEITE</small><b>Seite & Vorlage</b></div><button onclick="sb74CloseTopPanels()">×</button></div>
+        <div class="sb74PopoverGrid">
+          <button onclick="fitCanvasStage()">⊡<span>An Bildschirm</span></button>
+          <button onclick="setCanvasOrientation('portrait')">▯<span>Hochformat</span></button>
+          <button onclick="setCanvasOrientation('landscape')">▭<span>Querformat</span></button>
+          <button onclick="sb74OpenPageStyle()">◫<span>Papierstil</span></button>
+        </div>
+        <div class="sb74PopoverSection">
+          <div class="sb74SectionHead"><b>Vorlagen</b><button onclick="saveCurrentPageTemplate()">＋ Vorlage</button></div>
+          <div id="sb74TemplateList" class="sb74TemplateList"></div>
+        </div>
+      </aside>
+
+      <aside id="sb74LayersPanel" class="sb74TopPopover sb74LayersPopover" aria-label="Ebenen">
+        <div class="sb74PopoverHead"><div><small>EBENEN</small><b>Ziehen zum Sortieren</b></div><button onclick="sb74CloseTopPanels()">×</button></div>
+        <div id="sb74MobileLayerList" class="sb74MobileLayerList"></div>
+      </aside>
 
       <div class="desktopCommandBar" aria-label="Desktop-Werkzeuge">
         <div class="sb72TextContext" aria-label="Textformatierung">
@@ -3421,7 +3441,7 @@ body.editorMode button:active{transform:scale(.97)}
           <div class="desktopCmdButtons">
             <button onclick="fitCanvasStage()" title="An Bildschirm">⊡ <span>Anpassen</span></button>
             <button onclick="toggleTopViewMenu()" title="Seite & Ansicht">▯ <span>Seite</span></button>
-            <button onclick="openShortcutHelp()" title="Tastenkürzel">⌨ <span>Shortcuts</span></button>
+            
           </div>
         </div>
       </div>
@@ -4008,7 +4028,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 73";
+ $("#headerEyebrow").textContent="VERSION 74";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -8433,6 +8453,125 @@ button.primary,button.ghost,.iconbtn{
 }
 </style>
 
+
+<style id="sb74-mobile-editor-rework">
+/* ===== V74 Mobile editor rework ===== */
+@media (max-width:899px){
+  body.editorMode main{padding-bottom:72px!important}
+  body.editorMode .canvasTopbar{
+    min-height:68px!important;
+    grid-template-columns:42px minmax(110px,1fr) auto auto!important;
+    padding:7px 8px!important;
+  }
+  body.editorMode .canvasTopbar:before{left:52px!important;top:21px!important;font-size:16px!important}
+  body.editorMode .editorTitle{padding-left:23px!important}
+  body.editorMode .historyBar{gap:3px!important}
+  body.editorMode .historyBtn{width:36px!important;height:36px!important}
+  body.editorMode .sb74EditorActions{display:flex!important;gap:3px!important;align-items:center!important}
+  body.editorMode .sb74TopIcon{
+    display:grid!important;place-items:center!important;width:36px!important;height:36px!important;
+    font-size:18px!important;padding:0!important;border-radius:10px!important
+  }
+  body.editorMode .sb74TopIcon svg{width:17px!important;height:17px!important}
+  body.editorMode .sb72SaveButton{
+    width:auto!important;min-width:72px!important;height:38px!important;padding:0 9px!important
+  }
+  body.editorMode .sb72SaveButton span{font-size:8px!important}
+  body.editorMode .canvasViewport{padding:11px 8px 150px!important}
+
+  .sb72MobileBottom{
+    height:67px!important;grid-template-columns:repeat(4,1fr)!important;
+    padding:4px 10px calc(4px + env(safe-area-inset-bottom))!important;
+  }
+  .sb72MobileBottom button{font-size:20px!important}
+  .sb72MobileBottom button span{font-size:7px!important}
+  .sb72MobileBottom button.active{background:#f8dfdd!important;color:#ae6970!important}
+
+  .sb72MobileSheet{
+    left:10px!important;right:10px!important;bottom:72px!important;
+    max-height:44vh!important;padding:8px 10px 12px!important;border-radius:18px 18px 13px 13px!important;
+    background:rgba(255,253,250,.975)!important;backdrop-filter:blur(22px)!important;
+  }
+  .sb72MobileSheet.textSheet{max-height:none!important;height:auto!important}
+  .sb74SheetHead{height:21px;position:sticky;top:-8px;z-index:4;background:inherit;display:flex;justify-content:center;align-items:center}
+  .sb74SheetHead .sb72SheetHandle{margin:0!important}
+  .sb74Close{
+    position:absolute;right:0;top:-1px;width:28px;height:28px;border:1px solid var(--sb-line);
+    border-radius:9px;background:#fffaf7;color:#80655d;font-size:18px;line-height:1
+  }
+
+  .sb74TextToolbar{display:grid;gap:8px}
+  .sb74TextTop{display:grid;grid-template-columns:minmax(0,1.45fr) 92px 44px 44px 44px;gap:6px}
+  .sb74TextTop select,.sb74TextTop input,.sb74TextTop button,
+  .sb74TextRow button,.sb74TextRow input{
+    height:43px;border:1px solid var(--sb-line);border-radius:11px;background:white;color:#705950;font-weight:800
+  }
+  .sb74TextTop select{padding:0 10px;font-size:12px;min-width:0}
+  .sb74TextTop input[type=number]{width:100%;text-align:center;font-size:15px}
+  .sb74TextTop button{font-size:18px}
+  .sb74TextRow{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+  .sb74TextRow button{font-size:17px;min-width:0;padding:0}
+  .sb74TextRow input[type=color]{width:100%;padding:5px}
+  .sb74FormatRow{display:flex;gap:6px;overflow:auto;padding:1px 0 2px}
+  .sb74FormatRow button{white-space:nowrap;height:36px;border:1px solid var(--sb-line);border-radius:999px;background:white;padding:0 11px;color:#705950;font-size:9px;font-weight:850}
+  .sb74FormatRow .primaryMini{background:#f5d8d6}
+
+  .sb74InsertSections{display:grid;gap:10px}
+  .sb74InsertTitle{font-size:8px;font-weight:900;letter-spacing:.13em;color:#a68a81;text-transform:uppercase;margin:1px 2px 5px}
+  .sb74CompactGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .sb74CompactGrid button{
+    min-height:59px;border:1px solid var(--sb-line);border-radius:11px;background:#fff;color:#705950;
+    font-size:8px;font-weight:850;padding:6px
+  }
+  .sb74CompactGrid button b{display:block;font-size:19px;margin-bottom:3px}
+  .sb74SelectionGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+  .sb74SelectionGrid button{
+    min-height:55px;border:1px solid var(--sb-line);border-radius:11px;background:white;color:#705950;font-weight:850;font-size:8px;padding:6px
+  }
+  .sb74SelectionGrid button b{display:block;font-size:18px;margin-bottom:3px}
+
+  .sb74TopPopover{
+    display:none;position:fixed;right:9px;top:74px;z-index:980;width:min(335px,calc(100vw - 18px));
+    max-height:58vh;overflow:auto;padding:11px;border:1px solid rgba(224,194,187,.86);border-radius:17px;
+    background:rgba(255,253,250,.92);backdrop-filter:blur(24px);box-shadow:0 18px 48px rgba(91,62,54,.14)
+  }
+  .sb74TopPopover.open{display:block;animation:sb74Pop .16s ease-out}
+  @keyframes sb74Pop{from{opacity:0;transform:translateY(-5px) scale(.98)}to{opacity:1;transform:none}}
+  .sb74PopoverHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
+  .sb74PopoverHead div{display:grid;gap:1px}.sb74PopoverHead small{font-size:7px;letter-spacing:.14em;color:#a6877e;font-weight:900}.sb74PopoverHead b{font-size:13px}
+  .sb74PopoverHead>button{width:31px;height:31px;border:1px solid var(--sb-line);border-radius:9px;background:#fff;color:#755f57;font-size:18px}
+  .sb74PopoverGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+  .sb74PopoverGrid button{height:58px;border:1px solid var(--sb-line);border-radius:10px;background:#fff;color:#705950;font-size:18px}
+  .sb74PopoverGrid button span{display:block;font-size:7px;font-weight:850;margin-top:3px}
+  .sb74PopoverSection{margin-top:10px;padding-top:8px;border-top:1px solid var(--sb-line)}
+  .sb74SectionHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}.sb74SectionHead b{font-size:10px}.sb74SectionHead button{border:0;background:#f8e2df;border-radius:999px;padding:6px 9px;font-size:8px;font-weight:850;color:#805f5b}
+  .sb74TemplateList{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+  .sb74TemplateList button{min-height:45px;border:1px solid var(--sb-line);border-radius:9px;background:white;text-align:left;padding:7px;color:#705950}.sb74TemplateList b{display:block;font-size:9px}.sb74TemplateList small{font-size:7px;color:#a28980}
+
+  .sb74LayersPopover{background:rgba(255,253,250,.84)!important}
+  .sb74MobileLayerList{display:grid;gap:5px}
+  .sb74Layer{
+    display:grid;grid-template-columns:28px minmax(0,1fr) 32px 32px;align-items:center;gap:4px;
+    min-height:44px;padding:4px 5px;border:1px solid rgba(233,216,211,.9);border-radius:10px;background:rgba(255,255,255,.82);
+    touch-action:none
+  }
+  .sb74Layer.dragging{opacity:.58;transform:scale(.985)}
+  .sb74LayerHandle{font-size:17px;color:#b2978e;text-align:center;cursor:grab}
+  .sb74LayerName{border:0;background:transparent;text-align:left;color:#705950;font-size:9px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sb74LayerTool{height:31px;border:0;border-radius:8px;background:#fff5f2;color:#7b625a;font-size:13px}
+
+  /* Old giant mobile inspector/page menu is no longer the default interaction. */
+  body.editorMode #desktopEditorSidebar.sb72MobileInspector{display:none!important}
+  body.editorMode #topViewMenu{display:none!important}
+  .sb72SelectionBar{display:none!important}
+}
+
+/* Desktop cleanup: no Shortcuts or duplicate photo rail. */
+@media (min-width:900px){
+  .sb72DesktopRail button[onclick*="'photos'"]{display:none!important}
+}
+</style>
+
 </head><body><div class="page">${serializedCanvas()}</div></body></html>`);w.document.close();setTimeout(()=>w.print(),300)
 }
 
@@ -10929,7 +11068,7 @@ if("serviceWorker"in navigator&&location.protocol.startsWith("http")){
     var bar=document.getElementById('sb72SelectionBar');
     if(!bar||typeof canvasState==='undefined')return;
     var selected=!!canvasState.selectedId || (canvasState.selectedIds&&canvasState.selectedIds.length) || (canvasState.selectedVectorIds&&canvasState.selectedVectorIds.length);
-    bar.classList.toggle('visible',!!selected);
+    bar.classList.remove('visible');
   },250);
 
   function init(){
@@ -10939,5 +11078,270 @@ if("serviceWorker"in navigator&&location.protocol.startsWith("http")){
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
+
+<script id="sb74-mobile-editor-functions">
+(function(){
+  var currentMobileGroup = null;
+  var alignModes = ['left','center','right','justify'];
+  var alignLabels = {left:'⇤',center:'↔',right:'⇥',justify:'☰'};
+
+  function B(label, action, icon){
+    return '<button onclick="'+action+'"><b>'+icon+'</b>'+label+'</button>';
+  }
+  function closeSheet(){
+    var sh=document.getElementById('sb72MobileSheet');
+    if(sh){sh.classList.remove('open','textSheet');}
+    document.querySelectorAll('.sb72MobileBottom button').forEach(function(b){b.classList.remove('active')});
+    currentMobileGroup=null;
+  }
+  window.sb74CloseMobile=closeSheet;
+
+  window.sb74CloseTopPanels=function(){
+    document.getElementById('sb74PagePanel')?.classList.remove('open');
+    document.getElementById('sb74LayersPanel')?.classList.remove('open');
+  };
+
+  function selectedTextObject(){
+    if(typeof canvasState==='undefined')return null;
+    if(canvasState.selectedType==='object'){
+      var o=canvasState.objects.find(function(x){return x.id===canvasState.selectedId});
+      if(o && ['text','task','merke'].includes(o.kind))return o;
+    }
+    var ids=typeof selectedObjectIds==='function'?selectedObjectIds():[];
+    return canvasState.objects.find(function(x){return ids.includes(x.id)&&['text','task','merke'].includes(x.kind)})||null;
+  }
+
+  window.sb74CycleAlign=function(){
+    var o=selectedTextObject(), current=(o?.style?.textAlign)||'left';
+    var next=alignModes[(alignModes.indexOf(current)+1)%alignModes.length];
+    if(typeof applyTextProperty==='function')applyTextProperty('textAlign',next);
+    var b=document.getElementById('sb74AlignBtn');
+    if(b){b.textContent=alignLabels[next];b.title='Ausrichtung: '+next;}
+  };
+
+  function textHTML(){
+    var o=selectedTextObject(), st=o?.style||{};
+    var ff=(st.fontFamily||'Arial').replace(/"/g,'');
+    var fs=st.fontSize||16;
+    var al=st.textAlign||'left';
+    return '<div class="sb74TextToolbar">'+
+      '<div class="sb74TextTop">'+
+        '<select onchange="applyTextProperty(\'fontFamily\',this.value)">'+
+          ['Arial','Georgia','Trebuchet MS','Verdana','Times New Roman','Courier New'].map(function(f){return '<option '+(ff.indexOf(f)>=0?'selected':'')+'>'+f+'</option>'}).join('')+
+        '</select>'+
+        '<input type="number" min="8" max="144" value="'+fs+'" onchange="applyTextProperty(\'fontSize\',+this.value)">'+
+        '<button onclick="formatSelectedText(\'bold\')" title="Fett"><b>B</b></button>'+
+        '<button onclick="formatSelectedText(\'italic\')" title="Kursiv"><i>I</i></button>'+
+        '<button onclick="formatSelectedText(\'underline\')" title="Unterstrichen"><u>U</u></button>'+
+      '</div>'+
+      '<div class="sb74TextRow">'+
+        '<input type="color" value="'+(st.color||'#6f5951')+'" onchange="applyTextProperty(\'color\',this.value)" title="Textfarbe">'+
+        '<button id="sb74AlignBtn" onclick="sb74CycleAlign()" title="Ausrichtung">'+alignLabels[al]+'</button>'+
+        '<button onclick="formatSelectedText(\'insertUnorderedList\')" title="Liste">☷</button>'+
+        '<button onclick="formatSelectedText(\'insertOrderedList\')" title="Nummerierte Liste">1☷</button>'+
+        '<button onclick="addCanvasTextBox()" title="Neues Textfeld">T＋</button>'+
+        '<button onclick="createCustomStylePreset()" title="Neues Textformat">Aa＋</button>'+
+        '<button onclick="openTextFormatManager()" title="Textformate verwalten">⚙</button>'+
+      '</div>'+
+      '<div class="sb74FormatRow" id="sb74TextFormatRow"></div>'+
+    '</div>';
+  }
+
+  function insertHTML(){
+    return '<div class="sb74InsertSections">'+
+      '<div><div class="sb74InsertTitle">Text & Lernen</div><div class="sb74CompactGrid">'+
+        B('Textfeld','addCanvasTextBox()','T')+
+        B('Tabelle','openTableDialog()','▦')+
+        B('Checkliste','addCanvasChecklist()','☑')+
+        B('Linie','addCanvasDivider()','—')+
+      '</div></div>'+
+      '<div><div class="sb74InsertTitle">Mathematik</div><div class="sb74CompactGrid">'+
+        B('Formel','openFormulaDialog()','ƒx')+
+        B('Graph','openGraphDialog()','⌁')+
+        B('Datum','addCanvasDate()','◷')+
+        B('Seitenzahl','addCanvasPageNumber()','#')+
+      '</div></div>'+
+      '<div><div class="sb74InsertTitle">Formen & Deko</div><div class="sb74CompactGrid">'+
+        B('Rechteck',"addVectorShape('rect')",'□')+
+        B('Kreis',"addVectorShape('ellipse')",'○')+
+        B('Dreieck',"addVectorShape('triangle')",'△')+
+        B('Pfad',"setVectorTool('pen')",'〰')+
+        B('Sticker','toggleStickerPanel()','✿')+
+        B('Karo-Zettel',"addPaperSticker('grid')",'▩')+
+        B('Liniert',"addPaperSticker('line')",'≡')+
+        B('Klebeband','addTapeSticker()','▰')+
+      '</div></div>'+
+    '</div>';
+  }
+
+  function uploadHTML(){
+    return '<div class="sb74InsertSections"><div><div class="sb74InsertTitle">Upload</div><div class="sb74CompactGrid">'+
+      B('Bild / Foto','openCanvasMediaPicker()','▧')+
+      B('Galerie',"document.getElementById('canvasImageInput').click()",'▤')+
+      B('Kamera',"document.getElementById('canvasCameraInput').click()",'◉')+
+      B('Datei',"document.getElementById('canvasAnyFileInput').click()",'📎')+
+    '</div></div></div>';
+  }
+
+  function selectionHTML(){
+    return '<div class="sb74InsertSections"><div><div class="sb74InsertTitle">Auswahl</div><div class="sb74SelectionGrid">'+
+      B('Mehrfachauswahl','toggleMultiSelectMode()','☑')+
+      B('Gruppieren','groupSelectedItems()','▣')+
+      B('Gruppierung lösen','ungroupSelectedItems()','▢')+
+      B('Duplizieren','duplicateSelected()','⧉')+
+      B('Als Textformat','saveSelectionAsTextFormat()','Aa')+
+      B('Sperren','toggleSelectedLock()','🔒')+
+    '</div></div></div>';
+  }
+
+  function renderTextFormats(){
+    var row=document.getElementById('sb74TextFormatRow'); if(!row)return;
+    var presets=(typeof canvasPresets==='function'?canvasPresets():[]);
+    row.innerHTML=presets.map(function(x){
+      var act=x.bundle?"insertSavedTextFormat('"+x.id+"')":"addCanvasText('"+x.id+"')";
+      return '<button onclick="'+act+'">'+(x.name||'Format')+'</button>';
+    }).join('')+
+    '<button class="primaryMini" onclick="saveSelectionAsTextFormat()">＋ Auswahl als Textformat</button>';
+  }
+
+  window.sb74OpenMobile=function(group,btn){
+    var sh=document.getElementById('sb72MobileSheet'), c=document.getElementById('sb72MobileSheetContent');
+    if(!sh||!c)return;
+    sb74CloseTopPanels();
+    if(currentMobileGroup===group && sh.classList.contains('open')){ closeSheet(); return; }
+    currentMobileGroup=group;
+    if(group==='text'){c.innerHTML=textHTML();sh.classList.add('textSheet');}
+    else if(group==='insert'){c.innerHTML=insertHTML();sh.classList.remove('textSheet');}
+    else if(group==='uploads'){c.innerHTML=uploadHTML();sh.classList.remove('textSheet');}
+    else {c.innerHTML=selectionHTML();sh.classList.remove('textSheet');}
+    sh.classList.add('open');
+    document.querySelectorAll('.sb72MobileBottom button').forEach(function(x){x.classList.remove('active')});
+    btn?.classList.add('active');
+    if(group==='text')setTimeout(renderTextFormats,0);
+  };
+
+  function templateButtons(){
+    var html=
+      '<button onclick="applyCanvasTemplate(\'clean\');sb74CloseTopPanels()"><b>Clean Notes</b><small>Überschrift + Merke</small></button>'+
+      '<button onclick="applyCanvasTemplate(\'cute\');sb74CloseTopPanels()"><b>Cute Study</b><small>Pastell + Aufgabe</small></button>'+
+      '<button onclick="applyCanvasTemplate(\'exam\');sb74CloseTopPanels()"><b>Exam Prep</b><small>Prüfung</small></button>'+
+      '<button onclick="applyCanvasTemplate(\'blank\');sb74CloseTopPanels()"><b>Leer</b><small>frei gestalten</small></button>';
+    try{
+      var custom=JSON.parse(localStorage.getItem('schoolbloom-page-templates')||'[]');
+      custom.forEach(function(t){
+        html+='<button onclick="applyCustomPageTemplate(\''+t.id+'\');sb74CloseTopPanels()"><b>'+String(t.name||'Eigene Vorlage').replace(/</g,'&lt;')+'</b><small>Eigene Vorlage</small></button>';
+      });
+    }catch(e){}
+    return html;
+  }
+
+  window.sb74TogglePagePanel=function(){
+    closeSheet();
+    var p=document.getElementById('sb74PagePanel'), l=document.getElementById('sb74LayersPanel');
+    l?.classList.remove('open');
+    p?.classList.toggle('open');
+    var list=document.getElementById('sb74TemplateList'); if(list)list.innerHTML=templateButtons();
+  };
+  window.sb74OpenPageStyle=function(){
+    sb74CloseTopPanels();
+    if(typeof toggleTopViewMenu==='function')toggleTopViewMenu();
+    var old=document.getElementById('topViewMenu');
+    if(old){
+      old.style.display='block';
+      old.style.position='fixed';old.style.top='74px';old.style.right='9px';old.style.left='auto';old.style.bottom='auto';
+      old.style.width='min(335px, calc(100vw - 18px))';old.style.maxHeight='65vh';old.style.zIndex='990';
+    }
+  };
+
+  function layerNameSafe(o){
+    if(typeof layerName==='function')return layerName(o);
+    return o.kind||o.type||'Element';
+  }
+  function layerItems(){
+    if(typeof canvasState==='undefined')return [];
+    return [
+      ...canvasState.objects.map(function(o){return {kind:'object',id:o.id,z:o.z||0,locked:o.locked,name:layerNameSafe(o)}}),
+      ...canvasState.vectors.map(function(v){return {kind:'vector',id:v.id,z:v.z||0,locked:v.locked,name:'Form · '+v.type}})
+    ].sort(function(a,b){return b.z-a.z});
+  }
+  function selectLayer(kind,idv){
+    if(kind==='object')selectCanvasObject(idv); else selectVector(idv);
+  }
+  window.sb74RenderLayers=function(){
+    var list=document.getElementById('sb74MobileLayerList'); if(!list)return;
+    var items=layerItems();
+    list.innerHTML=items.length?items.map(function(a){
+      return '<div class="sb74Layer" data-kind="'+a.kind+'" data-id="'+a.id+'">'+
+        '<div class="sb74LayerHandle">≡</div>'+
+        '<button class="sb74LayerName" onclick="sb74SelectLayer(\''+a.kind+'\',\''+a.id+'\')">'+(a.locked?'🔒 ':'')+String(a.name).replace(/</g,'&lt;')+'</button>'+
+        '<button class="sb74LayerTool" onclick="sb74SelectLayer(\''+a.kind+'\',\''+a.id+'\');moveSelectedLayer(1);sb74RenderLayers()">↑</button>'+
+        '<button class="sb74LayerTool" onclick="sb74SelectLayer(\''+a.kind+'\',\''+a.id+'\');moveSelectedLayer(-1);sb74RenderLayers()">↓</button>'+
+      '</div>';
+    }).join(''):'<div class="small">Noch keine Ebenen.</div>';
+    installLayerDrag();
+  };
+  window.sb74SelectLayer=function(kind,idv){selectLayer(kind,idv);sb74RenderLayers();};
+
+  function commitLayerOrder(){
+    var rows=[...document.querySelectorAll('#sb74MobileLayerList .sb74Layer')];
+    var total=rows.length;
+    rows.forEach(function(row,idx){
+      var kind=row.dataset.kind,idv=row.dataset.id;
+      var target=kind==='object'?canvasState.objects.find(function(x){return x.id===idv}):canvasState.vectors.find(function(x){return x.id===idv});
+      if(target)target.z=(total-idx)*10;
+    });
+    renderCanvasObjects();renderVectors();renderLayerList();markCanvasDirty();pushHistory();
+  }
+  function installLayerDrag(){
+    document.querySelectorAll('#sb74MobileLayerList .sb74Layer').forEach(function(row){
+      var handle=row.querySelector('.sb74LayerHandle'); if(!handle)return;
+      handle.onpointerdown=function(ev){
+        ev.preventDefault(); row.classList.add('dragging'); handle.setPointerCapture?.(ev.pointerId);
+        var move=function(e){
+          var el=document.elementFromPoint(e.clientX,e.clientY)?.closest('.sb74Layer');
+          if(el && el!==row && el.parentElement===row.parentElement){
+            var rect=el.getBoundingClientRect();
+            if(e.clientY<rect.top+rect.height/2)el.before(row);else el.after(row);
+          }
+        };
+        var up=function(e){
+          row.classList.remove('dragging');handle.releasePointerCapture?.(ev.pointerId);
+          handle.removeEventListener('pointermove',move);handle.removeEventListener('pointerup',up);handle.removeEventListener('pointercancel',up);
+          commitLayerOrder();
+        };
+        handle.addEventListener('pointermove',move);handle.addEventListener('pointerup',up);handle.addEventListener('pointercancel',up);
+      };
+    });
+  }
+
+  window.sb74ToggleLayersPanel=function(){
+    closeSheet();
+    var p=document.getElementById('sb74LayersPanel'), pg=document.getElementById('sb74PagePanel');
+    pg?.classList.remove('open');
+    p?.classList.toggle('open');
+    if(p?.classList.contains('open'))sb74RenderLayers();
+  };
+
+  // Make the old page panel closable if opened from elsewhere.
+  document.addEventListener('pointerdown',function(e){
+    if(innerWidth>899)return;
+    var top=e.target.closest('.sb74TopPopover,.sb72MobileSheet,.sb72MobileBottom,.canvasTopbar');
+    if(!top){
+      closeSheet(); sb74CloseTopPanels();
+      var old=document.getElementById('topViewMenu'); if(old)old.style.display='none';
+    }
+  });
+
+  // Keep mobile layers fresh while open.
+  setInterval(function(){
+    if(innerWidth<900 && document.getElementById('sb74LayersPanel')?.classList.contains('open'))sb74RenderLayers();
+  },700);
+
+  // Initial mobile canvas should fit the screen.
+  function initialFit(){if(innerWidth<900 && typeof fitCanvasStage==='function')setTimeout(fitCanvasStage,120);}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initialFit);else initialFit();
+})();
+</script>
+
 </body>
 </html>

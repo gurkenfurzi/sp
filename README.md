@@ -1,5 +1,12 @@
-# SchoolBloom V73 FIXED
+# SchoolBloom V74 – Mobile Editor Rework
 
-V73 fixes the fatal V72 Safari/iPhone rendering bug. The V72 UI script had accidentally been injected into V63's exported-HTML template string, so Safari closed the script early and displayed raw JavaScript on the Home page. V73 moves that UI script to the real end of the document and bumps the service-worker cache.
-
-V63 functional logic and the V72 reference-style editor UI remain in place.
+V74 keeps the V63 editor logic and reorganizes the mobile editor controls:
+- bottom bar: Text, Einfügen, Uploads, Auswahl
+- Page and Layers moved to compact top-right buttons
+- Print sits next to Save
+- Layers use a translucent floating panel and support drag-reordering
+- Text opens a compact formatting toolbar with font, size, bold/italic/underline, color, lists and one cycling alignment button
+- Formula and Graph live under Einfügen
+- Page panel contains orientation, fit-to-screen, paper style and templates / add template
+- Photos and More removed from the mobile bottom bar
+- Shortcut button removed from editor command bar
