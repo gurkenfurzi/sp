@@ -2989,40 +2989,18 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
 </style>
 
 
-<style id="v88-editor-final-polish">
-@media (max-width:899px){
-  body.editorMode .canvasQuickNav{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:5px!important;padding:8px!important}
-  body.editorMode .canvasQuickNav button{min-width:0!important;height:62px!important;padding:6px 2px!important}
-  body.editorMode .canvasQuickNav button span{font-size:8px!important}
-  body.editorMode #canvasQuickDrawer{max-height:min(61dvh,540px)!important;overflow:hidden!important;display:none!important;flex-direction:column!important}
-  body.editorMode #canvasQuickDrawer.open{display:flex!important}
-  body.editorMode #canvasQuickDrawer .mobileDrawerHead{flex:0 0 auto!important}
-  body.editorMode .mobileTextEditor{display:flex!important;flex-direction:column!important;min-height:0!important;flex:1 1 auto!important}
-  body.editorMode .mobileTextModeContent{flex:1 1 auto!important;min-height:0!important;overflow:auto!important;-webkit-overflow-scrolling:touch!important;padding:10px 2px 8px!important}
-  body.editorMode .mobileTextModeTabs{flex:0 0 auto!important;position:sticky!important;bottom:0!important;background:rgba(255,252,250,.98)!important;padding:9px 0 0!important}
-  body.editorMode .mobileTextTop{grid-template-columns:minmax(0,1.25fr) 108px repeat(4,38px)!important;gap:6px!important}
-  body.editorMode .mobileTextMiddle{grid-template-columns:44px repeat(7,minmax(0,1fr))!important;gap:6px!important}
-  .v88FontAdd{height:38px!important;border:1px solid #eadbd6!important;border-radius:11px!important;background:#fff8f6!important;color:#8d6864!important;font-size:11px!important;font-weight:950!important;display:grid!important;place-items:center!important;padding:0!important}
-  .v88FormatStrip{display:grid;gap:7px;padding-top:2px}.v88FormatTitle{font-size:8px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:#a2877d}
-  .v88FormatChips{display:flex;gap:6px;overflow:auto;padding-bottom:2px;scrollbar-width:none}.v88FormatChips::-webkit-scrollbar{display:none}
-  .v88FormatChips button{flex:0 0 auto;height:36px;border:1px solid #eadbd6;border-radius:12px;background:white;color:#725b53;padding:0 11px;font-size:9px;font-weight:850;white-space:nowrap}
-  .v88FormatActions{display:flex;gap:6px;overflow:auto}.v88FormatActions button{flex:0 0 auto;height:34px;border:1px dashed #e8cbc6;border-radius:11px;background:#fff7f5;color:#956e69;padding:0 10px;font-size:8px;font-weight:900}
-  .sbDashList{list-style:none!important;padding-left:0!important;margin:.25em 0!important}.sbDashList>li{margin:.08em 0!important}
-  .v88Zoom{position:fixed;right:14px;bottom:calc(94px + env(safe-area-inset-bottom));z-index:619;display:flex;align-items:center;gap:2px;padding:4px;background:rgba(255,252,250,.96);border:1px solid #eadbd6;border-radius:999px;box-shadow:0 10px 25px rgba(92,67,59,.09);backdrop-filter:blur(16px)}
-  .v88Zoom button{height:30px;min-width:31px;border:0;border-radius:999px;background:transparent;color:#735d55;font-weight:900;font-size:14px;padding:0 8px}.v88Zoom .label{min-width:48px;font-size:8px;color:#9b8178}
-  body.editorMode.editorDrawerOpen .v88Zoom{display:none!important} body:not(.editorMode) .v88Zoom{display:none!important}
-  body.editorMode .cobj.textObj{overflow-wrap:anywhere!important;word-break:break-word!important}
-  .v88FontManager{display:grid;gap:9px}.v88FontRow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;padding:10px 12px;border:1px solid #eadbd6;border-radius:14px;background:#fff}.v88FontRow small{display:block;color:#a0867d;font-size:8px;margin-top:2px}.v88FontRow button{height:34px;border:1px solid #f0d7d4;border-radius:10px;background:#fff7f6;color:#a7686c;font-weight:850}
-}
-@media (min-width:900px){.v88Zoom{display:none!important}}
+<style id="v91-boot-failsafe">
+html,body{background:#fff7f4;}
+@media (max-width:899px){.canvasQuickNav{grid-template-columns:repeat(5,minmax(0,1fr))!important}}
+.v91FontAdd{border:1px solid #ead2cb!important;background:#fff!important;color:#735d55!important;border-radius:12px!important;min-height:54px!important;padding:7px 10px!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:5px!important;font-weight:900!important}
+.v91TextFormats{padding:10px 2px 2px}.v91TextFormatsHead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}.v91TextFormatsHead b{font-size:12px}.v91TextFormatsHead button{border:1px solid #ead2cb;background:#fff;border-radius:10px;padding:7px 9px;color:#735d55;font-weight:800}.v91FormatScroll{display:flex;gap:7px;overflow-x:auto;padding-bottom:3px;scrollbar-width:none}.v91FormatScroll::-webkit-scrollbar{display:none}.v91FormatScroll button{flex:0 0 auto;border:1px solid #ead2cb;background:#fffaf7;border-radius:12px;padding:9px 11px;color:#735d55;font-weight:850;min-height:44px}.v91ZoomPill{position:fixed;right:12px;bottom:calc(92px + env(safe-area-inset-bottom));z-index:151;display:none;align-items:center;gap:4px;background:rgba(255,250,247,.94);border:1px solid #ead2cb;border-radius:999px;padding:5px;box-shadow:0 10px 30px rgba(110,72,65,.12);backdrop-filter:blur(14px)}body:has(#view-canvas.active) .v91ZoomPill{display:flex}.v91ZoomPill button{width:36px;height:36px;border:0;border-radius:999px;background:#fff;color:#735d55;font-weight:900}.v91ZoomPill span{min-width:47px;text-align:center;font-size:11px;font-weight:900;color:#80685f}.editorDrawerOpen .v91ZoomPill{opacity:.3;pointer-events:none}
 </style>
-
 </head>
 <body class="v57">
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 90</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 91</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -3292,7 +3270,7 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
         <div class="desktopCmdGroup desktopCmdView">
           <span class="desktopCmdLabel">Ansicht</span>
           <div class="desktopCmdButtons">
-            <button onclick="fitCanvasStage(true)" title="An Bildschirm">⊡ <span>Anpassen</span></button>
+            <button onclick="fitCanvasStage()" title="An Bildschirm">⊡ <span>Anpassen</span></button>
             <button onclick="toggleTopViewMenu()" title="Seite & Ansicht">▯ <span>Seite</span></button>
             <button onclick="openShortcutHelp()" title="Tastenkürzel">⌨ <span>Shortcuts</span></button>
           </div>
@@ -3303,7 +3281,7 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
         <div class="topViewSection">
           <b>Ansicht</b>
           <div class="topViewButtons">
-            <button onclick="fitCanvasStage(true)">⊡ An Bildschirm</button>
+            <button onclick="fitCanvasStage()">⊡ An Bildschirm</button>
             <button onclick="setCanvasZoom(.5)">50%</button>
             <button onclick="setCanvasZoom(.75)">75%</button>
             <button onclick="setCanvasZoom(1)">100%</button>
@@ -3352,7 +3330,6 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
       <input id="canvasImageInput" type="file" accept="image/*" style="display:none" onchange="if(this.files?.[0])addCanvasImage(this.files[0]);this.value=''">
       <input id="canvasCameraInput" type="file" accept="image/*" capture="environment" style="display:none" onchange="if(this.files?.[0])addCanvasImage(this.files[0]);this.value=''">
       <input id="canvasAnyFileInput" type="file" accept="image/*,.pdf,.doc,.docx,.ppt,.pptx,.txt" style="display:none" onchange="if(this.files?.[0])addCanvasFile(this.files[0]);this.value=''">
-      <input id="canvasCustomFontInput" type="file" accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2" style="display:none" onchange="if(this.files?.[0])importCustomFont(this.files[0]);this.value=''">
       <div class="canvasViewport" id="canvasViewport">
         <div class="canvasStage" id="canvasStage">
           <div class="canvasPage" id="canvasPage"></div>
@@ -3476,15 +3453,10 @@ const SCHOOLBLOOM_PLAN_WORKER="https://dry-surf-fec5.muelliaccc.workers.dev";
 
 let pdfjsLib=null;
 async function ensurePdfJs(){
- if(pdfjsLib)return pdfjsLib;
- try{
+  if(pdfjsLib)return pdfjsLib;
   pdfjsLib=await import("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs");
   pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
   return pdfjsLib;
- }catch(err){
-  console.warn("PDF.js konnte nicht geladen werden – SchoolBloom startet trotzdem.",err);
-  throw new Error("PDF-Modul momentan nicht verfügbar. Die App bleibt nutzbar; versuche die Stundenplan-Aktualisierung später erneut.");
- }
 }
 
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
@@ -3508,7 +3480,6 @@ const defaultData={
   timetable:{isPlaceholder:true,classes:["M U1"],selectedClass:"M U1",lessons:[]}
 };
 let data=load();
-normalizeAppData(data);
 let taskFilter="open";
 let selectedDay=dayCode(new Date())||"Mo";
 let timetableViewMode="current"; // current = wichtiger Plan inkl. Änderungen, basis = normaler Basisplan
@@ -3586,24 +3557,7 @@ function load(){
    return d;
  }catch{return structuredClone(defaultData)}
 }
-function normalizeAppData(d){
- if(!d||typeof d!=="object")return;
- for(const k of ["homework","tests","grades","flashcards","subjects","absences","studySessions","reminders","flashDecks","quizzes","studySheets"]){if(!Array.isArray(d[k]))d[k]=[]}
- if(!d.settings||typeof d.settings!=="object")d.settings=structuredClone(defaultData.settings);
- if(!d.customization||typeof d.customization!=="object")d.customization={theme:"blossom",compact:false};
- if(!d.economy||typeof d.economy!=="object")d.economy={coins:0,owned:["base-room"],equipped:[]};
- if(!d.lessonExtras||typeof d.lessonExtras!=="object")d.lessonExtras={};
- if(!d.canvasSheets||typeof d.canvasSheets!=="object")d.canvasSheets={};
- if(!d.timetable||typeof d.timetable!=="object")d.timetable=structuredClone(defaultData.timetable);
- if(!Array.isArray(d.timetable.lessons))d.timetable.lessons=[];
- if(!Array.isArray(d.timetable.classes))d.timetable.classes=[d.timetable.selectedClass||d.settings.className||"M U1"];
- if(!d.timetable.selectedClass)d.timetable.selectedClass=d.settings.className||d.timetable.classes[0]||"M U1";
- if(d.timetable.schedules&&typeof d.timetable.schedules!=="object")d.timetable.schedules={};
- if(d.timetable.currentSchedules&&typeof d.timetable.currentSchedules!=="object")d.timetable.currentSchedules={};
- if(d.timetable.basisSchedules&&typeof d.timetable.basisSchedules!=="object")d.timetable.basisSchedules={};
- for(const sub of d.subjects){if(sub&&typeof sub==="object")ensureSubjectShapeRaw(sub)}
-}
-function save(){normalizeAppData(data);localStorage.setItem(KEY,JSON.stringify(data));renderAll()}
+function save(){localStorage.setItem(KEY,JSON.stringify(data));renderAll()}
 function id(){return Math.random().toString(36).slice(2)+Date.now().toString(36)}
 function esc(s=""){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
 function fmtDate(s){if(!s)return"";return new Date(s+"T12:00:00").toLocaleDateString("de-DE",{day:"2-digit",month:"2-digit",year:"2-digit"})}
@@ -3913,7 +3867,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 90";
+ $("#headerEyebrow").textContent="VERSION 91";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -6535,7 +6489,7 @@ window.editorOpenGroup=function(group,btn){
  }else if(group==="pages"){
    title="Seiten";const ps=canvasState.pageStyle||{};
    html=`<div class="mobilePagePanel">
-    <div class="mobileDrawerActions rowish"><button onclick="fitCanvasStage(true)">⊡ An Bildschirm</button><button onclick="setCanvasZoom(.5)">50%</button><button onclick="setCanvasZoom(.75)">75%</button><button onclick="setCanvasZoom(1)">100%</button></div>
+    <div class="mobileDrawerActions rowish"><button onclick="fitCanvasStage()">⊡ An Bildschirm</button><button onclick="setCanvasZoom(.5)">50%</button><button onclick="setCanvasZoom(.75)">75%</button><button onclick="setCanvasZoom(1)">100%</button></div>
     <div class="mobileSubGrid"><label>Ausrichtung<select onchange="setCanvasOrientation(this.value)"><option value="portrait" ${canvasState.orientation==='portrait'?'selected':''}>Hochformat</option><option value="landscape" ${canvasState.orientation==='landscape'?'selected':''}>Querformat</option></select></label><label>Seitenfarbe<input type="color" value="${ps.color||'#ffffff'}" onchange="setCanvasPageStyle('color',this.value)"></label><label>Muster<select onchange="setCanvasPageStyle('pattern',this.value)"><option value="blank" ${ps.pattern==='blank'?'selected':''}>Leer</option><option value="lined" ${ps.pattern==='lined'?'selected':''}>Liniert</option><option value="grid" ${ps.pattern==='grid'?'selected':''}>Kariert</option><option value="dots" ${ps.pattern==='dots'?'selected':''}>Gepunktet</option></select></label><label>Rastergröße<input type="number" min="10" max="48" value="${ps.spacing||24}" onchange="setCanvasPageStyle('spacing',+this.value)"></label><label>Layout-Rand<input type="number" min="0" max="160" value="${ps.margin??55}" onchange="setCanvasPageStyle('margin',+this.value)"></label></div>
     <div class="mobileDrawerActions rowish"><button onclick="alignSelectedToPageMargin('left')">⇤ Linker Rand</button><button onclick="alignSelectedToPageMargin('right')">Rechter Rand ⇥</button><button onclick="fitSelectedToPageMargins()">↔ Bis Rand</button></div>
    </div>`;
@@ -9836,8 +9790,7 @@ window.exportData=function(){
 $("#importData").onchange=async e=>{const f=e.target.files?.[0];if(!f)return;try{data=JSON.parse(await f.text());save();alert("Backup importiert")}catch{alert("Backup konnte nicht gelesen werden.")}}
 window.resetAll=function(){if(confirm("Wirklich alle SchoolHub-Daten auf diesem Gerät löschen?")){localStorage.removeItem(KEY);location.reload()}}
 
-function renderSectionSafe(name,fn){try{fn()}catch(err){console.error("SchoolBloom render error:",name,err);if(name==="home"){const next=$("#nextPanel"),kpis=$("#homeKpis"),open=$("#homeOpen"),lessons=$("#todayLessons");if(next)next.innerHTML=`<div class="eyebrow">Heute</div><div style="font-size:23px;font-weight:900;margin-top:5px">SchoolBloom ist bereit.</div><div class="muted" style="margin-top:6px">Ein Bereich konnte gerade nicht geladen werden. Deine Daten bleiben gespeichert.</div>`;if(kpis&&!kpis.innerHTML)kpis.innerHTML=`<div class="kpi"><div class="big">${Array.isArray(data.homework)?data.homework.filter(x=>!x.done).length:0}</div><div class="small">Hausaufgaben offen</div></div><div class="kpi"><div class="big">${Array.isArray(data.tests)?data.tests.length:0}</div><div class="small">Tests</div></div><div class="kpi"><div class="big">–</div><div class="small">Notenschnitt</div></div>`;if(open&&!open.innerHTML)open.innerHTML='<div class="empty">Keine offenen Einträge.</div>';if(lessons&&!lessons.innerHTML)lessons.innerHTML='<div class="empty">Stundenplan konnte gerade nicht angezeigt werden.</div>'}}}
-function renderAll(){normalizeAppData(data);renderSectionSafe("home",renderHome);renderSectionSafe("plan",renderPlan);renderSectionSafe("tasks",renderTasks);renderSectionSafe("grades",renderGrades);renderSectionSafe("study",renderStudy);renderSectionSafe("subjects",renderSubjects);renderSectionSafe("absence",renderAbsence);renderSectionSafe("settings",renderSettings);renderSectionSafe("learnsets",renderLearnsetsLists);if(selectedSubjectId)renderSectionSafe("subject-detail",renderSubjectDetail);if(selectedTopicId)renderSectionSafe("topic-detail",renderTopicDetail);if(selectedDeckId)renderSectionSafe("deck-detail",renderDeckDetail);if(selectedQuizId&&quizSession)renderSectionSafe("quiz-player",renderQuizPlayer)}
+function renderAll(){renderHome();renderPlan();renderTasks();renderGrades();renderStudy();renderSubjects();renderAbsence();renderSettings();renderLearnsetsLists();if(selectedSubjectId)renderSubjectDetail();if(selectedTopicId)renderTopicDetail();if(selectedDeckId)renderDeckDetail();if(selectedQuizId&&quizSession)renderQuizPlayer()}
 applyCustomization();renderTimer();renderAll();
 if(localStorage.getItem("schoolbloom-plan-parser-version")!=="17"){localStorage.setItem("schoolbloom-plan-parser-version","17");setTimeout(()=>loadRemotePlan(),300)}
 
@@ -10764,163 +10717,112 @@ if(localStorage.getItem("schoolbloom-plan-parser-version")!=="42"){
  localStorage.setItem("schoolbloom-plan-parser-version","42");
  setTimeout(()=>loadRemotePlan(true),250);
 }
-if("serviceWorker"in navigator&&location.protocol.startsWith("http")){
- navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"}).then(reg=>{
-   reg.update().catch(()=>{});
-   if(reg.waiting)reg.waiting.postMessage({type:"SKIP_WAITING"});
-   reg.addEventListener("updatefound",()=>{
-     const nw=reg.installing;
-     nw?.addEventListener("statechange",()=>{
-       if(nw.state==="installed"&&navigator.serviceWorker.controller)nw.postMessage({type:"SKIP_WAITING"});
-     });
-   });
- }).catch(()=>{});
- navigator.serviceWorker.addEventListener("controllerchange",()=>{
-   if(!sessionStorage.getItem("sb-sw-reloaded")){
-     sessionStorage.setItem("sb-sw-reloaded","1");
-     location.reload();
-   }
- });
+if("serviceWorker" in navigator && location.protocol.startsWith("http")){
+  window.addEventListener("load",()=>{
+    navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"})
+      .then(reg=>reg.update().catch(()=>{}))
+      .catch(()=>{});
+  },{once:true});
 }
 
 
-/* ===== V88 editor cleanup: text formats inside Text, font upload, stable lists, zoom and chrome ===== */
-const V88_FONT_META='schoolbloom-custom-font-meta-v88';
-const V88_FONT_DB='schoolbloom-user-assets-v88';
-const V88_FONT_STORE='fonts';
-function v88Esc(v){return String(v??'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]||c))}
-function v88FontMeta(){try{return JSON.parse(localStorage.getItem(V88_FONT_META)||'[]')}catch(_){return[]}}
-function v88SaveFontMeta(a){localStorage.setItem(V88_FONT_META,JSON.stringify(a||[]))}
-function v88OpenFontDB(){return new Promise((res,rej)=>{const r=indexedDB.open(V88_FONT_DB,1);r.onupgradeneeded=()=>{const db=r.result;if(!db.objectStoreNames.contains(V88_FONT_STORE))db.createObjectStore(V88_FONT_STORE)};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
-async function v88FontPut(id,blob){const db=await v88OpenFontDB();return new Promise((res,rej)=>{const tx=db.transaction(V88_FONT_STORE,'readwrite');tx.objectStore(V88_FONT_STORE).put(blob,id);tx.oncomplete=()=>{db.close();res()};tx.onerror=()=>{db.close();rej(tx.error)}})}
-async function v88FontGet(id){const db=await v88OpenFontDB();return new Promise((res,rej)=>{const tx=db.transaction(V88_FONT_STORE,'readonly'),r=tx.objectStore(V88_FONT_STORE).get(id);r.onsuccess=()=>{db.close();res(r.result||null)};r.onerror=()=>{db.close();rej(r.error)}})}
-async function v88FontDel(id){const db=await v88OpenFontDB();return new Promise((res,rej)=>{const tx=db.transaction(V88_FONT_STORE,'readwrite');tx.objectStore(V88_FONT_STORE).delete(id);tx.oncomplete=()=>{db.close();res()};tx.onerror=()=>{db.close();rej(tx.error)}})}
-async function v88RegisterFont(meta,blob){if(!blob)return false;try{const face=new FontFace(meta.family,await blob.arrayBuffer());await face.load();document.fonts.add(face);return true}catch(e){console.warn('custom font',e);return false}}
-window.loadCustomFonts=async function(){for(const m of v88FontMeta()){try{await v88RegisterFont(m,await v88FontGet(m.id))}catch(e){console.warn(e)}}}
-window.openCustomFontPicker=function(){document.getElementById('canvasCustomFontInput')?.click()}
-window.importCustomFont=async function(file){
-  if(!file)return;if(file.size>12*1024*1024){cuteToast('Schriftdatei zu groß (max. 12 MB) ♡');return}
-  const base=(file.name||'Eigene Schrift').replace(/\.(ttf|otf|woff2?)$/i,'').trim()||'Eigene Schrift';
-  const name=(prompt('Wie soll die Schrift heißen?',base)||'').trim();if(!name)return;
-  const idv='f'+Date.now()+Math.random().toString(36).slice(2,7),family='SB_'+idv;
-  const meta={id:idv,family,name,fileName:file.name,created:Date.now()};
-  try{await v88FontPut(idv,file);if(!await v88RegisterFont(meta,file))throw new Error('FontFace');const a=v88FontMeta();a.push(meta);v88SaveFontMeta(a);cuteToast('Schrift „'+name+'“ hinzugefügt ♡');mobileRefreshTextMode?.();renderCanvasInspector?.()}catch(e){console.error(e);cuteToast('Schrift konnte nicht geladen werden.')}
-}
-window.openCustomFontManager=function(){const a=v88FontMeta();openModal(`<div class="v88FontManager"><div class="presetModalHead"><div><span class="eyebrow">SCHRIFTEN</span><h2>Eigene Schriften</h2></div><button class="miniIcon" onclick="closeModal()">×</button></div>${a.length?a.map(m=>`<div class="v88FontRow"><div><b style="font-family:${m.family}">${v88Esc(m.name)}</b><small>${v88Esc(m.fileName)}</small></div><button onclick="deleteCustomFont('${m.id}')">Löschen</button></div>`).join(''):'<div class="managerEmpty">Noch keine eigene Schrift.</div>'}<button class="primary" onclick="closeModal();openCustomFontPicker()">＋ Schrift hinzufügen</button></div>`)}
-window.deleteCustomFont=async function(idv){const a=v88FontMeta();await v88FontDel(idv);v88SaveFontMeta(a.filter(x=>x.id!==idv));closeModal();cuteToast('Schrift entfernt ♡')}
-function v88FontOptions(current){const built=['Arial','Lato','Playfair Display','Georgia','Verdana','Trebuchet MS','Times New Roman','Courier New'];return [...built.map(f=>`<option value="${f}" ${current===f?'selected':''}>${f}</option>`),...v88FontMeta().map(m=>`<option value="${m.family}" ${current===m.family?'selected':''}>✦ ${v88Esc(m.name)}</option>`)].join('')}
+/* ===== V91 RECOVERY + SAFE EDITOR ENHANCEMENTS ===== */
+window.__schoolBloomBooted=true;
+try{
+  const V91_FONTS_KEY="schoolbloom-v91-custom-fonts";
+  function v91StoredFonts(){try{return JSON.parse(localStorage.getItem(V91_FONTS_KEY)||"[]")}catch(_){return []}}
+  function v91InstallFont(font){
+    if(!font?.name||!font?.data)return;
+    const sid="v91-font-"+font.name.replace(/[^a-z0-9_-]/gi,"-");
+    if(document.getElementById(sid))return;
+    const st=document.createElement("style");st.id=sid;
+    st.textContent=`@font-face{font-family:${JSON.stringify(font.name)};src:url(${JSON.stringify(font.data)});font-display:swap}`;
+    document.head.appendChild(st);
+  }
+  window.v91LoadFonts=function(){v91StoredFonts().forEach(v91InstallFont)};
+  window.v91PickFont=function(){
+    const inp=document.createElement("input");inp.type="file";inp.accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2";
+    inp.onchange=()=>{
+      const f=inp.files?.[0];if(!f)return;
+      if(f.size>1600000){alert("Die Schrift ist zu groß. Bitte eine Datei unter ca. 1,6 MB verwenden.");return}
+      const reader=new FileReader();reader.onload=()=>{
+        const clean=(f.name||"Eigene Schrift").replace(/\.(ttf|otf|woff2?|TTF|OTF|WOFF2?)$/,'').trim()||"Eigene Schrift";
+        const arr=v91StoredFonts().filter(x=>x.name!==clean);arr.push({name:clean,data:String(reader.result)});
+        try{localStorage.setItem(V91_FONTS_KEY,JSON.stringify(arr));v91InstallFont(arr.at(-1));mobileRefreshTextMode?.();cuteToast?.("Schrift hinzugefügt ♡")}catch(e){alert("Die Schrift konnte nicht gespeichert werden. Versuche eine kleinere Font-Datei.")}
+      };reader.readAsDataURL(f);
+    };inp.click();
+  };
+  v91LoadFonts();
 
-function v88PresetChips(){return canvasPresets().map(x=>`<button onclick="${x.bundle?`insertSavedTextFormat('${x.id}')`:`addCanvasText('${x.id}')`}">${v88Esc(x.name)}</button>`).join('')}
-function v88FormatsBlock(){return `<div class="v88FormatStrip"><div class="v88FormatTitle">Textformate</div><div class="v88FormatChips">${v88PresetChips()}</div><div class="v88FormatActions"><button onclick="saveSelectionAsTextFormat()">＋ Auswahl als Textformat</button><button onclick="createCustomStylePreset()">＋ Eigenes Format</button><button onclick="openTextFormatManager()">⚙ Verwalten</button></div></div>`}
+  const v91BaseTextModeContent=mobileTextModeContentHTML;
+  mobileTextModeContentHTML=function(kind){
+    let out=v91BaseTextModeContent(kind);
+    if(kind!=="text")return out;
+    const fonts=v91StoredFonts();
+    // Textfarbe is intentionally only under “Aussehen”; this spot becomes Add Font.
+    out=out.replace(/<label class="mobileColorDot"[\s\S]*?<\/label>/,
+      `<button class="v91FontAdd" onclick="v91PickFont()">Aa+ <span>Schrift</span></button>`);
+    if(fonts.length){
+      const opts=fonts.map(f=>`<option value="${esc(f.name)}">${esc(f.name)}</option>`).join("");
+      out=out.replace(/<\/select>/,opts+"</select>");
+    }
+    return out;
+  };
 
-mobileTextControlsHTML=function(){
- const o=mobileSelectedText();
- if(!o){return `<div class="mobileDrawerSection"><div class="mobileDrawerTitle">Text hinzufügen</div><div class="mobileToolGrid">${canvasPresets().filter(x=>!x.bundle).map(x=>`<button onclick="addCanvasText('${x.id}')"><b>${x.id==='h1'?'H1':x.id==='h2'?'H2':x.id==='task'?'✓':x.id==='merke'?'!':'Aa'}</b><span>${v88Esc(x.name)}</span></button>`).join('')}</div>${v88FormatsBlock()}</div>`}
- return `<div class="mobileTextEditor"><div id="mobileTextModeContent" class="mobileTextModeContent">${mobileTextModeContentHTML('text')}</div><div class="mobileTextModeTabs" role="tablist" aria-label="Text-Werkzeuge"><button class="on" data-mode="text" onclick="mobileTextMode('text',this)"><b>T</b><span>Text</span></button><button data-mode="appearance" onclick="mobileTextMode('appearance',this)"><b>◉</b><span>Aussehen</span></button><button data-mode="spacing" onclick="mobileTextMode('spacing',this)"><b>Vᴬ</b><span>Abstand</span></button><button data-mode="position" onclick="mobileTextMode('position',this)"><b>⌗</b><span>Position</span></button><button data-mode="effects" onclick="mobileTextMode('effects',this)"><b>✦</b><span>Effekte</span></button></div></div>`
-}
+  const v91BaseTextControls=mobileTextControlsHTML;
+  mobileTextControlsHTML=function(){
+    let out=v91BaseTextControls();
+    const custom=canvasPresets().filter(x=>!canvasStylesDefault.some(d=>d.id===x.id));
+    const section=`<div class="v91TextFormats"><div class="v91TextFormatsHead"><b>Textformate</b><button onclick="openTextFormatManager()">Verwalten</button></div><div class="v91FormatScroll">${canvasStylesDefault.map(x=>`<button onclick="addCanvasText('${x.id}')">${esc(x.name)}</button>`).join("")}${custom.map(x=>`<button onclick="${x.bundle?`insertSavedTextFormat('${x.id}')`:`addCanvasText('${x.id}')`}">${esc(x.name||'Eigenes Format')}</button>`).join("")}<button onclick="createCustomStylePreset()">＋ Eigenes</button></div></div>`;
+    return out+section;
+  };
 
-mobileTextModeContentHTML=function(kind){
- const o=mobileSelectedText();if(!o)return '';
- const st=o.style||{};
- if(kind==='text'){
-   const ff=st.fontFamily||'Arial',fs=st.fontSize||16,ta=st.textAlign||'left';
-   return `<div class="mobileTextBar"><div class="mobileTextTop"><select onchange="applyTextProperty('fontFamily',this.value)">${v88FontOptions(ff)}</select><div class="mobileSizeStep"><button onclick="mobileFontStep(-1)">−</button><input id="mobileFontSize" type="number" min="6" max="180" value="${fs}" onchange="applyTextProperty('fontSize',+this.value)"><button onclick="mobileFontStep(1)">＋</button></div><button onclick="formatSelectedText('bold')"><b>B</b></button><button onclick="formatSelectedText('italic')"><i>I</i></button><button onclick="formatSelectedText('underline')"><u>U</u></button><button onclick="formatSelectedText('strikeThrough')"><s>S</s></button></div><div class="mobileTextMiddle"><button class="v88FontAdd" onclick="openCustomFontPicker()" title="Eigene Schrift hinzufügen">Aa＋</button><button class="${ta==='left'?'on':''}" onclick="applyTextProperty('textAlign','left');mobileRefreshTextMode()">≡</button><button class="${ta==='center'?'on':''}" onclick="applyTextProperty('textAlign','center');mobileRefreshTextMode()">≣</button><button class="${ta==='right'?'on':''}" onclick="applyTextProperty('textAlign','right');mobileRefreshTextMode()">≡</button><button class="${ta==='justify'?'on':''}" onclick="applyTextProperty('textAlign','justify');mobileRefreshTextMode()">☷</button><button onclick="applyTextList('bullet')" title="Punkte">•≡</button><button onclick="applyTextList('number')" title="Nummern">1≡</button><button onclick="applyTextList('dash')" title="Striche">–≡</button></div>${v88FormatsBlock()}</div>`;
- }
- if(kind==='appearance')return `<div class="mobileModeSection"><div class="mobileModeIntro"><b>Aussehen</b><span>Textfarbe, Fläche, Kontur, Verlauf und Transparenz.</span></div><div class="mobileSubGrid"><label>Textfarbe<input type="color" value="${st.color||'#7a5f57'}" onchange="applyTextProperty('color',this.value)"></label><label>Hintergrund<input type="color" value="${st.background&&st.background!=='transparent'?st.background:'#ffffff'}" onchange="updateObjStyle('background',this.value)"></label><label>Kontur<input type="color" value="${st.borderColor||'#e5aaa9'}" onchange="updateObjStyle('borderColor',this.value)"></label><label>Dicke<input type="number" min="0" max="20" value="${st.borderWidth||0}" onchange="updateObjStyle('borderWidth',+this.value)"></label><label>Linie<select onchange="updateObjStyle('borderStyle',this.value)"><option value="solid" ${(!st.borderStyle||st.borderStyle==='solid')?'selected':''}>Durchgezogen</option><option value="dashed" ${st.borderStyle==='dashed'?'selected':''}>Gestrichelt</option><option value="dotted" ${st.borderStyle==='dotted'?'selected':''}>Gepunktet</option></select></label><label>Transparenz<input type="range" min="0" max="100" value="${Math.round((st.opacity??1)*100)}" oninput="updateObjStyle('opacity',+this.value/100)"></label><button onclick="mobileGradient()">Verlauf</button><button onclick="updateObjStyle('background','transparent')">Fläche aus</button></div></div>`;
- if(kind==='spacing')return `<div class="mobileModeSection"><div class="mobileModeIntro"><b>Abstand</b><span>Buchstaben, Zeilen und Innenabstände.</span></div><div class="mobileSubGrid"><label>Buchstaben<input type="number" step=".5" value="${st.letterSpacing||0}" onchange="updateObjStyle('letterSpacing',+this.value)"></label><label>Zeilenhöhe<input type="number" step=".05" min=".8" max="3" value="${st.lineHeight||1.25}" onchange="updateObjStyle('lineHeight',+this.value)"></label><label>Innenabstand<input type="number" min="0" max="80" value="${st.padding??7}" onchange="updateObjStyle('padding',+this.value)"></label><label>Eckenradius<input type="number" min="0" max="80" value="${st.borderRadius||0}" onchange="updateObjStyle('borderRadius',+this.value)"></label></div></div>`;
- if(kind==='position')return `<div class="mobileModeSection"><div class="mobileModeIntro"><b>Position</b><span>Größe und Ausrichtung.</span></div><div class="mobileSubGrid"><label>X<input type="number" value="${Math.round(o.x)}" onchange="setSelectedGeometry('x',+this.value)"></label><label>Y<input type="number" value="${Math.round(o.y)}" onchange="setSelectedGeometry('y',+this.value)"></label><label>Breite<input type="number" value="${Math.round(o.w)}" onchange="setSelectedGeometry('w',+this.value)"></label><label>Höhe<input type="number" value="${Math.round(o.h)}" onchange="setSelectedGeometry('h',+this.value)"></label><button onclick="alignSelected('centerX')">Horizontal mittig</button><button onclick="alignSelected('centerY')">Vertikal mittig</button></div></div>`;
- if(kind==='effects')return `<div class="mobileModeSection"><div class="mobileModeIntro"><b>Effekte</b><span>Schatten und Tiefe.</span></div><div class="mobileSubGrid"><label>Schatten Blur<input id="mobileShadowBlur" type="number" min="0" max="60" value="14"></label><label>Schatten Y<input id="mobileShadowY" type="number" min="-30" max="30" value="5"></label><button onclick="mobileApplyShadow()">Schatten an</button><button onclick="updateObjStyle('boxShadow','none')">Schatten aus</button></div></div>`;
- return '';
-}
+  // Lists work from a selected text box even when the user did not highlight its text.
+  const v91BaseFormatSelectedText=window.formatSelectedText;
+  window.formatSelectedText=function(cmd){
+    const el=document.querySelector(`.cobj[data-id="${canvasState.selectedId}"]`);
+    if(el && el.isContentEditable && ["insertUnorderedList","insertOrderedList"].includes(cmd)){
+      const sel=window.getSelection();
+      const inside=sel&&sel.rangeCount&&el.contains(sel.anchorNode);
+      if(!inside){
+        el.focus();const r=document.createRange();r.selectNodeContents(el);sel.removeAllRanges();sel.addRange(r);
+      }
+    }
+    return v91BaseFormatSelectedText(cmd);
+  };
+  const v91BaseDash=window.mobileDashList;
+  window.mobileDashList=function(){
+    const el=document.querySelector(`.cobj[data-id="${canvasState.selectedId}"]`);
+    if(el&&el.isContentEditable){const sel=window.getSelection();if(!(sel&&sel.rangeCount&&el.contains(sel.anchorNode))){el.focus();const r=document.createRange();r.selectNodeContents(el);sel.removeAllRanges();sel.addRange(r)}}
+    return v91BaseDash();
+  };
 
-// Lists apply to the selected text object directly; highlighting text is never required.
-function v88TextLines(html){const d=document.createElement('div');d.innerHTML=html||'';const direct=[...d.querySelectorAll(':scope > ul > li,:scope > ol > li')];if(direct.length)return direct.map(li=>(li.innerText||li.textContent||'').replace(/^\s*[–-]\s*/,''));const text=(d.innerText||d.textContent||'').replace(/\r/g,'');const lines=text.split(/\n+/).map(x=>x.trim()).filter(Boolean);return lines.length?lines:['Text']}
-window.applyTextList=function(type){
- const o=mobileSelectedText();if(!o){cuteToast('Wähle zuerst ein Textfeld ♡');return}
- const lines=v88TextLines(o.text);const d=document.createElement('div');d.innerHTML=o.text||'';const first=d.firstElementChild;
- const same=(type==='bullet'&&first?.tagName==='UL'&&!first.classList.contains('sbDashList'))||(type==='number'&&first?.tagName==='OL')||(type==='dash'&&first?.classList.contains('sbDashList'));
- if(same)o.text=lines.map(x=>`<div>${v88Esc(x)||'<br>'}</div>`).join('');
- else if(type==='number')o.text=`<ol>${lines.map(x=>`<li>${v88Esc(x)}</li>`).join('')}</ol>`;
- else if(type==='dash')o.text=`<ul class="sbDashList">${lines.map(x=>`<li>– ${v88Esc(x)}</li>`).join('')}</ul>`;
- else o.text=`<ul>${lines.map(x=>`<li>${v88Esc(x)}</li>`).join('')}</ul>`;
- renderCanvasObjects();renderCanvasInspector();markCanvasDirty();pushHistory();window.mobileRefreshTextMode?.();
-}
-window.mobileDashList=function(){window.applyTextList('dash')}
+  // Manual zoom stays manual. Focusing / editing text never forces another auto-fit.
+  const v91BaseSetZoom=window.setCanvasZoom;
+  window.v91ZoomBy=function(delta){v91BaseSetZoom(Math.max(.3,Math.min(2.25,canvasZoom+Number(delta||0))));v91UpdateZoomLabel()};
+  window.v91Fit=function(){canvasState.userZoomTouched=false;fitCanvasStage();setTimeout(v91UpdateZoomLabel,0)};
+  function v91UpdateZoomLabel(){const x=document.getElementById('v91ZoomLabel');if(x)x.textContent=Math.round((canvasZoom||1)*100)+'%'}
+  document.addEventListener('focusin',e=>{if(e.target?.closest?.('#canvasViewport') && e.target.closest('[contenteditable="true"]'))canvasState.userZoomTouched=true},true);
+  const vp=document.getElementById('canvasViewport');
+  if(vp){
+    let pinch=null;
+    vp.addEventListener('touchstart',e=>{if(e.touches.length===2){const [a,b]=e.touches;pinch={d:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),z:canvasZoom};canvasState.userZoomTouched=true}}, {passive:true});
+    vp.addEventListener('touchmove',e=>{if(pinch&&e.touches.length===2){const [a,b]=e.touches,d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);v91BaseSetZoom(Math.max(.3,Math.min(2.25,pinch.z*(d/pinch.d))));v91UpdateZoomLabel();e.preventDefault()}}, {passive:false});
+    vp.addEventListener('touchend',e=>{if(e.touches.length<2)pinch=null},{passive:true});
+  }
 
-// Text formats live under Text now; legacy format calls redirect there.
-const v88EditorOpenGroup=window.editorOpenGroup;
-window.editorOpenGroup=function(group,btn){if(group==='formats')group='text';return v88EditorOpenGroup(group,btn||document.querySelector('.canvasQuickNav [data-group="text"]'))}
+  // Drawer close always restores the main editor strip; this fixes the “no bar after editing a format” state.
+  const v91BaseCloseDrawer=window.closeEditorDrawer;
+  window.closeEditorDrawer=function(){const r=v91BaseCloseDrawer();const nav=document.querySelector('.canvasQuickNav');if(nav){nav.style.removeProperty('display');nav.style.removeProperty('visibility');nav.style.removeProperty('opacity')}return r};
 
-// Fix the disappearing bottom bar after a text-format modal / style modal closes.
-const v88OpenModal=openModal;
-openModal=function(html){document.body.classList.remove('editorDrawerOpen');const d=document.getElementById('canvasQuickDrawer');if(d){d.classList.remove('open');d.innerHTML=''}openEditorGroup=null;return v88OpenModal(html)}
-const v88CloseModal=window.closeModal;
-window.closeModal=function(){const r=v88CloseModal?.();setTimeout(v88HealEditorChrome,0);return r}
-function v88HealEditorChrome(){
- const body=document.body,editor=body.classList.contains('editorMode'),drawer=document.getElementById('canvasQuickDrawer');
- if(!editor){
-   if(body.classList.contains('editorDrawerOpen'))body.classList.remove('editorDrawerOpen');
-   return;
- }
- if(!drawer?.classList.contains('open')){
-   if(body.classList.contains('editorDrawerOpen'))body.classList.remove('editorDrawerOpen');
-   document.querySelectorAll('.canvasQuickNav button').forEach(b=>b.classList.remove('active'));
- }
-}
-const v90ChromeObserver=new MutationObserver(()=>v88HealEditorChrome());
-v90ChromeObserver.observe(document.body,{attributes:true,attributeFilter:['class']});
-document.addEventListener('click',()=>setTimeout(v88HealEditorChrome,0),true);
-
-// One zoom system only; user zoom survives keyboard/rotation, initial editor open still fits to width.
-let v88Typing=false,v88Pinch=null;
-function v88IsTyping(){const a=document.activeElement;return !!(a&&(a.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)))}
-window.setCanvasZoom=function(value,opts={}){const stage=document.getElementById('canvasStage'),page=document.getElementById('canvasPage');if(!stage)return;const z=Math.max(.25,Math.min(2.5,Number(value)||1));canvasZoom=z;if(opts.user!==false)canvasState.userZoomTouched=true;stage.dataset.scale=String(z);stage.style.zoom=String(z);stage.style.transform='none';if(page){page.style.transform='none';page.style.transformOrigin='top center'}v88UpdateZoomLabel()}
-fitCanvasToScreen=window.fitCanvasToScreen=function(){const vp=document.getElementById('canvasViewport');if(!vp)return;const z=Math.min(1,Math.max(.25,(vp.clientWidth-20)/canvasPageWidth()));window.setCanvasZoom(z,{user:false});return z}
-window.fitCanvasStage=function(force=false){if(!force&&(v88IsTyping()||canvasState.userZoomTouched))return;fitCanvasToScreen();if(force)canvasState.userZoomTouched=true;const vp=document.getElementById('canvasViewport');if(vp){vp.scrollLeft=0;vp.scrollTop=0}}
-window.canvasZoomBy=function(delta){window.setCanvasZoom(Number(canvasZoom||1)+Number(delta||0),{user:true})}
-function v88UpdateZoomLabel(){const t=Math.round(Number(canvasZoom||1)*100)+'%';const x=document.getElementById('v88ZoomLabel');if(x)x.textContent=t;const y=document.getElementById('canvasZoomLabel');if(y)y.textContent=t}
-function v88EnsureZoom(){if(document.getElementById('v88Zoom'))return;const z=document.createElement('div');z.id='v88Zoom';z.className='v88Zoom';z.innerHTML='<button onclick="canvasZoomBy(-.1)">−</button><button id="v88ZoomLabel" class="label" onclick="fitCanvasStage(true)">100%</button><button onclick="canvasZoomBy(.1)">＋</button>';document.body.appendChild(z);v88UpdateZoomLabel()}
-function v88Dist(t){return Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY)}
-function v88BindPinch(){const vp=document.getElementById('canvasViewport');if(!vp||vp.dataset.v88Pinch)return;vp.dataset.v88Pinch='1';vp.addEventListener('touchstart',e=>{if(e.touches.length===2){v88Pinch={d:v88Dist(e.touches),z:Number(canvasZoom||1)};canvasState.userZoomTouched=true}},{passive:true});vp.addEventListener('touchmove',e=>{if(!v88Pinch||e.touches.length!==2)return;if(e.cancelable)e.preventDefault();window.setCanvasZoom(v88Pinch.z*(v88Dist(e.touches)/Math.max(1,v88Pinch.d)),{user:true})},{passive:false});vp.addEventListener('touchend',e=>{if(e.touches.length<2)v88Pinch=null},{passive:true});vp.addEventListener('touchcancel',()=>v88Pinch=null,{passive:true})}
-
-document.addEventListener('focusin',()=>{v88Typing=v88IsTyping()});document.addEventListener('focusout',()=>setTimeout(()=>{v88Typing=v88IsTyping()},60));
-window.visualViewport?.addEventListener('resize',()=>{if(!document.body.classList.contains('editorMode')||v88IsTyping()||canvasState.userZoomTouched)return;fitCanvasToScreen()});
-
-const v88RenderSheetEditor=renderSheetEditor;
-renderSheetEditor=function(){canvasState.userZoomTouched=false;const r=v88RenderSheetEditor();setTimeout(()=>{v88EnsureZoom();v88BindPinch();window.loadCustomFonts?.();v88HealEditorChrome();if(!canvasState.userZoomTouched)fitCanvasToScreen()},120);return r}
-
-// Desktop font selectors also receive user fonts.
-const v88RenderInspector=renderCanvasInspector;
-renderCanvasInspector=function(){const r=v88RenderInspector();setTimeout(()=>{document.querySelectorAll('#canvasInspector select[onchange*="fontFamily"],#presetFont').forEach(sel=>{const cur=sel.value,known=new Set([...sel.options].map(o=>o.value));for(const m of v88FontMeta())if(!known.has(m.family)){const o=document.createElement('option');o.value=m.family;o.textContent='✦ '+m.name;sel.appendChild(o)}if(cur)sel.value=cur})},0);return r}
-
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{v88EnsureZoom();window.loadCustomFonts?.();v88HealEditorChrome()},{once:true});else{v88EnsureZoom();window.loadCustomFonts?.();v88HealEditorChrome()}
-/* ===== /V88 ===== */
-/* ===== V90 home clock ===== */
-let v90HomeClockTimer=null;
-function v90EnsureHomeClockTimer(){
- if(v90HomeClockTimer)return;
- v90HomeClockTimer=setInterval(()=>{
-   const homeView=document.querySelector('#view-home');
-   if(homeView&&!homeView.classList.contains('hidden')){try{renderHome()}catch(e){console.warn('Home clock refresh',e)}}
- },30000);
-}
-v90EnsureHomeClockTimer();
-/* ===== /V90 home clock ===== */
-
-
-
-window.__schoolBloomBooted=true;document.documentElement.dataset.schoolbloomBoot='ok';
+  const zoom=document.createElement('div');zoom.className='v91ZoomPill';zoom.innerHTML='<button onclick="v91ZoomBy(-.1)">−</button><span id="v91ZoomLabel">100%</span><button onclick="v91ZoomBy(.1)">＋</button><button onclick="v91Fit()">⊡</button>';document.body.appendChild(zoom);v91UpdateZoomLabel();
+}catch(e){console.warn('V91 editor enhancement skipped safely:',e)}
+/* ===== /V91 ===== */
 </script>
 
-<script id="v90-boot-watchdog">
-window.__schoolBloomBootErrors=[];
-window.addEventListener('error',e=>{try{window.__schoolBloomBootErrors.push(String(e.message||e.error||'Script error'))}catch(_){}});
-window.addEventListener('unhandledrejection',e=>{try{window.__schoolBloomBootErrors.push(String(e.reason?.message||e.reason||'Promise error'))}catch(_){}});
-setTimeout(()=>{
- if(window.__schoolBloomBooted)return;
- const p=document.getElementById('nextPanel');
- if(p&&!p.textContent.trim())p.innerHTML='<div class="eyebrow">STARTFEHLER</div><div style="font-size:20px;font-weight:900;margin-top:6px">SchoolBloom konnte nicht starten.</div><div class="muted" style="margin-top:6px">Diagnose: '+((window.__schoolBloomBootErrors||[]).slice(-2).join(' · ')||'unbekannt')+'</div>';
-},1800);
+<script id="v91-fallback">
+window.addEventListener('error',e=>console.warn('SchoolBloom error:',e.message));
+setTimeout(()=>{if(!window.__schoolBloomBooted){document.documentElement.style.background='#fff7f4';document.body.style.background='#fff7f4';}},1800);
 </script>
 </body>
 </html>
