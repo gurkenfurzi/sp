@@ -2995,12 +2995,37 @@ html,body{background:#fff7f4;}
 .v91FontAdd{border:1px solid #ead2cb!important;background:#fff!important;color:#735d55!important;border-radius:12px!important;min-height:54px!important;padding:7px 10px!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:5px!important;font-weight:900!important}
 .v91TextFormats{padding:10px 2px 2px}.v91TextFormatsHead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}.v91TextFormatsHead b{font-size:12px}.v91TextFormatsHead button{border:1px solid #ead2cb;background:#fff;border-radius:10px;padding:7px 9px;color:#735d55;font-weight:800}.v91FormatScroll{display:flex;gap:7px;overflow-x:auto;padding-bottom:3px;scrollbar-width:none}.v91FormatScroll::-webkit-scrollbar{display:none}.v91FormatScroll button{flex:0 0 auto;border:1px solid #ead2cb;background:#fffaf7;border-radius:12px;padding:9px 11px;color:#735d55;font-weight:850;min-height:44px}.v91ZoomPill{position:fixed;right:12px;bottom:calc(92px + env(safe-area-inset-bottom));z-index:151;display:none;align-items:center;gap:4px;background:rgba(255,250,247,.94);border:1px solid #ead2cb;border-radius:999px;padding:5px;box-shadow:0 10px 30px rgba(110,72,65,.12);backdrop-filter:blur(14px)}body:has(#view-canvas.active) .v91ZoomPill{display:flex}.v91ZoomPill button{width:36px;height:36px;border:0;border-radius:999px;background:#fff;color:#735d55;font-weight:900}.v91ZoomPill span{min-width:47px;text-align:center;font-size:11px;font-weight:900;color:#80685f}.editorDrawerOpen .v91ZoomPill{opacity:.3;pointer-events:none}
 </style>
+
+<style id="v92-editor-polish">
+@media (max-width:899px){
+ body.editorMode .canvasQuickNav{gap:6px!important;padding:7px 8px!important;border-radius:24px!important}
+ body.editorMode .canvasQuickNav button{font-size:inherit!important;gap:4px!important}
+ body.editorMode .canvasQuickNav .editorNavIcon{width:24px;height:24px;display:grid;place-items:center;color:#765d55}
+ body.editorMode .canvasQuickNav .editorNavIcon svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+ body.editorMode .canvasQuickNav button.active .editorNavIcon{color:#a66f73}
+ .mobileTextLibrary{padding:2px 2px 8px!important}
+ .mobileLibraryHead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:2px 2px 11px}
+ .mobileLibraryHead>div{display:grid;gap:2px}.mobileLibraryHead b{font-size:16px;color:#6f5850}.mobileDrawerKicker{font-size:8px;font-weight:900;letter-spacing:.17em;color:#b58e86}
+ .mobileLibraryHead>button{border:1px solid #ead3cd;background:#fff;border-radius:12px;padding:8px 11px;color:#725b53;font-size:10px;font-weight:850}
+ .mobileFormatGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .mobileFormatCard{min-width:0!important;min-height:88px!important;border:1px solid #ead7d1!important;background:linear-gradient(180deg,#fff,#fffaf7)!important;border-radius:18px!important;padding:10px!important;display:grid!important;grid-template-columns:42px 1fr!important;grid-template-rows:auto auto!important;align-items:center!important;text-align:left!important;gap:2px 8px!important;box-shadow:0 5px 14px rgba(108,75,67,.045)!important}
+ .mobileFormatPreview{grid-row:1/3;width:42px;height:42px;border-radius:13px;background:#f9e9e6;display:grid;place-items:center;font-size:18px}
+ .mobileFormatName{font-size:11px;font-weight:900;color:#6e5750;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mobileFormatCard small{font-size:8px;color:#aa8f87}
+ .v92FormatManager{display:grid;gap:12px}.v92FormatManagerGrid{display:grid;gap:8px;max-height:52dvh;overflow:auto;padding:1px 2px 4px}
+ .v92FormatManagerCard{border:1px solid #ead6d0;background:#fffdfb;border-radius:17px;padding:8px;display:grid;grid-template-columns:1fr;gap:7px}
+ .v92FormatInsert{border:0!important;background:transparent!important;display:grid!important;grid-template-columns:44px 1fr!important;align-items:center!important;text-align:left!important;gap:9px!important;padding:2px!important;color:#705951!important}
+ .v92FormatGlyph{width:44px;height:44px;border-radius:13px;background:#f8e6e4;display:grid;place-items:center;font-size:18px}.v92FormatInsert b{display:block;font-size:12px}.v92FormatInsert small{display:block;font-size:8px;color:#aa8d84;margin-top:2px}
+ .v92FormatCardActions{display:grid;grid-template-columns:1fr 1fr;gap:6px}.v92FormatCardActions button{min-height:38px;border:1px solid #e8d1ca;background:#fff;border-radius:11px;color:#775f57;font-size:9px;font-weight:850}.v92FormatCardActions .formatDeleteBtn{background:#fff5f4;color:#b8696c}
+ .v92ManagerFooter{display:grid;grid-template-columns:1fr;gap:7px}.v92ManagerFooter button{min-height:44px}
+}
+@media (min-width:900px){.canvasQuickNav .editorNavIcon{display:inline-grid;width:18px;height:18px;vertical-align:middle}.canvasQuickNav .editorNavIcon svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}}
+</style>
 </head>
 <body class="v57">
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 91</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 92</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -3318,11 +3343,21 @@ html,body{background:#fff7f4;}
       </div>
 
       <div class="canvasQuickNav" aria-label="Editor-Werkzeuge">
-  <button data-group="text" onclick="editorOpenGroup('text',this)">T<span>Text</span></button>
-  <button data-group="elements" onclick="editorOpenGroup('elements',this)">◇<span>Elemente</span></button>
-  <button data-group="templates" onclick="editorOpenGroup('templates',this)">▤<span>Vorlagen</span></button>
-  <button data-group="pages" onclick="editorOpenGroup('pages',this)">▯<span>Seiten</span></button>
-  <button data-group="layers" onclick="editorOpenGroup('layers',this)">◇<span>Ebenen</span></button>
+  <button data-group="textLibrary" onclick="editorOpenGroup('textLibrary',this)" aria-label="Text">
+    <span class="editorNavIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14M12 5v14M8.5 19h7"/></svg></span><span>Text</span>
+  </button>
+  <button data-group="elements" onclick="editorOpenGroup('elements',this)" aria-label="Elemente">
+    <span class="editorNavIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1.4"/><circle cx="17" cy="7" r="3"/><path d="M4.5 19l3.2-5.5L11 19zM14 14h6v6h-6z"/></svg></span><span>Elemente</span>
+  </button>
+  <button data-group="templates" onclick="editorOpenGroup('templates',this)" aria-label="Vorlagen">
+    <span class="editorNavIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="4" width="12" height="15" rx="2"/><path d="M9 8h6M9 11h6M9 14h4"/></svg></span><span>Vorlagen</span>
+  </button>
+  <button data-group="pages" onclick="editorOpenGroup('pages',this)" aria-label="Seiten">
+    <span class="editorNavIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h8l3 3V20H7zM15 3.5V7h3"/></svg></span><span>Seiten</span>
+  </button>
+  <button data-group="layers" onclick="editorOpenGroup('layers',this)" aria-label="Ebenen">
+    <span class="editorNavIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4l8 4-8 4-8-4zM4 12l8 4 8-4M4 16l8 4 8-4"/></svg></span><span>Ebenen</span>
+  </button>
 </div>
 <div id="canvasQuickDrawer" class="canvasQuickDrawer"></div>
 <div id="mobileSelectionTools" class="mobileSelectionTools"></div>
@@ -3867,7 +3902,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 91";
+ $("#headerEyebrow").textContent="VERSION 92";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -4170,9 +4205,16 @@ function updateHistoryButtons(){const u=$("#undoBtn"),r=$("#redoBtn");if(u)u.dis
 function scheduleAutosave(){clearTimeout(canvasState.autosaveTimer);const el=$("#autosaveState");if(el){el.textContent="Nicht gespeichert";el.className="autosaveState saving"}canvasState.autosaveTimer=setTimeout(()=>autoSaveCanvas(),850)}
 function autoSaveCanvas(){const {s,t}=currentTopic();if(!s||!t)return;const snapshot=canvasSnapshot();if(snapshot===canvasState.lastSavedHash)return;saveCanvasSheetCore(true);canvasState.lastSavedHash=canvasSnapshot();const el=$("#autosaveState");if(el){el.textContent="Automatisch gespeichert ✓";el.className="autosaveState saved"}}
 
+const TEXT_PRESET_HIDDEN_KEY="schoolbloom-hidden-default-styles";
+const TEXT_PRESET_OVERRIDE_KEY="schoolbloom-default-style-overrides";
+function readTextPresetJSON(key,fallback=[]){try{const v=JSON.parse(localStorage.getItem(key)||"null");return Array.isArray(v)?v:fallback}catch(_){return fallback}}
 function canvasPresets(){
- const custom=JSON.parse(localStorage.getItem("schoolbloom-canvas-styles")||"[]");
- return [...canvasStylesDefault,...custom];
+ const hidden=new Set(readTextPresetJSON(TEXT_PRESET_HIDDEN_KEY));
+ const overrides=readTextPresetJSON(TEXT_PRESET_OVERRIDE_KEY);
+ const custom=readTextPresetJSON("schoolbloom-canvas-styles");
+ const defaults=canvasStylesDefault.filter(d=>!hidden.has(d.id)).map(d=>({...d,...(overrides.find(o=>o.id===d.id)||{})}));
+ const customOnly=custom.filter(c=>!canvasStylesDefault.some(d=>d.id===c.id));
+ return [...defaults,...customOnly];
 }
 function renderStylePresets(){
  const bar=$("#stylePresetBar");if(!bar)return;
@@ -4229,9 +4271,9 @@ window.confirmSaveSelectionAsTextFormat=function(payloadJSON){
  localStorage.setItem("schoolbloom-canvas-styles",JSON.stringify(arr));
  closeModal();cuteToast("Textformat gespeichert ♡");
  renderStylePresets();
- if(openEditorGroup==="text"){
-   const btn=[...document.querySelectorAll(".canvasQuickNav button")].find(b=>b.textContent.includes("Text"));
-   if(btn){openEditorGroup=null;editorOpenGroup("text",btn)}
+ if(openEditorGroup==="textLibrary"){
+   const btn=document.querySelector(".canvasQuickNav [data-group=textLibrary]");
+   if(btn){openEditorGroup=null;editorOpenGroup("textLibrary",btn)}
  }
 }
 
@@ -4268,31 +4310,52 @@ window.insertSavedTextFormat=function(presetId){
 
 
 window.openTextFormatManager=function(){
- const custom=JSON.parse(localStorage.getItem("schoolbloom-canvas-styles")||"[]");
- openModal(`<div class="textFormatManager">
-   <div class="presetModalHead"><div><span class="eyebrow">TEXT</span><h2>Textformate verwalten</h2></div><button class="miniIcon" onclick="closeModal()">×</button></div>
-   ${custom.length?`<div class="formatManagerList">${custom.map(s=>`
-    <div class="formatManagerRow">
-      <div class="formatManagerPreview">${s.bundle?"▣":(s.type==="block"?"Aa":"T")}</div>
-      <div><b>${esc(s.name||"Eigenes Format")}</b><small>${s.bundle?"Gruppiertes Textformat":"Textformat"}</small></div>
-      ${s.bundle?`<button onclick="insertSavedTextFormat('${s.id}');closeModal()">Einfügen</button>`:`<button onclick="closeModal();createCustomStylePreset('${s.id}')">Bearbeiten</button>`}
-      <button class="formatDeleteBtn" onclick="deleteCustomStylePreset('${s.id}')">⌫</button>
-    </div>`).join("")}</div>`:
-    `<div class="managerEmpty">Noch keine eigenen Textformate.</div>`}
-   <button class="primary" onclick="closeModal();createCustomStylePreset()">＋ Neues Textformat</button>
+ const visible=canvasPresets();
+ const hidden=readTextPresetJSON(TEXT_PRESET_HIDDEN_KEY);
+ const overrides=readTextPresetJSON(TEXT_PRESET_OVERRIDE_KEY);
+ const hasChanges=hidden.length||overrides.length;
+ openModal(`<div class="textFormatManager v92FormatManager">
+   <div class="presetModalHead"><div><span class="eyebrow">TEXT</span><h2>Textformate</h2><p class="small">Antippen zum Einfügen · jedes Format kann bearbeitet oder entfernt werden.</p></div><button class="miniIcon" onclick="closeModal()">×</button></div>
+   <div class="v92FormatManagerGrid">${visible.map(p=>{
+      const standard=canvasStylesDefault.some(d=>d.id===p.id);
+      const action=p.bundle?`editBundleTextFormat('${p.id}')`:`createCustomStylePreset('${p.id}')`;
+      return `<article class="v92FormatManagerCard">
+        <button class="v92FormatInsert" onclick="${p.bundle?`insertSavedTextFormat('${p.id}');closeModal()`:`addCanvasText('${p.id}');closeModal()`}">
+          <span class="v92FormatGlyph" style="font-family:${esc(p.fontFamily||'Arial')};font-weight:${esc(p.fontWeight||'700')};color:${esc(p.color||'#725b53')}">${textFormatPreviewLabel(p)}</span>
+          <span><b>${esc(p.name||'Textformat')}</b><small>${standard?'Standard':(p.bundle?'Gruppiert':'Eigenes Format')}</small></span>
+        </button>
+        <div class="v92FormatCardActions"><button onclick="closeModal();${action}">Bearbeiten</button><button class="formatDeleteBtn" onclick="deleteCustomStylePreset('${p.id}')">Löschen</button></div>
+      </article>`}).join('')||'<div class="managerEmpty">Noch keine Textformate.</div>'}</div>
+   <div class="v92ManagerFooter"><button class="primary" onclick="closeModal();createCustomStylePreset()">＋ Neues Textformat</button>${hasChanges?`<button class="ghost" onclick="restoreDefaultTextFormats()">Standards wiederherstellen</button>`:''}</div>
  </div>`);
+}
+
+window.editBundleTextFormat=function(idv){
+ const p=canvasPresets().find(x=>x.id===idv);if(!p?.bundle)return;
+ openModal(`<div class="compactPresetModal"><div class="presetModalHead"><div><span class="eyebrow">TEXTFORMAT</span><h2>Gruppiertes Format bearbeiten</h2></div><button class="miniIcon" onclick="closeModal()">×</button></div>
+   <label>Name</label><input id="bundleEditName" value="${esc(p.name||'Eigenes Textformat')}">
+   <p class="small">Die enthaltenen Elemente bleiben unverändert. Um das Design zu ändern, füge es ein, passe es auf der Seite an und speichere die Auswahl als neues Textformat.</p>
+   <div class="presetModalActions"><button class="primary" onclick="saveBundleTextFormatName('${idv}')">Speichern</button><button class="dangerBtn" onclick="deleteCustomStylePreset('${idv}')">Löschen</button></div>
+ </div>`);
+}
+window.saveBundleTextFormatName=function(idv){
+ let arr=readTextPresetJSON("schoolbloom-canvas-styles");const i=arr.findIndex(x=>x.id===idv);if(i<0)return;
+ arr[i].name=$("#bundleEditName")?.value.trim()||arr[i].name||"Eigenes Textformat";
+ localStorage.setItem("schoolbloom-canvas-styles",JSON.stringify(arr));closeModal();renderStylePresets();setTimeout(()=>openTextFormatManager(),0);
 }
 
 window.createCustomStylePreset=function(editId=null){
  const old=editId?canvasPresets().find(x=>x.id===editId):null;
+ if(old?.bundle){editBundleTextFormat(editId);return}
+ const fontChoices=["Arial","Georgia","Trebuchet MS","Verdana","Times New Roman","Courier New",...(typeof v91StoredFonts==='function'?v91StoredFonts().map(f=>f.name):[])];
  openModal(`<div class="compactPresetModal"><div class="presetModalHead"><div><span class="eyebrow">TEXTFORMAT</span><h2>${old?"Textformat bearbeiten":"Neues Textformat"}</h2></div><button class="miniIcon" onclick="closeModal()">×</button></div>
  <div class="presetFormGrid">
   <div><label>Name</label><input id="presetName" value="${esc(old?.name||"")}" placeholder="z. B. Definition"></div>
-  <div><label>Schriftgröße</label><input id="presetSize" type="number" min="8" max="72" value="${old?.fontSize||16}"></div>
-  <div><label>Schriftart</label><select id="presetFont">${["Arial","Georgia","Trebuchet MS","Verdana","Times New Roman","Courier New"].map(x=>`<option ${x===(old?.fontFamily||"Arial")?"selected":""}>${x}</option>`).join("")}</select></div>
+  <div><label>Schriftgröße</label><input id="presetSize" type="number" min="8" max="180" value="${old?.fontSize||16}"></div>
+  <div><label>Schriftart</label><select id="presetFont">${[...new Set(fontChoices)].map(x=>`<option ${x===(old?.fontFamily||"Arial")?"selected":""}>${esc(x)}</option>`).join("")}</select></div>
   <div><label>Schriftfarbe</label><input id="presetColor" type="color" value="${old?.color||"#4f4540"}"></div>
-  <div><label>Schriftgewicht</label><select id="presetWeight"><option value="400" ${old?.fontWeight=="400"?"selected":""}>Normal</option><option value="700" ${old?.fontWeight=="700"?"selected":""}>Fett</option><option value="900" ${old?.fontWeight=="900"?"selected":""}>Sehr fett</option></select></div>
-  <div><label>Kasten</label><select id="presetBox"><option value="no" ${old?.type==="text"?"selected":""}>Kein Kasten</option><option value="yes" ${old?.type==="block"?"selected":""}>Mit Kasten</option></select></div>
+  <div><label>Schriftgewicht</label><select id="presetWeight"><option value="400" ${String(old?.fontWeight)==="400"?"selected":""}>Normal</option><option value="700" ${String(old?.fontWeight)==="700"?"selected":""}>Fett</option><option value="900" ${String(old?.fontWeight)==="900"?"selected":""}>Sehr fett</option></select></div>
+  <div><label>Kasten</label><select id="presetBox"><option value="no" ${old?.type!=="block"?"selected":""}>Kein Kasten</option><option value="yes" ${old?.type==="block"?"selected":""}>Mit Kasten</option></select></div>
   <div><label>Hintergrund</label><input id="presetBg" type="color" value="${old?.bg&&old.bg!=="transparent"?old.bg:"#fff5eb"}"></div>
   <div><label>Kontur</label><input id="presetBorder" type="color" value="${old?.borderColor&&old.borderColor!=="transparent"?old.borderColor:"#efd4be"}"></div>
   <div><label>Konturdicke</label><input id="presetBorderWidth" type="number" min="0" max="12" value="${old?.borderWidth||1}"></div>
@@ -4300,26 +4363,39 @@ window.createCustomStylePreset=function(editId=null){
   <div><label>Innenabstand</label><input id="presetPadding" type="number" min="0" max="50" value="${old?.padding||10}"></div>
   <div><label>Starttext</label><input id="presetPrefix" value="${esc(old?.prefix||"")}"></div>
  </div>
- <div class="presetModalActions"><button class="primary" onclick="saveCustomStylePreset('${editId||""}')">Speichern</button>
- ${old&&!String(old.id).startsWith("h")&&!["body","task","merke"].includes(old.id)?`<button class="dangerBtn" onclick="deleteCustomStylePreset('${old.id}')">Format löschen</button>`:""}</div></div>`);
+ <div class="presetModalActions"><button class="primary" onclick="saveCustomStylePreset('${editId||""}')">Speichern</button>${old?`<button class="dangerBtn" onclick="deleteCustomStylePreset('${old.id}')">Format löschen</button>`:""}</div></div>`);
 }
 window.saveCustomStylePreset=function(editId=""){
- let arr=JSON.parse(localStorage.getItem("schoolbloom-canvas-styles")||"[]");
  const box=$("#presetBox").value==="yes";
  const obj={id:editId||"custom-"+Date.now(),name:$("#presetName").value.trim()||"Eigenes Format",type:box?"block":"text",
  fontSize:+$("#presetSize").value||16,fontWeight:$("#presetWeight").value,color:$("#presetColor").value,
  fontFamily:$("#presetFont").value,bg:box?$("#presetBg").value:"transparent",borderColor:box?$("#presetBorder").value:"transparent",
  borderWidth:box?(+$("#presetBorderWidth").value||0):0,radius:box?(+$("#presetRadius").value||0):0,padding:+$("#presetPadding").value||7,prefix:$("#presetPrefix").value||""};
- const i=arr.findIndex(x=>x.id===editId);if(i>=0)arr[i]=obj;else arr.push(obj);
- localStorage.setItem("schoolbloom-canvas-styles",JSON.stringify(arr));closeModal();renderStylePresets();
+ if(editId&&canvasStylesDefault.some(d=>d.id===editId)){
+   let arr=readTextPresetJSON(TEXT_PRESET_OVERRIDE_KEY);const i=arr.findIndex(x=>x.id===editId);if(i>=0)arr[i]=obj;else arr.push(obj);
+   localStorage.setItem(TEXT_PRESET_OVERRIDE_KEY,JSON.stringify(arr));
+   let hidden=readTextPresetJSON(TEXT_PRESET_HIDDEN_KEY).filter(x=>x!==editId);localStorage.setItem(TEXT_PRESET_HIDDEN_KEY,JSON.stringify(hidden));
+ }else{
+   let arr=readTextPresetJSON("schoolbloom-canvas-styles");const i=arr.findIndex(x=>x.id===editId);if(i>=0)arr[i]=obj;else arr.push(obj);localStorage.setItem("schoolbloom-canvas-styles",JSON.stringify(arr));
+ }
+ closeModal();renderStylePresets();setTimeout(()=>{if(document.body.classList.contains('editorMode'))openTextFormatManager()},0);
 }
 window.deleteCustomStylePreset=function(idv){
  closeModal();
- confirmDanger({title:"Textformat löschen?",text:"Das gespeicherte Textformat wird dauerhaft entfernt.",confirmText:"Format löschen",onConfirm:`performDeleteCustomStylePreset('${idv}')`});
+ const isDefault=canvasStylesDefault.some(d=>d.id===idv);
+ confirmDanger({title:"Textformat löschen?",text:isDefault?"Dieses Standardformat wird aus deiner Textformat-Liste ausgeblendet. Du kannst Standards später wiederherstellen.":"Das gespeicherte Textformat wird dauerhaft entfernt.",confirmText:"Format löschen",onConfirm:`performDeleteCustomStylePreset('${idv}')`});
 }
 window.performDeleteCustomStylePreset=function(idv){
- let arr=JSON.parse(localStorage.getItem("schoolbloom-canvas-styles")||"[]");arr=arr.filter(x=>x.id!==idv);
- localStorage.setItem("schoolbloom-canvas-styles",JSON.stringify(arr));closeModal();renderStylePresets();setTimeout(()=>openTextFormatManager(),0);
+ if(canvasStylesDefault.some(d=>d.id===idv)){
+   const hidden=[...new Set([...readTextPresetJSON(TEXT_PRESET_HIDDEN_KEY),idv])];localStorage.setItem(TEXT_PRESET_HIDDEN_KEY,JSON.stringify(hidden));
+   const ov=readTextPresetJSON(TEXT_PRESET_OVERRIDE_KEY).filter(x=>x.id!==idv);localStorage.setItem(TEXT_PRESET_OVERRIDE_KEY,JSON.stringify(ov));
+ }else{
+   let arr=readTextPresetJSON("schoolbloom-canvas-styles").filter(x=>x.id!==idv);localStorage.setItem("schoolbloom-canvas-styles",JSON.stringify(arr));
+ }
+ closeModal();renderStylePresets();setTimeout(()=>openTextFormatManager(),0);
+}
+window.restoreDefaultTextFormats=function(){
+ localStorage.removeItem(TEXT_PRESET_HIDDEN_KEY);localStorage.removeItem(TEXT_PRESET_OVERRIDE_KEY);closeModal();renderStylePresets();cuteToast("Standardformate wiederhergestellt ♡");setTimeout(()=>openTextFormatManager(),0);
 }
 
 
@@ -5687,7 +5763,7 @@ window.selectCanvasObject=function(oid){
  canvasState.selectedType="object";canvasState.selectedId=oid;canvasState.selectedIds=[oid];canvasState.selectedVectorIds=[];
  if(!same)renderCanvasObjects();
  renderVectors();renderCanvasInspector();renderLayerList();updateMultiSelectStatus();updateMobileSelectionTools();
- if(window.innerWidth<900&&mobileSelectedText())editorOpenGroup("text",document.querySelector(".canvasQuickNav [data-group=text]"));
+ if(window.innerWidth<900&&mobileSelectedText())editorOpenGroup("textEdit",document.querySelector(".canvasQuickNav [data-group=textLibrary]"));
 }
 function renderCanvasInspector(){
  const el=$("#canvasInspector");if(!el)return;
@@ -6462,6 +6538,28 @@ window.mobileDashList=function(){
 window.mobileGradient=function(){const a=prompt('Startfarbe','#f2c3c5');if(!a)return;const b=prompt('Endfarbe','#fff6f1');if(!b)return;updateObjStyle('background',`linear-gradient(135deg,${a},${b})`)}
 window.mobileApplyShadow=function(){const blur=+$("#mobileShadowBlur")?.value||14,y=+$("#mobileShadowY")?.value||5;updateObjStyle('boxShadow',`0 ${y}px ${blur}px rgba(94,68,62,.20)`)}
 
+function textFormatPreviewLabel(p){
+ if(p.bundle)return "▣";
+ if(p.id==="h1")return "H1";
+ if(p.id==="h2")return "H2";
+ if(p.id==="task")return "✓";
+ if(p.id==="merke")return "!";
+ return "Aa";
+}
+function mobileTextLibraryHTML(){
+ const presets=canvasPresets();
+ const cards=presets.map(p=>`<button class="mobileFormatCard" onclick="${p.bundle?`insertSavedTextFormat('${p.id}')`:`addCanvasText('${p.id}')`}">
+   <span class="mobileFormatPreview" style="font-family:${esc(p.fontFamily||'Arial')};font-weight:${esc(p.fontWeight||'700')};color:${esc(p.color||'#725b53')}">${textFormatPreviewLabel(p)}</span>
+   <span class="mobileFormatName">${esc(p.name||'Textformat')}</span>
+   <small>${p.bundle?'Gruppe':(p.type==='block'?'Text + Kasten':'Text')}</small>
+  </button>`).join("");
+ return `<div class="mobileDrawerSection mobileTextLibrary">
+   <div class="mobileLibraryHead"><div><span class="mobileDrawerKicker">TEXT</span><b>Textformate</b></div><button onclick="openTextFormatManager()">Verwalten</button></div>
+   <div class="mobileFormatGrid">${cards||'<div class="managerEmpty">Noch keine Textformate.</div>'}</div>
+   <div class="mobileDrawerActions"><button onclick="createCustomStylePreset()">＋ Neues Textformat</button></div>
+  </div>`;
+}
+
 window.editorOpenGroup=function(group,btn){
  const d=$("#canvasQuickDrawer");if(!d)return;
  if(openEditorGroup===group && d.classList.contains("open")){closeEditorDrawer();return}
@@ -6470,7 +6568,9 @@ window.editorOpenGroup=function(group,btn){
  const item=(label,action,icon="•")=>`<button onclick="${action}"><b>${icon}</b><span>${label}</span></button>`;
  const grid=items=>`<div class="mobileToolGrid">${items.join("")}</div>`;
  let title="Werkzeuge",html="";
- if(group==="text"){
+ if(group==="textLibrary"){
+   title="Text";html=mobileTextLibraryHTML();
+ }else if(group==="textEdit"||group==="text"){
    title=mobileSelectedText()?"Text bearbeiten":"Text";html=mobileTextControlsHTML();
  }else if(group==="elements"){
    title="Elemente";
@@ -10726,7 +10826,7 @@ if("serviceWorker" in navigator && location.protocol.startsWith("http")){
 }
 
 
-/* ===== V91 RECOVERY + SAFE EDITOR ENHANCEMENTS ===== */
+/* ===== V92 RECOVERY + SAFE EDITOR ENHANCEMENTS ===== */
 window.__schoolBloomBooted=true;
 try{
   const V91_FONTS_KEY="schoolbloom-v91-custom-fonts";
@@ -10761,7 +10861,7 @@ try{
     const fonts=v91StoredFonts();
     // Textfarbe is intentionally only under “Aussehen”; this spot becomes Add Font.
     out=out.replace(/<label class="mobileColorDot"[\s\S]*?<\/label>/,
-      `<button class="v91FontAdd" onclick="v91PickFont()">Aa+ <span>Schrift</span></button>`);
+      `<button class="v91FontAdd" onclick="v91PickFont()"><b>Aa+</b><span>Schrift hinzufügen</span></button>`);
     if(fonts.length){
       const opts=fonts.map(f=>`<option value="${esc(f.name)}">${esc(f.name)}</option>`).join("");
       out=out.replace(/<\/select>/,opts+"</select>");
@@ -10769,13 +10869,7 @@ try{
     return out;
   };
 
-  const v91BaseTextControls=mobileTextControlsHTML;
-  mobileTextControlsHTML=function(){
-    let out=v91BaseTextControls();
-    const custom=canvasPresets().filter(x=>!canvasStylesDefault.some(d=>d.id===x.id));
-    const section=`<div class="v91TextFormats"><div class="v91TextFormatsHead"><b>Textformate</b><button onclick="openTextFormatManager()">Verwalten</button></div><div class="v91FormatScroll">${canvasStylesDefault.map(x=>`<button onclick="addCanvasText('${x.id}')">${esc(x.name)}</button>`).join("")}${custom.map(x=>`<button onclick="${x.bundle?`insertSavedTextFormat('${x.id}')`:`addCanvasText('${x.id}')`}">${esc(x.name||'Eigenes Format')}</button>`).join("")}<button onclick="createCustomStylePreset()">＋ Eigenes</button></div></div>`;
-    return out+section;
-  };
+  // Textformate live only in the dedicated Text library drawer.
 
   // Lists work from a selected text box even when the user did not highlight its text.
   const v91BaseFormatSelectedText=window.formatSelectedText;
@@ -10816,11 +10910,11 @@ try{
   window.closeEditorDrawer=function(){const r=v91BaseCloseDrawer();const nav=document.querySelector('.canvasQuickNav');if(nav){nav.style.removeProperty('display');nav.style.removeProperty('visibility');nav.style.removeProperty('opacity')}return r};
 
   const zoom=document.createElement('div');zoom.className='v91ZoomPill';zoom.innerHTML='<button onclick="v91ZoomBy(-.1)">−</button><span id="v91ZoomLabel">100%</span><button onclick="v91ZoomBy(.1)">＋</button><button onclick="v91Fit()">⊡</button>';document.body.appendChild(zoom);v91UpdateZoomLabel();
-}catch(e){console.warn('V91 editor enhancement skipped safely:',e)}
-/* ===== /V91 ===== */
+}catch(e){console.warn('V92 editor enhancement skipped safely:',e)}
+/* ===== /V92 ===== */
 </script>
 
-<script id="v91-fallback">
+<script id="v92-fallback">
 window.addEventListener('error',e=>console.warn('SchoolBloom error:',e.message));
 setTimeout(()=>{if(!window.__schoolBloomBooted){document.documentElement.style.background='#fff7f4';document.body.style.background='#fff7f4';}},1800);
 </script>

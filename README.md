@@ -1,17 +1,17 @@
-# SchoolBloom – Version 91 Recovery Stable
+# SchoolBloom – Version 92 Textformat & Editor-Bar Fix
 
-Basis: letzte vom Nutzer bestätigte ladende Editor-Version (V85).
+Basis: V91 Recovery Stable (die zuletzt wieder funktionierende Version).
 
-Stabilitätsänderungen:
-- PDF.js wird erst beim PDF-Lesen geladen; ein CDN/PDF-Fehler blockiert den App-Start nicht.
-- Paper.js lädt asynchron und blockiert den ersten Seitenaufbau nicht.
-- Der Service Worker interceptet keine Navigation und löscht alte kaputte Caches.
-- Kein automatischer Reload bei Service-Worker-Wechsel.
-- Boot-Failsafe verhindert einen schwarzen Bildschirm.
+## Änderungen in V92
+- **Textformate erscheinen nur beim Tippen auf „Text“ in der unteren Editor-Leiste.**
+- Beim Antippen eines Textfeldes auf dem Lernblatt öffnet sich nur **„Text bearbeiten“** – ohne Textformat-Liste darunter.
+- Die untere Editor-Leiste hat neue, einheitliche SVG-Symbole für **Text, Elemente, Vorlagen, Seiten und Ebenen**.
+- Textformate sind als übersichtliche Karten angeordnet.
+- Der Textformat-Manager zeigt Standard- und eigene Formate zusammen an.
+- **Jedes sichtbare Textformat kann bearbeitet oder gelöscht werden.** Standardformate werden beim Löschen ausgeblendet und können über „Standards wiederherstellen“ zurückgeholt werden.
+- Gruppierte Textformate können umbenannt und gelöscht werden.
+- Eigene Schriften aus V91 bleiben erhalten.
+- Listen ohne vorherige Textmarkierung, freier Zoom und der V91-Boot-/Cache-Fix bleiben erhalten.
 
-Editor:
-- Textformate befinden sich im Text-Bereich; eigener Formate-Tab entfernt.
-- Eigene Fonts können lokal hinzugefügt werden.
-- Listen lassen sich auf ein ausgewähltes Textfeld anwenden, ohne den Text vorher zu markieren.
-- Freier +/- und Pinch-Zoom; manueller Zoom wird beim Texteingeben nicht automatisch überschrieben.
-- Schließen eines Text-/Formatpanels stellt die Hauptleiste wieder her.
+## Upload
+Alle Dateien aus diesem ZIP direkt in das GitHub-Pages-Repository kopieren und die bisherigen Dateien ersetzen – insbesondere `index.html` und `sw.js`.
