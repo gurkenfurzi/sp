@@ -3025,7 +3025,7 @@ html,body{background:#fff7f4;}
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 94</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 95</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -3902,7 +3902,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 94";
+ $("#headerEyebrow").textContent="VERSION 95";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -5461,7 +5461,7 @@ window.openTableDialog=function(){
 window.insertCanvasTable=function(){
  const cols=Math.max(1,Math.min(12,+$("#tblCols").value||3)),rows=Math.max(1,Math.min(30,+$("#tblRows").value||4));
  const cells=Array.from({length:rows},()=>Array.from({length:cols},()=>"..."));
- const o={id:id(),z:nextCanvasZ(),kind:"table",x:90,y:180,w:520,h:Math.max(100,rows*38),rows,cols,cells};canvasState.objects.push(o);closeModal();renderCanvasObjects();selectCanvasObject(o.id);pushHistory();
+ const o={id:id(),z:nextCanvasZ(),kind:"table",x:90,y:180,w:520,h:Math.max(100,rows*38),rows,cols,cells,cellColors:Array.from({length:rows},()=>Array.from({length:cols},()=>"")),borderRadius:12,activeCell:{r:0,c:0}};canvasState.objects.push(o);closeModal();renderCanvasObjects();selectCanvasObject(o.id);pushHistory();
 }
 const stickers=["🌸","🌷","🎀","🧸","⭐","✨","🍀","🍓","🫐","☁️","🌙","💗","📚","✏️","📝","🌼","🐻","🐰","🍵","💫","🌱"];
 function renderStickerPicker(){const el=$("#stickerPicker");if(el)el.innerHTML=stickers.map(s=>`<button onclick="addSticker('${s}')">${s}</button>`).join("")}
@@ -5480,34 +5480,68 @@ window.addSticker=function(s){const o={id:id(),z:nextCanvasZ(),kind:"sticker",x:
 
 
 function layerName(o){
- if(o.kind==="text")return "Text";
- if(o.kind==="task")return "Aufgabe";
- if(o.kind==="merke")return "Merke";
+ if(o.layerLabel)return o.layerLabel;
+ const plain=String(o.text||"").replace(/<[^>]*>/g," ").replace(/&nbsp;/g," ").replace(/\s+/g," ").trim();
+ if(["text","block","task","merke"].includes(o.kind))return plain?plain.slice(0,52):(o.kind==="task"?"Aufgabe":o.kind==="merke"?"Merke":"Text");
  if(o.kind==="image")return "Bild";
  if(o.kind==="file")return "Datei · "+(o.fileName||"");
  if(o.kind==="sticker")return "Sticker "+(o.text||"");
  if(o.kind==="table")return "Tabelle";
+ if(o.kind==="formula")return "Formel";
+ if(o.kind==="graph")return "Graph";
  if(o.kind==="paper")return o.paperType==="grid"?"Karo-Zettel":o.paperType==="line"?"Linierter Zettel":"Leerer Zettel";
  if(o.kind==="tape")return "Klebeband";
  return o.kind;
 }
+function layerEntries(){
+ return [
+  ...canvasState.objects.map(o=>({kind:"object",id:o.id,z:o.z||0,locked:o.locked,name:layerName(o)})),
+  ...canvasState.vectors.map(v=>({kind:"vector",id:v.id,z:v.z||0,locked:v.locked,name:v.layerLabel||("Form · "+v.type)}))
+ ].sort((a,b)=>b.z-a.z);
+}
+function layerItemRef(kind,id){return kind==="object"?canvasState.objects.find(x=>x.id===id):canvasState.vectors.find(x=>x.id===id)}
+window.renameLayerItem=function(kind,id){
+ const item=layerItemRef(kind,id);if(!item)return;
+ const current=item.layerLabel||(kind==="object"?layerName(item):("Form · "+item.type));
+ const value=prompt("Ebene umbenennen",current);if(value===null)return;
+ item.layerLabel=value.trim();renderLayerList();markCanvasDirty();pushHistory();
+}
+function reorderLayerItem(sourceKind,sourceId,targetKind,targetId){
+ if(sourceKind===targetKind&&sourceId===targetId)return;
+ const all=layerEntries();const from=all.findIndex(x=>x.kind===sourceKind&&x.id===sourceId),to=all.findIndex(x=>x.kind===targetKind&&x.id===targetId);
+ if(from<0||to<0)return;
+ const [src]=all.splice(from,1);let insert=to;if(from<to)insert=to-1;all.splice(Math.max(0,insert),0,src);
+ const n=all.length;all.forEach((x,i)=>{const ref=layerItemRef(x.kind,x.id);if(ref)ref.z=(n-i)*10});
+ renderCanvasObjects();renderVectors();renderLayerList();markCanvasDirty();pushHistory();
+}
+let nativeLayerDrag=null;
+window.layerNativeDragStart=function(e,kind,id){nativeLayerDrag={kind,id};try{e.dataTransfer.effectAllowed="move";e.dataTransfer.setData("text/plain",kind+":"+id)}catch(_){}}
+window.layerNativeDrop=function(e,kind,id){e.preventDefault();if(nativeLayerDrag)reorderLayerItem(nativeLayerDrag.kind,nativeLayerDrag.id,kind,id);nativeLayerDrag=null}
+let pointerLayerDrag=null;
+window.layerPointerStart=function(e,kind,id){
+ if(e.pointerType==="mouse"&&e.button!==0)return;
+ e.preventDefault();e.stopPropagation();pointerLayerDrag={kind,id,pointerId:e.pointerId,target:null};
+ e.currentTarget.setPointerCapture?.(e.pointerId);
+ document.body.classList.add("layerDragging");
+ const move=ev=>{if(!pointerLayerDrag||ev.pointerId!==pointerLayerDrag.pointerId)return;ev.preventDefault();const hit=document.elementFromPoint(ev.clientX,ev.clientY)?.closest?.('.layerItem');document.querySelectorAll('.layerItem.layerDropTarget').forEach(x=>x.classList.remove('layerDropTarget'));if(hit&&!(hit.dataset.layerKind===kind&&hit.dataset.layerId===id)){hit.classList.add('layerDropTarget');pointerLayerDrag.target={kind:hit.dataset.layerKind,id:hit.dataset.layerId}}};
+ const up=ev=>{if(!pointerLayerDrag||ev.pointerId!==pointerLayerDrag.pointerId)return;document.removeEventListener('pointermove',move,true);document.removeEventListener('pointerup',up,true);document.removeEventListener('pointercancel',up,true);document.body.classList.remove('layerDragging');document.querySelectorAll('.layerItem.layerDropTarget').forEach(x=>x.classList.remove('layerDropTarget'));const d=pointerLayerDrag;pointerLayerDrag=null;if(d.target)reorderLayerItem(d.kind,d.id,d.target.kind,d.target.id)};
+ document.addEventListener('pointermove',move,{capture:true,passive:false});document.addEventListener('pointerup',up,true);document.addEventListener('pointercancel',up,true);
+}
 function renderLayerList(){
  const el=$("#layerList");if(!el)return;
- const all=[
-   ...canvasState.objects.map(o=>({kind:"object",id:o.id,z:o.z||0,locked:o.locked,name:layerName(o)})),
-   ...canvasState.vectors.map(v=>({kind:"vector",id:v.id,z:v.z||0,locked:v.locked,name:"Form · "+v.type}))
- ].sort((a,b)=>b.z-a.z);
- el.innerHTML=all.length?all.map(a=>`<div class="layerItem ${canvasState.selectedType===a.kind&&canvasState.selectedId===a.id?"active":""}">
+ const all=layerEntries();
+ el.innerHTML=all.length?all.map(a=>`<div class="layerItem ${canvasState.selectedType===a.kind&&canvasState.selectedId===a.id?"active":""}" data-layer-kind="${a.kind}" data-layer-id="${a.id}" draggable="true" ondragstart="layerNativeDragStart(event,'${a.kind}','${a.id}')" ondragover="event.preventDefault()" ondrop="layerNativeDrop(event,'${a.kind}','${a.id}')">
    <div class="layerRow">
-     <button style="border:0;background:transparent;flex:1;text-align:left;color:inherit" onclick="${a.kind==="object"?`selectCanvasObject('${a.id}')`:`selectVector('${a.id}')`}"><span class="layerMeta">${a.locked?"🔒":""}<span class="layerName">${esc(a.name)}</span></span></button>
+     <button class="layerDragHandle" title="Ziehen zum Sortieren" onpointerdown="layerPointerStart(event,'${a.kind}','${a.id}')">⠿</button>
+     <button class="layerTitleBtn" onclick="${a.kind==="object"?`selectCanvasObject('${a.id}')`:`selectVector('${a.id}')`}"><span class="layerMeta">${a.locked?"🔒":""}<span class="layerName">${esc(a.name)}</span></span></button>
      <div class="layerTools">
-       <button title="Nach vorne" onclick="event.stopPropagation();${a.kind==="object"?`selectCanvasObject('${a.id}')`:`selectVector('${a.id}')`};moveSelectedLayer(1)">↑</button>
-       <button title="Nach hinten" onclick="event.stopPropagation();${a.kind==="object"?`selectCanvasObject('${a.id}')`:`selectVector('${a.id}')`};moveSelectedLayer(-1)">↓</button>
+       <button title="Umbenennen" onclick="event.stopPropagation();renameLayerItem('${a.kind}','${a.id}')">✎</button>
        <button title="Sperren" onclick="event.stopPropagation();${a.kind==="object"?`selectCanvasObject('${a.id}')`:`selectVector('${a.id}')`};toggleSelectedLock()">${a.locked?"🔓":"🔒"}</button>
        <button class="layerDeleteBtn" title="Löschen" onclick="event.stopPropagation();deleteLayerItem('${a.kind}','${a.id}')">⌫</button>
      </div>
    </div>
  </div>`).join(""):'<div class="small">Noch keine Elemente.</div>';
+ const mobile=document.querySelector("#canvasQuickDrawer.open .mobileLayerList");if(mobile)mobile.innerHTML=el.innerHTML;
 }
 
 function renderCanvasObjects(){
@@ -5532,8 +5566,9 @@ function renderCanvasObjects(){
      return `<div class="cobj formulaObj ${sel}${lockCls}" data-id="${o.id}" style="${base}transform:rotate(${o.rotation||0}deg);font-size:${s.fontSize||28}px;color:${s.color||"#4f4642"};font-family:${s.fontFamily||"Cambria Math, serif"};text-align:${s.textAlign||"center"}">${o.formulaHTML||formulaToHTML(o.formula||o.text||"")}<span class="rotateHandle"></span><span class="resizeHandle"></span></div>`;
    }
    if(o.kind==="table"){
-     const bw=o.borderWidth??1,bc=o.borderColor||"#aaa7a2",bg=o.cellBackground||"#ffffff",fs=o.fontSize||16;
-     const table=`<table style="--tbl-border:${bw}px;--tbl-color:${bc};--tbl-bg:${bg};--tbl-font:${fs}px">${o.cells.map((row,ri)=>`<tr>${row.map((c,ci)=>`<td contenteditable="${o.locked?"false":"true"}" inputmode="text" data-r="${ri}" data-c="${ci}">${esc(c)}</td>`).join("")}</tr>`).join("")}</table>`;
+     const bw=o.borderWidth??1,bc=o.borderColor||"#aaa7a2",bg=o.cellBackground||"#ffffff",fs=o.fontSize||16,rad=o.borderRadius??12;
+     o.cellColors ||= Array.from({length:o.rows||o.cells.length},(_,ri)=>Array.from({length:o.cols||o.cells[ri]?.length||1},()=>""));
+     const table=`<table style="--tbl-border:${bw}px;--tbl-color:${bc};--tbl-bg:${bg};--tbl-font:${fs}px;border-radius:${rad}px;overflow:hidden">${o.cells.map((row,ri)=>`<tr>${row.map((c,ci)=>`<td contenteditable="${o.locked?"false":"true"}" inputmode="text" data-r="${ri}" data-c="${ci}" style="background:${o.cellColors?.[ri]?.[ci]||bg}">${esc(c)}</td>`).join("")}</tr>`).join("")}</table>`;
      return `<div class="cobj tableObj ${sel}${lockCls}" data-id="${o.id}" style="${base}"><span class="tableMoveHandle" title="Tabelle bewegen">⠿</span>${table}<span class="rotateHandle"></span><span class="resizeHandle"></span></div>`;
    }
    const cls=(o.kind==="block"||o.kind==="file")?"calloutObj":o.kind==="task"?"taskObj":o.kind==="merke"?"merkeObj":"textObj";
@@ -5556,6 +5591,8 @@ function attachCanvasObjectEvents(){
      if(canvasState.multiMode||e.shiftKey){e.preventDefault();e.stopPropagation();toggleObjectInMultiSelection(oid);return}
      if(e.target.tagName==="TD"){
        if(!(canvasState.selectedType==="object"&&canvasState.selectedId===oid))selectCanvasObject(oid);
+       o.activeCell={r:+e.target.dataset.r||0,c:+e.target.dataset.c||0};
+       renderCanvasInspector();
        return;
      }
      const already=(canvasState.selectedIds||[]).includes(oid);
@@ -5827,7 +5864,9 @@ function renderCanvasInspector(){
        <div class="objectPanelGrid" style="margin-top:8px">
         <div><label>Linienfarbe</label><input type="color" value="${o.borderColor||"#aaa7a2"}" onchange="updateSelectedTable('borderColor',this.value)"></div>
         <div><label>Linienstärke</label><input type="number" min="0" max="8" value="${o.borderWidth??1}" onchange="updateSelectedTable('borderWidth',+this.value)"></div>
-        <div><label>Zellfarbe</label><input type="color" value="${o.cellBackground||"#ffffff"}" onchange="updateSelectedTable('cellBackground',this.value)"></div>
+        <div><label>Alle Zellen</label><input type="color" value="${o.cellBackground||"#ffffff"}" onchange="updateSelectedTable('cellBackground',this.value)"></div>
+        <div><label>Aktive Zelle</label><input type="color" value="${o.cellColors?.[o.activeCell?.r||0]?.[o.activeCell?.c||0]||o.cellBackground||"#ffffff"}" onchange="updateSelectedTableCellColor(this.value)"></div>
+        <div><label>Eckenradius</label><input type="number" min="0" max="60" value="${o.borderRadius??12}" onchange="updateSelectedTable('borderRadius',+this.value)"></div>
         <div><label>Textgröße</label><input type="number" min="12" max="40" value="${o.fontSize||16}" onchange="updateSelectedTable('fontSize',+this.value)"></div>
        </div>
        <div class="positionGrid" style="margin-top:8px">
@@ -5877,20 +5916,27 @@ window.updateSelectedTable=function(prop,value){
  const o=selectedTable();if(!o)return;o[prop]=value;
  renderCanvasObjects();renderCanvasInspector();markCanvasDirty();pushHistory();
 }
+window.updateSelectedTableCellColor=function(value){
+ const o=selectedTable();if(!o)return;const r=Math.max(0,Math.min(o.rows-1,o.activeCell?.r||0)),c=Math.max(0,Math.min(o.cols-1,o.activeCell?.c||0));
+ o.cellColors ||= Array.from({length:o.rows},()=>Array.from({length:o.cols},()=>""));
+ while(o.cellColors.length<o.rows)o.cellColors.push(Array.from({length:o.cols},()=>""));
+ o.cellColors.forEach(row=>{while(row.length<o.cols)row.push("")});o.cellColors[r][c]=value;
+ renderCanvasObjects();renderCanvasInspector();markCanvasDirty();pushHistory();
+}
 window.tableAddRow=function(){
- const o=selectedTable();if(!o)return;o.cells.push(Array.from({length:o.cols},()=>""));o.rows=o.cells.length;
+ const o=selectedTable();if(!o)return;o.cells.push(Array.from({length:o.cols},()=>""));o.cellColors ||= [];o.cellColors.push(Array.from({length:o.cols},()=>""));o.rows=o.cells.length;
  o.h=Math.max(o.h,o.rows*42);renderCanvasObjects();renderCanvasInspector();markCanvasDirty();pushHistory();
 }
 window.tableRemoveRow=function(){
- const o=selectedTable();if(!o||o.rows<=1)return;o.cells.pop();o.rows=o.cells.length;
+ const o=selectedTable();if(!o||o.rows<=1)return;o.cells.pop();o.cellColors?.pop();o.rows=o.cells.length;o.activeCell={r:Math.min(o.activeCell?.r||0,o.rows-1),c:Math.min(o.activeCell?.c||0,o.cols-1)};
  renderCanvasObjects();renderCanvasInspector();markCanvasDirty();pushHistory();
 }
 window.tableAddCol=function(){
- const o=selectedTable();if(!o)return;o.cells.forEach(r=>r.push(""));o.cols++;
+ const o=selectedTable();if(!o)return;o.cells.forEach(r=>r.push(""));o.cellColors ||= Array.from({length:o.rows},()=>[]);o.cellColors.forEach(r=>r.push(""));o.cols++;
  renderCanvasObjects();renderCanvasInspector();markCanvasDirty();pushHistory();
 }
 window.tableRemoveCol=function(){
- const o=selectedTable();if(!o||o.cols<=1)return;o.cells.forEach(r=>r.pop());o.cols--;
+ const o=selectedTable();if(!o||o.cols<=1)return;o.cells.forEach(r=>r.pop());o.cellColors?.forEach(r=>r.pop());o.cols--;o.activeCell={r:Math.min(o.activeCell?.r||0,o.rows-1),c:Math.min(o.activeCell?.c||0,o.cols-1)};
  renderCanvasObjects();renderCanvasInspector();markCanvasDirty();pushHistory();
 }
 
@@ -6500,7 +6546,7 @@ function mobileTextModeContentHTML(kind){
    <label>Linie<select onchange="updateObjStyle('borderStyle',this.value)"><option value="solid" ${(!st.borderStyle||st.borderStyle==='solid')?'selected':''}>Durchgezogen</option><option value="dashed" ${st.borderStyle==='dashed'?'selected':''}>Gestrichelt</option><option value="dotted" ${st.borderStyle==='dotted'?'selected':''}>Gepunktet</option></select></label>
    <label>Transparenz<input type="range" min="0" max="100" value="${Math.round((st.opacity??1)*100)}" oninput="updateObjStyle('opacity',+this.value/100)"></label>
    <button onclick="mobileGradient()">Verlauf</button><button onclick="updateObjStyle('background','transparent')">Fläche aus</button>
- </div></div>`;
+ </div><div class="mobileDrawerActions formatClipboardActions"><button onclick="copySelectedCanvasFormat()">⧉ Format kopieren</button><button onclick="pasteSelectedCanvasFormat()">▣ Format einfügen</button></div></div>`;
  if(kind==='spacing')return `<div class="mobileModeSection"><div class="mobileModeIntro"><b>Abstand</b><span>Text- und Innenabstände fein einstellen.</span></div><div class="mobileSubGrid">
    <label>Buchstaben<input type="number" step=".5" value="${st.letterSpacing||0}" onchange="updateObjStyle('letterSpacing',+this.value)"></label>
    <label>Zeilenhöhe<input type="number" step=".05" min=".8" max="3" value="${st.lineHeight||1.25}" onchange="updateObjStyle('lineHeight',+this.value)"></label>
@@ -6594,9 +6640,9 @@ window.editorOpenGroup=function(group,btn){
     <div class="mobileDrawerActions rowish"><button onclick="alignSelectedToPageMargin('left')">⇤ Linker Rand</button><button onclick="alignSelectedToPageMargin('right')">Rechter Rand ⇥</button><button onclick="fitSelectedToPageMargins()">↔ Bis Rand</button></div>
    </div>`;
  }else if(group==="layers"){
-   title="Ebenen";renderLayerList();html=`<div class="mobileDrawerSection"><div class="mobileLayerList">${$("#layerList")?.innerHTML||'<div class="small">Noch keine Ebenen.</div>'}</div><div class="mobileDrawerActions rowish"><button onclick="moveSelectedLayer(1)">↑ Nach vorne</button><button onclick="moveSelectedLayer(-1)">↓ Nach hinten</button><button onclick="toggleSelectedLock()">🔒 Sperren</button><button onclick="deleteSelectedCanvasItem()">⌫ Löschen</button></div></div>`;
+   title="Ebenen";renderLayerList();html=`<div class="mobileDrawerSection"><div class="mobileModeIntro"><b>Ziehen zum Sortieren</b><span>Oben = vorne · unten = hinten. Am Griff ⠿ ziehen.</span></div><div class="mobileLayerList">${$("#layerList")?.innerHTML||'<div class="small">Noch keine Ebenen.</div>'}</div></div>`;
  }else if(group==="selection"){
-   title="Auswahl";html=`<div class="mobileDrawerSection">${grid([item(canvasState.multiMode?"Mehrfach aus":"Mehrfachauswahl","toggleMultiSelectMode()","☑"),item("Gruppieren","groupSelectedItems()","▣"),item("Gruppierung lösen","ungroupSelectedItems()","▢"),item("Duplizieren","duplicateSelected()","⧉"),item("Als Textformat","saveSelectionAsTextFormat()","Aa"),item("Sperren","toggleSelectedLock()","🔒"),item("Löschen","deleteSelectedCanvasItem()","⌫")])}<div class="mobileDrawerTitle">Ausrichten</div>${grid([item("Links","mobileAlignMulti('left')","⇤"),item("Horizontal Mitte","mobileAlignMulti('centerX')","↔"),item("Rechts","mobileAlignMulti('right')","⇥"),item("Oben","mobileAlignMulti('top')","⇧"),item("Vertikal Mitte","mobileAlignMulti('centerY')","↕"),item("Unten","mobileAlignMulti('bottom')","⇩")])}</div>`;
+   title="Auswahl";html=`<div class="mobileDrawerSection">${grid([item(canvasState.multiMode?"Mehrfach aus":"Mehrfachauswahl","toggleMultiSelectMode()","☑"),item("Gruppieren","groupSelectedItems()","▣"),item("Gruppierung lösen","ungroupSelectedItems()","▢"),item("Duplizieren","duplicateSelected()","⧉"),item("Als Textformat","saveSelectionAsTextFormat()","Aa"),item("Format kopieren","copySelectedCanvasFormat()","⧉"),item("Format einfügen","pasteSelectedCanvasFormat()","▣"),item("Sperren","toggleSelectedLock()","🔒"),item("Löschen","deleteSelectedCanvasItem()","⌫")])}<div class="mobileDrawerTitle">Ausrichten</div>${grid([item("Links","mobileAlignMulti('left')","⇤"),item("Horizontal Mitte","mobileAlignMulti('centerX')","↔"),item("Rechts","mobileAlignMulti('right')","⇥"),item("Oben","mobileAlignMulti('top')","⇧"),item("Vertikal Mitte","mobileAlignMulti('centerY')","↕"),item("Unten","mobileAlignMulti('bottom')","⇩")])}</div>`;
  }
  d.innerHTML=mobileDrawerHead(title)+html;
 }
@@ -6616,6 +6662,31 @@ function updateMobileSelectionTools(){
  if(window.innerWidth>=900||!document.body.classList.contains('editorMode')||(!canvasState.selectedId&&!canvasState.selectedIds?.length&&!canvasState.selectedVectorIds?.length)){el.classList.remove('show');el.innerHTML='';return}
  el.classList.add('show');el.innerHTML=`<button onclick="duplicateSelected()" title="Duplizieren">⧉</button><button onclick="toggleSelectedLock()" title="Sperren">🔒</button><button onclick="deleteSelectedCanvasItem()" title="Löschen">⌫</button><button onclick="editorOpenGroup('selection')" title="Mehr">•••</button>`;
 }
+let copiedCanvasFormat=null;
+function canvasFormatSource(){
+ if(canvasState.selectedType!=="object")return null;
+ return canvasState.objects.find(x=>x.id===canvasState.selectedId)||null;
+}
+window.copySelectedCanvasFormat=function(){
+ const o=canvasFormatSource();if(!o)return cuteToast("Wähle zuerst ein Element ♡");
+ if(["text","block","task","merke","file"].includes(o.kind))copiedCanvasFormat={type:"text",style:JSON.parse(JSON.stringify(o.style||{}))};
+ else if(o.kind==="table")copiedCanvasFormat={type:"table",props:{borderColor:o.borderColor,borderWidth:o.borderWidth,cellBackground:o.cellBackground,fontSize:o.fontSize,borderRadius:o.borderRadius}};
+ else if(o.kind==="vector")copiedCanvasFormat={type:"vector"};
+ else return cuteToast("Für dieses Element gibt es noch kein Format ♡");
+ cuteToast("Format kopiert ✦");
+}
+window.pasteSelectedCanvasFormat=function(){
+ if(!copiedCanvasFormat)return cuteToast("Kopiere zuerst ein Format ♡");
+ const targets=(canvasState.selectedIds||[]).length?canvasState.objects.filter(x=>canvasState.selectedIds.includes(x.id)):[canvasFormatSource()].filter(Boolean);
+ let changed=0;
+ targets.forEach(o=>{
+  if(copiedCanvasFormat.type==="text"&&["text","block","task","merke","file"].includes(o.kind)){o.style={...(o.style||{}),...JSON.parse(JSON.stringify(copiedCanvasFormat.style))};changed++}
+  if(copiedCanvasFormat.type==="table"&&o.kind==="table"){Object.assign(o,copiedCanvasFormat.props);changed++}
+ });
+ if(!changed)return cuteToast("Format passt nicht zu dieser Auswahl ♡");
+ renderCanvasObjects();renderCanvasInspector();markCanvasDirty();pushHistory();cuteToast("Format eingefügt ✦");
+}
+
 function renderSheetEditor(){
  const {s,t}=currentTopic();if(!s||!t)return;
  renderStylePresets();renderStickerPicker();
@@ -6652,7 +6723,7 @@ function serializedCanvas(){
    }
    if(o.kind==="tape")return `<div style="${base}background:rgba(242,190,178,.62);transform:rotate(${o.rotation||-4}deg)"></div>`;
    if(o.kind==="graph")return `<div style="${base}">${graphSvg(o.graph||graphDefault(),Math.max(120,Math.round(o.w)),Math.max(100,Math.round(o.h)))}</div>`;
-   if(o.kind==="table")return `<div style="${base}"><table style="border-collapse:collapse;width:100%;height:100%;font-size:${o.fontSize||16}px">${o.cells.map(r=>`<tr>${r.map(c=>`<td style="border:${o.borderWidth??1}px solid ${o.borderColor||"#aaa7a2"};background:${o.cellBackground||"#ffffff"};padding:6px">${esc(c)}</td>`).join("")}</tr>`).join("")}</table></div>`;
+   if(o.kind==="table")return `<div style="${base}"><table style="border-collapse:collapse;width:100%;height:100%;font-size:${o.fontSize||16}px;border-radius:${o.borderRadius??12}px;overflow:hidden">${o.cells.map((r,ri)=>`<tr>${r.map((c,ci)=>`<td style="border:${o.borderWidth??1}px solid ${o.borderColor||"#aaa7a2"};background:${o.cellColors?.[ri]?.[ci]||o.cellBackground||"#ffffff"};padding:6px">${esc(c)}</td>`).join("")}</tr>`).join("")}</table></div>`;
    const s=o.style||{},bg=o.kind==="task"?"#fff5eb":o.kind==="merke"?"#fff0ef":s.background||"transparent";
    return `<div style="${base}transform:rotate(${o.rotation||0}deg);padding:${s.padding??7}px;font-size:${s.fontSize||16}px;font-weight:${s.fontWeight||400};color:${s.color||"#333"};font-family:${s.fontFamily||"Arial"};background:${s.background||bg};text-align:${s.textAlign||"left"};border:${s.borderWidth||0}px solid ${s.borderColor||"transparent"};border-radius:${s.borderRadius||0}px">${o.text||""}</div>`;
  }).join("");
@@ -8726,7 +8797,7 @@ function renderTopicDetail(){
  <div class="resourceSections section">
    <div class="resourceSection">
      <div class="resourceSectionHead"><h3>📄 Lernblätter</h3><button class="primary" onclick="openStudySheetEditor()">+ Lernblatt</button></div>
-     <div class="stack">${sheets.length?sheets.map(x=>`<div class="sheetCard"><b>📄 ${esc(x.title)}</b><div class="small">${x.canvasData?"A4 Canvas-Lernblatt":"A4 Lernblatt"}</div><div class="editRow"><button class="ghost" onclick="openStudySheetEditor('${x.id}')">Bearbeiten</button><button class="ghost" onclick="openStudySheetEditor('${x.id}',true)">Öffnen</button><button class="dangerBtn" onclick="deleteStudySheet('${x.id}')">Löschen</button></div></div>`).join(""):'<div class="empty">Noch kein Lernblatt.</div>'}</div>
+     <div class="stack">${sheets.length?sheets.map(x=>`<div class="sheetCard sheetCardDirect" role="button" tabindex="0" onclick="if(!event.target.closest('button'))openStudySheetEditor('${x.id}')" onkeydown="if(event.key==='Enter')openStudySheetEditor('${x.id}')"><b>📄 ${esc(x.title)}</b><div class="small">${x.canvasData?"A4 Canvas-Lernblatt":"A4 Lernblatt"}</div><div class="editRow"><button class="ghost" onclick="event.stopPropagation();openStudySheetEditor('${x.id}')">Öffnen</button><button class="dangerBtn" onclick="event.stopPropagation();deleteStudySheet('${x.id}')">Löschen</button></div></div>`).join(""):'<div class="empty">Noch kein Lernblatt.</div>'}</div>
    </div>
 
    <div class="resourceSection">
@@ -10973,4 +11044,61 @@ setTimeout(()=>{if(!window.__schoolBloomBooted){document.documentElement.style.b
  }
  body.editorMode #canvasQuickDrawer{bottom:calc(92px + env(safe-area-inset-bottom))!important}
 }
+</style>
+<style id="v95-final-ui-fixes">
+/* V95 — last-mile layout + editor interaction fixes */
+html,body,button,input,select,textarea{font-family:ui-rounded,"SF Pro Rounded","Avenir Next Rounded","Avenir Next",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important}
+
+@media (max-width:899px){
+  /* HOME / APP NAV: the whole width is five equal columns. Older rules forced flex. */
+  body:not(.editorMode) #nav{
+    display:grid!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    left:50%!important;right:auto!important;transform:translateX(-50%)!important;
+    width:calc(100vw - 28px)!important;max-width:520px!important;
+    margin:0!important;box-sizing:border-box!important;
+    justify-items:stretch!important;align-items:stretch!important;
+    padding:7px!important;gap:3px!important;
+  }
+  body:not(.editorMode) #nav button{
+    width:100%!important;min-width:0!important;max-width:none!important;margin:0!important;
+    display:flex!important;align-items:center!important;justify-content:center!important;
+    flex-direction:column!important;text-align:center!important;
+  }
+  body:not(.editorMode) #nav button svg{margin:0 auto!important;flex:0 0 auto!important}
+  body:not(.editorMode) #nav .navLabel{width:100%!important;text-align:center!important;margin:3px 0 0!important}
+
+  /* Editor: opening Text/Appearance/etc. REPLACES the main strip instead of stacking above it. */
+  body.editorMode.editorDrawerOpen .canvasQuickNav{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}
+  body.editorMode #canvasQuickDrawer.open{
+    bottom:calc(12px + env(safe-area-inset-bottom))!important;
+    max-height:min(68dvh,610px)!important;
+    overflow:auto!important;
+  }
+  body.editorMode #canvasQuickDrawer .mobilePropertyTabs{
+    position:sticky!important;bottom:-12px!important;z-index:8!important;
+    margin:8px -10px -12px!important;padding:8px 10px calc(8px + env(safe-area-inset-bottom))!important;
+    background:rgba(255,252,249,.98)!important;border-top:1px solid #efddd7!important;
+    backdrop-filter:blur(18px)!important;
+  }
+
+  /* Layers: actual scroll area + touch reorder handle. */
+  .mobileLayerList{max-height:min(52dvh,470px)!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior:contain!important;padding-right:2px!important}
+  .mobileLayerList .layerItem{touch-action:pan-y!important}
+  .layerRow{display:grid!important;grid-template-columns:38px minmax(0,1fr) auto!important;align-items:center!important;gap:7px!important}
+  .layerDragHandle{width:36px!important;height:36px!important;border:1px solid #eadbd6!important;border-radius:11px!important;background:#fffaf7!important;color:#9b7e75!important;font-size:19px!important;cursor:grab!important;touch-action:none!important;padding:0!important}
+  .layerTitleBtn{min-width:0!important;border:0!important;background:transparent!important;color:inherit!important;text-align:left!important;padding:7px 2px!important}
+  .layerDropTarget{outline:2px solid #e8a3a4!important;outline-offset:-2px!important;background:#fff0ef!important}
+  body.layerDragging{user-select:none!important;-webkit-user-select:none!important}
+  .layerTools{display:flex!important;gap:4px!important}
+  .layerTools button{width:34px!important;height:34px!important}
+
+  .formatClipboardActions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:7px!important}
+  .formatClipboardActions button{min-width:0!important}
+}
+
+.sheetCardDirect{cursor:pointer;transition:transform .14s ease,box-shadow .14s ease}
+.sheetCardDirect:active{transform:scale(.985)}
+.tableObj table{width:100%;height:100%;border-collapse:collapse;table-layout:fixed}
+.tableObj td{transition:background-color .15s ease}
 </style>
