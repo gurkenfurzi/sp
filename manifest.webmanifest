@@ -1,12 +1,12 @@
 {
-  "name": "SchoolBloom",
-  "short_name": "SchoolBloom",
-  "id": "/sp/?v=100",
-  "start_url": "./?v=100",
+  "name": "Studia",
+  "short_name": "Studia",
+  "id": "/sp/?v=101",
+  "start_url": "./?v=101",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#fff7f4",
-  "theme_color": "#fff7f4",
+  "background_color": "#fff8f5",
+  "theme_color": "#fff8f5",
   "icons": [
     {
       "src": "./icon-192-v99.png",

@@ -1,4 +1,4 @@
-# SchoolBloom – Version 97
+# Studia – Version 97
 
 Auf Basis der funktionierenden V96.
 
