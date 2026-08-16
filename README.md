@@ -1,13 +1,13 @@
-# SchoolBloom – Version 95
+# SchoolBloom – Version 96
 
-Gezielter UI-/Editor-Fix auf Basis von V94.
+Auf Basis der funktionierenden V95.
 
-- Home-Navigation wirklich als 5 gleich breite, zentrierte Spalten
-- Textbearbeitung ersetzt auf Mobile die Main-Editorleiste
-- Format kopieren / Format einfügen
-- Ebenen: Drag & Drop, echte Namen, Umbenennen, Scrollen
-- Lernblatt-Karten öffnen mit einem Tap direkt den Editor
-- Tabellen: runde Ecken + einzelne Zellen färben
-- weichere/rounded App-Schrift
+- kompakter mobiler Text-Editor ohne übergroße Panels
+- eigener Font-Picker mit echter Schriftvorschau + eigene Schriften
+- mehrere Lernblatt-Seiten mit Seitenleiste unter dem Canvas
+- freies Zoomen und Verschieben des Canvas, Zwei-Finger-Pinch-Zoom
+- Fächer auf Home klarer erreichbar
+- Notizbuch/Fach-Detailseite nah am gelieferten Referenzdesign: Suche, +Thema, Themenkarten, Inhaltszahlen, Übersicht
+- V95-Funktionen bleiben erhalten
 
 Alle Dateien direkt ins GitHub-Pages-Repository kopieren.

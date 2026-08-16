@@ -3025,7 +3025,7 @@ html,body{background:#fff7f4;}
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 95</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 96</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -3902,7 +3902,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 95";
+ $("#headerEyebrow").textContent="VERSION 96";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -10983,6 +10983,248 @@ try{
   const zoom=document.createElement('div');zoom.className='v91ZoomPill';zoom.innerHTML='<button onclick="v91ZoomBy(-.1)">−</button><span id="v91ZoomLabel">100%</span><button onclick="v91ZoomBy(.1)">＋</button><button onclick="v91Fit()">⊡</button>';document.body.appendChild(zoom);v91UpdateZoomLabel();
 }catch(e){console.warn('V92 editor enhancement skipped safely:',e)}
 /* ===== /V92 ===== */
+
+/* ===== V96 — compact editor, font previews, multi-page canvas, free pan/zoom, subject redesign ===== */
+
+// ---------- Compact font picker with real previews ----------
+const V96_FONT_KEY="schoolbloom-v91-custom-fonts";
+function v96StoredFonts(){try{return JSON.parse(localStorage.getItem(V96_FONT_KEY)||"[]")}catch(_){return []}}
+function v96FontChoices(){
+  return [
+    {name:"Arial",css:"Arial"},
+    {name:"Lato",css:"Lato, Arial, sans-serif"},
+    {name:"Playfair Display",css:"'Playfair Display', Georgia, serif"},
+    {name:"Georgia",css:"Georgia"},
+    {name:"Verdana",css:"Verdana"},
+    {name:"Trebuchet MS",css:"'Trebuchet MS'"},
+    ...v96StoredFonts().map(f=>({name:f.name,css:f.name,custom:true}))
+  ];
+}
+function v96FontDisplayName(css){
+  const clean=String(css||"").replace(/["']/g,"").toLowerCase();
+  const hit=v96FontChoices().find(f=>clean.includes(String(f.name).toLowerCase()));
+  return hit?.name||String(css||"Schrift").split(",")[0].replace(/["']/g,"");
+}
+window.v96UseFont=function(css){applyTextProperty('fontFamily',css);mobileTextMode('text')};
+window.v96OpenFontPicker=function(){
+  const o=mobileSelectedText();if(!o)return;
+  const current=o.style?.fontFamily||"Arial";
+  const rows=v96FontChoices().map(f=>{
+    const selected=String(current).replace(/["']/g,"").includes(f.name.replace(/["']/g,""));
+    return `<button class="v96FontChoice ${selected?'selected':''}" onclick='v96UseFont(${JSON.stringify(f.css)})'>
+      <span class="v96FontSample" style='font-family:${esc(f.css)}'>Abc 123</span>
+      <span class="v96FontMeta"><b style='font-family:${esc(f.css)}'>${esc(f.name)}</b><small>${f.custom?'Eigene Schrift':'Standard'}</small></span>
+      <i>${selected?'✓':'›'}</i>
+    </button>`;
+  }).join("");
+  const content=$("#mobileTextModeContent");if(!content)return;
+  content.innerHTML=`<div class="v96FontPicker"><div class="v96InlineHead"><button onclick="mobileTextMode('text')">‹</button><div><b>Schriftart</b><small>Tippe auf eine Schrift für die Vorschau.</small></div></div><div class="v96FontList">${rows}</div><button class="v96AddFontButton" onclick="v91PickFont()"><b>Aa＋</b><span>Eigene Schrift hinzufügen</span></button></div>`;
+};
+
+const v96PreviousTextModeContentHTML=mobileTextModeContentHTML;
+mobileTextModeContentHTML=function(kind){
+  const o=mobileSelectedText();if(!o)return '';
+  const st=o.style||{};
+  if(kind==='text'){
+    const ff=st.fontFamily||"Arial",fs=st.fontSize||16,ta=st.textAlign||"left";
+    return `<div class="v96TextPanel">
+      <div class="v96TextPrimaryRow">
+        <button class="v96FontChooser" onclick="v96OpenFontPicker()"><span class="fontPreviewAa" style='font-family:${esc(ff)}'>Aa</span><span><b style='font-family:${esc(ff)}'>${esc(v96FontDisplayName(ff))}</b><small>Schriftart</small></span><i>⌄</i></button>
+        <div class="mobileSizeStep"><button onclick="mobileFontStep(-1)">−</button><input id="mobileFontSize" type="number" min="6" max="180" value="${fs}" onchange="applyTextProperty('fontSize',+this.value)"><button onclick="mobileFontStep(1)">＋</button></div>
+        <button class="v96FmtBtn" onclick="formatSelectedText('bold')"><b>B</b></button>
+        <button class="v96FmtBtn" onclick="formatSelectedText('italic')"><i>I</i></button>
+        <button class="v96FmtBtn" onclick="formatSelectedText('underline')"><u>U</u></button>
+        <button class="v96FmtBtn" onclick="formatSelectedText('strikeThrough')"><s>S</s></button>
+      </div>
+      <div class="v96TextSecondaryRow">
+        <button class="${ta==='left'?'on':''}" onclick="applyTextProperty('textAlign','left');mobileRefreshTextMode()" title="Links">≡</button>
+        <button class="${ta==='center'?'on':''}" onclick="applyTextProperty('textAlign','center');mobileRefreshTextMode()" title="Zentriert">≣</button>
+        <button class="${ta==='right'?'on':''}" onclick="applyTextProperty('textAlign','right');mobileRefreshTextMode()" title="Rechts">≡</button>
+        <button class="${ta==='justify'?'on':''}" onclick="applyTextProperty('textAlign','justify');mobileRefreshTextMode()" title="Blocksatz">☷</button>
+        <span class="v96Divider"></span>
+        <button onclick="formatSelectedText('insertUnorderedList')" title="Punkte">•≡</button>
+        <button onclick="formatSelectedText('insertOrderedList')" title="Nummern">1≡</button>
+        <button onclick="mobileDashList()" title="Striche">–≡</button>
+      </div>
+    </div>`;
+  }
+  if(kind==='appearance')return `<div class="v96CompactMode"><div class="v96CompactTitle"><b>Aussehen</b><span>Farben, Kontur und Transparenz</span></div><div class="v96CompactGrid">
+      <label>Textfarbe<input type="color" value="${st.color||'#7a5f57'}" onchange="applyTextProperty('color',this.value)"></label>
+      <label>Fläche<input type="color" value="${st.background&&st.background!=='transparent'?st.background:'#ffffff'}" onchange="updateObjStyle('background',this.value)"></label>
+      <label>Kontur<input type="color" value="${st.borderColor||'#e5aaa9'}" onchange="updateObjStyle('borderColor',this.value)"></label>
+      <label>Dicke<input type="number" min="0" max="20" value="${st.borderWidth||0}" onchange="updateObjStyle('borderWidth',+this.value)"></label>
+      <label>Linie<select onchange="updateObjStyle('borderStyle',this.value)"><option value="solid" ${(!st.borderStyle||st.borderStyle==='solid')?'selected':''}>Durchgezogen</option><option value="dashed" ${st.borderStyle==='dashed'?'selected':''}>Gestrichelt</option><option value="dotted" ${st.borderStyle==='dotted'?'selected':''}>Gepunktet</option></select></label>
+      <label>Transparenz<input type="range" min="0" max="100" value="${Math.round((st.opacity??1)*100)}" oninput="updateObjStyle('opacity',+this.value/100)"></label>
+    </div><div class="v96ActionRow"><button onclick="mobileGradient()">✦ Verlauf</button><button onclick="updateObjStyle('background','transparent')">Fläche aus</button><button onclick="copySelectedCanvasFormat()">⧉ Format kopieren</button><button onclick="pasteSelectedCanvasFormat()">▣ Format einfügen</button></div></div>`;
+  if(kind==='spacing')return `<div class="v96CompactMode"><div class="v96CompactTitle"><b>Abstand</b><span>Text und Innenraum</span></div><div class="v96CompactGrid">
+      <label>Buchstaben<input type="number" step=".5" value="${st.letterSpacing||0}" onchange="updateObjStyle('letterSpacing',+this.value)"></label>
+      <label>Zeilenhöhe<input type="number" step=".05" min=".8" max="3" value="${st.lineHeight||1.25}" onchange="updateObjStyle('lineHeight',+this.value)"></label>
+      <label>Innenabstand<input type="number" min="0" max="80" value="${st.padding??7}" onchange="updateObjStyle('padding',+this.value)"></label>
+      <label>Eckenradius<input type="number" min="0" max="80" value="${st.borderRadius||0}" onchange="updateObjStyle('borderRadius',+this.value)"></label>
+    </div></div>`;
+  if(kind==='position')return `<div class="v96CompactMode"><div class="v96CompactTitle"><b>Position</b><span>Größe und Ausrichtung</span></div><div class="v96CompactGrid">
+      <label>X<input type="number" value="${Math.round(o.x)}" onchange="setSelectedGeometry('x',+this.value)"></label><label>Y<input type="number" value="${Math.round(o.y)}" onchange="setSelectedGeometry('y',+this.value)"></label>
+      <label>Breite<input type="number" value="${Math.round(o.w)}" onchange="setSelectedGeometry('w',+this.value)"></label><label>Höhe<input type="number" value="${Math.round(o.h)}" onchange="setSelectedGeometry('h',+this.value)"></label>
+    </div><div class="v96ActionRow two"><button onclick="alignSelected('centerX')">↔ Horizontal Mitte</button><button onclick="alignSelected('centerY')">↕ Vertikal Mitte</button></div></div>`;
+  if(kind==='effects')return `<div class="v96CompactMode"><div class="v96CompactTitle"><b>Effekte</b><span>Schatten und Tiefe</span></div><div class="v96CompactGrid">
+      <label>Blur<input id="mobileShadowBlur" type="number" min="0" max="60" value="14"></label><label>Versatz Y<input id="mobileShadowY" type="number" min="-30" max="30" value="5"></label>
+    </div><div class="v96ActionRow two"><button onclick="mobileApplyShadow()">✦ Schatten an</button><button onclick="updateObjStyle('boxShadow','none')">Schatten aus</button></div></div>`;
+  return v96PreviousTextModeContentHTML(kind);
+};
+
+// ---------- Multi-page canvas ----------
+function v96Deep(v){return JSON.parse(JSON.stringify(v))}
+function v96CurrentPageData(){return {objects:v96Deep(canvasState.objects||[]),vectors:v96Deep(canvasState.vectors||[]),orientation:canvasState.orientation||'portrait',pageStyle:v96Deep(canvasState.pageStyle||{color:'#fff',pattern:'blank',spacing:24,margin:55})}}
+function v96BlankPage(){return {objects:[],vectors:[],orientation:canvasState.orientation||'portrait',pageStyle:v96Deep(canvasState.pageStyle||{color:'#fff',pattern:'blank',spacing:24,margin:55})}}
+function v96SyncPage(){
+  canvasState.pages ||= [v96CurrentPageData()];
+  canvasState.activePage=Math.max(0,Math.min(canvasState.pages.length-1,Number(canvasState.activePage)||0));
+  canvasState.pages[canvasState.activePage]=v96CurrentPageData();
+}
+function v96LoadPageData(pg){
+  canvasState.objects=v96Deep(pg?.objects||[]);canvasState.vectors=v96Deep(pg?.vectors||[]);
+  canvasState.orientation=pg?.orientation==='landscape'?'landscape':'portrait';
+  canvasState.pageStyle={color:'#ffffff',pattern:'blank',spacing:24,margin:55,...v96Deep(pg?.pageStyle||{})};
+  canvasState.selectedType=null;canvasState.selectedId=null;canvasState.selectedIds=[];canvasState.selectedVectorIds=[];canvasState.multiMode=false;
+  canvasState.history=[];canvasState.historyIndex=-1;
+  applyCanvasPageSize();renderCanvasObjects();renderVectors();renderCanvasInspector();renderLayerList();clearGuides();pushHistory(true);canvasState.lastSavedHash=canvasSnapshot();
+}
+function v96EnsurePageStrip(){
+  const vp=$("#canvasViewport");if(!vp)return null;
+  let strip=$("#v96PageStrip");if(!strip){strip=document.createElement('div');strip.id='v96PageStrip';strip.className='v96PageStrip';vp.insertAdjacentElement('afterend',strip)}
+  return strip;
+}
+function v96RenderPageStrip(){
+  const strip=v96EnsurePageStrip();if(!strip)return;
+  canvasState.pages ||= [v96CurrentPageData()];
+  strip.innerHTML=`<div class="v96PageThumbs">${canvasState.pages.map((p,i)=>`<button class="v96PageThumb ${i===canvasState.activePage?'active':''}" onclick="v96SwitchPage(${i})"><span>${i+1}</span><small>Seite</small></button>`).join('')}<button class="v96PageAdd" onclick="v96AddPage()"><b>＋</b><small>Seite</small></button></div><div class="v96PageActions"><button onclick="v96DuplicatePage()">⧉</button><button onclick="v96DeletePage()">⌫</button></div>`;
+}
+window.v96SwitchPage=function(index){
+  index=Number(index);if(index===canvasState.activePage||!canvasState.pages?.[index])return;
+  v96SyncPage();canvasState.activePage=index;v96LoadPageData(canvasState.pages[index]);v96RenderPageStrip();markCanvasDirty();setTimeout(()=>v96FitCanvas(false),30);
+};
+window.v96AddPage=function(){
+  v96SyncPage();canvasState.pages.push(v96BlankPage());canvasState.activePage=canvasState.pages.length-1;v96LoadPageData(canvasState.pages[canvasState.activePage]);v96RenderPageStrip();markCanvasDirty();cuteToast('Neue Seite hinzugefügt ♡');setTimeout(()=>v96FitCanvas(false),30);
+};
+window.v96DuplicatePage=function(){
+  v96SyncPage();const copy=v96Deep(canvasState.pages[canvasState.activePage]);copy.objects.forEach(o=>o.id=id());copy.vectors.forEach(v=>v.id=id());canvasState.pages.splice(canvasState.activePage+1,0,copy);canvasState.activePage++;v96LoadPageData(copy);v96RenderPageStrip();markCanvasDirty();cuteToast('Seite dupliziert ✦');
+};
+window.v96DeletePage=function(){
+  if((canvasState.pages||[]).length<=1)return cuteToast('Mindestens eine Seite bleibt ♡');
+  if(!confirm('Diese Seite wirklich löschen?'))return;
+  canvasState.pages.splice(canvasState.activePage,1);canvasState.activePage=Math.max(0,canvasState.activePage-1);v96LoadPageData(canvasState.pages[canvasState.activePage]);v96RenderPageStrip();markCanvasDirty();
+};
+
+const v96BaseRenderSheetEditor=renderSheetEditor;
+renderSheetEditor=function(){
+  v96BaseRenderSheetEditor();
+  const sh=selectedSheetId?(data.studySheets||[]).find(x=>x.id===selectedSheetId):null;
+  const saved=sh?.canvasData||null;
+  canvasState.pages=saved?.pages?.length?v96Deep(saved.pages):[v96CurrentPageData()];
+  canvasState.activePage=Math.max(0,Math.min(canvasState.pages.length-1,Number(saved?.activePage)||0));
+  if(saved?.pages?.length)v96LoadPageData(canvasState.pages[canvasState.activePage]);
+  v96EnsurePanSurface();v96RenderPageStrip();setTimeout(()=>v96FitCanvas(false),100);
+};
+
+saveCanvasSheetCore=function(auto=false){
+  const {s,t}=currentTopic();if(!s||!t)return;
+  v96SyncPage();
+  const first=canvasState.pages?.[0]||v96CurrentPageData();
+  const title=first.objects?.find(o=>["text","block"].includes(o.kind)&&(o.style?.fontSize||0)>=28)?.text?.replace(/<[^>]*>/g,"").slice(0,80)||t.title;
+  const active=canvasState.pages[canvasState.activePage]||v96CurrentPageData();
+  const dataObj={objects:v96Deep(active.objects),vectors:v96Deep(active.vectors),orientation:active.orientation,pageStyle:v96Deep(active.pageStyle),pages:v96Deep(canvasState.pages),activePage:canvasState.activePage};
+  if(selectedSheetId){const sh=data.studySheets.find(x=>x.id===selectedSheetId);if(sh){sh.title=title;sh.canvasData=dataObj;sh.html=""}}
+  else{const sh={id:id(),subject:s.name,topicId:t.id,title,html:"",canvasData:dataObj,created:Date.now()};data.studySheets.push(sh);selectedSheetId=sh.id}
+  save();if(!auto){const el=$("#autosaveState");if(el){el.textContent="Gespeichert ✓";el.className="autosaveState saved"}}
+};
+
+// ---------- Free pan / pinch zoom ----------
+function v96EnsurePanSurface(){
+  const vp=$("#canvasViewport"),stage=$("#canvasStage");if(!vp||!stage)return null;
+  let surface=$("#v96PanSurface");
+  if(!surface){surface=document.createElement('div');surface.id='v96PanSurface';surface.className='v96PanSurface';stage.parentNode.insertBefore(surface,stage);surface.appendChild(stage)}
+  return surface;
+}
+function v96ApplyZoom(value,preserve=true,focus=null){
+  const vp=$("#canvasViewport"),stage=$("#canvasStage"),surface=v96EnsurePanSurface();if(!vp||!stage||!surface)return;
+  const old=Math.max(.2,Number(stage.dataset.scale)||canvasZoom||1),z=Math.max(.25,Math.min(3,Number(value)||1));
+  let docX,docY;
+  if(focus){const sr=surface.getBoundingClientRect();docX=(focus.x-sr.left+vp.scrollLeft)/old;docY=(focus.y-sr.top+vp.scrollTop)/old}
+  else if(preserve){docX=(vp.scrollLeft+vp.clientWidth/2)/old;docY=(vp.scrollTop+vp.clientHeight/2)/old}
+  canvasZoom=z;canvasState.userZoomTouched=true;stage.dataset.scale=String(z);stage.style.zoom='';stage.style.transform=`scale(${z})`;stage.style.transformOrigin='0 0';
+  surface.style.width=(canvasPageWidth()*z)+'px';surface.style.height=(canvasPageHeight()*z)+'px';
+  const label=$("#canvasZoomLabel");if(label)label.textContent=Math.round(z*100)+'%';const pill=$("#v91ZoomLabel");if(pill)pill.textContent=Math.round(z*100)+'%';
+  requestAnimationFrame(()=>{if(docX!=null){vp.scrollLeft=Math.max(0,docX*z-(focus?focus.x:vp.clientWidth/2));vp.scrollTop=Math.max(0,docY*z-(focus?focus.y:vp.clientHeight/2))}});
+}
+function v96FitCanvas(markUser=false){
+  const vp=$("#canvasViewport");if(!vp)return;const z=Math.min(1,Math.max(.25,(vp.clientWidth-28)/canvasPageWidth()));
+  const touched=canvasState.userZoomTouched;v96ApplyZoom(z,false);canvasState.userZoomTouched=markUser?true:touched;vp.scrollLeft=0;vp.scrollTop=0;
+}
+fitCanvasToScreen=function(){v96FitCanvas(false)};window.fitCanvasToScreen=fitCanvasToScreen;
+window.fitCanvasStage=function(){v96FitCanvas(true)};
+window.setCanvasZoom=function(v){v96ApplyZoom(v,true)};
+window.canvasZoomBy=function(delta){v96ApplyZoom(canvasZoom+Number(delta||0),true)};
+const v96OldApplyPageSize=applyCanvasPageSize;
+applyCanvasPageSize=function(){v96OldApplyPageSize();setTimeout(()=>v96ApplyZoom(canvasZoom||1,false),0)};
+
+(function v96InstallCanvasGestures(){
+ const vp=$("#canvasViewport");if(!vp||vp.dataset.v96Gesture)return;vp.dataset.v96Gesture='1';
+ let pinch=null;
+ vp.addEventListener('touchstart',e=>{
+   if(e.touches.length!==2)return; e.preventDefault();e.stopImmediatePropagation();
+   const a=e.touches[0],b=e.touches[1],rect=vp.getBoundingClientRect();
+   pinch={dist:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),zoom:canvasZoom,focus:{x:(a.clientX+b.clientX)/2-rect.left,y:(a.clientY+b.clientY)/2-rect.top}};
+   canvasState.userZoomTouched=true;
+ },{capture:true,passive:false});
+ vp.addEventListener('touchmove',e=>{
+   if(!pinch||e.touches.length!==2)return;e.preventDefault();e.stopImmediatePropagation();
+   const a=e.touches[0],b=e.touches[1],d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);v96ApplyZoom(pinch.zoom*(d/pinch.dist),true,pinch.focus);
+ },{capture:true,passive:false});
+ vp.addEventListener('touchend',e=>{if(e.touches.length<2)pinch=null},{capture:true,passive:true});
+})();
+
+// ---------- Subject/notebook detail: close to the supplied reference ----------
+const v96BaseRenderSubjectDetail=renderSubjectDetail;
+window.v96FilterTopics=function(q){const term=String(q||'').trim().toLowerCase();document.querySelectorAll('.v96TopicCard').forEach(c=>c.hidden=!!term&&!c.dataset.search.includes(term))};
+renderSubjectDetail=function(){
+  if(window.innerWidth>=900)return v96BaseRenderSubjectDetail();
+  const root=$("#subjectDetail");if(!root)return;const s=data.subjects.find(x=>x.id===selectedSubjectId);if(!s){root.innerHTML='<div class="empty">Fach nicht gefunden.</div>';return}ensureSubjectShape(s);
+  const topics=s.topics||[];
+  let totalResources=0,populated=0;
+  const cards=topics.map(t=>{
+    const topicDecks=(data.flashDecks||[]).filter(d=>d.subject===s.name&&d.topicId===t.id);
+    const cardsCount=topicDecks.reduce((sum,d)=>sum+(data.flashcards||[]).filter(c=>c.deckId===d.id).length,0);
+    const sheets=(data.studySheets||[]).filter(x=>x.subject===s.name&&x.topicId===t.id).length;
+    const quizzes=(data.quizzes||[]).filter(x=>x.subject===s.name&&x.topicId===t.id).length;
+    const files=(t.files||[]).length;const resources=sheets+cardsCount+quizzes+files;totalResources+=resources;if(resources)populated++;
+    return `<button class="v96TopicCard" data-search="${esc((t.title+' '+(t.text||'')).toLowerCase())}" onclick="openTopic('${s.id}','${t.id}')">
+      <span class="v96FolderTab"></span><span class="v96TopicTop"><i>${esc(s.emoji||'🌿')}</i><b>${esc(t.title)}</b><strong>›</strong></span>
+      <span class="v96TopicStats"><em>▧ <span>${sheets} Lernblätter</span></em><em>▤ <span>${cardsCount} Karteikarten</span></em><em>ⓘ <span>${quizzes} Quizze</span></em><em>⌑ <span>${files} Dateien</span></em></span>
+    </button>`;
+  }).join('')||'<div class="v96EmptyTopics">Noch keine Themen. Tippe auf <b>+ Thema</b>.</div>';
+  const pct=topics.length?Math.round(populated/topics.length*100):0;
+  root.innerHTML=`<div class="v96SubjectPage">
+    <div class="v96SubjectHeader"><button onclick="leaveSubjectNotebook()">←</button><div><h2>${esc(s.name)}</h2><p>Themenordner</p></div><span class="v96LeafDecor">🌿</span></div>
+    <div class="v96SubjectTools"><label><span>⌕</span><input placeholder="Themen suchen …" oninput="v96FilterTopics(this.value)"></label><button onclick="openNewTopic('${s.id}')">＋ Thema</button></div>
+    <div class="v96TopicGrid">${cards}</div>
+    <div class="v96SubjectOverview"><span class="v96OverviewFlower">${esc(s.emoji||'🌷')}</span><div><small>Dein Überblick</small><b>${topics.length} ${topics.length===1?'Thema':'Themen'} insgesamt</b><div class="v96Progress"><i style="width:${pct}%"></i></div><span>${totalResources} Lerninhalte · ${pct}% mit Inhalten</span></div><button onclick="openCoverEditor('${s.id}')">Gestalten</button></div>
+    <button class="v96DeleteSubject" onclick="deleteSubjectFromPage('${s.id}')">Fach löschen</button>
+  </div>`;
+};
+
+// ---------- Home: clearer shortcuts; Fächer is no longer hidden behind “Notiz” ----------
+(function v96HomeCleanup(){
+ const a=document.querySelector('.homeMiniActions');if(a){
+   const b=[...a.querySelectorAll('button')];
+   if(b[0])b[0].innerHTML='<span>＋</span> Aufgabe';
+   if(b[1])b[1].innerHTML='<span>✦</span> Test';
+   if(b[2]){b[2].innerHTML='<span>▤</span> Fächer';b[2].setAttribute('onclick',"openView('subjects')")}
+   if(b[3]){b[3].innerHTML='<span>◷</span> Lernen';b[3].setAttribute('onclick',"openView('study')")}
+ }
+})();
+
+/* ===== /V96 ===== */
+
 </script>
 
 <script id="v92-fallback">
@@ -11102,3 +11344,71 @@ html,body,button,input,select,textarea{font-family:ui-rounded,"SF Pro Rounded","
 .tableObj table{width:100%;height:100%;border-collapse:collapse;table-layout:fixed}
 .tableObj td{transition:background-color .15s ease}
 </style>
+
+<style id="v96-ui">
+/* ===== V96 compact mobile editor + notebook reference design ===== */
+@media (max-width:899px){
+  body.editorMode #canvasQuickDrawer.open{
+    left:12px!important;right:12px!important;bottom:calc(10px + env(safe-area-inset-bottom))!important;
+    max-height:min(54dvh,480px)!important;height:auto!important;overflow:hidden!important;
+    padding:8px 10px!important;border-radius:24px!important;box-sizing:border-box!important;
+  }
+  body.editorMode #canvasQuickDrawer .mobileDrawerHead{padding:6px 0 7px!important;min-height:36px!important}
+  .mobileDrawerHead button{height:32px!important;min-height:32px!important;width:40px!important}
+  .mobileTextEditor{max-height:calc(min(54dvh,480px) - 48px)!important;overflow:hidden!important}
+  .mobileTextModeContent{padding:7px 1px!important;overflow:auto!important;overscroll-behavior:contain!important;scrollbar-width:none!important}
+  .mobileTextModeContent::-webkit-scrollbar{display:none}
+  .mobileTextModeTabs{padding-top:6px!important;gap:4px!important}
+  .mobileTextModeTabs button{min-height:48px!important;border-radius:12px!important;padding:4px 1px!important}
+  .mobileTextModeTabs button b{font-size:16px!important}.mobileTextModeTabs button span{font-size:7.5px!important}
+
+  .v96TextPanel{display:grid;gap:7px}
+  .v96TextPrimaryRow{display:grid;grid-template-columns:minmax(108px,1.45fr) 102px repeat(4,38px);gap:5px;align-items:stretch}
+  .v96FontChooser{min-width:0;height:42px;border:1px solid #ead9d3;background:#fff;border-radius:12px;color:#6f5951;padding:4px 7px;display:grid;grid-template-columns:30px minmax(0,1fr) 12px;gap:5px;align-items:center;text-align:left}
+  .v96FontChooser .fontPreviewAa{width:30px;height:30px;border-radius:9px;background:#f8e8e5;display:grid;place-items:center;font-size:15px}
+  .v96FontChooser>span:nth-child(2){display:grid;min-width:0}.v96FontChooser b{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v96FontChooser small{font-size:6.5px;color:#a48a81}.v96FontChooser i{font-style:normal}
+  .v96TextPrimaryRow .mobileSizeStep{height:42px!important}.v96FmtBtn{height:42px!important;border:1px solid #ead9d3!important;border-radius:12px!important;background:#fff!important;color:#6f5951!important;padding:0!important;font-size:15px!important}
+  .v96TextSecondaryRow{display:grid;grid-template-columns:repeat(4,1fr) 1px repeat(3,1fr);gap:5px;align-items:center}
+  .v96TextSecondaryRow button{height:38px;border:1px solid #ead9d3;background:#fff;color:#715b53;border-radius:11px;font-size:14px}.v96TextSecondaryRow button.on{background:#f6dcda}.v96Divider{height:26px;background:#efdfda;border-radius:1px}
+
+  .v96CompactMode{display:grid;gap:7px}.v96CompactTitle{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:0 2px}.v96CompactTitle b{font-size:11px;color:#6d574f}.v96CompactTitle span{font-size:7px;color:#9f857c}
+  .v96CompactGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+  .v96CompactGrid label{display:grid;grid-template-columns:minmax(0,1fr) 58%;gap:6px;align-items:center;min-height:39px;padding:4px 7px;border:1px solid #eadbd6;border-radius:11px;background:#fff;color:#92776e;font-size:7.5px;font-weight:850;margin:0}
+  .v96CompactGrid input,.v96CompactGrid select{width:100%;height:30px;min-width:0;border:0;background:#fff9f6;color:#705a52;border-radius:8px;padding:0 6px;font-size:9px;font-weight:800}.v96CompactGrid input[type=color]{padding:2px}.v96CompactGrid input[type=range]{padding:0}
+  .v96ActionRow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}.v96ActionRow.two{grid-template-columns:repeat(2,minmax(0,1fr))}.v96ActionRow button{min-height:37px;border:1px solid #eadbd6;background:#fff;border-radius:11px;color:#725b53;font-size:8px;font-weight:850;padding:5px}
+
+  .v96FontPicker{display:grid;gap:8px}.v96InlineHead{display:grid;grid-template-columns:34px 1fr;gap:8px;align-items:center}.v96InlineHead>button{width:34px;height:34px;border:1px solid #eadbd6;border-radius:10px;background:#fff;color:#705a52;font-size:20px}.v96InlineHead>div{display:grid}.v96InlineHead b{font-size:11px}.v96InlineHead small{font-size:7px;color:#a1877d}
+  .v96FontList{display:grid;grid-template-columns:1fr 1fr;gap:6px;max-height:235px;overflow:auto;overscroll-behavior:contain;padding:1px}
+  .v96FontChoice{min-width:0;min-height:62px;border:1px solid #eadbd6;background:#fff;border-radius:13px;padding:7px;display:grid;grid-template-columns:50px minmax(0,1fr) 12px;gap:6px;align-items:center;text-align:left;color:#715a52}.v96FontChoice.selected{background:#fff1f0;border-color:#e9aaa8}.v96FontSample{font-size:15px;text-align:center}.v96FontMeta{display:grid;min-width:0}.v96FontMeta b{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v96FontMeta small{font-size:6.5px;color:#a28a81}.v96FontChoice i{font-style:normal;color:#c17d7d}
+  .v96AddFontButton{min-height:42px;border:1px dashed #e3bdb8;background:#fff8f6;border-radius:12px;color:#8b6861;display:flex;align-items:center;justify-content:center;gap:8px;font-size:9px;font-weight:850}.v96AddFontButton b{font-size:15px}
+
+  body.editorMode .canvasViewport{overflow:auto!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior:contain!important;touch-action:pan-x pan-y!important;padding:10px 12px 18px!important;max-height:none!important}
+  .v96PanSurface{position:relative;flex:none;margin:8px auto 18px!important;transform:none!important}
+  body.editorMode .canvasStage{margin:0!important;transform-origin:0 0!important}
+
+  .v96PageStrip{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 12px calc(86px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(255,249,246,.78),rgba(255,249,246,.96));border-top:1px solid #efdfda;overflow:hidden}
+  .v96PageThumbs{display:flex;gap:6px;overflow-x:auto;min-width:0;scrollbar-width:none}.v96PageThumbs::-webkit-scrollbar{display:none}
+  .v96PageThumb,.v96PageAdd{flex:0 0 54px;height:48px;border:1px solid #ead7d1;background:#fff;border-radius:12px;color:#80675f;display:grid;place-items:center;align-content:center;gap:0;padding:3px}.v96PageThumb.active{border-color:#e49a9a;background:#fff0ef;box-shadow:inset 0 0 0 1px #e9abab}.v96PageThumb span,.v96PageAdd b{font-size:13px}.v96PageThumb small,.v96PageAdd small{font-size:6.5px}.v96PageActions{display:flex;gap:5px;flex:0 0 auto}.v96PageActions button{width:38px;height:38px;border:1px solid #ead7d1;background:#fff;border-radius:11px;color:#80675f}
+
+  .homeMiniActions{gap:8px!important}.homeMiniActions button{min-height:56px!important;display:grid!important;place-items:center!important;align-content:center!important;gap:2px!important;padding:7px 3px!important;font-size:9px!important}.homeMiniActions button span{font-size:15px!important;line-height:1!important}
+
+  #view-subject-detail>.sectionHead{display:none!important}
+  .v96SubjectPage{display:grid;gap:15px;padding-bottom:18px}
+  .v96SubjectHeader{position:relative;display:grid;grid-template-columns:48px 1fr auto;gap:12px;align-items:center;padding:2px 2px 3px}.v96SubjectHeader>button{width:48px;height:48px;border:1px solid #ead4ce;background:#fffaf7;border-radius:14px;color:#80675f;font-size:24px;box-shadow:0 4px 0 rgba(220,181,172,.10)}.v96SubjectHeader h2{font-size:34px;line-height:1;letter-spacing:-.045em;color:#68554e}.v96SubjectHeader p{margin:5px 0 0;color:#a38a80;font-size:12px}.v96LeafDecor{font-size:54px;opacity:.34;transform:rotate(-14deg);filter:saturate(.6)}
+  .v96SubjectTools{display:grid;grid-template-columns:1fr 132px;gap:9px}.v96SubjectTools label{height:52px;border:1px solid #ead4ce;background:#fffdf9;border-radius:15px;display:grid;grid-template-columns:32px 1fr;align-items:center;padding:0 12px;margin:0;box-shadow:0 6px 15px rgba(100,70,62,.035)}.v96SubjectTools label span{font-size:22px;color:#9a7a70}.v96SubjectTools input{border:0;background:transparent;outline:0;padding:0;font-size:12px;color:#725d55}.v96SubjectTools>button{border:0;border-radius:15px;background:linear-gradient(135deg,#eba1a5,#e79199);color:#fff;font-size:13px;font-weight:900;box-shadow:0 7px 0 rgba(207,132,135,.10)}
+  .v96TopicGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .v96TopicCard{position:relative;min-height:168px;border:1px solid #ead7d1;background:linear-gradient(180deg,#fffdf9,#fffaf6);border-radius:17px;padding:17px 13px 12px;text-align:left;color:#6f5951;overflow:visible;box-shadow:0 7px 17px rgba(105,72,64,.035)}.v96TopicCard[hidden]{display:none}.v96FolderTab{position:absolute;left:13px;top:-9px;width:64px;height:18px;background:#fffdf9;border:1px solid #ead7d1;border-bottom:0;border-radius:10px 10px 0 0}.v96TopicTop{position:relative;display:grid;grid-template-columns:36px minmax(0,1fr) 16px;gap:8px;align-items:center}.v96TopicTop i{width:36px;height:36px;border-radius:10px;background:#f4f4e7;display:grid;place-items:center;font-style:normal;font-size:17px;filter:saturate(.65)}.v96TopicTop b{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v96TopicTop strong{font-size:22px;color:#d48287;font-weight:500}.v96TopicStats{display:grid;gap:7px;margin-top:13px}.v96TopicStats em{display:grid;grid-template-columns:20px 1fr;gap:5px;align-items:center;font-style:normal;color:#c27e7d;font-size:10px}.v96TopicStats em span{color:#a47d74}.v96EmptyTopics{grid-column:1/-1;border:1px dashed #e9cbc4;border-radius:18px;padding:30px 18px;text-align:center;color:#9b8077;font-size:12px}
+  .v96SubjectOverview{display:grid;grid-template-columns:60px 1fr auto;gap:11px;align-items:center;border:1px solid #ead7d1;background:linear-gradient(135deg,#fffaf7,#fff5f1);border-radius:18px;padding:12px 14px;overflow:hidden}.v96OverviewFlower{width:54px;height:54px;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:27px;box-shadow:0 5px 13px rgba(100,70,62,.05)}.v96SubjectOverview>div{display:grid;gap:2px}.v96SubjectOverview small{font-size:8px}.v96SubjectOverview b{font-size:14px}.v96SubjectOverview span{font-size:8px;color:#aa887f}.v96Progress{height:5px;border-radius:999px;background:#efddd8;margin:5px 0 2px;overflow:hidden}.v96Progress i{display:block;height:100%;border-radius:999px;background:#df9298}.v96SubjectOverview>button{border:1px solid #ead3cd;background:#fff;border-radius:11px;padding:8px 9px;color:#80675f;font-size:8px;font-weight:850}.v96DeleteSubject{justify-self:center;border:0;background:transparent;color:#bd7778;font-size:9px;text-decoration:underline;padding:5px 10px}
+}
+
+@media (max-width:410px){
+  .v96TextPrimaryRow{grid-template-columns:minmax(92px,1.25fr) 92px repeat(4,34px)}
+  .v96FmtBtn{height:40px!important}.v96SubjectTools{grid-template-columns:1fr 112px}.v96SubjectHeader h2{font-size:30px}.v96TopicCard{padding-left:10px;padding-right:10px}.v96TopicTop{grid-template-columns:32px minmax(0,1fr) 12px;gap:6px}.v96TopicTop i{width:32px;height:32px}.v96TopicTop b{font-size:12px}
+}
+
+@media (min-width:900px){
+  .v96PanSurface{position:relative;margin:20px auto 28px}
+  .v96PageStrip{display:flex;align-items:center;justify-content:center;gap:10px;padding:8px 10px 18px}.v96PageThumbs{display:flex;gap:7px}.v96PageThumb,.v96PageAdd{width:58px;height:48px;border:1px solid #ead7d1;background:#fff;border-radius:11px;color:#80675f}.v96PageThumb.active{background:#fff0ef;border-color:#e49a9a}.v96PageActions{display:flex;gap:6px}.v96PageActions button{width:38px;height:38px;border:1px solid #ead7d1;background:#fff;border-radius:10px;color:#80675f}
+}
+</style>
+
