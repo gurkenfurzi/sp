@@ -7,11 +7,11 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Studia">
-<link rel="manifest" href="./manifest.webmanifest?v=102">
+<link rel="manifest" href="./manifest.webmanifest?v=107">
 <link rel="icon" type="image/png" sizes="64x64" href="./favicon-v99.png">
-<link rel="icon" type="image/png" sizes="192x192" href="./icon-192-v99.png">
-<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon-v99.png">
-<link rel="apple-touch-icon-precomposed" href="./apple-touch-icon-v99.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192-v107.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon-v107.png">
+<link rel="apple-touch-icon-precomposed" href="./apple-touch-icon-v107.png">
 <title>Studia</title>
 <style>
 :root{
@@ -3028,7 +3028,7 @@ html,body{background:#fff7f4;}
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 105</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 107</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -3917,7 +3917,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"Studia.";
- $("#headerEyebrow").textContent="VERSION 105";
+ $("#headerEyebrow").textContent="VERSION 107";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -11546,7 +11546,7 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
   window.addEventListener('resize',()=>{if(document.body.classList.contains('editorMode'))setTimeout(v102DesktopEditorInit,80)});
 
   /* refresh version + title */
-  const eyebrow=$('#headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 105';document.title='Studia';
+  const eyebrow=$('#headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 107';document.title='Studia';
 })();
 
 
@@ -11673,7 +11673,7 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
   openView=function(name,...args){const out=v103OpenViewBase(name,...args);try{sessionStorage.setItem('studia-last-view',name);sessionStorage.setItem('studia-last-subject',selectedSubjectId||'');sessionStorage.setItem('studia-last-topic',selectedTopicId||'');sessionStorage.setItem('studia-last-sheet',selectedSheetId||'')}catch(_){}return out};
   window.addEventListener('beforeunload',()=>{try{sessionStorage.setItem('studia-last-view',document.querySelector('.view.active')?.id?.replace('view-','')||'home');sessionStorage.setItem('studia-last-subject',selectedSubjectId||'');sessionStorage.setItem('studia-last-topic',selectedTopicId||'');sessionStorage.setItem('studia-last-sheet',selectedSheetId||'')}catch(_){}});
 
-  setTimeout(()=>{const e=$('#headerEyebrow');if(e)e.textContent='VERSION 105';document.title='Studia';if(document.body.classList.contains('editorMode')){v103Topbar();v96RenderPageStrip()}},60);
+  setTimeout(()=>{const e=$('#headerEyebrow');if(e)e.textContent='VERSION 107';document.title='Studia';if(document.body.classList.contains('editorMode')){v103Topbar();v96RenderPageStrip()}},60);
   /* Space shows a grab hand; middle mouse or Space+drag pans. */
   window.addEventListener('keydown',e=>{if(e.code==='Space'&&document.body.classList.contains('editorMode')&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName))$('#canvasViewport')?.classList.add('v103Hand')});
   window.addEventListener('keyup',e=>{if(e.code==='Space')$('#canvasViewport')?.classList.remove('v103Hand')});
@@ -11915,7 +11915,7 @@ html,body,button,input,select,textarea{font-family:ui-rounded,"SF Pro Rounded","
 
 
 <style id="v100-subjects-desktop-editor">
-/* ===== VERSION 105 — subjects reference + desktop editor reference ===== */
+/* ===== VERSION 107 — subjects reference + desktop editor reference ===== */
 @media (max-width:899px){
   body:has(#view-subjects.active)>.app>.header,
   body:has(#view-subject-detail.active)>.app>.header,
@@ -12146,3 +12146,322 @@ body:has(#view-subjects.active)>.app>.header,body:has(#view-subject-detail.activ
 @media(min-width:900px){body.editorMode #canvasViewport.v103Hand{cursor:grab!important}body.editorMode #canvasViewport.v103Hand.v102Panning{cursor:grabbing!important}}
 </style>
 
+
+
+<!-- V106 PATCH INSERTED -->
+<style id="v106-ui-patch">
+@media (max-width:899px){
+  body.editorMode .canvasEditorShell{height:100dvh!important;min-height:100dvh!important;grid-template-rows:62px minmax(0,1fr)!important;display:grid!important}
+  body.editorMode .canvasTopbar{margin:0!important;border-radius:0 0 18px 18px!important;padding:8px 10px calc(8px + env(safe-area-inset-top))!important;gap:8px!important}
+  body.editorMode .canvasTopbar .editorTitle b{font-size:18px!important}
+  body.editorMode #canvasViewport{padding:8px 8px 14px!important;margin:0!important;border-radius:22px 22px 0 0!important;min-height:0!important;height:auto!important;flex:1 1 auto!important;background:linear-gradient(180deg,#fff8f6,#fffdf9)!important}
+  body.editorMode .v96PanSurface{margin:0 auto 14px!important}
+  body.editorMode #canvasStage{margin:0 auto!important}
+  body.editorMode #v96PageStrip{padding:8px 10px calc(88px + env(safe-area-inset-bottom))!important;background:linear-gradient(180deg,rgba(255,250,247,.86),rgba(255,250,247,.98))!important}
+  body.editorMode .canvasQuickNav{backdrop-filter:blur(18px)!important}
+  body.editorMode #mobileSelectionTools{top:auto!important;bottom:calc(102px + env(safe-area-inset-bottom))!important;left:50%!important;transform:translateX(-50%)!important}
+  body.editorMode #mobileSelectionTools button{width:38px!important;height:38px!important}
+  .v102NotebookGrid,.v102TopicResourceList,.v103TopicList{grid-template-columns:1fr!important}
+  .v102Notebook,.v103Notebook,.v102ResourceCard,.v103FolderRow{width:100%!important;justify-self:stretch!important}
+  .v102Notebook strong,.v102Notebook small,.v102ResourceCard .v103ResourceText,.v103FolderText{min-width:0!important}
+}
+
+@media (min-width:900px){
+  body.editorMode .canvasEditorShell{grid-template-columns:280px minmax(0,1fr) 360px!important;grid-template-rows:68px 1fr 86px!important}
+  body.editorMode .canvasTopbar{margin:8px 10px 0!important;padding:9px 12px!important}
+  body.editorMode #canvasViewport{padding:22px 26px 110px!important}
+  body.editorMode #desktopEditorSidebar,body.editorMode .v102DesktopLeft{overflow:auto!important}
+  body.editorMode #desktopEditorSidebar>.objectPanel{padding:12px 14px!important}
+  body.editorMode #desktopEditorSidebar .rowBetween b{font-size:15px!important}
+  body.editorMode .v102RightTabs{position:sticky!important;top:0!important}
+  body.editorMode .v102PaletteGrid button{min-height:76px!important}
+  body.editorMode .v102PaletteGrid button span{font-size:10.5px!important}
+  .graphModal,.visualGraphFunctionModal,.formulaModal,.visualFormulaModal{width:min(1240px,95vw)!important;max-width:1240px!important;max-height:88vh!important;overflow:auto!important}
+  .graphBuilderLayout{grid-template-columns:minmax(420px,1fr) minmax(420px,1fr)!important;align-items:start!important}
+  .graphPreviewWrap{min-height:420px!important}
+  .graphPreview{min-height:400px!important}
+  .visualGraphFunctionModal .formulaVisualEditor,.formulaVisualEditor{min-height:140px!important}
+  .formulaToolSections{display:grid!important;grid-template-columns:1fr 1fr!important;gap:12px!important}
+  .v96PageThumb[draggable="true"], .v106PageButton[draggable="true"]{cursor:grab!important}
+}
+
+.v106MoveBtn{font-weight:900!important}
+.v96PageThumb.dragging,.v106PageButton.dragging{opacity:.45!important}
+.v96PageThumb.dropTarget,.v106PageButton.dropTarget{outline:2px dashed #e3a8ad!important;outline-offset:2px!important}
+.v106DragHint{margin-top:8px;font-size:11px;color:#a18379}
+#desktopEditorSidebar select.fontSelect{font-family:inherit}
+#desktopEditorSidebar select.fontSelect option[value="Arial"]{font-family:Arial,sans-serif}
+#desktopEditorSidebar select.fontSelect option[value="Georgia"]{font-family:Georgia,serif}
+#desktopEditorSidebar select.fontSelect option[value="Trebuchet MS"]{font-family:"Trebuchet MS",sans-serif}
+#desktopEditorSidebar select.fontSelect option[value="Verdana"]{font-family:Verdana,sans-serif}
+#desktopEditorSidebar select.fontSelect option[value="Times New Roman"]{font-family:"Times New Roman",serif}
+#desktopEditorSidebar select.fontSelect option[value="Courier New"]{font-family:"Courier New",monospace}
+</style>
+<script id="v106-behavior-patch">
+(function(){
+  function afterPaint(fn){setTimeout(fn,0)}
+
+  window.fitCanvasStage=function(){
+    try{ v96FitCanvas(false); }
+    catch(_){ try{ fitCanvasToScreen?.(); }catch(__){} }
+  };
+
+  // Mobile selection toolbar: add a dedicated drag handle like Canva.
+  const _oldMobileTools = window.updateMobileSelectionTools;
+  window.v106MoveSelectedStart=function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    if(canvasState.selectedType==='object' && canvasState.selectedId){
+      startDragObject(e, canvasState.selectedId);
+      return;
+    }
+    if(canvasState.selectedVectorIds?.length){
+      startVectorDrag(e, canvasState.selectedVectorIds[0]);
+    }
+  };
+  updateMobileSelectionTools=function(){
+    if(typeof _oldMobileTools==='function') _oldMobileTools();
+    const el=document.getElementById('mobileSelectionTools');
+    if(!el || !el.classList.contains('show')) return;
+    if(!el.querySelector('.v106MoveBtn')){
+      const btn=document.createElement('button');
+      btn.className='v106MoveBtn';
+      btn.title='Verschieben';
+      btn.innerHTML='↔';
+      btn.onpointerdown=window.v106MoveSelectedStart;
+      el.insertBefore(btn, el.firstChild);
+    }
+  };
+
+  // Font preview in the desktop properties select.
+  function v106EnhanceFontPreview(){
+    document.querySelectorAll('#desktopEditorSidebar select.fontSelect').forEach(sel=>{
+      if(!sel.dataset.v106Bound){
+        sel.dataset.v106Bound='1';
+        sel.addEventListener('change',()=>afterPaint(v106EnhanceFontPreview));
+      }
+      [...sel.options].forEach(opt=>{ const ff=opt.value||opt.textContent||'Arial'; opt.style.fontFamily=ff; });
+      const ff=sel.value||sel.options[sel.selectedIndex]?.value||'Arial';
+      sel.style.fontFamily=ff;
+    });
+  }
+
+  // Drag & drop page reordering.
+  let v106PageDragFrom=null;
+  function clearDragState(){ document.querySelectorAll('.v96PageThumb,.v106PageButton').forEach(x=>x.classList.remove('dragging','dropTarget')); }
+  window.v106PageDragStart=function(e,index){ v106PageDragFrom=Number(index); e.dataTransfer?.setData('text/plain', String(index)); e.dataTransfer && (e.dataTransfer.effectAllowed='move'); e.currentTarget.classList.add('dragging'); };
+  window.v106PageDragOver=function(e){ e.preventDefault(); e.currentTarget.classList.add('dropTarget'); };
+  window.v106PageDragLeave=function(e){ e.currentTarget.classList.remove('dropTarget'); };
+  window.v106PageDragEnd=function(){ v106PageDragFrom=null; clearDragState(); };
+  window.v106ReorderPages=function(from,to){
+    v96SyncPage();
+    from=Number(from); to=Number(to);
+    if(!canvasState.pages?.length || from===to || from<0 || to<0 || from>=canvasState.pages.length || to>=canvasState.pages.length) return;
+    const moving=canvasState.pages.splice(from,1)[0];
+    canvasState.pages.splice(to,0,moving);
+    if(canvasState.activePage===from) canvasState.activePage=to;
+    else if(from<canvasState.activePage && to>=canvasState.activePage) canvasState.activePage--;
+    else if(from>canvasState.activePage && to<=canvasState.activePage) canvasState.activePage++;
+    v96LoadPageData(canvasState.pages[canvasState.activePage]);
+    v96RenderPageStrip();
+    if(window.innerWidth>=900 && typeof v102RightTab==='function') setTimeout(()=>v102RightTab('page'),20);
+    markCanvasDirty();
+  };
+  window.v106PageDrop=function(e,index){
+    e.preventDefault();
+    const from=v106PageDragFrom;
+    clearDragState();
+    v106PageDragFrom=null;
+    if(from==null) return;
+    window.v106ReorderPages(from,index);
+  };
+
+  const _oldPageStrip=v96RenderPageStrip;
+  v96RenderPageStrip=function(){
+    const strip=v96EnsurePageStrip();
+    if(!strip) return;
+    canvasState.pages ||= [v96CurrentPageData()];
+    strip.innerHTML=`<div class="v96PageThumbs v103PageThumbs">${canvasState.pages.map((p,i)=>`<button class="v96PageThumb ${i===canvasState.activePage?'active':''}" draggable="true" onclick="v96SwitchPage(${i})" ondragstart="v106PageDragStart(event,${i})" ondragover="v106PageDragOver(event,${i})" ondragleave="v106PageDragLeave(event)" ondrop="v106PageDrop(event,${i})" ondragend="v106PageDragEnd()"><span>${i+1}</span><small>Seite ${i+1}</small></button>`).join('')}<button class="v96PageAdd v103PageAdd" onclick="v96AddPage()">${(window.icon||window.v103Icon||window.v102Icon)?.('plus')||'+'}<small>Seite hinzufügen</small></button></div><div class="v96PageActions"><button title="Duplizieren" onclick="v96DuplicatePage()">${(window.icon||window.v103Icon||window.v102Icon)?.('duplicate')||'⧉'}</button><button title="Löschen" onclick="v96DeletePage()">${(window.icon||window.v103Icon||window.v102Icon)?.('trash')||'⌫'}</button></div>`;
+  };
+
+  const _oldRightTab = window.v102RightTab;
+  window.v102RightTab=function(mode){
+    if(typeof _oldRightTab==='function') _oldRightTab(mode);
+    if(mode==='page'){
+      const list=document.querySelector('#v102PagePanel .v102SidePages');
+      if(list){
+        [...list.querySelectorAll('button')].forEach((btn,i)=>{
+          btn.classList.add('v106PageButton');
+          btn.setAttribute('draggable','true');
+          btn.ondragstart=(e)=>v106PageDragStart(e,i);
+          btn.ondragover=(e)=>v106PageDragOver(e,i);
+          btn.ondragleave=(e)=>v106PageDragLeave(e);
+          btn.ondrop=(e)=>v106PageDrop(e,i);
+          btn.ondragend=()=>v106PageDragEnd();
+        });
+        if(!list.parentElement.querySelector('.v106DragHint')){
+          const hint=document.createElement('div');
+          hint.className='v106DragHint';
+          hint.textContent='Seitenreihenfolge ändern: Seite ziehen und loslassen.';
+          list.insertAdjacentElement('afterend', hint);
+        }
+      }
+    }
+    afterPaint(v106EnhanceFontPreview);
+  };
+
+  const _oldRenderSheetEditor = renderSheetEditor;
+  renderSheetEditor=function(){
+    _oldRenderSheetEditor();
+    setTimeout(()=>{
+      if(window.innerWidth>=900){
+        const drawer=document.getElementById('canvasQuickDrawer');
+        if(drawer && !drawer.innerHTML.trim() && window.v102PaletteHTML) drawer.innerHTML=window.v102PaletteHTML();
+        v102RightTab(canvasState.selectedId?'design':'page');
+      }
+      v106EnhanceFontPreview();
+      updateMobileSelectionTools();
+    },160);
+  };
+
+  document.addEventListener('click',()=>afterPaint(v106EnhanceFontPreview),true);
+  window.addEventListener('resize',()=>afterPaint(v106EnhanceFontPreview));
+})();
+</script>
+
+
+<!-- V107 FINAL PATCH -->
+<style id="v107-final-style">
+@media (min-width:900px){
+  body.editorMode .canvasEditorShell{grid-template-columns:300px minmax(0,1fr) 360px!important;grid-template-rows:64px 1fr 84px!important}
+  body.editorMode .v102DesktopLeft{margin:10px 0 10px 10px!important}
+  body.editorMode #canvasViewport{margin:10px!important;padding:18px 20px 100px!important}
+  body.editorMode #desktopEditorSidebar{margin:10px 10px 10px 0!important}
+  body.editorMode .canvasQuickNav{grid-template-columns:repeat(2,minmax(0,1fr))!important;padding:8px!important;gap:7px!important}
+  body.editorMode .canvasQuickNav button{min-height:58px!important;padding:6px 4px!important}
+  body.editorMode .canvasQuickDrawer{padding:10px!important}
+  body.editorMode .v102PaletteGroup{gap:8px!important;margin-bottom:12px!important}
+  body.editorMode .v102PaletteTitle{font-size:10px!important;letter-spacing:.11em!important}
+  body.editorMode .v102PaletteGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+  body.editorMode .v102PaletteGrid button{min-height:68px!important;padding:8px 6px!important;gap:5px!important}
+  body.editorMode .v102PaletteGrid button svg{width:23px!important;height:23px!important}
+  body.editorMode .v102PaletteGrid button span{font-size:11px!important;line-height:1.12!important;text-align:center!important;display:block!important}
+  body.editorMode #desktopEditorSidebar .objectPanelGrid,
+  body.editorMode #desktopEditorSidebar .positionGrid,
+  body.editorMode #desktopEditorSidebar .vectorControls{gap:9px!important}
+  body.editorMode #desktopEditorSidebar .objectPanel input,
+  body.editorMode #desktopEditorSidebar .objectPanel select,
+  body.editorMode #desktopEditorSidebar .objectPanel textarea{font-size:12px!important;min-height:38px!important}
+  body.editorMode #desktopEditorSidebar .objectPanel label{font-size:10px!important}
+  body.editorMode .graphModal,
+  body.editorMode .visualGraphFunctionModal,
+  body.editorMode .formulaModal,
+  body.editorMode .visualFormulaModal{width:min(1280px,96vw)!important;max-height:90vh!important}
+  body.editorMode .formulaToolSections{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px!important}
+}
+@media (max-width:899px){
+  body.editorMode #canvasViewport{padding:8px 8px 10px!important}
+  body.editorMode #v96PageStrip{padding-bottom:calc(86px + env(safe-area-inset-bottom))!important}
+  body.editorMode .canvasTopbar .editorTitle{min-width:0!important}
+  body.editorMode .editorTitle b{white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+}
+body.editorMode #canvasViewport.v107-panning,
+body.editorMode #canvasViewport.v102Panning{cursor:grabbing!important;user-select:none!important}
+.canvasTopbar .v107RenameBtn{display:grid!important;place-items:center!important}
+.canvasTopbar .editorTitle.v107Renamable{cursor:pointer}
+</style>
+<script id="v107-final-script">
+(function(){
+  function inEditor(){ return document.body.classList.contains('editorMode') && document.querySelector('#view-sheet-editor.active'); }
+  function vp(){ return document.getElementById('canvasViewport'); }
+  function fillDesktopDrawer(){
+    if(window.innerWidth<900 || !inEditor()) return;
+    const drawer=document.getElementById('canvasQuickDrawer');
+    if(!drawer) return;
+    if(!drawer.innerHTML.trim()){
+      const html=(window.v103PaletteHTML||window.v102PaletteHTML)?.() || '';
+      drawer.innerHTML=html;
+      drawer.classList.add('open');
+    }
+  }
+  function currentSheet(){ return (data.studySheets||[]).find(x=>x.id===selectedSheetId); }
+  window.v107RenameCurrentResource=function(){
+    const sh=currentSheet();
+    const fallback=window.v102PendingResource?.name || 'Lernblatt';
+    const prev=(sh?.title||fallback||'Lernblatt');
+    const value=prompt('Neuer Name', prev);
+    if(value===null) return;
+    const next=String(value||'').trim();
+    if(!next) return;
+    if(sh) sh.title=next;
+    if(window.v102PendingResource) window.v102PendingResource.name=next;
+    const candidate=(canvasState.objects||[])
+      .filter(o=>['text','block'].includes(o.kind) && typeof o.text==='string')
+      .sort((a,b)=>(b.style?.fontSize||0)-(a.style?.fontSize||0))[0];
+    if(candidate && String(candidate.text||'').trim()===String(prev).trim()) candidate.text=next;
+    try{ save(); }catch(_){ }
+    try{ renderCanvasObjects(); }catch(_){ }
+    try{ markCanvasDirty(false); }catch(_){ }
+    const title=document.querySelector('.canvasTopbar .editorTitle b');
+    if(title) title.textContent=next;
+  };
+  function enhanceTopbar(){
+    const top=document.querySelector('.canvasTopbar');
+    if(!top) return;
+    const titleWrap=top.querySelector('.editorTitle');
+    if(titleWrap){
+      titleWrap.classList.add('v107Renamable');
+      titleWrap.title='Name ändern';
+      titleWrap.onclick=(e)=>{ if(!e.target.closest('button')) window.v107RenameCurrentResource(); };
+    }
+    const actions=top.querySelector('.editorActions');
+    if(actions && !actions.querySelector('.v107RenameBtn')){
+      const btn=document.createElement('button');
+      btn.className='v107RenameBtn';
+      btn.title='Umbenennen';
+      btn.innerHTML=(window.icon||window.v103Icon||window.v102Icon)?.('edit') || '✎';
+      btn.onclick=window.v107RenameCurrentResource;
+      actions.insertBefore(btn, actions.lastElementChild || null);
+    }
+  }
+  let pan=null;
+  function endPan(){
+    pan=null;
+    const v=vp();
+    if(v) v.classList.remove('v107-panning');
+  }
+  document.addEventListener('wheel', function(e){
+    if(!(window.innerWidth>=900 && inEditor() && e.altKey)) return;
+    const v=vp(); if(!v || !v.contains(e.target)) return;
+    e.preventDefault();
+    const r=v.getBoundingClientRect();
+    const focus={x:e.clientX-r.left,y:e.clientY-r.top};
+    if(typeof v96ApplyZoom==='function') v96ApplyZoom((canvasZoom||1)*(e.deltaY<0?1.1:.9), true, focus);
+  }, {passive:false, capture:true});
+  document.addEventListener('mousedown', function(e){
+    if(!(window.innerWidth>=900 && inEditor() && e.button===1)) return;
+    const v=vp(); if(!v || !v.contains(e.target)) return;
+    e.preventDefault();
+    pan={x:e.clientX,y:e.clientY,l:v.scrollLeft,t:v.scrollTop};
+    v.classList.add('v107-panning');
+  }, true);
+  window.addEventListener('mousemove', function(e){
+    if(!pan) return;
+    const v=vp(); if(!v) return;
+    v.scrollLeft=pan.l-(e.clientX-pan.x);
+    v.scrollTop=pan.t-(e.clientY-pan.y);
+  }, true);
+  window.addEventListener('mouseup', endPan, true);
+  window.addEventListener('blur', endPan);
+  document.addEventListener('auxclick', function(e){ if(pan && e.button===1) e.preventDefault(); }, true);
+
+  const oldRender=renderSheetEditor;
+  renderSheetEditor=function(){
+    oldRender();
+    setTimeout(()=>{ fillDesktopDrawer(); enhanceTopbar(); if(window.innerWidth>=900 && typeof v102RightTab==='function') v102RightTab(canvasState.selectedId?'design':'page'); }, 80);
+    setTimeout(()=>{ fillDesktopDrawer(); enhanceTopbar(); }, 240);
+  };
+  document.addEventListener('click', ()=>setTimeout(()=>{ fillDesktopDrawer(); enhanceTopbar(); }, 0), true);
+  window.addEventListener('resize', ()=>setTimeout(()=>{ fillDesktopDrawer(); enhanceTopbar(); }, 80));
+})();
+</script>
