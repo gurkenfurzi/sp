@@ -3025,7 +3025,7 @@ html,body{background:#fff7f4;}
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 96</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 97</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -3902,7 +3902,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 96";
+ $("#headerEyebrow").textContent="VERSION 97";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -11223,6 +11223,151 @@ renderSubjectDetail=function(){
  }
 })();
 
+
+
+// ===== V97 — subject/settings + topic hub reference redesign =====
+function v97TopicStats(s,t){
+  const decks=(data.flashDecks||[]).filter(d=>d.subject===s.name&&d.topicId===t.id);
+  const cardCount=decks.reduce((sum,d)=>sum+(data.flashcards||[]).filter(c=>c.deckId===d.id).length,0);
+  const sheets=(data.studySheets||[]).filter(x=>x.subject===s.name&&x.topicId===t.id);
+  const quizzes=(data.quizzes||[]).filter(x=>x.subject===s.name&&x.topicId===t.id);
+  const tests=(data.tests||[]).filter(x=>x.subject===s.name&&x.topicId===t.id);
+  t.notes ||= []; t.files ||= [];
+  return {decks,cardCount,sheets,quizzes,tests,notes:t.notes,files:t.files};
+}
+function v97LeafIcon(){return `<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M9 25c3-8 8-13 15-17"/><path d="M13 18c-4-.4-7-2.6-8-6 4-.7 7 .6 9 4"/><path d="M18 13c-.2-4 1.6-7 5-9 1.2 3.8.3 7-3 9"/><path d="M17 20c4-.2 7 1.3 9 4-3.4 1.4-6.8.7-9-2"/></svg>`}
+function v97ResourceIcon(kind){
+  const icons={
+    sheets:`<svg viewBox="0 0 32 32"><path d="M9 4h10l5 5v19H9z"/><path d="M19 4v6h6"/><path d="M13 16h7M13 21h7"/></svg>`,
+    cards:`<svg viewBox="0 0 32 32"><rect x="7" y="7" width="17" height="20" rx="2"/><path d="M11 4h16a2 2 0 0 1 2 2v17"/><path d="M11 13h9M11 18h9"/></svg>`,
+    quizzes:`<svg viewBox="0 0 32 32"><rect x="6" y="5" width="20" height="22" rx="3"/><path d="M12 12c.4-2 2-3 4-3 2.4 0 4 1.4 4 3.4 0 2.8-4 2.7-4 5.1"/><circle cx="16" cy="22" r="1"/></svg>`,
+    tests:`<svg viewBox="0 0 32 32"><rect x="7" y="5" width="18" height="23" rx="3"/><path d="M12 4h8v4h-8z"/><path d="m11 15 2 2 4-5M19 15h3M11 22l2 2 4-5M19 22h3"/></svg>`,
+    notes:`<svg viewBox="0 0 32 32"><rect x="8" y="5" width="17" height="22" rx="2"/><path d="M12 11h9M12 16h9M12 21h6"/><path d="M5 9v15"/></svg>`,
+    files:`<svg viewBox="0 0 32 32"><path d="M9 4h10l6 6v18H9z"/><path d="M19 4v7h7"/><path d="M13 17h8M13 22h8"/></svg>`
+  };return icons[kind]||icons.files;
+}
+window.v97FilterTopics=function(q){const term=String(q||'').trim().toLowerCase();document.querySelectorAll('.v97TopicCard').forEach(c=>c.hidden=!!term&&!c.dataset.search.includes(term))};
+
+window.openSubjectSettings=function(sid=selectedSubjectId){
+  const s=data.subjects.find(x=>x.id===sid);if(!s)return;ensureSubjectShape(s);
+  openModal(`<div class="v97SettingsModal"><div class="eyebrow">FACH</div><h2>${esc(s.name)} einstellen</h2><p class="small">Name und Notizbuch-Einstellungen dieses Fachs.</p>
+    <label>Name des Fachs</label><input id="v97SubjectName" value="${esc(s.name)}" maxlength="50">
+    <label>Abkürzung</label><input id="v97SubjectAbbr" value="${esc(s.abbr||defaultSubjectAbbr(s.name))}" maxlength="8">
+    <div class="v97SettingsActions"><button class="primary" onclick="saveSubjectSettings('${s.id}')">Speichern</button><button class="ghost" onclick="closeModal();openCoverEditor('${s.id}')">Cover & Farbe</button></div>
+    <div class="v97DangerZone"><b>Gefahrenbereich</b><span>Das Fach und seine Themen werden aus dem Notizbuch entfernt.</span><button onclick="deleteSubjectFromSettings('${s.id}')">Fach löschen</button></div>
+  </div>`);
+};
+window.saveSubjectSettings=function(sid){
+  const s=data.subjects.find(x=>x.id===sid);if(!s)return;
+  const old=s.name,newName=String($('#v97SubjectName')?.value||'').trim();if(!newName)return alert('Bitte gib einen Fachnamen ein.');
+  const duplicate=data.subjects.some(x=>x.id!==sid&&x.name.trim().toLowerCase()===newName.toLowerCase());if(duplicate)return alert('Ein Fach mit diesem Namen gibt es bereits.');
+  s.name=newName;s.abbr=String($('#v97SubjectAbbr')?.value||'').trim()||defaultSubjectAbbr(newName);
+  const collections=[data.flashDecks,data.flashcards,data.studySheets,data.quizzes,data.tests,data.homework,data.grades];
+  collections.forEach(arr=>(arr||[]).forEach(x=>{if(x.subject===old)x.subject=newName}));
+  save();closeModal();selectedSubjectId=sid;openView('subject-detail');
+};
+window.deleteSubjectFromSettings=function(sid){
+  const s=data.subjects.find(x=>x.id===sid);if(!s)return;
+  if(!confirm(`„${s.name}“ wirklich löschen?`))return;
+  data.subjects=data.subjects.filter(x=>x.id!==sid);save();closeModal();selectedSubjectId=null;selectedTopicId=null;openView('subjects');
+};
+
+const v97DesktopSubjectRender=v96BaseRenderSubjectDetail;
+renderSubjectDetail=function(){
+  if(window.innerWidth>=900)return v97DesktopSubjectRender();
+  const root=$('#subjectDetail');if(!root)return;const s=data.subjects.find(x=>x.id===selectedSubjectId);if(!s){root.innerHTML='<div class="empty">Fach nicht gefunden.</div>';return}ensureSubjectShape(s);
+  const cards=(s.topics||[]).map(t=>{const st=v97TopicStats(s,t);return `<button class="v97TopicCard" data-search="${esc((t.title+' '+(t.text||'')).toLowerCase())}" onclick="openTopic('${s.id}','${t.id}')">
+      <span class="v97FolderTab"></span><span class="v97TopicHead"><i>${v97LeafIcon()}</i><b>${esc(t.title)}</b><strong>›</strong></span>
+      <span class="v97TopicStats"><em>${v97ResourceIcon('sheets')}<span>${st.sheets.length} Lernblätter</span></em><em>${v97ResourceIcon('cards')}<span>${st.cardCount} Karteikarten</span></em><em>${v97ResourceIcon('quizzes')}<span>${st.quizzes.length} Quizze</span></em><em>${v97ResourceIcon('tests')}<span>${st.tests.length} ${st.tests.length===1?'Test':'Tests'}</span></em></span>
+    </button>`}).join('')||'<div class="v97EmptyTopics">Noch keine Themen. Tippe auf <b>+ Thema</b>.</div>';
+  root.innerHTML=`<div class="v97SubjectPage">
+    <div class="v97SubjectHeader"><button class="v97Back" onclick="leaveSubjectNotebook()">←</button><div><h2>${esc(s.name)}</h2><p>Themenordner</p></div><button class="v97SubjectGear" onclick="openSubjectSettings('${s.id}')" aria-label="Fach einstellen">⚙︎</button></div>
+    <div class="v97SubjectTools"><label><span>⌕</span><input placeholder="Themen suchen …" oninput="v97FilterTopics(this.value)"></label><button onclick="openNewTopic('${s.id}')"><span>＋</span> Thema</button></div>
+    <div class="v97TopicGrid">${cards}</div>
+  </div>`;
+};
+
+function v97TopicResourceCounts(s,t){return v97TopicStats(s,t)}
+function v97TopicCard(kind,title,count,desc,tone){
+  return `<button class="v97ResourceCard tone-${tone}" onclick="v97OpenTopicHub('${kind}')"><span class="v97ResourceIcon">${v97ResourceIcon(kind)}</span><b>${title}</b><small>▱ ${count} ${title}</small><p>${desc}</p><span class="v97OpenHint">Öffnen <i>›</i></span></button>`;
+}
+const v97BaseRenderTopicDetail=renderTopicDetail;
+renderTopicDetail=function(){
+  if(window.innerWidth>=900)return v97BaseRenderTopicDetail();
+  const root=$('#topicDetail');if(!root)return;const {s,t}=currentTopic();if(!s||!t){root.innerHTML='<div class="empty">Thema nicht gefunden.</div>';return}ensureSubjectShape(s);t.notes ||= [];t.files ||= [];
+  const st=v97TopicResourceCounts(s,t);
+  root.innerHTML=`<div class="v97TopicPage">
+    <div class="v97TopicHeader"><button class="v97Back" onclick="backToNotebook()">←</button><div class="v97TopicBreadcrumb"><span>${esc(s.name)}</span><i>›</i><b>${esc(t.title)}</b></div><div class="v97Tulip">🌷<span>♡</span></div></div>
+    <h2>${esc(t.title)}</h2><p class="v97TopicSubtitle">Alle Inhalte an einem Ort</p>
+    <div class="v97ResourceGrid">
+      ${v97TopicCard('sheets','Lernblätter',st.sheets.length,'Übersichten, Erklärungen und Arbeitsblätter.','green')}
+      ${v97TopicCard('cards','Karteikarten',st.cardCount,'Wichtige Begriffe und Definitionen.','peach')}
+      ${v97TopicCard('quizzes','Quizze',st.quizzes.length,'Teste dein Wissen mit verschiedenen Fragetypen.','purple')}
+      ${v97TopicCard('tests','Tests',st.tests.length,'Simuliere Prüfungen und behalte Termine im Blick.','blue')}
+    </div>
+    <div class="v97SmallResources">
+      <button onclick="v97OpenTopicHub('notes')"><span class="v97SmallIcon tone-orange">${v97ResourceIcon('notes')}</span><span><b>Notizen</b><small>▱ ${st.notes.length} Notizen</small><p>Eigene Mitschriften und Gedanken.</p></span><i>›</i></button>
+      <button onclick="v97OpenTopicHub('files')"><span class="v97SmallIcon tone-teal">${v97ResourceIcon('files')}</span><span><b>Dateien</b><small>▱ ${st.files.length} Dateien</small><p>Zusätzliche Materialien und Dokumente.</p></span><i>›</i></button>
+    </div>
+    <div class="v97Motivation"><span>🌷</span><div><b>Bleib dran – du machst das!</b><small>Kleine Schritte, große Ziele.</small></div><i>♡　♡　♡</i></div>
+    <input id="v97TopicFileInput" type="file" multiple accept="image/*,.pdf,.doc,.docx,.ppt,.pptx" hidden onchange="v97AddTopicFiles(this.files)">
+  </div>`;
+};
+
+function v97HubHeader(title,sub=''){return `<div class="v97HubHead"><button onclick="closeModal()">←</button><div><div class="eyebrow">${sub}</div><h2>${title}</h2></div></div>`}
+window.v97OpenTopicHub=function(kind){
+  const {s,t}=currentTopic();if(!s||!t)return;const st=v97TopicStats(s,t);
+  if(kind==='sheets'){
+    const items=st.sheets.map(x=>`<button class="v97HubItem" onclick="v97OpenSheet('${x.id}')"><span>${v97ResourceIcon('sheets')}</span><div><b>${esc(x.title)}</b><small>${x.canvasData?'A4 Canvas-Lernblatt':'A4 Lernblatt'}</small></div><i>›</i></button>`).join('')||'<div class="empty">Noch kein Lernblatt.</div>';
+    openModal(`${v97HubHeader('Lernblätter',esc(t.title))}<div class="v97HubActions"><button class="primary" onclick="v97NewSheet()">＋ Lernblatt</button></div><div class="v97HubList">${items}</div>`);return;
+  }
+  if(kind==='cards'){
+    const items=st.decks.map(d=>`<button class="v97HubItem" onclick="v97OpenDeck('${d.id}')"><span>${v97ResourceIcon('cards')}</span><div><b>${esc(d.name)}</b><small>${(data.flashcards||[]).filter(c=>c.deckId===d.id).length} Karten</small></div><i>›</i></button>`).join('')||'<div class="empty">Noch kein Kartenordner.</div>';
+    openModal(`${v97HubHeader('Karteikarten',esc(t.title))}<div class="v97HubActions"><button class="primary" onclick="v97NewDeck()">＋ Ordner</button></div><div class="v97HubList">${items}</div>`);return;
+  }
+  if(kind==='quizzes'){
+    const items=st.quizzes.map(q=>`<button class="v97HubItem" onclick="v97OpenQuiz('${q.id}')"><span>${v97ResourceIcon('quizzes')}</span><div><b>${esc(q.name)}</b><small>${(q.questions||[]).length} Fragen</small></div><i>›</i></button>`).join('')||'<div class="empty">Noch kein Quiz.</div>';
+    openModal(`${v97HubHeader('Quizze',esc(t.title))}<div class="v97HubActions"><button class="primary" onclick="v97NewQuiz()">＋ Quiz</button></div><div class="v97HubList">${items}</div>`);return;
+  }
+  if(kind==='tests'){
+    const items=st.tests.map(x=>`<div class="v97HubItem static"><span>${v97ResourceIcon('tests')}</span><div><b>${esc(x.type||'Test')}</b><small>${esc(x.date||'Ohne Datum')} · ${esc(x.text||'Keine Beschreibung')}</small></div><button class="v97MiniDelete" onclick="v97DeleteTopicTest('${x.id}')">×</button></div>`).join('')||'<div class="empty">Noch kein Test für dieses Thema.</div>';
+    openModal(`${v97HubHeader('Tests',esc(t.title))}<div class="v97HubActions"><button class="primary" onclick="v97NewTopicTest()">＋ Test</button></div><div class="v97HubList">${items}</div>`);return;
+  }
+  if(kind==='notes'){
+    const items=st.notes.map(n=>`<button class="v97HubItem" onclick="v97EditTopicNote('${n.id}')"><span>${v97ResourceIcon('notes')}</span><div><b>${esc(n.title||'Notiz')}</b><small>${esc((n.text||'').slice(0,80)||'Antippen zum Bearbeiten')}</small></div><i>›</i></button>`).join('')||'<div class="empty">Noch keine Notizen.</div>';
+    openModal(`${v97HubHeader('Notizen',esc(t.title))}<div class="v97HubActions"><button class="primary" onclick="v97NewTopicNote()">＋ Notiz</button></div><div class="v97HubList">${items}</div>`);return;
+  }
+  if(kind==='files'){
+    const items=st.files.map(f=>`<div class="v97HubItem static"><span>${v97ResourceIcon('files')}</span><button class="v97FileOpen" onclick="openStoredFile('${f.id}')"><b>${esc(f.name)}</b><small>${esc(f.type||'Datei')}</small></button><button class="v97MiniDelete" onclick="v97DeleteTopicFile('${f.id}')">×</button></div>`).join('')||'<div class="empty">Noch keine Dateien.</div>';
+    openModal(`${v97HubHeader('Dateien',esc(t.title))}<div class="v97HubActions"><button class="primary" onclick="closeModal();setTimeout(()=>document.querySelector('#v97TopicFileInput')?.click(),60)">＋ Datei</button></div><div class="v97HubList">${items}</div>`);return;
+  }
+};
+window.v97OpenSheet=function(id){closeModal();openStudySheetEditor(id)};
+window.v97NewSheet=function(){closeModal();openStudySheetEditor()};
+window.v97OpenDeck=function(id){closeModal();openDeck(id)};
+window.v97NewDeck=function(){closeModal();setTimeout(()=>createDeckPrompt(),40)};
+window.v97OpenQuiz=function(id){closeModal();setTimeout(()=>editQuiz(id),40)};
+window.v97NewQuiz=function(){closeModal();setTimeout(()=>createQuizPrompt(),40)};
+window.v97NewTopicTest=function(){
+  const {s,t}=currentTopic();if(!s||!t)return;openModal(`${v97HubHeader('Neuer Test',esc(t.title))}<div class="formGrid"><div><label>Datum</label><input id="v97TestDate" type="date" value="${todayISO()}"></div><div><label>Art</label><select id="v97TestType"><option>Test</option><option>Klassenarbeit</option><option>Prüfung</option><option>Präsentation</option></select></div><div class="full"><label>Beschreibung / Themen</label><textarea id="v97TestText" placeholder="Was kommt dran?"></textarea></div></div><button class="primary" style="margin-top:12px" onclick="v97SaveTopicTest()">Speichern</button>`)
+};
+window.v97SaveTopicTest=function(){const {s,t}=currentTopic();if(!s||!t)return;data.tests.push({id:id(),subject:s.name,topicId:t.id,date:$('#v97TestDate').value,type:$('#v97TestType').value,reminder:1,text:$('#v97TestText').value.trim(),files:[]});save();v97OpenTopicHub('tests')};
+window.v97DeleteTopicTest=function(tid){if(!confirm('Test löschen?'))return;data.tests=data.tests.filter(x=>x.id!==tid);save();v97OpenTopicHub('tests')};
+window.v97NewTopicNote=function(){const {t}=currentTopic();if(!t)return;openModal(`${v97HubHeader('Neue Notiz',esc(t.title))}<label>Titel</label><input id="v97NoteTitle" placeholder="z. B. Zusammenfassung"><label style="margin-top:10px">Notiz</label><textarea id="v97NoteText" placeholder="Schreib deine Notiz …"></textarea><button class="primary" style="margin-top:12px" onclick="v97SaveTopicNote()">Speichern</button>`)};
+window.v97SaveTopicNote=function(noteId=null){const {t}=currentTopic();if(!t)return;t.notes ||= [];const title=String($('#v97NoteTitle')?.value||'').trim()||'Notiz',text=String($('#v97NoteText')?.value||'').trim();if(noteId){const n=t.notes.find(x=>x.id===noteId);if(n){n.title=title;n.text=text}}else t.notes.push({id:id(),title,text,created:Date.now()});save();v97OpenTopicHub('notes')};
+window.v97EditTopicNote=function(nid){const {t}=currentTopic();const n=t?.notes?.find(x=>x.id===nid);if(!n)return;openModal(`${v97HubHeader('Notiz bearbeiten',esc(t.title))}<label>Titel</label><input id="v97NoteTitle" value="${esc(n.title||'Notiz')}"><label style="margin-top:10px">Notiz</label><textarea id="v97NoteText">${esc(n.text||'')}</textarea><div class="v97SettingsActions"><button class="primary" onclick="v97SaveTopicNote('${nid}')">Speichern</button><button class="dangerBtn" onclick="v97DeleteTopicNote('${nid}')">Löschen</button></div>`)};
+window.v97DeleteTopicNote=function(nid){const {t}=currentTopic();if(!t||!confirm('Notiz löschen?'))return;t.notes=(t.notes||[]).filter(x=>x.id!==nid);save();v97OpenTopicHub('notes')};
+window.v97AddTopicFiles=async function(files){const {t}=currentTopic();if(!t)return;t.files ||= [];for(const f of [...files]){const fid=id();await dbPut({id:fid,name:f.name,type:f.type,blob:f});t.files.push({id:fid,name:f.name,type:f.type||'Datei'})}save();renderTopicDetail();v97OpenTopicHub('files')};
+window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!confirm('Datei löschen?'))return;await dbDelete(fid);t.files=(t.files||[]).filter(x=>x.id!==fid);save();v97OpenTopicHub('files')};
+
+// Context-aware top settings button: subject settings inside a subject notebook, normal settings elsewhere.
+(function v97ContextGear(){
+  const gear=document.querySelector('.header .iconbtn');if(!gear)return;
+  gear.onclick=()=>{if(document.querySelector('#view-subject-detail.active')&&selectedSubjectId){openSubjectSettings(selectedSubjectId)}else openView('settings')};
+})();
+
+/* ===== /V97 ===== */
+
 /* ===== /V96 ===== */
 
 </script>
@@ -11410,5 +11555,45 @@ html,body,button,input,select,textarea{font-family:ui-rounded,"SF Pro Rounded","
   .v96PanSurface{position:relative;margin:20px auto 28px}
   .v96PageStrip{display:flex;align-items:center;justify-content:center;gap:10px;padding:8px 10px 18px}.v96PageThumbs{display:flex;gap:7px}.v96PageThumb,.v96PageAdd{width:58px;height:48px;border:1px solid #ead7d1;background:#fff;border-radius:11px;color:#80675f}.v96PageThumb.active{background:#fff0ef;border-color:#e49a9a}.v96PageActions{display:flex;gap:6px}.v96PageActions button{width:38px;height:38px;border:1px solid #ead7d1;background:#fff;border-radius:10px;color:#80675f}
 }
+</style>
+
+
+
+<style id="v97-notebook-topic-reference">
+@media (max-width:899px){
+  body:has(#view-subject-detail.active)>.app>.header,
+  body:has(#view-topic-detail.active)>.app>.header{display:none!important}
+  #view-subject-detail>.sectionHead,#view-topic-detail>.sectionHead{display:none!important}
+  #view-subject-detail,#view-topic-detail{padding-top:18px!important;padding-bottom:118px!important}
+
+  .v97SubjectPage{display:grid;gap:18px;padding:0 4px 24px}
+  .v97SubjectHeader{display:grid;grid-template-columns:54px minmax(0,1fr) 48px;gap:14px;align-items:center}
+  .v97Back,.v97SubjectGear{width:50px;height:50px;border:1px solid #ead4ce;border-radius:15px;background:rgba(255,252,249,.94);color:#836b62;display:grid;place-items:center;font-size:25px;box-shadow:0 5px 0 rgba(221,186,176,.09)}
+  .v97SubjectGear{font-size:20px}
+  .v97SubjectHeader h2{margin:0;font-size:34px;line-height:1.04;letter-spacing:-.045em;color:#68554e;font-weight:900}
+  .v97SubjectHeader p{margin:6px 0 0;color:#a38b81;font-size:12px}
+  .v97SubjectTools{display:grid;grid-template-columns:minmax(0,1fr) 126px;gap:10px;align-items:stretch}
+  .v97SubjectTools label{height:54px;margin:0;border:1px solid #ead5cf;border-radius:16px;background:rgba(255,253,250,.96);display:grid;grid-template-columns:32px minmax(0,1fr);align-items:center;padding:0 13px;box-shadow:0 7px 20px rgba(106,75,67,.035)}
+  .v97SubjectTools label span{font-size:21px;color:#92756d}.v97SubjectTools input{min-width:0;border:0!important;background:transparent!important;outline:0!important;padding:0!important;font-size:12px!important;font-weight:750;color:#6f5a53!important}
+  .v97SubjectTools>button{height:54px;border:0;border-radius:16px;background:linear-gradient(135deg,#eaa0a3,#df8c94);color:white;font-weight:900;font-size:13px;box-shadow:0 7px 0 rgba(205,133,137,.10)}
+  .v97SubjectTools>button span{font-size:19px;margin-right:3px}
+
+  .v97TopicGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 10px;padding-top:5px}
+  .v97TopicCard{position:relative;min-height:174px;border:1px solid #ead7d1;border-radius:18px;background:linear-gradient(180deg,rgba(255,254,251,.99),rgba(255,250,247,.99));padding:18px 13px 12px;text-align:left;color:#6d5850;box-shadow:0 8px 18px rgba(106,76,68,.035);overflow:visible}
+  .v97TopicCard[hidden]{display:none}.v97FolderTab{position:absolute;top:-10px;left:13px;width:72px;height:19px;background:#fffdfa;border:1px solid #ead7d1;border-bottom:0;border-radius:11px 11px 0 0}
+  .v97TopicHead{display:grid;grid-template-columns:38px minmax(0,1fr) 14px;gap:8px;align-items:center}.v97TopicHead i{width:38px;height:38px;border-radius:11px;background:#f2f3e6;display:grid;place-items:center;color:#7f8a58}.v97TopicHead i svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.55;stroke-linecap:round;stroke-linejoin:round}.v97TopicHead b{font-size:13px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v97TopicHead strong{font-size:23px;color:#d38185;font-weight:450}
+  .v97TopicStats{display:grid;gap:7px;margin-top:15px}.v97TopicStats em{display:grid;grid-template-columns:17px minmax(0,1fr);gap:7px;align-items:center;font-style:normal;color:#be7d7c}.v97TopicStats em svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.55;stroke-linecap:round;stroke-linejoin:round}.v97TopicStats em span{font-size:9.5px;color:#9e7b73;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v97EmptyTopics{grid-column:1/-1;padding:36px 18px;border:1px dashed #e7c8c1;border-radius:18px;text-align:center;color:#9d8178;font-size:11px}
+
+  .v97TopicPage{position:relative;padding:0 5px 24px}.v97TopicHeader{display:grid;grid-template-columns:50px minmax(0,1fr) 72px;align-items:start;gap:10px;min-height:90px}.v97TopicBreadcrumb{align-self:center;display:flex;gap:9px;align-items:center;min-width:0;color:#8c756d;font-size:11px}.v97TopicBreadcrumb span,.v97TopicBreadcrumb b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v97TopicBreadcrumb i{font-style:normal;color:#c59393}.v97Tulip{position:relative;justify-self:end;font-size:58px;line-height:1;filter:saturate(.72);opacity:.74}.v97Tulip span{position:absolute;left:-28px;bottom:8px;color:#e69b9f;font-size:15px;letter-spacing:6px}
+  .v97TopicPage>h2{font-size:38px;line-height:1;margin:-18px 0 8px;letter-spacing:-.045em;color:#5f4f49}.v97TopicSubtitle{margin:0 0 18px;color:#8f7971;font-size:14px}
+  .v97ResourceGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.v97ResourceCard{min-height:196px;border:1px solid #ead9d3;background:rgba(255,253,250,.96);border-radius:19px;padding:13px;text-align:left;color:#65534d;display:grid;grid-template-rows:auto auto auto 1fr auto;gap:6px;box-shadow:0 8px 20px rgba(100,70,62,.035)}.v97ResourceIcon{width:52px;height:52px;border-radius:14px;display:grid;place-items:center}.v97ResourceIcon svg{width:32px;height:32px;fill:none;stroke:currentColor;stroke-width:1.55;stroke-linecap:round;stroke-linejoin:round}.tone-green .v97ResourceIcon{background:#f0f2e3;color:#88955c}.tone-peach .v97ResourceIcon{background:#fae8df;color:#d88d71}.tone-purple .v97ResourceIcon{background:#f0e7f4;color:#9d70ac}.tone-blue .v97ResourceIcon{background:#e8f0f5;color:#6e9ab3}.v97ResourceCard>b{font-size:15px}.v97ResourceCard>small{font-size:8.5px;color:#c47776}.v97ResourceCard>p{margin:2px 0 0;font-size:10px;line-height:1.45;color:#8e7871}.v97OpenHint{align-self:end;display:flex;justify-content:space-between;align-items:center;color:#aa8a80;font-size:8px;border-top:1px solid #f0e3de;padding-top:7px}.v97OpenHint i{font-style:normal;color:#d08387;font-size:16px}
+  .v97SmallResources{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}.v97SmallResources>button{min-height:112px;border:1px solid #ead9d3;background:rgba(255,253,250,.96);border-radius:18px;padding:11px;display:grid;grid-template-columns:40px minmax(0,1fr) 13px;gap:8px;align-items:start;text-align:left;color:#68554e}.v97SmallIcon{width:40px;height:40px;border-radius:11px;display:grid;place-items:center}.v97SmallIcon svg{width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:1.55;stroke-linecap:round;stroke-linejoin:round}.v97SmallIcon.tone-orange{background:#fff0dc;color:#c98c56}.v97SmallIcon.tone-teal{background:#e8f4f2;color:#6b9891}.v97SmallResources>button>span:nth-child(2){display:grid;gap:3px;min-width:0}.v97SmallResources b{font-size:12px}.v97SmallResources small{font-size:8px;color:#c57877}.v97SmallResources p{margin:0;font-size:8.5px;line-height:1.35;color:#948078}.v97SmallResources>button>i{font-style:normal;font-size:20px;color:#bd8986;align-self:center}
+  .v97Motivation{margin-top:11px;border:1px solid #ead9d3;background:linear-gradient(135deg,#fffaf6,#fff2ef);border-radius:18px;padding:10px 13px;display:grid;grid-template-columns:42px 1fr auto;gap:9px;align-items:center;color:#6d5951}.v97Motivation>span{font-size:28px}.v97Motivation>div{display:grid;gap:2px}.v97Motivation b{font-size:11px}.v97Motivation small{font-size:8px;color:#9c837b}.v97Motivation>i{font-style:normal;color:#e1a0a3;font-size:10px}
+
+  .v97SettingsModal{display:grid;gap:10px}.v97SettingsModal h2{margin:0 0 2px}.v97SettingsActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}.v97DangerZone{margin-top:8px;border:1px solid #efcccc;background:#fff5f4;border-radius:16px;padding:12px;display:grid;gap:5px}.v97DangerZone b{color:#a95f63}.v97DangerZone span{font-size:9px;color:#9c7a74}.v97DangerZone button{margin-top:4px;border:1px solid #e9b9ba;background:#fff;color:#b25f64;border-radius:12px;padding:10px;font-weight:850}
+
+  .v97HubHead{display:grid;grid-template-columns:42px 1fr;gap:9px;align-items:center;margin-bottom:10px}.v97HubHead>button{width:42px;height:42px;border:1px solid #ead5ce;background:#fff;border-radius:13px;color:#795f57;font-size:22px}.v97HubHead h2{margin:1px 0 0}.v97HubActions{display:flex;justify-content:flex-end;margin-bottom:8px}.v97HubList{display:grid;gap:7px;max-height:54dvh;overflow:auto;-webkit-overflow-scrolling:touch}.v97HubItem{width:100%;min-height:64px;border:1px solid #eadbd5;background:#fffdfb;border-radius:15px;padding:8px;display:grid;grid-template-columns:40px minmax(0,1fr) 15px;gap:8px;align-items:center;text-align:left;color:#6c5750}.v97HubItem>span{width:40px;height:40px;border-radius:11px;background:#f5ebe6;display:grid;place-items:center;color:#a1746a}.v97HubItem>span svg{width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:1.55;stroke-linecap:round;stroke-linejoin:round}.v97HubItem>div,.v97HubItem>.v97FileOpen{display:grid;gap:2px;min-width:0}.v97HubItem b{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v97HubItem small{font-size:8px;color:#a68b82;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v97HubItem>i{font-style:normal;color:#c68585;font-size:19px}.v97HubItem.static{grid-template-columns:40px minmax(0,1fr) 32px}.v97MiniDelete{width:30px;height:30px;border:0;border-radius:9px;background:#fff0ef;color:#bd6d71;font-size:17px}.v97FileOpen{border:0!important;background:transparent!important;color:inherit!important;text-align:left!important;padding:0!important}
+}
+@media (max-width:390px){.v97TopicCard{padding-left:10px;padding-right:10px}.v97TopicStats em span{font-size:8.6px}.v97SubjectTools{grid-template-columns:minmax(0,1fr) 108px}.v97ResourceCard{padding:10px}.v97ResourceCard>p{font-size:9px}.v97TopicPage>h2{font-size:34px}}
 </style>
 

@@ -1,13 +1,17 @@
-# SchoolBloom – Version 96
+# SchoolBloom – Version 97
 
-Auf Basis der funktionierenden V95.
+Auf Basis der funktionierenden V96.
 
-- kompakter mobiler Text-Editor ohne übergroße Panels
-- eigener Font-Picker mit echter Schriftvorschau + eigene Schriften
-- mehrere Lernblatt-Seiten mit Seitenleiste unter dem Canvas
-- freies Zoomen und Verschieben des Canvas, Zwei-Finger-Pinch-Zoom
-- Fächer auf Home klarer erreichbar
-- Notizbuch/Fach-Detailseite nah am gelieferten Referenzdesign: Suche, +Thema, Themenkarten, Inhaltszahlen, Übersicht
-- V95-Funktionen bleiben erhalten
+- Fach-/Notizbuchansicht näher am gelieferten Referenzdesign
+- „Dein Überblick“ und unteres „Fach löschen“ entfernt
+- keine zufällige Pflanzendeko im Fachkopf mehr
+- eigenes Zahnrad im Fachkopf: Fach umbenennen, Abkürzung ändern, Cover/Farbe öffnen oder Fach löschen
+- Umbenennen aktualisiert auch verknüpfte Lernblätter, Decks, Karten, Quizze, Tests, Aufgaben und Noten
+- Themenkarten als saubere zweispaltige Ordnerkarten mit Lernblättern, Karteikarten, Quizzen und Tests
+- Klick auf ein Thema öffnet einen neuen Themen-Hub nach dem Referenzbild
+- Themen-Hub: Lernblätter, Karteikarten, Quizze, Tests, Notizen und Dateien
+- Tests können jetzt optional direkt einem Thema zugeordnet werden
+- Themennotizen können erstellt, bearbeitet und gelöscht werden
+- bestehende V96 Editor-/Canvas-/Formel-/Graph-Funktionen bleiben erhalten
 
 Alle Dateien direkt ins GitHub-Pages-Repository kopieren.
