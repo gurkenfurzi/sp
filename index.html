@@ -3025,7 +3025,7 @@ html,body{background:#fff7f4;}
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 92</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 93</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -3902,7 +3902,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 92";
+ $("#headerEyebrow").textContent="VERSION 93";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -10919,4 +10919,28 @@ window.addEventListener('error',e=>console.warn('SchoolBloom error:',e.message))
 setTimeout(()=>{if(!window.__schoolBloomBooted){document.documentElement.style.background='#fff7f4';document.body.style.background='#fff7f4';}},1800);
 </script>
 </body>
-</html>
+</html><style id="v93-bottom-nav-stability">
+@media (max-width:899px){
+ body.editorMode .canvasQuickNav{
+   grid-template-columns:repeat(5,minmax(0,1fr))!important;
+   display:grid!important;
+   visibility:visible!important;
+   opacity:1!important;
+ }
+ /* Keep the main bar visible even when a drawer/editor panel is open. */
+ body.editorMode.editorDrawerOpen .canvasQuickNav{display:grid!important;visibility:visible!important;opacity:1!important}
+ body.editorMode #canvasQuickDrawer{bottom:calc(94px + env(safe-area-inset-bottom))!important;max-height:min(48dvh,440px)!important}
+ body.editorMode .canvasQuickNav button{display:grid!important;grid-template-rows:26px 14px!important;place-items:center!important;align-content:center!important;justify-content:stretch!important;padding:7px 2px!important;line-height:1!important}
+ body.editorMode .canvasQuickNav .editorNavIcon{width:26px!important;height:26px!important;display:grid!important;place-items:center!important;margin:0 auto!important;line-height:0!important}
+ body.editorMode .canvasQuickNav .editorNavIcon svg{display:block!important;width:22px!important;height:22px!important;margin:auto!important;overflow:visible!important}
+ body.editorMode .canvasQuickNav button>span:last-child{display:block!important;width:100%!important;text-align:center!important;line-height:12px!important;margin:0!important}
+}
+</style>
+<script id="v93-nav-recovery">
+(function(){
+ const recover=()=>{if(!document.body.classList.contains('editorMode'))return;const n=document.querySelector('.canvasQuickNav');if(!n)return;n.style.removeProperty('display');n.style.removeProperty('visibility');n.style.removeProperty('opacity');};
+ document.addEventListener('click',()=>setTimeout(recover,0),true);
+ window.addEventListener('pageshow',recover);
+ setTimeout(recover,100);
+})();
+</script>
