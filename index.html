@@ -3025,7 +3025,7 @@ html,body{background:#fff7f4;}
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 93</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 94</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -3902,7 +3902,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 93";
+ $("#headerEyebrow").textContent="VERSION 94";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -10944,3 +10944,33 @@ setTimeout(()=>{if(!window.__schoolBloomBooted){document.documentElement.style.b
  setTimeout(recover,100);
 })();
 </script>
+<style id="v94-centered-editor-bottom-nav">
+@media (max-width:899px){
+ body.editorMode .canvasQuickNav{
+   position:fixed!important;
+   left:50%!important;
+   right:auto!important;
+   top:auto!important;
+   bottom:calc(12px + env(safe-area-inset-bottom))!important;
+   transform:translateX(-50%)!important;
+   width:calc(100vw - 32px)!important;
+   max-width:680px!important;
+   box-sizing:border-box!important;
+   margin:0!important;
+   padding:8px!important;
+   display:grid!important;
+   grid-template-columns:repeat(5,minmax(0,1fr))!important;
+   gap:4px!important;
+   border:1px solid #ead2cb!important;
+   border-radius:24px!important;
+   background:rgba(255,252,249,.97)!important;
+   box-shadow:0 10px 28px rgba(112,78,68,.10)!important;
+   z-index:620!important;
+ }
+ body.editorMode .canvasQuickNav button{
+   width:100%!important;min-width:0!important;margin:0!important;
+   justify-self:stretch!important;align-self:stretch!important;
+ }
+ body.editorMode #canvasQuickDrawer{bottom:calc(92px + env(safe-area-inset-bottom))!important}
+}
+</style>
