@@ -1,17 +1,17 @@
-# Studia – Version 97
+# Studia — Version 103
 
-Auf Basis der funktionierenden V96.
+GitHub-Pages/PWA build.
 
-- Fach-/Notizbuchansicht näher am gelieferten Referenzdesign
-- „Dein Überblick“ und unteres „Fach löschen“ entfernt
-- keine zufällige Pflanzendeko im Fachkopf mehr
-- eigenes Zahnrad im Fachkopf: Fach umbenennen, Abkürzung ändern, Cover/Farbe öffnen oder Fach löschen
-- Umbenennen aktualisiert auch verknüpfte Lernblätter, Decks, Karten, Quizze, Tests, Aufgaben und Noten
-- Themenkarten als saubere zweispaltige Ordnerkarten mit Lernblättern, Karteikarten, Quizzen und Tests
-- Klick auf ein Thema öffnet einen neuen Themen-Hub nach dem Referenzbild
-- Themen-Hub: Lernblätter, Karteikarten, Quizze, Tests, Notizen und Dateien
-- Tests können jetzt optional direkt einem Thema zugeordnet werden
-- Themennotizen können erstellt, bearbeitet und gelöscht werden
-- bestehende V96 Editor-/Canvas-/Formel-/Graph-Funktionen bleiben erhalten
-
-Alle Dateien direkt ins GitHub-Pages-Repository kopieren.
+## V103
+- Fächer auf Handy und Laptop als kompakte, süße Notizblöcke mit einheitlichen SVG-Icons
+- Themenansicht als saubere Ordnerliste
+- Lernblätter, digitale Hausaufgaben, Arbeitsblätter, Karteikarten, Quizze und geschriebene Tests/Klassenarbeiten
+- Ressourcen umbenennbar; Tests können optional Scan/Foto/PDF speichern
+- Karteikarten-Wiederholung mit Gewusst / Meh / Nicht gewusst
+- Desktop-Editor mit pastelligem Hintergrund, kompakter Palette und einheitlichen Icons
+- Alt + Mausrad zoomt; Leertaste + Ziehen oder mittlere Maustaste verschiebt die Arbeitsfläche
+- Mehrseitige Dokumente mit „Seite hinzufügen“
+- Rechteck- und Dreieck-Ecken abrundbar
+- überarbeitetes Ebenen-Drag-and-drop
+- Exportmenü: PDF/Drucken, PNG, JPG, HTML
+- Reload stellt die zuletzt geöffnete Arbeitsansicht in derselben Browser-Session wieder her
