@@ -9,9 +9,9 @@
 <meta name="apple-mobile-web-app-title" content="Studia">
 <link rel="manifest" href="./manifest.webmanifest?v=107">
 <link rel="icon" type="image/png" sizes="64x64" href="./favicon-v99.png">
-<link rel="icon" type="image/png" sizes="192x192" href="./icon-192-v107.png">
-<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon-v107.png">
-<link rel="apple-touch-icon-precomposed" href="./apple-touch-icon-v107.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192-v108.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon-v108.png">
+<link rel="apple-touch-icon-precomposed" href="./apple-touch-icon-v108.png">
 <title>Studia</title>
 <style>
 :root{
@@ -3028,7 +3028,7 @@ html,body{background:#fff7f4;}
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 107</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 108</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -3917,7 +3917,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"Studia.";
- $("#headerEyebrow").textContent="VERSION 107";
+ $("#headerEyebrow").textContent="VERSION 108";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -11546,7 +11546,7 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
   window.addEventListener('resize',()=>{if(document.body.classList.contains('editorMode'))setTimeout(v102DesktopEditorInit,80)});
 
   /* refresh version + title */
-  const eyebrow=$('#headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 107';document.title='Studia';
+  const eyebrow=$('#headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 108';document.title='Studia';
 })();
 
 
@@ -11673,7 +11673,7 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
   openView=function(name,...args){const out=v103OpenViewBase(name,...args);try{sessionStorage.setItem('studia-last-view',name);sessionStorage.setItem('studia-last-subject',selectedSubjectId||'');sessionStorage.setItem('studia-last-topic',selectedTopicId||'');sessionStorage.setItem('studia-last-sheet',selectedSheetId||'')}catch(_){}return out};
   window.addEventListener('beforeunload',()=>{try{sessionStorage.setItem('studia-last-view',document.querySelector('.view.active')?.id?.replace('view-','')||'home');sessionStorage.setItem('studia-last-subject',selectedSubjectId||'');sessionStorage.setItem('studia-last-topic',selectedTopicId||'');sessionStorage.setItem('studia-last-sheet',selectedSheetId||'')}catch(_){}});
 
-  setTimeout(()=>{const e=$('#headerEyebrow');if(e)e.textContent='VERSION 107';document.title='Studia';if(document.body.classList.contains('editorMode')){v103Topbar();v96RenderPageStrip()}},60);
+  setTimeout(()=>{const e=$('#headerEyebrow');if(e)e.textContent='VERSION 108';document.title='Studia';if(document.body.classList.contains('editorMode')){v103Topbar();v96RenderPageStrip()}},60);
   /* Space shows a grab hand; middle mouse or Space+drag pans. */
   window.addEventListener('keydown',e=>{if(e.code==='Space'&&document.body.classList.contains('editorMode')&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName))$('#canvasViewport')?.classList.add('v103Hand')});
   window.addEventListener('keyup',e=>{if(e.code==='Space')$('#canvasViewport')?.classList.remove('v103Hand')});
@@ -11915,7 +11915,7 @@ html,body,button,input,select,textarea{font-family:ui-rounded,"SF Pro Rounded","
 
 
 <style id="v100-subjects-desktop-editor">
-/* ===== VERSION 107 — subjects reference + desktop editor reference ===== */
+/* ===== VERSION 108 — subjects reference + desktop editor reference ===== */
 @media (max-width:899px){
   body:has(#view-subjects.active)>.app>.header,
   body:has(#view-subject-detail.active)>.app>.header,
@@ -12463,5 +12463,278 @@ body.editorMode #canvasViewport.v102Panning{cursor:grabbing!important;user-selec
   };
   document.addEventListener('click', ()=>setTimeout(()=>{ fillDesktopDrawer(); enhanceTopbar(); }, 0), true);
   window.addEventListener('resize', ()=>setTimeout(()=>{ fillDesktopDrawer(); enhanceTopbar(); }, 80));
+})();
+</script>
+
+
+<!-- V108 CANVAS INTERACTION FIX -->
+<style id="v108-canvas-fix">
+/* Canvas is now a free workspace. The page itself remains the only visible sheet. */
+body.editorMode #canvasViewport{
+  background:linear-gradient(135deg,rgba(255,245,244,.72),rgba(250,249,234,.72))!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  overflow:auto!important;
+  overscroll-behavior:contain!important;
+  scrollbar-width:none!important;
+}
+body.editorMode #canvasViewport::-webkit-scrollbar{display:none!important}
+body.editorMode #v96PanSurface{
+  position:relative!important;
+  display:block!important;
+  margin:0!important;
+  padding:0!important;
+  min-width:0!important;
+  min-height:0!important;
+  box-sizing:border-box!important;
+}
+body.editorMode #canvasStage{
+  position:absolute!important;
+  margin:0!important;
+  transform-origin:0 0!important;
+  box-shadow:0 12px 34px rgba(106,78,68,.11)!important;
+}
+/* Pages are managed from the Pages tool/right panel, not in a second strip under the canvas. */
+body.editorMode #v96PageStrip{display:none!important}
+
+.v108MoveHandle,.v108VectorMoveHandle{
+  position:absolute;
+  width:38px;height:38px;
+  border:1px solid #e8cfc9;
+  border-radius:999px;
+  background:rgba(255,252,249,.98);
+  color:#795f56;
+  display:none;
+  place-items:center;
+  box-shadow:0 7px 18px rgba(101,73,64,.14);
+  z-index:10005;
+  padding:0;
+  cursor:grab;
+  touch-action:none;
+}
+.v108MoveHandle:active,.v108VectorMoveHandle:active{cursor:grabbing;transform:scale(.95)}
+.v108MoveHandle svg,.v108VectorMoveHandle svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.cobj.selected>.v108MoveHandle{display:grid;left:50%;bottom:-48px;transform:translateX(-50%)}
+
+.v108ChecklistBody{display:grid;gap:7px;width:100%;height:100%;align-content:start}
+.v108ChecklistRow{display:grid;grid-template-columns:24px minmax(0,1fr);gap:8px;align-items:center;min-height:26px}
+.studiaCheck{width:21px;height:21px;border-radius:999px;border:1.6px solid #dda5a5;background:#fff;display:grid;place-items:center;padding:0;color:#fff;cursor:pointer;touch-action:manipulation;transition:.14s ease}
+.studiaCheck::after{content:"";width:8px;height:4px;border-left:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg) translate(1px,-1px);opacity:0}
+.studiaCheck.done{background:#dda0a4;border-color:#dda0a4}.studiaCheck.done::after{opacity:1}
+.v108ChecklistText{min-width:0;line-height:1.3}
+
+@media (max-width:899px){
+  body.editorMode .canvasEditorShell{overflow:hidden!important}
+  body.editorMode #canvasViewport{
+    margin:0!important;
+    padding:0!important;
+    min-height:0!important;
+    height:100%!important;
+    border-radius:0!important;
+    touch-action:none!important;
+    -webkit-overflow-scrolling:touch!important;
+  }
+  body.editorMode #v96PanSurface{margin:0!important}
+  body.editorMode #canvasStage{border-radius:2px!important}
+  .v108MoveHandle,.v108VectorMoveHandle{display:grid}
+
+  /* Keep the mobile text sheet compact enough to fit without clipping controls. */
+  body.editorMode #canvasQuickDrawer.open{left:10px!important;right:10px!important;width:auto!important;max-width:none!important}
+  .v96TextPrimaryRow,.mobileTextTop{grid-template-columns:minmax(78px,1.15fr) 78px repeat(4,31px)!important;gap:4px!important}
+  .v96TextPrimaryRow .v96FmtBtn,.mobileTextTop>button{height:38px!important;min-width:0!important}
+  .v96TextSecondaryRow{gap:4px!important}
+  .mobileTextMiddle{grid-template-columns:32px repeat(7,minmax(28px,1fr))!important;gap:4px!important}
+  .mobileTextMiddle>button,.mobileColorDot{height:36px!important}
+  .mobileTextModeContent{overflow:auto!important;max-width:100%!important}
+}
+
+@media (min-width:900px){
+  body.editorMode #canvasViewport{padding:0!important;margin:10px!important;cursor:default!important}
+  body.editorMode #canvasViewport.v108Pan{cursor:grabbing!important;user-select:none!important}
+  body.editorMode #v96PanSurface{margin:0!important}
+  body.editorMode #canvasStage{border:1px solid #eadbd6!important}
+  /* Selected objects show the same move affordance on desktop too, while direct dragging also works. */
+  .cobj.selected>.v108MoveHandle{display:grid}
+}
+</style>
+<script id="v108-canvas-script">
+(function(){
+  const isEditor=()=>document.body.classList.contains('editorMode') && !!document.querySelector('#view-sheet-editor.active');
+  const viewport=()=>document.getElementById('canvasViewport');
+  const stage=()=>document.getElementById('canvasStage');
+  const surface=()=>document.getElementById('v96PanSurface') || (typeof v96EnsurePanSurface==='function'?v96EnsurePanSurface():null);
+  const isMobile=()=>window.innerWidth<900;
+  const gutter=()=>isMobile()?150:90;
+  const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+  const moveIcon='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M3 12h18M12 3l-3 3M12 3l3 3M12 21l-3-3M12 21l3-3M3 12l3-3M3 12l3 3M21 12l-3-3M21 12l-3 3"/></svg>';
+
+  // -------- Free page workspace + reliable zoom --------
+  window.v108ApplyZoom=function(value,preserve=true,focus=null){
+    const vp=viewport(),st=stage(),sf=surface();if(!vp||!st||!sf)return;
+    const old=clamp(Number(st.dataset.scale)||Number(canvasZoom)||1,.2,4);
+    const z=clamp(Number(value)||1,.22,3.2),g=gutter();
+    const fx=focus?.x ?? vp.clientWidth/2, fy=focus?.y ?? vp.clientHeight/2;
+    let pageX=null,pageY=null;
+    if(preserve){
+      const oldG=Number(sf.dataset.gutter)||g;
+      pageX=(vp.scrollLeft+fx-oldG)/old;
+      pageY=(vp.scrollTop+fy-oldG)/old;
+    }
+    canvasZoom=z;canvasState.userZoomTouched=true;
+    st.dataset.scale=String(z);sf.dataset.gutter=String(g);
+    st.style.zoom='';st.style.transform=`scale(${z})`;st.style.transformOrigin='0 0';st.style.left=g+'px';st.style.top=g+'px';
+    sf.style.width=(canvasPageWidth()*z+g*2)+'px';sf.style.height=(canvasPageHeight()*z+g*2)+'px';
+    const label=document.getElementById('canvasZoomLabel');if(label)label.textContent=Math.round(z*100)+'%';
+    const pill=document.getElementById('v91ZoomLabel');if(pill)pill.textContent=Math.round(z*100)+'%';
+    if(preserve&&pageX!=null){requestAnimationFrame(()=>{vp.scrollLeft=Math.max(0,g+pageX*z-fx);vp.scrollTop=Math.max(0,g+pageY*z-fy)})}
+  };
+  v96ApplyZoom=window.v108ApplyZoom;
+  window.setCanvasZoom=function(v){v108ApplyZoom(v,true)};
+  window.canvasZoomBy=function(d){v108ApplyZoom((canvasZoom||1)+Number(d||0),true)};
+  window.v108FitCanvas=function(markUser=false){
+    const vp=viewport();if(!vp)return;
+    if(canvasState.userZoomTouched&&!markUser){v108ApplyZoom(canvasZoom||1,false);return}
+    const z=clamp((vp.clientWidth-28)/canvasPageWidth(),.22,1),g=gutter();
+    const was=canvasState.userZoomTouched;v108ApplyZoom(z,false);canvasState.userZoomTouched=markUser?true:was;
+    requestAnimationFrame(()=>{vp.scrollLeft=Math.max(0,g-14);vp.scrollTop=Math.max(0,g-14)});
+  };
+  v96FitCanvas=window.v108FitCanvas;
+  fitCanvasToScreen=function(){canvasState.userZoomTouched=false;v108FitCanvas(true)};window.fitCanvasToScreen=fitCanvasToScreen;
+  fitCanvasStage=fitCanvasToScreen;window.fitCanvasStage=fitCanvasToScreen;
+  shouldAutoFitCanvas=function(){return false};
+
+  // Alt + mouse wheel zooms at the pointer. Window capture runs before old document handlers.
+  window.addEventListener('wheel',function(e){
+    if(!isEditor()||!e.altKey)return;
+    const vp=viewport();if(!vp)return;
+    const t=e.target instanceof Element?e.target:null;
+    if(t && !t.closest('#canvasViewport,#v96PanSurface,#canvasStage'))return;
+    e.preventDefault();e.stopImmediatePropagation();
+    const r=vp.getBoundingClientRect(),focus={x:e.clientX-r.left,y:e.clientY-r.top};
+    const factor=Math.exp(-e.deltaY*0.0018);
+    v108ApplyZoom((canvasZoom||1)*factor,true,focus);
+  },{capture:true,passive:false});
+
+  // Middle mouse button = Adobe-style hand/pan.
+  let mousePan=null;
+  window.addEventListener('mousedown',function(e){
+    if(!isEditor()||e.button!==1)return;const vp=viewport();if(!vp)return;
+    const t=e.target instanceof Element?e.target:null;if(t&&!t.closest('#canvasViewport,#v96PanSurface,#canvasStage'))return;
+    e.preventDefault();e.stopImmediatePropagation();mousePan={x:e.clientX,y:e.clientY,l:vp.scrollLeft,t:vp.scrollTop};vp.classList.add('v108Pan');
+  },true);
+  window.addEventListener('mousemove',function(e){if(!mousePan)return;const vp=viewport();if(!vp)return;vp.scrollLeft=mousePan.l-(e.clientX-mousePan.x);vp.scrollTop=mousePan.t-(e.clientY-mousePan.y)},true);
+  const stopMousePan=()=>{mousePan=null;viewport()?.classList.remove('v108Pan')};
+  window.addEventListener('mouseup',stopMousePan,true);window.addEventListener('blur',stopMousePan);
+  window.addEventListener('auxclick',e=>{if(isEditor()&&e.button===1)e.preventDefault()},true);
+
+  // Two-finger pinch AND pan. It never edits/moves page objects.
+  let pinch=null;
+  function touchMid(a,b,vp){const r=vp.getBoundingClientRect();return{x:(a.clientX+b.clientX)/2-r.left,y:(a.clientY+b.clientY)/2-r.top}}
+  window.addEventListener('touchstart',function(e){
+    if(!isEditor()||e.touches.length!==2)return;const vp=viewport();if(!vp||!vp.contains(e.target))return;
+    e.preventDefault();e.stopImmediatePropagation();const a=e.touches[0],b=e.touches[1],m=touchMid(a,b,vp),z=canvasZoom||1,g=Number(surface()?.dataset.gutter)||gutter();
+    pinch={dist:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),zoom:z,pageX:(vp.scrollLeft+m.x-g)/z,pageY:(vp.scrollTop+m.y-g)/z};canvasState.userZoomTouched=true;
+  },{capture:true,passive:false});
+  window.addEventListener('touchmove',function(e){
+    if(!pinch||e.touches.length!==2)return;const vp=viewport();if(!vp)return;e.preventDefault();e.stopImmediatePropagation();
+    const a=e.touches[0],b=e.touches[1],m=touchMid(a,b,vp),dist=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),z=clamp(pinch.zoom*(dist/pinch.dist),.22,3.2),g=gutter();
+    v108ApplyZoom(z,false);requestAnimationFrame(()=>{vp.scrollLeft=Math.max(0,g+pinch.pageX*z-m.x);vp.scrollTop=Math.max(0,g+pinch.pageY*z-m.y)});
+  },{capture:true,passive:false});
+  window.addEventListener('touchend',e=>{if(e.touches.length<2)pinch=null},{capture:true,passive:true});
+  window.addEventListener('touchcancel',()=>{pinch=null},{capture:true,passive:true});
+
+  // -------- Selection/movement: tap selects on mobile, dedicated handle moves. Desktop drag works immediately. --------
+  function selectedObject(id){return canvasState.selectedType==='object'&&canvasState.selectedId===id&&((canvasState.selectedIds||[]).includes(id));}
+  function decorateObjects(){
+    if(!isEditor())return;
+    document.querySelectorAll('#canvasObjects .cobj').forEach(el=>{
+      const id=el.dataset.id,o=canvasState.objects.find(x=>x.id===id);if(!o)return;
+      if(o.isChecklist)el.classList.add('v108ChecklistObject');
+      if(el.classList.contains('selected')&&!o.locked&&!o.editing&&!el.querySelector(':scope > .v108MoveHandle')){
+        const b=document.createElement('button');b.type='button';b.className='v108MoveHandle';b.dataset.oid=id;b.title='Verschieben';b.setAttribute('aria-label','Element verschieben');b.innerHTML=moveIcon;el.appendChild(b);
+      }
+    });
+  }
+  function decorateVector(){
+    const root=document.getElementById('canvasObjects');if(!root)return;root.querySelectorAll(':scope > .v108VectorMoveHandle').forEach(x=>x.remove());
+    if(!isEditor()||canvasState.selectedType!=='vector'||!canvasState.selectedId)return;
+    const v=canvasState.vectors.find(x=>x.id===canvasState.selectedId);if(!v||v.locked)return;const b=vectorBounds(v),btn=document.createElement('button');
+    btn.type='button';btn.className='v108VectorMoveHandle';btn.dataset.vid=v.id;btn.title='Form verschieben';btn.innerHTML=moveIcon;btn.style.left=(b.cx-19)+'px';btn.style.top=(b.y+b.h+15)+'px';root.appendChild(btn);
+  }
+  const oldRenderObjects=renderCanvasObjects;
+  renderCanvasObjects=function(){oldRenderObjects();decorateObjects();decorateVector()};
+  const oldRenderVectors=renderVectors;
+  renderVectors=function(){oldRenderVectors();decorateVector();decorateObjects()};
+
+  let lastMobileTap={id:null,time:0};
+  window.addEventListener('pointerdown',function(e){
+    if(!isEditor())return;const target=e.target instanceof Element?e.target:null;if(!target)return;
+    const move=target.closest('.v108MoveHandle,.v108VectorMoveHandle');
+    if(move){
+      e.preventDefault();e.stopImmediatePropagation();
+      if(move.dataset.oid){const id=move.dataset.oid;if(!selectedObject(id))selectCanvasObject(id);if((selectedObjectIds().length+selectedVectorIds().length)>1)startDragSelection(e);else startDragObject(e,id)}
+      else if(move.dataset.vid){selectVector(move.dataset.vid);startVectorDrag(e,move.dataset.vid)}
+      return;
+    }
+    if(target.closest('.studiaCheck'))return;
+    if(isMobile()){
+      const c=target.closest('.cobj');
+      if(c&&!target.closest('.resizeHandle,.rotateHandle,.tableMoveHandle,td')){
+        const id=c.dataset.id,o=canvasState.objects.find(x=>x.id===id);if(!o)return;e.preventDefault();e.stopImmediatePropagation();
+        const now=Date.now(),double=lastMobileTap.id===id&&now-lastMobileTap.time<330;lastMobileTap={id,time:now};selectCanvasObject(id);
+        if(double&&['text','block','task','merke'].includes(o.kind)&&!o.isChecklist){o.editing=true;renderCanvasObjects();setTimeout(()=>{const el=document.querySelector(`.cobj[data-id="${id}"]`);try{el?.focus({preventScroll:true})}catch(_){el?.focus()}},0)}
+        return;
+      }
+      const proxy=target.closest('.vectorTouchProxy');
+      if(proxy){e.preventDefault();e.stopImmediatePropagation();selectVector(proxy.dataset.vid);return}
+    }else{
+      const c=target.closest('.cobj');
+      if(c&&e.button===0&&!target.closest('.resizeHandle,.rotateHandle,.tableMoveHandle,td')&&!c.isContentEditable){
+        const id=c.dataset.id,o=canvasState.objects.find(x=>x.id===id);if(!o||o.locked)return;e.preventDefault();e.stopImmediatePropagation();
+        if(e.shiftKey){toggleObjectInMultiSelection(id);return}
+        if(!selectedObject(id))selectCanvasObject(id);
+        if((selectedObjectIds().length+selectedVectorIds().length)>1)startDragSelection(e);else startDragObject(e,id);return;
+      }
+    }
+  },true);
+  window.addEventListener('dblclick',function(e){
+    if(!isEditor())return;const c=e.target instanceof Element?e.target.closest('.cobj'):null;if(!c)return;const o=canvasState.objects.find(x=>x.id===c.dataset.id);if(!o||!['text','block','task','merke'].includes(o.kind)||o.isChecklist)return;
+    e.preventDefault();o.editing=true;renderCanvasObjects();setTimeout(()=>{const el=document.querySelector(`.cobj[data-id="${o.id}"]`);try{el?.focus({preventScroll:true})}catch(_){el?.focus()}},0);
+  },true);
+
+  // -------- Canvas deletes: instant for ordinary editor elements; important library deletes keep their warnings. --------
+  window.deleteLayerItem=function(kind,itemId){performDeleteLayerItem(kind,itemId)};
+  window.deleteSelectedCanvasItem=function(){performDeleteSelectedCanvasItem()};
+
+  // -------- Compact text box --------
+  window.addCanvasTextBox=function(){
+    const o=newCanvasObject('body');o.text='Textfeld';o.w=220;o.h=58;o.style.padding=8;o.style.fontSize=o.style.fontSize||16;o.style.borderWidth=1;o.style.borderColor='#e4d2cc';
+    canvasState.objects.push(o);renderCanvasObjects();selectCanvasObject(o.id);markCanvasDirty();cuteToast('Textfeld eingefügt ♡');
+  };
+
+  // -------- Real round checkboxes --------
+  function checklistHTML(labels=['Punkt 1','Punkt 2','Punkt 3']){
+    return `<div class="v108ChecklistBody">${labels.map(x=>`<div class="v108ChecklistRow"><button type="button" class="studiaCheck" contenteditable="false" aria-checked="false"></button><span class="v108ChecklistText">${esc(x)}</span></div>`).join('')}</div>`;
+  }
+  window.addCanvasChecklist=function(){
+    const o=newCanvasObject('body');o.text=checklistHTML();o.isChecklist=true;o.w=300;o.h=116;o.style.padding=10;o.style.borderWidth=0;o.style.background='transparent';
+    canvasState.objects.push(o);renderCanvasObjects();selectCanvasObject(o.id);markCanvasDirty();cuteToast('Checkliste eingefügt ♡');
+  };
+  function migrateChecklists(){
+    let changed=false;(canvasState.objects||[]).forEach(o=>{if(!o.isChecklist&&typeof o.text==='string'&&/☐\s*Punkt\s*1/i.test(o.text)){o.text=checklistHTML(['Punkt 1','Punkt 2','Punkt 3']);o.isChecklist=true;o.editing=false;changed=true}});if(changed)renderCanvasObjects();
+  }
+  window.addEventListener('pointerdown',function(e){const b=e.target instanceof Element?e.target.closest('.studiaCheck'):null;if(!b||!isEditor())return;e.preventDefault();e.stopImmediatePropagation()},true);
+  window.addEventListener('click',function(e){
+    const b=e.target instanceof Element?e.target.closest('.studiaCheck'):null;if(!b||!isEditor())return;e.preventDefault();e.stopImmediatePropagation();b.classList.toggle('done');b.setAttribute('aria-checked',b.classList.contains('done')?'true':'false');
+    const c=b.closest('.cobj'),o=c?canvasState.objects.find(x=>x.id===c.dataset.id):null,body=c?.querySelector('.v108ChecklistBody');if(o&&body){o.text=body.outerHTML;markCanvasDirty();pushHistory()}
+  },true);
+
+  // Ensure the free workspace is restored whenever the editor is opened.
+  const oldSheetRender=renderSheetEditor;
+  renderSheetEditor=function(){
+    oldSheetRender();setTimeout(()=>{migrateChecklists();surface();decorateObjects();decorateVector();v108FitCanvas(false)},120);
+  };
+  window.addEventListener('resize',()=>{if(isEditor())setTimeout(()=>{surface();v108ApplyZoom(canvasZoom||1,false)},40)});
 })();
 </script>
