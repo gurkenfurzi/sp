@@ -7,8 +7,11 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SchoolBloom">
-<link rel="manifest" href="./manifest.webmanifest">
-<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+<link rel="manifest" href="./manifest.webmanifest?v=99">
+<link rel="icon" type="image/png" sizes="64x64" href="./favicon-v99.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192-v99.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon-v99.png">
+<link rel="apple-touch-icon-precomposed" href="./apple-touch-icon-v99.png">
 <title>SchoolBloom</title>
 <style>
 :root{
@@ -3025,7 +3028,7 @@ html,body{background:#fff7f4;}
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 97</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 100</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -3902,7 +3905,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 97";
+ $("#headerEyebrow").textContent="VERSION 100";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -11597,3 +11600,164 @@ html,body,button,input,select,textarea{font-family:ui-rounded,"SF Pro Rounded","
 @media (max-width:390px){.v97TopicCard{padding-left:10px;padding-right:10px}.v97TopicStats em span{font-size:8.6px}.v97SubjectTools{grid-template-columns:minmax(0,1fr) 108px}.v97ResourceCard{padding:10px}.v97ResourceCard>p{font-size:9px}.v97TopicPage>h2{font-size:34px}}
 </style>
 
+
+
+<style id="v100-subjects-desktop-editor">
+/* ===== VERSION 100 — subjects reference + desktop editor reference ===== */
+@media (max-width:899px){
+  body:has(#view-subjects.active)>.app>.header,
+  body:has(#view-subject-detail.active)>.app>.header,
+  body:has(#view-topic-detail.active)>.app>.header{display:none!important}
+  #view-subjects>.learningBackRow,#view-subjects>.sectionHead,
+  #view-subject-detail>.sectionHead,#view-topic-detail>.sectionHead{display:none!important}
+  #view-subjects,#view-subject-detail,#view-topic-detail{padding:14px 2px 118px!important}
+
+  .v100SubjectsPage,.v100SubjectPage,.v100TopicPage{max-width:720px;margin:0 auto;color:#6d574f}
+  .v100SubjectsHead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin:8px 8px 20px}
+  .v100SubjectsHead h2,.v100SubjectHead h2,.v100TopicHead h2{font-size:42px!important;line-height:.98!important;letter-spacing:-.055em!important;margin:0!important;color:#6a5147!important;font-weight:900!important}
+  .v100SubjectsHead p,.v100SubjectHead p,.v100TopicHead p{margin:8px 0 0;font-size:15px;color:#ae8f84}
+  .v100RoundAction{width:54px;height:54px;border-radius:50%;border:1px solid #edd7d1;background:rgba(255,253,249,.93);display:grid;place-items:center;color:#c38484;font-size:21px;box-shadow:0 8px 22px rgba(127,89,78,.08)}
+
+  .v100Search{height:60px;border-radius:22px;border:1px solid #edd7d1;background:rgba(255,253,249,.95);display:grid;grid-template-columns:34px minmax(0,1fr);align-items:center;padding:0 18px;margin:0 8px 22px;box-shadow:0 8px 24px rgba(127,89,78,.07)}
+  .v100Search span{font-size:26px;color:#b1847b}.v100Search input{border:0!important;background:transparent!important;padding:0!important;outline:0!important;font-size:16px!important;color:#755e55!important;font-weight:650}
+
+  .v100SubjectGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 16px;padding:0 9px}
+  .v100SubjectCard,.v100SubjectAdd{position:relative;min-height:188px;border-radius:18px;border:1px solid #ead9d3;background:linear-gradient(180deg,#fffdfa,#fffaf6);padding:31px 14px 18px;color:#6c554c;box-shadow:0 11px 24px rgba(128,86,75,.07);overflow:visible;text-align:center}
+  .v100SubjectCard:before,.v100SubjectAdd:before{content:"";position:absolute;left:22px;right:22px;top:-12px;height:25px;background:radial-gradient(circle at 8px 14px,#efb1b5 0 4px,transparent 4.5px) 0 0/39px 25px repeat-x;filter:drop-shadow(0 3px 1px rgba(166,114,105,.08))}
+  .v100SubjectCard:after{content:"♡";position:absolute;right:16px;bottom:10px;color:#efa9ad;font-size:18px}
+  .v100SubjectIcon{width:72px;height:72px;margin:0 auto 13px;border-radius:50%;display:grid;place-items:center;font-size:36px;background:var(--soft,#f8e4e4)}
+  .v100SubjectCard b{display:block;font-size:19px;font-weight:900;letter-spacing:-.025em}.v100SubjectCard small{display:block;margin-top:11px;padding-top:10px;border-top:1px dashed #ead7d1;font-size:10px;color:#ad8c82}
+  .v100SubjectAdd{border-style:dashed;background:rgba(255,253,250,.66);display:grid;place-items:center;align-content:center;gap:10px;color:#c78a8b}.v100SubjectAdd strong{font-size:39px;font-weight:400}.v100SubjectAdd span{font-size:12px;font-weight:800}
+  .v100FloatAdd{position:fixed;right:30px;bottom:calc(108px + env(safe-area-inset-bottom));width:62px;height:62px;border:0;border-radius:50%;background:linear-gradient(135deg,#f2a5aa,#e98d98);color:white;font-size:35px;box-shadow:0 12px 25px rgba(199,119,124,.28);z-index:58}
+
+  .v100SubjectHead{display:grid;grid-template-columns:54px minmax(0,1fr) 54px;align-items:center;gap:14px;margin:8px 8px 20px}.v100Back{width:54px;height:54px;border:1px solid #ecd5cf;background:#fffdf9;border-radius:18px;color:#9a746c;font-size:28px;display:grid;place-items:center}.v100SubjectHead .v100RoundAction{justify-self:end}
+  .v100SubjectTools{display:grid;grid-template-columns:minmax(0,1fr) 128px;gap:11px;margin:0 8px 22px}.v100SubjectTools .v100Search{margin:0}.v100SubjectTools>button{border:0;border-radius:19px;background:linear-gradient(135deg,#eea1a6,#df8e98);color:white;font-weight:900;font-size:15px;box-shadow:0 8px 22px rgba(199,119,124,.17)}
+  .v100FolderList{display:grid;gap:15px;padding:0 8px}.v100FolderCard{width:100%;min-height:134px;border:1px solid #ead8d2;background:rgba(255,253,250,.96);border-radius:22px;padding:18px;display:grid;grid-template-columns:126px minmax(0,1fr) 24px;gap:17px;align-items:center;text-align:left;color:#6d574f;box-shadow:0 9px 22px rgba(110,76,67,.055)}
+  .v100FolderIcon{height:92px;border-radius:18px;position:relative;background:var(--folder,#e8edd2);display:grid;place-items:center;font-size:38px}.v100FolderIcon:before{content:"";position:absolute;left:14px;top:-10px;width:62px;height:22px;border-radius:12px 12px 2px 2px;background:var(--folder,#e8edd2)}
+  .v100FolderCard b{font-size:22px;display:block}.v100FolderCard small{font-size:13px;color:#aa8e84;margin-top:7px;display:block}.v100FolderCard i{font-style:normal;font-size:36px;color:#dc8b8d;font-weight:300}
+
+  .v100TopicHead{display:grid;grid-template-columns:54px minmax(0,1fr) 54px;align-items:start;gap:14px;margin:8px 8px 22px}.v100TopicHead .v100RoundAction{justify-self:end}.v100TopicHead h2{margin-top:28px!important}.v100TopicHead p{margin-top:9px}
+  .v100ResourceList{display:grid;gap:14px;padding:0 8px}.v100ResourceRow{width:100%;min-height:124px;border:1px solid #ead8d2;background:rgba(255,253,250,.96);border-radius:22px;padding:15px;display:grid;grid-template-columns:104px minmax(0,1fr) 24px;align-items:center;gap:16px;text-align:left;color:#6c554d;box-shadow:0 8px 20px rgba(110,76,67,.045)}
+  .v100ResourceIcon{width:92px;height:92px;border-radius:50%;display:grid;place-items:center;font-size:42px;background:var(--bubble,#f7e5e5)}.v100ResourceRow b{font-size:21px}.v100ResourceRow small{display:block;margin-top:6px;font-size:12px;color:#aa8a81}.v100ResourceRow i{font-style:normal;font-size:32px;color:#dc9293}
+
+  #modalWrap:has(.v100AddSheet){place-items:end center!important;padding:0!important;background:rgba(96,74,66,.42)!important;backdrop-filter:blur(7px)}
+  #modal:has(.v100AddSheet){width:100%!important;max-width:760px!important;border-radius:30px 30px 0 0!important;padding:18px 18px calc(24px + env(safe-area-inset-bottom))!important;background:#fffaf6!important;max-height:82dvh!important}
+  .v100AddSheet{display:grid;gap:16px}.v100SheetGrab{width:64px;height:6px;border-radius:999px;background:#eadbd6;margin:0 auto 2px}.v100AddSheetHead{display:flex;justify-content:space-between;align-items:start;gap:10px}.v100AddSheetHead h2{font-size:38px!important;margin:0!important;color:#6a5147}.v100AddSheetHead p{margin:6px 0 0;color:#aa8d83}.v100AddSheetHead button{width:46px;height:46px;border-radius:50%;border:1px solid #ecd6cf;background:#fff;color:#92736a;font-size:23px}
+  .v100AddCards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.v100AddCard{min-height:168px;border:1px solid #ead8d2;border-radius:20px;background:#fffdfa;display:grid;place-items:center;align-content:center;gap:12px;color:#6f584f;position:relative;box-shadow:0 7px 18px rgba(110,76,67,.04)}.v100AddCard b{font-size:14px}.v100AddCard span{width:84px;height:84px;border-radius:50%;display:grid;place-items:center;font-size:43px;background:var(--bubble,#f8e6e6)}.v100AddCard:after{content:"♡";position:absolute;right:13px;bottom:10px;color:#f0a4a9}
+  @media(max-width:430px){.v100SubjectCard,.v100SubjectAdd{min-height:172px}.v100FolderCard{grid-template-columns:96px minmax(0,1fr) 20px}.v100FolderIcon{height:78px}.v100AddCards{grid-template-columns:repeat(2,minmax(0,1fr))}.v100ResourceRow{grid-template-columns:88px minmax(0,1fr) 20px}.v100ResourceIcon{width:78px;height:78px}}
+}
+
+@media (min-width:900px){
+  body.editorMode{overflow:hidden!important;background:#fff9f7!important}
+  body.editorMode>.app{max-width:none!important;width:100vw!important;height:100vh!important;margin:0!important;padding:0!important;background:#fff9f7!important}
+  body.editorMode>.app>.header,body.editorMode>#nav,body.editorMode .nav{display:none!important}
+  body.editorMode #view-sheet-editor{display:block!important;width:100vw!important;height:100vh!important;margin:0!important;padding:0!important;overflow:hidden!important}
+  body.editorMode .canvasEditorShell{display:grid!important;grid-template-columns:86px 300px minmax(0,1fr) 310px!important;grid-template-rows:70px 48px minmax(0,1fr) 40px!important;width:100vw!important;height:100vh!important;gap:0!important;max-width:none!important;margin:0!important;background:#fffaf8!important}
+
+  body.editorMode .canvasTopbar{grid-column:1/-1!important;grid-row:1!important;display:grid!important;grid-template-columns:86px 300px 1fr auto!important;align-items:center!important;gap:0!important;padding:0 22px!important;border-bottom:1px solid #eadbd6!important;background:rgba(255,252,250,.98)!important;position:relative!important;z-index:90!important}
+  body.editorMode .canvasTopbar:before{content:"🌷  SchoolBloom";font-size:19px;font-weight:900;color:#5d4942;grid-column:1/3;align-self:center}
+  body.editorMode .canvasTopbar>.editorIcon:first-child{display:none!important}
+  body.editorMode .editorTitle{grid-column:3!important;justify-self:start!important;display:grid!important;gap:1px!important}.editorTitle b{font-size:15px!important;color:#5f4c45!important}.editorTitle span{font-size:9px!important;color:#9c8178!important}
+  body.editorMode .historyBar{position:absolute!important;left:46%!important;transform:translateX(-50%)!important;display:flex!important;gap:5px!important}.historyBtn{width:34px!important;height:34px!important;border:0!important;background:transparent!important;color:#7d675f!important;font-size:20px!important}
+  body.editorMode .editorActions{grid-column:4!important;display:flex!important;gap:8px!important;align-items:center!important}.editorActions .editorIcon{width:auto!important;min-width:42px!important;height:40px!important;border:1px solid #eadbd6!important;border-radius:12px!important;background:#fff!important;color:#705a52!important;padding:0 11px!important}.editorActions .primaryIcon{background:#f1b1b3!important;border-color:#efaaad!important;color:#fff!important}.pageTopLabel{display:inline!important;margin-left:5px!important}
+
+  body.editorMode .desktopCommandBar{grid-column:1/-1!important;grid-row:2!important;display:flex!important;align-items:center!important;gap:9px!important;overflow:hidden!important;padding:5px 18px 5px 105px!important;border-bottom:1px solid #eadbd6!important;background:#fffdfb!important;box-shadow:none!important;border-radius:0!important;position:relative!important;top:auto!important;z-index:80!important}
+  body.editorMode .desktopCmdLabel{display:none!important}.desktopCmdGroup{border:0!important;padding:0!important;margin:0!important}.desktopCmdButtons{display:flex!important;gap:2px!important}.desktopCmdButtons button{height:34px!important;min-width:34px!important;border:0!important;background:transparent!important;color:#69554e!important;border-radius:8px!important;padding:4px 7px!important;font-size:14px!important}.desktopCmdButtons button:hover{background:#f7e7e4!important}.desktopCmdButtons button span{font-size:9px!important;margin-left:3px!important}
+
+  body.editorMode .canvasQuickNav{grid-column:1!important;grid-row:3!important;position:static!important;transform:none!important;left:auto!important;bottom:auto!important;width:86px!important;height:100%!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:3px!important;padding:10px 7px!important;border:0!important;border-right:1px solid #eadbd6!important;border-radius:0!important;background:#fffdfb!important;box-shadow:none!important;z-index:40!important;overflow-y:auto!important}
+  body.editorMode .canvasQuickNav button{flex:0 0 auto!important;width:72px!important;height:56px!important;min-height:56px!important;border:0!important;border-radius:12px!important;background:transparent!important;color:#6c5750!important;display:grid!important;grid-template-rows:25px 13px!important;place-items:center!important;align-content:center!important;gap:2px!important;padding:4px!important;font-size:18px!important}.canvasQuickNav button span:last-child{font-size:8px!important;font-weight:850!important}.canvasQuickNav button.active,.canvasQuickNav button:hover{background:#f5dfdf!important;color:#a4696d!important}.v100DesktopOnly{display:grid!important}
+
+  body.editorMode #canvasQuickDrawer{grid-column:2!important;grid-row:3!important;position:static!important;transform:none!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;width:300px!important;height:100%!important;max-height:none!important;display:block!important;overflow:auto!important;border:0!important;border-right:1px solid #eadbd6!important;border-radius:0!important;background:#fffdfb!important;box-shadow:none!important;padding:14px!important;z-index:35!important}.canvasQuickDrawer .mobileDrawerHead{position:sticky!important;top:0!important;background:#fffdfb!important;z-index:2!important;margin:-14px -14px 10px!important;padding:12px 14px!important;border-bottom:1px solid #eee0dc!important}.canvasQuickDrawer .mobileDrawerHead button:first-child,.canvasQuickDrawer .mobileDrawerHead .mobileDrawerClose{display:none!important}.canvasQuickDrawer .mobileToolGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.canvasQuickDrawer .mobileToolGrid button{min-height:72px!important}.canvasQuickDrawer .mobileTextLibrary{display:grid!important}.canvasQuickDrawer .mobileFormatGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+
+  body.editorMode .canvasViewport{grid-column:3!important;grid-row:3!important;position:relative!important;display:block!important;overflow:auto!important;width:100%!important;height:100%!important;max-height:none!important;min-height:0!important;padding:24px 40px 110px!important;background:radial-gradient(circle at 7% 10%,rgba(241,190,190,.10),transparent 26rem),linear-gradient(180deg,#f8f6f4,#f5f2ef)!important;border:0!important;border-radius:0!important;touch-action:auto!important}.canvasViewport:before{display:none!important}
+  body.editorMode .v96PanSurface{margin:0 auto!important;min-width:max-content!important;min-height:max-content!important;display:flex!important;justify-content:center!important;align-items:flex-start!important;padding:0!important}.canvasStage{box-shadow:0 10px 35px rgba(87,62,54,.14)!important;border:1px solid #e4d8d3!important}
+
+  body.editorMode .desktopEditorSidebar{grid-column:4!important;grid-row:3!important;position:static!important;display:block!important;width:310px!important;height:100%!important;overflow:auto!important;border:0!important;border-left:1px solid #eadbd6!important;border-radius:0!important;background:#fffdfb!important;padding:0 14px 16px!important;box-shadow:none!important;z-index:35!important}.desktopEditorSidebar>.objectPanel{border:0!important;border-bottom:1px solid #eee0dc!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;padding:14px 2px!important;margin:0!important}.desktopEditorSidebar .rowBetween>b{font-size:12px!important}.desktopEditorSidebar .layerList{max-height:56vh!important}
+  body.editorMode #stickerPanel{display:none!important}.pageTemplatesPanel{display:none!important}
+  .v100RightTabs{position:sticky;top:0;z-index:5;display:grid;grid-template-columns:repeat(3,1fr);gap:0;background:#fffdfb;border-bottom:1px solid #eadbd6;margin:0 -14px;padding:10px 14px 0}.v100RightTabs button{height:38px;border:0;background:transparent;color:#8d736a;font-size:10px;font-weight:850;border-bottom:2px solid transparent}.v100RightTabs button.active{color:#b86f75;border-color:#d9878c}.v100RightPage{display:grid;gap:12px;padding:14px 2px}.v100RightPage h3{font-size:12px!important}.v100PageThumbList{display:grid;gap:8px}.v100PageMini{height:88px;border:1px solid #ead9d3;border-radius:12px;background:#fff;display:grid;grid-template-columns:30px 1fr 26px;gap:8px;align-items:center;padding:8px;color:#6d574f}.v100PageMini.active{border-color:#e6a5a7;box-shadow:inset 0 0 0 1px #e7a5a8}.v100MiniPagePaper{height:70px;background:#fffaf7;border:1px solid #eadbd6}.v100PageSettings{display:grid;gap:9px}.v100PageSettings label{display:grid;gap:5px;font-size:9px!important}.v100PageSettings .two{display:grid;grid-template-columns:1fr 1fr;gap:7px}.v100PageSettings input,.v100PageSettings select{height:36px!important;padding:6px 8px!important;font-size:10px!important}.v100PageAddBtn{height:38px;border:1px solid #eccfd0;border-radius:10px;background:#fff0f0;color:#b56f74;font-weight:850}
+
+  body.editorMode #v96PageStrip{display:none!important}.v100DesktopBottom{grid-column:1/-1!important;grid-row:4!important;display:flex!important;justify-content:flex-end!important;align-items:center!important;padding:0 330px 0 390px!important;border-top:1px solid #eadbd6!important;background:#fffdfb!important;color:#756159!important;font-size:10px!important;gap:8px!important}.v100DesktopBottom input{width:120px!important;height:auto!important;padding:0!important}.v100DesktopBottom button{width:28px;height:28px;border:0;background:transparent;color:#6d574f;font-size:16px}
+
+  body.editorMode .topViewMenu{display:none!important}
+}
+@media(max-width:899px){.v100DesktopOnly,.v100RightTabs,.v100RightPage,.v100DesktopBottom{display:none!important}}
+</style>
+
+<script id="v100-behavior">
+(function(){
+ const colors=['#f7e3e5','#f9edcf','#eee2f6','#dfeef8','#e7efd8','#f6e4d9'];
+ const folderColors=['#dfe8c8','#f4d9a9','#e8cde9','#cfe4f3','#f4d6d8','#d9eadf'];
+ function emojiForSubject(s,i=0){const n=String(s.name||'').toLowerCase();if(n.includes('bio'))return '🌸';if(n.includes('math'))return '🧮';if(n.includes('deutsch'))return '✏️';if(n.includes('engl'))return '💬';if(n.includes('gesch'))return '🏛️';return s.emoji||['🌷','📚','🧠','🎨','🧪'][i%5]}
+ window.v100FilterSubjects=function(q){const t=String(q||'').trim().toLowerCase();document.querySelectorAll('.v100SubjectCard').forEach(x=>x.hidden=!!t&&!x.dataset.search.includes(t))};
+ window.v100FilterSubjectTopics=function(q){const t=String(q||'').trim().toLowerCase();document.querySelectorAll('.v100FolderCard').forEach(x=>x.hidden=!!t&&!x.dataset.search.includes(t))};
+ const oldRenderSubjects=renderSubjects;
+ renderSubjects=function(){
+   if(window.innerWidth>=900)return oldRenderSubjects();
+   data.subjects.forEach(ensureSubjectShape);const root=$('#subjectList');if(!root)return;
+   root.className='';
+   const cards=(data.subjects||[]).map((s,i)=>`<button class="v100SubjectCard" data-search="${esc(String(s.name||'').toLowerCase())}" onclick="openSubject('${s.id}')"><span class="v100SubjectIcon" style="--soft:${colors[i%colors.length]}">${emojiForSubject(s,i)}</span><b>${esc(s.name)}</b><small>${(s.topics||[]).length} Themen</small></button>`).join('');
+   root.innerHTML=`<div class="v100SubjectsPage"><div class="v100SubjectsHead"><div><h2>Fächer</h2><p>Deine Fächer 🌷</p></div><button class="v100RoundAction" onclick="openView('settings')">🌷</button></div><label class="v100Search"><span>⌕</span><input placeholder="Fächer suchen" oninput="v100FilterSubjects(this.value)"></label><div class="v100SubjectGrid">${cards}<button class="v100SubjectAdd" onclick="openAddSubject()"><strong>＋</strong><span>Fach hinzufügen</span></button></div><button class="v100FloatAdd" onclick="openAddSubject()">＋</button></div>`;
+ };
+
+ const oldSubjectRender=renderSubjectDetail;
+ renderSubjectDetail=function(){
+   if(window.innerWidth>=900)return oldSubjectRender();
+   const root=$('#subjectDetail');if(!root)return;const s=data.subjects.find(x=>x.id===selectedSubjectId);if(!s){root.innerHTML='<div class="empty">Fach nicht gefunden.</div>';return}ensureSubjectShape(s);
+   const cards=(s.topics||[]).map((t,i)=>{const st=v97TopicStats(s,t);const cnt=st.sheets.length+st.cardCount+st.quizzes.length+st.tests.length+(t.files||[]).length;return `<button class="v100FolderCard" data-search="${esc(String(t.title||'').toLowerCase())}" onclick="openTopic('${s.id}','${t.id}')"><span class="v100FolderIcon" style="--folder:${folderColors[i%folderColors.length]}">${['🧫','🌿','🧬','🌍','📚','✨'][i%6]}</span><span><b>${esc(t.title)}</b><small>${cnt} Inhalte</small></span><i>›</i></button>`}).join('')||'<div class="empty">Noch keine Themen.</div>';
+   root.innerHTML=`<div class="v100SubjectPage"><div class="v100SubjectHead"><button class="v100Back" onclick="leaveSubjectNotebook()">←</button><div><h2>${esc(s.name)}</h2><p>Themen 🌷</p></div><button class="v100RoundAction" onclick="openSubjectSettings('${s.id}')">🌷</button></div><div class="v100SubjectTools"><label class="v100Search"><span>⌕</span><input placeholder="Themen suchen" oninput="v100FilterSubjectTopics(this.value)"></label><button onclick="openNewTopic('${s.id}')">＋ Thema</button></div><div class="v100FolderList">${cards}</div><button class="v100FloatAdd" onclick="openNewTopic('${s.id}')">＋</button></div>`;
+ };
+
+ function topicHomeworks(s,t){return (data.homework||[]).filter(x=>x.subject===s.name&&x.topicId===t.id)}
+ window.v100OpenTopicHomeworkHub=function(){const {s,t}=currentTopic();if(!s||!t)return;const items=topicHomeworks(s,t);openModal(`<div class="v97HubHead"><button onclick="closeModal()">←</button><div><div class="eyebrow">${esc(t.title)}</div><h2>Hausaufgaben</h2></div></div><div class="v97HubActions"><button class="primary" onclick="v100NewTopicHomework()">＋ Hausaufgabe</button></div><div class="v97HubList">${items.length?items.map(x=>`<div class="v97HubItem static"><span>📋</span><div><b>${esc(x.text)}</b><small>${esc(x.due||'Ohne Fälligkeit')}</small></div><button class="v97MiniDelete" onclick="v100DeleteTopicHomework('${x.id}')">×</button></div>`).join(''):'<div class="empty">Noch keine Hausaufgabe.</div>'}</div>`)};
+ window.v100NewTopicHomework=function(){const {s,t}=currentTopic();if(!s||!t)return;openModal(`<h2>Hausaufgabe</h2><div class="formGrid"><div><label>Fach</label><input value="${esc(s.name)}" disabled></div><div><label>Fällig</label><input id="v100HwDue" type="date" value="${todayISO()}"></div><div class="full"><label>Aufgabe</label><textarea id="v100HwText" placeholder="z. B. Seite 42, Aufgabe 3–5"></textarea></div><div class="full"><label>Notiz</label><input id="v100HwNote" placeholder="optional"></div></div><button class="primary" style="margin-top:12px" onclick="v100SaveTopicHomework()">Speichern</button>`)};
+ window.v100SaveTopicHomework=function(){const {s,t}=currentTopic();const text=String($('#v100HwText')?.value||'').trim();if(!s||!t||!text)return;data.homework.push({id:id(),subject:s.name,topicId:t.id,text,due:$('#v100HwDue')?.value||todayISO(),note:String($('#v100HwNote')?.value||'').trim(),done:false,created:Date.now(),files:[]});save();closeModal();renderTopicDetail()};
+ window.v100DeleteTopicHomework=function(i){if(!confirm('Hausaufgabe löschen?'))return;data.homework=(data.homework||[]).filter(x=>x.id!==i);save();v100OpenTopicHomeworkHub()};
+ window.v100OpenTopicAddSheet=function(){const {t}=currentTopic();if(!t)return;openModal(`<div class="v100AddSheet"><div class="v100SheetGrab"></div><div class="v100AddSheetHead"><div><h2>Hinzufügen 🌷</h2><p>Was möchtest du zu <b>${esc(t.title)}</b> hinzufügen?</p></div><button onclick="closeModal()">×</button></div><div class="v100AddCards"><button class="v100AddCard" style="--bubble:#f8e3e5" onclick="closeModal();setTimeout(()=>v97NewSheet(),30)"><span>📄</span><b>Lernblatt</b></button><button class="v100AddCard" style="--bubble:#faedc9" onclick="closeModal();setTimeout(()=>v100NewTopicHomework(),30)"><span>🎒</span><b>Hausaufgabe</b></button><button class="v100AddCard" style="--bubble:#e8efd8" onclick="closeModal();setTimeout(()=>v97NewDeck(),30)"><span>🗂️</span><b>Karteikarten</b></button><button class="v100AddCard" style="--bubble:#eee4f5" onclick="closeModal();setTimeout(()=>v97NewQuiz(),30)"><span>💬</span><b>Quiz</b></button><button class="v100AddCard" style="--bubble:#e7eef5" onclick="closeModal();setTimeout(()=>v97NewTopicTest(),30)"><span>📋</span><b>Test</b></button></div></div>`)};
+ const oldTopicRender=renderTopicDetail;
+ renderTopicDetail=function(){
+   if(window.innerWidth>=900)return oldTopicRender();const root=$('#topicDetail');if(!root)return;const {s,t}=currentTopic();if(!s||!t){root.innerHTML='<div class="empty">Thema nicht gefunden.</div>';return}const st=v97TopicStats(s,t),hw=topicHomeworks(s,t);
+   const rows=[['📄','#f8e3e5','Lernblätter',st.sheets.length,`v97OpenTopicHub('sheets')`],['📋','#faedc9','Hausaufgaben',hw.length,`v100OpenTopicHomeworkHub()`],['🗂️','#e8efd8','Karteikarten',st.cardCount,`v97OpenTopicHub('cards')`],['💬','#e8f0f7','Quizze',st.quizzes.length,`v97OpenTopicHub('quizzes')`],['📝','#eee4f5','Tests',st.tests.length,`v97OpenTopicHub('tests')`]];
+   root.innerHTML=`<div class="v100TopicPage"><div class="v100TopicHead"><button class="v100Back" onclick="backToNotebook()">←</button><div><h2>${esc(t.title)}</h2><p>Inhalte 🌷</p></div><button class="v100RoundAction" onclick="v100OpenTopicAddSheet()">🌷</button></div><div class="v100ResourceList">${rows.map(r=>`<button class="v100ResourceRow" onclick="${r[4]}"><span class="v100ResourceIcon" style="--bubble:${r[1]}">${r[0]}</span><span><b>${r[2]}</b><small>${r[3]} ${r[2]}</small></span><i>›</i></button>`).join('')}</div><button class="v100FloatAdd" onclick="v100OpenTopicAddSheet()">＋</button></div>`;
+ };
+
+ // Desktop editor rail + right panel. Mobile editor HTML and behavior stay untouched.
+ function desktopRailButton(group,label,icon){return `<button class="v100DesktopOnly" data-group="${group}" onclick="v100DesktopOpen('${group}',this)"><span class="editorNavIcon">${icon}</span><span>${label}</span></button>`}
+ window.v100DesktopOpen=function(group,btn){
+   if(window.innerWidth<900)return editorOpenGroup(group,btn);
+   const d=$('#canvasQuickDrawer');if(!d)return;
+   if(group==='pages')v100RightTab('page');
+   if(group==='layers')v100RightTab('layers');
+   const map={templates:'templates',elements:'elements',textLibrary:'textLibrary',pages:'pages',layers:'layers'};
+   if(map[group]){openEditorGroup=null;d.classList.remove('open');editorOpenGroup(map[group],btn);return}
+   $$('.canvasQuickNav button').forEach(x=>x.classList.remove('active'));btn?.classList.add('active');d.classList.add('open');document.body.classList.add('editorDrawerOpen');
+   const card=(name,act,ico)=>`<button onclick="${act}"><b>${ico}</b><span>${name}</span></button>`;
+   let title='Elemente',items=[];
+   if(group==='images'){title='Bilder';items=[card('Bild / Foto','openCanvasMediaPicker()','▧'),card('Datei','document.getElementById(\'canvasAnyFileInput\').click()','📎')]}
+   if(group==='shapes'){title='Formen';items=[card('Rechteck',"addVectorShape('rect')",'□'),card('Kreis',"addVectorShape('ellipse')",'○'),card('Dreieck',"addVectorShape('triangle')",'△'),card('Freier Pfad',"setVectorTool('pen')",'〰'),card('Linie','addCanvasDivider()','—')]}
+   if(group==='charts'){title='Diagramme';items=[card('Graph','openGraphDialog()','⌁'),card('Tabelle','openTableDialog()','▦')]}
+   if(group==='tables'){title='Tabellen';items=[card('Tabelle','openTableDialog()','▦')]}
+   if(group==='formula'){title='Formeln';items=[card('Formel','openFormulaDialog()','∑')]}
+   if(group==='files'){title='Dateien';items=[card('Datei','document.getElementById(\'canvasAnyFileInput\').click()','📎')]}
+   if(group==='stickers'){title='Sticker';items=[card('Sticker','toggleStickerPanel()','✿'),card('Karo-Zettel',"addPaperSticker('grid')",'▩'),card('Linien-Zettel',"addPaperSticker('line')",'≡'),card('Klebeband','addTapeSticker()','▰')]}
+   d.innerHTML=mobileDrawerHead(title)+`<div class="mobileDrawerSection"><div class="mobileToolGrid">${items.join('')}</div></div>`;
+ };
+ window.v100RightTab=function(mode){
+   if(window.innerWidth<900)return;const side=$('#desktopEditorSidebar');if(!side)return;
+   $$('.v100RightTabs button').forEach(b=>b.classList.toggle('active',b.dataset.tab===mode));const panels=[...side.querySelectorAll(':scope>.objectPanel')];const prop=panels.find(p=>p.querySelector('#canvasInspector'));const layers=panels.find(p=>p.querySelector('#layerList'));const page=$('#v100RightPage');if(prop)prop.style.display=mode==='design'?'':'none';if(layers)layers.style.display=mode==='layers'?'':'none';if(page)page.style.display=mode==='page'?'grid':'none';
+ };
+ function v100PagePanelHTML(){canvasState.pages ||= [v96CurrentPageData()];const ps=canvasState.pageStyle||{};return `<div class="v100RightPage" id="v100RightPage"><h3>Seiten</h3><button class="v100PageAddBtn" onclick="v96AddPage();setTimeout(v100RefreshDesktopPagePanel,10)">＋ Seite hinzufügen</button><div class="v100PageThumbList">${canvasState.pages.map((p,i)=>`<button class="v100PageMini ${i===canvasState.activePage?'active':''}" onclick="v96SwitchPage(${i});setTimeout(v100RefreshDesktopPagePanel,10)"><b>${i+1}</b><span class="v100MiniPagePaper"></span><span>›</span></button>`).join('')}</div><div class="v100PageSettings"><h3>Seiteneinstellungen</h3><label>Format<select><option>A4 (210 × 297 mm)</option></select></label><div class="two"><button class="ghost" onclick="setCanvasOrientation('portrait')">▯ Hochformat</button><button class="ghost" onclick="setCanvasOrientation('landscape')">▭ Querformat</button></div><label>Hintergrund<input type="color" value="${ps.color||'#ffffff'}" onchange="setCanvasPageStyle('color',this.value)"></label><label>Muster<select onchange="setCanvasPageStyle('pattern',this.value)"><option value="blank" ${ps.pattern==='blank'?'selected':''}>Leer</option><option value="dots" ${ps.pattern==='dots'?'selected':''}>Gepunktet</option><option value="grid" ${ps.pattern==='grid'?'selected':''}>Kariert</option><option value="lined" ${ps.pattern==='lined'?'selected':''}>Liniert</option></select></label><label>Rastergröße<input type="number" min="10" max="48" value="${ps.spacing||24}" onchange="setCanvasPageStyle('spacing',+this.value)"></label><label>Layout-Rand<input type="number" min="0" max="160" value="${ps.margin??55}" onchange="setCanvasPageStyle('margin',+this.value)"></label></div></div>`}
+ window.v100RefreshDesktopPagePanel=function(){const old=$('#v100RightPage');if(old)old.outerHTML=v100PagePanelHTML()};
+ function v100DesktopInit(){
+   if(window.innerWidth<900||!document.body.classList.contains('editorMode'))return;const nav=$('.canvasQuickNav'),side=$('#desktopEditorSidebar'),shell=$('.canvasEditorShell');if(!nav||!side||!shell)return;
+   nav.querySelectorAll('.v100DesktopOnly').forEach(x=>x.remove());
+   [['textLibrary','textLibrary'],['elements','elements'],['templates','templates'],['pages','pages'],['layers','layers']].forEach(([sel,g])=>{const b=nav.querySelector(`[data-group="${sel}"]`);if(b)b.setAttribute('onclick',`v100DesktopOpen('${g}',this)`)});
+   nav.insertAdjacentHTML('beforeend',desktopRailButton('images','Bilder','▧')+desktopRailButton('shapes','Formen','◯')+desktopRailButton('charts','Diagramme','⌁')+desktopRailButton('tables','Tabellen','▦')+desktopRailButton('formula','Formeln','∑')+desktopRailButton('files','Dateien','📎')+desktopRailButton('stickers','Sticker','✿'));
+   if(!side.querySelector('.v100RightTabs'))side.insertAdjacentHTML('afterbegin',`<div class="v100RightTabs"><button class="active" data-tab="design" onclick="v100RightTab('design')">Design</button><button data-tab="page" onclick="v100RightTab('page')">Seite</button><button data-tab="layers" onclick="v100RightTab('layers')">Ebene</button></div>${v100PagePanelHTML()}`);else v100RefreshDesktopPagePanel();
+   if(!shell.querySelector('.v100DesktopBottom'))shell.insertAdjacentHTML('beforeend','<div class="v100DesktopBottom"><button onclick="v96ApplyZoom((canvasZoom||1)-.1)">−</button><input type="range" min="25" max="200" value="100" oninput="v96ApplyZoom(+this.value/100)"><button onclick="v96ApplyZoom((canvasZoom||1)+.1)">＋</button><span>100%</span><button onclick="fitCanvasStage()">⛶</button></div>');
+   const first=nav.querySelector('[data-group="elements"]');openEditorGroup=null;$('#canvasQuickDrawer')?.classList.remove('open');if(first)editorOpenGroup('elements',first);v100RightTab(canvasState.selectedId?'design':'page');
+ }
+ const oldRenderSheet=renderSheetEditor;renderSheetEditor=function(){oldRenderSheet();setTimeout(v100DesktopInit,60)};
+ const oldInspector=renderCanvasInspector;renderCanvasInspector=function(){oldInspector();if(window.innerWidth>=900&&document.body.classList.contains('editorMode')&&canvasState.selectedId)setTimeout(()=>v100RightTab('design'),0)};
+ window.addEventListener('resize',()=>{if(document.body.classList.contains('editorMode'))setTimeout(v100DesktopInit,80)});
+})();
+</script>
