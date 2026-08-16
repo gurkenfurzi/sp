@@ -1,17 +1,9 @@
-# Studia — Version 103
+# Studia V104
 
-GitHub-Pages/PWA build.
+Regression-Fix auf Basis von V103.
 
-## V103
-- Fächer auf Handy und Laptop als kompakte, süße Notizblöcke mit einheitlichen SVG-Icons
-- Themenansicht als saubere Ordnerliste
-- Lernblätter, digitale Hausaufgaben, Arbeitsblätter, Karteikarten, Quizze und geschriebene Tests/Klassenarbeiten
-- Ressourcen umbenennbar; Tests können optional Scan/Foto/PDF speichern
-- Karteikarten-Wiederholung mit Gewusst / Meh / Nicht gewusst
-- Desktop-Editor mit pastelligem Hintergrund, kompakter Palette und einheitlichen Icons
-- Alt + Mausrad zoomt; Leertaste + Ziehen oder mittlere Maustaste verschiebt die Arbeitsfläche
-- Mehrseitige Dokumente mit „Seite hinzufügen“
-- Rechteck- und Dreieck-Ecken abrundbar
-- überarbeitetes Ebenen-Drag-and-drop
-- Exportmenü: PDF/Drucken, PNG, JPG, HTML
-- Reload stellt die zuletzt geöffnete Arbeitsansicht in derselben Browser-Session wieder her
+- Fächer / Notizbuch können nicht mehr durch einen Fehler im Stundenplan-Renderer blank werden.
+- Renderbereiche sind voneinander isoliert.
+- Ein bereits funktionierender Stundenplan wird beim Start nicht mehr durch eine gerade unlesbare Remote-PDF gestört.
+- Manuelles Aktualisieren bleibt möglich; bei Fehlern bleibt der gespeicherte Plan aktiv.
+- Design- und Editor-Funktionen aus V103 bleiben erhalten.

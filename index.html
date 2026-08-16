@@ -3028,7 +3028,7 @@ html,body{background:#fff7f4;}
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 103</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 104</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -3904,8 +3904,8 @@ window.openView=function(name){
  if(name!=="sheet-editor"){document.body.classList.remove("editorDrawerOpen");const q=$("#canvasQuickDrawer");if(q){q.classList.remove("open");q.innerHTML=""}const mt=$("#mobileSelectionTools");if(mt){mt.classList.remove("show");mt.innerHTML=""}}
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
- $("#headerTitle").textContent=titles[name]||"SchoolHub.";
- $("#headerEyebrow").textContent="VERSION 103";
+ $("#headerTitle").textContent=titles[name]||"Studia.";
+ $("#headerEyebrow").textContent="VERSION 104";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -9962,7 +9962,7 @@ window.exportData=function(){
  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="schoolhub-backup.json";a.click();URL.revokeObjectURL(a.href)
 }
 $("#importData").onchange=async e=>{const f=e.target.files?.[0];if(!f)return;try{data=JSON.parse(await f.text());save();alert("Backup importiert")}catch{alert("Backup konnte nicht gelesen werden.")}}
-window.resetAll=function(){if(confirm("Wirklich alle SchoolHub-Daten auf diesem Gerät löschen?")){localStorage.removeItem(KEY);location.reload()}}
+window.resetAll=function(){if(confirm("Wirklich alle Studia-Daten auf diesem Gerät löschen?")){localStorage.removeItem(KEY);location.reload()}}
 
 function renderAll(){renderHome();renderPlan();renderTasks();renderGrades();renderStudy();renderSubjects();renderAbsence();renderSettings();renderLearnsetsLists();if(selectedSubjectId)renderSubjectDetail();if(selectedTopicId)renderTopicDetail();if(selectedDeckId)renderDeckDetail();if(selectedQuizId&&quizSession)renderQuizPlayer()}
 applyCustomization();renderTimer();renderAll();
@@ -10876,8 +10876,12 @@ window.loadRemotePlan=async function(manual=false){
  if(refreshBtn)refreshBtn.disabled=false;
 
  if(parserError){
-   if(status)status.textContent="Die PDF wurde geladen, konnte aber nicht vollständig gelesen werden. Der letzte funktionierende Plan bleibt erhalten.";
-   if(live){live.textContent="PDF erreichbar · Parser konnte den neuen Plan nicht übernehmen";live.className="liveRefreshStatus warn"}
+   if(status)status.textContent=(data.timetable?.lessons||[]).length
+     ? "Der gespeicherte Stundenplan bleibt aktiv. Die neue PHS-PDF konnte gerade nicht sicher gelesen werden."
+     : "Die PDF wurde geladen, konnte aber nicht vollständig gelesen werden.";
+   if(live){live.textContent=(data.timetable?.lessons||[]).length
+     ? "✓ Gespeicherter Plan aktiv · Live-PDF gerade nicht lesbar"
+     : "PDF erreichbar · Parser konnte den Plan nicht übernehmen";live.className="liveRefreshStatus warn"}
  }else{
    if(status)status.textContent="Die Stundenplan-PDF ist gerade nicht erreichbar. Der letzte funktionierende Plan bleibt erhalten.";
    if(live){live.textContent="Live-Verbindung gerade nicht erreichbar";live.className="liveRefreshStatus error"}
@@ -10885,11 +10889,17 @@ window.loadRemotePlan=async function(manual=false){
  console.warn(parserError||networkError);
 }
 
-loadRemotePlan(false);
+// V104: A cached working timetable must never be disturbed just because the
+// remote PDF temporarily changes format. Auto-load only for a fresh install.
+if(data.timetable?.isPlaceholder || !(data.timetable?.lessons||[]).length){
+  loadRemotePlan(false);
+}
 
 if(localStorage.getItem("schoolbloom-plan-parser-version")!=="42"){
  localStorage.setItem("schoolbloom-plan-parser-version","42");
- setTimeout(()=>loadRemotePlan(true),250);
+ if(data.timetable?.isPlaceholder || !(data.timetable?.lessons||[]).length){
+   setTimeout(()=>loadRemotePlan(true),250);
+ }
 }
 if("serviceWorker" in navigator && location.protocol.startsWith("http")){
   window.addEventListener("load",()=>{
@@ -11509,7 +11519,7 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
   window.addEventListener('resize',()=>{if(document.body.classList.contains('editorMode'))setTimeout(v102DesktopEditorInit,80)});
 
   /* refresh version + title */
-  const eyebrow=$('#headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 103';document.title='Studia';
+  const eyebrow=$('#headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 104';document.title='Studia';
 })();
 
 
@@ -11617,7 +11627,7 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
   openView=function(name,...args){const out=v103OpenViewBase(name,...args);try{sessionStorage.setItem('studia-last-view',name);sessionStorage.setItem('studia-last-subject',selectedSubjectId||'');sessionStorage.setItem('studia-last-topic',selectedTopicId||'');sessionStorage.setItem('studia-last-sheet',selectedSheetId||'')}catch(_){}return out};
   window.addEventListener('beforeunload',()=>{try{sessionStorage.setItem('studia-last-view',document.querySelector('.view.active')?.id?.replace('view-','')||'home');sessionStorage.setItem('studia-last-subject',selectedSubjectId||'');sessionStorage.setItem('studia-last-topic',selectedTopicId||'');sessionStorage.setItem('studia-last-sheet',selectedSheetId||'')}catch(_){}});
 
-  setTimeout(()=>{const e=$('#headerEyebrow');if(e)e.textContent='VERSION 103';document.title='Studia';if(document.body.classList.contains('editorMode')){v103Topbar();v96RenderPageStrip()}},60);
+  setTimeout(()=>{const e=$('#headerEyebrow');if(e)e.textContent='VERSION 104';document.title='Studia';if(document.body.classList.contains('editorMode')){v103Topbar();v96RenderPageStrip()}},60);
   /* Space shows a grab hand; middle mouse or Space+drag pans. */
   window.addEventListener('keydown',e=>{if(e.code==='Space'&&document.body.classList.contains('editorMode')&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName))$('#canvasViewport')?.classList.add('v103Hand')});
   window.addEventListener('keyup',e=>{if(e.code==='Space')$('#canvasViewport')?.classList.remove('v103Hand')});
@@ -11859,7 +11869,7 @@ html,body,button,input,select,textarea{font-family:ui-rounded,"SF Pro Rounded","
 
 
 <style id="v100-subjects-desktop-editor">
-/* ===== VERSION 103 — subjects reference + desktop editor reference ===== */
+/* ===== VERSION 104 — subjects reference + desktop editor reference ===== */
 @media (max-width:899px){
   body:has(#view-subjects.active)>.app>.header,
   body:has(#view-subject-detail.active)>.app>.header,
@@ -12088,4 +12098,118 @@ body:has(#view-subjects.active)>.app>.header,body:has(#view-subject-detail.activ
 </style>
 <style id="v103-hand-cursor">
 @media(min-width:900px){body.editorMode #canvasViewport.v103Hand{cursor:grab!important}body.editorMode #canvasViewport.v103Hand.v102Panning{cursor:grabbing!important}}
+</style>
+
+<script id="v104-regression-guard">
+/* Studia V104 — regression guard. Do not let one broken module blank another view. */
+(()=>{
+  const byId=id=>document.getElementById(id);
+  const safe=(label,fn)=>{try{return fn?.()}catch(err){console.error('[Studia V104] '+label,err);return null}};
+
+  // A timetable/render error must never prevent Fächer / Notizbuch / editor from rendering.
+  renderAll=function(){
+    safe('Home',()=>renderHome());
+    safe('Stundenplan',()=>renderPlan());
+    safe('Aufgaben',()=>renderTasks());
+    safe('Noten',()=>renderGrades());
+    safe('Lernen',()=>renderStudy());
+    safe('Fächer',()=>renderSubjects());
+    safe('Abwesenheit',()=>renderAbsence());
+    safe('Einstellungen',()=>renderSettings());
+    safe('Lernsets',()=>renderLearnsetsLists());
+    if(selectedSubjectId) safe('Notizbuch',()=>renderSubjectDetail());
+    if(selectedTopicId) safe('Thema',()=>renderTopicDetail());
+    if(selectedDeckId) safe('Karteikarten',()=>renderDeckDetail());
+    if(selectedQuizId&&quizSession) safe('Quiz',()=>renderQuizPlayer());
+  };
+
+  // Make Fächer rendering defensive against old/malformed local data.
+  const fancySubjects=renderSubjects;
+  renderSubjects=function(){
+    const root=byId('subjectList');
+    try{
+      data.subjects=Array.isArray(data.subjects)?data.subjects:[];
+      data.subjects.forEach((s,i)=>{
+        if(!s || typeof s!=='object') data.subjects[i]={id:id(),name:'Fach',topics:[],files:[],notes:[]};
+        else {
+          s.name=String(s.name||s.abbr||'Fach');
+          s.id=s.id||id();
+          ensureSubjectShape(s);
+        }
+      });
+      fancySubjects();
+      if(root && !root.innerHTML.trim()) throw new Error('Fächeransicht blieb leer');
+      document.body.classList.add('studiaSubjectsReady');
+    }catch(err){
+      console.error('[Studia V104] Fächer-Fallback',err);
+      document.body.classList.remove('studiaSubjectsReady');
+      if(!root)return;
+      const subjects=(data.subjects||[]).filter(Boolean);
+      root.className='';
+      root.innerHTML=`<div class="v104SubjectFallback"><div class="v104FallbackHead"><div><h2>Fächer</h2><p>Deine Fächer</p></div></div><div class="v104FallbackGrid">${subjects.map((s,i)=>`<button onclick="openSubject('${s.id}')"><span>${esc(String(s.name||'Fach').slice(0,2).toUpperCase())}</span><b>${esc(String(s.name||'Fach'))}</b><small>${(s.topics||[]).length} Themen</small></button>`).join('')||'<div class="empty">Noch keine Fächer.</div>'}</div></div>`;
+    }
+  };
+
+  // Same protection for entering a notebook/topic: never show a totally blank page.
+  const fancySubjectDetail=renderSubjectDetail;
+  renderSubjectDetail=function(){
+    const root=byId('subjectDetail');
+    try{ fancySubjectDetail(); if(root&&!root.innerHTML.trim())throw new Error('Notizbuch blieb leer'); }
+    catch(err){
+      console.error('[Studia V104] Notizbuch-Fallback',err);
+      const s=(data.subjects||[]).find(x=>x.id===selectedSubjectId);
+      if(root)root.innerHTML=s?`<div class="v104SimpleNotebook"><button onclick="leaveSubjectNotebook()">← Fächer</button><h2>${esc(s.name||'Fach')}</h2><p>Themenordner</p><div>${(s.topics||[]).map(t=>`<button onclick="openTopic('${s.id}','${t.id}')"><b>${esc(t.title||'Thema')}</b><small>Öffnen ›</small></button>`).join('')||'<div class="empty">Noch kein Themenordner.</div>'}</div></div>`:'<div class="empty">Fach nicht gefunden.</div>';
+    }
+  };
+  const fancyTopicDetail=renderTopicDetail;
+  renderTopicDetail=function(){
+    const root=byId('topicDetail');
+    try{ fancyTopicDetail(); if(root&&!root.innerHTML.trim())throw new Error('Thema blieb leer'); }
+    catch(err){
+      console.error('[Studia V104] Thema-Fallback',err);
+      if(root)root.innerHTML='<div class="empty">Das Thema konnte nicht vollständig dargestellt werden. Deine Daten sind weiterhin gespeichert.</div>';
+    }
+  };
+
+  // Re-wrap the final navigation function so the target is always rendered even if another module fails.
+  const priorOpenView=openView;
+  openView=function(name,...args){
+    const result=safe('Navigation '+name,()=>priorOpenView(name,...args));
+    if(name==='subjects')safe('Fächer direkt',()=>renderSubjects());
+    if(name==='subject-detail')safe('Notizbuch direkt',()=>renderSubjectDetail());
+    if(name==='topic-detail')safe('Thema direkt',()=>renderTopicDetail());
+    if(name==='plan')safe('Stundenplan direkt',()=>renderPlan());
+    return result;
+  };
+  window.openView=openView;
+
+  // Keep a useful cached plan visible even when live refresh fails.
+  const priorLoadRemotePlan=window.loadRemotePlan;
+  window.loadRemotePlan=async function(manual=false){
+    const before=JSON.stringify(data.timetable||{});
+    try{return await priorLoadRemotePlan(manual)}
+    catch(err){
+      try{data.timetable=JSON.parse(before);save();safe('Stundenplan wiederherstellen',()=>renderPlan())}catch(_){}
+      console.error('[Studia V104] Live-Plan konnte nicht übernommen werden',err);
+    }
+  };
+
+  // Repair the current screen once after the patch is installed.
+  setTimeout(()=>{
+    const active=document.querySelector('.view.active')?.id?.replace('view-','');
+    if(active==='subjects')safe('Fächer initial',()=>renderSubjects());
+    if(active==='subject-detail')safe('Notizbuch initial',()=>renderSubjectDetail());
+    if(active==='topic-detail')safe('Thema initial',()=>renderTopicDetail());
+    const e=byId('headerEyebrow');if(e)e.textContent='VERSION 104';
+    document.title='Studia';
+  },0);
+})();
+</script>
+<style id="v104-regression-style">
+/* Header is only hidden when the custom notebook view really rendered. */
+body:has(#view-subjects.active):not(.studiaSubjectsReady)>.app>.header{display:flex!important}
+.v104SubjectFallback,.v104SimpleNotebook{max-width:760px;margin:0 auto;padding:22px 16px 120px;color:#6b554d}
+.v104FallbackHead h2,.v104SimpleNotebook h2{font-size:42px;margin:0 0 4px;font-family:ui-rounded,"SF Pro Rounded",system-ui,sans-serif}.v104FallbackHead p,.v104SimpleNotebook p{color:#a98c82;font-weight:700}
+.v104FallbackGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:18px}.v104FallbackGrid button,.v104SimpleNotebook>div>button{border:1px solid #ead8d2;background:#fffdfa;border-radius:20px;min-height:150px;padding:18px;color:#6b554d;display:grid;gap:8px;text-align:left}.v104FallbackGrid button span{width:54px;height:54px;border-radius:17px;background:#f8e5e7;display:grid;place-items:center;font-weight:900}.v104FallbackGrid button b{font-size:19px}.v104FallbackGrid button small,.v104SimpleNotebook small{color:#a98c82}
+@media(min-width:900px){.v104FallbackGrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 </style>
