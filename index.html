@@ -7,11 +7,11 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Studia">
-<link rel="manifest" href="./manifest.webmanifest?v=107">
+<link rel="manifest" href="./manifest.webmanifest?v=111">
 <link rel="icon" type="image/png" sizes="64x64" href="./favicon-v99.png">
-<link rel="icon" type="image/png" sizes="192x192" href="./icon-192-v108.png">
-<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon-v108.png">
-<link rel="apple-touch-icon-precomposed" href="./apple-touch-icon-v108.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192-v109.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon-v109.png">
+<link rel="apple-touch-icon-precomposed" href="./apple-touch-icon-v109.png">
 <title>Studia</title>
 <style>
 :root{
@@ -3463,12 +3463,20 @@ html,body{background:#fff7f4;}
       <p class="small">Auf dem iPhone muss Studia zuerst zum Home-Bildschirm hinzugefügt und von dort geöffnet werden.</p>
     </div>
 
-    <div class="section panel">
-      <h2>Daten</h2>
-      <p class="small">Diese Version speichert deine Daten lokal auf diesem Gerät.</p>
-      <button class="ghost" onclick="exportData()">Backup exportieren</button>
-      <label class="ghost" style="display:inline-block;margin:0 0 0 6px;color:#8d7369" for="importData">Backup importieren</label>
-      <input id="importData" type="file" accept="application/json" style="display:none">
+    <div class="section panel v111BackupPanel">
+      <div class="v111BackupHead"><div><h2>Backup & Sicherheit</h2><p class="small">Studia sichert deine Daten automatisch zusätzlich auf diesem Gerät.</p></div><span class="v111BackupCloud">↻</span></div>
+      <div class="v111BackupStatus" id="v111BackupStatus"><b>Lokales Autobackup</b><span>Wird vorbereitet …</span></div>
+      <label class="v111BackupToggle"><span><b>Automatische Backups</b><small>Nach Änderungen, höchstens etwa alle 5 Minuten.</small></span><input id="v111BackupEnabled" type="checkbox" checked onchange="v111ToggleBackups(this.checked)"></label>
+      <label class="v111BackupToggle"><span><b>Tägliche Backup-Erinnerung</b><small>Einmal pro Tag wird dir ein Download angeboten.</small></span><input id="v111DailyPrompt" type="checkbox" checked onchange="v111ToggleDailyPrompt(this.checked)"></label>
+      <div class="v111BackupButtons">
+        <button class="primary" onclick="v111CreateBackupNow(true)">Jetzt lokal sichern</button>
+        <button class="ghost" onclick="exportData()">Backup-Datei herunterladen</button>
+        <button class="ghost" onclick="v111OpenRestoreManager()">Lokales Backup wiederherstellen</button>
+        <label class="ghost v111ImportLabel" for="importData">Backup-Datei importieren</label>
+        <input id="importData" type="file" accept="application/json,.json,.studia" style="display:none">
+        <button class="ghost" onclick="v111RequestPersistentStorage()">Speicher dauerhaft schützen</button>
+      </div>
+      <p class="small v111BackupNote">Interne Backups funktionieren ohne Google und ohne Internet. Eine heruntergeladene Backup-Datei ist zusätzlich wichtig, falls Safari/Websitedaten komplett gelöscht werden.</p>
       <button class="dangerBtn" style="display:block;margin-top:12px" onclick="resetAll()">Alle Daten löschen</button>
     </div>
   </section>
@@ -11691,6 +11699,9 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
 window.addEventListener('error',e=>console.warn('Studia error:',e.message));
 setTimeout(()=>{if(!window.__schoolBloomBooted){document.documentElement.style.background='#fff7f4';document.body.style.background='#fff7f4';}},1800);
 </script>
+
+
+
 </body>
 </html><style id="v93-bottom-nav-stability">
 @media (max-width:899px){
@@ -12606,7 +12617,7 @@ body.editorMode #v96PageStrip{display:none!important}
 
   // Alt + mouse wheel zooms at the pointer. Window capture runs before old document handlers.
   window.addEventListener('wheel',function(e){
-    if(!isEditor()||!e.altKey)return;
+    if(true)return;
     const vp=viewport();if(!vp)return;
     const t=e.target instanceof Element?e.target:null;
     if(t && !t.closest('#canvasViewport,#v96PanSurface,#canvasStage'))return;
@@ -12632,12 +12643,12 @@ body.editorMode #v96PageStrip{display:none!important}
   let pinch=null;
   function touchMid(a,b,vp){const r=vp.getBoundingClientRect();return{x:(a.clientX+b.clientX)/2-r.left,y:(a.clientY+b.clientY)/2-r.top}}
   window.addEventListener('touchstart',function(e){
-    if(!isEditor()||e.touches.length!==2)return;const vp=viewport();if(!vp||!vp.contains(e.target))return;
+    if(true)return;const vp=viewport();if(!vp||!vp.contains(e.target))return;
     e.preventDefault();e.stopImmediatePropagation();const a=e.touches[0],b=e.touches[1],m=touchMid(a,b,vp),z=canvasZoom||1,g=Number(surface()?.dataset.gutter)||gutter();
     pinch={dist:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),zoom:z,pageX:(vp.scrollLeft+m.x-g)/z,pageY:(vp.scrollTop+m.y-g)/z};canvasState.userZoomTouched=true;
   },{capture:true,passive:false});
   window.addEventListener('touchmove',function(e){
-    if(!pinch||e.touches.length!==2)return;const vp=viewport();if(!vp)return;e.preventDefault();e.stopImmediatePropagation();
+    if(true)return;const vp=viewport();if(!vp)return;e.preventDefault();e.stopImmediatePropagation();
     const a=e.touches[0],b=e.touches[1],m=touchMid(a,b,vp),dist=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),z=clamp(pinch.zoom*(dist/pinch.dist),.22,3.2),g=gutter();
     v108ApplyZoom(z,false);requestAnimationFrame(()=>{vp.scrollLeft=Math.max(0,g+pinch.pageX*z-m.x);vp.scrollTop=Math.max(0,g+pinch.pageY*z-m.y)});
   },{capture:true,passive:false});
@@ -12738,3 +12749,348 @@ body.editorMode #v96PageStrip{display:none!important}
   window.addEventListener('resize',()=>{if(isEditor())setTimeout(()=>{surface();v108ApplyZoom(canvasZoom||1,false)},40)});
 })();
 </script>
+
+<!-- V109 UI + INTERACTION STABILIZATION -->
+<style id="v109-final-fixes">
+/* ---------- universal overflow / sizing safety ---------- */
+body.editorMode *,#view-subjects *,#view-subject-detail *,#view-topic-detail *{box-sizing:border-box}
+body.editorMode button,body.editorMode input,body.editorMode select,body.editorMode textarea{max-width:100%;min-width:0}
+body.editorMode .cobj.textObj,
+body.editorMode .cobj.calloutObj,
+body.editorMode .cobj.taskObj,
+body.editorMode .cobj.merkeObj{
+  overflow:hidden!important;
+  overflow-wrap:anywhere!important;
+  word-break:normal!important;
+  white-space:pre-wrap!important;
+  max-width:none!important;
+}
+body.editorMode .cobj[contenteditable="true"]{overflow:auto!important;overscroll-behavior:contain!important}
+body.editorMode .cobj table{max-width:100%!important}
+
+/* ---------- phone editor: one clean bottom sheet that actually scrolls ---------- */
+@media(max-width:899px){
+  body.editorMode{overflow:hidden!important}
+  body.editorMode #canvasViewport{
+    touch-action:none!important;
+    overscroll-behavior:none!important;
+    overflow:auto!important;
+    -webkit-overflow-scrolling:auto!important;
+  }
+  body.editorMode #canvasQuickDrawer.open{
+    left:10px!important;right:10px!important;bottom:calc(8px + env(safe-area-inset-bottom))!important;
+    width:auto!important;height:min(68dvh,590px)!important;max-height:min(68dvh,590px)!important;
+    display:flex!important;flex-direction:column!important;
+    overflow:hidden!important;padding:8px 10px 10px!important;border-radius:24px!important;
+  }
+  body.editorMode #canvasQuickDrawer .mobileDrawerHead{
+    position:relative!important;top:auto!important;flex:0 0 auto!important;
+    margin:0!important;padding:5px 0 8px!important;background:transparent!important;
+  }
+  body.editorMode #canvasQuickDrawer.open>.mobileDrawerSection,
+  body.editorMode #canvasQuickDrawer.open>.mobilePagePanel,
+  body.editorMode #canvasQuickDrawer.open>.mobileTextLibrary,
+  body.editorMode #canvasQuickDrawer.open>.mobileTextEditor{
+    flex:1 1 auto!important;min-height:0!important;max-height:none!important;
+    overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;
+    overscroll-behavior:contain!important;padding-right:2px!important;
+  }
+  .mobileTextEditor{display:flex!important;flex-direction:column!important;overflow:hidden!important}
+  .mobileTextModeContent{flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;padding:8px 1px!important}
+  .mobileTextModeTabs{flex:0 0 auto!important}
+  .mobileTextLibrary{overflow-y:auto!important;overflow-x:hidden!important;padding-bottom:12px!important}
+  .mobileFormatGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}
+  .mobileFormatCard{min-width:0!important;width:100%!important;max-width:100%!important;overflow:hidden!important}
+  .mobileFormatName,.mobileFormatCard small{overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+  .v96TextPrimaryRow{grid-template-columns:minmax(92px,1.2fr) 82px repeat(4,34px)!important;gap:4px!important}
+  .v96TextPrimaryRow>*{min-width:0!important;max-width:100%!important}
+  .v96FontChooser{padding:3px 5px!important;grid-template-columns:27px minmax(0,1fr) 10px!important}
+  .v96FontChooser .fontPreviewAa{width:27px!important;height:27px!important}
+  .v96TextSecondaryRow{grid-template-columns:repeat(4,minmax(34px,1fr)) 1px repeat(3,minmax(34px,1fr))!important;gap:4px!important}
+  .v96CompactGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .v96CompactGrid label{grid-template-columns:minmax(0,1fr) minmax(62px,55%)!important;overflow:hidden!important}
+  .v96ActionRow button{min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  .v96FontList{max-height:none!important;overflow:visible!important}
+  .v96FontPicker{min-height:0!important}
+
+  /* no floating duplicate/lock toolbar in the middle while a drawer is open */
+  body.editorMode.editorDrawerOpen #mobileSelectionTools{display:none!important}
+  body.editorMode #mobileSelectionTools{
+    left:auto!important;right:12px!important;top:78px!important;transform:none!important;
+    padding:4px!important;gap:2px!important;box-shadow:0 8px 22px rgba(95,69,62,.11)!important;
+  }
+  body.editorMode #mobileSelectionTools button{width:32px!important;height:32px!important;font-size:0!important}
+  body.editorMode #mobileSelectionTools button svg{width:17px!important;height:17px!important}
+
+  /* compact layers — icons never become giant cards */
+  .mobileLayerList{display:grid!important;gap:6px!important;min-width:0!important}
+  .mobileLayerList .layerItem,.mobileLayerList .v103LayerItem{
+    width:100%!important;min-width:0!important;margin:0!important;padding:0!important;
+    border:1px solid #eadbd6!important;border-radius:14px!important;background:#fffdfb!important;overflow:hidden!important;
+  }
+  .mobileLayerList .layerRow{
+    width:100%!important;display:grid!important;grid-template-columns:32px minmax(0,1fr) auto!important;
+    align-items:center!important;gap:5px!important;padding:5px!important;border:0!important;
+  }
+  .mobileLayerList .layerDragHandle{width:32px!important;height:34px!important;min-width:32px!important;padding:0!important;border:0!important;background:transparent!important}
+  .mobileLayerList .layerTitleBtn{width:100%!important;min-width:0!important;height:36px!important;display:flex!important;align-items:center!important;gap:6px!important;padding:0 3px!important;border:0!important;background:transparent!important;text-align:left!important;overflow:hidden!important}
+  .mobileLayerList .v103LayerKind{width:25px!important;height:25px!important;flex:0 0 25px!important}
+  .mobileLayerList .layerName{display:block!important;min-width:0!important;max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;font-size:10px!important}
+  .mobileLayerList .layerTools{display:flex!important;gap:2px!important;flex:0 0 auto!important}
+  .mobileLayerList .layerTools button{width:31px!important;height:31px!important;min-width:31px!important;min-height:31px!important;padding:0!important;border:0!important;border-radius:9px!important;background:#fff7f4!important;display:grid!important;place-items:center!important}
+  .mobileLayerList .layerTools button svg,.mobileLayerList .layerDragHandle svg,.mobileLayerList .v103LayerKind svg{width:16px!important;height:16px!important}
+
+  /* selected move handle stays small and outside the text, not over menus */
+  .v108MoveHandle,.v108VectorMoveHandle{width:34px!important;height:34px!important}
+  .cobj.selected>.v108MoveHandle{bottom:-42px!important}
+
+  /* Full-width topic cards: no awkward empty strip at the right. */
+  #view-topic-detail,.v103TopicDetail,.v102TopicDetail,.v102TopicResourceList{width:100%!important;max-width:none!important}
+  .v102TopicResourceList{grid-template-columns:1fr!important}
+  .v102ResourceCard{width:100%!important;max-width:none!important;min-width:0!important}
+  .v103ResourceText{min-width:0!important;overflow:hidden!important}
+  .v103ResourceText b,.v103ResourceText small{max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important}
+
+  /* More compact notebook overview: more cards beside each other. */
+  .v102NotebookGrid{gap:9px!important}
+  .v102Notebook.v103Notebook{height:168px!important;min-height:168px!important;padding:23px 8px 12px!important;border-radius:18px!important}
+  .v102Notebook.v103Notebook .v102NotebookIcon{width:56px!important;height:56px!important;margin-bottom:9px!important}
+  .v102Notebook.v103Notebook .v102NotebookIcon svg{width:27px!important;height:27px!important}
+  .v102Notebook.v103Notebook strong{font-size:17px!important}
+  .v102Notebook.v103Notebook small{font-size:9px!important;margin-top:10px!important;padding-top:8px!important}
+  .v102SubjectPageHead h2{font-size:40px!important}
+  .v102SubjectTools{margin-bottom:15px!important}
+
+  /* Topics: two clean folder cards where space permits, no broken empty right half. */
+  .v103TopicList{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+  .v103FolderRow{width:100%!important;min-width:0!important;min-height:118px!important;grid-template-columns:42px minmax(0,1fr) 15px!important;gap:8px!important;padding:12px!important;overflow:hidden!important}
+  .v103FolderArt{width:42px!important;height:42px!important;border-radius:13px!important}
+  .v103FolderText{min-width:0!important;overflow:hidden!important}.v103FolderText b{font-size:15px!important}.v103FolderText small{display:-webkit-box!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:3!important;overflow:hidden!important;font-size:8px!important}
+}
+@media(max-width:355px){.v103TopicList{grid-template-columns:1fr!important}}
+
+/* ---------- desktop editor ---------- */
+@media(min-width:900px){
+  body.editorMode .canvasEditorShell{
+    grid-template-columns:232px minmax(0,1fr) 310px!important;
+    grid-template-rows:64px minmax(0,1fr)!important;
+    min-width:0!important;
+  }
+  body.editorMode .v102DesktopLeft{min-width:0!important;margin:10px 0 10px 10px!important}
+  body.editorMode #desktopEditorSidebar{
+    width:auto!important;max-width:none!important;min-width:0!important;margin:10px 10px 10px 0!important;
+    overflow-y:auto!important;overflow-x:hidden!important;
+  }
+  body.editorMode #desktopEditorSidebar>*{min-width:0!important;max-width:100%!important}
+  body.editorMode #desktopEditorSidebar .objectPanel{min-width:0!important;max-width:100%!important;overflow:hidden!important}
+  body.editorMode #canvasInspector,body.editorMode #layerList,body.editorMode #pageTemplatePicker{width:100%!important;max-width:100%!important;min-width:0!important}
+  body.editorMode #canvasInspector .objectPanelGrid,
+  body.editorMode #canvasInspector .inspectorGrid,
+  body.editorMode #canvasInspector .positionGrid,
+  body.editorMode #canvasInspector .vectorControls{grid-template-columns:repeat(2,minmax(0,1fr))!important;min-width:0!important}
+  body.editorMode #canvasInspector label,body.editorMode #canvasInspector input,body.editorMode #canvasInspector select,body.editorMode #canvasInspector button{min-width:0!important;max-width:100%!important;width:100%!important}
+  body.editorMode #canvasViewport{margin:10px!important;padding:0!important;border:0!important;border-radius:20px!important;overflow:auto!important;cursor:default!important}
+  body.editorMode #v96PanSurface{margin:0!important}
+  body.editorMode #canvasStage{margin:0!important}
+  body.editorMode .canvasQuickNav{grid-template-columns:repeat(2,minmax(0,1fr))!important;padding:8px!important;gap:5px!important}
+  body.editorMode .canvasQuickNav button{min-height:54px!important;border-radius:13px!important;padding:5px!important}
+  body.editorMode #canvasQuickDrawer{padding:9px!important;overflow-y:auto!important;overflow-x:hidden!important}
+  .v102PaletteGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important}
+  .v102PaletteGrid button{min-height:62px!important;min-width:0!important;max-width:100%!important;padding:7px!important;overflow:hidden!important}
+  .v102PaletteGrid button span{overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;max-width:100%!important}
+  .v103LayerItem .layerRow{grid-template-columns:26px minmax(0,1fr) auto!important;padding:4px!important}
+  .v103LayerItem .layerTools button{width:25px!important;height:25px!important}
+  .v103LayerItem .layerTools svg{width:14px!important;height:14px!important}
+  #layerList{max-height:calc(100vh - 180px)!important;overflow-y:auto!important;overflow-x:hidden!important}
+
+  /* Laptop notebooks: denser overview, four beside each other on common widths. */
+  .v102NotebookGrid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:14px!important}
+  .v102Notebook.v103Notebook{height:205px!important;min-height:205px!important;padding:26px 12px 14px!important}
+  .v102Notebook.v103Notebook .v102NotebookIcon{width:64px!important;height:64px!important;margin-bottom:11px!important}
+  .v102Notebook.v103Notebook strong{font-size:19px!important}
+  .v103TopicList{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important}
+  .v103FolderRow{min-width:0!important;overflow:hidden!important}
+}
+@media(min-width:900px) and (max-width:1120px){.v102NotebookGrid{grid-template-columns:repeat(3,minmax(0,1fr))!important}.v103TopicList{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+</style>
+<script id="v109-final-script">
+(function(){
+  const isEditor=()=>document.body.classList.contains('editorMode')&&!!document.querySelector('#view-sheet-editor.active');
+  const vp=()=>document.getElementById('canvasViewport');
+  const svg=(d)=>`<svg viewBox="0 0 24 24" aria-hidden="true">${d}</svg>`;
+  const icons={
+    duplicate:svg('<rect x="8" y="8" width="11" height="11" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/>'),
+    lock:svg('<rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>'),
+    trash:svg('<path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/>'),
+    more:svg('<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>')
+  };
+
+  // Main selection pill: never cover the editing sheet; SVG only, no emoji.
+  window.updateMobileSelectionTools=function(){
+    const el=document.getElementById('mobileSelectionTools');if(!el)return;
+    const has=canvasState.selectedId||canvasState.selectedIds?.length||canvasState.selectedVectorIds?.length;
+    if(window.innerWidth>=900||!isEditor()||!has||document.body.classList.contains('editorDrawerOpen')){el.classList.remove('show');el.innerHTML='';return}
+    el.classList.add('show');
+    el.innerHTML=`<button onclick="duplicateSelected()" title="Duplizieren">${icons.duplicate}</button><button onclick="toggleSelectedLock()" title="Sperren">${icons.lock}</button><button onclick="deleteSelectedCanvasItem()" title="Löschen">${icons.trash}</button><button onclick="editorOpenGroup('selection')" title="Mehr">${icons.more}</button>`;
+  };
+
+  // Make drawer content scrollable after every drawer render, also on iOS Safari.
+  const oldOpenGroup=window.editorOpenGroup;
+  window.editorOpenGroup=function(group,btn){
+    const r=oldOpenGroup(group,btn);
+    requestAnimationFrame(()=>{
+      const d=document.getElementById('canvasQuickDrawer');if(!d)return;
+      d.scrollTop=0;
+      const scroll=d.querySelector('.mobileTextModeContent,.mobileTextLibrary,.mobileDrawerSection,.mobilePagePanel');
+      if(scroll) scroll.scrollTop=0;
+      updateMobileSelectionTools();
+    });
+    return r;
+  };
+  const oldClose=window.closeEditorDrawer;
+  window.closeEditorDrawer=function(){const r=oldClose();requestAnimationFrame(updateMobileSelectionTools);return r};
+
+  // Compact layer rows with protected text overflow. Reuse the existing data + actions.
+  window.renderLayerList=function(){
+    const el=document.getElementById('layerList');if(!el)return;
+    const all=layerEntries();const ic=window.v103Icon||window.v102Icon||(()=>"");
+    el.innerHTML=all.length?all.map(a=>`<div class="layerItem v103LayerItem ${canvasState.selectedType===a.kind&&canvasState.selectedId===a.id?'active':''}" data-layer-kind="${a.kind}" data-layer-id="${a.id}" draggable="true" ondragstart="layerNativeDragStart(event,'${a.kind}','${a.id}')" ondragover="event.preventDefault()" ondrop="layerNativeDrop(event,'${a.kind}','${a.id}')"><div class="layerRow"><button class="layerDragHandle" title="Ziehen" onpointerdown="layerPointerStart(event,'${a.kind}','${a.id}')">${ic('drag')}</button><button class="layerTitleBtn" title="${esc(a.name)}" onclick="${a.kind==='object'?`selectCanvasObject('${a.id}')`:`selectVector('${a.id}')`}"><span class="v103LayerKind">${a.kind==='object'?ic('sheet'):ic('rect')}</span><span class="layerName">${esc(a.name)}</span></button><div class="layerTools"><button title="Umbenennen" onclick="event.stopPropagation();renameLayerItem('${a.kind}','${a.id}')">${ic('edit')}</button><button title="${a.locked?'Entsperren':'Sperren'}" onclick="event.stopPropagation();${a.kind==='object'?`selectCanvasObject('${a.id}')`:`selectVector('${a.id}')`};toggleSelectedLock()">${ic(a.locked?'unlock':'lock')}</button><button class="layerDeleteBtn" title="Löschen" onclick="event.stopPropagation();deleteLayerItem('${a.kind}','${a.id}')">${ic('trash')}</button></div></div></div>`).join(''):'<div class="v103EmptyState">Noch keine Elemente.</div>';
+    const mobile=document.querySelector('#canvasQuickDrawer.open .mobileLayerList');if(mobile)mobile.innerHTML=el.innerHTML;
+  };
+
+  // Existing + new text boxes may never paint outside their own box.
+  const oldRenderObjects=window.renderCanvasObjects;
+  window.renderCanvasObjects=function(){
+    oldRenderObjects();
+    document.querySelectorAll('#canvasObjects .cobj').forEach(el=>{el.style.maxWidth='none';if(el.matches('.textObj,.calloutObj,.taskObj,.merkeObj')){el.style.overflow=el.isContentEditable?'auto':'hidden';}});
+  };
+  window.addCanvasTextBox=function(){
+    const o=newCanvasObject('body');o.text='Textfeld';o.w=210;o.h=54;o.style.padding=7;o.style.fontSize=16;o.style.borderWidth=0;o.style.background='transparent';
+    canvasState.objects.push(o);renderCanvasObjects();selectCanvasObject(o.id);markCanvasDirty();cuteToast('Textfeld eingefügt ♡');
+  };
+
+  // Reliable laptop Alt+wheel zoom: based on pointer coordinates, not event target.
+  window.addEventListener('wheel',function(e){
+    if(!isEditor()||window.innerWidth<900||!e.altKey)return;const v=vp();if(!v)return;const r=v.getBoundingClientRect();
+    if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;
+    e.preventDefault();e.stopImmediatePropagation();const factor=Math.exp(-e.deltaY*0.0022);
+    const focus={x:e.clientX-r.left,y:e.clientY-r.top};
+    (window.v108ApplyZoom||window.v96ApplyZoom)?.((canvasZoom||1)*factor,true,focus);
+  },{capture:true,passive:false});
+
+  // Safari gesture events + direct touch fallback for two-finger pinch/pan.
+  let gestureStart=null,touchStart=null;
+  function zoomAt(z,clientX,clientY){const v=vp();if(!v)return;const r=v.getBoundingClientRect();(window.v108ApplyZoom||window.v96ApplyZoom)?.(z,true,{x:clientX-r.left,y:clientY-r.top})}
+  window.addEventListener('gesturestart',function(e){if(!isEditor()||window.innerWidth>=900)return;const v=vp();if(!v)return;const r=v.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;e.preventDefault();gestureStart=canvasZoom||1},{capture:true,passive:false});
+  window.addEventListener('gesturechange',function(e){if(gestureStart==null||!isEditor())return;e.preventDefault();e.stopImmediatePropagation();zoomAt(Math.max(.22,Math.min(3.2,gestureStart*e.scale)),e.clientX,e.clientY)},{capture:true,passive:false});
+  window.addEventListener('gestureend',()=>{gestureStart=null},{capture:true,passive:true});
+  window.addEventListener('touchstart',function(e){
+    if(!isEditor()||window.innerWidth>=900||e.touches.length!==2)return;const v=vp();if(!v)return;const a=e.touches[0],b=e.touches[1],r=v.getBoundingClientRect(),mx=(a.clientX+b.clientX)/2,my=(a.clientY+b.clientY)/2;if(mx<r.left||mx>r.right||my<r.top||my>r.bottom)return;
+    e.preventDefault();e.stopImmediatePropagation();touchStart={d:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),z:canvasZoom||1,mx,my,sl:v.scrollLeft,st:v.scrollTop};canvasState.userZoomTouched=true;
+  },{capture:true,passive:false});
+  window.addEventListener('touchmove',function(e){
+    if(!touchStart||e.touches.length!==2||!isEditor())return;const v=vp();if(!v)return;e.preventDefault();e.stopImmediatePropagation();const a=e.touches[0],b=e.touches[1],mx=(a.clientX+b.clientX)/2,my=(a.clientY+b.clientY)/2,d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),z=Math.max(.22,Math.min(3.2,touchStart.z*(d/touchStart.d)));
+    zoomAt(z,mx,my);requestAnimationFrame(()=>{v.scrollLeft+=touchStart.mx-mx;v.scrollTop+=touchStart.my-my;touchStart.mx=mx;touchStart.my=my});
+  },{capture:true,passive:false});
+  window.addEventListener('touchend',e=>{if(e.touches.length<2)touchStart=null},{capture:true,passive:true});
+  window.addEventListener('touchcancel',()=>{touchStart=null},{capture:true,passive:true});
+
+  // Desktop vector/form dragging: intercept the transparent hit-shape before older handlers.
+  document.addEventListener('pointerdown',function(e){
+    if(!isEditor()||window.innerWidth<900||e.button!==0)return;const t=e.target instanceof Element?e.target:null;if(!t)return;
+    if(t.closest('.vectorResizeHandle,.vectorRotateHandle,.pathNode'))return;
+    const hit=t.closest('.vectorTouchProxy,.shapeHit');if(!hit)return;const vid=hit.dataset.vid;if(!vid)return;const v=canvasState.vectors.find(x=>x.id===vid);if(!v||v.locked)return;
+    e.preventDefault();e.stopImmediatePropagation();if(e.shiftKey){toggleVectorInMultiSelection(vid);return}selectVector(vid);startVectorDrag(e,vid);
+  },true);
+
+  // Keep mobile layer drawer refreshed after any selection/render change.
+  const oldInspector=window.renderCanvasInspector;
+  window.renderCanvasInspector=function(){oldInspector();if(document.querySelector('#canvasQuickDrawer.open .mobileLayerList'))requestAnimationFrame(renderLayerList)};
+
+  // Version marker.
+  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 111';document.title='Studia'},40);
+})();
+</script>
+
+
+<!-- ===== Studia V111 local backup system ===== -->
+<style id="v111-backup-style">
+.v111BackupPanel{overflow:hidden}
+.v111BackupHead{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}.v111BackupHead h2{margin-bottom:4px}.v111BackupCloud{width:44px;height:44px;flex:0 0 44px;border-radius:14px;background:#fff0ef;border:1px solid #edcfcb;color:#bc777c;display:grid;place-items:center;font-size:24px;font-weight:900}
+.v111BackupStatus{margin-top:14px;border:1px solid #e9d8d2;background:linear-gradient(135deg,#fffaf7,#f7faef);border-radius:15px;padding:11px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px}.v111BackupStatus b{font-size:12px}.v111BackupStatus span{font-size:9px;color:#8d766d;text-align:right}.v111BackupStatus.ok{border-color:#d9e5c6;background:#f6faef}.v111BackupStatus.warn{border-color:#efd6bf;background:#fff8ec}
+.v111BackupToggle{margin-top:9px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:14px!important;border:1px solid #eadbd6!important;border-radius:14px!important;background:#fffdfb!important;padding:10px 12px!important}.v111BackupToggle span{display:grid;gap:2px;min-width:0}.v111BackupToggle b{font-size:11px}.v111BackupToggle small{font-size:8px;color:#9e857c;line-height:1.35}.v111BackupToggle input{width:18px!important;height:18px!important;flex:0 0 18px!important;margin:0!important;accent-color:#e59a9f}
+.v111BackupButtons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}.v111BackupButtons>button,.v111BackupButtons>.v111ImportLabel{margin:0!important;min-height:42px!important;border-radius:12px!important;display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;font-size:9px!important;font-weight:850!important;padding:8px!important;box-sizing:border-box!important}.v111ImportLabel{border:1px solid #e8d5cf;background:#fff;color:#8d7369;cursor:pointer}.v111BackupNote{margin-top:10px!important;line-height:1.45!important}
+.v111RestoreList{display:grid;gap:8px;max-height:min(52vh,480px);overflow:auto;-webkit-overflow-scrolling:touch;margin-top:12px}.v111RestoreRow{border:1px solid #eadbd6;background:#fffdfb;border-radius:14px;padding:10px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center}.v111RestoreRow>div{min-width:0;display:grid;gap:2px}.v111RestoreRow b{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v111RestoreRow small{font-size:8px;color:#9e857c}.v111RestoreRow button{border:1px solid #e8d2cd;background:#fff5f3;border-radius:10px;color:#9a6c68;padding:7px 9px;font-size:8px;font-weight:900}.v111RestoreEmpty{padding:22px;border:1px dashed #ead3cc;border-radius:14px;text-align:center;color:#9b8178;font-size:10px}
+@media(max-width:600px){.v111BackupButtons{grid-template-columns:1fr}.v111BackupStatus{align-items:flex-start;flex-direction:column}.v111BackupStatus span{text-align:left}}
+</style>
+<script id="v111-local-backup">
+(function(){
+ const VERSION=111;
+ const BDB='studia-local-backups-v1', SNAP='snapshots', BLOBS='blobs';
+ const MAX_SNAPS=20, MIN_INTERVAL=5*60*1000;
+ const ENABLE_KEY='studia-local-backup-enabled', DAILY_KEY='studia-daily-backup-prompt-enabled', LAST_PROMPT_KEY='studia-daily-backup-prompt-date';
+ let backupDirty=true, backupTimer=null, backupBusy=false;
+ const sleep=(ms)=>new Promise(r=>setTimeout(r,ms));
+ function today(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+ function stamp(ts=Date.now()){const d=new Date(ts);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}_${String(d.getHours()).padStart(2,'0')}-${String(d.getMinutes()).padStart(2,'0')}`}
+ function escB(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+ function enabled(){return localStorage.getItem(ENABLE_KEY)!=='0'}
+ function dailyEnabled(){return localStorage.getItem(DAILY_KEY)!=='0'}
+ function snapshotLocalStorage(){const out={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k)out[k]=localStorage.getItem(k)}return out}
+ function openBDB(){return new Promise((res,rej)=>{const r=indexedDB.open(BDB,1);r.onupgradeneeded=()=>{const db=r.result;if(!db.objectStoreNames.contains(SNAP)){const s=db.createObjectStore(SNAP,{keyPath:'id'});s.createIndex('ts','ts')}if(!db.objectStoreNames.contains(BLOBS))db.createObjectStore(BLOBS,{keyPath:'id'})};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+ function txDone(tx){return new Promise((res,rej)=>{tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error);tx.onabort=()=>rej(tx.error||new Error('aborted'))})}
+ async function liveFiles(){try{const db=await dbOpen();return await new Promise((res,rej)=>{const r=db.transaction(STORE).objectStore(STORE).getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>rej(r.error)})}catch(e){console.warn('[Studia backup] live files unavailable',e);return []}}
+ async function latestSnap(){const db=await openBDB();return await new Promise((res,rej)=>{const r=db.transaction(SNAP).objectStore(SNAP).getAll();r.onsuccess=()=>res((r.result||[]).sort((a,b)=>b.ts-a.ts)[0]||null);r.onerror=()=>rej(r.error)})}
+ async function allSnaps(){const db=await openBDB();return await new Promise((res,rej)=>{const r=db.transaction(SNAP).objectStore(SNAP).getAll();r.onsuccess=()=>res((r.result||[]).sort((a,b)=>b.ts-a.ts));r.onerror=()=>rej(r.error)})}
+ async function gc(db){const snaps=await new Promise((res,rej)=>{const r=db.transaction(SNAP).objectStore(SNAP).getAll();r.onsuccess=()=>res((r.result||[]).sort((a,b)=>b.ts-a.ts));r.onerror=()=>rej(r.error)});const remove=snaps.slice(MAX_SNAPS);if(remove.length){const tx=db.transaction(SNAP,'readwrite'),st=tx.objectStore(SNAP);remove.forEach(x=>st.delete(x.id));await txDone(tx)}const kept=snaps.slice(0,MAX_SNAPS),refs=new Set(kept.flatMap(x=>x.fileIds||[]));const blobs=await new Promise((res,rej)=>{const r=db.transaction(BLOBS).objectStore(BLOBS).getAllKeys();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>rej(r.error)});const dead=blobs.filter(k=>!refs.has(k));if(dead.length){const tx=db.transaction(BLOBS,'readwrite'),st=tx.objectStore(BLOBS);dead.forEach(k=>st.delete(k));await txDone(tx)}}
+ async function createSnapshot(reason='auto',force=false){
+   if(backupBusy||(!enabled()&&!force))return null;
+   backupBusy=true;
+   try{
+     const prev=await latestSnap();if(!force&&!backupDirty&&prev)return prev;if(!force&&prev&&Date.now()-prev.ts<MIN_INTERVAL)return prev;
+     const files=await liveFiles(),db=await openBDB();
+     if(files.length){const tx=db.transaction(BLOBS,'readwrite'),st=tx.objectStore(BLOBS);files.forEach(f=>st.put({id:f.id,name:f.name||'',type:f.type||f.blob?.type||'',blob:f.blob||null,updatedAt:Date.now()}));await txDone(tx)}
+     const snap={id:`snap-${Date.now()}-${Math.random().toString(36).slice(2,7)}`,ts:Date.now(),reason,version:VERSION,localStorage:snapshotLocalStorage(),fileIds:files.map(x=>x.id)};
+     const tx=db.transaction(SNAP,'readwrite');tx.objectStore(SNAP).put(snap);await txDone(tx);await gc(db);backupDirty=false;updateStatus();return snap;
+   }catch(e){console.error('[Studia backup] create failed',e);updateStatus(true);return null}finally{backupBusy=false}
+ }
+ async function getBackupBlob(id){const db=await openBDB();return await new Promise((res,rej)=>{const r=db.transaction(BLOBS).objectStore(BLOBS).get(id);r.onsuccess=()=>res(r.result||null);r.onerror=()=>rej(r.error)})}
+ function blobToDataURL(blob){return new Promise((res,rej)=>{if(!blob)return res('');const r=new FileReader();r.onload=()=>res(String(r.result||''));r.onerror=()=>rej(r.error);r.readAsDataURL(blob)})}
+ function dataURLToBlob(url){const [head,body]=String(url||'').split(',');if(!body)return new Blob([]);const mime=(head.match(/data:([^;]+)/)||[])[1]||'application/octet-stream',bin=atob(body),u8=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u8[i]=bin.charCodeAt(i);return new Blob([u8],{type:mime})}
+ async function fullPackageFromSnapshot(snap){const files=[];for(const id of snap.fileIds||[]){const f=await getBackupBlob(id);if(f)files.push({id:f.id,name:f.name,type:f.type,data:await blobToDataURL(f.blob)})}return {format:'studia-backup-v111',version:VERSION,createdAt:snap.ts,localStorage:snap.localStorage||{},files}}
+ async function packageCurrent(){await createSnapshot('download',true);const snap=await latestSnap();return fullPackageFromSnapshot(snap)}
+ function downloadPackage(pkg){const blob=new Blob([JSON.stringify(pkg)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`Studia_Backup_${stamp(pkg.createdAt||Date.now())}.studia.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1200)}
+ async function clearLiveFiles(){try{const db=await dbOpen();const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).clear();await txDone(tx)}catch(e){console.warn('[Studia backup] clear files failed',e)}}
+ async function restorePackage(pkg){
+   if(!pkg)return;
+   if(pkg.format==='studia-backup-v111' || pkg.localStorage){
+     await clearLiveFiles();
+     if(Array.isArray(pkg.files)){for(const f of pkg.files){try{await dbPut({id:f.id,name:f.name||'',type:f.type||'',blob:dataURLToBlob(f.data||'')})}catch(e){console.warn('file restore failed',f?.id,e)}}}
+     localStorage.clear();Object.entries(pkg.localStorage||{}).forEach(([k,v])=>localStorage.setItem(k,String(v)));
+     location.reload();return;
+   }
+   // Backwards compatibility: old Studia exports contained only the main data object.
+   localStorage.setItem(KEY,JSON.stringify(pkg));location.reload();
+ }
+ async function restoreSnapshot(id){const db=await openBDB(),snap=await new Promise((res,rej)=>{const r=db.transaction(SNAP).objectStore(SNAP).get(id);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});if(!snap)return alert('Backup nicht gefunden.');if(!confirm('Dieses lokale Backup wiederherstellen? Der aktuelle Stand wird dadurch ersetzt.'))return;const pkg=await fullPackageFromSnapshot(snap);await restorePackage(pkg)}
+ async function updateStatus(err=false){const el=document.getElementById('v111BackupStatus');if(!el)return;try{const snaps=await allSnaps(),last=snaps[0];el.classList.toggle('warn',!!err);el.classList.toggle('ok',!!last&&!err);el.querySelector('b').textContent=enabled()?'Lokales Autobackup aktiv':'Lokales Autobackup aus';el.querySelector('span').textContent=err?'Letzte Sicherung fehlgeschlagen':last?`${snaps.length} Versionen · zuletzt ${new Date(last.ts).toLocaleString('de-DE',{dateStyle:'short',timeStyle:'short'})}`:'Noch kein Backup erstellt'}catch(_){}}
+ function schedule(){if(!enabled())return;clearTimeout(backupTimer);backupTimer=setTimeout(async()=>{await createSnapshot('auto');if(backupDirty)schedule()},18000)}
+ window.v111ToggleBackups=function(on){localStorage.setItem(ENABLE_KEY,on?'1':'0');backupDirty=true;if(on){schedule();v111CreateBackupNow(false)}else clearTimeout(backupTimer);updateStatus()};
+ window.v111ToggleDailyPrompt=function(on){localStorage.setItem(DAILY_KEY,on?'1':'0')};
+ window.v111CreateBackupNow=async function(showToast=true){const s=await createSnapshot('manual',true);if(showToast){if(s)typeof cuteToast==='function'?cuteToast('Backup lokal gespeichert ✓'):alert('Backup lokal gespeichert ✓');else alert('Backup konnte nicht gespeichert werden.')}};
+ window.v111RequestPersistentStorage=async function(){if(!navigator.storage?.persist)return alert('Dein Browser bietet diese Funktion hier nicht an.');try{const ok=await navigator.storage.persist();alert(ok?'Studia-Speicher wird möglichst dauerhaft behalten ✓':'Safari hat den dauerhaften Speicher nicht zugesichert. Backup-Dateien bleiben deshalb weiterhin wichtig.')}catch{alert('Speicherschutz konnte nicht angefragt werden.')}};
+ window.v111OpenRestoreManager=async function(){const snaps=await allSnaps();openModal(`<div class="v111Restore"><div class="rowBetween"><div><div class="eyebrow">BACKUPS</div><h2>Wiederherstellen</h2></div><button class="iconbtn" onclick="closeModal()">×</button></div><p class="small">Die letzten ${MAX_SNAPS} lokalen Stände werden automatisch aufgehoben.</p><div class="v111RestoreList">${snaps.length?snaps.map((s,i)=>`<div class="v111RestoreRow"><div><b>${i===0?'Aktuellstes Backup':'Backup '+(i+1)}</b><small>${escB(new Date(s.ts).toLocaleString('de-DE'))} · ${escB(s.reason||'auto')}</small></div><button onclick="v111RestoreSnapshot('${escB(s.id)}')">Wiederherstellen</button></div>`).join(''):'<div class="v111RestoreEmpty">Noch keine lokalen Backups vorhanden.</div>'}</div></div>`)};
+ window.v111RestoreSnapshot=restoreSnapshot;
+ window.exportData=async function(){try{const pkg=await packageCurrent();downloadPackage(pkg)}catch(e){console.error(e);alert('Backup-Datei konnte nicht erstellt werden.')}};
+ const imp=document.getElementById('importData');if(imp)imp.onchange=async e=>{const f=e.target.files?.[0];if(!f)return;try{const pkg=JSON.parse(await f.text());if(!confirm('Dieses Backup importieren? Der aktuelle Stand wird dadurch ersetzt.'))return;await restorePackage(pkg)}catch(e){console.error(e);alert('Backup konnte nicht gelesen werden.')}finally{e.target.value=''}};
+ // Every ordinary Studia save marks the backup dirty, but snapshots are throttled.
+ try{const baseSave=save;save=function(){const r=baseSave.apply(this,arguments);backupDirty=true;schedule();return r}}catch(e){console.warn('[Studia backup] save hook unavailable',e)}
+ document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&backupDirty&&enabled())createSnapshot('background',true)});
+ window.addEventListener('pagehide',()=>{if(backupDirty&&enabled())createSnapshot('pagehide',true)});
+ function syncSettings(){const a=document.getElementById('v111BackupEnabled'),d=document.getElementById('v111DailyPrompt');if(a)a.checked=enabled();if(d)d.checked=dailyEnabled();updateStatus()}
+ const oldRenderSettings=typeof renderSettings==='function'?renderSettings:null;if(oldRenderSettings)renderSettings=function(){oldRenderSettings();setTimeout(syncSettings,0)};
+ async function dailyPrompt(){if(!dailyEnabled()||localStorage.getItem(LAST_PROMPT_KEY)===today())return;localStorage.setItem(LAST_PROMPT_KEY,today());await sleep(900);if(document.body.classList.contains('modalOpen'))return;openModal(`<div><div class="eyebrow">SICHERHEIT</div><h2>Tagesbackup 🌷</h2><p class="small">Dein internes Backup läuft automatisch. Möchtest du zusätzlich die heutige Sicherungsdatei in „Downloads/Dateien“ speichern?</p><div class="row" style="margin-top:12px;flex-wrap:wrap"><button class="primary" onclick="closeModal();setTimeout(()=>exportData(),80)">Backup herunterladen</button><button class="ghost" onclick="closeModal()">Heute nicht</button></div></div>`)}
+ setTimeout(()=>{syncSettings();if(enabled()){createSnapshot('startup');schedule()}dailyPrompt()},1200);
+})();
+</script>
+<!-- ===== /Studia V111 local backup system ===== -->
