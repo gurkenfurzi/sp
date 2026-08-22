@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Studia">
-<link rel="manifest" href="./manifest.webmanifest?v=107">
+<link rel="manifest" href="./manifest.webmanifest?v=112">
 <link rel="icon" type="image/png" sizes="64x64" href="./favicon-v99.png">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192-v109.png">
 <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon-v109.png">
@@ -3463,12 +3463,20 @@ html,body{background:#fff7f4;}
       <p class="small">Auf dem iPhone muss Studia zuerst zum Home-Bildschirm hinzugefügt und von dort geöffnet werden.</p>
     </div>
 
-    <div class="section panel">
-      <h2>Daten</h2>
-      <p class="small">Diese Version speichert deine Daten lokal auf diesem Gerät.</p>
-      <button class="ghost" onclick="exportData()">Backup exportieren</button>
-      <label class="ghost" style="display:inline-block;margin:0 0 0 6px;color:#8d7369" for="importData">Backup importieren</label>
-      <input id="importData" type="file" accept="application/json" style="display:none">
+    <div class="section panel v111BackupPanel">
+      <div class="v111BackupHead"><div><h2>Backup & Sicherheit</h2><p class="small">Studia sichert deine Daten automatisch zusätzlich auf diesem Gerät.</p></div><span class="v111BackupCloud">↻</span></div>
+      <div class="v111BackupStatus" id="v111BackupStatus"><b>Lokales Autobackup</b><span>Wird vorbereitet …</span></div>
+      <label class="v111BackupToggle"><span><b>Automatische Backups</b><small>Nach Änderungen, höchstens etwa alle 5 Minuten.</small></span><input id="v111BackupEnabled" type="checkbox" checked onchange="v111ToggleBackups(this.checked)"></label>
+      <label class="v111BackupToggle"><span><b>Tägliche Backup-Erinnerung</b><small>Einmal pro Tag wird dir ein Download angeboten.</small></span><input id="v111DailyPrompt" type="checkbox" checked onchange="v111ToggleDailyPrompt(this.checked)"></label>
+      <div class="v111BackupButtons">
+        <button class="primary" onclick="v111CreateBackupNow(true)">Jetzt lokal sichern</button>
+        <button class="ghost" onclick="exportData()">Backup-Datei herunterladen</button>
+        <button class="ghost" onclick="v111OpenRestoreManager()">Lokales Backup wiederherstellen</button>
+        <label class="ghost v111ImportLabel" for="importData">Backup-Datei importieren</label>
+        <input id="importData" type="file" accept="application/json,.json,.studia" style="display:none">
+        <button class="ghost" onclick="v111RequestPersistentStorage()">Speicher dauerhaft schützen</button>
+      </div>
+      <p class="small v111BackupNote">Interne Backups funktionieren ohne Google und ohne Internet. Eine heruntergeladene Backup-Datei ist zusätzlich wichtig, falls Safari/Websitedaten komplett gelöscht werden.</p>
       <button class="dangerBtn" style="display:block;margin-top:12px" onclick="resetAll()">Alle Daten löschen</button>
     </div>
   </section>
@@ -11694,6 +11702,76 @@ setTimeout(()=>{if(!window.__schoolBloomBooted){document.documentElement.style.b
 
 
 
+
+<!-- ===== Studia V113 interaction + layout fix ===== -->
+<style id="v113-final-fixes">
+html,body{max-width:100%;overflow-x:hidden}
+@media(max-width:899px){
+  body:not(.editorMode){overflow-x:hidden!important}
+  #view-subjects.active,#view-subject-detail.active,#view-topic-detail.active{left:auto!important;margin-left:0!important;width:100%!important;max-width:100%!important;overflow-x:hidden!important;overscroll-behavior-x:none!important}
+  #view-subjects.active .viewInner,#view-subject-detail.active .viewInner,#view-topic-detail.active .viewInner,#topicDetail,#subjectList,#subjectDetail{width:100%!important;max-width:100%!important;overflow-x:hidden!important}
+  .v102ResourceCard,.v103ResourceText,.v102TopicResourceList{max-width:100%!important;min-width:0!important}
+  body.editorMode #canvasViewport{position:relative!important;inset:auto!important;width:auto!important;max-width:none!important;height:auto!important;overflow:hidden!important;padding:0!important;margin:0!important;border:0!important;border-radius:0!important;touch-action:none!important}
+  body.editorMode #v96PanSurface{touch-action:none!important;overflow:visible!important}
+  body.editorMode #canvasStage{touch-action:none!important;max-width:none!important;max-height:none!important}
+  body.editorMode .canvasQuickNav{display:grid!important;visibility:visible!important;opacity:1!important}
+  body.editorMode #canvasQuickDrawer.open{overflow:hidden!important}
+  body.editorMode #canvasQuickDrawer.open>div:not(.mobileDrawerHeader):not(.mobileTextModeTabs){min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important}
+  body.editorMode .cobj{max-width:none!important}
+  body.editorMode .cobj.textObj{white-space:normal!important}
+  .mobileLayerList .layerRow{grid-template-columns:25px minmax(0,1fr) auto!important}
+  .mobileLayerList .layerTools button{width:25px!important;height:25px!important;min-width:25px!important;min-height:25px!important}
+}
+@media(min-width:900px){
+  body.editorMode .canvasEditorShell{grid-template-columns:270px minmax(0,1fr) 315px!important}
+  body.editorMode #desktopEditorSidebar{min-width:0!important;max-width:315px!important;overflow-x:hidden!important}
+  body.editorMode #desktopEditorSidebar .objectPanel,body.editorMode #desktopEditorSidebar .objectPanelGrid,body.editorMode #desktopEditorSidebar .positionGrid,body.editorMode #desktopEditorSidebar .vectorControls{min-width:0!important;max-width:100%!important}
+  body.editorMode #desktopEditorSidebar input,body.editorMode #desktopEditorSidebar select,body.editorMode #desktopEditorSidebar textarea,body.editorMode #desktopEditorSidebar button{max-width:100%!important;min-width:0!important}
+  body.editorMode #canvasViewport{overflow:auto!important;touch-action:none!important}
+  body.editorMode #canvasStage{max-width:none!important;max-height:none!important}
+  body.editorMode .v102PaletteGrid button{min-width:0!important}
+}
+</style>
+<script id="v113-final-script">
+(function(){
+ const mobile=()=>innerWidth<900, editor=()=>document.body.classList.contains('editorMode')&&document.querySelector('#view-sheet-editor.active');
+ const vp=()=>document.getElementById('canvasViewport'), stage=()=>document.getElementById('canvasStage'), surface=()=>document.getElementById('v96PanSurface');
+ const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+ let touch=null, alt=false, pan=null;
+ function ensureTransform(){const s=stage();if(!s)return; s.style.setProperty('transform-origin','0 0','important');}
+ function phoneApply(){const s=stage(),f=surface();if(!s||!f||!window.v113Phone)return;const q=window.v113Phone;canvasZoom=q.z;s.dataset.scale=q.z;s.style.setProperty('left','0px','important');s.style.setProperty('top','0px','important');s.style.setProperty('transform',`translate3d(${q.x}px,${q.y}px,0) scale(${q.z})`,'important');s.style.setProperty('transform-origin','0 0','important');f.style.setProperty('width','100%','important');f.style.setProperty('height','100%','important');}
+ function phoneFit(){const v=vp();if(!v)return;const z=clamp(Math.min((v.clientWidth-20)/canvasPageWidth(),(v.clientHeight-24)/canvasPageHeight()),.15,1);window.v113Phone={x:(v.clientWidth-canvasPageWidth()*z)/2,y:12,z,touched:false};phoneApply()}
+ function phoneZoom(z,focus){const v=vp();if(!v)return;if(!window.v113Phone)phoneFit();const q=window.v113Phone,f=focus||{x:v.clientWidth/2,y:v.clientHeight/2};z=clamp(z,.14,4);const wx=(f.x-q.x)/q.z,wy=(f.y-q.y)/q.z;q.x=f.x-wx*z;q.y=f.y-wy*z;q.z=z;q.touched=true;phoneApply()}
+ function deskZoom(z,focus){const v=vp(),s=stage(),f=surface();if(!v||!s||!f)return;const old=clamp(Number(s.dataset.scale)||canvasZoom||1,.14,4),g=36,fx=focus?.x??v.clientWidth/2,fy=focus?.y??v.clientHeight/2,wx=(v.scrollLeft+fx-g)/old,wy=(v.scrollTop+fy-g)/old;z=clamp(z,.14,4);canvasZoom=z;s.dataset.scale=z;s.style.setProperty('left',g+'px','important');s.style.setProperty('top',g+'px','important');s.style.setProperty('transform',`scale(${z})`,'important');s.style.setProperty('transform-origin','0 0','important');f.style.width=(canvasPageWidth()*z+g*2)+'px';f.style.height=(canvasPageHeight()*z+g*2)+'px';requestAnimationFrame(()=>{v.scrollLeft=Math.max(0,g+wx*z-fx);v.scrollTop=Math.max(0,g+wy*z-fy)})}
+ window.v113ApplyZoom=(z,p=true,focus=null)=>mobile()?phoneZoom(z,focus):deskZoom(z,focus);window.v112ApplyZoom=window.v108ApplyZoom=window.v96ApplyZoom=window.v113ApplyZoom;window.setCanvasZoom=z=>window.v113ApplyZoom(z,true);window.canvasZoomBy=d=>window.v113ApplyZoom((canvasZoom||1)+Number(d||0),true);
+ window.fitCanvasStage=window.fitCanvasToScreen=function(){if(mobile())phoneFit();else{const v=vp();if(!v)return;deskZoom(Math.min((v.clientWidth-72)/canvasPageWidth(),(v.clientHeight-72)/canvasPageHeight()),{x:v.clientWidth/2,y:v.clientHeight/2})}};
+ // iOS pointer-event based two-finger pan + pinch. Works even when Safari suppresses legacy touchmove.
+ function midpoint(a,b,r){return{x:(a.x+b.x)/2-r.left,y:(a.y+b.y)/2-r.top}}
+ const pts=new Map();
+ window.addEventListener('pointerdown',e=>{if(!editor()||!mobile()||e.pointerType!=='touch')return;const v=vp(),r=v?.getBoundingClientRect();if(!v||e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;pts.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pts.size===2){const [a,b]=[...pts.values()],m=midpoint(a,b,r);if(!window.v113Phone)phoneFit();const q=window.v113Phone,d=Math.max(1,Math.hypot(a.x-b.x,a.y-b.y));touch={d,z:q.z,wx:(m.x-q.x)/q.z,wy:(m.y-q.y)/q.z};e.preventDefault();e.stopImmediatePropagation()}},{capture:true,passive:false});
+ window.addEventListener('pointermove',e=>{if(!pts.has(e.pointerId))return;pts.set(e.pointerId,{x:e.clientX,y:e.clientY});if(!editor()||!mobile()||pts.size<2||!touch)return;const v=vp(),r=v.getBoundingClientRect(),[a,b]=[...pts.values()].slice(0,2),m=midpoint(a,b,r),d=Math.max(1,Math.hypot(a.x-b.x,a.y-b.y)),z=clamp(touch.z*d/touch.d,.14,4),q=window.v113Phone;q.z=z;q.x=m.x-touch.wx*z;q.y=m.y-touch.wy*z;q.touched=true;phoneApply();e.preventDefault();e.stopImmediatePropagation()},{capture:true,passive:false});
+ const drop=e=>{pts.delete(e.pointerId);if(pts.size<2)touch=null};window.addEventListener('pointerup',drop,true);window.addEventListener('pointercancel',drop,true);
+ // Desktop: Alt + wheel zoom anywhere over viewport; middle mouse pans like Adobe.
+ addEventListener('keydown',e=>{if(e.key==='Alt')alt=true},true);addEventListener('keyup',e=>{if(e.key==='Alt')alt=false},true);addEventListener('blur',()=>{alt=false;pan=null});
+ addEventListener('wheel',e=>{if(!editor()||mobile()||!(e.altKey||alt))return;const v=vp(),r=v?.getBoundingClientRect();if(!v||e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;e.preventDefault();e.stopImmediatePropagation();deskZoom((canvasZoom||1)*Math.exp(-e.deltaY*.0025),{x:e.clientX-r.left,y:e.clientY-r.top})},{capture:true,passive:false});
+ addEventListener('mousedown',e=>{if(!editor()||mobile()||e.button!==1)return;const v=vp(),r=v?.getBoundingClientRect();if(!v||e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;e.preventDefault();e.stopImmediatePropagation();pan={x:e.clientX,y:e.clientY,l:v.scrollLeft,t:v.scrollTop};v.classList.add('v102Panning')},true);addEventListener('mousemove',e=>{if(!pan)return;const v=vp();v.scrollLeft=pan.l-(e.clientX-pan.x);v.scrollTop=pan.t-(e.clientY-pan.y)},true);addEventListener('mouseup',()=>{pan=null;vp()?.classList.remove('v102Panning')},true);
+ // Make desktop vectors draggable via delegation, independent of older event bindings.
+ document.addEventListener('pointerdown',e=>{if(!editor()||mobile()||e.button!==0)return;const hit=e.target instanceof Element?e.target.closest('.vectorTouchProxy,.shapeHit'):null;if(!hit||e.target.closest('.vectorResizeHandle,.vectorRotateHandle,.pathNode'))return;const id=hit.dataset.vid,v=canvasState.vectors.find(x=>x.id===id);if(!v||v.locked)return;e.preventDefault();e.stopImmediatePropagation();selectVector(id);startVectorDrag(e,id)},true);
+ // Actual vector line and editable curve.
+ window.v113AddLine=function(curve=false){const z=typeof nextCanvasZ==='function'?nextCanvasZ():999;const v={id:id(),z,type:'path',points:curve?[[250,430],[350,320],[455,510],[555,390]]:[[250,410],[545,410]],fill:'none',stroke:'#8d7369',strokeWidth:3,dash:'solid',rotation:0,locked:false,closed:false,curve:!!curve};canvasState.vectors.push(v);selectVector(v.id);renderVectors();pushHistory?.();markCanvasDirty?.()};
+ const oldPathD=window.pathD||pathD;window.pathD=pathD=function(points,v){if(!points?.length)return'';return 'M '+points.map((p,i)=>(i?'L ':'')+p[0]+' '+p[1]).join(' ')};
+ const oldVectorEl=window.vectorEl||vectorEl;window.vectorEl=vectorEl=function(v){if(v?.type==='path'&&v.curve&&v.points?.length>=4){const p=v.points,d=v.dash==='dashed'?'10 7':v.dash==='dotted'?'2 6':'';return `<path data-vid="${v.id}" d="M ${p[0][0]} ${p[0][1]} C ${p[1][0]} ${p[1][1]} ${p[2][0]} ${p[2][1]} ${p[3][0]} ${p[3][1]}" fill="none" stroke="${v.stroke}" stroke-width="${v.strokeWidth}" stroke-dasharray="${d}" stroke-linecap="round" class="${canvasState.selectedType==='vector'&&canvasState.selectedId===v.id?'vectorSelected':''}"/>`}return oldVectorEl(v)};
+ // Patch palette: line is a real vector; add curve. Keep all existing tools.
+ const basePalette=window.v102PaletteHTML;window.v102PaletteHTML=function(){let h=basePalette?basePalette():'';h=h.replace(/addCanvasDivider\(\)/g,'v113AddLine(false)');if(!h.includes('v113AddLine(true)'))h=h.replace(/(<div class="v102PaletteTitle">Formen<\/div><div class="v102PaletteGrid">)([\s\S]*?)(<\/div>)/,(_,a,b,c)=>a+b+`<button onclick="v113AddLine(true)">${(window.v102Icon?.('line')||'⌁')}<span>Kurve</span></button>`+c);return h};window.v103PaletteHTML=window.v102PaletteHTML;
+ function refreshDesktop(){if(!editor()||mobile())return;const d=document.getElementById('canvasQuickDrawer');if(d){d.innerHTML=window.v102PaletteHTML();d.classList.add('open')}ensureTransform()}
+ const oldRender=window.renderSheetEditor||renderSheetEditor;window.renderSheetEditor=function(){oldRender();setTimeout(()=>{ensureTransform();if(mobile())phoneFit();else refreshDesktop()},180)};try{renderSheetEditor=window.renderSheetEditor}catch(_){}
+ // Topic pages: hard reset accidental horizontal offsets after every render/navigation.
+ function normalize(){if(editor())return;document.documentElement.scrollLeft=0;document.body.scrollLeft=0;document.querySelectorAll('#view-subjects,#view-subject-detail,#view-topic-detail').forEach(x=>{x.scrollLeft=0;x.style.transform='none'})}
+ document.addEventListener('click',()=>requestAnimationFrame(normalize),true);addEventListener('resize',()=>setTimeout(()=>{if(editor()){ensureTransform();if(mobile()&&!window.v113Phone?.touched)phoneFit()}else normalize()},80));
+ setTimeout(()=>{document.getElementById('headerEyebrow')&&(document.getElementById('headerEyebrow').textContent='VERSION 113');ensureTransform()},80);
+})();
+</script>
+<!-- ===== /Studia V113 ===== -->
 </body>
 </html><style id="v93-bottom-nav-stability">
 @media (max-width:899px){
@@ -12672,6 +12750,7 @@ body.editorMode #v96PageStrip{display:none!important}
 
   let lastMobileTap={id:null,time:0};
   window.addEventListener('pointerdown',function(e){
+    if(true)return;
     if(!isEditor())return;const target=e.target instanceof Element?e.target:null;if(!target)return;
     const move=target.closest('.v108MoveHandle,.v108VectorMoveHandle');
     if(move){
@@ -12963,6 +13042,7 @@ body.editorMode .cobj table{max-width:100%!important}
 
   // Reliable laptop Alt+wheel zoom: based on pointer coordinates, not event target.
   window.addEventListener('wheel',function(e){
+    if(true)return;
     if(!isEditor()||window.innerWidth<900||!e.altKey)return;const v=vp();if(!v)return;const r=v.getBoundingClientRect();
     if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;
     e.preventDefault();e.stopImmediatePropagation();const factor=Math.exp(-e.deltaY*0.0022);
@@ -12973,14 +13053,16 @@ body.editorMode .cobj table{max-width:100%!important}
   // Safari gesture events + direct touch fallback for two-finger pinch/pan.
   let gestureStart=null,touchStart=null;
   function zoomAt(z,clientX,clientY){const v=vp();if(!v)return;const r=v.getBoundingClientRect();(window.v108ApplyZoom||window.v96ApplyZoom)?.(z,true,{x:clientX-r.left,y:clientY-r.top})}
-  window.addEventListener('gesturestart',function(e){if(!isEditor()||window.innerWidth>=900)return;const v=vp();if(!v)return;const r=v.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;e.preventDefault();gestureStart=canvasZoom||1},{capture:true,passive:false});
-  window.addEventListener('gesturechange',function(e){if(gestureStart==null||!isEditor())return;e.preventDefault();e.stopImmediatePropagation();zoomAt(Math.max(.22,Math.min(3.2,gestureStart*e.scale)),e.clientX,e.clientY)},{capture:true,passive:false});
+  window.addEventListener('gesturestart',function(e){if(true)return;if(!isEditor()||window.innerWidth>=900)return;const v=vp();if(!v)return;const r=v.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;e.preventDefault();gestureStart=canvasZoom||1},{capture:true,passive:false});
+  window.addEventListener('gesturechange',function(e){if(true)return;if(gestureStart==null||!isEditor())return;e.preventDefault();e.stopImmediatePropagation();zoomAt(Math.max(.22,Math.min(3.2,gestureStart*e.scale)),e.clientX,e.clientY)},{capture:true,passive:false});
   window.addEventListener('gestureend',()=>{gestureStart=null},{capture:true,passive:true});
   window.addEventListener('touchstart',function(e){
+    if(true)return;
     if(!isEditor()||window.innerWidth>=900||e.touches.length!==2)return;const v=vp();if(!v)return;const a=e.touches[0],b=e.touches[1],r=v.getBoundingClientRect(),mx=(a.clientX+b.clientX)/2,my=(a.clientY+b.clientY)/2;if(mx<r.left||mx>r.right||my<r.top||my>r.bottom)return;
     e.preventDefault();e.stopImmediatePropagation();touchStart={d:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),z:canvasZoom||1,mx,my,sl:v.scrollLeft,st:v.scrollTop};canvasState.userZoomTouched=true;
   },{capture:true,passive:false});
   window.addEventListener('touchmove',function(e){
+    if(true)return;
     if(!touchStart||e.touches.length!==2||!isEditor())return;const v=vp();if(!v)return;e.preventDefault();e.stopImmediatePropagation();const a=e.touches[0],b=e.touches[1],mx=(a.clientX+b.clientX)/2,my=(a.clientY+b.clientY)/2,d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),z=Math.max(.22,Math.min(3.2,touchStart.z*(d/touchStart.d)));
     zoomAt(z,mx,my);requestAnimationFrame(()=>{v.scrollLeft+=touchStart.mx-mx;v.scrollTop+=touchStart.my-my;touchStart.mx=mx;touchStart.my=my});
   },{capture:true,passive:false});
@@ -12989,6 +13071,7 @@ body.editorMode .cobj table{max-width:100%!important}
 
   // Desktop vector/form dragging: intercept the transparent hit-shape before older handlers.
   document.addEventListener('pointerdown',function(e){
+    if(true)return;
     if(!isEditor()||window.innerWidth<900||e.button!==0)return;const t=e.target instanceof Element?e.target:null;if(!t)return;
     if(t.closest('.vectorResizeHandle,.vectorRotateHandle,.pathNode'))return;
     const hit=t.closest('.vectorTouchProxy,.shapeHit');if(!hit)return;const vid=hit.dataset.vid;if(!vid)return;const v=canvasState.vectors.find(x=>x.id===vid);if(!v||v.locked)return;
@@ -13000,6 +13083,362 @@ body.editorMode .cobj table{max-width:100%!important}
   window.renderCanvasInspector=function(){oldInspector();if(document.querySelector('#canvasQuickDrawer.open .mobileLayerList'))requestAnimationFrame(renderLayerList)};
 
   // Version marker.
-  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 109';document.title='Studia'},40);
+  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 112';document.title='Studia'},40);
 })();
 </script>
+
+
+<!-- ===== Studia V111 local backup system ===== -->
+<style id="v111-backup-style">
+.v111BackupPanel{overflow:hidden}
+.v111BackupHead{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}.v111BackupHead h2{margin-bottom:4px}.v111BackupCloud{width:44px;height:44px;flex:0 0 44px;border-radius:14px;background:#fff0ef;border:1px solid #edcfcb;color:#bc777c;display:grid;place-items:center;font-size:24px;font-weight:900}
+.v111BackupStatus{margin-top:14px;border:1px solid #e9d8d2;background:linear-gradient(135deg,#fffaf7,#f7faef);border-radius:15px;padding:11px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px}.v111BackupStatus b{font-size:12px}.v111BackupStatus span{font-size:9px;color:#8d766d;text-align:right}.v111BackupStatus.ok{border-color:#d9e5c6;background:#f6faef}.v111BackupStatus.warn{border-color:#efd6bf;background:#fff8ec}
+.v111BackupToggle{margin-top:9px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:14px!important;border:1px solid #eadbd6!important;border-radius:14px!important;background:#fffdfb!important;padding:10px 12px!important}.v111BackupToggle span{display:grid;gap:2px;min-width:0}.v111BackupToggle b{font-size:11px}.v111BackupToggle small{font-size:8px;color:#9e857c;line-height:1.35}.v111BackupToggle input{width:18px!important;height:18px!important;flex:0 0 18px!important;margin:0!important;accent-color:#e59a9f}
+.v111BackupButtons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}.v111BackupButtons>button,.v111BackupButtons>.v111ImportLabel{margin:0!important;min-height:42px!important;border-radius:12px!important;display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;font-size:9px!important;font-weight:850!important;padding:8px!important;box-sizing:border-box!important}.v111ImportLabel{border:1px solid #e8d5cf;background:#fff;color:#8d7369;cursor:pointer}.v111BackupNote{margin-top:10px!important;line-height:1.45!important}
+.v111RestoreList{display:grid;gap:8px;max-height:min(52vh,480px);overflow:auto;-webkit-overflow-scrolling:touch;margin-top:12px}.v111RestoreRow{border:1px solid #eadbd6;background:#fffdfb;border-radius:14px;padding:10px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center}.v111RestoreRow>div{min-width:0;display:grid;gap:2px}.v111RestoreRow b{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v111RestoreRow small{font-size:8px;color:#9e857c}.v111RestoreRow button{border:1px solid #e8d2cd;background:#fff5f3;border-radius:10px;color:#9a6c68;padding:7px 9px;font-size:8px;font-weight:900}.v111RestoreEmpty{padding:22px;border:1px dashed #ead3cc;border-radius:14px;text-align:center;color:#9b8178;font-size:10px}
+@media(max-width:600px){.v111BackupButtons{grid-template-columns:1fr}.v111BackupStatus{align-items:flex-start;flex-direction:column}.v111BackupStatus span{text-align:left}}
+</style>
+<script id="v111-local-backup">
+(function(){
+ const VERSION=111;
+ const BDB='studia-local-backups-v1', SNAP='snapshots', BLOBS='blobs';
+ const MAX_SNAPS=20, MIN_INTERVAL=5*60*1000;
+ const ENABLE_KEY='studia-local-backup-enabled', DAILY_KEY='studia-daily-backup-prompt-enabled', LAST_PROMPT_KEY='studia-daily-backup-prompt-date';
+ let backupDirty=true, backupTimer=null, backupBusy=false;
+ const sleep=(ms)=>new Promise(r=>setTimeout(r,ms));
+ function today(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+ function stamp(ts=Date.now()){const d=new Date(ts);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}_${String(d.getHours()).padStart(2,'0')}-${String(d.getMinutes()).padStart(2,'0')}`}
+ function escB(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+ function enabled(){return localStorage.getItem(ENABLE_KEY)!=='0'}
+ function dailyEnabled(){return localStorage.getItem(DAILY_KEY)!=='0'}
+ function snapshotLocalStorage(){const out={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k)out[k]=localStorage.getItem(k)}return out}
+ function openBDB(){return new Promise((res,rej)=>{const r=indexedDB.open(BDB,1);r.onupgradeneeded=()=>{const db=r.result;if(!db.objectStoreNames.contains(SNAP)){const s=db.createObjectStore(SNAP,{keyPath:'id'});s.createIndex('ts','ts')}if(!db.objectStoreNames.contains(BLOBS))db.createObjectStore(BLOBS,{keyPath:'id'})};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+ function txDone(tx){return new Promise((res,rej)=>{tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error);tx.onabort=()=>rej(tx.error||new Error('aborted'))})}
+ async function liveFiles(){try{const db=await dbOpen();return await new Promise((res,rej)=>{const r=db.transaction(STORE).objectStore(STORE).getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>rej(r.error)})}catch(e){console.warn('[Studia backup] live files unavailable',e);return []}}
+ async function latestSnap(){const db=await openBDB();return await new Promise((res,rej)=>{const r=db.transaction(SNAP).objectStore(SNAP).getAll();r.onsuccess=()=>res((r.result||[]).sort((a,b)=>b.ts-a.ts)[0]||null);r.onerror=()=>rej(r.error)})}
+ async function allSnaps(){const db=await openBDB();return await new Promise((res,rej)=>{const r=db.transaction(SNAP).objectStore(SNAP).getAll();r.onsuccess=()=>res((r.result||[]).sort((a,b)=>b.ts-a.ts));r.onerror=()=>rej(r.error)})}
+ async function gc(db){const snaps=await new Promise((res,rej)=>{const r=db.transaction(SNAP).objectStore(SNAP).getAll();r.onsuccess=()=>res((r.result||[]).sort((a,b)=>b.ts-a.ts));r.onerror=()=>rej(r.error)});const remove=snaps.slice(MAX_SNAPS);if(remove.length){const tx=db.transaction(SNAP,'readwrite'),st=tx.objectStore(SNAP);remove.forEach(x=>st.delete(x.id));await txDone(tx)}const kept=snaps.slice(0,MAX_SNAPS),refs=new Set(kept.flatMap(x=>x.fileIds||[]));const blobs=await new Promise((res,rej)=>{const r=db.transaction(BLOBS).objectStore(BLOBS).getAllKeys();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>rej(r.error)});const dead=blobs.filter(k=>!refs.has(k));if(dead.length){const tx=db.transaction(BLOBS,'readwrite'),st=tx.objectStore(BLOBS);dead.forEach(k=>st.delete(k));await txDone(tx)}}
+ async function createSnapshot(reason='auto',force=false){
+   if(backupBusy||(!enabled()&&!force))return null;
+   backupBusy=true;
+   try{
+     const prev=await latestSnap();if(!force&&!backupDirty&&prev)return prev;if(!force&&prev&&Date.now()-prev.ts<MIN_INTERVAL)return prev;
+     const files=await liveFiles(),db=await openBDB();
+     if(files.length){const tx=db.transaction(BLOBS,'readwrite'),st=tx.objectStore(BLOBS);files.forEach(f=>st.put({id:f.id,name:f.name||'',type:f.type||f.blob?.type||'',blob:f.blob||null,updatedAt:Date.now()}));await txDone(tx)}
+     const snap={id:`snap-${Date.now()}-${Math.random().toString(36).slice(2,7)}`,ts:Date.now(),reason,version:VERSION,localStorage:snapshotLocalStorage(),fileIds:files.map(x=>x.id)};
+     const tx=db.transaction(SNAP,'readwrite');tx.objectStore(SNAP).put(snap);await txDone(tx);await gc(db);backupDirty=false;updateStatus();return snap;
+   }catch(e){console.error('[Studia backup] create failed',e);updateStatus(true);return null}finally{backupBusy=false}
+ }
+ async function getBackupBlob(id){const db=await openBDB();return await new Promise((res,rej)=>{const r=db.transaction(BLOBS).objectStore(BLOBS).get(id);r.onsuccess=()=>res(r.result||null);r.onerror=()=>rej(r.error)})}
+ function blobToDataURL(blob){return new Promise((res,rej)=>{if(!blob)return res('');const r=new FileReader();r.onload=()=>res(String(r.result||''));r.onerror=()=>rej(r.error);r.readAsDataURL(blob)})}
+ function dataURLToBlob(url){const [head,body]=String(url||'').split(',');if(!body)return new Blob([]);const mime=(head.match(/data:([^;]+)/)||[])[1]||'application/octet-stream',bin=atob(body),u8=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u8[i]=bin.charCodeAt(i);return new Blob([u8],{type:mime})}
+ async function fullPackageFromSnapshot(snap){const files=[];for(const id of snap.fileIds||[]){const f=await getBackupBlob(id);if(f)files.push({id:f.id,name:f.name,type:f.type,data:await blobToDataURL(f.blob)})}return {format:'studia-backup-v111',version:VERSION,createdAt:snap.ts,localStorage:snap.localStorage||{},files}}
+ async function packageCurrent(){await createSnapshot('download',true);const snap=await latestSnap();return fullPackageFromSnapshot(snap)}
+ function downloadPackage(pkg){const blob=new Blob([JSON.stringify(pkg)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`Studia_Backup_${stamp(pkg.createdAt||Date.now())}.studia.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1200)}
+ async function clearLiveFiles(){try{const db=await dbOpen();const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).clear();await txDone(tx)}catch(e){console.warn('[Studia backup] clear files failed',e)}}
+ async function restorePackage(pkg){
+   if(!pkg)return;
+   if(pkg.format==='studia-backup-v111' || pkg.localStorage){
+     await clearLiveFiles();
+     if(Array.isArray(pkg.files)){for(const f of pkg.files){try{await dbPut({id:f.id,name:f.name||'',type:f.type||'',blob:dataURLToBlob(f.data||'')})}catch(e){console.warn('file restore failed',f?.id,e)}}}
+     localStorage.clear();Object.entries(pkg.localStorage||{}).forEach(([k,v])=>localStorage.setItem(k,String(v)));
+     location.reload();return;
+   }
+   // Backwards compatibility: old Studia exports contained only the main data object.
+   localStorage.setItem(KEY,JSON.stringify(pkg));location.reload();
+ }
+ async function restoreSnapshot(id){const db=await openBDB(),snap=await new Promise((res,rej)=>{const r=db.transaction(SNAP).objectStore(SNAP).get(id);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});if(!snap)return alert('Backup nicht gefunden.');if(!confirm('Dieses lokale Backup wiederherstellen? Der aktuelle Stand wird dadurch ersetzt.'))return;const pkg=await fullPackageFromSnapshot(snap);await restorePackage(pkg)}
+ async function updateStatus(err=false){const el=document.getElementById('v111BackupStatus');if(!el)return;try{const snaps=await allSnaps(),last=snaps[0];el.classList.toggle('warn',!!err);el.classList.toggle('ok',!!last&&!err);el.querySelector('b').textContent=enabled()?'Lokales Autobackup aktiv':'Lokales Autobackup aus';el.querySelector('span').textContent=err?'Letzte Sicherung fehlgeschlagen':last?`${snaps.length} Versionen · zuletzt ${new Date(last.ts).toLocaleString('de-DE',{dateStyle:'short',timeStyle:'short'})}`:'Noch kein Backup erstellt'}catch(_){}}
+ function schedule(){if(!enabled())return;clearTimeout(backupTimer);backupTimer=setTimeout(async()=>{await createSnapshot('auto');if(backupDirty)schedule()},18000)}
+ window.v111ToggleBackups=function(on){localStorage.setItem(ENABLE_KEY,on?'1':'0');backupDirty=true;if(on){schedule();v111CreateBackupNow(false)}else clearTimeout(backupTimer);updateStatus()};
+ window.v111ToggleDailyPrompt=function(on){localStorage.setItem(DAILY_KEY,on?'1':'0')};
+ window.v111CreateBackupNow=async function(showToast=true){const s=await createSnapshot('manual',true);if(showToast){if(s)typeof cuteToast==='function'?cuteToast('Backup lokal gespeichert ✓'):alert('Backup lokal gespeichert ✓');else alert('Backup konnte nicht gespeichert werden.')}};
+ window.v111RequestPersistentStorage=async function(){if(!navigator.storage?.persist)return alert('Dein Browser bietet diese Funktion hier nicht an.');try{const ok=await navigator.storage.persist();alert(ok?'Studia-Speicher wird möglichst dauerhaft behalten ✓':'Safari hat den dauerhaften Speicher nicht zugesichert. Backup-Dateien bleiben deshalb weiterhin wichtig.')}catch{alert('Speicherschutz konnte nicht angefragt werden.')}};
+ window.v111OpenRestoreManager=async function(){const snaps=await allSnaps();openModal(`<div class="v111Restore"><div class="rowBetween"><div><div class="eyebrow">BACKUPS</div><h2>Wiederherstellen</h2></div><button class="iconbtn" onclick="closeModal()">×</button></div><p class="small">Die letzten ${MAX_SNAPS} lokalen Stände werden automatisch aufgehoben.</p><div class="v111RestoreList">${snaps.length?snaps.map((s,i)=>`<div class="v111RestoreRow"><div><b>${i===0?'Aktuellstes Backup':'Backup '+(i+1)}</b><small>${escB(new Date(s.ts).toLocaleString('de-DE'))} · ${escB(s.reason||'auto')}</small></div><button onclick="v111RestoreSnapshot('${escB(s.id)}')">Wiederherstellen</button></div>`).join(''):'<div class="v111RestoreEmpty">Noch keine lokalen Backups vorhanden.</div>'}</div></div>`)};
+ window.v111RestoreSnapshot=restoreSnapshot;
+ window.exportData=async function(){try{const pkg=await packageCurrent();downloadPackage(pkg)}catch(e){console.error(e);alert('Backup-Datei konnte nicht erstellt werden.')}};
+ const imp=document.getElementById('importData');if(imp)imp.onchange=async e=>{const f=e.target.files?.[0];if(!f)return;try{const pkg=JSON.parse(await f.text());if(!confirm('Dieses Backup importieren? Der aktuelle Stand wird dadurch ersetzt.'))return;await restorePackage(pkg)}catch(e){console.error(e);alert('Backup konnte nicht gelesen werden.')}finally{e.target.value=''}};
+ // Every ordinary Studia save marks the backup dirty, but snapshots are throttled.
+ try{const baseSave=save;save=function(){const r=baseSave.apply(this,arguments);backupDirty=true;schedule();return r}}catch(e){console.warn('[Studia backup] save hook unavailable',e)}
+ document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&backupDirty&&enabled())createSnapshot('background',true)});
+ window.addEventListener('pagehide',()=>{if(backupDirty&&enabled())createSnapshot('pagehide',true)});
+ function syncSettings(){const a=document.getElementById('v111BackupEnabled'),d=document.getElementById('v111DailyPrompt');if(a)a.checked=enabled();if(d)d.checked=dailyEnabled();updateStatus()}
+ const oldRenderSettings=typeof renderSettings==='function'?renderSettings:null;if(oldRenderSettings)renderSettings=function(){oldRenderSettings();setTimeout(syncSettings,0)};
+ async function dailyPrompt(){if(!dailyEnabled()||localStorage.getItem(LAST_PROMPT_KEY)===today())return;localStorage.setItem(LAST_PROMPT_KEY,today());await sleep(900);if(document.body.classList.contains('modalOpen'))return;openModal(`<div><div class="eyebrow">SICHERHEIT</div><h2>Tagesbackup 🌷</h2><p class="small">Dein internes Backup läuft automatisch. Möchtest du zusätzlich die heutige Sicherungsdatei in „Downloads/Dateien“ speichern?</p><div class="row" style="margin-top:12px;flex-wrap:wrap"><button class="primary" onclick="closeModal();setTimeout(()=>exportData(),80)">Backup herunterladen</button><button class="ghost" onclick="closeModal()">Heute nicht</button></div></div>`)}
+ setTimeout(()=>{syncSettings();if(enabled()){createSnapshot('startup');schedule()}dailyPrompt()},1200);
+})();
+</script>
+<!-- ===== /Studia V111 local backup system ===== -->
+
+
+<!-- ===== Studia V112 hard stabilization ===== -->
+<style id="v112-hard-stabilization-style">
+/* Universal overflow guards. */
+body.editorMode *,#view-subjects *,#view-subject-detail *,#view-topic-detail *{box-sizing:border-box}
+body.editorMode .cobj.textObj,body.editorMode .cobj.calloutObj,body.editorMode .cobj.taskObj,body.editorMode .cobj.merkeObj{
+  overflow:hidden!important;overflow-wrap:anywhere!important;word-break:break-word!important;
+}
+body.editorMode .cobj[contenteditable="true"]{overflow:auto!important;-webkit-overflow-scrolling:touch!important}
+body.editorMode #canvasStage{touch-action:none!important;-webkit-touch-callout:none!important;user-select:none!important;-webkit-user-select:none!important}
+body.editorMode .cobj[contenteditable="true"],body.editorMode td[contenteditable="true"]{user-select:text!important;-webkit-user-select:text!important;-webkit-touch-callout:default!important}
+
+/* Resource/topic pages really use the whole phone width. */
+@media(max-width:899px){
+  #view-topic-detail.active,#view-subjects.active,#view-subject-detail.active{
+    position:relative!important;left:50%!important;width:100vw!important;max-width:100vw!important;
+    margin-left:-50vw!important;padding-left:12px!important;padding-right:12px!important;
+  }
+  #topicDetail,#subjectList,#subjectDetail,.v102TopicDetail,.v103TopicDetail,.v102TopicResourceList,.v103SubjectsPage,.v103SubjectDetail{
+    width:100%!important;max-width:none!important;min-width:0!important;margin-left:0!important;margin-right:0!important;
+  }
+  .v102TopicResourceList{display:grid!important;grid-template-columns:1fr!important;gap:10px!important}
+  .v102ResourceCard{width:100%!important;max-width:none!important;min-width:0!important;grid-template-columns:52px minmax(0,1fr) 16px!important;gap:10px!important;padding:11px!important}
+  .v102ResourceCard>*{min-width:0!important}.v103ResourceText{min-width:0!important;overflow:hidden!important}
+  .v103ResourceText b,.v103ResourceText small{display:block!important;max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important}
+
+  /* Denser subject notebooks. */
+  .v102NotebookGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}
+  .v102Notebook.v103Notebook{min-height:146px!important;height:146px!important;padding:20px 7px 10px!important;border-radius:17px!important}
+  .v102Notebook.v103Notebook .v102NotebookIcon{width:50px!important;height:50px!important;margin-bottom:7px!important}
+  .v102Notebook.v103Notebook .v102NotebookIcon svg{width:24px!important;height:24px!important}
+  .v102Notebook.v103Notebook strong{font-size:15px!important;max-width:100%!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  .v102Notebook.v103Notebook small{font-size:8px!important;margin-top:7px!important;padding-top:6px!important;width:88%!important}
+
+  /* Free mobile workspace: no framed/scrolling canvas box. */
+  body.editorMode .canvasEditorShell{height:100dvh!important;min-height:100dvh!important;overflow:hidden!important}
+  body.editorMode #canvasViewport{
+    position:relative!important;overflow:hidden!important;touch-action:none!important;overscroll-behavior:none!important;
+    margin:0!important;padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;
+    background:radial-gradient(circle at 12% 18%,rgba(247,208,214,.34),transparent 24rem),radial-gradient(circle at 88% 75%,rgba(228,239,207,.38),transparent 25rem),#fff9f6!important;
+  }
+  body.editorMode #v96PanSurface{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;margin:0!important;padding:0!important;overflow:visible!important;display:block!important}
+  body.editorMode #canvasStage{position:absolute!important;margin:0!important;left:0!important;top:0!important;transform-origin:0 0!important;will-change:transform!important}
+  body.editorMode #v96PageStrip{display:none!important}
+
+  /* Bottom toolbar is stable. Drawers sit ABOVE it, except text editing which replaces it. */
+  body.editorMode .canvasQuickNav{
+    display:grid!important;visibility:visible!important;opacity:1!important;position:fixed!important;
+    left:10px!important;right:10px!important;bottom:calc(8px + env(safe-area-inset-bottom))!important;top:auto!important;
+    width:auto!important;height:72px!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:3px!important;
+    padding:5px 7px!important;border-radius:22px!important;z-index:760!important;background:rgba(255,252,249,.97)!important;
+    border:1px solid #ead9d3!important;box-shadow:0 12px 28px rgba(91,67,59,.12)!important;backdrop-filter:blur(18px)!important;
+  }
+  body.editorMode .canvasQuickNav button{display:grid!important;place-items:center!important;align-content:center!important;min-width:0!important;width:auto!important;height:60px!important;min-height:0!important;padding:4px 2px!important;border-radius:13px!important;gap:3px!important}
+  body.editorMode .canvasQuickNav .editorNavIcon{width:24px!important;height:24px!important}.canvasQuickNav .editorNavIcon svg{width:21px!important;height:21px!important}
+  body.editorMode .canvasQuickNav button>span:last-child{font-size:8px!important;line-height:1!important;text-align:center!important}
+  body.editorMode.v112TextEditing .canvasQuickNav{display:none!important}
+
+  body.editorMode #canvasQuickDrawer.open{
+    left:10px!important;right:10px!important;bottom:calc(88px + env(safe-area-inset-bottom))!important;top:auto!important;
+    width:auto!important;height:min(58dvh,520px)!important;max-height:min(58dvh,520px)!important;
+    display:flex!important;flex-direction:column!important;overflow:hidden!important;padding:8px 10px 10px!important;border-radius:23px!important;z-index:750!important;
+  }
+  body.editorMode.v112TextEditing #canvasQuickDrawer.open{bottom:calc(8px + env(safe-area-inset-bottom))!important;height:min(64dvh,560px)!important;max-height:min(64dvh,560px)!important}
+  body.editorMode #canvasQuickDrawer.open>.mobileDrawerSection,
+  body.editorMode #canvasQuickDrawer.open>.mobilePagePanel,
+  body.editorMode #canvasQuickDrawer.open>.mobileTextLibrary,
+  body.editorMode #canvasQuickDrawer.open>.mobileTextEditor,
+  body.editorMode #canvasQuickDrawer .mobileTextModeContent{
+    min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;touch-action:pan-y!important;overscroll-behavior:contain!important;
+  }
+  body.editorMode #canvasQuickDrawer .mobileTextEditor{display:flex!important;flex-direction:column!important;overflow:hidden!important}
+  body.editorMode #canvasQuickDrawer .mobileTextModeContent{flex:1 1 auto!important;padding-bottom:16px!important}
+  body.editorMode #canvasQuickDrawer .mobileTextModeTabs{flex:0 0 auto!important;position:sticky!important;bottom:0!important;background:#fffaf7!important;z-index:3!important}
+
+  /* Tiny, non-obstructive selection actions. */
+  body.editorMode #mobileSelectionTools{left:auto!important;right:12px!important;top:auto!important;bottom:calc(88px + env(safe-area-inset-bottom))!important;transform:none!important;padding:3px!important;gap:2px!important;border-radius:13px!important;z-index:770!important}
+  body.editorMode #mobileSelectionTools button{width:28px!important;height:28px!important;min-width:28px!important;min-height:28px!important;padding:0!important}
+  body.editorMode #mobileSelectionTools button svg{width:15px!important;height:15px!important}
+  body.editorMode.editorDrawerOpen #mobileSelectionTools,body.editorMode.v112TextEditing #mobileSelectionTools{display:none!important}
+
+  /* Layers: one compact row, no gigantic inherited buttons. */
+  .mobileLayerList{display:grid!important;gap:5px!important;width:100%!important;min-width:0!important}
+  .mobileLayerList .layerItem{width:100%!important;min-width:0!important;margin:0!important;padding:0!important;border-radius:12px!important;overflow:hidden!important}
+  .mobileLayerList .layerRow{width:100%!important;min-width:0!important;display:grid!important;grid-template-columns:28px minmax(0,1fr) auto!important;gap:4px!important;align-items:center!important;padding:4px 5px!important}
+  .mobileLayerList button{min-width:0!important;min-height:0!important;max-width:none!important;margin:0!important;box-shadow:none!important}
+  .mobileLayerList .layerDragHandle{width:28px!important;height:30px!important;padding:0!important;border:0!important;background:transparent!important}
+  .mobileLayerList .layerTitleBtn{width:100%!important;height:32px!important;padding:0 2px!important;border:0!important;background:transparent!important;display:flex!important;align-items:center!important;gap:5px!important;overflow:hidden!important;text-align:left!important}
+  .mobileLayerList .v103LayerKind{width:20px!important;height:20px!important;flex:0 0 20px!important}.mobileLayerList .v103LayerKind svg{width:14px!important;height:14px!important}
+  .mobileLayerList .layerName{min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;font-size:9px!important}
+  .mobileLayerList .layerTools{display:flex!important;gap:2px!important;flex:0 0 auto!important}
+  .mobileLayerList .layerTools button{width:27px!important;height:27px!important;min-width:27px!important;min-height:27px!important;padding:0!important;border-radius:8px!important;display:grid!important;place-items:center!important}
+  .mobileLayerList .layerTools button svg,.mobileLayerList .layerDragHandle svg{width:14px!important;height:14px!important}
+
+  /* Move handle belongs to the selected object, not the middle of the screen. */
+  .v108MoveHandle,.v108VectorMoveHandle{width:32px!important;height:32px!important;min-width:32px!important;min-height:32px!important;border-radius:50%!important;padding:0!important;display:grid!important;place-items:center!important;background:#fffdfb!important;border:1px solid #e3b8b5!important;box-shadow:0 5px 14px rgba(91,62,57,.15)!important;z-index:10020!important;touch-action:none!important}
+  .v108MoveHandle svg,.v108VectorMoveHandle svg{width:17px!important;height:17px!important}
+  .cobj.selected>.v108MoveHandle{right:-16px!important;bottom:-16px!important;top:auto!important;left:auto!important}
+}
+@media(min-width:560px) and (max-width:899px){.v102NotebookGrid{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
+
+/* Desktop: compact Canva-like three columns, controls never escape the properties panel. */
+@media(min-width:900px){
+  body.editorMode .canvasEditorShell{grid-template-columns:245px minmax(0,1fr) 320px!important;grid-template-rows:64px minmax(0,1fr)!important}
+  body.editorMode #canvasViewport{position:relative!important;overflow:auto!important;margin:10px!important;padding:0!important;border:0!important;border-radius:18px!important;background:#fff8f5!important}
+  body.editorMode #v96PanSurface{position:relative!important;margin:0!important;display:block!important}
+  body.editorMode #canvasStage{position:absolute!important;margin:0!important;transform-origin:0 0!important;will-change:transform!important}
+  body.editorMode #desktopEditorSidebar{min-width:0!important;width:auto!important;overflow-x:hidden!important}
+  body.editorMode #desktopEditorSidebar *,body.editorMode #canvasInspector *{min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
+  body.editorMode #canvasInspector .objectPanelGrid,body.editorMode #canvasInspector .positionGrid,body.editorMode #canvasInspector .vectorControls{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}
+  body.editorMode #canvasInspector input,body.editorMode #canvasInspector select,body.editorMode #canvasInspector textarea{width:100%!important;max-width:100%!important}
+  body.editorMode #canvasInspector .alignRow,body.editorMode #canvasInspector .tableEditGrid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important}
+  body.editorMode #canvasInspector .alignRow button,body.editorMode #canvasInspector .tableEditGrid button{width:100%!important;min-width:0!important;padding:7px 5px!important;white-space:normal!important;font-size:9px!important}
+  body.editorMode #canvasInspector .multiInspector>span{display:block!important;overflow:hidden!important;line-height:1.35!important}
+  body.editorMode .fontSelect option{font-size:13px}
+  .graphModal,.visualGraphFunctionModal,.formulaModal,.visualFormulaModal{width:min(1240px,95vw)!important;max-width:1240px!important;max-height:90vh!important;overflow:auto!important}
+}
+</style>
+<script id="v112-hard-stabilization-script">
+(function(){
+  const mobile=()=>window.innerWidth<900;
+  const inEditor=()=>document.body.classList.contains('editorMode')&&!!document.querySelector('#view-sheet-editor.active');
+  const VP=()=>document.getElementById('canvasViewport');
+  const ST=()=>document.getElementById('canvasStage');
+  const SF=()=>document.getElementById('v96PanSurface');
+  const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+  const MOVE='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M3 12h18M12 3 9 6M12 3l3 3M12 21l-3-3M12 21l3-3M3 12l3-3M3 12l3 3M21 12l-3-3M21 12l-3 3"/></svg>';
+  let pinch=null,pinching=false,altDown=false,desktopPan=null;
+  let phoneView={x:0,y:12,z:1,touched:false};
+
+  function localMid(a,b,v){const r=v.getBoundingClientRect();return{x:(a.clientX+b.clientX)/2-r.left,y:(a.clientY+b.clientY)/2-r.top}}
+  function applyPhoneView(){
+    const st=ST(),sf=SF();if(!st||!sf)return;
+    canvasZoom=phoneView.z;st.dataset.scale=String(phoneView.z);st.style.zoom='';
+    st.style.left='0px';st.style.top='0px';st.style.transform=`translate3d(${phoneView.x}px,${phoneView.y}px,0) scale(${phoneView.z})`;st.style.transformOrigin='0 0';
+    sf.style.width='100%';sf.style.height='100%';
+    const a=document.getElementById('canvasZoomLabel');if(a)a.textContent=Math.round(phoneView.z*100)+'%';
+    const b=document.getElementById('v91ZoomLabel');if(b)b.textContent=Math.round(phoneView.z*100)+'%';
+  }
+  function fitPhone(force=true){
+    const v=VP();if(!v)return;const z=clamp(Math.min((v.clientWidth-24)/canvasPageWidth(),(v.clientHeight-30)/canvasPageHeight()),.18,1);
+    phoneView.z=z;phoneView.x=(v.clientWidth-canvasPageWidth()*z)/2;phoneView.y=12;phoneView.touched=!force;applyPhoneView();
+  }
+  function zoomPhone(z,focus){
+    const v=VP();if(!v)return;z=clamp(z,.16,3.5);const f=focus||{x:v.clientWidth/2,y:v.clientHeight/2};
+    const wx=(f.x-phoneView.x)/phoneView.z,wy=(f.y-phoneView.y)/phoneView.z;
+    phoneView.x=f.x-wx*z;phoneView.y=f.y-wy*z;phoneView.z=z;phoneView.touched=true;applyPhoneView();
+  }
+  function applyDesktopZoom(value,preserve=true,focus=null){
+    const v=VP(),st=ST(),sf=SF();if(!v||!st||!sf)return;const old=clamp(Number(st.dataset.scale)||canvasZoom||1,.15,4),z=clamp(Number(value)||1,.18,3.5),g=36;
+    const fx=focus?.x??v.clientWidth/2,fy=focus?.y??v.clientHeight/2;
+    let wx=null,wy=null;if(preserve){wx=(v.scrollLeft+fx-g)/old;wy=(v.scrollTop+fy-g)/old}
+    canvasZoom=z;canvasState.userZoomTouched=true;st.dataset.scale=String(z);st.style.zoom='';st.style.left=g+'px';st.style.top=g+'px';st.style.transform=`scale(${z})`;st.style.transformOrigin='0 0';
+    sf.style.width=(canvasPageWidth()*z+g*2)+'px';sf.style.height=(canvasPageHeight()*z+g*2)+'px';
+    if(preserve&&wx!=null)requestAnimationFrame(()=>{v.scrollLeft=Math.max(0,g+wx*z-fx);v.scrollTop=Math.max(0,g+wy*z-fy)});
+  }
+  function fitDesktop(){const v=VP();if(!v)return;const z=clamp(Math.min((v.clientWidth-72)/canvasPageWidth(),(v.clientHeight-72)/canvasPageHeight()),.18,1);applyDesktopZoom(z,false);requestAnimationFrame(()=>{v.scrollLeft=0;v.scrollTop=0})}
+
+  window.v112ApplyZoom=function(v,preserve=true,focus=null){if(mobile())zoomPhone(v,focus);else applyDesktopZoom(v,preserve,focus)};
+  window.v108ApplyZoom=window.v112ApplyZoom;window.v96ApplyZoom=window.v112ApplyZoom;
+  window.setCanvasZoom=function(v){window.v112ApplyZoom(v,true)};
+  window.canvasZoomBy=function(d){window.v112ApplyZoom((canvasZoom||1)+Number(d||0),true)};
+  window.fitCanvasStage=window.fitCanvasToScreen=function(){canvasState.userZoomTouched=false;if(mobile())fitPhone(true);else fitDesktop()};
+  try{fitCanvasStage=window.fitCanvasStage;fitCanvasToScreen=window.fitCanvasToScreen;v96ApplyZoom=window.v112ApplyZoom}catch(_){}
+
+  // Real two-finger zoom + pan on iPhone. Single-finger object taps are deliberately left alone.
+  window.addEventListener('touchstart',function(e){
+    if(!inEditor()||!mobile()||e.touches.length!==2)return;const v=VP();if(!v)return;const a=e.touches[0],b=e.touches[1],m=localMid(a,b,v);if(m.x<0||m.y<0||m.x>v.clientWidth||m.y>v.clientHeight)return;
+    e.preventDefault();e.stopImmediatePropagation();pinching=true;const z=phoneView.z||canvasZoom||1;pinch={d:Math.max(1,Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY)),z,x:phoneView.x,y:phoneView.y,wx:(m.x-phoneView.x)/z,wy:(m.y-phoneView.y)/z};canvasState.userZoomTouched=true;
+  },{capture:true,passive:false});
+  window.addEventListener('touchmove',function(e){
+    if(!pinch||!inEditor()||e.touches.length!==2)return;const v=VP();if(!v)return;e.preventDefault();e.stopImmediatePropagation();const a=e.touches[0],b=e.touches[1],m=localMid(a,b,v),d=Math.max(1,Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY)),z=clamp(pinch.z*(d/pinch.d),.16,3.5);
+    phoneView.z=z;phoneView.x=m.x-pinch.wx*z;phoneView.y=m.y-pinch.wy*z;phoneView.touched=true;applyPhoneView();
+  },{capture:true,passive:false});
+  const endPinch=e=>{if(e.touches&&e.touches.length>=2)return;pinch=null;setTimeout(()=>{pinching=false},80)};
+  window.addEventListener('touchend',endPinch,{capture:true,passive:true});window.addEventListener('touchcancel',()=>{pinch=null;pinching=false},{capture:true,passive:true});
+  ['gesturestart','gesturechange','gestureend'].forEach(n=>window.addEventListener(n,e=>{if(inEditor()&&mobile()){e.preventDefault();e.stopImmediatePropagation()}},{capture:true,passive:false}));
+
+  // Adobe-like desktop navigation.
+  window.addEventListener('keydown',e=>{if(e.key==='Alt')altDown=true},true);window.addEventListener('keyup',e=>{if(e.key==='Alt')altDown=false},true);window.addEventListener('blur',()=>{altDown=false;desktopPan=null});
+  window.addEventListener('wheel',function(e){
+    if(!inEditor()||mobile()||!(e.altKey||altDown))return;const v=VP();if(!v)return;const r=v.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;
+    e.preventDefault();e.stopImmediatePropagation();const focus={x:e.clientX-r.left,y:e.clientY-r.top},factor=Math.exp(-e.deltaY*.0024);applyDesktopZoom((canvasZoom||1)*factor,true,focus);
+  },{capture:true,passive:false});
+  window.addEventListener('mousedown',function(e){if(!inEditor()||mobile()||e.button!==1)return;const v=VP();if(!v)return;const r=v.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;e.preventDefault();e.stopImmediatePropagation();desktopPan={x:e.clientX,y:e.clientY,l:v.scrollLeft,t:v.scrollTop};v.classList.add('v108Pan')},true);
+  window.addEventListener('mousemove',function(e){if(!desktopPan)return;const v=VP();if(!v)return;v.scrollLeft=desktopPan.l-(e.clientX-desktopPan.x);v.scrollTop=desktopPan.t-(e.clientY-desktopPan.y)},true);
+  const endDesk=()=>{desktopPan=null;VP()?.classList.remove('v108Pan')};window.addEventListener('mouseup',endDesk,true);window.addEventListener('auxclick',e=>{if(inEditor()&&e.button===1)e.preventDefault()},true);
+
+  // Clean object event model: mobile tap selects, move ONLY via the four-arrow handle; desktop drag moves directly.
+  window.attachCanvasObjectEvents=function(){
+    document.querySelectorAll('#canvasObjects .cobj').forEach(el=>{
+      const oid=el.dataset.id;if(!oid)return;let down=null,lastTap=0;
+      el.addEventListener('pointerdown',e=>{
+        const o=canvasState.objects.find(x=>x.id===oid);if(!o)return;
+        if(e.target.closest('.v108MoveHandle'))return;
+        if(e.target.classList.contains('rotateHandle')){if(o.locked)return;e.preventDefault();e.stopPropagation();startRotateObject(e,oid);return}
+        if(e.target.classList.contains('resizeHandle')){if(o.locked)return;e.preventDefault();e.stopPropagation();startResizeObject(e,oid);return}
+        if(e.target.classList.contains('tableMoveHandle')){if(o.locked)return;e.preventDefault();e.stopPropagation();selectCanvasObject(oid);startDragObject(e,oid);return}
+        if(e.target.tagName==='TD'){if(!(canvasState.selectedType==='object'&&canvasState.selectedId===oid))selectCanvasObject(oid);o.activeCell={r:+e.target.dataset.r||0,c:+e.target.dataset.c||0};renderCanvasInspector();return}
+        if(canvasState.multiMode||e.shiftKey){e.preventDefault();e.stopPropagation();toggleObjectInMultiSelection(oid);return}
+        if(mobile()){
+          if(o.editing)return;down={id:e.pointerId,x:e.clientX,y:e.clientY};return;
+        }
+        if(o.locked)return;e.preventDefault();e.stopPropagation();if(!(canvasState.selectedIds||[]).includes(oid))selectCanvasObject(oid);
+        if((canvasState.selectedIds.length+canvasState.selectedVectorIds.length)>1)startDragSelection(e);else startDragObject(e,oid);
+      });
+      el.addEventListener('pointerup',e=>{
+        if(!mobile()||!down||down.id!==e.pointerId){down=null;return}const o=canvasState.objects.find(x=>x.id===oid),m=Math.hypot(e.clientX-down.x,e.clientY-down.y);down=null;if(!o||pinching||m>8)return;
+        const now=Date.now(),dbl=now-lastTap<330;lastTap=now;selectCanvasObject(oid);
+        if(dbl&&['text','block','task','merke'].includes(o.kind)&&!o.isChecklist){o.editing=true;renderCanvasObjects();setTimeout(()=>{const x=document.querySelector(`.cobj[data-id="${oid}"]`);try{x?.focus({preventScroll:true})}catch(_){x?.focus()}},0)}
+      });
+      if(el.isContentEditable)el.addEventListener('input',()=>{const o=canvasState.objects.find(x=>x.id===oid);if(o)o.text=el.innerHTML;markCanvasDirty()});
+      el.querySelectorAll('td').forEach(td=>td.addEventListener('input',()=>{const o=canvasState.objects.find(x=>x.id===oid);if(o)o.cells[+td.dataset.r][+td.dataset.c]=td.innerText;markCanvasDirty()}));
+    });
+  };
+  try{attachCanvasObjectEvents=window.attachCanvasObjectEvents}catch(_){}
+
+  window.attachVectorEvents=function(){
+    const root=document.getElementById('canvasObjects');if(!root)return;
+    root.querySelectorAll('.vectorTouchProxy').forEach(el=>{let down=null;el.addEventListener('pointerdown',e=>{const id=el.dataset.vid,v=canvasState.vectors.find(x=>x.id===id);if(!v)return;e.preventDefault();e.stopPropagation();if(canvasState.multiMode||e.shiftKey){toggleVectorInMultiSelection(id);return}if(mobile()){down={id:e.pointerId,x:e.clientX,y:e.clientY};return}selectVector(id);if(!v.locked)startVectorDrag(e,id)});el.addEventListener('pointerup',e=>{if(!mobile()||!down||down.id!==e.pointerId){down=null;return}const m=Math.hypot(e.clientX-down.x,e.clientY-down.y),id=el.dataset.vid;down=null;if(!pinching&&m<8)selectVector(id)})});
+    root.querySelectorAll('.vectorResizeHandle').forEach(el=>el.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();selectVector(el.dataset.vid);startVectorResize(e,el.dataset.vid)}));
+    root.querySelectorAll('.vectorRotateHandle').forEach(el=>el.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();selectVector(el.dataset.vid);startVectorRotate(e,el.dataset.vid)}));
+    root.querySelectorAll('.pathNode').forEach(el=>el.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();startNodeDrag(e,+el.dataset.index)}));
+  };
+  try{attachVectorEvents=window.attachVectorEvents}catch(_){}
+
+  // Delegated move handles survive every render and are the only mobile drag affordance.
+  document.addEventListener('pointerdown',function(e){
+    if(!inEditor()||!mobile())return;const t=e.target instanceof Element?e.target:null,handle=t?.closest('.v108MoveHandle,.v108VectorMoveHandle');if(!handle)return;e.preventDefault();e.stopImmediatePropagation();
+    if(handle.dataset.oid){const id=handle.dataset.oid;if(!(canvasState.selectedIds||[]).includes(id))selectCanvasObject(id);startDragObject(e,id)}
+    else if(handle.dataset.vid){selectVector(handle.dataset.vid);startVectorDrag(e,handle.dataset.vid)}
+  },true);
+
+  // Keep the text/actions drawer and the persistent bottom toolbar in a deterministic state.
+  const baseOpen=window.editorOpenGroup;
+  window.editorOpenGroup=function(group,btn){const r=baseOpen(group,btn);const editing=(group==='textEdit'||group==='text')&&!!mobileSelectedText();document.body.classList.toggle('v112TextEditing',editing);requestAnimationFrame(()=>{const d=document.getElementById('canvasQuickDrawer');if(d){const s=d.querySelector('.mobileTextModeContent,.mobileTextLibrary,.mobileDrawerSection,.mobilePagePanel');if(s)s.style.touchAction='pan-y'}});return r};
+  try{editorOpenGroup=window.editorOpenGroup}catch(_){}
+  const baseClose=window.closeEditorDrawer;
+  window.closeEditorDrawer=function(){document.body.classList.remove('v112TextEditing');const r=baseClose();requestAnimationFrame(()=>{const n=document.querySelector('.canvasQuickNav');if(n){n.style.removeProperty('display');n.style.removeProperty('visibility');n.style.removeProperty('opacity')}});return r};
+  try{closeEditorDrawer=window.closeEditorDrawer}catch(_){}
+
+  // Shrink only obviously over-wide single-line heading text boxes; never touch paragraphs/callouts.
+  function tidyTextBoxes(){
+    let changed=false;for(const o of canvasState.objects||[]){if(o.kind!=='text')continue;const raw=String(o.text||'').replace(/<[^>]*>/g,'').trim(),fs=Number(o.style?.fontSize)||16;if(!raw||raw.length>48||/[\n\r]/.test(raw)||fs<22)continue;const pad=Number(o.style?.padding??7),est=clamp(raw.length*fs*.61+pad*2+16,90,canvasPageWidth()-30),h=clamp(fs*(Number(o.style?.lineHeight)||1.25)+pad*2+8,36,140);if(o.w>est*1.35){o.w=Math.round(est);changed=true}if(o.h>h*1.7){o.h=Math.round(h);changed=true}}
+    if(changed){renderCanvasObjects();markCanvasDirty(false)}
+  }
+
+  const baseSheet=window.renderSheetEditor||renderSheetEditor;
+  window.renderSheetEditor=function(){
+    baseSheet();setTimeout(()=>{if(mobile()){phoneView={x:0,y:12,z:1,touched:false};fitPhone(true)}else fitDesktop();tidyTextBoxes();document.body.classList.remove('v112TextEditing');},180);
+  };
+  try{renderSheetEditor=window.renderSheetEditor}catch(_){}
+  window.addEventListener('resize',()=>{if(!inEditor())return;setTimeout(()=>{if(mobile()&&!phoneView.touched)fitPhone(true);else if(!mobile())applyDesktopZoom(canvasZoom||1,false)},60)});
+
+  // Force final compact layer render after earlier wrappers.
+  const baseLayers=window.renderLayerList||renderLayerList;
+  window.renderLayerList=function(){baseLayers();const m=document.querySelector('#canvasQuickDrawer.open .mobileLayerList');if(m){m.querySelectorAll('button').forEach(b=>{b.style.minWidth='0';b.style.maxWidth='none'})}};
+  try{renderLayerList=window.renderLayerList}catch(_){}
+
+  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 112';document.title='Studia'},40);
+})();
+</script>
+<!-- ===== /Studia V112 hard stabilization ===== -->
+<style id="v112-last-specificity-fixes">
+@media(max-width:899px){
+  body.editorMode.editorDrawerOpen .canvasQuickNav{display:grid!important;visibility:visible!important;opacity:1!important}
+  body.editorMode.editorDrawerOpen.v112TextEditing .canvasQuickNav{display:none!important}
+  body:has(#view-subjects.active) .app:before,body:has(#view-subjects.active) .app:after,
+  body:has(#view-subject-detail.active) .app:before,body:has(#view-subject-detail.active) .app:after,
+  body:has(#view-topic-detail.active) .app:before,body:has(#view-topic-detail.active) .app:after{display:none!important}
+}
+</style>
