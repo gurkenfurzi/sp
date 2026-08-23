@@ -11720,6 +11720,93 @@ setTimeout(()=>{if(!window.__schoolBloomBooted){document.documentElement.style.b
 
 
 
+<!-- ===== Studia V117 interaction + mobile toolbar stabilization ===== -->
+<style id="v117-interaction-fix">
+@media (max-width:899px){
+  body.editorMode.v117TextPanel .canvasQuickNav{display:none!important;visibility:hidden!important;pointer-events:none!important}
+  body.editorMode.v117TextPanel #canvasQuickDrawer.open{left:12px!important;right:12px!important;bottom:calc(8px + env(safe-area-inset-bottom))!important;max-height:min(54dvh,470px)!important;width:auto!important}
+  body.editorMode .v116ShapeMoveHandle,body.editorMode .v108VectorMoveHandle{display:none!important;visibility:hidden!important;pointer-events:none!important}
+  body.editorMode .vectorTouchProxy,body.editorMode .shapeHit{pointer-events:all!important;touch-action:none!important;cursor:grab!important}
+  body.editorMode .vectorTouchProxy:active,body.editorMode .shapeHit:active{cursor:grabbing!important}
+  body.editorMode #canvasQuickDrawer.open .mobileLayerList{width:100%!important;max-width:100%!important;overflow-x:hidden!important;padding:0!important}
+  body.editorMode #canvasQuickDrawer.open .mobileLayerList .layerItem,
+  body.editorMode #canvasQuickDrawer.open .mobileLayerList .v103LayerItem{width:100%!important;max-width:100%!important;min-width:0!important;overflow:hidden!important;border-radius:13px!important}
+  body.editorMode #canvasQuickDrawer.open .mobileLayerList .layerRow{display:grid!important;grid-template-columns:26px minmax(0,1fr) 92px!important;gap:4px!important;align-items:center!important;width:100%!important;min-width:0!important;padding:5px 6px!important;overflow:hidden!important}
+  body.editorMode #canvasQuickDrawer.open .mobileLayerList .layerDragHandle{width:26px!important;height:30px!important;min-width:26px!important;padding:0!important;border:0!important;background:transparent!important}
+  body.editorMode #canvasQuickDrawer.open .mobileLayerList .layerTitleBtn{height:32px!important;min-width:0!important;width:100%!important;padding:0 2px!important;overflow:hidden!important;text-align:left!important}
+  body.editorMode #canvasQuickDrawer.open .mobileLayerList .layerName{display:block!important;min-width:0!important;max-width:100%!important;font-size:12.5px!important;line-height:1.1!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  body.editorMode #canvasQuickDrawer.open .mobileLayerList .layerTools{display:flex!important;flex:0 0 92px!important;width:92px!important;min-width:92px!important;max-width:92px!important;gap:4px!important;align-items:center!important;justify-content:flex-end!important;overflow:visible!important}
+  body.editorMode #canvasQuickDrawer.open .mobileLayerList .layerTools button{display:grid!important;place-items:center!important;flex:0 0 28px!important;width:28px!important;min-width:28px!important;max-width:28px!important;height:28px!important;min-height:28px!important;margin:0!important;padding:0!important;border:0!important;border-radius:9px!important;background:#fff8f5!important;color:#715d55!important;overflow:hidden!important;font-size:0!important}
+  body.editorMode #canvasQuickDrawer.open .mobileLayerList .layerTools button svg{width:14px!important;height:14px!important;display:block!important}
+  body.editorMode #canvasQuickDrawer.open .mobileLayerList .layerTools .layerDeleteBtn{background:#fff0ef!important;color:#c65d69!important;font-size:22px!important;font-family:Arial,sans-serif!important;font-weight:400!important;line-height:1!important}
+  body.editorMode #canvasQuickDrawer.open .mobileTextTop,
+  body.editorMode #canvasQuickDrawer.open .mobileTextMiddle{width:100%!important;max-width:100%!important;min-width:0!important;overflow-x:auto!important;overflow-y:hidden!important;overscroll-behavior-inline:contain!important}
+  body.editorMode #canvasQuickDrawer.open .mobileTextTop>*{flex:0 0 auto!important}
+  body.editorMode #canvasQuickDrawer.open .mobileTextModeContent{min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important}
+}
+</style>
+<script id="v117-interaction-fix-script">
+(function(){
+  const mobile=()=>window.innerWidth<900;
+  const inEditor=()=>document.body.classList.contains('editorMode')&&!!document.querySelector('#view-sheet-editor.active');
+  const activeTouchPointers=new Set();
+  let shapeDrag=null;
+
+  function setTextPanel(on){
+    document.body.classList.toggle('v117TextPanel',!!on);
+    if(!on){const nav=document.querySelector('.canvasQuickNav');if(nav){nav.style.removeProperty('display');nav.style.removeProperty('visibility');nav.style.removeProperty('pointer-events')}}
+  }
+  function syncTextPanel(){
+    if(!inEditor()||!mobile()){setTextPanel(false);return}
+    const d=document.getElementById('canvasQuickDrawer');
+    const open=!!d?.classList.contains('open');
+    setTextPanel(open&&!!d.querySelector('.mobileTextEditor,.mobileTextLibrary'));
+  }
+
+  const baseOpen=window.editorOpenGroup||((typeof editorOpenGroup==='function')?editorOpenGroup:null);
+  if(baseOpen){window.editorOpenGroup=function(){const r=baseOpen.apply(this,arguments);requestAnimationFrame(syncTextPanel);return r};try{editorOpenGroup=window.editorOpenGroup}catch(_){}}
+  const baseClose=window.closeEditorDrawer||((typeof closeEditorDrawer==='function')?closeEditorDrawer:null);
+  if(baseClose){window.closeEditorDrawer=function(){setTextPanel(false);const r=baseClose.apply(this,arguments);requestAnimationFrame(syncTextPanel);return r};try{closeEditorDrawer=window.closeEditorDrawer}catch(_){}}
+
+  function patchLayers(){document.querySelectorAll('.mobileLayerList .layerDeleteBtn').forEach(btn=>{btn.textContent='×';btn.title='Löschen';btn.setAttribute('aria-label','Ebene löschen')})}
+
+  document.addEventListener('pointerdown',e=>{if(e.pointerType==='touch')activeTouchPointers.add(e.pointerId)},true);
+  const clearPointer=e=>{if(e.pointerType==='touch')activeTouchPointers.delete(e.pointerId);if(shapeDrag&&shapeDrag.pid===e.pointerId)finishShapeDrag()};
+  document.addEventListener('pointerup',clearPointer,true);document.addEventListener('pointercancel',clearPointer,true);
+
+  function copyVector(v){return JSON.parse(JSON.stringify(v))}
+  function moveVector(v,s,dx,dy){if(v.type==='rect'){v.x=s.x+dx;v.y=s.y+dy}else if(v.type==='ellipse'){v.cx=s.cx+dx;v.cy=s.cy+dy}else if(v.points){v.points=s.points.map(pt=>[pt[0]+dx,pt[1]+dy])}}
+  function finishShapeDrag(){const d=shapeDrag;if(!d)return;shapeDrag=null;window.removeEventListener('pointermove',shapeMove,true);if(d.raf)cancelAnimationFrame(d.raf);if(d.moved){try{pushHistory()}catch(_){}}}
+  function shapeMove(e){
+    const d=shapeDrag;if(!d||e.pointerId!==d.pid)return;
+    if(e.pointerType==='touch'&&activeTouchPointers.size>1){finishShapeDrag();return}
+    e.preventDefault();d.latest=e;if(d.raf)return;
+    d.raf=requestAnimationFrame(()=>{if(!shapeDrag)return;const ev=d.latest;d.raf=0;if(!ev)return;const q=canvasPoint(ev),dx=q.x-d.p.x,dy=q.y-d.p.y;if(Math.hypot(dx,dy)<1.5&&!d.moved)return;d.moved=true;const v=(window.canvasState?.vectors||[]).find(x=>x.id===d.vid);if(!v)return;moveVector(v,d.snap,dx,dy);try{renderVectors()}catch(_){}try{markCanvasDirty(false)}catch(_){}})
+  }
+  function startDirectShapeDrag(e,vid){const v=(window.canvasState?.vectors||[]).find(x=>x.id===vid);if(!v||v.locked)return;shapeDrag={vid,pid:e.pointerId,p:canvasPoint(e),snap:copyVector(v),latest:null,raf:0,moved:false};window.addEventListener('pointermove',shapeMove,{capture:true,passive:false})}
+
+  document.addEventListener('pointerdown',e=>{
+    if(!inEditor())return;const t=e.target instanceof Element?e.target:null,hit=t?.closest('.vectorTouchProxy,.shapeHit');
+    if(!hit||t.closest('.vectorResizeHandle,.vectorRotateHandle,.pathNode')||(e.button!=null&&e.button!==0))return;
+    if(e.pointerType==='touch'&&activeTouchPointers.size>1)return;
+    const vid=hit.getAttribute('data-vid'),v=(window.canvasState?.vectors||[]).find(x=>x.id===vid);if(!vid||!v)return;
+    e.preventDefault();e.stopImmediatePropagation();
+    if(window.canvasState?.multiMode||e.shiftKey){try{toggleVectorInMultiSelection(vid)}catch(_){};return}
+    try{selectVector(vid)}catch(_){}if(!v.locked)startDirectShapeDrag(e,vid)
+  },true);
+
+  function cleanShapeHandles(){document.querySelectorAll('.v116ShapeMoveHandle,.v108VectorMoveHandle').forEach(x=>x.remove())}
+  const oldRenderVectors=window.renderVectors||((typeof renderVectors==='function')?renderVectors:null);
+  if(oldRenderVectors){window.renderVectors=function(){const r=oldRenderVectors.apply(this,arguments);requestAnimationFrame(cleanShapeHandles);return r};try{renderVectors=window.renderVectors}catch(_){}}
+
+  const drawer=document.getElementById('canvasQuickDrawer');
+  if(drawer)new MutationObserver(()=>requestAnimationFrame(()=>{syncTextPanel();patchLayers()})).observe(drawer,{subtree:true,childList:true,attributes:true});
+  document.addEventListener('click',()=>requestAnimationFrame(()=>{syncTextPanel();patchLayers()}),true);
+  window.addEventListener('resize',()=>setTimeout(syncTextPanel,60));
+  setTimeout(()=>{cleanShapeHandles();patchLayers();syncTextPanel();const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 117';document.title='Studia'},260);
+})();
+</script>
+<!-- ===== /Studia V117 ===== -->
 </body>
 </html><style id="v93-bottom-nav-stability">
 @media (max-width:899px){
