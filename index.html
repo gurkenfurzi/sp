@@ -13031,7 +13031,7 @@ body.editorMode .cobj table{max-width:100%!important}
   window.renderCanvasInspector=function(){oldInspector();if(document.querySelector('#canvasQuickDrawer.open .mobileLayerList'))requestAnimationFrame(renderLayerList)};
 
   // Version marker.
-  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 115';document.title='Studia'},40);
+  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 116';document.title='Studia'},40);
 })();
 </script>
 
@@ -13377,7 +13377,7 @@ body.editorMode .cobj[contenteditable="true"],body.editorMode td[contenteditable
   window.renderLayerList=function(){baseLayers();const m=document.querySelector('#canvasQuickDrawer.open .mobileLayerList');if(m){m.querySelectorAll('button').forEach(b=>{b.style.minWidth='0';b.style.maxWidth='none'})}};
   try{renderLayerList=window.renderLayerList}catch(_){}
 
-  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 115';document.title='Studia'},40);
+  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 116';document.title='Studia'},40);
 })();
 </script>
 <!-- ===== /Studia V112 hard stabilization ===== -->
@@ -13672,7 +13672,7 @@ html,body{overflow-x:hidden!important}
   try{renderSheetEditor=window.renderSheetEditor}catch(_){ }
   window.addEventListener('resize',()=>setTimeout(()=>{topicLock();if(inEditor()){desktopInit();reconcileMobileChrome()}},100));
 
-  setTimeout(()=>{topicLock();if(inEditor()){desktopInit();reconcileMobileChrome()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 115';document.title='Studia'},120);
+  setTimeout(()=>{topicLock();if(inEditor()){desktopInit();reconcileMobileChrome()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 116';document.title='Studia'},120);
 })();
 </script>
 
@@ -13847,7 +13847,7 @@ html,body{max-width:100%!important;overflow-x:hidden!important}
   const oldRender=window.renderSheetEditor||renderSheetEditor;window.renderSheetEditor=function(){const r=oldRender.apply(this,arguments);setTimeout(()=>init(true),360);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){ }
   const mo=new MutationObserver(()=>requestAnimationFrame(syncDrawerState));setTimeout(()=>{const d=document.getElementById('canvasQuickDrawer');if(d)mo.observe(d,{attributes:true,childList:true,subtree:true});if(editor())init(true)},180);
   window.addEventListener('resize',()=>{if(!editor())return;setTimeout(()=>{bindViewport();mobile()?fitMobile(false):fitDesktop()},100)});
-  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 115';document.title='Studia'},80);
+  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 116';document.title='Studia'},80);
 })();
 </script>
 <!-- ===== /Studia V115 ===== -->
@@ -13864,3 +13864,144 @@ html,body{max-width:100%!important;overflow-x:hidden!important}
  body.editorMode .canvasTopbar .editorActions>button{grid-column:auto!important;grid-row:auto!important;position:static!important}
 }
 </style>
+
+<!-- ===== Studia V116 focused mobile editor fixes ===== -->
+<style id="v116-mobile-editor-fix">
+@media (max-width:899px){
+  body.editorMode{overflow:hidden!important;overscroll-behavior:none!important}
+  body.editorMode #mobileSelectionTools{display:none!important;visibility:hidden!important;pointer-events:none!important;width:0!important;height:0!important;padding:0!important;border:0!important;box-shadow:none!important;overflow:hidden!important}
+  body.editorMode .canvasQuickNav{left:14px!important;right:14px!important;width:auto!important;max-width:none!important;transform:none!important;box-sizing:border-box!important;overflow:hidden!important}
+  body.editorMode #canvasQuickDrawer.open{left:14px!important;right:14px!important;width:auto!important;max-width:none!important;box-sizing:border-box!important;overflow:hidden!important}
+
+  /* compact, readable layer rows with a real visible delete X */
+  body.editorMode #canvasQuickDrawer.open .mobileLayerList{display:grid!important;gap:7px!important;overflow-x:hidden!important}
+  body.editorMode #canvasQuickDrawer.open .mobileLayerList .v103LayerItem,
+  body.editorMode #canvasQuickDrawer.open .mobileLayerList .layerItem{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important;overflow:hidden!important;border-radius:14px!important}
+  body.editorMode #canvasQuickDrawer.open .mobileLayerList .layerRow{display:grid!important;grid-template-columns:30px minmax(0,1fr) 108px!important;align-items:center!important;gap:5px!important;width:100%!important;min-width:0!important;padding:5px 6px!important;box-sizing:border-box!important;overflow:hidden!important}
+  body.editorMode #canvasQuickDrawer.open .mobileLayerList .layerDragHandle{width:30px!important;height:34px!important;min-width:30px!important;padding:0!important}
+  body.editorMode #canvasQuickDrawer.open .mobileLayerList .layerTitleBtn{width:100%!important;min-width:0!important;height:36px!important;padding:0 2px!important;overflow:hidden!important}
+  body.editorMode #canvasQuickDrawer.open .mobileLayerList .layerName{font-size:13px!important;line-height:1.1!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  body.editorMode #canvasQuickDrawer.open .mobileLayerList .layerTools{display:grid!important;grid-template-columns:repeat(3,34px)!important;gap:3px!important;width:108px!important;min-width:108px!important;max-width:108px!important;align-items:center!important;justify-content:end!important;overflow:visible!important}
+  body.editorMode #canvasQuickDrawer.open .mobileLayerList .layerTools button{display:grid!important;place-items:center!important;width:34px!important;height:34px!important;min-width:34px!important;max-width:34px!important;min-height:34px!important;padding:0!important;margin:0!important;border:0!important;border-radius:10px!important;background:#fff7f4!important;color:#725e55!important;overflow:hidden!important;font-size:0!important}
+  body.editorMode #canvasQuickDrawer.open .mobileLayerList .layerTools button svg{width:16px!important;height:16px!important;display:block!important}
+  body.editorMode #canvasQuickDrawer.open .mobileLayerList .layerTools .layerDeleteBtn{background:#fff0ef!important;color:#c5656d!important;font-size:25px!important;font-weight:500!important;line-height:1!important}
+
+  /* explicit move handle for selected shapes; no floating toolbar over the canvas */
+  body.editorMode .v116ShapeMoveHandle{pointer-events:all!important;cursor:grab!important;touch-action:none!important}
+  body.editorMode .v116ShapeMoveHandle:active{cursor:grabbing!important}
+  body.editorMode .v116ShapeMoveHandle circle{fill:#fffaf8!important;stroke:#e6b9b5!important;stroke-width:2!important;filter:drop-shadow(0 4px 8px rgba(97,70,60,.13))}
+  body.editorMode .v116ShapeMoveHandle path{fill:none!important;stroke:#7c6259!important;stroke-width:2.2!important;stroke-linecap:round!important;stroke-linejoin:round!important;pointer-events:none!important}
+
+  /* keep drawers and text from leaking outside their cards */
+  body.editorMode #canvasQuickDrawer.open,
+  body.editorMode #canvasQuickDrawer.open *{box-sizing:border-box!important;min-width:0}
+  body.editorMode #canvasQuickDrawer.open .mobileDrawerSection{max-width:100%!important;overflow-x:hidden!important}
+  body.editorMode #canvasQuickDrawer.open .mobileTextEditor,
+  body.editorMode #canvasQuickDrawer.open .mobileTextModeContent{max-width:100%!important;overflow-x:hidden!important}
+}
+</style>
+<script id="v116-mobile-editor-fix-script">
+(function(){
+  const isMobile=()=>window.innerWidth<900;
+  const inEditor=()=>document.body.classList.contains('editorMode')&&!!document.querySelector('#view-sheet-editor.active');
+  const NS='http://www.w3.org/2000/svg';
+
+  function killFloatingSelectionTools(){
+    const el=document.getElementById('mobileSelectionTools');
+    if(!el)return;
+    el.classList.remove('show');
+    el.innerHTML='';
+    el.style.setProperty('display','none','important');
+  }
+  window.updateMobileSelectionTools=function(){killFloatingSelectionTools()};
+  try{updateMobileSelectionTools=window.updateMobileSelectionTools}catch(_){ }
+
+  function polishLayerUI(root=document){
+    if(!isMobile())return;
+    root.querySelectorAll?.('.mobileLayerList .layerDeleteBtn').forEach(btn=>{
+      btn.innerHTML='×';
+      btn.setAttribute('aria-label','Ebene löschen');
+      btn.title='Löschen';
+    });
+    root.querySelectorAll?.('.mobileLayerList .layerTools button').forEach(btn=>{
+      btn.style.removeProperty('flex');
+      btn.style.removeProperty('width');
+    });
+  }
+
+  const oldLayers=window.renderLayerList||((typeof renderLayerList==='function')?renderLayerList:null);
+  if(oldLayers){
+    window.renderLayerList=function(){
+      const r=oldLayers.apply(this,arguments);
+      requestAnimationFrame(()=>polishLayerUI(document));
+      return r;
+    };
+    try{renderLayerList=window.renderLayerList}catch(_){ }
+  }
+
+  function addShapeMoveHandles(){
+    if(!inEditor()||!isMobile())return;
+    const selectedIds=new Set([...(window.canvasState?.selectedVectorIds||[]),window.canvasState?.selectedType==='vector'?window.canvasState?.selectedId:null].filter(Boolean));
+    document.querySelectorAll('.vectorObj').forEach(svg=>{
+      svg.querySelectorAll('.v116ShapeMoveHandle').forEach(x=>x.remove());
+      const vid=svg.getAttribute('data-vector-wrap');
+      if(!selectedIds.has(vid))return;
+      const v=(window.canvasState?.vectors||[]).find(x=>x.id===vid);if(!v||v.locked)return;
+      const b=typeof vectorBounds==='function'?vectorBounds(v):null;if(!b)return;
+      const pageW=typeof canvasPageWidth==='function'?canvasPageWidth():794;
+      const x=Math.max(24,Math.min(pageW-24,b.x+b.w/2));
+      const y=Math.max(24,b.y-28);
+      const g=document.createElementNS(NS,'g');
+      g.setAttribute('class','v116ShapeMoveHandle');
+      g.setAttribute('data-vid',vid);
+      g.setAttribute('transform',`translate(${x} ${y})`);
+      g.innerHTML='<circle r="19"></circle><path d="M0 -10V10M-10 0H10M0 -10l-4 4M0 -10l4 4M0 10l-4-4M0 10l4-4M-10 0l4-4M-10 0l4 4M10 0l-4-4M10 0l-4 4"></path>';
+      g.addEventListener('pointerdown',e=>{
+        e.preventDefault();e.stopPropagation();
+        try{selectVector(vid)}catch(_){ }
+        try{startVectorDrag(e,vid)}catch(_){ }
+      },{passive:false});
+      svg.appendChild(g);
+    });
+  }
+
+  const oldVectors=window.renderVectors||((typeof renderVectors==='function')?renderVectors:null);
+  if(oldVectors){
+    window.renderVectors=function(){
+      const r=oldVectors.apply(this,arguments);
+      requestAnimationFrame(addShapeMoveHandles);
+      return r;
+    };
+    try{renderVectors=window.renderVectors}catch(_){ }
+  }
+
+  /* Desktop: reinforce direct shape dragging without touching phone pinch gestures. */
+  document.addEventListener('pointerdown',e=>{
+    if(!inEditor()||isMobile()||e.button!==0)return;
+    const hit=e.target instanceof Element?e.target.closest('.vectorTouchProxy,.shapeHit'):null;
+    if(!hit)return;
+    const vid=hit.getAttribute('data-vid');
+    const v=(window.canvasState?.vectors||[]).find(x=>x.id===vid);
+    if(!vid||!v||v.locked)return;
+    e.preventDefault();e.stopImmediatePropagation();
+    try{selectVector(vid);startVectorDrag(e,vid)}catch(_){ }
+  },true);
+
+  function sweep(){
+    killFloatingSelectionTools();
+    polishLayerUI(document);
+    addShapeMoveHandles();
+  }
+
+  const drawer=document.getElementById('canvasQuickDrawer');
+  if(drawer)new MutationObserver(()=>requestAnimationFrame(sweep)).observe(drawer,{subtree:true,childList:true,attributes:true});
+  document.addEventListener('click',()=>requestAnimationFrame(sweep),true);
+  window.addEventListener('resize',()=>setTimeout(sweep,40));
+  setTimeout(()=>{
+    sweep();
+    const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 116';
+    document.title='Studia';
+  },220);
+})();
+</script>
+<!-- ===== /Studia V116 ===== -->
