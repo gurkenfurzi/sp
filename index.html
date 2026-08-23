@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Studia">
-<link rel="manifest" href="./manifest.webmanifest?v=112">
+<link rel="manifest" href="./manifest.webmanifest?v=113">
 <link rel="icon" type="image/png" sizes="64x64" href="./favicon-v99.png">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192-v109.png">
 <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon-v109.png">
@@ -669,7 +669,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
 .canvasViewport{overscroll-behavior:contain}
-.canvasStage{transform:none!important}
+.canvasStage{transform:none}
 .vectorTouchProxy{fill:rgba(255,255,255,.001)!important;stroke:rgba(255,255,255,.001)!important;stroke-width:16!important;pointer-events:all!important;touch-action:none}
 .vectorObj .vectorHandle{touch-action:none}
 .vectorObj.selected .shapeVisible{filter:drop-shadow(0 0 3px rgba(233,158,154,.9))}
@@ -3478,6 +3478,24 @@ html,body{background:#fff7f4;}
       </div>
       <p class="small v111BackupNote">Interne Backups funktionieren ohne Google und ohne Internet. Eine heruntergeladene Backup-Datei ist zusätzlich wichtig, falls Safari/Websitedaten komplett gelöscht werden.</p>
       <button class="dangerBtn" style="display:block;margin-top:12px" onclick="resetAll()">Alle Daten löschen</button>
+    </div>
+
+    <div class="section panel v113SyncPanel">
+      <div class="v113SyncHead"><div><h2>Geräte-Sync</h2><p class="small">Optional: derselbe Studia-Stand auf Handy und Laptop.</p></div><span class="v113SyncIcon">⇄</span></div>
+      <div class="v113SyncStatus" id="v113SyncStatus"><b>Noch nicht verbunden</b><span>GitHub-Sync ist optional.</span></div>
+      <div class="v113SyncGrid">
+        <label>GitHub Token<input id="v113SyncToken" type="password" autocomplete="off" placeholder="Token mit Gist-Berechtigung"></label>
+        <label>Sync-Passwort<input id="v113SyncPass" type="password" autocomplete="off" placeholder="Auf allen Geräten gleich"></label>
+        <label class="full">Gist-ID<input id="v113SyncGist" placeholder="Wird beim Einrichten automatisch erstellt"></label>
+      </div>
+      <label class="v111BackupToggle"><span><b>Automatisch synchronisieren</b><small>Nach Änderungen und beim Öffnen von Studia.</small></span><input id="v113SyncAuto" type="checkbox" onchange="v113SetAutoSync(this.checked)"></label>
+      <div class="v113SyncButtons">
+        <button class="primary" onclick="v113SetupSync()">Sync einrichten</button>
+        <button class="ghost" onclick="v113SyncPush(true)">Jetzt hochladen</button>
+        <button class="ghost" onclick="v113SyncPull(true)">Jetzt herunterladen</button>
+        <button class="ghost" onclick="v113ForgetSync()">Verbindung entfernen</button>
+      </div>
+      <p class="small v113SyncNote">Die Sync-Datei wird vor dem Upload mit deinem Sync-Passwort verschlüsselt. Token und Passwort bleiben nur auf diesem Gerät und werden nicht in Studia-Backups exportiert.</p>
     </div>
   </section>
 </div>
@@ -6961,7 +6979,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
 .canvasViewport{overscroll-behavior:contain}
-.canvasStage{transform:none!important}
+.canvasStage{transform:none}
 .vectorTouchProxy{fill:rgba(255,255,255,.001)!important;stroke:rgba(255,255,255,.001)!important;stroke-width:16!important;pointer-events:all!important;touch-action:none}
 .vectorObj .vectorHandle{touch-action:none}
 .vectorObj.selected .shapeVisible{filter:drop-shadow(0 0 3px rgba(233,158,154,.9))}
@@ -7885,7 +7903,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 .editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
 .editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
 .canvasViewport{overscroll-behavior:contain}
-.canvasStage{transform:none!important}
+.canvasStage{transform:none}
 .vectorTouchProxy{fill:rgba(255,255,255,.001)!important;stroke:rgba(255,255,255,.001)!important;stroke-width:16!important;pointer-events:all!important;touch-action:none}
 .vectorObj .vectorHandle{touch-action:none}
 .vectorObj.selected .shapeVisible{filter:drop-shadow(0 0 3px rgba(233,158,154,.9))}
@@ -11019,8 +11037,8 @@ try{
   const vp=document.getElementById('canvasViewport');
   if(vp){
     let pinch=null;
-    vp.addEventListener('touchstart',e=>{if(e.touches.length===2){const [a,b]=e.touches;pinch={d:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),z:canvasZoom};canvasState.userZoomTouched=true}}, {passive:true});
-    vp.addEventListener('touchmove',e=>{if(pinch&&e.touches.length===2){const [a,b]=e.touches,d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);v91BaseSetZoom(Math.max(.3,Math.min(2.25,pinch.z*(d/pinch.d))));v91UpdateZoomLabel();e.preventDefault()}}, {passive:false});
+    vp.addEventListener('touchstart',e=>{if(window.__STUDIA_V115_OWNS_GESTURES)return;if(e.touches.length===2){const [a,b]=e.touches;pinch={d:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),z:canvasZoom};canvasState.userZoomTouched=true}}, {passive:true});
+    vp.addEventListener('touchmove',e=>{if(window.__STUDIA_V115_OWNS_GESTURES)return;if(pinch&&e.touches.length===2){const [a,b]=e.touches,d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);v91BaseSetZoom(Math.max(.3,Math.min(2.25,pinch.z*(d/pinch.d))));v91UpdateZoomLabel();e.preventDefault()}}, {passive:false});
     vp.addEventListener('touchend',e=>{if(e.touches.length<2)pinch=null},{passive:true});
   }
 
@@ -11218,13 +11236,13 @@ applyCanvasPageSize=function(){v96OldApplyPageSize();setTimeout(()=>v96ApplyZoom
 (function v96InstallCanvasGestures(){
  const vp=$("#canvasViewport");if(!vp||vp.dataset.v96Gesture)return;vp.dataset.v96Gesture='1';
  let pinch=null;
- vp.addEventListener('touchstart',e=>{
+ vp.addEventListener('touchstart',e=>{if(window.__STUDIA_V115_OWNS_GESTURES)return;
    if(e.touches.length!==2)return; e.preventDefault();e.stopImmediatePropagation();
    const a=e.touches[0],b=e.touches[1],rect=vp.getBoundingClientRect();
    pinch={dist:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),zoom:canvasZoom,focus:{x:(a.clientX+b.clientX)/2-rect.left,y:(a.clientY+b.clientY)/2-rect.top}};
    canvasState.userZoomTouched=true;
  },{capture:true,passive:false});
- vp.addEventListener('touchmove',e=>{
+ vp.addEventListener('touchmove',e=>{if(window.__STUDIA_V115_OWNS_GESTURES)return;
    if(!pinch||e.touches.length!==2)return;e.preventDefault();e.stopImmediatePropagation();
    const a=e.touches[0],b=e.touches[1],d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);v96ApplyZoom(pinch.zoom*(d/pinch.dist),true,pinch.focus);
  },{capture:true,passive:false});
@@ -11549,7 +11567,7 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
   };
   function v102DesktopEditorInit(){if(window.innerWidth<900||!document.body.classList.contains('editorMode'))return;const shell=$('.canvasEditorShell'),nav=$('.canvasQuickNav'),drawer=$('#canvasQuickDrawer'),vp=$('#canvasViewport'),side=$('#desktopEditorSidebar');if(!shell||!nav||!drawer||!vp||!side)return;let left=$('.v102DesktopLeft');if(!left){left=document.createElement('div');left.className='v102DesktopLeft';nav.parentNode.insertBefore(left,nav);left.append(nav,drawer)}nav.innerHTML=`<button class="active" onclick="document.getElementById('canvasQuickDrawer').innerHTML=v102PaletteHTML()">${v102Icon('rect')}<span>Elemente</span></button><button onclick="document.getElementById('canvasQuickDrawer').innerHTML=v102PaletteHTML()">${v102Icon('pencil')}<span>Text</span></button><button onclick="v102RightTab('page')">${v102Icon('pages')}<span>Seiten</span></button><button onclick="v102RightTab('layers')">${v102Icon('layers')}<span>Ebenen</span></button>`;drawer.classList.add('open');drawer.innerHTML=v102PaletteHTML();if(!side.querySelector('.v102RightTabs'))side.insertAdjacentHTML('afterbegin',`<div class="v102RightTabs"><button data-mode="design" onclick="v102RightTab('design')">Design</button><button data-mode="page" onclick="v102RightTab('page')">Seiten</button><button data-mode="layers" onclick="v102RightTab('layers')">Ebenen</button></div>`);v102RightTab(canvasState.selectedId?'design':'page');v102InstallDesktopPanZoom(vp);}
   window.v102PaletteHTML=v102PaletteHTML;
-  function v102InstallDesktopPanZoom(vp){if(vp.dataset.v102PanZoom)return;vp.dataset.v102PanZoom='1';let space=false,pan=null;window.addEventListener('keydown',e=>{if(e.code==='Space'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName)){space=true;if(document.body.classList.contains('editorMode'))e.preventDefault()}});window.addEventListener('keyup',e=>{if(e.code==='Space')space=false});vp.addEventListener('wheel',e=>{if(!e.altKey)return;e.preventDefault();const rect=vp.getBoundingClientRect(),focus={x:e.clientX-rect.left,y:e.clientY-rect.top};v96ApplyZoom((canvasZoom||1)*(e.deltaY<0?1.08:.92),true,focus)},{passive:false});vp.addEventListener('pointerdown',e=>{if(!(e.button===1||(e.button===0&&space)))return;e.preventDefault();vp.classList.add('v102Panning');pan={x:e.clientX,y:e.clientY,l:vp.scrollLeft,t:vp.scrollTop};vp.setPointerCapture?.(e.pointerId)});vp.addEventListener('pointermove',e=>{if(!pan)return;vp.scrollLeft=pan.l-(e.clientX-pan.x);vp.scrollTop=pan.t-(e.clientY-pan.y)});const end=()=>{pan=null;vp.classList.remove('v102Panning')};vp.addEventListener('pointerup',end);vp.addEventListener('pointercancel',end)}
+  function v102InstallDesktopPanZoom(vp){if(vp.dataset.v102PanZoom)return;vp.dataset.v102PanZoom='1';let space=false,pan=null;window.addEventListener('keydown',e=>{if(e.code==='Space'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName)){space=true;if(document.body.classList.contains('editorMode'))e.preventDefault()}});window.addEventListener('keyup',e=>{if(e.code==='Space')space=false});vp.addEventListener('wheel',e=>{if(window.__STUDIA_V115_OWNS_GESTURES)return;if(!e.altKey)return;e.preventDefault();const rect=vp.getBoundingClientRect(),focus={x:e.clientX-rect.left,y:e.clientY-rect.top};v96ApplyZoom((canvasZoom||1)*(e.deltaY<0?1.08:.92),true,focus)},{passive:false});vp.addEventListener('pointerdown',e=>{if(window.__STUDIA_V115_OWNS_GESTURES)return;if(!(e.button===1||(e.button===0&&space)))return;e.preventDefault();vp.classList.add('v102Panning');pan={x:e.clientX,y:e.clientY,l:vp.scrollLeft,t:vp.scrollTop};vp.setPointerCapture?.(e.pointerId)});vp.addEventListener('pointermove',e=>{if(!pan)return;vp.scrollLeft=pan.l-(e.clientX-pan.x);vp.scrollTop=pan.t-(e.clientY-pan.y)});const end=()=>{pan=null;vp.classList.remove('v102Panning')};vp.addEventListener('pointerup',end);vp.addEventListener('pointercancel',end)}
   const v102RenderSheet=renderSheetEditor;renderSheetEditor=function(){v102RenderSheet();setTimeout(v102DesktopEditorInit,100)};
   window.addEventListener('resize',()=>{if(document.body.classList.contains('editorMode'))setTimeout(v102DesktopEditorInit,80)});
 
@@ -11702,122 +11720,6 @@ setTimeout(()=>{if(!window.__schoolBloomBooted){document.documentElement.style.b
 
 
 
-
-<!-- ===== Studia V113 interaction + layout fix ===== -->
-<style id="v113-final-fixes">
-html,body{max-width:100%;overflow-x:hidden}
-@media(max-width:899px){
-  body:not(.editorMode){overflow-x:hidden!important}
-  #view-subjects.active,#view-subject-detail.active,#view-topic-detail.active{left:auto!important;margin-left:0!important;width:100%!important;max-width:100%!important;overflow-x:hidden!important;overscroll-behavior-x:none!important}
-  #view-subjects.active .viewInner,#view-subject-detail.active .viewInner,#view-topic-detail.active .viewInner,#topicDetail,#subjectList,#subjectDetail{width:100%!important;max-width:100%!important;overflow-x:hidden!important}
-  .v102ResourceCard,.v103ResourceText,.v102TopicResourceList{max-width:100%!important;min-width:0!important}
-  body.editorMode #canvasViewport{position:relative!important;inset:auto!important;width:auto!important;max-width:none!important;height:auto!important;overflow:hidden!important;padding:0!important;margin:0!important;border:0!important;border-radius:0!important;touch-action:none!important}
-  body.editorMode #v96PanSurface{touch-action:none!important;overflow:visible!important}
-  body.editorMode #canvasStage{touch-action:none!important;max-width:none!important;max-height:none!important}
-  body.editorMode .canvasQuickNav{display:grid!important;visibility:visible!important;opacity:1!important}
-  body.editorMode #canvasQuickDrawer.open{overflow:hidden!important}
-  body.editorMode #canvasQuickDrawer.open>div:not(.mobileDrawerHeader):not(.mobileTextModeTabs){min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important}
-  body.editorMode .cobj{max-width:none!important}
-  body.editorMode .cobj.textObj{white-space:normal!important}
-  .mobileLayerList .layerRow{grid-template-columns:25px minmax(0,1fr) auto!important}
-  .mobileLayerList .layerTools button{width:25px!important;height:25px!important;min-width:25px!important;min-height:25px!important}
-}
-@media(min-width:900px){
-  body.editorMode .canvasEditorShell{grid-template-columns:270px minmax(0,1fr) 315px!important}
-  body.editorMode #desktopEditorSidebar{min-width:0!important;max-width:315px!important;overflow-x:hidden!important}
-  body.editorMode #desktopEditorSidebar .objectPanel,body.editorMode #desktopEditorSidebar .objectPanelGrid,body.editorMode #desktopEditorSidebar .positionGrid,body.editorMode #desktopEditorSidebar .vectorControls{min-width:0!important;max-width:100%!important}
-  body.editorMode #desktopEditorSidebar input,body.editorMode #desktopEditorSidebar select,body.editorMode #desktopEditorSidebar textarea,body.editorMode #desktopEditorSidebar button{max-width:100%!important;min-width:0!important}
-  body.editorMode #canvasViewport{overflow:auto!important;touch-action:none!important}
-  body.editorMode #canvasStage{max-width:none!important;max-height:none!important}
-  body.editorMode .v102PaletteGrid button{min-width:0!important}
-}
-</style>
-<script id="v113-final-script">
-(function(){
- const mobile=()=>innerWidth<900, editor=()=>document.body.classList.contains('editorMode')&&document.querySelector('#view-sheet-editor.active');
- const vp=()=>document.getElementById('canvasViewport'), stage=()=>document.getElementById('canvasStage'), surface=()=>document.getElementById('v96PanSurface');
- const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
- let touch=null, alt=false, pan=null;
- function ensureTransform(){const s=stage();if(!s)return; s.style.setProperty('transform-origin','0 0','important');}
- function phoneApply(){const s=stage(),f=surface();if(!s||!f||!window.v113Phone)return;const q=window.v113Phone;canvasZoom=q.z;s.dataset.scale=q.z;s.style.setProperty('left','0px','important');s.style.setProperty('top','0px','important');s.style.setProperty('transform',`translate3d(${q.x}px,${q.y}px,0) scale(${q.z})`,'important');s.style.setProperty('transform-origin','0 0','important');f.style.setProperty('width','100%','important');f.style.setProperty('height','100%','important');}
- function phoneFit(){const v=vp();if(!v)return;const z=clamp(Math.min((v.clientWidth-20)/canvasPageWidth(),(v.clientHeight-24)/canvasPageHeight()),.15,1);window.v113Phone={x:(v.clientWidth-canvasPageWidth()*z)/2,y:12,z,touched:false};phoneApply()}
- function phoneZoom(z,focus){const v=vp();if(!v)return;if(!window.v113Phone)phoneFit();const q=window.v113Phone,f=focus||{x:v.clientWidth/2,y:v.clientHeight/2};z=clamp(z,.14,4);const wx=(f.x-q.x)/q.z,wy=(f.y-q.y)/q.z;q.x=f.x-wx*z;q.y=f.y-wy*z;q.z=z;q.touched=true;phoneApply()}
- function deskZoom(z,focus){const v=vp(),s=stage(),f=surface();if(!v||!s||!f)return;const old=clamp(Number(s.dataset.scale)||canvasZoom||1,.14,4),g=36,fx=focus?.x??v.clientWidth/2,fy=focus?.y??v.clientHeight/2,wx=(v.scrollLeft+fx-g)/old,wy=(v.scrollTop+fy-g)/old;z=clamp(z,.14,4);canvasZoom=z;s.dataset.scale=z;s.style.setProperty('left',g+'px','important');s.style.setProperty('top',g+'px','important');s.style.setProperty('transform',`scale(${z})`,'important');s.style.setProperty('transform-origin','0 0','important');f.style.width=(canvasPageWidth()*z+g*2)+'px';f.style.height=(canvasPageHeight()*z+g*2)+'px';requestAnimationFrame(()=>{v.scrollLeft=Math.max(0,g+wx*z-fx);v.scrollTop=Math.max(0,g+wy*z-fy)})}
- window.v113ApplyZoom=(z,p=true,focus=null)=>mobile()?phoneZoom(z,focus):deskZoom(z,focus);window.v112ApplyZoom=window.v108ApplyZoom=window.v96ApplyZoom=window.v113ApplyZoom;window.setCanvasZoom=z=>window.v113ApplyZoom(z,true);window.canvasZoomBy=d=>window.v113ApplyZoom((canvasZoom||1)+Number(d||0),true);
- window.fitCanvasStage=window.fitCanvasToScreen=function(){if(mobile())phoneFit();else{const v=vp();if(!v)return;deskZoom(Math.min((v.clientWidth-72)/canvasPageWidth(),(v.clientHeight-72)/canvasPageHeight()),{x:v.clientWidth/2,y:v.clientHeight/2})}};
- // iOS pointer-event based two-finger pan + pinch. Works even when Safari suppresses legacy touchmove.
- function midpoint(a,b,r){return{x:(a.x+b.x)/2-r.left,y:(a.y+b.y)/2-r.top}}
- const pts=new Map();
- window.addEventListener('pointerdown',e=>{if(!editor()||!mobile()||e.pointerType!=='touch')return;const v=vp(),r=v?.getBoundingClientRect();if(!v||e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;pts.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pts.size===2){const [a,b]=[...pts.values()],m=midpoint(a,b,r);if(!window.v113Phone)phoneFit();const q=window.v113Phone,d=Math.max(1,Math.hypot(a.x-b.x,a.y-b.y));touch={d,z:q.z,wx:(m.x-q.x)/q.z,wy:(m.y-q.y)/q.z};e.preventDefault();e.stopImmediatePropagation()}},{capture:true,passive:false});
- window.addEventListener('pointermove',e=>{if(!pts.has(e.pointerId))return;pts.set(e.pointerId,{x:e.clientX,y:e.clientY});if(!editor()||!mobile()||pts.size<2||!touch)return;const v=vp(),r=v.getBoundingClientRect(),[a,b]=[...pts.values()].slice(0,2),m=midpoint(a,b,r),d=Math.max(1,Math.hypot(a.x-b.x,a.y-b.y)),z=clamp(touch.z*d/touch.d,.14,4),q=window.v113Phone;q.z=z;q.x=m.x-touch.wx*z;q.y=m.y-touch.wy*z;q.touched=true;phoneApply();e.preventDefault();e.stopImmediatePropagation()},{capture:true,passive:false});
- const drop=e=>{pts.delete(e.pointerId);if(pts.size<2)touch=null};window.addEventListener('pointerup',drop,true);window.addEventListener('pointercancel',drop,true);
- // Desktop: Alt + wheel zoom anywhere over viewport; middle mouse pans like Adobe.
- addEventListener('keydown',e=>{if(e.key==='Alt')alt=true},true);addEventListener('keyup',e=>{if(e.key==='Alt')alt=false},true);addEventListener('blur',()=>{alt=false;pan=null});
- addEventListener('wheel',e=>{if(!editor()||mobile()||!(e.altKey||alt))return;const v=vp(),r=v?.getBoundingClientRect();if(!v||e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;e.preventDefault();e.stopImmediatePropagation();deskZoom((canvasZoom||1)*Math.exp(-e.deltaY*.0025),{x:e.clientX-r.left,y:e.clientY-r.top})},{capture:true,passive:false});
- addEventListener('mousedown',e=>{if(!editor()||mobile()||e.button!==1)return;const v=vp(),r=v?.getBoundingClientRect();if(!v||e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;e.preventDefault();e.stopImmediatePropagation();pan={x:e.clientX,y:e.clientY,l:v.scrollLeft,t:v.scrollTop};v.classList.add('v102Panning')},true);addEventListener('mousemove',e=>{if(!pan)return;const v=vp();v.scrollLeft=pan.l-(e.clientX-pan.x);v.scrollTop=pan.t-(e.clientY-pan.y)},true);addEventListener('mouseup',()=>{pan=null;vp()?.classList.remove('v102Panning')},true);
- // Make desktop vectors draggable via delegation, independent of older event bindings.
- document.addEventListener('pointerdown',e=>{if(!editor()||mobile()||e.button!==0)return;const hit=e.target instanceof Element?e.target.closest('.vectorTouchProxy,.shapeHit'):null;if(!hit||e.target.closest('.vectorResizeHandle,.vectorRotateHandle,.pathNode'))return;const id=hit.dataset.vid,v=canvasState.vectors.find(x=>x.id===id);if(!v||v.locked)return;e.preventDefault();e.stopImmediatePropagation();selectVector(id);startVectorDrag(e,id)},true);
- // Actual vector line and editable curve.
- window.v113AddLine=function(curve=false){const z=typeof nextCanvasZ==='function'?nextCanvasZ():999;const v={id:id(),z,type:'path',points:curve?[[250,430],[350,320],[455,510],[555,390]]:[[250,410],[545,410]],fill:'none',stroke:'#8d7369',strokeWidth:3,dash:'solid',rotation:0,locked:false,closed:false,curve:!!curve};canvasState.vectors.push(v);selectVector(v.id);renderVectors();pushHistory?.();markCanvasDirty?.()};
- const oldPathD=window.pathD||pathD;window.pathD=pathD=function(points,v){if(!points?.length)return'';return 'M '+points.map((p,i)=>(i?'L ':'')+p[0]+' '+p[1]).join(' ')};
- const oldVectorEl=window.vectorEl||vectorEl;window.vectorEl=vectorEl=function(v){if(v?.type==='path'&&v.curve&&v.points?.length>=4){const p=v.points,d=v.dash==='dashed'?'10 7':v.dash==='dotted'?'2 6':'';return `<path data-vid="${v.id}" d="M ${p[0][0]} ${p[0][1]} C ${p[1][0]} ${p[1][1]} ${p[2][0]} ${p[2][1]} ${p[3][0]} ${p[3][1]}" fill="none" stroke="${v.stroke}" stroke-width="${v.strokeWidth}" stroke-dasharray="${d}" stroke-linecap="round" class="${canvasState.selectedType==='vector'&&canvasState.selectedId===v.id?'vectorSelected':''}"/>`}return oldVectorEl(v)};
- // Patch palette: line is a real vector; add curve. Keep all existing tools.
- const basePalette=window.v102PaletteHTML;window.v102PaletteHTML=function(){let h=basePalette?basePalette():'';h=h.replace(/addCanvasDivider\(\)/g,'v113AddLine(false)');if(!h.includes('v113AddLine(true)'))h=h.replace(/(<div class="v102PaletteTitle">Formen<\/div><div class="v102PaletteGrid">)([\s\S]*?)(<\/div>)/,(_,a,b,c)=>a+b+`<button onclick="v113AddLine(true)">${(window.v102Icon?.('line')||'⌁')}<span>Kurve</span></button>`+c);return h};window.v103PaletteHTML=window.v102PaletteHTML;
- function refreshDesktop(){if(!editor()||mobile())return;const d=document.getElementById('canvasQuickDrawer');if(d){d.innerHTML=window.v102PaletteHTML();d.classList.add('open')}ensureTransform()}
- const oldRender=window.renderSheetEditor||renderSheetEditor;window.renderSheetEditor=function(){oldRender();setTimeout(()=>{ensureTransform();if(mobile())phoneFit();else refreshDesktop()},180)};try{renderSheetEditor=window.renderSheetEditor}catch(_){}
- // Topic pages: hard reset accidental horizontal offsets after every render/navigation.
- function normalize(){if(editor())return;document.documentElement.scrollLeft=0;document.body.scrollLeft=0;document.querySelectorAll('#view-subjects,#view-subject-detail,#view-topic-detail').forEach(x=>{x.scrollLeft=0;x.style.transform='none'})}
- document.addEventListener('click',()=>requestAnimationFrame(normalize),true);addEventListener('resize',()=>setTimeout(()=>{if(editor()){ensureTransform();if(mobile()&&!window.v113Phone?.touched)phoneFit()}else normalize()},80));
- setTimeout(()=>{document.getElementById('headerEyebrow')&&(document.getElementById('headerEyebrow').textContent='VERSION 113');ensureTransform()},80);
-})();
-</script>
-<!-- ===== /Studia V113 ===== -->
-
-<style id="v114-emergency-mobile-fix">
-@media(max-width:899px){
- html,body{width:100%;max-width:100%;overflow-x:hidden!important}
- body.editorMode{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;overflow:hidden!important}
- body.editorMode .canvasEditorShell{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;display:block!important;overflow:hidden!important}
- body.editorMode .canvasTopbar{position:absolute!important;z-index:900!important;left:0!important;right:0!important;top:0!important;height:72px!important;margin:0!important;padding:calc(8px + env(safe-area-inset-top)) 8px 7px!important;border-radius:0 0 18px 18px!important;overflow:hidden!important}
- body.editorMode #canvasViewport{position:absolute!important;z-index:1!important;left:0!important;right:0!important;top:72px!important;bottom:82px!important;width:auto!important;height:auto!important;margin:0!important;padding:0!important;overflow:hidden!important;border:0!important;border-radius:0!important;touch-action:none!important}
- body.editorMode #v96PanSurface{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;margin:0!important;padding:0!important;overflow:visible!important}
- body.editorMode #canvasStage{position:absolute!important;left:0!important;top:0!important;margin:0!important;transform-origin:0 0!important;max-width:none!important;max-height:none!important}
- body.editorMode .canvasQuickNav{position:fixed!important;z-index:920!important;left:8px!important;right:8px!important;bottom:calc(6px + env(safe-area-inset-bottom))!important;width:auto!important;max-width:none!important;height:68px!important;margin:0!important;padding:5px!important;display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;overflow:hidden!important;transform:none!important}
- body.editorMode .canvasQuickNav button{width:100%!important;min-width:0!important;max-width:none!important;height:56px!important;padding:3px 1px!important;overflow:hidden!important}
- body.editorMode .canvasQuickNav button span:last-child{font-size:8px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;max-width:100%!important}
- body.editorMode #canvasQuickDrawer.open{position:fixed!important;z-index:930!important;left:8px!important;right:8px!important;bottom:calc(80px + env(safe-area-inset-bottom))!important;top:auto!important;width:auto!important;height:auto!important;max-height:min(48dvh,430px)!important;min-height:0!important;margin:0!important;padding:8px!important;overflow:hidden!important;border-radius:22px!important;display:flex!important;flex-direction:column!important}
- body.editorMode.v112TextEditing #canvasQuickDrawer.open{bottom:calc(6px + env(safe-area-inset-bottom))!important;max-height:min(55dvh,480px)!important;height:auto!important}
- body.editorMode #canvasQuickDrawer.open>*,body.editorMode #canvasQuickDrawer .mobileTextEditor,body.editorMode #canvasQuickDrawer .mobileTextModeContent{min-height:0!important;max-height:100%!important}
- body.editorMode #canvasQuickDrawer .mobileTextModeContent,body.editorMode #canvasQuickDrawer .mobileDrawerSection,body.editorMode #canvasQuickDrawer .mobileTextLibrary,body.editorMode #canvasQuickDrawer .mobilePagePanel{overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;touch-action:pan-y!important}
- body.editorMode #canvasQuickDrawer .mobileTextModeContent{flex:0 1 auto!important;padding-bottom:8px!important}
- body.editorMode #canvasQuickDrawer .mobileTextEditor{height:auto!important;display:flex!important;flex-direction:column!important}
- body.editorMode #canvasQuickDrawer .mobileTextModeTabs{position:relative!important;bottom:auto!important}
- body.editorMode #v96PageStrip{display:none!important}
- body.editorMode .cobj{max-width:none!important;box-sizing:border-box!important}
- body.editorMode .cobj.textObj,body.editorMode .cobj.calloutObj,body.editorMode .cobj.taskObj,body.editorMode .cobj.merkeObj{overflow:hidden!important}
- body.editorMode .cobj *{max-width:100%!important;box-sizing:border-box!important}
-}
-</style>
-<script id="v114-emergency-mobile-script">
-(()=>{
- const isMob=()=>innerWidth<900&&document.body.classList.contains('editorMode')&&document.querySelector('#view-sheet-editor.active');
- const vp=()=>document.getElementById('canvasViewport'), st=()=>document.getElementById('canvasStage');
- let view={x:0,y:10,z:1}, pinch=null;
- const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
- function apply(){if(!isMob())return;const s=st();if(!s)return;canvasZoom=view.z;s.dataset.scale=view.z;s.style.zoom='';s.style.left='0px';s.style.top='0px';s.style.transform=`translate3d(${view.x}px,${view.y}px,0) scale(${view.z})`;s.style.transformOrigin='0 0';}
- function fit(){if(!isMob())return;const v=vp();if(!v)return;const w=canvasPageWidth(),h=canvasPageHeight();const z=clamp(Math.min((v.clientWidth-24)/w,(v.clientHeight-24)/h),.15,1);view.z=z;view.x=(v.clientWidth-w*z)/2;view.y=Math.max(10,(v.clientHeight-h*z)/2);apply();}
- window.fitCanvasStage=window.fitCanvasToScreen=fit;
- function mid(t,v){const r=v.getBoundingClientRect();return{x:(t[0].clientX+t[1].clientX)/2-r.left,y:(t[0].clientY+t[1].clientY)/2-r.top}}
- function start(e){if(!isMob()||e.touches.length!==2)return;const v=vp();if(!v)return;e.preventDefault();e.stopImmediatePropagation();const m=mid(e.touches,v),a=e.touches[0],b=e.touches[1],d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);pinch={d,z:view.z,wx:(m.x-view.x)/view.z,wy:(m.y-view.y)/view.z};}
- function move(e){if(!pinch||!isMob()||e.touches.length!==2)return;const v=vp();e.preventDefault();e.stopImmediatePropagation();const m=mid(e.touches,v),a=e.touches[0],b=e.touches[1],d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),z=clamp(pinch.z*d/pinch.d,.15,3.5);view.z=z;view.x=m.x-pinch.wx*z;view.y=m.y-pinch.wy*z;apply();}
- function end(e){if(e.touches&&e.touches.length>=2)return;pinch=null;}
- function install(){const v=vp();if(!v||v.dataset.v114pinch)return;v.dataset.v114pinch='1';v.addEventListener('touchstart',start,{capture:true,passive:false});v.addEventListener('touchmove',move,{capture:true,passive:false});v.addEventListener('touchend',end,{capture:true,passive:false});v.addEventListener('touchcancel',end,{capture:true,passive:false});}
- const oldOpen=window.openSheetEditor; if(typeof oldOpen==='function')window.openSheetEditor=function(){const r=oldOpen.apply(this,arguments);setTimeout(()=>{install();fit()},250);return r};
- addEventListener('resize',()=>setTimeout(()=>{install();fit()},120));
- document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(()=>{install();fit()},120)});
- setTimeout(()=>{install();if(isMob())fit()},250);
-})();
-</script>
 </body>
 </html><style id="v93-bottom-nav-stability">
 @media (max-width:899px){
@@ -12732,7 +12634,7 @@ body.editorMode #v96PageStrip{display:none!important}
   shouldAutoFitCanvas=function(){return false};
 
   // Alt + mouse wheel zooms at the pointer. Window capture runs before old document handlers.
-  window.addEventListener('wheel',function(e){
+  window.addEventListener('wheel',function(e){if(window.__STUDIA_V115_OWNS_GESTURES)return;
     if(true)return;
     const vp=viewport();if(!vp)return;
     const t=e.target instanceof Element?e.target:null;
@@ -12745,7 +12647,7 @@ body.editorMode #v96PageStrip{display:none!important}
 
   // Middle mouse button = Adobe-style hand/pan.
   let mousePan=null;
-  window.addEventListener('mousedown',function(e){
+  window.addEventListener('mousedown',function(e){if(window.__STUDIA_V115_OWNS_GESTURES)return;
     if(!isEditor()||e.button!==1)return;const vp=viewport();if(!vp)return;
     const t=e.target instanceof Element?e.target:null;if(t&&!t.closest('#canvasViewport,#v96PanSurface,#canvasStage'))return;
     e.preventDefault();e.stopImmediatePropagation();mousePan={x:e.clientX,y:e.clientY,l:vp.scrollLeft,t:vp.scrollTop};vp.classList.add('v108Pan');
@@ -12758,12 +12660,12 @@ body.editorMode #v96PageStrip{display:none!important}
   // Two-finger pinch AND pan. It never edits/moves page objects.
   let pinch=null;
   function touchMid(a,b,vp){const r=vp.getBoundingClientRect();return{x:(a.clientX+b.clientX)/2-r.left,y:(a.clientY+b.clientY)/2-r.top}}
-  window.addEventListener('touchstart',function(e){
+  window.addEventListener('touchstart',function(e){if(window.__STUDIA_V115_OWNS_GESTURES)return;
     if(true)return;const vp=viewport();if(!vp||!vp.contains(e.target))return;
     e.preventDefault();e.stopImmediatePropagation();const a=e.touches[0],b=e.touches[1],m=touchMid(a,b,vp),z=canvasZoom||1,g=Number(surface()?.dataset.gutter)||gutter();
     pinch={dist:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),zoom:z,pageX:(vp.scrollLeft+m.x-g)/z,pageY:(vp.scrollTop+m.y-g)/z};canvasState.userZoomTouched=true;
   },{capture:true,passive:false});
-  window.addEventListener('touchmove',function(e){
+  window.addEventListener('touchmove',function(e){if(window.__STUDIA_V115_OWNS_GESTURES)return;
     if(true)return;const vp=viewport();if(!vp)return;e.preventDefault();e.stopImmediatePropagation();
     const a=e.touches[0],b=e.touches[1],m=touchMid(a,b,vp),dist=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),z=clamp(pinch.zoom*(dist/pinch.dist),.22,3.2),g=gutter();
     v108ApplyZoom(z,false);requestAnimationFrame(()=>{vp.scrollLeft=Math.max(0,g+pinch.pageX*z-m.x);vp.scrollTop=Math.max(0,g+pinch.pageY*z-m.y)});
@@ -13087,7 +12989,7 @@ body.editorMode .cobj table{max-width:100%!important}
   };
 
   // Reliable laptop Alt+wheel zoom: based on pointer coordinates, not event target.
-  window.addEventListener('wheel',function(e){
+  window.addEventListener('wheel',function(e){if(window.__STUDIA_V115_OWNS_GESTURES)return;
     if(true)return;
     if(!isEditor()||window.innerWidth<900||!e.altKey)return;const v=vp();if(!v)return;const r=v.getBoundingClientRect();
     if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;
@@ -13102,12 +13004,12 @@ body.editorMode .cobj table{max-width:100%!important}
   window.addEventListener('gesturestart',function(e){if(true)return;if(!isEditor()||window.innerWidth>=900)return;const v=vp();if(!v)return;const r=v.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;e.preventDefault();gestureStart=canvasZoom||1},{capture:true,passive:false});
   window.addEventListener('gesturechange',function(e){if(true)return;if(gestureStart==null||!isEditor())return;e.preventDefault();e.stopImmediatePropagation();zoomAt(Math.max(.22,Math.min(3.2,gestureStart*e.scale)),e.clientX,e.clientY)},{capture:true,passive:false});
   window.addEventListener('gestureend',()=>{gestureStart=null},{capture:true,passive:true});
-  window.addEventListener('touchstart',function(e){
+  window.addEventListener('touchstart',function(e){if(window.__STUDIA_V115_OWNS_GESTURES)return;
     if(true)return;
     if(!isEditor()||window.innerWidth>=900||e.touches.length!==2)return;const v=vp();if(!v)return;const a=e.touches[0],b=e.touches[1],r=v.getBoundingClientRect(),mx=(a.clientX+b.clientX)/2,my=(a.clientY+b.clientY)/2;if(mx<r.left||mx>r.right||my<r.top||my>r.bottom)return;
     e.preventDefault();e.stopImmediatePropagation();touchStart={d:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),z:canvasZoom||1,mx,my,sl:v.scrollLeft,st:v.scrollTop};canvasState.userZoomTouched=true;
   },{capture:true,passive:false});
-  window.addEventListener('touchmove',function(e){
+  window.addEventListener('touchmove',function(e){if(window.__STUDIA_V115_OWNS_GESTURES)return;
     if(true)return;
     if(!touchStart||e.touches.length!==2||!isEditor())return;const v=vp();if(!v)return;e.preventDefault();e.stopImmediatePropagation();const a=e.touches[0],b=e.touches[1],mx=(a.clientX+b.clientX)/2,my=(a.clientY+b.clientY)/2,d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),z=Math.max(.22,Math.min(3.2,touchStart.z*(d/touchStart.d)));
     zoomAt(z,mx,my);requestAnimationFrame(()=>{v.scrollLeft+=touchStart.mx-mx;v.scrollTop+=touchStart.my-my;touchStart.mx=mx;touchStart.my=my});
@@ -13129,7 +13031,7 @@ body.editorMode .cobj table{max-width:100%!important}
   window.renderCanvasInspector=function(){oldInspector();if(document.querySelector('#canvasQuickDrawer.open .mobileLayerList'))requestAnimationFrame(renderLayerList)};
 
   // Version marker.
-  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 112';document.title='Studia'},40);
+  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 115';document.title='Studia'},40);
 })();
 </script>
 
@@ -13382,11 +13284,11 @@ body.editorMode .cobj[contenteditable="true"],body.editorMode td[contenteditable
   try{fitCanvasStage=window.fitCanvasStage;fitCanvasToScreen=window.fitCanvasToScreen;v96ApplyZoom=window.v112ApplyZoom}catch(_){}
 
   // Real two-finger zoom + pan on iPhone. Single-finger object taps are deliberately left alone.
-  window.addEventListener('touchstart',function(e){
+  window.addEventListener('touchstart',function(e){if(window.__STUDIA_V115_OWNS_GESTURES)return;
     if(!inEditor()||!mobile()||e.touches.length!==2)return;const v=VP();if(!v)return;const a=e.touches[0],b=e.touches[1],m=localMid(a,b,v);if(m.x<0||m.y<0||m.x>v.clientWidth||m.y>v.clientHeight)return;
     e.preventDefault();e.stopImmediatePropagation();pinching=true;const z=phoneView.z||canvasZoom||1;pinch={d:Math.max(1,Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY)),z,x:phoneView.x,y:phoneView.y,wx:(m.x-phoneView.x)/z,wy:(m.y-phoneView.y)/z};canvasState.userZoomTouched=true;
   },{capture:true,passive:false});
-  window.addEventListener('touchmove',function(e){
+  window.addEventListener('touchmove',function(e){if(window.__STUDIA_V115_OWNS_GESTURES)return;
     if(!pinch||!inEditor()||e.touches.length!==2)return;const v=VP();if(!v)return;e.preventDefault();e.stopImmediatePropagation();const a=e.touches[0],b=e.touches[1],m=localMid(a,b,v),d=Math.max(1,Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY)),z=clamp(pinch.z*(d/pinch.d),.16,3.5);
     phoneView.z=z;phoneView.x=m.x-pinch.wx*z;phoneView.y=m.y-pinch.wy*z;phoneView.touched=true;applyPhoneView();
   },{capture:true,passive:false});
@@ -13396,11 +13298,11 @@ body.editorMode .cobj[contenteditable="true"],body.editorMode td[contenteditable
 
   // Adobe-like desktop navigation.
   window.addEventListener('keydown',e=>{if(e.key==='Alt')altDown=true},true);window.addEventListener('keyup',e=>{if(e.key==='Alt')altDown=false},true);window.addEventListener('blur',()=>{altDown=false;desktopPan=null});
-  window.addEventListener('wheel',function(e){
+  window.addEventListener('wheel',function(e){if(window.__STUDIA_V115_OWNS_GESTURES)return;
     if(!inEditor()||mobile()||!(e.altKey||altDown))return;const v=VP();if(!v)return;const r=v.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;
     e.preventDefault();e.stopImmediatePropagation();const focus={x:e.clientX-r.left,y:e.clientY-r.top},factor=Math.exp(-e.deltaY*.0024);applyDesktopZoom((canvasZoom||1)*factor,true,focus);
   },{capture:true,passive:false});
-  window.addEventListener('mousedown',function(e){if(!inEditor()||mobile()||e.button!==1)return;const v=VP();if(!v)return;const r=v.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;e.preventDefault();e.stopImmediatePropagation();desktopPan={x:e.clientX,y:e.clientY,l:v.scrollLeft,t:v.scrollTop};v.classList.add('v108Pan')},true);
+  window.addEventListener('mousedown',function(e){if(window.__STUDIA_V115_OWNS_GESTURES)return;if(!inEditor()||mobile()||e.button!==1)return;const v=VP();if(!v)return;const r=v.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;e.preventDefault();e.stopImmediatePropagation();desktopPan={x:e.clientX,y:e.clientY,l:v.scrollLeft,t:v.scrollTop};v.classList.add('v108Pan')},true);
   window.addEventListener('mousemove',function(e){if(!desktopPan)return;const v=VP();if(!v)return;v.scrollLeft=desktopPan.l-(e.clientX-desktopPan.x);v.scrollTop=desktopPan.t-(e.clientY-desktopPan.y)},true);
   const endDesk=()=>{desktopPan=null;VP()?.classList.remove('v108Pan')};window.addEventListener('mouseup',endDesk,true);window.addEventListener('auxclick',e=>{if(inEditor()&&e.button===1)e.preventDefault()},true);
 
@@ -13475,7 +13377,7 @@ body.editorMode .cobj[contenteditable="true"],body.editorMode td[contenteditable
   window.renderLayerList=function(){baseLayers();const m=document.querySelector('#canvasQuickDrawer.open .mobileLayerList');if(m){m.querySelectorAll('button').forEach(b=>{b.style.minWidth='0';b.style.maxWidth='none'})}};
   try{renderLayerList=window.renderLayerList}catch(_){}
 
-  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 112';document.title='Studia'},40);
+  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 115';document.title='Studia'},40);
 })();
 </script>
 <!-- ===== /Studia V112 hard stabilization ===== -->
@@ -13486,5 +13388,479 @@ body.editorMode .cobj[contenteditable="true"],body.editorMode td[contenteditable
   body:has(#view-subjects.active) .app:before,body:has(#view-subjects.active) .app:after,
   body:has(#view-subject-detail.active) .app:before,body:has(#view-subject-detail.active) .app:after,
   body:has(#view-topic-detail.active) .app:before,body:has(#view-topic-detail.active) .app:after{display:none!important}
+}
+</style>
+
+<!-- ===== Studia V113 editor + topic stabilization + encrypted device sync ===== -->
+<style id="v113-stability-style">
+html,body{overflow-x:hidden!important}
+
+/* Topic detail is its own contained screen on phones: no sideways / outer-page scrolling. */
+@media(max-width:899px){
+  body.v113TopicLock{height:100dvh!important;overflow:hidden!important;overscroll-behavior:none!important}
+  body.v113TopicLock>.app{height:100dvh!important;max-width:none!important;width:100%!important;margin:0!important;padding:0!important;overflow:hidden!important}
+  body.v113TopicLock #view-topic-detail.active{
+    position:fixed!important;inset:0!important;left:0!important;right:0!important;top:0!important;bottom:0!important;
+    width:100%!important;max-width:100%!important;height:100dvh!important;margin:0!important;
+    padding:max(18px,env(safe-area-inset-top)) 14px calc(104px + env(safe-area-inset-bottom))!important;
+    overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior-y:contain!important;overscroll-behavior-x:none!important;
+    -webkit-overflow-scrolling:touch!important;background:transparent!important;
+  }
+  body.v113TopicLock #topicDetail,body.v113TopicLock .v102TopicDetail,body.v113TopicLock .v103TopicDetail,
+  body.v113TopicLock .v102TopicResourceList{width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important;padding-left:0!important;padding-right:0!important}
+  body.v113TopicLock .v102TopicPageHead{width:100%!important;max-width:100%!important;min-width:0!important;display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:8px!important;align-items:center!important}
+  body.v113TopicLock .v102SubjectIdentity{min-width:0!important;display:grid!important;grid-template-columns:48px minmax(0,1fr)!important;gap:10px!important;align-items:center!important}
+  body.v113TopicLock .v102SubjectIdentity>div{min-width:0!important}
+  body.v113TopicLock .v102TopicPageHead h2{font-size:clamp(34px,10vw,46px)!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  body.v113TopicLock .v103HeadActions{min-width:0!important;gap:6px!important}
+  body.v113TopicLock .v102OnlyPlus{padding:10px 11px!important;white-space:nowrap!important}
+  body.v113TopicLock .v102ResourceCard{width:100%!important;max-width:100%!important;min-width:0!important;grid-template-columns:52px minmax(0,1fr) 18px!important;gap:10px!important;padding:11px!important;overflow:hidden!important}
+  body.v113TopicLock .v103ResourceText,body.v113TopicLock .v103ResourceText>*{min-width:0!important;max-width:100%!important}
+
+  /* The editor is a fixed workspace; the document itself never pushes the web page around. */
+  body.editorMode{height:100dvh!important;overflow:hidden!important;overscroll-behavior:none!important}
+  body.editorMode>.app{width:100%!important;height:100dvh!important;max-width:none!important;margin:0!important;padding:0!important;overflow:hidden!important}
+  body.editorMode #view-sheet-editor.active{position:fixed!important;inset:0!important;width:100%!important;height:100dvh!important;margin:0!important;padding:0!important;overflow:hidden!important}
+  body.editorMode .canvasEditorShell{position:fixed!important;inset:0!important;width:100%!important;height:100dvh!important;min-height:0!important;margin:0!important;padding:0!important;display:block!important;overflow:hidden!important;background:radial-gradient(circle at 8% 15%,rgba(247,207,216,.38),transparent 25rem),radial-gradient(circle at 92% 74%,rgba(226,239,205,.43),transparent 26rem),#fff9f6!important}
+
+  body.editorMode .canvasTopbar{
+    position:fixed!important;left:8px!important;right:8px!important;top:calc(env(safe-area-inset-top) + 5px)!important;height:64px!important;min-height:64px!important;z-index:950!important;
+    margin:0!important;padding:6px!important;border-radius:18px!important;display:grid!important;
+    grid-template-columns:40px minmax(58px,1fr) auto auto!important;align-items:center!important;gap:5px!important;flex-wrap:nowrap!important;
+    background:rgba(255,253,250,.97)!important;border:1px solid #ead8d2!important;box-shadow:0 9px 25px rgba(94,65,57,.09)!important;backdrop-filter:blur(18px)!important;
+  }
+  body.editorMode .canvasTopbar>.editorIcon:first-child{width:40px!important;height:40px!important}
+  body.editorMode .editorTitle{min-width:0!important;text-align:left!important;display:grid!important;gap:1px!important;line-height:1.05!important}
+  body.editorMode .editorTitle b{font-size:11px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  body.editorMode .editorTitle span{font-size:7.5px!important;white-space:normal!important;line-height:1.05!important;max-height:18px!important;overflow:hidden!important}
+  body.editorMode .historyBar,body.editorMode .editorActions{display:flex!important;align-items:center!important;gap:3px!important;min-width:0!important}
+  body.editorMode .historyBar button,body.editorMode .editorActions button{width:36px!important;height:40px!important;min-width:36px!important;min-height:40px!important;padding:0!important;border-radius:11px!important}
+  body.editorMode .editorActions button[title="Exportieren"]{display:none!important}
+  body.editorMode .pageTopLabel{display:none!important}
+  body.editorMode .canvasTopbar svg{width:19px!important;height:19px!important}
+
+  body.editorMode #canvasViewport{
+    position:fixed!important;left:0!important;right:0!important;top:calc(env(safe-area-inset-top) + 74px)!important;
+    bottom:calc(88px + env(safe-area-inset-bottom))!important;width:auto!important;height:auto!important;
+    margin:0!important;padding:0!important;max-height:none!important;min-height:0!important;overflow:hidden!important;
+    border:0!important;border-radius:0!important;box-shadow:none!important;touch-action:none!important;overscroll-behavior:none!important;
+    background:radial-gradient(circle at 12% 14%,rgba(248,210,218,.32),transparent 24rem),radial-gradient(circle at 88% 80%,rgba(228,239,208,.42),transparent 25rem),#fffaf7!important;
+  }
+  body.editorMode #v96PanSurface{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;margin:0!important;padding:0!important;display:block!important;overflow:visible!important}
+  body.editorMode #canvasStage{position:absolute!important;left:0!important;top:0!important;margin:0!important;transform-origin:0 0!important;will-change:transform!important;box-shadow:0 14px 34px rgba(95,64,56,.13)!important;border:1px solid #e5d8d3!important;border-radius:3px!important}
+  body.editorMode #v96PageStrip,body.editorMode .v91ZoomPill{display:none!important}
+
+  body.editorMode .canvasQuickNav{
+    position:fixed!important;left:10px!important;right:10px!important;bottom:calc(7px + env(safe-area-inset-bottom))!important;top:auto!important;
+    width:auto!important;height:72px!important;min-height:72px!important;margin:0!important;padding:5px 6px!important;z-index:910!important;
+    display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:3px!important;overflow:hidden!important;
+    border-radius:22px!important;background:rgba(255,253,250,.98)!important;border:1px solid #ead8d2!important;box-shadow:0 11px 28px rgba(91,65,57,.12)!important;backdrop-filter:blur(18px)!important;
+  }
+  body.editorMode .canvasQuickNav button{width:100%!important;min-width:0!important;height:60px!important;min-height:60px!important;margin:0!important;padding:3px 1px!important;border-radius:13px!important;display:grid!important;place-items:center!important;align-content:center!important;gap:2px!important;overflow:hidden!important}
+  body.editorMode .canvasQuickNav button .editorNavIcon{width:23px!important;height:23px!important;display:grid!important;place-items:center!important}
+  body.editorMode .canvasQuickNav button .editorNavIcon svg{width:20px!important;height:20px!important}
+  body.editorMode .canvasQuickNav button>span:last-child{font-size:8px!important;line-height:1!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;max-width:100%!important}
+
+  body.editorMode #canvasQuickDrawer.open{
+    position:fixed!important;left:9px!important;right:9px!important;bottom:calc(87px + env(safe-area-inset-bottom))!important;top:auto!important;
+    width:auto!important;height:min(56dvh,500px)!important;max-height:min(56dvh,500px)!important;min-height:0!important;
+    margin:0!important;padding:8px 10px 10px!important;z-index:920!important;display:flex!important;flex-direction:column!important;
+    overflow:hidden!important;border-radius:23px!important;background:rgba(255,251,248,.985)!important;border:1px solid #ead6d0!important;box-shadow:0 18px 42px rgba(93,62,54,.15)!important;
+  }
+  body.editorMode.v112TextEditing #canvasQuickDrawer.open{bottom:calc(7px + env(safe-area-inset-bottom))!important;height:min(65dvh,575px)!important;max-height:min(65dvh,575px)!important}
+  body.editorMode.v112TextEditing .canvasQuickNav{display:none!important}
+  body.editorMode #canvasQuickDrawer.open .mobileDrawerSection,
+  body.editorMode #canvasQuickDrawer.open .mobileTextLibrary,
+  body.editorMode #canvasQuickDrawer.open .mobilePagePanel,
+  body.editorMode #canvasQuickDrawer.open .mobileTextModeContent{min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior:contain!important;touch-action:pan-y!important}
+  body.editorMode #canvasQuickDrawer.open .mobileTextEditor{min-height:0!important;height:100%!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
+  body.editorMode #canvasQuickDrawer.open .mobileTextModeContent{flex:1 1 auto!important}
+  body.editorMode #canvasQuickDrawer.open .mobileTextModeTabs{flex:0 0 auto!important;position:relative!important;bottom:auto!important;margin-top:6px!important}
+
+  body.editorMode #mobileSelectionTools{position:fixed!important;left:auto!important;right:12px!important;top:auto!important;bottom:calc(88px + env(safe-area-inset-bottom))!important;transform:none!important;padding:3px!important;gap:2px!important;border-radius:13px!important;z-index:935!important}
+  body.editorMode #mobileSelectionTools button{width:29px!important;height:29px!important;min-width:29px!important;min-height:29px!important;padding:0!important}
+  body.editorMode.editorDrawerOpen #mobileSelectionTools,body.editorMode.v112TextEditing #mobileSelectionTools{display:none!important}
+
+  /* Selected text never bleeds out of its real box. */
+  body.editorMode .cobj.textObj,body.editorMode .cobj.calloutObj,body.editorMode .cobj.taskObj,body.editorMode .cobj.merkeObj{max-width:none!important;overflow:hidden!important;overflow-wrap:anywhere!important;word-break:break-word!important}
+  body.editorMode .cobj[contenteditable="true"]{overflow:auto!important;-webkit-overflow-scrolling:touch!important}
+}
+
+/* Desktop editor: compact three-panel layout where every left tab is actually clickable. */
+@media(min-width:900px){
+  body.editorMode{overflow:hidden!important;background:radial-gradient(circle at 5% 12%,rgba(247,205,214,.48),transparent 28rem),radial-gradient(circle at 96% 80%,rgba(226,240,205,.54),transparent 32rem),linear-gradient(135deg,#fff7f5,#fffdf8 54%,#f8f6e8)!important}
+  body.editorMode>.app{width:100vw!important;height:100vh!important;max-width:none!important;margin:0!important;padding:0!important;overflow:hidden!important}
+  body.editorMode #view-sheet-editor.active{width:100%!important;height:100vh!important;margin:0!important;padding:0!important;overflow:hidden!important}
+  body.editorMode .canvasEditorShell{width:100%!important;height:100vh!important;max-width:none!important;margin:0!important;display:grid!important;grid-template-columns:228px minmax(0,1fr) 314px!important;grid-template-rows:64px minmax(0,1fr) 72px!important;gap:0!important;overflow:hidden!important;background:transparent!important}
+  body.editorMode .canvasTopbar{grid-column:1/-1!important;grid-row:1!important;margin:7px 9px 0!important;padding:6px 8px!important;border-radius:17px!important;min-width:0!important}
+  body.editorMode .v102DesktopLeft{grid-column:1!important;grid-row:2/4!important;margin:8px 0 8px 9px!important;border-radius:18px!important;overflow:hidden!important;display:grid!important;grid-template-rows:auto minmax(0,1fr)!important;background:rgba(255,253,250,.95)!important;border:1px solid #ead8d2!important;box-shadow:0 10px 28px rgba(103,72,62,.07)!important}
+  body.editorMode .v102DesktopLeft>.canvasQuickNav{position:relative!important;inset:auto!important;width:100%!important;height:auto!important;margin:0!important;padding:7px!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:5px!important;overflow:visible!important;border:0!important;border-bottom:1px solid #efdfda!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+  body.editorMode .v102DesktopLeft>.canvasQuickNav button{width:100%!important;min-width:0!important;height:52px!important;min-height:52px!important;margin:0!important;padding:5px 3px!important;border-radius:12px!important;pointer-events:auto!important;display:grid!important;place-items:center!important;gap:2px!important}
+  body.editorMode .v102DesktopLeft>.canvasQuickNav button .editorNavIcon{width:21px!important;height:21px!important}.v102DesktopLeft>.canvasQuickNav svg{width:19px!important;height:19px!important}
+  body.editorMode .v102DesktopLeft>#canvasQuickDrawer{position:relative!important;inset:auto!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;margin:0!important;padding:9px!important;display:block!important;overflow-y:auto!important;overflow-x:hidden!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;pointer-events:auto!important}
+  body.editorMode .v113PaletteGroup{display:grid!important;gap:6px!important;margin:0 0 11px!important}.v113PaletteTitle{font-size:9px!important;font-weight:950!important;letter-spacing:.12em!important;text-transform:uppercase!important;color:#ad887d!important}
+  body.editorMode .v113PaletteGrid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important}
+  body.editorMode .v113PaletteGrid button{min-width:0!important;min-height:58px!important;padding:6px 4px!important;border:1px solid #eddad4!important;border-radius:12px!important;background:#fffdfb!important;color:#775f57!important;display:grid!important;place-items:center!important;align-content:center!important;gap:4px!important;font-size:9px!important;font-weight:900!important;pointer-events:auto!important}
+  body.editorMode .v113PaletteGrid button:hover{background:#fae9e7!important;border-color:#e8c6c2!important;transform:translateY(-1px)!important}
+  body.editorMode .v113PaletteIcon{width:23px!important;height:23px!important;display:grid!important;place-items:center!important;font-size:18px!important}.v113PaletteIcon svg{width:21px!important;height:21px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.7!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+  body.editorMode #canvasViewport{grid-column:2!important;grid-row:2!important;position:relative!important;margin:8px!important;padding:0!important;overflow:auto!important;min-height:0!important;max-height:none!important;border:1px solid #ead8d2!important;border-radius:19px!important;background:radial-gradient(circle at 8% 12%,rgba(248,208,216,.36),transparent 22rem),radial-gradient(circle at 92% 82%,rgba(227,240,206,.48),transparent 26rem),#fffaf7!important;cursor:default!important;overscroll-behavior:contain!important}
+  body.editorMode #canvasViewport.v113Pan{cursor:grabbing!important;user-select:none!important}
+  body.editorMode #v96PanSurface{position:relative!important;margin:0!important;padding:0!important;display:block!important}
+  body.editorMode #canvasStage{position:absolute!important;margin:0!important;transform-origin:0 0!important;will-change:transform!important}
+  body.editorMode #desktopEditorSidebar{grid-column:3!important;grid-row:2/4!important;margin:8px 9px 8px 0!important;width:auto!important;min-width:0!important;max-width:none!important;overflow-y:auto!important;overflow-x:hidden!important;border-radius:18px!important;background:rgba(255,253,250,.95)!important;border:1px solid #ead8d2!important;box-shadow:0 10px 28px rgba(103,72,62,.07)!important}
+  body.editorMode #desktopEditorSidebar *,body.editorMode #canvasInspector *{box-sizing:border-box!important;min-width:0!important;max-width:100%!important}
+  body.editorMode #desktopEditorSidebar .objectPanel{padding:10px!important;overflow:hidden!important}
+  body.editorMode #desktopEditorSidebar .objectPanelGrid,body.editorMode #desktopEditorSidebar .positionGrid,body.editorMode #desktopEditorSidebar .vectorControls{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important}
+  body.editorMode #desktopEditorSidebar input,body.editorMode #desktopEditorSidebar select,body.editorMode #desktopEditorSidebar textarea{width:100%!important;max-width:100%!important;min-height:34px!important;font-size:10px!important}
+  body.editorMode #v96PageStrip{grid-column:2!important;grid-row:3!important;margin:0 8px 8px!important;min-width:0!important;border-radius:16px!important;padding:7px 9px!important;overflow-x:auto!important}
+  body.editorMode .vectorTouchProxy,body.editorMode .shapeHit{cursor:grab!important}
+  body.editorMode .vectorTouchProxy:active,body.editorMode .shapeHit:active{cursor:grabbing!important}
+  .graphModal,.visualGraphFunctionModal,.formulaModal,.visualFormulaModal{width:min(1120px,94vw)!important;max-width:1120px!important;max-height:88vh!important;overflow:auto!important}
+}
+
+/* Sync panel */
+.v113SyncHead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.v113SyncIcon{width:44px;height:44px;border-radius:14px;background:#f4e7f7;border:1px solid #ead8ef;color:#9875a4;display:grid;place-items:center;font-size:22px;font-weight:900;flex:0 0 44px}
+.v113SyncStatus{margin-top:12px;border:1px solid #eadbd6;border-radius:14px;background:#fffdfb;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px}.v113SyncStatus b{font-size:11px}.v113SyncStatus span{font-size:8.5px;color:#9b8178;text-align:right}.v113SyncStatus.ok{background:#f4f9ed;border-color:#d8e5c5}.v113SyncStatus.busy{background:#fff8ea;border-color:#efdcb6}.v113SyncStatus.bad{background:#fff1ef;border-color:#efcfcb}
+.v113SyncGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.v113SyncGrid .full{grid-column:1/-1}.v113SyncGrid label{margin:0}.v113SyncGrid input{min-height:40px!important}
+.v113SyncButtons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:10px}.v113SyncButtons button{margin:0!important;min-height:40px!important;font-size:9px!important}.v113SyncNote{margin-top:9px!important;line-height:1.45!important}
+@media(max-width:600px){.v113SyncGrid,.v113SyncButtons{grid-template-columns:1fr}.v113SyncGrid .full{grid-column:auto}.v113SyncStatus{align-items:flex-start;flex-direction:column}.v113SyncStatus span{text-align:left}}
+</style>
+
+<script id="v113-stability-script">
+(function(){
+  const mobile=()=>window.innerWidth<900;
+  const inEditor=()=>document.body.classList.contains('editorMode')&&!!document.querySelector('#view-sheet-editor.active');
+  const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+  const stage=()=>document.getElementById('canvasStage');
+  const viewport=()=>document.getElementById('canvasViewport');
+  const surface=()=>document.getElementById('v96PanSurface') || (typeof v96EnsurePanSurface==='function'?v96EnsurePanSurface():null);
+
+  // Critical fix: V63 had transform:none!important; zoom state changed but the page never visually scaled.
+  // Every zoom API now writes an inline !important transform, so legacy CSS cannot block it again.
+  function setStageTransform(value){const st=stage();if(st)st.style.setProperty('transform',value,'important')}
+  function setScaleLabel(z){const a=document.getElementById('canvasZoomLabel');if(a)a.textContent=Math.round(z*100)+'%';const b=document.getElementById('v91ZoomLabel');if(b)b.textContent=Math.round(z*100)+'%'}
+  function applyDesktopZoom(value,preserve=true,focus=null){
+    const vp=viewport(),st=stage(),sf=surface();if(!vp||!st||!sf)return;
+    const old=clamp(Number(st.dataset.scale)||window.canvasZoom||1,.15,4),z=clamp(Number(value)||1,.18,3.5),g=38;
+    const fx=focus?.x??vp.clientWidth/2,fy=focus?.y??vp.clientHeight/2;
+    let wx=null,wy=null;if(preserve){wx=(vp.scrollLeft+fx-g)/old;wy=(vp.scrollTop+fy-g)/old}
+    window.canvasZoom=z;canvasState.userZoomTouched=true;st.dataset.scale=String(z);st.style.zoom='';st.style.left=g+'px';st.style.top=g+'px';setStageTransform(`scale(${z})`);st.style.transformOrigin='0 0';
+    sf.style.width=(canvasPageWidth()*z+g*2)+'px';sf.style.height=(canvasPageHeight()*z+g*2)+'px';setScaleLabel(z);
+    if(preserve&&wx!=null)requestAnimationFrame(()=>{vp.scrollLeft=Math.max(0,g+wx*z-fx);vp.scrollTop=Math.max(0,g+wy*z-fy)});
+  }
+  function fitDesktop(){const vp=viewport();if(!vp)return;const z=clamp(Math.min((vp.clientWidth-76)/canvasPageWidth(),(vp.clientHeight-76)/canvasPageHeight()),.18,1);applyDesktopZoom(z,false);requestAnimationFrame(()=>{vp.scrollLeft=0;vp.scrollTop=0})}
+  window.v113ApplyDesktopZoom=applyDesktopZoom;
+  if(!mobile()){
+    window.v96ApplyZoom=applyDesktopZoom;window.v108ApplyZoom=applyDesktopZoom;window.v112ApplyZoom=applyDesktopZoom;
+    try{v96ApplyZoom=applyDesktopZoom}catch(_){ }
+  }
+
+  // Alt + wheel and middle-mouse hand: bind directly to the real viewport after every editor render.
+  function bindDesktopNavigation(){
+    const vp=viewport();if(!vp||vp.dataset.v113Nav==='1'||mobile())return;vp.dataset.v113Nav='1';let pan=null;
+    vp.addEventListener('wheel',e=>{if(window.__STUDIA_V115_OWNS_GESTURES)return;if(!e.altKey)return;e.preventDefault();e.stopPropagation();const r=vp.getBoundingClientRect(),focus={x:e.clientX-r.left,y:e.clientY-r.top};applyDesktopZoom((window.canvasZoom||1)*Math.exp(-e.deltaY*.0022),true,focus)},{passive:false});
+    vp.addEventListener('mousedown',e=>{if(window.__STUDIA_V115_OWNS_GESTURES)return;if(e.button!==1)return;e.preventDefault();e.stopPropagation();pan={x:e.clientX,y:e.clientY,l:vp.scrollLeft,t:vp.scrollTop};vp.classList.add('v113Pan')},true);
+    window.addEventListener('mousemove',e=>{if(!pan)return;vp.scrollLeft=pan.l-(e.clientX-pan.x);vp.scrollTop=pan.t-(e.clientY-pan.y)},true);
+    const stop=()=>{pan=null;vp.classList.remove('v113Pan')};window.addEventListener('mouseup',stop,true);window.addEventListener('blur',stop);
+    vp.addEventListener('auxclick',e=>{if(e.button===1)e.preventDefault()});
+  }
+
+  // Object movement uses raw pointer deltas / current visual scale. No more jumping when the canvas is zoomed.
+  window.startDragObject=function(e,oid){
+    const o=canvasState.objects.find(x=>x.id===oid);if(!o||o.locked)return;e.preventDefault?.();e.stopPropagation?.();
+    const st=stage(),sc=Math.max(.01,Number(st?.dataset.scale)||window.canvasZoom||1),sx=e.clientX,sy=e.clientY,ox=o.x,oy=o.y;let moved=false;
+    const move=ev=>{const dx=(ev.clientX-sx)/sc,dy=(ev.clientY-sy)/sc;if(Math.hypot(dx,dy)>.5)moved=true;const rawX=Math.max(0,Math.min(canvasPageWidth()-o.w,ox+dx)),rawY=Math.max(0,Math.min(canvasPageHeight()-o.h,oy+dy)),sn=snapObjectPosition(o,rawX,rawY);o.x=sn.x;o.y=sn.y;const el=document.querySelector(`.cobj[data-id="${oid}"]`);if(el){el.style.left=o.x+'px';el.style.top=o.y+'px'}markCanvasDirty(false)};
+    const up=()=>{clearGuides();window.removeEventListener('pointermove',move,true);window.removeEventListener('pointerup',up,true);window.removeEventListener('pointercancel',up,true);if(moved)pushHistory();renderCanvasInspector?.()};
+    window.addEventListener('pointermove',move,true);window.addEventListener('pointerup',up,true);window.addEventListener('pointercancel',up,true);
+  };
+  try{startDragObject=window.startDragObject}catch(_){ }
+
+  window.startVectorDrag=function(e,vid){
+    const v=canvasState.vectors.find(x=>x.id===vid);if(!v||v.locked)return;e.preventDefault?.();e.stopPropagation?.();
+    const st=stage(),sc=Math.max(.01,Number(st?.dataset.scale)||window.canvasZoom||1),sx=e.clientX,sy=e.clientY,snap=JSON.parse(JSON.stringify(v));let moved=false;
+    const move=ev=>{const dx=(ev.clientX-sx)/sc,dy=(ev.clientY-sy)/sc;if(Math.hypot(dx,dy)>.5)moved=true;if(v.type==='rect'){v.x=snap.x+dx;v.y=snap.y+dy}else if(v.type==='ellipse'){v.cx=snap.cx+dx;v.cy=snap.cy+dy}else if(v.points){v.points=snap.points.map(pt=>[pt[0]+dx,pt[1]+dy])}renderVectors();markCanvasDirty(false)};
+    const up=()=>{window.removeEventListener('pointermove',move,true);window.removeEventListener('pointerup',up,true);window.removeEventListener('pointercancel',up,true);if(moved)pushHistory()};
+    window.addEventListener('pointermove',move,true);window.addEventListener('pointerup',up,true);window.addEventListener('pointercancel',up,true);
+  };
+  try{startVectorDrag=window.startVectorDrag}catch(_){ }
+
+  // Real vector line + smooth curve tools. They are normal vectors, so move/resize/layers all work.
+  window.addVectorLine=function(){
+    const v={id:id(),z:nextCanvasZ(),type:'path',points:[[210,410],[585,410]],fill:'none',stroke:'#8d7369',strokeWidth:4,dash:'solid',closed:false,rotation:0,locked:false};
+    canvasState.vectors.push(v);canvasState.vectorTool='select';selectVector(v.id);pushHistory();markCanvasDirty();cuteToast?.('Linie eingefügt ♡');
+  };
+  window.addVectorCurve=function(){
+    const p0=[205,470],p1=[300,300],p2=[495,300],p3=[590,470],pts=[];
+    for(let i=0;i<=28;i++){const t=i/28,u=1-t,x=u*u*u*p0[0]+3*u*u*t*p1[0]+3*u*t*t*p2[0]+t*t*t*p3[0],y=u*u*u*p0[1]+3*u*u*t*p1[1]+3*u*t*t*p2[1]+t*t*t*p3[1];pts.push([x,y])}
+    const v={id:id(),z:nextCanvasZ(),type:'path',points:pts,fill:'none',stroke:'#8d7369',strokeWidth:4,dash:'solid',closed:false,rotation:0,locked:false,smoothCurve:true};
+    canvasState.vectors.push(v);canvasState.vectorTool='select';selectVector(v.id);pushHistory();markCanvasDirty();cuteToast?.('Kurve eingefügt ♡');
+  };
+
+  // Add the new line/curve tools to the phone Elements drawer every time it opens.
+  function patchMobileElements(){
+    if(!mobile())return;const d=document.getElementById('canvasQuickDrawer');if(!d?.classList.contains('open'))return;
+    const section=d.querySelector('.mobileDrawerSection .mobileToolGrid');if(!section||section.querySelector('[data-v113-line]'))return;
+    const line=document.createElement('button');line.dataset.v113Line='1';line.innerHTML='<b>—</b><span>Linie</span>';line.onclick=()=>addVectorLine();
+    const curve=document.createElement('button');curve.dataset.v113Curve='1';curve.innerHTML='<b>⌁</b><span>Kurve</span>';curve.onclick=()=>addVectorCurve();
+    section.append(line,curve);
+  }
+
+  // Stable toolbar state: it may only disappear while the text-edit sub-toolbar intentionally replaces it.
+  function reconcileMobileChrome(){
+    if(!inEditor()||!mobile())return;const nav=document.querySelector('.canvasQuickNav'),drawer=document.getElementById('canvasQuickDrawer');if(!nav)return;
+    const open=!!drawer?.classList.contains('open');if(!open){document.body.classList.remove('editorDrawerOpen','v112TextEditing');nav.style.setProperty('display','grid','important')}
+    else if(document.body.classList.contains('v112TextEditing'))nav.style.setProperty('display','none','important');
+    else nav.style.setProperty('display','grid','important');
+    const tools=document.getElementById('mobileSelectionTools');if(tools&&open)tools.style.setProperty('display','none','important');else if(tools)tools.style.removeProperty('display');
+  }
+  const chromeObserver=new MutationObserver(()=>requestAnimationFrame(reconcileMobileChrome));chromeObserver.observe(document.body,{attributes:true,attributeFilter:['class'],subtree:false});
+  const drawerObserverTarget=document.getElementById('canvasQuickDrawer');if(drawerObserverTarget)chromeObserver.observe(drawerObserverTarget,{attributes:true,attributeFilter:['class']});
+
+  const prevOpenGroup=window.editorOpenGroup;
+  window.editorOpenGroup=function(group,btn){const r=prevOpenGroup(group,btn);requestAnimationFrame(()=>{patchMobileElements();reconcileMobileChrome()});return r};
+  try{editorOpenGroup=window.editorOpenGroup}catch(_){ }
+  const prevCloseDrawer=window.closeEditorDrawer;
+  window.closeEditorDrawer=function(){const r=prevCloseDrawer();document.body.classList.remove('v112TextEditing');requestAnimationFrame(reconcileMobileChrome);return r};
+  try{closeEditorDrawer=window.closeEditorDrawer}catch(_){ }
+
+  // Desktop left palette: five reliable modes instead of stale/overlapping click layers.
+  const PICON={
+    text:'<svg viewBox="0 0 24 24"><path d="M5 5h14M12 5v14M8.5 19h7"/></svg>',
+    rect:'<svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2"/></svg>',
+    image:'<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8" cy="9" r="2"/><path d="m5 18 5-5 3 3 2-2 4 4"/></svg>',
+    table:'<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 4v16M15 4v16"/></svg>',
+    line:'<svg viewBox="0 0 24 24"><path d="M4 17 20 7"/></svg>',
+    curve:'<svg viewBox="0 0 24 24"><path d="M4 17c4-12 12-12 16 0"/></svg>',
+    formula:'<svg viewBox="0 0 24 24"><path d="M17 5H8l5 7-5 7h9"/></svg>',
+    graph:'<svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16M7 15l4-5 3 2 5-6"/></svg>',
+    page:'<svg viewBox="0 0 24 24"><path d="M7 3h8l3 3v15H7zM15 3v4h3"/></svg>',
+    layers:'<svg viewBox="0 0 24 24"><path d="m12 4 8 4-8 4-8-4zM4 12l8 4 8-4M4 16l8 4 8-4"/></svg>',
+    template:'<svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>',
+    pen:'<svg viewBox="0 0 24 24"><path d="m4 20 4-1 10-10-3-3L5 16zM14 7l3 3"/></svg>'
+  };
+  const pbtn=(label,icon,action)=>`<button onclick="${action}"><span class="v113PaletteIcon">${PICON[icon]||PICON.rect}</span><span>${label}</span></button>`;
+  function elementsPalette(){return `<div class="v113PaletteGroup"><div class="v113PaletteTitle">Text & Inhalt</div><div class="v113PaletteGrid">${pbtn('Textfeld','text','addCanvasTextBox()')}${pbtn('Checkliste','page','addCanvasChecklist()')}${pbtn('Bild / Datei','image','openCanvasMediaPicker()')}${pbtn('Tabelle','table','openTableDialog()')}</div></div><div class="v113PaletteGroup"><div class="v113PaletteTitle">Formen & Linien</div><div class="v113PaletteGrid">${pbtn('Rechteck','rect',"addVectorShape('rect')")}${pbtn('Kreis','rect',"addVectorShape('ellipse')")}${pbtn('Dreieck','rect',"addVectorShape('triangle')")}${pbtn('Linie','line','addVectorLine()')}${pbtn('Kurve','curve','addVectorCurve()')}${pbtn('Freihand','pen',"setVectorTool('pen')")}</div></div><div class="v113PaletteGroup"><div class="v113PaletteTitle">Mathematik</div><div class="v113PaletteGrid">${pbtn('Formel','formula','openFormulaDialog()')}${pbtn('Graph','graph','openGraphDialog()')}</div></div><div class="v113PaletteGroup"><div class="v113PaletteTitle">Papier & Deko</div><div class="v113PaletteGrid">${pbtn('Kariertes Papier','page',"addPaperSticker('grid')")}${pbtn('Liniertes Papier','page',"addPaperSticker('line')")}${pbtn('Klebeband','line','addTapeSticker()')}${pbtn('Sticker','template','toggleStickerPanel()')}</div></div>`}
+  function textPalette(){const presets=typeof canvasPresets==='function'?canvasPresets():[];return `<div class="v113PaletteGroup"><div class="v113PaletteTitle">Text</div><div class="v113PaletteGrid">${pbtn('Textfeld','text','addCanvasTextBox()')}${pbtn('Eigenes Format','template','createCustomStylePreset()')}</div></div><div class="v113PaletteGroup"><div class="v113PaletteTitle">Textformate</div><div class="v113PaletteGrid">${presets.map(x=>pbtn(x.name,'text',x.bundle?`insertSavedTextFormat('${x.id}')`:`addCanvasText('${x.id}')`)).join('')}</div></div>`}
+  function templatesPalette(){try{renderPageTemplates()}catch(_){}const source=document.getElementById('pageTemplatePicker')?.innerHTML||'';return `<div class="v113PaletteGroup"><div class="v113PaletteTitle">Vorlagen</div><div class="v113TemplateHost">${source}</div><div class="v113PaletteGrid" style="margin-top:8px">${pbtn('Aktuelle Seite speichern','template','saveCurrentPageTemplate()')}${pbtn('Verwalten','template','openPageTemplateManager()')}</div></div>`}
+  window.v113DesktopPanel=function(mode,btn){
+    if(mobile())return;const drawer=document.getElementById('canvasQuickDrawer'),nav=document.querySelector('.v102DesktopLeft>.canvasQuickNav')||document.querySelector('.canvasQuickNav');if(!drawer||!nav)return;
+    nav.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===btn||x.dataset.v113Mode===mode));drawer.classList.add('open');drawer.style.display='block';
+    if(mode==='elements')drawer.innerHTML=elementsPalette();
+    if(mode==='text')drawer.innerHTML=textPalette();
+    if(mode==='templates')drawer.innerHTML=templatesPalette();
+    if(mode==='pages'){drawer.innerHTML='<div class="v113PaletteGroup"><div class="v113PaletteTitle">Seiten</div><p class="small">Seiteneinstellungen und Reihenfolge findest du rechts.</p></div>';try{v102RightTab('page')}catch(_){}}
+    if(mode==='layers'){drawer.innerHTML='<div class="v113PaletteGroup"><div class="v113PaletteTitle">Ebenen</div><p class="small">Ebenen per Drag & Drop rechts sortieren.</p></div>';try{v102RightTab('layers')}catch(_){}}
+    localStorage.setItem('studia-v113-desktop-panel',mode);
+  };
+  function desktopInit(){
+    if(mobile()||!inEditor())return;const nav=document.querySelector('.v102DesktopLeft>.canvasQuickNav')||document.querySelector('.canvasQuickNav'),drawer=document.getElementById('canvasQuickDrawer');if(!nav||!drawer)return;
+    nav.innerHTML=`<button data-v113-mode="elements" onclick="v113DesktopPanel('elements',this)"><span class="editorNavIcon">${PICON.rect}</span><span>Elemente</span></button><button data-v113-mode="text" onclick="v113DesktopPanel('text',this)"><span class="editorNavIcon">${PICON.text}</span><span>Text</span></button><button data-v113-mode="templates" onclick="v113DesktopPanel('templates',this)"><span class="editorNavIcon">${PICON.template}</span><span>Vorlagen</span></button><button data-v113-mode="pages" onclick="v113DesktopPanel('pages',this)"><span class="editorNavIcon">${PICON.page}</span><span>Seiten</span></button><button data-v113-mode="layers" onclick="v113DesktopPanel('layers',this)"><span class="editorNavIcon">${PICON.layers}</span><span>Ebenen</span></button>`;
+    const mode=localStorage.getItem('studia-v113-desktop-panel')||'elements',button=nav.querySelector(`[data-v113-mode="${mode}"]`)||nav.querySelector('button');v113DesktopPanel(button?.dataset.v113Mode||'elements',button);bindDesktopNavigation();
+  }
+
+  // Topic view = one contained viewport. This also removes the old 100vw/left:50% gap hack.
+  function topicLock(){const on=!!document.querySelector('#view-topic-detail.active');document.body.classList.toggle('v113TopicLock',on&&!inEditor())}
+  const prevOpenView=window.openView;
+  window.openView=function(name){const r=prevOpenView(name);requestAnimationFrame(()=>{topicLock();reconcileMobileChrome()});return r};
+  try{openView=window.openView}catch(_){ }
+
+  // Reapply final editor wiring after all legacy render wrappers finish.
+  const prevRender=window.renderSheetEditor||renderSheetEditor;
+  window.renderSheetEditor=function(){
+    prevRender();setTimeout(()=>{desktopInit();bindDesktopNavigation();reconcileMobileChrome();if(!mobile())fitDesktop();},260);
+  };
+  try{renderSheetEditor=window.renderSheetEditor}catch(_){ }
+  window.addEventListener('resize',()=>setTimeout(()=>{topicLock();if(inEditor()){desktopInit();reconcileMobileChrome()}},100));
+
+  setTimeout(()=>{topicLock();if(inEditor()){desktopInit();reconcileMobileChrome()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 115';document.title='Studia'},120);
+})();
+</script>
+
+<script id="v113-device-sync-script">
+(function(){
+  const GIST_KEY='studia-sync-gist-id',AUTO_KEY='studia-sync-auto',LOCAL_TS='studia-sync-local-ts',LAST_PULL='studia-sync-last-pull';
+  const SDB='studia-sync-secrets-v1',SSTORE='settings';let syncTimer=null,syncBusy=false;
+  const enc=new TextEncoder(),dec=new TextDecoder();
+  function b64(bytes){let s='';bytes=new Uint8Array(bytes);for(let i=0;i<bytes.length;i+=0x8000)s+=String.fromCharCode(...bytes.subarray(i,i+0x8000));return btoa(s)}
+  function unb64(s){const x=atob(s),u=new Uint8Array(x.length);for(let i=0;i<x.length;i++)u[i]=x.charCodeAt(i);return u}
+  function syncStatus(title,text,cls=''){const el=document.getElementById('v113SyncStatus');if(!el)return;el.className='v113SyncStatus '+cls;el.querySelector('b').textContent=title;el.querySelector('span').textContent=text}
+  function secretDB(){return new Promise((res,rej)=>{const r=indexedDB.open(SDB,1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains(SSTORE))r.result.createObjectStore(SSTORE)};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+  async function secretGet(k){const db=await secretDB();return await new Promise((res,rej)=>{const r=db.transaction(SSTORE).objectStore(SSTORE).get(k);r.onsuccess=()=>res(r.result||'');r.onerror=()=>rej(r.error)})}
+  async function secretSet(k,v){const db=await secretDB();return await new Promise((res,rej)=>{const tx=db.transaction(SSTORE,'readwrite');tx.objectStore(SSTORE).put(v,k);tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error)})}
+  async function secretClear(){const db=await secretDB();return await new Promise((res,rej)=>{const tx=db.transaction(SSTORE,'readwrite');tx.objectStore(SSTORE).clear();tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error)})}
+  async function getCreds(){return{token:await secretGet('token'),pass:await secretGet('pass'),gist:localStorage.getItem(GIST_KEY)||''}}
+  async function saveCreds(token,pass,gist){await secretSet('token',token);await secretSet('pass',pass);if(gist)localStorage.setItem(GIST_KEY,gist)}
+  function eligibleLocalStorage(){const out={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(!k||k.startsWith('studia-sync-')||k.startsWith('studia-local-backup-')||k.startsWith('studia-daily-backup-'))continue;if(k.startsWith('schoolhub')||k.startsWith('schoolbloom')||k.startsWith('studia-'))out[k]=localStorage.getItem(k)}return out}
+  function blobURL(blob){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result||''));r.onerror=()=>rej(r.error);r.readAsDataURL(blob)})}
+  function urlBlob(url){const [h,b]=String(url||'').split(',');if(!b)return new Blob([]);const mime=(h.match(/data:([^;]+)/)||[])[1]||'application/octet-stream',bin=atob(b),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return new Blob([u],{type:mime})}
+  async function liveFiles(){try{const db=await dbOpen();return await new Promise((res,rej)=>{const r=db.transaction(STORE).objectStore(STORE).getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>rej(r.error)})}catch(_){return[]}}
+  async function pack(){const files=[];for(const f of await liveFiles())files.push({id:f.id,name:f.name||'',type:f.type||f.blob?.type||'',data:await blobURL(f.blob||new Blob([]))});return{format:'studia-sync-v1',ts:Date.now(),localStorage:eligibleLocalStorage(),files}}
+  async function derive(pass,salt){const base=await crypto.subtle.importKey('raw',enc.encode(pass),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:180000,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+  async function encryptPack(pkg,pass){const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12)),key=await derive(pass,salt),ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,enc.encode(JSON.stringify(pkg)));return JSON.stringify({v:1,salt:b64(salt),iv:b64(iv),data:b64(ct),ts:pkg.ts})}
+  async function decryptPack(raw,pass){const box=JSON.parse(raw),salt=unb64(box.salt),iv=unb64(box.iv),key=await derive(pass,salt),pt=await crypto.subtle.decrypt({name:'AES-GCM',iv},key,unb64(box.data));return JSON.parse(dec.decode(pt))}
+  async function gh(path,method='GET',body=null,token=''){const r=await fetch('https://api.github.com'+path,{method,headers:{'Accept':'application/vnd.github+json','Authorization':'Bearer '+token,'X-GitHub-Api-Version':'2022-11-28',...(body?{'Content-Type':'application/json'}:{})},body:body?JSON.stringify(body):undefined});if(!r.ok)throw new Error('GitHub '+r.status);return r.status===204?null:r.json()}
+  async function clearFiles(){try{const db=await dbOpen();await new Promise((res,rej)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).clear();tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error)})}catch(_){}}
+  async function applyPack(pkg){if(!pkg?.localStorage)throw new Error('Ungültige Sync-Datei');const keep={gist:localStorage.getItem(GIST_KEY)||'',auto:localStorage.getItem(AUTO_KEY)||'0'};Object.keys(localStorage).filter(k=>(k.startsWith('schoolhub')||k.startsWith('schoolbloom')||k.startsWith('studia-'))&&!k.startsWith('studia-sync-')&&!k.startsWith('studia-local-backup-')&&!k.startsWith('studia-daily-backup-')).forEach(k=>localStorage.removeItem(k));Object.entries(pkg.localStorage).forEach(([k,v])=>localStorage.setItem(k,String(v)));if(keep.gist)localStorage.setItem(GIST_KEY,keep.gist);localStorage.setItem(AUTO_KEY,keep.auto);localStorage.setItem(LOCAL_TS,String(pkg.ts||Date.now()));await clearFiles();for(const f of pkg.files||[]){try{await dbPut({id:f.id,name:f.name||'',type:f.type||'',blob:urlBlob(f.data||'')})}catch(_){}}}
+  function readFields(){return{token:String(document.getElementById('v113SyncToken')?.value||'').trim(),pass:String(document.getElementById('v113SyncPass')?.value||''),gist:String(document.getElementById('v113SyncGist')?.value||'').trim()}}
+  async function loadSettingsUI(){const c=await getCreds(),t=document.getElementById('v113SyncToken'),p=document.getElementById('v113SyncPass'),g=document.getElementById('v113SyncGist'),a=document.getElementById('v113SyncAuto');if(t)t.value=c.token;if(p)p.value=c.pass;if(g)g.value=c.gist;if(a)a.checked=localStorage.getItem(AUTO_KEY)==='1';syncStatus(c.gist?'Verbunden':'Noch nicht verbunden',c.gist?'Verschlüsselter GitHub-Sync bereit.':'GitHub-Sync ist optional.',c.gist?'ok':'')}
+  window.v113SetupSync=async function(){if(syncBusy)return;let {token,pass,gist}=readFields();if(!token||!pass)return alert('Bitte GitHub Token und Sync-Passwort eingeben.');syncBusy=true;syncStatus('Verbindung wird eingerichtet','Bitte kurz warten …','busy');try{if(!gist){const pkg=await pack(),content=await encryptPack(pkg,pass),x=await gh('/gists','POST',{description:'Studia encrypted device sync',public:false,files:{'studia-sync.json':{content}}},token);gist=x.id;localStorage.setItem(LOCAL_TS,String(pkg.ts))}await saveCreds(token,pass,gist);localStorage.setItem(GIST_KEY,gist);localStorage.setItem(AUTO_KEY,'1');const g=document.getElementById('v113SyncGist'),a=document.getElementById('v113SyncAuto');if(g)g.value=gist;if(a)a.checked=true;syncStatus('Verbunden','Handy und Laptop können denselben Stand nutzen.','ok');cuteToast?.('Geräte-Sync verbunden ✓')}catch(e){console.error(e);syncStatus('Sync fehlgeschlagen','Token/Berechtigung oder Verbindung prüfen.','bad');alert('Sync konnte nicht eingerichtet werden. Prüfe den GitHub Token und die Gist-Berechtigung.')}finally{syncBusy=false}};
+  window.v113SyncPush=async function(show=true){if(syncBusy)return;const fields=readFields(),old=await getCreds(),token=fields.token||old.token,pass=fields.pass||old.pass,gist=fields.gist||old.gist;if(!token||!pass||!gist){if(show)alert('Geräte-Sync ist noch nicht eingerichtet.');return}syncBusy=true;syncStatus('Synchronisiere','Daten werden verschlüsselt und hochgeladen …','busy');try{await saveCreds(token,pass,gist);const pkg=await pack(),content=await encryptPack(pkg,pass);if(content.length>9_000_000)throw new Error('Sync-Datei zu groß');await gh('/gists/'+encodeURIComponent(gist),'PATCH',{files:{'studia-sync.json':{content}}},token);localStorage.setItem(LOCAL_TS,String(pkg.ts));syncStatus('Aktuell','Zuletzt hochgeladen '+new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}),'ok');if(show)cuteToast?.('Auf Geräte-Sync gespeichert ✓')}catch(e){console.error(e);syncStatus('Sync fehlgeschlagen',String(e.message||e),'bad');if(show)alert(e.message==='Sync-Datei zu groß'?'Der Sync ist wegen sehr großer Dateianhänge zu groß. Die normalen lokalen Backups funktionieren weiter.':'Hochladen fehlgeschlagen. Token und Internetverbindung prüfen.')}finally{syncBusy=false}};
+  window.v113SyncPull=async function(show=true,auto=false){if(syncBusy)return false;const fields=readFields(),old=await getCreds(),token=fields.token||old.token,pass=fields.pass||old.pass,gist=fields.gist||old.gist;if(!token||!pass||!gist){if(show)alert('Geräte-Sync ist noch nicht eingerichtet.');return false}syncBusy=true;syncStatus('Prüfe Geräte-Sync','Remote-Stand wird gelesen …','busy');try{await saveCreds(token,pass,gist);const x=await gh('/gists/'+encodeURIComponent(gist),'GET',null,token),raw=x.files?.['studia-sync.json']?.content;if(!raw)throw new Error('Sync-Datei fehlt');const pkg=await decryptPack(raw,pass),localTs=Number(localStorage.getItem(LOCAL_TS)||0);if(auto&&pkg.ts<=localTs){syncStatus('Aktuell','Keine neueren Daten vorhanden.','ok');return false}if(show&&!confirm('Den Stand aus dem Geräte-Sync laden? Der aktuelle lokale Stand wird ersetzt.'))return false;await applyPack(pkg);syncStatus('Synchronisiert','Neuer Stand wurde geladen.','ok');setTimeout(()=>location.reload(),120);return true}catch(e){console.error(e);syncStatus('Sync fehlgeschlagen','Passwort, Token oder Verbindung prüfen.','bad');if(show)alert('Herunterladen fehlgeschlagen. Prüfe Sync-Passwort, GitHub Token und Gist-ID.');return false}finally{syncBusy=false;localStorage.setItem(LAST_PULL,String(Date.now()))}};
+  window.v113SetAutoSync=function(on){localStorage.setItem(AUTO_KEY,on?'1':'0');if(on){v113SyncPull(false,true);schedulePush()}else clearTimeout(syncTimer)};
+  window.v113ForgetSync=async function(){if(!confirm('Sync-Verbindung auf diesem Gerät entfernen? Deine Studia-Daten bleiben erhalten.'))return;await secretClear();localStorage.removeItem(GIST_KEY);localStorage.removeItem(AUTO_KEY);const t=document.getElementById('v113SyncToken'),p=document.getElementById('v113SyncPass'),g=document.getElementById('v113SyncGist'),a=document.getElementById('v113SyncAuto');if(t)t.value='';if(p)p.value='';if(g)g.value='';if(a)a.checked=false;syncStatus('Nicht verbunden','Lokale Daten bleiben erhalten.','')};
+  function schedulePush(){if(localStorage.getItem(AUTO_KEY)!=='1')return;clearTimeout(syncTimer);syncTimer=setTimeout(()=>v113SyncPush(false),6500)}
+
+  // Any real Studia save updates sync freshness and schedules a push. Credentials live outside localStorage.
+  try{const baseSave=window.save||save;window.save=function(){const r=baseSave.apply(this,arguments);localStorage.setItem(LOCAL_TS,String(Date.now()));schedulePush();return r};try{save=window.save}catch(_){}}catch(e){console.warn('[Studia sync] save hook unavailable',e)}
+  const oldRenderSettings=window.renderSettings||renderSettings;window.renderSettings=function(){oldRenderSettings();setTimeout(loadSettingsUI,0)};try{renderSettings=window.renderSettings}catch(_){ }
+  setTimeout(async()=>{await loadSettingsUI();if(localStorage.getItem(AUTO_KEY)==='1'){const last=Number(localStorage.getItem(LAST_PULL)||0);if(Date.now()-last>60000)v113SyncPull(false,true)}},1300);
+})();
+</script>
+<!-- ===== /Studia V113 ===== -->
+
+
+<!-- ===== Studia V115 clean editor controller ===== -->
+<style id="v115-clean-editor-style">
+html,body{max-width:100%!important;overflow-x:hidden!important}
+
+/* Topic screen: one real viewport, never a wider hidden canvas. */
+@media(max-width:899px){
+  body.v113TopicLock,body:has(#view-topic-detail.active){height:100dvh!important;overflow:hidden!important;overscroll-behavior:none!important}
+  body.v113TopicLock>.app,body:has(#view-topic-detail.active)>.app{width:100%!important;max-width:100%!important;height:100dvh!important;margin:0!important;padding:0!important;overflow:hidden!important}
+  #view-topic-detail.active{position:fixed!important;inset:0!important;box-sizing:border-box!important;width:100%!important;max-width:100%!important;height:100dvh!important;margin:0!important;padding:max(18px,env(safe-area-inset-top)) 14px calc(102px + env(safe-area-inset-bottom))!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important}
+  #view-topic-detail.active #topicDetail,#view-topic-detail.active .v102TopicDetail,#view-topic-detail.active .v103TopicDetail,#view-topic-detail.active .v102TopicResourceList{box-sizing:border-box!important;width:100%!important;max-width:100%!important;min-width:0!important;margin-left:0!important;margin-right:0!important;transform:none!important}
+  #view-topic-detail.active .v102TopicResourceList{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:10px!important}
+  #view-topic-detail.active .v102ResourceCard{box-sizing:border-box!important;width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important;overflow:hidden!important}
+  #view-topic-detail.active *{max-width:100%}
+}
+
+/* PHONE EDITOR — fixed chrome + free document workspace. */
+@media(max-width:899px){
+  body.editorMode{position:fixed!important;inset:0!important;width:100%!important;height:100dvh!important;margin:0!important;overflow:hidden!important;overscroll-behavior:none!important;background:#fff9f6!important}
+  body.editorMode>.app,body.editorMode #view-sheet-editor.active,body.editorMode .canvasEditorShell{position:fixed!important;inset:0!important;width:100%!important;max-width:none!important;height:100dvh!important;min-height:0!important;margin:0!important;padding:0!important;overflow:hidden!important;display:block!important;background:radial-gradient(circle at 8% 16%,rgba(248,210,219,.42),transparent 24rem),radial-gradient(circle at 92% 78%,rgba(228,239,210,.45),transparent 25rem),#fffaf7!important}
+  body.editorMode .desktopCommandBar,body.editorMode #desktopEditorSidebar{display:none!important}
+
+  body.editorMode .canvasTopbar{position:fixed!important;z-index:1100!important;left:8px!important;right:8px!important;top:calc(env(safe-area-inset-top) + 5px)!important;width:auto!important;height:64px!important;min-height:64px!important;box-sizing:border-box!important;margin:0!important;padding:6px!important;display:grid!important;grid-template-columns:42px minmax(48px,1fr) auto auto!important;align-items:center!important;gap:4px!important;overflow:hidden!important;border:1px solid #ead8d2!important;border-radius:18px!important;background:rgba(255,253,250,.98)!important;box-shadow:0 8px 24px rgba(94,65,57,.09)!important;backdrop-filter:blur(18px)!important}
+  body.editorMode .canvasTopbar>.editorIcon:first-child{width:40px!important;height:40px!important;min-width:40px!important;padding:0!important}
+  body.editorMode .editorTitle{min-width:0!important;overflow:hidden!important;text-align:left!important;line-height:1!important}
+  body.editorMode .editorTitle b{display:none!important}
+  body.editorMode .editorTitle span{font-size:8px!important;line-height:1.05!important;max-height:20px!important;overflow:hidden!important;word-break:normal!important}
+  body.editorMode .historyBar,body.editorMode .editorActions{display:flex!important;align-items:center!important;gap:3px!important;min-width:0!important;overflow:hidden!important}
+  body.editorMode .historyBar button,body.editorMode .editorActions button{width:35px!important;height:40px!important;min-width:35px!important;min-height:40px!important;margin:0!important;padding:0!important;border-radius:11px!important;overflow:hidden!important}
+  body.editorMode .editorActions button[title="Exportieren"]{display:none!important}
+  body.editorMode .editorActions .primaryIcon{width:88px!important;min-width:88px!important;padding:0 8px!important}
+  body.editorMode .pageTopLabel{display:none!important}
+  body.editorMode .canvasTopbar svg{width:19px!important;height:19px!important}
+
+  body.editorMode #canvasViewport{position:fixed!important;z-index:10!important;left:0!important;right:0!important;top:calc(env(safe-area-inset-top) + 76px)!important;bottom:calc(84px + env(safe-area-inset-bottom))!important;width:auto!important;height:auto!important;min-height:0!important;max-height:none!important;margin:0!important;padding:0!important;overflow:hidden!important;touch-action:none!important;overscroll-behavior:none!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:transparent!important}
+  body.editorMode #v96PanSurface{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;margin:0!important;padding:0!important;overflow:visible!important;pointer-events:auto!important}
+  body.editorMode #canvasStage{position:absolute!important;left:0!important;top:0!important;margin:0!important;max-width:none!important;max-height:none!important;transform-origin:0 0!important;will-change:transform!important;border:1px solid #e5d8d3!important;border-radius:3px!important;box-shadow:0 12px 32px rgba(94,65,57,.13)!important;background:#fff!important}
+  body.editorMode #v96PageStrip,body.editorMode .v91ZoomPill{display:none!important}
+
+  body.editorMode .canvasQuickNav{position:fixed!important;z-index:1040!important;left:10px!important;right:10px!important;bottom:calc(7px + env(safe-area-inset-bottom))!important;top:auto!important;width:auto!important;max-width:none!important;height:70px!important;min-height:70px!important;margin:0!important;padding:5px 6px!important;box-sizing:border-box!important;display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:3px!important;overflow:hidden!important;transform:none!important;border:1px solid #ead8d2!important;border-radius:22px!important;background:rgba(255,253,250,.985)!important;box-shadow:0 11px 28px rgba(91,65,57,.12)!important;backdrop-filter:blur(18px)!important}
+  body.editorMode .canvasQuickNav button{box-sizing:border-box!important;width:100%!important;max-width:100%!important;min-width:0!important;height:58px!important;min-height:58px!important;margin:0!important;padding:3px 1px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:3px!important;overflow:hidden!important;border-radius:13px!important}
+  body.editorMode .canvasQuickNav .editorNavIcon{width:22px!important;height:22px!important;display:grid!important;place-items:center!important;flex:0 0 22px!important}
+  body.editorMode .canvasQuickNav .editorNavIcon svg{width:20px!important;height:20px!important}
+  body.editorMode .canvasQuickNav button>span:last-child{display:block!important;width:100%!important;max-width:100%!important;font-size:8px!important;line-height:1!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;text-align:center!important}
+
+  body.editorMode #canvasQuickDrawer.open{position:fixed!important;z-index:1060!important;left:9px!important;right:9px!important;top:auto!important;bottom:calc(84px + env(safe-area-inset-bottom))!important;width:auto!important;max-width:none!important;height:auto!important;max-height:min(46dvh,420px)!important;min-height:0!important;box-sizing:border-box!important;margin:0!important;padding:8px!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;border:1px solid #ead6d0!important;border-radius:22px!important;background:rgba(255,251,248,.99)!important;box-shadow:0 16px 38px rgba(92,62,54,.14)!important}
+  body.editorMode.v115TextEdit #canvasQuickDrawer.open{bottom:calc(7px + env(safe-area-inset-bottom))!important;max-height:min(50dvh,445px)!important}
+  body.editorMode.v115TextEdit .canvasQuickNav{display:none!important}
+  body.editorMode #canvasQuickDrawer.open .mobileDrawerSection,body.editorMode #canvasQuickDrawer.open .mobileTextLibrary,body.editorMode #canvasQuickDrawer.open .mobilePagePanel,body.editorMode #canvasQuickDrawer.open .mobileTextModeContent{box-sizing:border-box!important;min-height:0!important;max-width:100%!important;overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior:contain!important;touch-action:pan-y!important}
+  body.editorMode #canvasQuickDrawer.open .mobileTextEditor{display:flex!important;flex-direction:column!important;min-height:0!important;max-width:100%!important;height:auto!important;overflow:hidden!important}
+  body.editorMode #canvasQuickDrawer.open button,body.editorMode #canvasQuickDrawer.open input,body.editorMode #canvasQuickDrawer.open select{box-sizing:border-box!important;min-width:0!important;max-width:100%!important}
+  body.editorMode #canvasQuickDrawer .mobileTextModeTabs{position:static!important;flex:0 0 auto!important}
+  body.editorMode #mobileSelectionTools{z-index:1080!important;max-width:calc(100vw - 28px)!important}
+
+  /* Never let text paint outside its own object bounds. */
+  body.editorMode #canvasObjects .cobj.textObj,body.editorMode #canvasObjects .cobj.calloutObj,body.editorMode #canvasObjects .cobj.taskObj,body.editorMode #canvasObjects .cobj.merkeObj{overflow:hidden!important;max-width:none!important;box-sizing:border-box!important}
+}
+
+/* DESKTOP — predictable three-column editor and real scrollable canvas. */
+@media(min-width:900px){
+  body.editorMode .canvasEditorShell{display:grid!important;grid-template-columns:238px minmax(0,1fr) 318px!important;grid-template-rows:64px minmax(0,1fr)!important;gap:10px!important;height:100dvh!important;min-height:0!important;padding:10px!important;box-sizing:border-box!important;overflow:hidden!important;background:linear-gradient(135deg,#fff5f4,#fbfaed)!important}
+  body.editorMode .canvasTopbar{grid-column:1/-1!important;grid-row:1!important;position:relative!important;inset:auto!important;height:64px!important;min-height:64px!important;margin:0!important;box-sizing:border-box!important}
+  body.editorMode .v102DesktopLeft{grid-column:1!important;grid-row:2!important;min-width:0!important;width:auto!important;height:100%!important;overflow:hidden!important;margin:0!important;border-radius:18px!important;background:rgba(255,253,250,.94)!important;border:1px solid #eadbd6!important}
+  body.editorMode .canvasQuickNav{position:relative!important;inset:auto!important;width:100%!important;height:auto!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important;padding:8px!important;box-sizing:border-box!important;overflow:visible!important}
+  body.editorMode .canvasQuickNav button{width:100%!important;min-width:0!important;max-width:100%!important;height:58px!important;margin:0!important;padding:6px!important;border-radius:13px!important;overflow:hidden!important}
+  body.editorMode #canvasQuickDrawer.open{position:relative!important;inset:auto!important;width:100%!important;height:calc(100% - 145px)!important;max-height:none!important;margin:0!important;padding:8px!important;box-sizing:border-box!important;overflow-y:auto!important;overflow-x:hidden!important;border:0!important;box-shadow:none!important;background:transparent!important}
+  body.editorMode #canvasViewport{grid-column:2!important;grid-row:2!important;position:relative!important;inset:auto!important;width:100%!important;height:100%!important;min-height:0!important;margin:0!important;padding:0!important;overflow:auto!important;touch-action:auto!important;border:0!important;border-radius:18px!important;background:radial-gradient(circle at 18% 15%,rgba(248,210,219,.35),transparent 25rem),radial-gradient(circle at 84% 78%,rgba(228,239,210,.4),transparent 26rem),#fffaf7!important;cursor:default!important}
+  body.editorMode #v96PanSurface{position:relative!important;inset:auto!important;display:block!important;margin:0!important;padding:0!important;min-width:0!important;min-height:0!important;overflow:visible!important}
+  body.editorMode #canvasStage{position:absolute!important;margin:0!important;transform-origin:0 0!important;max-width:none!important;max-height:none!important}
+  body.editorMode #desktopEditorSidebar{grid-column:3!important;grid-row:2!important;position:relative!important;inset:auto!important;width:auto!important;max-width:none!important;height:100%!important;min-width:0!important;margin:0!important;padding:0 2px 0 0!important;overflow-y:auto!important;overflow-x:hidden!important}
+  body.editorMode #desktopEditorSidebar>*{box-sizing:border-box!important;min-width:0!important;max-width:100%!important;width:100%!important}
+  body.editorMode #canvasInspector,body.editorMode #layerList{min-width:0!important;max-width:100%!important;overflow-x:hidden!important}
+  body.editorMode #canvasInspector input,body.editorMode #canvasInspector select,body.editorMode #canvasInspector button{box-sizing:border-box!important;min-width:0!important;max-width:100%!important}
+}
+</style>
+<script id="v115-clean-editor-script">
+(function(){
+  window.__STUDIA_V115_OWNS_GESTURES=true;
+  const mobile=()=>window.innerWidth<900;
+  const editor=()=>document.body.classList.contains('editorMode')&&!!document.querySelector('#view-sheet-editor.active');
+  const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+  const stage=()=>document.getElementById('canvasStage');
+  const surface=()=>document.getElementById('v96PanSurface')||document.getElementById('canvasStage')?.parentElement;
+  const pageW=()=>typeof canvasPageWidth==='function'?canvasPageWidth():794;
+  const pageH=()=>typeof canvasPageHeight==='function'?canvasPageHeight():1123;
+  let mobileView={x:0,y:12,z:.45,touched:false},pinch=null,desktopPan=null;
+
+  function replaceViewport(){
+    const old=document.getElementById('canvasViewport');if(!old||old.dataset.v115clean==='1')return old;
+    const neo=old.cloneNode(false);neo.dataset.v115clean='1';while(old.firstChild)neo.appendChild(old.firstChild);old.replaceWith(neo);return neo;
+  }
+  const viewport=()=>document.getElementById('canvasViewport');
+  function label(z){const a=document.getElementById('canvasZoomLabel');if(a)a.textContent=Math.round(z*100)+'%';const b=document.getElementById('v91ZoomLabel');if(b)b.textContent=Math.round(z*100)+'%'}
+  function applyMobile(){const st=stage(),sf=surface();if(!st)return;window.canvasZoom=mobileView.z;st.dataset.scale=String(mobileView.z);st.style.setProperty('left','0px','important');st.style.setProperty('top','0px','important');st.style.setProperty('transform',`translate3d(${mobileView.x}px,${mobileView.y}px,0) scale(${mobileView.z})`,'important');st.style.setProperty('transform-origin','0 0','important');if(sf&&sf!==st){sf.style.setProperty('width','100%','important');sf.style.setProperty('height','100%','important')}label(mobileView.z)}
+  function fitMobile(force=false){const v=viewport();if(!v)return;if(mobileView.touched&&!force){applyMobile();return}const z=clamp(Math.min((v.clientWidth-24)/pageW(),(v.clientHeight-24)/pageH()),.18,1);mobileView={x:(v.clientWidth-pageW()*z)/2,y:12,z,touched:false};applyMobile()}
+  function zoomMobile(z,focus){const v=viewport();if(!v)return;z=clamp(z,.18,3.5);const f=focus||{x:v.clientWidth/2,y:v.clientHeight/2},wx=(f.x-mobileView.x)/mobileView.z,wy=(f.y-mobileView.y)/mobileView.z;mobileView.x=f.x-wx*z;mobileView.y=f.y-wy*z;mobileView.z=z;mobileView.touched=true;applyMobile()}
+
+  function applyDesktop(z,preserve=true,focus=null){const v=viewport(),st=stage(),sf=surface();if(!v||!st||!sf)return;const old=clamp(Number(st.dataset.scale)||window.canvasZoom||1,.15,4),g=44;z=clamp(Number(z)||1,.18,3.5);const fx=focus?.x??v.clientWidth/2,fy=focus?.y??v.clientHeight/2;let wx=null,wy=null;if(preserve){wx=(v.scrollLeft+fx-g)/old;wy=(v.scrollTop+fy-g)/old}window.canvasZoom=z;st.dataset.scale=String(z);st.style.setProperty('left',g+'px','important');st.style.setProperty('top',g+'px','important');st.style.setProperty('transform',`scale(${z})`,'important');st.style.setProperty('transform-origin','0 0','important');sf.style.width=(pageW()*z+g*2)+'px';sf.style.height=(pageH()*z+g*2)+'px';label(z);if(preserve&&wx!=null)requestAnimationFrame(()=>{v.scrollLeft=Math.max(0,g+wx*z-fx);v.scrollTop=Math.max(0,g+wy*z-fy)})}
+  function fitDesktop(){const v=viewport();if(!v)return;const z=clamp(Math.min((v.clientWidth-88)/pageW(),(v.clientHeight-88)/pageH()),.18,1);applyDesktop(z,false);requestAnimationFrame(()=>{v.scrollLeft=0;v.scrollTop=0})}
+  window.v115ApplyZoom=function(z,preserve=true,focus=null){mobile()?zoomMobile(z,focus):applyDesktop(z,preserve,focus)};
+  window.setCanvasZoom=z=>window.v115ApplyZoom(z,true);
+  window.canvasZoomBy=d=>window.v115ApplyZoom((window.canvasZoom||1)+Number(d||0),true);
+  window.fitCanvasStage=window.fitCanvasToScreen=function(){mobileView.touched=false;mobile()?fitMobile(true):fitDesktop()};
+  try{fitCanvasStage=window.fitCanvasStage;fitCanvasToScreen=window.fitCanvasToScreen;v96ApplyZoom=window.v115ApplyZoom;v108ApplyZoom=window.v115ApplyZoom;v112ApplyZoom=window.v115ApplyZoom}catch(_){ }
+
+  function bindViewport(){
+    const v=replaceViewport();if(!v||v.dataset.v115bound==='1')return;v.dataset.v115bound='1';
+    // Phone: exactly two fingers own canvas zoom/pan. One finger is left to object selection/editing.
+    v.addEventListener('touchstart',e=>{if(!editor()||!mobile()||e.touches.length!==2)return;const r=v.getBoundingClientRect(),a=e.touches[0],b=e.touches[1],mx=(a.clientX+b.clientX)/2-r.left,my=(a.clientY+b.clientY)/2-r.top;if(mx<0||my<0||mx>v.clientWidth||my>v.clientHeight)return;e.preventDefault();e.stopImmediatePropagation();const d=Math.max(1,Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY));pinch={d,z:mobileView.z,wx:(mx-mobileView.x)/mobileView.z,wy:(my-mobileView.y)/mobileView.z};mobileView.touched=true},{capture:true,passive:false});
+    v.addEventListener('touchmove',e=>{if(!pinch||!editor()||!mobile()||e.touches.length!==2)return;const r=v.getBoundingClientRect(),a=e.touches[0],b=e.touches[1],mx=(a.clientX+b.clientX)/2-r.left,my=(a.clientY+b.clientY)/2-r.top,d=Math.max(1,Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY)),z=clamp(pinch.z*d/pinch.d,.18,3.5);e.preventDefault();e.stopImmediatePropagation();mobileView.z=z;mobileView.x=mx-pinch.wx*z;mobileView.y=my-pinch.wy*z;applyMobile()},{capture:true,passive:false});
+    const end=e=>{if(!e.touches||e.touches.length<2)pinch=null};v.addEventListener('touchend',end,{capture:true,passive:true});v.addEventListener('touchcancel',()=>{pinch=null},{capture:true,passive:true});
+    // Laptop: Alt + wheel zooms around pointer; middle mouse pans like Adobe.
+    v.addEventListener('wheel',e=>{if(!editor()||mobile()||!e.altKey)return;e.preventDefault();e.stopImmediatePropagation();const r=v.getBoundingClientRect(),focus={x:e.clientX-r.left,y:e.clientY-r.top};applyDesktop((window.canvasZoom||1)*Math.exp(-e.deltaY*.0022),true,focus)},{capture:true,passive:false});
+    v.addEventListener('mousedown',e=>{if(!editor()||mobile()||e.button!==1)return;e.preventDefault();e.stopImmediatePropagation();desktopPan={x:e.clientX,y:e.clientY,l:v.scrollLeft,t:v.scrollTop};v.style.cursor='grabbing'},{capture:true});
+    window.addEventListener('mousemove',e=>{if(!desktopPan)return;v.scrollLeft=desktopPan.l-(e.clientX-desktopPan.x);v.scrollTop=desktopPan.t-(e.clientY-desktopPan.y)},true);
+    const stop=()=>{desktopPan=null;if(v)v.style.cursor=''};window.addEventListener('mouseup',stop,true);window.addEventListener('blur',stop);v.addEventListener('auxclick',e=>{if(e.button===1)e.preventDefault()});
+  }
+
+  // Desktop vector shapes: direct drag always works from the transparent hit target.
+  document.addEventListener('pointerdown',e=>{if(!editor()||mobile()||e.button!==0)return;const t=e.target instanceof Element?e.target:null,hit=t?.closest('.vectorTouchProxy,.shapeHit');if(!hit||t.closest('.vectorResizeHandle,.vectorRotateHandle,.pathNode'))return;const vid=hit.dataset.vid,v=(window.canvasState?.vectors||[]).find(x=>x.id===vid);if(!vid||!v||v.locked)return;e.preventDefault();e.stopImmediatePropagation();if(e.shiftKey&&typeof toggleVectorInMultiSelection==='function'){toggleVectorInMultiSelection(vid);return}selectVector(vid);startVectorDrag(e,vid)},true);
+
+  function syncDrawerState(){if(!editor()||!mobile())return;const d=document.getElementById('canvasQuickDrawer'),text=!!d?.querySelector('.mobileTextEditor')&&d.classList.contains('open');document.body.classList.toggle('v115TextEdit',text);const nav=document.querySelector('.canvasQuickNav');if(nav){nav.style.removeProperty('left');nav.style.removeProperty('right');nav.style.removeProperty('width');nav.style.removeProperty('transform')}}
+  function init(forceFit=false){if(!editor())return;bindViewport();syncDrawerState();if(mobile())setTimeout(()=>fitMobile(forceFit),40);else setTimeout(fitDesktop,40)}
+
+  const oldOpen=window.editorOpenGroup;window.editorOpenGroup=function(){const r=oldOpen.apply(this,arguments);requestAnimationFrame(syncDrawerState);return r};try{editorOpenGroup=window.editorOpenGroup}catch(_){ }
+  const oldClose=window.closeEditorDrawer;window.closeEditorDrawer=function(){const r=oldClose.apply(this,arguments);document.body.classList.remove('v115TextEdit');requestAnimationFrame(syncDrawerState);return r};try{closeEditorDrawer=window.closeEditorDrawer}catch(_){ }
+  const oldRender=window.renderSheetEditor||renderSheetEditor;window.renderSheetEditor=function(){const r=oldRender.apply(this,arguments);setTimeout(()=>init(true),360);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){ }
+  const mo=new MutationObserver(()=>requestAnimationFrame(syncDrawerState));setTimeout(()=>{const d=document.getElementById('canvasQuickDrawer');if(d)mo.observe(d,{attributes:true,childList:true,subtree:true});if(editor())init(true)},180);
+  window.addEventListener('resize',()=>{if(!editor())return;setTimeout(()=>{bindViewport();mobile()?fitMobile(false):fitDesktop()},100)});
+  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 115';document.title='Studia'},80);
+})();
+</script>
+<!-- ===== /Studia V115 ===== -->
+<style id="v115-topbar-last-fix">
+@media(max-width:899px){
+ body.editorMode .canvasTopbar:before{display:none!important;content:none!important}
+ body.editorMode .canvasTopbar>.editorIcon:first-child,
+ body.editorMode .canvasTopbar .editorTitle,
+ body.editorMode .canvasTopbar .historyBar,
+ body.editorMode .canvasTopbar .editorActions{position:static!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;transform:none!important;grid-column:auto!important;grid-row:auto!important;justify-self:stretch!important;align-self:center!important;margin:0!important}
+ body.editorMode .canvasTopbar .editorTitle{width:auto!important;max-width:none!important;min-width:0!important}
+ body.editorMode .canvasTopbar .historyBar{width:auto!important;max-width:none!important;justify-content:flex-end!important;flex-wrap:nowrap!important;overflow:visible!important}
+ body.editorMode .canvasTopbar .editorActions{width:auto!important;max-width:none!important;justify-content:flex-end!important;flex-wrap:nowrap!important;overflow:visible!important}
+ body.editorMode .canvasTopbar .editorActions>button{grid-column:auto!important;grid-row:auto!important;position:static!important}
 }
 </style>
