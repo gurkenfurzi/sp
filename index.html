@@ -14092,3 +14092,74 @@ html,body{max-width:100%!important;overflow-x:hidden!important}
 })();
 </script>
 <!-- ===== /Studia V116 ===== -->
+
+<style id="v118-core-fix">
+/* V118: one clean interaction layer */
+.canvasViewport{touch-action:none!important;overscroll-behavior:none!important;overflow:hidden!important}
+.canvasStage,.canvasPage,.canvasObjects,.canvasSvg{touch-action:none!important}
+.cobj,.shapeHit,.vectorTouchProxy{cursor:grab!important}
+.cobj.dragging,.shapeHit.dragging{cursor:grabbing!important}
+#canvasQuickDrawer,.layerList,.modal{overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important}
+.layerItem{min-height:42px!important}
+.layerBtns{flex-shrink:0!important}.layerBtns span{cursor:pointer!important}
+</style>
+<script id="v118-core-fix">
+(function(){
+ const state={mode:null,lastX:0,lastY:0,pinch:null};
+ const isEd=()=>document.body.classList.contains('editorMode')||!!document.querySelector('#view-sheet-editor.active');
+ const vp=()=>document.querySelector('.canvasViewport');
+ // Prevent old handlers from stealing two finger gestures.
+ document.addEventListener('touchstart',e=>{
+   if(!isEd()||!vp()?.contains(e.target))return;
+   if(e.touches.length===2){
+     state.mode='pinch';
+     const a=e.touches[0],b=e.touches[1];
+     state.pinch={d:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),z:window.canvasZoom||1,x:(a.clientX+b.clientX)/2,y:(a.clientY+b.clientY)/2};
+   }
+ },{capture:true,passive:false});
+ document.addEventListener('touchmove',e=>{
+   if(state.mode!=='pinch'||e.touches.length!==2)return;
+   e.preventDefault();
+   const a=e.touches[0],b=e.touches[1];
+   const d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);
+   const z=Math.max(.25,Math.min(4,state.pinch.z*(d/state.pinch.d)));
+   if(typeof window.applyCanvasZoom==='function')window.applyCanvasZoom(z);
+   else if(typeof window.setCanvasZoom==='function')window.setCanvasZoom(z);
+ },{capture:true,passive:false});
+ document.addEventListener('touchend',e=>{if(e.touches.length<2)state.mode=null},{capture:true});
+ // Shapes: make them use the same drag path as normal canvas objects.
+ document.addEventListener('pointerdown',e=>{
+   if(!isEd()||e.button!==0)return;
+   const el=e.target.closest?.('.shapeHit,.vectorTouchProxy,.vectorObj');
+   if(!el)return;
+   const id=el.dataset.vid||el.closest('[data-vid]')?.dataset.vid;
+   if(!id)return;
+   try{
+    if(typeof selectVector==='function')selectVector(id);
+    if(typeof startVectorDrag==='function'){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      startVectorDrag(e,id);
+    }
+   }catch(err){console.warn('shape drag',err)}
+ },true);
+ // Keep desktop features equal to mobile: open text tools when text is selected.
+ document.addEventListener('click',e=>{
+   const text=e.target.closest?.('.textObj');
+   if(!text)return;
+   if(typeof editorOpenGroup==='function'){
+    try{editorOpenGroup('text')}catch(_){ }
+   }
+ },true);
+ // compact layers buttons always visible
+ const fix=()=>{
+  document.querySelectorAll('.layerItem').forEach(x=>{
+    x.style.overflow='visible';
+    const b=x.querySelector('.layerBtns');if(b)b.style.display='flex';
+  });
+ };
+ new MutationObserver(fix).observe(document.body,{subtree:true,childList:true});
+ setTimeout(fix,500);
+ const h=document.getElementById('headerEyebrow');if(h)h.textContent='VERSION 118';
+})();
+</script>
