@@ -1,4 +1,4 @@
-const CACHE_NAME='studia-v126-shell';
+const CACHE_NAME='studia-v127-shell';
 const SHELL=['./','./index.html?v=126','./manifest.webmanifest','./icon-192-v109.png','./icon-512-v109.png','./apple-touch-icon-v109.png'];
 self.addEventListener('install',event=>{self.skipWaiting();event.waitUntil(caches.open(CACHE_NAME).then(c=>c.addAll(SHELL).catch(()=>{})))});
 self.addEventListener('activate',event=>{event.waitUntil((async()=>{for(const key of await caches.keys()){if(key!==CACHE_NAME)await caches.delete(key)}await self.clients.claim()})())});

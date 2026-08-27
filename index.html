@@ -3028,7 +3028,7 @@ html,body{background:#fff7f4;}
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 126</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 127</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -3943,7 +3943,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"Studia.";
- $("#headerEyebrow").textContent="VERSION 126";
+ $("#headerEyebrow").textContent="VERSION 127";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -11572,7 +11572,7 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
   window.addEventListener('resize',()=>{if(document.body.classList.contains('editorMode'))setTimeout(v102DesktopEditorInit,80)});
 
   /* refresh version + title */
-  const eyebrow=$('#headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 126';document.title='Studia';
+  const eyebrow=$('#headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 127';document.title='Studia';
 })();
 
 
@@ -11699,7 +11699,7 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
   openView=function(name,...args){const out=v103OpenViewBase(name,...args);try{sessionStorage.setItem('studia-last-view',name);sessionStorage.setItem('studia-last-subject',selectedSubjectId||'');sessionStorage.setItem('studia-last-topic',selectedTopicId||'');sessionStorage.setItem('studia-last-sheet',selectedSheetId||'')}catch(_){}return out};
   window.addEventListener('beforeunload',()=>{try{sessionStorage.setItem('studia-last-view',document.querySelector('.view.active')?.id?.replace('view-','')||'home');sessionStorage.setItem('studia-last-subject',selectedSubjectId||'');sessionStorage.setItem('studia-last-topic',selectedTopicId||'');sessionStorage.setItem('studia-last-sheet',selectedSheetId||'')}catch(_){}});
 
-  setTimeout(()=>{const e=$('#headerEyebrow');if(e)e.textContent='VERSION 126';document.title='Studia';if(document.body.classList.contains('editorMode')){v103Topbar();v96RenderPageStrip()}},60);
+  setTimeout(()=>{const e=$('#headerEyebrow');if(e)e.textContent='VERSION 127';document.title='Studia';if(document.body.classList.contains('editorMode')){v103Topbar();v96RenderPageStrip()}},60);
   /* Space shows a grab hand; middle mouse or Space+drag pans. */
   window.addEventListener('keydown',e=>{if(e.code==='Space'&&document.body.classList.contains('editorMode')&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName))$('#canvasViewport')?.classList.add('v103Hand')});
   window.addEventListener('keyup',e=>{if(e.code==='Space')$('#canvasViewport')?.classList.remove('v103Hand')});
@@ -11803,7 +11803,7 @@ setTimeout(()=>{if(!window.__schoolBloomBooted){document.documentElement.style.b
   if(drawer)new MutationObserver(()=>requestAnimationFrame(()=>{syncTextPanel();patchLayers()})).observe(drawer,{subtree:true,childList:true,attributes:true});
   document.addEventListener('click',()=>requestAnimationFrame(()=>{syncTextPanel();patchLayers()}),true);
   window.addEventListener('resize',()=>setTimeout(syncTextPanel,60));
-  setTimeout(()=>{cleanShapeHandles();patchLayers();syncTextPanel();const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 126';document.title='Studia'},260);
+  setTimeout(()=>{cleanShapeHandles();patchLayers();syncTextPanel();const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 127';document.title='Studia'},260);
 })();
 </script>
 <!-- ===== /Studia V117 ===== -->
@@ -12007,7 +12007,7 @@ body.editorMode.v122ShapeDragging{user-select:none!important;-webkit-user-select
   window.canvasZoomBy=d=>window.setCanvasZoom(scale()+Number(d||0));
   try{setCanvasZoom=window.setCanvasZoom;canvasZoomBy=window.canvasZoomBy}catch(_){ }
 
-  const eyebrow=document.getElementById('headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 126';
+  const eyebrow=document.getElementById('headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 127';
 })();
 </script>
 <!-- ===== /Studia V122 ===== -->
@@ -12093,7 +12093,7 @@ body.editorMode.v125VectorDragging #canvasObjects .shapeHit{cursor:grabbing!impo
   /* Remove the V122 blocker at runtime too, so stale/injected style order cannot win. */
   function enforce(){document.querySelectorAll('#canvasObjects .vectorTouchProxy,#canvasObjects .shapeHit').forEach(el=>{el.style.setProperty('pointer-events','all','important');el.style.setProperty('touch-action','none','important')})}
   const oldRV=window.renderVectors;if(typeof oldRV==='function')window.renderVectors=function(){const r=oldRV.apply(this,arguments);enforce();return r};
-  setTimeout(()=>{enforce();const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 126'},80);
+  setTimeout(()=>{enforce();const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 127'},80);
 })();
 </script>
 <!-- ===== /Studia V125 ===== -->
@@ -12120,7 +12120,7 @@ function move(e){if(!drag||e.pointerId!==drag.pid)return;const v=(window.canvasS
 function end(e){if(!drag||e.pointerId!==drag.pid)return;e.preventDefault();e.stopImmediatePropagation();const moved=drag.moved;drag=null;if(moved){try{pushHistory()}catch(_){}}try{renderCanvasInspector();renderLayerList()}catch(_){}installProxies()}
 window.addEventListener('pointermove',move,{capture:true,passive:false});window.addEventListener('pointerup',end,true);window.addEventListener('pointercancel',end,true);
 const oldRender=window.renderVectors||renderVectors;window.renderVectors=function(){const out=oldRender.apply(this,arguments);queueMicrotask(installProxies);return out};try{renderVectors=window.renderVectors}catch(_){}
-setTimeout(()=>{if(editor()){try{renderVectors()}catch(_){}installProxies()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 126'},350);
+setTimeout(()=>{if(editor()){try{renderVectors()}catch(_){}installProxies()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 127'},350);
 })();
 </script>
 <!-- ===== /Studia V126 ===== -->
@@ -12348,7 +12348,7 @@ html,body,button,input,select,textarea{font-family:ui-rounded,"SF Pro Rounded","
 
 
 <style id="v100-subjects-desktop-editor">
-/* ===== VERSION 126 — subjects reference + desktop editor reference ===== */
+/* ===== VERSION 127 — subjects reference + desktop editor reference ===== */
 @media (max-width:899px){
   body:has(#view-subjects.active)>.app>.header,
   body:has(#view-subject-detail.active)>.app>.header,
@@ -13435,7 +13435,7 @@ body.editorMode .cobj table{max-width:100%!important}
   window.renderCanvasInspector=function(){oldInspector();if(document.querySelector('#canvasQuickDrawer.open .mobileLayerList'))requestAnimationFrame(renderLayerList)};
 
   // Version marker.
-  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 126';document.title='Studia'},40);
+  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 127';document.title='Studia'},40);
 })();
 </script>
 
@@ -13781,7 +13781,7 @@ body.editorMode .cobj[contenteditable="true"],body.editorMode td[contenteditable
   window.renderLayerList=function(){baseLayers();const m=document.querySelector('#canvasQuickDrawer.open .mobileLayerList');if(m){m.querySelectorAll('button').forEach(b=>{b.style.minWidth='0';b.style.maxWidth='none'})}};
   try{renderLayerList=window.renderLayerList}catch(_){}
 
-  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 126';document.title='Studia'},40);
+  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 127';document.title='Studia'},40);
 })();
 </script>
 <!-- ===== /Studia V112 hard stabilization ===== -->
@@ -14076,7 +14076,7 @@ html,body{overflow-x:hidden!important}
   try{renderSheetEditor=window.renderSheetEditor}catch(_){ }
   window.addEventListener('resize',()=>setTimeout(()=>{topicLock();if(inEditor()){desktopInit();reconcileMobileChrome()}},100));
 
-  setTimeout(()=>{topicLock();if(inEditor()){desktopInit();reconcileMobileChrome()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 126';document.title='Studia'},120);
+  setTimeout(()=>{topicLock();if(inEditor()){desktopInit();reconcileMobileChrome()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 127';document.title='Studia'},120);
 })();
 </script>
 
@@ -14251,7 +14251,7 @@ html,body{max-width:100%!important;overflow-x:hidden!important}
   const oldRender=window.renderSheetEditor||renderSheetEditor;window.renderSheetEditor=function(){const r=oldRender.apply(this,arguments);setTimeout(()=>init(true),360);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){ }
   const mo=new MutationObserver(()=>requestAnimationFrame(syncDrawerState));setTimeout(()=>{const d=document.getElementById('canvasQuickDrawer');if(d)mo.observe(d,{attributes:true,childList:true,subtree:true});if(editor())init(true)},180);
   window.addEventListener('resize',()=>{if(!editor())return;setTimeout(()=>{bindViewport();mobile()?fitMobile(false):fitDesktop()},100)});
-  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 126';document.title='Studia'},80);
+  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 127';document.title='Studia'},80);
 })();
 </script>
 <!-- ===== /Studia V115 ===== -->
@@ -14403,7 +14403,7 @@ html,body{max-width:100%!important;overflow-x:hidden!important}
   window.addEventListener('resize',()=>setTimeout(sweep,40));
   setTimeout(()=>{
     sweep();
-    const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 126';
+    const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 127';
     document.title='Studia';
   },220);
 })();
@@ -14610,7 +14610,7 @@ body.editorMode .v121LayerRow.v121Drop{outline:2px solid #e8aaa9;outline-offset:
 
   function init(){if(!editor())return;document.body.classList.remove('layerDragging');ensureSurface();v121ApplyZoom(scaleNow(),false);renderCanvasObjects();renderVectors();renderLayerList();if(!mobile()){const mode=localStorage.getItem('studia-v113-desktop-panel')||'elements',btn=document.querySelector(`.canvasQuickNav [data-v113-mode="${mode}"]`)||document.querySelector('.canvasQuickNav button');if(btn)v113DesktopPanel(mode,btn)}}
   setTimeout(init,280);window.addEventListener('resize',()=>setTimeout(()=>{if(editor())v121ApplyZoom(scaleNow(),false)},70));
-  const eyebrow=document.getElementById('headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 126';
+  const eyebrow=document.getElementById('headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 127';
 })();
 </script>
 <!-- ===== /Studia V121 ===== -->
@@ -14759,7 +14759,78 @@ body.editorMode #canvasViewport{touch-action:none!important;overscroll-behavior:
  const oldOpenStudy=window.openStudySheetEditor;if(typeof oldOpenStudy==='function')window.openStudySheetEditor=function(){const r=oldOpenStudy.apply(this,arguments);setTimeout(sync,120);return r};
  window.addEventListener('resize',()=>setTimeout(()=>{if(isEditor()&&!isMobile())desktopNav()},100));
  setTimeout(sync,350);
- const eyebrow=document.getElementById('headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 126';
+ const eyebrow=document.getElementById('headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 127';
 })();
 </script>
 <!-- ===== /Studia V123 ===== -->
+
+
+<style id="v127-shape-drag-actual-fix">
+body.editorMode #canvasObjects{pointer-events:auto!important}
+body.editorMode #canvasObjects .vectorObj{pointer-events:auto!important}
+body.editorMode #canvasObjects .shapeVisible{pointer-events:none!important}
+body.editorMode #canvasObjects .vectorTouchProxy,
+body.editorMode #canvasObjects .shapeHit{pointer-events:all!important;touch-action:none!important;cursor:grab!important}
+body.editorMode #canvasObjects .vectorObj.locked .vectorTouchProxy,
+body.editorMode #canvasObjects .vectorObj.locked .shapeHit{cursor:default!important}
+body.editorMode #canvasObjects .v126VectorDragProxy{display:none!important;pointer-events:none!important}
+</style>
+<script id="v127-shape-drag-actual-script">
+(function(){
+'use strict';
+const activeEditor=()=>document.body.classList.contains('editorMode')&&!!document.querySelector('#view-sheet-editor.active');
+let drag=null;
+function clone(v){return JSON.parse(JSON.stringify(v))}
+function moveFrom(v,s,dx,dy){
+ if(v.type==='rect'){v.x=s.x+dx;v.y=s.y+dy}
+ else if(v.type==='ellipse'){v.cx=s.cx+dx;v.cy=s.cy+dy}
+ else if(Array.isArray(v.points)){v.points=s.points.map(p=>[p[0]+dx,p[1]+dy])}
+}
+function onDown(e){
+ if(!activeEditor()||e.button>0||drag)return;
+ const t=e.target instanceof Element?e.target:null;
+ const hit=t?.closest('#canvasObjects .vectorTouchProxy,#canvasObjects .shapeHit');
+ if(!hit||t.closest('.vectorResizeHandle,.vectorRotateHandle,.pathNode'))return;
+ const vid=hit.dataset.vid;
+ const v=(window.canvasState?.vectors||[]).find(x=>x.id===vid);
+ if(!v||v.locked)return;
+ e.preventDefault();e.stopImmediatePropagation();
+ if(window.canvasState.multiMode||e.shiftKey){try{toggleVectorInMultiSelection(vid)}catch(_){};return}
+ // Do NOT call selectVector here: it rerenders/removes the node during pointerdown.
+ window.canvasState.selectedType='vector';window.canvasState.selectedId=vid;
+ window.canvasState.selectedIds=[];window.canvasState.selectedVectorIds=[vid];
+ const p=canvasPoint(e);
+ drag={vid,pid:e.pointerId,start:p,snap:clone(v),moved:false};
+ document.body.classList.add('v127ShapeDragging');
+ try{hit.setPointerCapture?.(e.pointerId)}catch(_){}
+ try{renderCanvasInspector();renderLayerList();updateMultiSelectStatus?.();updateMobileSelectionTools?.()}catch(_){}
+}
+function onMove(e){
+ if(!drag||e.pointerId!==drag.pid)return;
+ const v=(window.canvasState?.vectors||[]).find(x=>x.id===drag.vid);if(!v){drag=null;return}
+ const p=canvasPoint(e),dx=p.x-drag.start.x,dy=p.y-drag.start.y;
+ if(!drag.moved&&Math.hypot(dx,dy)<.4)return;
+ drag.moved=true;e.preventDefault();e.stopImmediatePropagation();
+ moveFrom(v,drag.snap,dx,dy);
+ // update only SVG geometry during drag; avoid destroying the active pointer target every frame
+ const wrap=document.querySelector(`#canvasObjects .vectorObj[data-vector-wrap="${CSS.escape(drag.vid)}"]`);
+ if(wrap){
+   const vis=wrap.querySelector('.shapeVisible'),hit=wrap.querySelector('.vectorTouchProxy,.shapeHit');
+   if(v.type==='rect'){for(const el of [vis,hit])if(el){el.setAttribute('x',v.x);el.setAttribute('y',v.y)}}
+   else if(v.type==='ellipse'){for(const el of [vis,hit])if(el){el.setAttribute('cx',v.cx);el.setAttribute('cy',v.cy)}}
+   else if(v.type==='triangle'){const pts=v.points.map(q=>q.join(',')).join(' ');for(const el of [vis,hit])if(el)el.setAttribute('points',pts)}
+   else if(v.type==='path'){const d=pathD(v.points);for(const el of [vis,hit])if(el)el.setAttribute('d',d)}
+ }
+ try{markCanvasDirty(false)}catch(_){}
+}
+function onUp(e){
+ if(!drag||e.pointerId!==drag.pid)return;
+ e.preventDefault();e.stopImmediatePropagation();const d=drag;drag=null;document.body.classList.remove('v127ShapeDragging');
+ try{renderVectors();renderCanvasInspector();renderLayerList();if(d.moved)pushHistory()}catch(_){}
+}
+document.addEventListener('pointerdown',onDown,true);
+window.addEventListener('pointermove',onMove,{capture:true,passive:false});
+window.addEventListener('pointerup',onUp,true);window.addEventListener('pointercancel',onUp,true);
+setTimeout(()=>{document.querySelectorAll('.v126VectorDragProxy').forEach(n=>n.remove());const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 127'},250);
+})();
+</script>
