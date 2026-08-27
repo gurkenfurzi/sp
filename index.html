@@ -1,18 +1,17 @@
-<!DOCTYPE html>
-
+<!doctype html>
 <html lang="de">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" name="viewport"/>
-<meta content="#fff8f5" name="theme-color"/>
-<meta content="yes" name="apple-mobile-web-app-capable"/>
-<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
-<meta content="Studia" name="apple-mobile-web-app-title"/>
-<link href="./manifest.webmanifest?v=113" rel="manifest"/>
-<link href="./favicon-v99.png" rel="icon" sizes="64x64" type="image/png"/>
-<link href="./icon-192-v109.png" rel="icon" sizes="192x192" type="image/png"/>
-<link href="./apple-touch-icon-v109.png" rel="apple-touch-icon" sizes="180x180"/>
-<link href="./apple-touch-icon-v109.png" rel="apple-touch-icon-precomposed"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#fff8f5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Studia">
+<link rel="manifest" href="./manifest.webmanifest?v=113">
+<link rel="icon" type="image/png" sizes="64x64" href="./favicon-v99.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192-v109.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon-v109.png">
+<link rel="apple-touch-icon-precomposed" href="./apple-touch-icon-v109.png">
 <title>Studia</title>
 <style>
 :root{
@@ -1196,7 +1195,8 @@ button.primary,button.ghost,.iconbtn{
  #nav button{min-width:43px!important}
 }
 </style>
-<script async="" src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.18/paper-full.min.js"></script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.12.18/paper-full.min.js"></script>
+
 <style id="v43-compact-ui">
 /* VERSION 63 — compact information architecture */
 #nav{grid-template-columns:repeat(5,1fr)!important;width:min(94vw,520px)!important}
@@ -1228,6 +1228,8 @@ button.primary,button.ghost,.iconbtn{
  #nav .navLabel{font-size:9px!important}
 }
 </style>
+
+
 <style id="v44-learning-navigation">
 /* VERSION 63 — Fächer / Lernsets / Study sauber getrennt */
 .learningBackRow{
@@ -1382,6 +1384,8 @@ button.primary,button.ghost,.iconbtn{
  line-height:1.4;
 }
 </style>
+
+
 <style id="v45-editor-cleanup">
 body.editorMode{-webkit-text-size-adjust:100%;overscroll-behavior:none}
 .canvasEditorShell{max-width:980px}
@@ -1409,6 +1413,8 @@ body.editorMode{-webkit-text-size-adjust:100%;overscroll-behavior:none}
  .formatChip{padding:6px 8px!important;font-size:10px!important}
 }
 </style>
+
+
 <style id="v46-editor">
 /* VERSION 63 — one toolbar, top view, tables + multiselect */
 .canvasQuickNav{grid-template-columns:repeat(4,1fr)!important}
@@ -1457,6 +1463,8 @@ body.editorMode{-webkit-text-size-adjust:100%;overscroll-behavior:none}
  .tableMoveHandle{left:-10px;top:-28px}
 }
 </style>
+
+
 <style id="v47-fixes">
 .modalOverlay,.modalBackdrop{
  align-items:flex-start!important;
@@ -1519,6 +1527,8 @@ body.editorMode{-webkit-text-size-adjust:100%;overscroll-behavior:none}
 }
 @media(max-width:390px){.presetFormGrid{grid-template-columns:1fr}}
 </style>
+
+
 <style id="v48-fixes">
 /* hard fix for modal layout on iPhone */
 #modalWrap.modalWrap.open{
@@ -1570,6 +1580,8 @@ body.editorMode{-webkit-text-size-adjust:100%;overscroll-behavior:none}
  .confirmDangerActions{grid-template-columns:1fr 1fr}
 }
 </style>
+
+
 <style id="v50-grouping">
 .formatManagerList{display:grid;gap:7px;margin:8px 0 12px}
 .formatManagerRow{
@@ -1596,6 +1608,8 @@ body.editorMode{-webkit-text-size-adjust:100%;overscroll-behavior:none}
 .multiInspector .alignRow{display:flex;flex-wrap:wrap!important}
 .multiInspector .alignRow button{flex:1 1 110px}
 </style>
+
+
 <style id="v51-cute-ui">
 .layerDeleteBtn{color:#bd686c!important;background:#fff3f3!important;border-color:#ebc7c8!important;font-weight:950!important}
 .formulaHelperTitle{font-size:9px;font-weight:900;letter-spacing:.11em;text-transform:uppercase;color:#9c8178;margin-top:2px}
@@ -1621,6 +1635,8 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
 @media(max-width:520px){.formulaTemplateGrid{grid-template-columns:repeat(4,1fr)}.formulaTemplateGrid button{min-height:64px!important}.formulaTemplateGrid button b{font-size:20px}}
 @media(prefers-reduced-motion:reduce){button.cutePop,.cuteBurst i{animation:none!important}.cuteBurst{display:none!important}}
 </style>
+
+
 <style id="v52-visual-formula">
 .visualFormulaModal{display:grid;gap:11px}
 .formulaEasyHint{
@@ -1724,6 +1740,8 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
  .formulaTemplateGrid.visualOnly button b{font-size:20px}
 }
 </style>
+
+
 <style id="v53-formula-upgrades">
 .formulaTemplateGrid.visualOnly{
  grid-template-columns:repeat(4,minmax(0,1fr))!important;
@@ -1780,6 +1798,8 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
  }
 }
 </style>
+
+
 <style id="v54-page-desktop">
 /* Page margin guide */
 .canvasPage.showPageMargins:after{
@@ -1928,6 +1948,8 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
  .formulaTemplateGrid.visualOnly{grid-template-columns:repeat(3,1fr)!important}
 }
 </style>
+
+
 <style id="v55-endgame">
 /* Visible Seite button */
 .pageTopButton{
@@ -1997,6 +2019,8 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
  .graphAsymGrid{grid-template-columns:1fr}
 }
 </style>
+
+
 <style id="v56-desktop-pro">
 @media (min-width: 900px){
   body{overflow:hidden}
@@ -2068,6 +2092,8 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
 .graphTokenInput{min-height:43px!important;font:18px "Cambria Math",serif!important}
 .graphHintTiny{font-size:8px;color:#9b8279;line-height:1.35}
 </style>
+
+
 <style id="v57-desktop-and-graph">
 /* Real desktop workspace — not a stretched mobile card */
 @media (min-width:900px){
@@ -2140,6 +2166,8 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
 .graphCurveRow.activeCurve{outline:2px solid #e8aaa9;outline-offset:2px;background:#fff3f1}
 .graphAutoRangeNote{font-size:8px;color:#998078;margin-top:4px}
 </style>
+
+
 <style id="v58-real-desktop">
 @media(min-width:900px){
  body.v57,body{background:#ecebea!important;overflow:hidden!important}
@@ -2222,6 +2250,8 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
  .graphFormulaMenu{grid-template-columns:repeat(3,1fr)!important}
 }
 </style>
+
+
 <style id="v59-real-fix">
 /* ---------- TRUE DESKTOP LAYOUT USING THE REAL DOM ---------- */
 @media(min-width:900px){
@@ -2378,6 +2408,8 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
   white-space:normal!important;
 }
 </style>
+
+
 <style id="v60-cleanup">
 /* Notebook abbreviation: sans-serif, clean */
 .subjectNotebook .abbr,
@@ -2477,6 +2509,8 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
   }
 }
 </style>
+
+
 <style id="v61-graph-fixes">
 .graphInlineOps{
   display:grid;
@@ -2531,6 +2565,8 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
   .graphInlineOps button{min-height:44px;font-size:20px}
 }
 </style>
+
+
 <style id="v62-desktop-redesign">
 @media(min-width:900px){
   html,body{height:100%;overflow:hidden!important}
@@ -2769,6 +2805,8 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
   .desktopCommandBar{display:none!important}
 }
 </style>
+
+
 <style id="v63-editor-polish">
 /* root artifact: never allow browser-generated pseudo decoration */
 .vfRoot{position:relative!important;text-decoration:none!important;border:0!important}
@@ -2854,6 +2892,8 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
  .shortcutGrid{grid-template-columns:1fr}
 }
 </style>
+
+
 <style id="v84-mobile-reference-editor">
 /* V84: editor UI is strictly scoped to editorMode. App navigation remains untouched elsewhere. */
 @media (max-width:899px){
@@ -2934,6 +2974,8 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
   body.editorMode #topViewMenu{z-index:635!important;left:10px!important;right:10px!important;top:66px!important;max-height:55dvh!important;overflow:auto!important;border-radius:20px!important}
 }
 </style>
+
+
 <style id="v85-mobile-text-tabs-fix">
 @media (max-width:899px){
  body.editorMode #canvasQuickDrawer.open{padding-bottom:8px!important;overflow:hidden!important;display:flex!important;flex-direction:column!important;max-height:min(58vh,510px)!important}
@@ -2948,12 +2990,15 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
  .mobileTextBar{padding:0!important}
 }
 </style>
+
+
 <style id="v91-boot-failsafe">
 html,body{background:#fff7f4;}
 @media (max-width:899px){.canvasQuickNav{grid-template-columns:repeat(5,minmax(0,1fr))!important}}
 .v91FontAdd{border:1px solid #ead2cb!important;background:#fff!important;color:#735d55!important;border-radius:12px!important;min-height:54px!important;padding:7px 10px!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:5px!important;font-weight:900!important}
 .v91TextFormats{padding:10px 2px 2px}.v91TextFormatsHead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}.v91TextFormatsHead b{font-size:12px}.v91TextFormatsHead button{border:1px solid #ead2cb;background:#fff;border-radius:10px;padding:7px 9px;color:#735d55;font-weight:800}.v91FormatScroll{display:flex;gap:7px;overflow-x:auto;padding-bottom:3px;scrollbar-width:none}.v91FormatScroll::-webkit-scrollbar{display:none}.v91FormatScroll button{flex:0 0 auto;border:1px solid #ead2cb;background:#fffaf7;border-radius:12px;padding:9px 11px;color:#735d55;font-weight:850;min-height:44px}.v91ZoomPill{position:fixed;right:12px;bottom:calc(92px + env(safe-area-inset-bottom));z-index:151;display:none;align-items:center;gap:4px;background:rgba(255,250,247,.94);border:1px solid #ead2cb;border-radius:999px;padding:5px;box-shadow:0 10px 30px rgba(110,72,65,.12);backdrop-filter:blur(14px)}body:has(#view-canvas.active) .v91ZoomPill{display:flex}.v91ZoomPill button{width:36px;height:36px;border:0;border-radius:999px;background:#fff;color:#735d55;font-weight:900}.v91ZoomPill span{min-width:47px;text-align:center;font-size:11px;font-weight:900;color:#80685f}.editorDrawerOpen .v91ZoomPill{opacity:.3;pointer-events:none}
 </style>
+
 <style id="v92-editor-polish">
 @media (max-width:899px){
  body.editorMode .canvasQuickNav{gap:6px!important;padding:7px 8px!important;border-radius:24px!important}
@@ -2981,447 +3026,492 @@ html,body{background:#fff7f4;}
 </head>
 <body class="v57">
 <div class="app">
-<div class="header">
-<div>
-<div class="eyebrow" id="headerEyebrow">VERSION 108</div>
-<h1 id="headerTitle">Heute.</h1>
-</div>
-<button class="iconbtn" onclick="openView('settings')">⚙︎</button>
-</div>
-<section class="view active" id="view-home">
-<div class="homeMiniActions">
-<button onclick="openAddHomework()">＋ Aufgabe</button>
-<button onclick="openAddTest()">✦ Test</button>
-<button onclick="openView('subjects')">📝 Notiz</button>
-<button onclick="openView('study')">⏱ Lernen</button>
-</div>
-<div class="panel" id="nextPanel"></div>
-<div class="section">
-<div class="grid3" id="homeKpis"></div>
-</div>
-<div class="section">
-<div class="sectionHead"><h2 class="kawaiiTitle"><span class="kawaiiSticker">🌷</span>Heute</h2><span id="todayDate"></span></div>
-<div class="stack" id="todayLessons"></div>
-</div>
-<div class="section">
-<div class="sectionHead"><h2 class="kawaiiTitle"><span class="kawaiiSticker">📝</span>Offen</h2><span>Hausaufgaben &amp; Tests</span></div>
-<div class="stack" id="homeOpen"></div>
-</div>
+  <div class="header">
+    <div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 108</div>
+      <h1 id="headerTitle">Heute.</h1>
+    </div>
+    <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
+  </div>
+
+  <section class="view active" id="view-home">
+    <div class="homeMiniActions">
+      <button onclick="openAddHomework()">＋ Aufgabe</button>
+      <button onclick="openAddTest()">✦ Test</button>
+      <button onclick="openView('subjects')">📝 Notiz</button>
+      <button onclick="openView('study')">⏱ Lernen</button>
+    </div>
+    <div class="panel" id="nextPanel"></div>
+
+
+    <div class="section">
+      <div class="grid3" id="homeKpis"></div>
+    </div>
+
+    <div class="section">
+      <div class="sectionHead"><h2 class="kawaiiTitle"><span class="kawaiiSticker">🌷</span>Heute</h2><span id="todayDate"></span></div>
+      <div class="stack" id="todayLessons"></div>
+    </div>
+
+    <div class="section">
+      <div class="sectionHead"><h2 class="kawaiiTitle"><span class="kawaiiSticker">📝</span>Offen</h2><span>Hausaufgaben & Tests</span></div>
+      <div class="stack" id="homeOpen"></div>
+    </div>
+  </section>
+
+  <section class="view" id="view-plan">
+    <div class="panel">
+      <div class="rowBetween">
+        <div><div class="eyebrow">PHS Ludwigshafen</div><h2 style="margin-top:4px">Stundenplan</h2></div>
+        <button class="ghost" onclick="loadRemotePlan(true)">Jetzt aktualisieren</button>
+      </div>
+      <div id="planStatus" class="small" style="margin-top:12px">Plan wird geprüft …</div><div id="liveRefreshStatus" class="liveRefreshStatus"></div>
+      <div class="classPickerWrap">
+        <label for="planClassPicker">Klasse</label>
+        <select id="planClassPicker" class="classPicker" onchange="switchTimetableClass(this.value)"></select>
+      </div>
+    </div>
+    <div class="planModeSwitch" id="planModeSwitch">
+      <button class="active" data-planmode="current" onclick="setTimetableViewMode('current',this)">
+        <span>✦</span><b>Aktuell & Änderungen</b><small>Wichtig</small>
+      </button>
+      <button data-planmode="basis" onclick="setTimetableViewMode('basis',this)">
+        <span>▦</span><b>Basisplan</b><small>Normalplan</small>
+      </button>
+    </div>
+    <div id="placeholderBanner" class="card warn" style="display:none;margin-top:12px">
+      <b>↻ Automatischer Import</b><div class="small" style="margin-top:4px;color:inherit">Automatisch im Hintergrund · zusätzlich jederzeit live aktualisierbar.</div>
+    </div>
+    <div class="heatPlanControl" id="heatPlanControl">
+      <div class="heatPlanInfo">
+        <span class="heatSun">☀️</span>
+        <div>
+          <b>Hitzestunden</b>
+          <small id="heatPlanState">Automatisch</small>
+        </div>
+      </div>
+      <div class="heatModeButtons">
+        <button data-heatmode="auto" onclick="setHeatMode('auto',this)">Auto</button>
+        <button data-heatmode="on" onclick="setHeatMode('on',this)">An</button>
+        <button data-heatmode="off" onclick="setHeatMode('off',this)">Aus</button>
+      </div>
+    </div>
+    <div id="planModeHint" class="planModeHint">
+      <span class="modeCurrentHint">✦ Zeigt den aktuellen Wochenplan, Verschiebungen und echte Entfälle.</span>
+      <span class="modeBasisHint">▦ Zeigt den normalen Basisplan ohne Wochenänderungen.</span>
+    </div>
+    <div class="daytabs" id="dayTabs"></div>
+    <div class="stack" id="planLessons"></div>
+  </section>
+
+  <section class="view" id="view-tasks">
+    <div class="sectionHead"><h2>Aufgaben</h2><button class="primary" onclick="openAddHomework()">+ Neu</button></div>
+    <div class="daytabs">
+      <button class="tab active" data-taskfilter="open">Offen</button>
+      <button class="tab" data-taskfilter="done">Erledigt</button>
+      <button class="tab" data-taskfilter="all">Alle</button>
+    </div>
+    <div class="stack" id="homeworkList"></div>
+
+    <div class="section">
+      <div class="sectionHead"><h2>Tests & Arbeiten</h2><button class="primary" onclick="openAddTest()">+ Neu</button></div>
+      <div class="stack" id="testList"></div>
+    </div>
+  </section>
+
+  <section class="view" id="view-grades">
+    <div class="sectionHead"><h2>Noten</h2><button class="primary" onclick="openAddGrade()">+ Note</button></div>
+    <div class="grid2" id="gradeSummary"></div>
+    <div class="section">
+      <div class="stack" id="gradeList"></div>
+    </div>
+  </section>
+
+  <section class="view" id="view-study">
+    <div class="learnHub">
+      <button onclick="openView('subjects')"><span>📚</span><b>Fächer</b><small>Notizen & Dateien</small></button>
+      <button onclick="openView('learnsets')"><span>✦</span><b>Lernsets</b><small>Karteikarten · Quiz · Test</small></button>
+      <button class="active"><span>⏱</span><b>Study</b><small>Timer & StudyPet</small></button>
+    </div>
+    <div class="panel">
+      <div class="rowBetween"><div><div class="eyebrow">Focus</div><h2>Lernzeit</h2></div><span class="badge" id="studyTodayBadge">0 min heute</span></div>
+      <div class="rowBetween" style="margin-top:12px"><span class="badge coin" id="coinBadge">🪙 0</span><button class="ghost" onclick="openPetShop()">Shop & Zimmer</button></div>
+      <div id="petRoomMini" class="petRoom" style="margin-top:12px"><div class="window"></div><div class="rug"></div><div class="petShelf">📚</div><div class="petPlant">🌷</div><div class="petAvatarCute"><div class="petEar left"></div><div class="petEar right"></div><div class="petFace">• ᴥ •</div><div class="petBlush left"></div><div class="petBlush right"></div></div></div>
+      <div class="durationControls">
+        <div class="mini"><label>Lernzeit (Minuten)</label><input id="focusMinutes" type="number" min="1" max="240" value="25"></div>
+        <div class="mini"><label>Pause (Minuten)</label><input id="breakMinutes" type="number" min="1" max="60" value="5"></div>
+      </div>
+      <div class="timer" id="timerDisplay">25:00</div>
+      <div class="studyTimerActions">
+        <button class="primary" id="timerBtn" onclick="smartTimerButton()">▶ Fokus</button>
+        <button class="ghost breakBtn" onclick="startCustomBreak()">☕ Pause starten</button>
+        <button class="ghost iconOnlyBtn" aria-label="Reset" title="Reset" onclick="resetTimer()">↻</button>
+      </div>
+      <div class="small" id="timerModeLabel" style="text-align:center;margin-top:10px">Fokus · fürs Lernen bekommst du Münzen.</div>
+    </div>
 </section>
-<section class="view" id="view-plan">
-<div class="panel">
-<div class="rowBetween">
-<div><div class="eyebrow">PHS Ludwigshafen</div><h2 style="margin-top:4px">Stundenplan</h2></div>
-<button class="ghost" onclick="loadRemotePlan(true)">Jetzt aktualisieren</button>
-</div>
-<div class="small" id="planStatus" style="margin-top:12px">Plan wird geprüft …</div><div class="liveRefreshStatus" id="liveRefreshStatus"></div>
-<div class="classPickerWrap">
-<label for="planClassPicker">Klasse</label>
-<select class="classPicker" id="planClassPicker" onchange="switchTimetableClass(this.value)"></select>
-</div>
-</div>
-<div class="planModeSwitch" id="planModeSwitch">
-<button class="active" data-planmode="current" onclick="setTimetableViewMode('current',this)">
-<span>✦</span><b>Aktuell &amp; Änderungen</b><small>Wichtig</small>
-</button>
-<button data-planmode="basis" onclick="setTimetableViewMode('basis',this)">
-<span>▦</span><b>Basisplan</b><small>Normalplan</small>
-</button>
-</div>
-<div class="card warn" id="placeholderBanner" style="display:none;margin-top:12px">
-<b>↻ Automatischer Import</b><div class="small" style="margin-top:4px;color:inherit">Automatisch im Hintergrund · zusätzlich jederzeit live aktualisierbar.</div>
-</div>
-<div class="heatPlanControl" id="heatPlanControl">
-<div class="heatPlanInfo">
-<span class="heatSun">☀️</span>
-<div>
-<b>Hitzestunden</b>
-<small id="heatPlanState">Automatisch</small>
-</div>
-</div>
-<div class="heatModeButtons">
-<button data-heatmode="auto" onclick="setHeatMode('auto',this)">Auto</button>
-<button data-heatmode="on" onclick="setHeatMode('on',this)">An</button>
-<button data-heatmode="off" onclick="setHeatMode('off',this)">Aus</button>
-</div>
-</div>
-<div class="planModeHint" id="planModeHint">
-<span class="modeCurrentHint">✦ Zeigt den aktuellen Wochenplan, Verschiebungen und echte Entfälle.</span>
-<span class="modeBasisHint">▦ Zeigt den normalen Basisplan ohne Wochenänderungen.</span>
-</div>
-<div class="daytabs" id="dayTabs"></div>
-<div class="stack" id="planLessons"></div>
-</section>
-<section class="view" id="view-tasks">
-<div class="sectionHead"><h2>Aufgaben</h2><button class="primary" onclick="openAddHomework()">+ Neu</button></div>
-<div class="daytabs">
-<button class="tab active" data-taskfilter="open">Offen</button>
-<button class="tab" data-taskfilter="done">Erledigt</button>
-<button class="tab" data-taskfilter="all">Alle</button>
-</div>
-<div class="stack" id="homeworkList"></div>
-<div class="section">
-<div class="sectionHead"><h2>Tests &amp; Arbeiten</h2><button class="primary" onclick="openAddTest()">+ Neu</button></div>
-<div class="stack" id="testList"></div>
-</div>
-</section>
-<section class="view" id="view-grades">
-<div class="sectionHead"><h2>Noten</h2><button class="primary" onclick="openAddGrade()">+ Note</button></div>
-<div class="grid2" id="gradeSummary"></div>
-<div class="section">
-<div class="stack" id="gradeList"></div>
-</div>
-</section>
-<section class="view" id="view-study">
-<div class="learnHub">
-<button onclick="openView('subjects')"><span>📚</span><b>Fächer</b><small>Notizen &amp; Dateien</small></button>
-<button onclick="openView('learnsets')"><span>✦</span><b>Lernsets</b><small>Karteikarten · Quiz · Test</small></button>
-<button class="active"><span>⏱</span><b>Study</b><small>Timer &amp; StudyPet</small></button>
-</div>
-<div class="panel">
-<div class="rowBetween"><div><div class="eyebrow">Focus</div><h2>Lernzeit</h2></div><span class="badge" id="studyTodayBadge">0 min heute</span></div>
-<div class="rowBetween" style="margin-top:12px"><span class="badge coin" id="coinBadge">🪙 0</span><button class="ghost" onclick="openPetShop()">Shop &amp; Zimmer</button></div>
-<div class="petRoom" id="petRoomMini" style="margin-top:12px"><div class="window"></div><div class="rug"></div><div class="petShelf">📚</div><div class="petPlant">🌷</div><div class="petAvatarCute"><div class="petEar left"></div><div class="petEar right"></div><div class="petFace">• ᴥ •</div><div class="petBlush left"></div><div class="petBlush right"></div></div></div>
-<div class="durationControls">
-<div class="mini"><label>Lernzeit (Minuten)</label><input id="focusMinutes" max="240" min="1" type="number" value="25"/></div>
-<div class="mini"><label>Pause (Minuten)</label><input id="breakMinutes" max="60" min="1" type="number" value="5"/></div>
-</div>
-<div class="timer" id="timerDisplay">25:00</div>
-<div class="studyTimerActions">
-<button class="primary" id="timerBtn" onclick="smartTimerButton()">▶ Fokus</button>
-<button class="ghost breakBtn" onclick="startCustomBreak()">☕ Pause starten</button>
-<button aria-label="Reset" class="ghost iconOnlyBtn" onclick="resetTimer()" title="Reset">↻</button>
-</div>
-<div class="small" id="timerModeLabel" style="text-align:center;margin-top:10px">Fokus · fürs Lernen bekommst du Münzen.</div>
-</div>
-</section>
-<section class="view" id="view-learnsets">
-<div class="learningBackRow">
-<button onclick="openView('study')">← <span>Zurück zu Lernen</span></button>
-</div>
-<div class="learnsetsHero">
-<div>
-<div class="eyebrow">LERNEN</div>
-<h2>Lernsets.</h2>
-<p>Karteikarten, Quiz und Testfragen an einem Ort.</p>
-</div>
-<button class="smallIconBtn" onclick="openView('subjects')" title="Fächer öffnen">📚</button>
-</div>
-<div class="learnsetsTabs">
-<button class="active" data-learnset-tab="cards" onclick="switchLearnsetsTab('cards',this)">Karteikarten</button>
-<button data-learnset-tab="quiz" onclick="switchLearnsetsTab('quiz',this)">Quiz</button>
-<button data-learnset-tab="test" onclick="switchLearnsetsTab('test',this)">Test</button>
-</div>
-<div class="learnsetsPanel" id="learnsetsCardsPanel">
-<div class="sectionHead compactHead">
-<div><h2>Karteikarten</h2><div class="small">Deine Kartenordner aus allen Fächern</div></div>
-<button class="primary" onclick="openView('subjects')">+ Ordner</button>
-</div>
-<div id="flashArea"></div>
-</div>
-<div class="learnsetsPanel" id="learnsetsQuizPanel" style="display:none">
-<div class="sectionHead compactHead">
-<div><h2>Quiz</h2><div class="small">Fragen beantworten und direkt üben</div></div>
-<button class="primary" onclick="openView('subjects')">+ Quiz</button>
-</div>
-<div class="learnsetsList" id="learnsetsQuizList"></div>
-</div>
-<div class="learnsetsPanel" id="learnsetsTestPanel" style="display:none">
-<div class="sectionHead compactHead">
-<div><h2>Test</h2><div class="small">Wie eine kleine Klassenarbeit ohne sichtbare Lösungen</div></div>
-</div>
-<div class="learnsetsList" id="learnsetsTestList"></div>
-</div>
-</section>
-<section class="view" id="view-more">
-<div class="moreGroup">
-<div class="eyebrow">SCHULE</div>
-<button onclick="openView('grades')"><span>1,0</span><div><b>Noten</b><small>Eintragen &amp; Durchschnitt</small></div><i>›</i></button>
-<button onclick="openView('absence')"><span>☁</span><div><b>Abwesenheiten</b><small>Fehltage &amp; Entschuldigungen</small></div><i>›</i></button>
-<button onclick="openView('subjects')"><span>📚</span><div><b>Fächer &amp; Dateien</b><small>Notizbücher, Dateien, Lernblätter</small></div><i>›</i></button>
-</div>
-<div class="moreGroup">
-<div class="eyebrow">LERNEN</div>
-<button onclick="openView('study')"><span>⏱</span><div><b>StudyPet &amp; Timer</b><small>Fokus- und Pausenzeiten</small></div><i>›</i></button>
-</div>
-<div class="moreGroup">
-<div class="eyebrow">APP</div>
-<button onclick="openView('settings')"><span>⚙︎</span><div><b>Einstellungen</b><small>Plan, Darstellung, Daten</small></div><i>›</i></button>
-</div>
-</section>
-<section class="view" id="view-subjects">
-<div class="learningBackRow">
-<button onclick="openView('study')">← <span>Zurück zu Lernen</span></button>
-</div>
-<div class="sectionHead"><h2>Fächer &amp; Dateien</h2><button class="primary" onclick="openAddSubject()">+ Fach</button></div>
-<div class="stack" id="subjectList"></div>
-</section>
-<section class="view" id="view-subject-detail">
-<div class="sectionHead">
-<button class="ghost" onclick="leaveSubjectNotebook()">← Fächer</button>
-<button class="dangerBtn" id="deleteCurrentSubjectBtn">Fach löschen</button>
-</div>
-<div id="subjectDetail"></div>
-</section>
-<section class="view" id="view-topic-detail">
-<div class="sectionHead">
-<button class="ghost" onclick="backToNotebook()">← Notizbuch</button>
-<button class="dangerBtn" id="deleteCurrentTopicBtn">Thema löschen</button>
-</div>
-<div id="topicDetail"></div>
-</section>
-<section class="view" id="view-deck-detail">
-<div class="sectionHead">
-<button class="ghost" onclick="goBackFromDeck()">← Zurück</button>
-<button class="primary" id="addCardToDeckBtn">+ Karte</button>
-</div>
-<div id="deckDetail"></div>
-</section>
-<section class="view" id="view-sheet-editor">
-<div class="canvasEditorShell">
-<div class="canvasTopbar">
-<button class="editorIcon" onclick="closeSheetEditor()" title="Zurück"><svg viewbox="0 0 24 24"><path d="m15 5-7 7 7 7"></path></svg></button>
-<div class="editorTitle"><b>Lernblatt</b><span class="autosaveState" id="autosaveState">Autosave an</span></div>
-<div class="historyBar">
-<button class="historyBtn" id="undoBtn" onclick="undoCanvas()" title="Rückgängig">↶</button>
-<button class="historyBtn" id="redoBtn" onclick="redoCanvas()" title="Wiederholen">↷</button>
-</div>
-<div class="editorActions">
-<button class="editorIcon viewTopBtn pageTopButton" onclick="toggleTopViewMenu()" title="Seite &amp; Ansicht"><span class="pageTopIcon">▯</span><span class="pageTopLabel">Seite</span></button>
-<button class="editorIcon" onclick="exportCanvasHTML()" title="Exportieren"><svg viewbox="0 0 24 24"><path d="M12 3v12M8 11l4 4 4-4M4 19h16"></path></svg></button>
-<button class="editorIcon" onclick="printCanvasSheet()" title="PDF / Drucken"><svg viewbox="0 0 24 24"><path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"></path><rect height="7" width="10" x="7" y="14"></rect></svg></button>
-<button class="editorIcon primaryIcon" onclick="saveCanvasSheet()" title="Speichern"><svg viewbox="0 0 24 24"><path d="M5 3h12l2 2v16H5z"></path><path d="M8 3v6h8V3M8 21v-7h8v7"></path></svg></button>
-</div>
-</div>
-<div aria-label="Desktop-Werkzeuge" class="desktopCommandBar">
-<div class="desktopCmdGroup">
-<span class="desktopCmdLabel">Einfügen</span>
-<div class="desktopCmdButtons">
-<button onclick="editorOpenGroup('add')" title="Hinzufügen">＋ <span>Hinzufügen</span></button>
-<button onclick="addCanvasTextBox()" title="Textfeld">T <span>Textfeld</span></button>
-<button onclick="openFormulaDialog()" title="Formel">∑ <span>Formel</span></button>
-<button onclick="openGraphDialog()" title="Graph">⌁ <span>Graph</span></button>
-<button onclick="addCanvasChecklist()" title="Checkliste">☑ <span>Checkliste</span></button>
-<button onclick="addCanvasDivider()" title="Trennlinie">— <span>Linie</span></button>
-</div>
-</div>
-<div class="desktopCmdGroup">
-<span class="desktopCmdLabel">Bearbeiten</span>
-<div class="desktopCmdButtons">
-<button onclick="duplicateSelected()" title="Duplizieren">⧉ <span>Duplizieren</span></button>
-<button onclick="groupSelectedItems()" title="Gruppieren">▣ <span>Gruppieren</span></button>
-<button onclick="ungroupSelectedItems()" title="Gruppierung lösen">▢ <span>Lösen</span></button>
-<button onclick="toggleSelectedLock()" title="Sperren">🔒 <span>Sperren</span></button>
-</div>
-</div>
-<div class="desktopCmdGroup">
-<span class="desktopCmdLabel">Ebene</span>
-<div class="desktopCmdButtons">
-<button onclick="moveSelectedLayer(1)" title="Nach vorne">↑ <span>Vorne</span></button>
-<button onclick="moveSelectedLayer(-1)" title="Nach hinten">↓ <span>Hinten</span></button>
-</div>
-</div>
-<div class="desktopCmdGroup desktopCmdView">
-<span class="desktopCmdLabel">Ansicht</span>
-<div class="desktopCmdButtons">
-<button onclick="fitCanvasStage()" title="An Bildschirm">⊡ <span>Anpassen</span></button>
-<button onclick="toggleTopViewMenu()" title="Seite &amp; Ansicht">▯ <span>Seite</span></button>
-<button onclick="openShortcutHelp()" title="Tastenkürzel">⌨ <span>Shortcuts</span></button>
-</div>
-</div>
-</div>
-<div class="topViewMenu" id="topViewMenu">
-<div class="topViewSection">
-<b>Ansicht</b>
-<div class="topViewButtons">
-<button onclick="fitCanvasStage()">⊡ An Bildschirm</button>
-<button onclick="setCanvasZoom(.5)">50%</button>
-<button onclick="setCanvasZoom(.75)">75%</button>
-<button onclick="setCanvasZoom(1)">100%</button>
-</div>
-</div>
-<div class="topViewSection">
-<b>Seite</b>
-<div class="topViewButtons orientationButtons">
-<button id="portraitBtn" onclick="setCanvasOrientation('portrait')">▯ Hochformat</button>
-<button id="landscapeBtn" onclick="setCanvasOrientation('landscape')">▭ Querformat</button>
-</div>
-</div>
-<div class="topViewSection pageStyleSection">
-<b>Seitenstil</b>
-<div class="pageStyleGrid">
-<label>Farbe<input id="pageColorInput" onchange="setCanvasPageStyle('color',this.value)" type="color" value="#ffffff"/></label>
-<label>Hintergrund
+
+  <section class="view" id="view-learnsets">
+    <div class="learningBackRow">
+      <button onclick="openView('study')">← <span>Zurück zu Lernen</span></button>
+    </div>
+
+    <div class="learnsetsHero">
+      <div>
+        <div class="eyebrow">LERNEN</div>
+        <h2>Lernsets.</h2>
+        <p>Karteikarten, Quiz und Testfragen an einem Ort.</p>
+      </div>
+      <button class="smallIconBtn" onclick="openView('subjects')" title="Fächer öffnen">📚</button>
+    </div>
+
+    <div class="learnsetsTabs">
+      <button class="active" data-learnset-tab="cards" onclick="switchLearnsetsTab('cards',this)">Karteikarten</button>
+      <button data-learnset-tab="quiz" onclick="switchLearnsetsTab('quiz',this)">Quiz</button>
+      <button data-learnset-tab="test" onclick="switchLearnsetsTab('test',this)">Test</button>
+    </div>
+
+    <div id="learnsetsCardsPanel" class="learnsetsPanel">
+      <div class="sectionHead compactHead">
+        <div><h2>Karteikarten</h2><div class="small">Deine Kartenordner aus allen Fächern</div></div>
+        <button class="primary" onclick="openView('subjects')">+ Ordner</button>
+      </div>
+      <div id="flashArea"></div>
+    </div>
+
+    <div id="learnsetsQuizPanel" class="learnsetsPanel" style="display:none">
+      <div class="sectionHead compactHead">
+        <div><h2>Quiz</h2><div class="small">Fragen beantworten und direkt üben</div></div>
+        <button class="primary" onclick="openView('subjects')">+ Quiz</button>
+      </div>
+      <div id="learnsetsQuizList" class="learnsetsList"></div>
+    </div>
+
+    <div id="learnsetsTestPanel" class="learnsetsPanel" style="display:none">
+      <div class="sectionHead compactHead">
+        <div><h2>Test</h2><div class="small">Wie eine kleine Klassenarbeit ohne sichtbare Lösungen</div></div>
+      </div>
+      <div id="learnsetsTestList" class="learnsetsList"></div>
+    </div>
+  </section>
+
+  <section class="view" id="view-more">
+    <div class="moreGroup">
+      <div class="eyebrow">SCHULE</div>
+      <button onclick="openView('grades')"><span>1,0</span><div><b>Noten</b><small>Eintragen & Durchschnitt</small></div><i>›</i></button>
+      <button onclick="openView('absence')"><span>☁</span><div><b>Abwesenheiten</b><small>Fehltage & Entschuldigungen</small></div><i>›</i></button>
+      <button onclick="openView('subjects')"><span>📚</span><div><b>Fächer & Dateien</b><small>Notizbücher, Dateien, Lernblätter</small></div><i>›</i></button>
+    </div>
+    <div class="moreGroup">
+      <div class="eyebrow">LERNEN</div>
+      <button onclick="openView('study')"><span>⏱</span><div><b>StudyPet & Timer</b><small>Fokus- und Pausenzeiten</small></div><i>›</i></button>
+    </div>
+    <div class="moreGroup">
+      <div class="eyebrow">APP</div>
+      <button onclick="openView('settings')"><span>⚙︎</span><div><b>Einstellungen</b><small>Plan, Darstellung, Daten</small></div><i>›</i></button>
+    </div>
+  </section>
+
+  <section class="view" id="view-subjects">
+    <div class="learningBackRow">
+      <button onclick="openView('study')">← <span>Zurück zu Lernen</span></button>
+    </div>
+    <div class="sectionHead"><h2>Fächer & Dateien</h2><button class="primary" onclick="openAddSubject()">+ Fach</button></div>
+    <div class="stack" id="subjectList"></div>
+  </section>
+
+
+  <section class="view" id="view-subject-detail">
+    <div class="sectionHead">
+      <button class="ghost" onclick="leaveSubjectNotebook()">← Fächer</button>
+      <button class="dangerBtn" id="deleteCurrentSubjectBtn">Fach löschen</button>
+    </div>
+    <div id="subjectDetail"></div>
+  </section>
+
+
+  <section class="view" id="view-topic-detail">
+    <div class="sectionHead">
+      <button class="ghost" onclick="backToNotebook()">← Notizbuch</button>
+      <button class="dangerBtn" id="deleteCurrentTopicBtn">Thema löschen</button>
+    </div>
+    <div id="topicDetail"></div>
+  </section>
+
+  <section class="view" id="view-deck-detail">
+    <div class="sectionHead">
+      <button class="ghost" onclick="goBackFromDeck()">← Zurück</button>
+      <button class="primary" id="addCardToDeckBtn">+ Karte</button>
+    </div>
+    <div id="deckDetail"></div>
+  </section>
+
+
+  <section class="view" id="view-sheet-editor">
+    <div class="canvasEditorShell">
+      <div class="canvasTopbar">
+        <button class="editorIcon" title="Zurück" onclick="closeSheetEditor()"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg></button>
+        <div class="editorTitle"><b>Lernblatt</b><span class="autosaveState" id="autosaveState">Autosave an</span></div>
+        <div class="historyBar">
+          <button class="historyBtn" id="undoBtn" title="Rückgängig" onclick="undoCanvas()">↶</button>
+          <button class="historyBtn" id="redoBtn" title="Wiederholen" onclick="redoCanvas()">↷</button>
+        </div>
+        <div class="editorActions">
+          <button class="editorIcon viewTopBtn pageTopButton" title="Seite & Ansicht" onclick="toggleTopViewMenu()"><span class="pageTopIcon">▯</span><span class="pageTopLabel">Seite</span></button>
+          <button class="editorIcon" title="Exportieren" onclick="exportCanvasHTML()"><svg viewBox="0 0 24 24"><path d="M12 3v12M8 11l4 4 4-4M4 19h16"/></svg></button>
+          <button class="editorIcon" title="PDF / Drucken" onclick="printCanvasSheet()"><svg viewBox="0 0 24 24"><path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="7" y="14" width="10" height="7"/></svg></button>
+          <button class="editorIcon primaryIcon" title="Speichern" onclick="saveCanvasSheet()"><svg viewBox="0 0 24 24"><path d="M5 3h12l2 2v16H5z"/><path d="M8 3v6h8V3M8 21v-7h8v7"/></svg></button>
+        </div>
+      </div>
+
+      <div class="desktopCommandBar" aria-label="Desktop-Werkzeuge">
+        <div class="desktopCmdGroup">
+          <span class="desktopCmdLabel">Einfügen</span>
+          <div class="desktopCmdButtons">
+            <button onclick="editorOpenGroup('add')" title="Hinzufügen">＋ <span>Hinzufügen</span></button>
+            <button onclick="addCanvasTextBox()" title="Textfeld">T <span>Textfeld</span></button>
+            <button onclick="openFormulaDialog()" title="Formel">∑ <span>Formel</span></button>
+            <button onclick="openGraphDialog()" title="Graph">⌁ <span>Graph</span></button>
+            <button onclick="addCanvasChecklist()" title="Checkliste">☑ <span>Checkliste</span></button>
+            <button onclick="addCanvasDivider()" title="Trennlinie">— <span>Linie</span></button>
+          </div>
+        </div>
+
+        <div class="desktopCmdGroup">
+          <span class="desktopCmdLabel">Bearbeiten</span>
+          <div class="desktopCmdButtons">
+            <button onclick="duplicateSelected()" title="Duplizieren">⧉ <span>Duplizieren</span></button>
+            <button onclick="groupSelectedItems()" title="Gruppieren">▣ <span>Gruppieren</span></button>
+            <button onclick="ungroupSelectedItems()" title="Gruppierung lösen">▢ <span>Lösen</span></button>
+            <button onclick="toggleSelectedLock()" title="Sperren">🔒 <span>Sperren</span></button>
+          </div>
+        </div>
+
+        <div class="desktopCmdGroup">
+          <span class="desktopCmdLabel">Ebene</span>
+          <div class="desktopCmdButtons">
+            <button onclick="moveSelectedLayer(1)" title="Nach vorne">↑ <span>Vorne</span></button>
+            <button onclick="moveSelectedLayer(-1)" title="Nach hinten">↓ <span>Hinten</span></button>
+          </div>
+        </div>
+
+        <div class="desktopCmdGroup desktopCmdView">
+          <span class="desktopCmdLabel">Ansicht</span>
+          <div class="desktopCmdButtons">
+            <button onclick="fitCanvasStage()" title="An Bildschirm">⊡ <span>Anpassen</span></button>
+            <button onclick="toggleTopViewMenu()" title="Seite & Ansicht">▯ <span>Seite</span></button>
+            <button onclick="openShortcutHelp()" title="Tastenkürzel">⌨ <span>Shortcuts</span></button>
+          </div>
+        </div>
+      </div>
+
+      <div id="topViewMenu" class="topViewMenu">
+        <div class="topViewSection">
+          <b>Ansicht</b>
+          <div class="topViewButtons">
+            <button onclick="fitCanvasStage()">⊡ An Bildschirm</button>
+            <button onclick="setCanvasZoom(.5)">50%</button>
+            <button onclick="setCanvasZoom(.75)">75%</button>
+            <button onclick="setCanvasZoom(1)">100%</button>
+          </div>
+        </div>
+        <div class="topViewSection">
+          <b>Seite</b>
+          <div class="topViewButtons orientationButtons">
+            <button id="portraitBtn" onclick="setCanvasOrientation('portrait')">▯ Hochformat</button>
+            <button id="landscapeBtn" onclick="setCanvasOrientation('landscape')">▭ Querformat</button>
+          </div>
+        </div>
+        <div class="topViewSection pageStyleSection">
+          <b>Seitenstil</b>
+          <div class="pageStyleGrid">
+            <label>Farbe<input id="pageColorInput" type="color" value="#ffffff" onchange="setCanvasPageStyle('color',this.value)"></label>
+            <label>Hintergrund
               <select id="pagePatternSelect" onchange="setCanvasPageStyle('pattern',this.value)">
-<option value="blank">Leer</option>
-<option value="lined">Liniert</option>
-<option value="grid">Kariert</option>
-<option value="dots">Gepunktet</option>
-</select>
-</label>
-<label id="pageSpacingLabel">Rastergröße<input id="pageSpacingInput" max="48" min="10" oninput="setCanvasPageStyle('spacing',+this.value)" type="range" value="24"/><span id="pageSpacingValue">24</span></label>
-<label>Seitenrand<input id="pageMarginInput" max="160" min="0" onchange="setCanvasPageStyle('margin',+this.value)" type="number" value="55"/></label>
+                <option value="blank">Leer</option>
+                <option value="lined">Liniert</option>
+                <option value="grid">Kariert</option>
+                <option value="dots">Gepunktet</option>
+              </select>
+            </label>
+            <label id="pageSpacingLabel">Rastergröße<input id="pageSpacingInput" type="range" min="10" max="48" value="24" oninput="setCanvasPageStyle('spacing',+this.value)"><span id="pageSpacingValue">24</span></label>
+            <label>Seitenrand<input id="pageMarginInput" type="number" min="0" max="160" value="55" onchange="setCanvasPageStyle('margin',+this.value)"></label>
+          </div>
+          <div class="topViewButtons">
+            <button onclick="alignSelectedToPageMargin('left')">⇤ An linken Rand</button>
+            <button onclick="alignSelectedToPageMargin('right')">An rechten Rand ⇥</button>
+            <button onclick="fitSelectedToPageMargins()">↔ Breite bis Rand</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="canvasQuickNav" aria-label="Editor-Werkzeuge">
+  <button data-group="textLibrary" onclick="editorOpenGroup('textLibrary',this)" aria-label="Text">
+    <span class="editorNavIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14M12 5v14M8.5 19h7"/></svg></span><span>Text</span>
+  </button>
+  <button data-group="elements" onclick="editorOpenGroup('elements',this)" aria-label="Elemente">
+    <span class="editorNavIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1.4"/><circle cx="17" cy="7" r="3"/><path d="M4.5 19l3.2-5.5L11 19zM14 14h6v6h-6z"/></svg></span><span>Elemente</span>
+  </button>
+  <button data-group="templates" onclick="editorOpenGroup('templates',this)" aria-label="Vorlagen">
+    <span class="editorNavIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="4" width="12" height="15" rx="2"/><path d="M9 8h6M9 11h6M9 14h4"/></svg></span><span>Vorlagen</span>
+  </button>
+  <button data-group="pages" onclick="editorOpenGroup('pages',this)" aria-label="Seiten">
+    <span class="editorNavIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h8l3 3V20H7zM15 3.5V7h3"/></svg></span><span>Seiten</span>
+  </button>
+  <button data-group="layers" onclick="editorOpenGroup('layers',this)" aria-label="Ebenen">
+    <span class="editorNavIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4l8 4-8 4-8-4zM4 12l8 4 8-4M4 16l8 4 8-4"/></svg></span><span>Ebenen</span>
+  </button>
 </div>
-<div class="topViewButtons">
-<button onclick="alignSelectedToPageMargin('left')">⇤ An linken Rand</button>
-<button onclick="alignSelectedToPageMargin('right')">An rechten Rand ⇥</button>
-<button onclick="fitSelectedToPageMargins()">↔ Breite bis Rand</button>
+<div id="canvasQuickDrawer" class="canvasQuickDrawer"></div>
+<div id="mobileSelectionTools" class="mobileSelectionTools"></div>
+<div id="multiSelectStatus" class="multiSelectStatus"></div>
+      <input id="canvasImageInput" type="file" accept="image/*" style="display:none" onchange="if(this.files?.[0])addCanvasImage(this.files[0]);this.value=''">
+      <input id="canvasCameraInput" type="file" accept="image/*" capture="environment" style="display:none" onchange="if(this.files?.[0])addCanvasImage(this.files[0]);this.value=''">
+      <input id="canvasAnyFileInput" type="file" accept="image/*,.pdf,.doc,.docx,.ppt,.pptx,.txt" style="display:none" onchange="if(this.files?.[0])addCanvasFile(this.files[0]);this.value=''">
+      <div class="canvasViewport" id="canvasViewport">
+        <div class="canvasStage" id="canvasStage">
+          <div class="canvasPage" id="canvasPage"></div>
+          <svg id="canvasSvg" class="canvasSvg" viewBox="0 0 794 1123"></svg>
+          <div id="canvasObjects" class="canvasObjects"></div><div id="canvasGuides" class="canvasGuides"></div><div id="pathDrawHint" class="pathDrawHint" style="display:none">Mit Finger/Stift ziehen · loslassen = Pfad fertig</div>
+        </div>
+      </div>
+
+      <aside id="desktopEditorSidebar" class="desktopEditorSidebar">
+      <div id="stickerPanel" class="objectPanel" style="display:none">
+        <div class="rowBetween"><b>Sticker</b><button class="ghost" onclick="toggleStickerPanel()">Schließen</button></div>
+        <div class="stickerPicker" id="stickerPicker"></div>
+      </div>
+
+      <div class="objectPanel">
+        <div class="rowBetween"><b>Eigenschaften</b><label class="snapToggle"><input id="snapToggle" type="checkbox" checked onchange="canvasState.snap=this.checked"> Snap</label><div class="row"><button class="miniIcon" title="Sperren/Entsperren" onclick="toggleSelectedLock()"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></button><button class="miniIcon dangerMini" title="Löschen" onclick="deleteSelectedCanvasItem()"><svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M7 7l1 14h8l1-14M10 11v6M14 11v6"/></svg></button></div></div>
+        <div id="canvasInspector" class="small">Wähle einen Text, ein Bild, eine Tabelle, einen Sticker oder eine Form aus.</div>
+      </div>
+
+      <div class="objectPanel">
+        <div class="rowBetween"><b>Ebenen</b><div class="row"><button class="miniIcon" title="Nach vorne" onclick="moveSelectedLayer(1)">↑</button><button class="miniIcon" title="Nach hinten" onclick="moveSelectedLayer(-1)">↓</button></div></div>
+        <div id="layerList" class="layerList"></div>
+      </div>
+
+      <div class="objectPanel pageTemplatesPanel">
+        <div class="rowBetween"><b>Seitenvorlagen</b><div class="row"><button class="miniIcon" title="Aktuelle Seite als Vorlage speichern" onclick="saveCurrentPageTemplate()">＋</button><button class="miniIcon" title="Vorlagen verwalten" onclick="openPageTemplateManager()">⚙</button></div></div>
+        <div class="templatePicker" id="pageTemplatePicker">
+          <button class="templateCard" onclick="applyCanvasTemplate('clean')"><b>Clean Notes</b><span>klare Überschrift + Merkkasten</span></button>
+          <button class="templateCard" onclick="applyCanvasTemplate('cute')"><b>Cute Study</b><span>Pastell + Sticker + Aufgabe</span></button>
+          <button class="templateCard" onclick="applyCanvasTemplate('exam')"><b>Exam Prep</b><span>Definitionen + Aufgaben</span></button>
+          <button class="templateCard" onclick="applyCanvasTemplate('blank')"><b>Leer</b><span>komplett frei gestalten</span></button>
+        </div>
+      </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="view" id="view-quiz-player">
+    <div class="sectionHead">
+      <button class="ghost backBtn" onclick="openTopic(selectedSubjectId,selectedTopicId)">← Thema</button>
+      <span class="badge" id="quizScoreBadge">0 Punkte</span>
+    </div>
+    <div id="quizPlayerRoot"></div>
+  </section>
+
+  <section class="view" id="view-absence">
+    <div class="sectionHead"><h2>Abwesenheiten</h2><button class="primary" onclick="openAddAbsence()">+ Eintragen</button></div>
+    <div class="grid2" id="absenceSummary"></div>
+    <div class="section"><div class="stack" id="absenceList"></div></div>
+  </section>
+
+  <section class="view" id="view-settings">
+    <div class="panel">
+      <h2>Profil</h2>
+      <div class="section">
+        <label>Ich bin …</label>
+        <div class="profileType" id="profileType">
+          <button data-type="school">Schüler/in</button>
+          <button data-type="student">Student/in</button>
+          <button data-type="work">Arbeitend</button>
+        </div>
+      </div>
+      <div class="formGrid section">
+        <div><label>Name</label><input id="setName" placeholder="Dein Name"></div>
+        <div><label>Klasse / Kurs</label><input id="setClass" value="M U1"></div>
+        <div><label>Schule / Hochschule</label><input id="setSchool" value="PHS Ludwigshafen"></div>
+        <div><label>Haustier im Lerntimer</label><select id="setPet"><option value="on">An</option><option value="off">Aus</option></select></div>
+        <div class="full"><label>Stundenplan-PDF</label><input id="setPdf" value="https://www.phs-lu.de/wp-content/uploads/2023/04/Stundenplan.pdf"></div>
+      </div>
+      <button class="primary" style="margin-top:12px" onclick="saveSettings()">Speichern</button>
+    </div>
+
+    <div class="section panel">
+      <h2>Design anpassen 🎨</h2>
+      <p class="small">Wähle deinen Look. Deine Inhalte bleiben gleich.</p>
+      <div class="themeSwatches" id="themeSwatches">
+        <button class="themeSwatch" data-theme="blossom" style="background:linear-gradient(135deg,#fff5f4,#efaaa6)"></button>
+        <button class="themeSwatch" data-theme="matcha" style="background:linear-gradient(135deg,#f6f7e9,#a8c687)"></button>
+        <button class="themeSwatch" data-theme="lavender" style="background:linear-gradient(135deg,#f8f2ff,#c5addf)"></button>
+        <button class="themeSwatch" data-theme="sky" style="background:linear-gradient(135deg,#f1f8ff,#9fc6e8)"></button>
+      </div>
+      <label style="margin-top:12px"><input id="compactToggle" type="checkbox" style="width:auto;margin-right:8px"> Kompaktere Karten & Abstände</label>
+      <button class="ghost" style="margin-top:10px" onclick="saveCustomization()">Design speichern</button>
+    </div>
+
+    <div class="section panel">
+      <h2>Erinnerungen</h2>
+      <div id="notificationState" class="notificationBox">Benachrichtigungen werden geprüft …</div>
+      <div class="row" style="margin-top:10px;flex-wrap:wrap">
+        <button class="primary" onclick="enableNotifications()">Benachrichtigungen erlauben</button>
+        <button class="ghost" onclick="testNotification()">Test senden</button>
+      </div>
+      <p class="small">Auf dem iPhone muss Studia zuerst zum Home-Bildschirm hinzugefügt und von dort geöffnet werden.</p>
+    </div>
+
+    <div class="section panel v111BackupPanel">
+      <div class="v111BackupHead"><div><h2>Backup & Sicherheit</h2><p class="small">Studia sichert deine Daten automatisch zusätzlich auf diesem Gerät.</p></div><span class="v111BackupCloud">↻</span></div>
+      <div class="v111BackupStatus" id="v111BackupStatus"><b>Lokales Autobackup</b><span>Wird vorbereitet …</span></div>
+      <label class="v111BackupToggle"><span><b>Automatische Backups</b><small>Nach Änderungen, höchstens etwa alle 5 Minuten.</small></span><input id="v111BackupEnabled" type="checkbox" checked onchange="v111ToggleBackups(this.checked)"></label>
+      <label class="v111BackupToggle"><span><b>Tägliche Backup-Erinnerung</b><small>Einmal pro Tag wird dir ein Download angeboten.</small></span><input id="v111DailyPrompt" type="checkbox" checked onchange="v111ToggleDailyPrompt(this.checked)"></label>
+      <div class="v111BackupButtons">
+        <button class="primary" onclick="v111CreateBackupNow(true)">Jetzt lokal sichern</button>
+        <button class="ghost" onclick="exportData()">Backup-Datei herunterladen</button>
+        <button class="ghost" onclick="v111OpenRestoreManager()">Lokales Backup wiederherstellen</button>
+        <label class="ghost v111ImportLabel" for="importData">Backup-Datei importieren</label>
+        <input id="importData" type="file" accept="application/json,.json,.studia" style="display:none">
+        <button class="ghost" onclick="v111RequestPersistentStorage()">Speicher dauerhaft schützen</button>
+      </div>
+      <p class="small v111BackupNote">Interne Backups funktionieren ohne Google und ohne Internet. Eine heruntergeladene Backup-Datei ist zusätzlich wichtig, falls Safari/Websitedaten komplett gelöscht werden.</p>
+      <button class="dangerBtn" style="display:block;margin-top:12px" onclick="resetAll()">Alle Daten löschen</button>
+    </div>
+
+    <div class="section panel v113SyncPanel">
+      <div class="v113SyncHead"><div><h2>Geräte-Sync</h2><p class="small">Optional: derselbe Studia-Stand auf Handy und Laptop.</p></div><span class="v113SyncIcon">⇄</span></div>
+      <div class="v113SyncStatus" id="v113SyncStatus"><b>Noch nicht verbunden</b><span>GitHub-Sync ist optional.</span></div>
+      <div class="v113SyncGrid">
+        <label>GitHub Token<input id="v113SyncToken" type="password" autocomplete="off" placeholder="Token mit Gist-Berechtigung"></label>
+        <label>Sync-Passwort<input id="v113SyncPass" type="password" autocomplete="off" placeholder="Auf allen Geräten gleich"></label>
+        <label class="full">Gist-ID<input id="v113SyncGist" placeholder="Wird beim Einrichten automatisch erstellt"></label>
+      </div>
+      <label class="v111BackupToggle"><span><b>Automatisch synchronisieren</b><small>Nach Änderungen und beim Öffnen von Studia.</small></span><input id="v113SyncAuto" type="checkbox" onchange="v113SetAutoSync(this.checked)"></label>
+      <div class="v113SyncButtons">
+        <button class="primary" onclick="v113SetupSync()">Sync einrichten</button>
+        <button class="ghost" onclick="v113SyncPush(true)">Jetzt hochladen</button>
+        <button class="ghost" onclick="v113SyncPull(true)">Jetzt herunterladen</button>
+        <button class="ghost" onclick="v113ForgetSync()">Verbindung entfernen</button>
+      </div>
+      <p class="small v113SyncNote">Die Sync-Datei wird vor dem Upload mit deinem Sync-Passwort verschlüsselt. Token und Passwort bleiben nur auf diesem Gerät und werden nicht in Studia-Backups exportiert.</p>
+    </div>
+  </section>
 </div>
-</div>
-</div>
-<div aria-label="Editor-Werkzeuge" class="canvasQuickNav">
-<button aria-label="Text" data-group="textLibrary" onclick="editorOpenGroup('textLibrary',this)">
-<span class="editorNavIcon"><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M5 5h14M12 5v14M8.5 19h7"></path></svg></span><span>Text</span>
-</button>
-<button aria-label="Elemente" data-group="elements" onclick="editorOpenGroup('elements',this)">
-<span class="editorNavIcon"><svg aria-hidden="true" viewbox="0 0 24 24"><rect height="6" rx="1.4" width="6" x="4" y="4"></rect><circle cx="17" cy="7" r="3"></circle><path d="M4.5 19l3.2-5.5L11 19zM14 14h6v6h-6z"></path></svg></span><span>Elemente</span>
-</button>
-<button aria-label="Vorlagen" data-group="templates" onclick="editorOpenGroup('templates',this)">
-<span class="editorNavIcon"><svg aria-hidden="true" viewbox="0 0 24 24"><rect height="15" rx="2" width="12" x="6" y="4"></rect><path d="M9 8h6M9 11h6M9 14h4"></path></svg></span><span>Vorlagen</span>
-</button>
-<button aria-label="Seiten" data-group="pages" onclick="editorOpenGroup('pages',this)">
-<span class="editorNavIcon"><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M7 3.5h8l3 3V20H7zM15 3.5V7h3"></path></svg></span><span>Seiten</span>
-</button>
-<button aria-label="Ebenen" data-group="layers" onclick="editorOpenGroup('layers',this)">
-<span class="editorNavIcon"><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M12 4l8 4-8 4-8-4zM4 12l8 4 8-4M4 16l8 4 8-4"></path></svg></span><span>Ebenen</span>
-</button>
-</div>
-<div class="canvasQuickDrawer" id="canvasQuickDrawer"></div>
-<div class="mobileSelectionTools" id="mobileSelectionTools"></div>
-<div class="multiSelectStatus" id="multiSelectStatus"></div>
-<input accept="image/*" id="canvasImageInput" onchange="if(this.files?.[0])addCanvasImage(this.files[0]);this.value=''" style="display:none" type="file"/>
-<input accept="image/*" capture="environment" id="canvasCameraInput" onchange="if(this.files?.[0])addCanvasImage(this.files[0]);this.value=''" style="display:none" type="file"/>
-<input accept="image/*,.pdf,.doc,.docx,.ppt,.pptx,.txt" id="canvasAnyFileInput" onchange="if(this.files?.[0])addCanvasFile(this.files[0]);this.value=''" style="display:none" type="file"/>
-<div class="canvasViewport" id="canvasViewport">
-<div class="canvasStage" id="canvasStage">
-<div class="canvasPage" id="canvasPage"></div>
-<svg class="canvasSvg" id="canvasSvg" viewbox="0 0 794 1123"></svg>
-<div class="canvasObjects" id="canvasObjects"></div><div class="canvasGuides" id="canvasGuides"></div><div class="pathDrawHint" id="pathDrawHint" style="display:none">Mit Finger/Stift ziehen · loslassen = Pfad fertig</div>
-</div>
-</div>
-<aside class="desktopEditorSidebar" id="desktopEditorSidebar">
-<div class="objectPanel" id="stickerPanel" style="display:none">
-<div class="rowBetween"><b>Sticker</b><button class="ghost" onclick="toggleStickerPanel()">Schließen</button></div>
-<div class="stickerPicker" id="stickerPicker"></div>
-</div>
-<div class="objectPanel">
-<div class="rowBetween"><b>Eigenschaften</b><label class="snapToggle"><input checked="" id="snapToggle" onchange="canvasState.snap=this.checked" type="checkbox"/> Snap</label><div class="row"><button class="miniIcon" onclick="toggleSelectedLock()" title="Sperren/Entsperren"><svg viewbox="0 0 24 24"><rect height="11" rx="2" width="14" x="5" y="10"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg></button><button class="miniIcon dangerMini" onclick="deleteSelectedCanvasItem()" title="Löschen"><svg viewbox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M7 7l1 14h8l1-14M10 11v6M14 11v6"></path></svg></button></div></div>
-<div class="small" id="canvasInspector">Wähle einen Text, ein Bild, eine Tabelle, einen Sticker oder eine Form aus.</div>
-</div>
-<div class="objectPanel">
-<div class="rowBetween"><b>Ebenen</b><div class="row"><button class="miniIcon" onclick="moveSelectedLayer(1)" title="Nach vorne">↑</button><button class="miniIcon" onclick="moveSelectedLayer(-1)" title="Nach hinten">↓</button></div></div>
-<div class="layerList" id="layerList"></div>
-</div>
-<div class="objectPanel pageTemplatesPanel">
-<div class="rowBetween"><b>Seitenvorlagen</b><div class="row"><button class="miniIcon" onclick="saveCurrentPageTemplate()" title="Aktuelle Seite als Vorlage speichern">＋</button><button class="miniIcon" onclick="openPageTemplateManager()" title="Vorlagen verwalten">⚙</button></div></div>
-<div class="templatePicker" id="pageTemplatePicker">
-<button class="templateCard" onclick="applyCanvasTemplate('clean')"><b>Clean Notes</b><span>klare Überschrift + Merkkasten</span></button>
-<button class="templateCard" onclick="applyCanvasTemplate('cute')"><b>Cute Study</b><span>Pastell + Sticker + Aufgabe</span></button>
-<button class="templateCard" onclick="applyCanvasTemplate('exam')"><b>Exam Prep</b><span>Definitionen + Aufgaben</span></button>
-<button class="templateCard" onclick="applyCanvasTemplate('blank')"><b>Leer</b><span>komplett frei gestalten</span></button>
-</div>
-</div>
-</aside>
-</div>
-</section>
-<section class="view" id="view-quiz-player">
-<div class="sectionHead">
-<button class="ghost backBtn" onclick="openTopic(selectedSubjectId,selectedTopicId)">← Thema</button>
-<span class="badge" id="quizScoreBadge">0 Punkte</span>
-</div>
-<div id="quizPlayerRoot"></div>
-</section>
-<section class="view" id="view-absence">
-<div class="sectionHead"><h2>Abwesenheiten</h2><button class="primary" onclick="openAddAbsence()">+ Eintragen</button></div>
-<div class="grid2" id="absenceSummary"></div>
-<div class="section"><div class="stack" id="absenceList"></div></div>
-</section>
-<section class="view" id="view-settings">
-<div class="panel">
-<h2>Profil</h2>
-<div class="section">
-<label>Ich bin …</label>
-<div class="profileType" id="profileType">
-<button data-type="school">Schüler/in</button>
-<button data-type="student">Student/in</button>
-<button data-type="work">Arbeitend</button>
-</div>
-</div>
-<div class="formGrid section">
-<div><label>Name</label><input id="setName" placeholder="Dein Name"/></div>
-<div><label>Klasse / Kurs</label><input id="setClass" value="M U1"/></div>
-<div><label>Schule / Hochschule</label><input id="setSchool" value="PHS Ludwigshafen"/></div>
-<div><label>Haustier im Lerntimer</label><select id="setPet"><option value="on">An</option><option value="off">Aus</option></select></div>
-<div class="full"><label>Stundenplan-PDF</label><input id="setPdf" value="https://www.phs-lu.de/wp-content/uploads/2023/04/Stundenplan.pdf"/></div>
-</div>
-<button class="primary" onclick="saveSettings()" style="margin-top:12px">Speichern</button>
-</div>
-<div class="section panel">
-<h2>Design anpassen 🎨</h2>
-<p class="small">Wähle deinen Look. Deine Inhalte bleiben gleich.</p>
-<div class="themeSwatches" id="themeSwatches">
-<button class="themeSwatch" data-theme="blossom" style="background:linear-gradient(135deg,#fff5f4,#efaaa6)"></button>
-<button class="themeSwatch" data-theme="matcha" style="background:linear-gradient(135deg,#f6f7e9,#a8c687)"></button>
-<button class="themeSwatch" data-theme="lavender" style="background:linear-gradient(135deg,#f8f2ff,#c5addf)"></button>
-<button class="themeSwatch" data-theme="sky" style="background:linear-gradient(135deg,#f1f8ff,#9fc6e8)"></button>
-</div>
-<label style="margin-top:12px"><input id="compactToggle" style="width:auto;margin-right:8px" type="checkbox"/> Kompaktere Karten &amp; Abstände</label>
-<button class="ghost" onclick="saveCustomization()" style="margin-top:10px">Design speichern</button>
-</div>
-<div class="section panel">
-<h2>Erinnerungen</h2>
-<div class="notificationBox" id="notificationState">Benachrichtigungen werden geprüft …</div>
-<div class="row" style="margin-top:10px;flex-wrap:wrap">
-<button class="primary" onclick="enableNotifications()">Benachrichtigungen erlauben</button>
-<button class="ghost" onclick="testNotification()">Test senden</button>
-</div>
-<p class="small">Auf dem iPhone muss Studia zuerst zum Home-Bildschirm hinzugefügt und von dort geöffnet werden.</p>
-</div>
-<div class="section panel v111BackupPanel">
-<div class="v111BackupHead"><div><h2>Backup &amp; Sicherheit</h2><p class="small">Studia sichert deine Daten automatisch zusätzlich auf diesem Gerät.</p></div><span class="v111BackupCloud">↻</span></div>
-<div class="v111BackupStatus" id="v111BackupStatus"><b>Lokales Autobackup</b><span>Wird vorbereitet …</span></div>
-<label class="v111BackupToggle"><span><b>Automatische Backups</b><small>Nach Änderungen, höchstens etwa alle 5 Minuten.</small></span><input checked="" id="v111BackupEnabled" onchange="v111ToggleBackups(this.checked)" type="checkbox"/></label>
-<label class="v111BackupToggle"><span><b>Tägliche Backup-Erinnerung</b><small>Einmal pro Tag wird dir ein Download angeboten.</small></span><input checked="" id="v111DailyPrompt" onchange="v111ToggleDailyPrompt(this.checked)" type="checkbox"/></label>
-<div class="v111BackupButtons">
-<button class="primary" onclick="v111CreateBackupNow(true)">Jetzt lokal sichern</button>
-<button class="ghost" onclick="exportData()">Backup-Datei herunterladen</button>
-<button class="ghost" onclick="v111OpenRestoreManager()">Lokales Backup wiederherstellen</button>
-<label class="ghost v111ImportLabel" for="importData">Backup-Datei importieren</label>
-<input accept="application/json,.json,.studia" id="importData" style="display:none" type="file"/>
-<button class="ghost" onclick="v111RequestPersistentStorage()">Speicher dauerhaft schützen</button>
-</div>
-<p class="small v111BackupNote">Interne Backups funktionieren ohne Google und ohne Internet. Eine heruntergeladene Backup-Datei ist zusätzlich wichtig, falls Safari/Websitedaten komplett gelöscht werden.</p>
-<button class="dangerBtn" onclick="resetAll()" style="display:block;margin-top:12px">Alle Daten löschen</button>
-</div>
-<div class="section panel v113SyncPanel">
-<div class="v113SyncHead"><div><h2>Geräte-Sync</h2><p class="small">Optional: derselbe Studia-Stand auf Handy und Laptop.</p></div><span class="v113SyncIcon">⇄</span></div>
-<div class="v113SyncStatus" id="v113SyncStatus"><b>Noch nicht verbunden</b><span>GitHub-Sync ist optional.</span></div>
-<div class="v113SyncGrid">
-<label>GitHub Token<input autocomplete="off" id="v113SyncToken" placeholder="Token mit Gist-Berechtigung" type="password"/></label>
-<label>Sync-Passwort<input autocomplete="off" id="v113SyncPass" placeholder="Auf allen Geräten gleich" type="password"/></label>
-<label class="full">Gist-ID<input id="v113SyncGist" placeholder="Wird beim Einrichten automatisch erstellt"/></label>
-</div>
-<label class="v111BackupToggle"><span><b>Automatisch synchronisieren</b><small>Nach Änderungen und beim Öffnen von Studia.</small></span><input id="v113SyncAuto" onchange="v113SetAutoSync(this.checked)" type="checkbox"/></label>
-<div class="v113SyncButtons">
-<button class="primary" onclick="v113SetupSync()">Sync einrichten</button>
-<button class="ghost" onclick="v113SyncPush(true)">Jetzt hochladen</button>
-<button class="ghost" onclick="v113SyncPull(true)">Jetzt herunterladen</button>
-<button class="ghost" onclick="v113ForgetSync()">Verbindung entfernen</button>
-</div>
-<p class="small v113SyncNote">Die Sync-Datei wird vor dem Upload mit deinem Sync-Passwort verschlüsselt. Token und Passwort bleiben nur auf diesem Gerät und werden nicht in Studia-Backups exportiert.</p>
-</div>
-</section>
-</div>
+
 <nav class="nav" id="nav">
-<button class="active" data-view="home"><svg viewbox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"></path><path d="M5.5 10.5V20h13v-9.5"></path><path d="M9.5 20v-6h5v6"></path></svg><span class="navLabel">Heute</span></button>
-<button data-view="plan"><svg viewbox="0 0 24 24"><rect height="16" rx="2" width="18" x="3" y="5"></rect><path d="M7 3v4M17 3v4M3 10h18M8 14h2M14 14h2M8 18h2M14 18h2"></path></svg><span class="navLabel">Plan</span></button>
-<button data-view="tasks"><svg viewbox="0 0 24 24"><path d="m5 12 4 4L19 6"></path></svg><span class="navLabel">Aufgaben</span></button>
-<button data-view="study"><svg viewbox="0 0 24 24"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H20v16H7.5A3.5 3.5 0 0 0 4 21.5z"></path><path d="M4 5.5v16"></path></svg><span class="navLabel">Lernen</span></button>
-<button data-view="more"><svg viewbox="0 0 24 24"><circle cx="5" cy="12" fill="currentColor" r="1.5" stroke="none"></circle><circle cx="12" cy="12" fill="currentColor" r="1.5" stroke="none"></circle><circle cx="19" cy="12" fill="currentColor" r="1.5" stroke="none"></circle></svg><span class="navLabel">Mehr</span></button>
+  <button class="active" data-view="home"><svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/><path d="M9.5 20v-6h5v6"/></svg><span class="navLabel">Heute</span></button>
+  <button data-view="plan"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M8 14h2M14 14h2M8 18h2M14 18h2"/></svg><span class="navLabel">Plan</span></button>
+  <button data-view="tasks"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg><span class="navLabel">Aufgaben</span></button>
+  <button data-view="study"><svg viewBox="0 0 24 24"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H20v16H7.5A3.5 3.5 0 0 0 4 21.5z"/><path d="M4 5.5v16"/></svg><span class="navLabel">Lernen</span></button>
+  <button data-view="more"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg><span class="navLabel">Mehr</span></button>
 </nav>
+
 <div class="modalWrap" id="modalWrap" onclick="if(event.target===this)closeModal()">
-<div class="modal" id="modal"></div>
+  <div class="modal" id="modal"></div>
 </div>
+
 <script type="module">
 const SCHOOLBLOOM_PLAN_WORKER="https://dry-surf-fec5.muelliaccc.workers.dev";
 
@@ -11622,10 +11712,14 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
 /* ===== /Studia V103 additions ===== */
 /* ===== /Studia V103 behavior ===== */
 </script>
+
 <script id="v92-fallback">
 window.addEventListener('error',e=>console.warn('Studia error:',e.message));
 setTimeout(()=>{if(!window.__schoolBloomBooted){document.documentElement.style.background='#fff7f4';document.body.style.background='#fff7f4';}},1800);
 </script>
+
+
+
 <!-- ===== Studia V117 interaction + mobile toolbar stabilization ===== -->
 <style id="v117-interaction-fix">
 @media (max-width:899px){
@@ -11651,82 +11745,312 @@ setTimeout(()=>{if(!window.__schoolBloomBooted){document.documentElement.style.b
   body.editorMode #canvasQuickDrawer.open .mobileTextModeContent{min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important}
 }
 </style>
-
-<!-- ===== /Studia V117 ===== -->
-
-<style id="v119-core-style">
-body.editorMode #canvasViewport{touch-action:none!important;overscroll-behavior:none!important}
-body.editorMode #canvasStage,body.editorMode #v96PanSurface{touch-action:none!important;transform-origin:0 0!important}
-body.editorMode .cobj,body.editorMode .vectorTouchProxy,body.editorMode .shapeHit{touch-action:none!important;cursor:grab!important}
-body.editorMode .cobj.v119Dragging,body.editorMode .vectorObj.v119Dragging{cursor:grabbing!important}
-@media(max-width:899px){
- body.editorMode #canvasViewport{overflow:auto!important;-webkit-overflow-scrolling:auto!important}
- body.editorMode #v96PanSurface{margin:120px auto!important}
- body.editorMode.editorDrawerOpen .canvasQuickNav{display:none!important}
- body.editorMode:not(.editorDrawerOpen) .canvasQuickNav{display:grid!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
-}
-@media(min-width:900px){
- body.editorMode .v102DesktopLeft{grid-template-rows:auto minmax(0,1fr)!important}
- body.editorMode .canvasQuickDrawer{overflow:auto!important}
- .v119DeskGroup{display:grid;gap:7px;margin-bottom:13px}.v119DeskTitle{font-size:10px;font-weight:950;color:#aa8278;text-transform:uppercase;letter-spacing:.1em}
- .v119DeskGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.v119DeskGrid button{min-height:62px;border:1px solid #ead8d2;border-radius:14px;background:#fffdfa;color:#735d55;font-size:10px;font-weight:900;padding:7px;overflow:hidden}.v119DeskGrid button b{display:block;font-size:19px;margin-bottom:4px}.v119DeskFormats{display:flex;gap:6px;overflow:auto;padding-bottom:3px}.v119DeskFormats button{white-space:nowrap;border:1px solid #ead8d2;border-radius:12px;background:#fff;padding:8px 10px;color:#735d55;font-weight:850;font-size:9px}
-}
-</style>
-<script id="v119-core-script">
+<script id="v117-interaction-fix-script">
 (function(){
- const ed=()=>document.body.classList.contains('editorMode')&&!!document.querySelector('#view-sheet-editor.active');
- const mobile=()=>innerWidth<900;
- const viewport=()=>document.getElementById('canvasViewport');
- const surface=()=>document.getElementById('v96PanSurface');
- const stage=()=>document.getElementById('canvasStage');
- let gesture=null,drag=null,pan=null;
- function zNow(){return Math.max(.2,Number(stage()?.dataset.scale)||window.canvasZoom||1)}
- function setZoomAt(z,cx,cy,start=null){
-   const vp=viewport(),sf=surface(),st=stage();if(!vp||!sf||!st)return;
-   const old=start?.z||zNow(),rect=vp.getBoundingClientRect(),lx=cx-rect.left,ly=cy-rect.top;
-   const oldLeft=start?.offX??sf.offsetLeft,oldTop=start?.offY??sf.offsetTop,oldSL=start?.sl??vp.scrollLeft,oldST=start?.st??vp.scrollTop;
-   const docX=(oldSL+lx-oldLeft)/old,docY=(oldST+ly-oldTop)/old;
-   z=Math.max(.22,Math.min(4,z));window.canvasZoom=z;canvasZoom=z;canvasState.userZoomTouched=true;st.dataset.scale=String(z);st.style.zoom='';st.style.transform=`scale(${z})`;st.style.transformOrigin='0 0';sf.style.width=(canvasPageWidth()*z)+'px';sf.style.height=(canvasPageHeight()*z)+'px';
-   const label=document.getElementById('canvasZoomLabel');if(label)label.textContent=Math.round(z*100)+'%';
-   const newLeft=sf.offsetLeft,newTop=sf.offsetTop;vp.scrollLeft=Math.max(0,newLeft+docX*z-lx);vp.scrollTop=Math.max(0,newTop+docY*z-ly);
- }
- window.v119SetZoomAt=setZoomAt;
- window.setCanvasZoom=function(v){const vp=viewport(),r=vp?.getBoundingClientRect();if(vp)setZoomAt(+v,r.left+r.width/2,r.top+r.height/2)};
- window.canvasZoomBy=function(d){const vp=viewport(),r=vp?.getBoundingClientRect();if(vp)setZoomAt(zNow()+(+d||0),r.left+r.width/2,r.top+r.height/2)};
- window.fitCanvasStage=function(){const vp=viewport();if(!vp)return;const r=vp.getBoundingClientRect(),z=Math.max(.22,Math.min(1,(vp.clientWidth-34)/canvasPageWidth()));setZoomAt(z,r.left+r.width/2,r.top+50,{z:zNow(),sl:0,st:0,offX:surface()?.offsetLeft||0,offY:surface()?.offsetTop||0})};
+  const mobile=()=>window.innerWidth<900;
+  const inEditor=()=>document.body.classList.contains('editorMode')&&!!document.querySelector('#view-sheet-editor.active');
+  const activeTouchPointers=new Set();
+  let shapeDrag=null;
 
- // Canva-style pinch: focal point follows finger midpoint and midpoint movement pans at the same time.
- viewport()?.addEventListener('touchstart',e=>{if(!ed()||!mobile()||e.touches.length!==2)return;e.preventDefault();e.stopImmediatePropagation();const a=e.touches[0],b=e.touches[1],vp=viewport(),sf=surface();gesture={d:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),z:zNow(),cx:(a.clientX+b.clientX)/2,cy:(a.clientY+b.clientY)/2,sl:vp.scrollLeft,st:vp.scrollTop,offX:sf?.offsetLeft||0,offY:sf?.offsetTop||0};drag=null},{capture:true,passive:false});
- viewport()?.addEventListener('touchmove',e=>{if(!gesture||e.touches.length!==2)return;e.preventDefault();e.stopImmediatePropagation();const a=e.touches[0],b=e.touches[1],cx=(a.clientX+b.clientX)/2,cy=(a.clientY+b.clientY)/2,d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),z=gesture.z*(d/gesture.d);setZoomAt(z,cx,cy,gesture)},{capture:true,passive:false});
- viewport()?.addEventListener('touchend',e=>{if(e.touches.length<2)gesture=null},{capture:true,passive:true});
+  function setTextPanel(on){
+    document.body.classList.toggle('v117TextPanel',!!on);
+    if(!on){const nav=document.querySelector('.canvasQuickNav');if(nav){nav.style.removeProperty('display');nav.style.removeProperty('visibility');nav.style.removeProperty('pointer-events')}}
+  }
+  function syncTextPanel(){
+    if(!inEditor()||!mobile()){setTextPanel(false);return}
+    const d=document.getElementById('canvasQuickDrawer');
+    const open=!!d?.classList.contains('open');
+    setTextPanel(open&&!!d.querySelector('.mobileTextEditor,.mobileTextLibrary'));
+  }
 
- // Desktop Adobe-style navigation.
- viewport()?.addEventListener('wheel',e=>{if(!ed()||mobile()||!e.altKey)return;e.preventDefault();e.stopImmediatePropagation();setZoomAt(zNow()*Math.exp(-e.deltaY*.0025),e.clientX,e.clientY)},{capture:true,passive:false});
- viewport()?.addEventListener('mousedown',e=>{if(!ed()||mobile()||e.button!==1)return;e.preventDefault();const vp=viewport();pan={x:e.clientX,y:e.clientY,sl:vp.scrollLeft,st:vp.scrollTop};vp.style.cursor='grabbing'},{capture:true});
- addEventListener('mousemove',e=>{if(!pan)return;const vp=viewport();vp.scrollLeft=pan.sl-(e.clientX-pan.x);vp.scrollTop=pan.st-(e.clientY-pan.y)});addEventListener('mouseup',e=>{if(e.button===1&&pan){pan=null;if(viewport())viewport().style.cursor=''}});
+  const baseOpen=window.editorOpenGroup||((typeof editorOpenGroup==='function')?editorOpenGroup:null);
+  if(baseOpen){window.editorOpenGroup=function(){const r=baseOpen.apply(this,arguments);requestAnimationFrame(syncTextPanel);return r};try{editorOpenGroup=window.editorOpenGroup}catch(_){}}
+  const baseClose=window.closeEditorDrawer||((typeof closeEditorDrawer==='function')?closeEditorDrawer:null);
+  if(baseClose){window.closeEditorDrawer=function(){setTextPanel(false);const r=baseClose.apply(this,arguments);requestAnimationFrame(syncTextPanel);return r};try{closeEditorDrawer=window.closeEditorDrawer}catch(_){}}
 
- function moveVector(v,dx,dy,snap){if(v.type==='rect'){v.x=snap.x+dx;v.y=snap.y+dy}else if(v.type==='ellipse'){v.cx=snap.cx+dx;v.cy=snap.cy+dy}else if(v.points)v.points=snap.points.map(p=>[p[0]+dx,p[1]+dy])}
- function beginVector(e,id){const v=canvasState.vectors.find(x=>x.id===id);if(!v||v.locked)return;const p=canvasPoint(e);drag={type:'vector',id,p,snap:JSON.parse(JSON.stringify(v)),pid:e.pointerId,moved:false};selectVector(id)}
- function beginObject(e,id){const o=canvasState.objects.find(x=>x.id===id);if(!o||o.locked||o.editing)return;const p=canvasPoint(e);drag={type:'object',id,p,snap:{x:o.x,y:o.y},pid:e.pointerId,moved:false};if(!(canvasState.selectedId===id&&canvasState.selectedType==='object'))selectCanvasObject(id)}
- document.addEventListener('pointerdown',e=>{if(!ed()||e.button!==0||gesture)return;const t=e.target instanceof Element?e.target:null;if(!t)return;if(t.closest('.resizeHandle,.rotateHandle,.vectorResizeHandle,.vectorRotateHandle,.pathNode,td,input,select,textarea,button'))return;const vh=t.closest('.vectorTouchProxy,.shapeHit');if(vh){e.preventDefault();e.stopImmediatePropagation();beginVector(e,vh.dataset.vid);return}const ob=t.closest('.cobj');if(ob){e.preventDefault();e.stopImmediatePropagation();beginObject(e,ob.dataset.id)}},true);
- document.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.pid||gesture)return;const q=canvasPoint(e),dx=q.x-drag.p.x,dy=q.y-drag.p.y;if(Math.hypot(dx,dy)<2&&!drag.moved)return;drag.moved=true;e.preventDefault();if(drag.type==='vector'){const v=canvasState.vectors.find(x=>x.id===drag.id);if(v){moveVector(v,dx,dy,drag.snap);renderVectors();markCanvasDirty(false)}}else{const o=canvasState.objects.find(x=>x.id===drag.id),el=document.querySelector(`.cobj[data-id="${drag.id}"]`);if(o){o.x=Math.max(0,Math.min(canvasPageWidth()-o.w,drag.snap.x+dx));o.y=Math.max(0,Math.min(canvasPageHeight()-o.h,drag.snap.y+dy));if(el){el.style.left=o.x+'px';el.style.top=o.y+'px'}markCanvasDirty(false)}}},{capture:true,passive:false});
- document.addEventListener('pointerup',e=>{if(!drag||e.pointerId!==drag.pid)return;const d=drag;drag=null;if(d.moved){pushHistory();renderCanvasInspector();renderLayerList();return}if(d.type==='object'){const o=canvasState.objects.find(x=>x.id===d.id);if(o&&['text','block','task','merke'].includes(o.kind)&&canvasState.selectedId===o.id){o.editing=true;renderCanvasObjects();if(mobile())editorOpenGroup('textEdit',document.querySelector('.canvasQuickNav [data-group=textLibrary]'));setTimeout(()=>document.querySelector(`.cobj[data-id="${o.id}"]`)?.focus({preventScroll:true}),0)}}},true);
+  function patchLayers(){document.querySelectorAll('.mobileLayerList .layerDeleteBtn').forEach(btn=>{btn.textContent='×';btn.title='Löschen';btn.setAttribute('aria-label','Ebene löschen')})}
 
- // Desktop: all phone text capabilities, text formats and custom font upload in the left panel.
- function deskButton(label,ico,action){return `<button onclick="${action}"><b>${ico}</b><span>${label}</span></button>`}
- window.v119DesktopPalette=function(){const presets=canvasPresets();return `<div class="v119DeskGroup"><div class="v119DeskTitle">Text</div><div class="v119DeskGrid">${deskButton('Textfeld','T','addCanvasTextBox()')}${deskButton('Text bearbeiten','Aa',"editorOpenGroup('text')")}${deskButton('Schrift hinzufügen','Aa+','v91PickFont()')}${deskButton('Textformate','H1',"editorOpenGroup('textLibrary')")}</div><div class="v119DeskFormats">${presets.slice(0,10).map(p=>`<button onclick="${p.bundle?`insertSavedTextFormat('${p.id}')`:`addCanvasText('${p.id}')`}">${p.name}</button>`).join('')}</div></div><div class="v119DeskGroup"><div class="v119DeskTitle">Elemente</div><div class="v119DeskGrid">${deskButton('Rechteck','□',"addVectorShape('rect')")}${deskButton('Kreis','○',"addVectorShape('ellipse')")}${deskButton('Dreieck','△',"addVectorShape('triangle')")}${deskButton('Linie','╱','v119AddLine()')}${deskButton('Kurve','⌁','v119AddCurve()')}${deskButton('Freihand','〰',"setVectorTool('pen')")}${deskButton('Tabelle','▦','openTableDialog()')}${deskButton('Bild / Datei','▧','openCanvasMediaPicker()')}${deskButton('Formel','∑','openFormulaDialog()')}${deskButton('Graph','ƒ','openGraphDialog()')}${deskButton('Checkliste','☑','addCanvasChecklist()')}${deskButton('Sticker','✿',"editorOpenGroup('decor')")}</div></div>`};
- window.v119AddLine=function(){const v={id:id(),z:nextCanvasZ(),type:'path',points:[[250,380],[540,380]],fill:'none',stroke:'#8d7369',strokeWidth:4,dash:'solid',closed:false,rotation:0,locked:false};canvasState.vectors.push(v);selectVector(v.id);pushHistory()};
- window.v119AddCurve=function(){const v={id:id(),z:nextCanvasZ(),type:'path',points:[[220,430],[330,320],[460,520],[570,390]],fill:'none',stroke:'#8d7369',strokeWidth:4,dash:'solid',closed:false,rotation:0,locked:false,curve:true};canvasState.vectors.push(v);selectVector(v.id);pushHistory()};
- // Smooth curve render for curve paths.
- const oldPathD=window.pathD||pathD;window.v119PathD=function(points,curve){if(!curve)return oldPathD(points);if(!points?.length)return'';if(points.length<3)return oldPathD(points);let d=`M ${points[0][0]} ${points[0][1]}`;for(let i=1;i<points.length-1;i++){const p=points[i],n=points[i+1],mx=(p[0]+n[0])/2,my=(p[1]+n[1])/2;d+=` Q ${p[0]} ${p[1]} ${mx} ${my}`}const l=points.at(-1);return d+` T ${l[0]} ${l[1]}`};
- const baseVectorEl=vectorEl;vectorEl=function(v){if(v.type==='path'&&v.curve){const dash=v.dash==='dashed'?'10 7':v.dash==='dotted'?'2 6':'';return `<path data-vid="${v.id}" d="${v119PathD(v.points,true)}" fill="none" stroke="${v.stroke}" stroke-width="${v.strokeWidth}" stroke-dasharray="${dash}" stroke-linecap="round" stroke-linejoin="round"/>`}return baseVectorEl(v)};
- const baseRenderVectors=renderVectors;renderVectors=function(){baseRenderVectors();document.querySelectorAll('.vectorTouchProxy[data-vid]').forEach(el=>{const v=canvasState.vectors.find(x=>x.id===el.dataset.vid);if(v?.curve&&el.tagName.toLowerCase()==='path')el.setAttribute('d',v119PathD(v.points,true))})};
- function initDesktop(){if(mobile()||!ed())return;const drawer=document.getElementById('canvasQuickDrawer'),nav=document.querySelector('.canvasQuickNav');if(drawer){drawer.classList.add('open');drawer.innerHTML=v119DesktopPalette()}if(nav){const buttons=nav.querySelectorAll('button');if(buttons[0])buttons[0].onclick=()=>{drawer.innerHTML=v119DesktopPalette()};if(buttons[1])buttons[1].onclick=()=>{drawer.innerHTML=v119DesktopPalette();drawer.scrollTop=0}}}
- const baseRender=renderSheetEditor;renderSheetEditor=function(){baseRender();setTimeout(()=>{if(!mobile())initDesktop()},120)};
- addEventListener('resize',()=>setTimeout(initDesktop,100));
- setTimeout(()=>{const h=document.getElementById('headerEyebrow');if(h)h.textContent='VERSION 119';document.title='Studia';if(ed()&&!mobile())initDesktop()},250);
+  document.addEventListener('pointerdown',e=>{if(e.pointerType==='touch')activeTouchPointers.add(e.pointerId)},true);
+  const clearPointer=e=>{if(e.pointerType==='touch')activeTouchPointers.delete(e.pointerId);if(shapeDrag&&shapeDrag.pid===e.pointerId)finishShapeDrag()};
+  document.addEventListener('pointerup',clearPointer,true);document.addEventListener('pointercancel',clearPointer,true);
+
+  function copyVector(v){return JSON.parse(JSON.stringify(v))}
+  function moveVector(v,s,dx,dy){if(v.type==='rect'){v.x=s.x+dx;v.y=s.y+dy}else if(v.type==='ellipse'){v.cx=s.cx+dx;v.cy=s.cy+dy}else if(v.points){v.points=s.points.map(pt=>[pt[0]+dx,pt[1]+dy])}}
+  function finishShapeDrag(){const d=shapeDrag;if(!d)return;shapeDrag=null;window.removeEventListener('pointermove',shapeMove,true);if(d.raf)cancelAnimationFrame(d.raf);if(d.moved){try{pushHistory()}catch(_){}}}
+  function shapeMove(e){
+    const d=shapeDrag;if(!d||e.pointerId!==d.pid)return;
+    if(e.pointerType==='touch'&&activeTouchPointers.size>1){finishShapeDrag();return}
+    e.preventDefault();d.latest=e;if(d.raf)return;
+    d.raf=requestAnimationFrame(()=>{if(!shapeDrag)return;const ev=d.latest;d.raf=0;if(!ev)return;const q=canvasPoint(ev),dx=q.x-d.p.x,dy=q.y-d.p.y;if(Math.hypot(dx,dy)<1.5&&!d.moved)return;d.moved=true;const v=(window.canvasState?.vectors||[]).find(x=>x.id===d.vid);if(!v)return;moveVector(v,d.snap,dx,dy);try{renderVectors()}catch(_){}try{markCanvasDirty(false)}catch(_){}})
+  }
+  function startDirectShapeDrag(e,vid){const v=(window.canvasState?.vectors||[]).find(x=>x.id===vid);if(!v||v.locked)return;shapeDrag={vid,pid:e.pointerId,p:canvasPoint(e),snap:copyVector(v),latest:null,raf:0,moved:false};window.addEventListener('pointermove',shapeMove,{capture:true,passive:false})}
+
+  document.addEventListener('pointerdown',e=>{
+    if(!inEditor())return;const t=e.target instanceof Element?e.target:null,hit=t?.closest('.vectorTouchProxy,.shapeHit');
+    if(!hit||t.closest('.vectorResizeHandle,.vectorRotateHandle,.pathNode')||(e.button!=null&&e.button!==0))return;
+    if(e.pointerType==='touch'&&activeTouchPointers.size>1)return;
+    const vid=hit.getAttribute('data-vid'),v=(window.canvasState?.vectors||[]).find(x=>x.id===vid);if(!vid||!v)return;
+    e.preventDefault();e.stopImmediatePropagation();
+    if(window.canvasState?.multiMode||e.shiftKey){try{toggleVectorInMultiSelection(vid)}catch(_){};return}
+    try{selectVector(vid)}catch(_){}if(!v.locked)startDirectShapeDrag(e,vid)
+  },true);
+
+  function cleanShapeHandles(){document.querySelectorAll('.v116ShapeMoveHandle,.v108VectorMoveHandle').forEach(x=>x.remove())}
+  const oldRenderVectors=window.renderVectors||((typeof renderVectors==='function')?renderVectors:null);
+  if(oldRenderVectors){window.renderVectors=function(){const r=oldRenderVectors.apply(this,arguments);requestAnimationFrame(cleanShapeHandles);return r};try{renderVectors=window.renderVectors}catch(_){}}
+
+  const drawer=document.getElementById('canvasQuickDrawer');
+  if(drawer)new MutationObserver(()=>requestAnimationFrame(()=>{syncTextPanel();patchLayers()})).observe(drawer,{subtree:true,childList:true,attributes:true});
+  document.addEventListener('click',()=>requestAnimationFrame(()=>{syncTextPanel();patchLayers()}),true);
+  window.addEventListener('resize',()=>setTimeout(syncTextPanel,60));
+  setTimeout(()=>{cleanShapeHandles();patchLayers();syncTextPanel();const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 117';document.title='Studia'},260);
 })();
 </script>
+<!-- ===== /Studia V117 ===== -->
+
+
+<!-- ===== Studia V120 interaction core ===== -->
+<style id="v120-core-style">
+/* Keep the current bars/design; only fix interaction layers. */
+body.editorMode #canvasViewport{overscroll-behavior:none!important}
+@media(max-width:899px){
+  body.editorMode #canvasViewport{touch-action:none!important;overflow:hidden!important;position:relative!important}
+  body.editorMode #canvasStage{position:absolute!important;left:0!important;top:0!important;margin:0!important;transform-origin:0 0!important;will-change:transform!important}
+  body.editorMode .mobileLayerList{touch-action:pan-y!important;overscroll-behavior:contain!important}
+  body.editorMode .mobileLayerList .layerDragHandle{touch-action:none!important;cursor:grab!important}
+  body.editorMode .mobileLayerList .layerDragHandle:active{cursor:grabbing!important}
+  body.editorMode.layerDragging .mobileLayerList{overflow:hidden!important}
+}
+body.editorMode #canvasObjects .cobj:not(.editing):not(.locked),
+body.editorMode #canvasObjects .vectorTouchProxy{cursor:grab!important}
+body.editorMode #canvasObjects .cobj.v120Dragging,
+body.editorMode #canvasObjects .vectorObj.v120Dragging .vectorTouchProxy{cursor:grabbing!important}
+@media(min-width:900px){
+  .v120DesktopTextFull{display:grid;gap:10px}
+  .v120DesktopTextFull .mobileTextEditor{display:flex!important;max-height:none!important;overflow:visible!important}
+  .v120DesktopTextFull .mobileTextModeContent{max-height:none!important;overflow:visible!important}
+  .v120DesktopTextFull .mobileTextModeTabs{position:static!important}
+  .v120DesktopTextFull .mobileTextLibrary{overflow:visible!important}
+}
+</style>
+<script id="v120-core-script">
+(function(){
+  'use strict';
+  const mobile=()=>innerWidth<900;
+  const inEditor=()=>document.body.classList.contains('editorMode')&&!!document.querySelector('#view-sheet-editor.active');
+  const vp=()=>document.getElementById('canvasViewport');
+  const stage=()=>document.getElementById('canvasStage');
+  const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+  let drag=null;
+  let touchView={x:0,y:12,z:1,ready:false};
+  let pinch=null;
+
+  function point(ev){
+    const st=stage(); if(!st)return{x:0,y:0};
+    const r=st.getBoundingClientRect();
+    const z=Number(st.dataset.scale||canvasZoom||1)||1;
+    return{x:(ev.clientX-r.left)/z,y:(ev.clientY-r.top)/z};
+  }
+  function setSelection(kind,id){
+    if(kind==='object'){
+      canvasState.selectedType='object';canvasState.selectedId=id;canvasState.selectedIds=[id];canvasState.selectedVectorIds=[];
+    }else{
+      canvasState.selectedType='vector';canvasState.selectedId=id;canvasState.selectedIds=[];canvasState.selectedVectorIds=[id];
+    }
+  }
+  function finishSelectionUI(){
+    try{renderCanvasObjects();renderVectors();renderCanvasInspector();renderLayerList();updateMultiSelectStatus?.();updateMobileSelectionTools?.()}catch(e){console.warn('[V120 selection]',e)}
+  }
+  function cancelDrag(){
+    if(!drag)return;
+    drag.cancelled=true;
+    document.querySelectorAll('.v120Dragging').forEach(x=>x.classList.remove('v120Dragging'));
+  }
+
+  /* -------- One unified direct-drag controller for objects + shapes -------- */
+  document.addEventListener('pointerdown',function(e){
+    if(!inEditor()||e.button!==0)return;
+    const root=document.getElementById('canvasObjects');
+    if(!root||!root.contains(e.target))return;
+    const target=e.target instanceof Element?e.target:null;if(!target)return;
+    if(target.closest('.resizeHandle,.rotateHandle,.vectorResizeHandle,.vectorRotateHandle,.pathNode,.tableMoveHandle'))return;
+
+    const objEl=target.closest('.cobj');
+    const vecHit=target.closest('.vectorTouchProxy,.shapeHit');
+    if(objEl){
+      const id=objEl.dataset.id,o=canvasState.objects.find(x=>x.id===id);if(!o)return;
+      if(o.editing||target.closest('[contenteditable="true"],td,input,select,textarea,button'))return;
+      e.preventDefault();e.stopImmediatePropagation();
+      setSelection('object',id);
+      const p=point(e);
+      drag={kind:'object',id,pid:e.pointerId,start:p,last:p,moved:false,cancelled:false,ox:o.x,oy:o.y};
+      objEl.classList.add('v120Dragging');
+      try{objEl.setPointerCapture?.(e.pointerId)}catch(_){ }
+      return;
+    }
+    if(vecHit){
+      const id=vecHit.dataset.vid||vecHit.closest('[data-vid]')?.dataset.vid,v=canvasState.vectors.find(x=>x.id===id);if(!v)return;
+      e.preventDefault();e.stopImmediatePropagation();
+      setSelection('vector',id);
+      const p=point(e);
+      drag={kind:'vector',id,pid:e.pointerId,start:p,last:p,moved:false,cancelled:false,snap:JSON.parse(JSON.stringify(v))};
+      vecHit.closest('.vectorObj')?.classList.add('v120Dragging');
+      try{vecHit.setPointerCapture?.(e.pointerId)}catch(_){ }
+    }
+  },true);
+
+  document.addEventListener('pointermove',function(e){
+    if(!drag||drag.cancelled||e.pointerId!==drag.pid)return;
+    const q=point(e),dx=q.x-drag.start.x,dy=q.y-drag.start.y;
+    if(!drag.moved&&Math.hypot(dx,dy)<3)return;
+    drag.moved=true;e.preventDefault();e.stopImmediatePropagation();
+    if(drag.kind==='object'){
+      const o=canvasState.objects.find(x=>x.id===drag.id);if(!o||o.locked)return;
+      const x=clamp(drag.ox+dx,0,Math.max(0,canvasPageWidth()-o.w));
+      const y=clamp(drag.oy+dy,0,Math.max(0,canvasPageHeight()-o.h));
+      o.x=x;o.y=y;
+      const el=document.querySelector(`.cobj[data-id="${CSS.escape(drag.id)}"]`);if(el){el.style.left=x+'px';el.style.top=y+'px'}
+      try{markCanvasDirty(false)}catch(_){ }
+    }else{
+      const v=canvasState.vectors.find(x=>x.id===drag.id),s=drag.snap;if(!v||v.locked)return;
+      if(v.type==='rect'){v.x=s.x+dx;v.y=s.y+dy}
+      else if(v.type==='ellipse'){v.cx=s.cx+dx;v.cy=s.cy+dy}
+      else if(v.points)v.points=s.points.map(pt=>[pt[0]+dx,pt[1]+dy]);
+      /* rendering here is intentional: window-level pointer listener survives DOM replacement */
+      try{renderVectors();markCanvasDirty(false)}catch(_){ }
+    }
+  },true);
+
+  function endDrag(e){
+    if(!drag|| (e&&e.pointerId!=null&&e.pointerId!==drag.pid))return;
+    const d=drag;drag=null;document.querySelectorAll('.v120Dragging').forEach(x=>x.classList.remove('v120Dragging'));
+    if(d.cancelled)return;
+    if(d.moved){try{renderCanvasObjects();renderVectors();renderCanvasInspector();renderLayerList();pushHistory()}catch(_){ }}
+    else finishSelectionUI();
+  }
+  document.addEventListener('pointerup',endDrag,true);
+  document.addEventListener('pointercancel',endDrag,true);
+
+  /* -------- Canva-like focal pinch zoom on phone -------- */
+  function syncViewFromDOM(){
+    if(!mobile()||!inEditor())return;
+    const v=vp(),s=stage();if(!v||!s)return;
+    const vr=v.getBoundingClientRect(),sr=s.getBoundingClientRect();
+    const z=Number(s.dataset.scale||canvasZoom||1)||1;
+    touchView={x:sr.left-vr.left,y:sr.top-vr.top,z,ready:true};
+  }
+  function applyTouchView(){
+    const s=stage();if(!s)return;
+    touchView.z=clamp(touchView.z,.18,4);
+    canvasZoom=touchView.z;s.dataset.scale=String(touchView.z);s.style.zoom='';
+    s.style.left='0px';s.style.top='0px';s.style.transform=`translate3d(${touchView.x}px,${touchView.y}px,0) scale(${touchView.z})`;s.style.transformOrigin='0 0';
+    const a=document.getElementById('canvasZoomLabel');if(a)a.textContent=Math.round(touchView.z*100)+'%';
+    const b=document.getElementById('v91ZoomLabel');if(b)b.textContent=Math.round(touchView.z*100)+'%';
+  }
+  function fitTouch(){
+    const v=vp();if(!v||!mobile())return;
+    const z=Math.min(1,(v.clientWidth-24)/canvasPageWidth(),(v.clientHeight-24)/canvasPageHeight());
+    touchView={z,x:(v.clientWidth-canvasPageWidth()*z)/2,y:12,ready:true};applyTouchView();
+  }
+  document.addEventListener('touchstart',function(e){
+    if(!mobile()||!inEditor()||!vp()?.contains(e.target))return;
+    if(e.touches.length===2){
+      e.preventDefault();e.stopImmediatePropagation();cancelDrag();
+      if(!touchView.ready)syncViewFromDOM();
+      const v=vp(),r=v.getBoundingClientRect(),a=e.touches[0],b=e.touches[1];
+      const cx=(a.clientX+b.clientX)/2-r.left,cy=(a.clientY+b.clientY)/2-r.top;
+      const d=Math.max(1,Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY));
+      pinch={d,z:touchView.z,wx:(cx-touchView.x)/touchView.z,wy:(cy-touchView.y)/touchView.z};
+      canvasState.userZoomTouched=true;
+    }
+  },{capture:true,passive:false});
+  document.addEventListener('touchmove',function(e){
+    if(!pinch||e.touches.length!==2)return;
+    e.preventDefault();e.stopImmediatePropagation();
+    const v=vp(),r=v.getBoundingClientRect(),a=e.touches[0],b=e.touches[1];
+    const cx=(a.clientX+b.clientX)/2-r.left,cy=(a.clientY+b.clientY)/2-r.top;
+    const d=Math.max(1,Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY));
+    const z=clamp(pinch.z*(d/pinch.d),.18,4);
+    touchView.z=z;touchView.x=cx-pinch.wx*z;touchView.y=cy-pinch.wy*z;touchView.ready=true;applyTouchView();
+  },{capture:true,passive:false});
+  document.addEventListener('touchend',function(e){if(e.touches.length<2)pinch=null},{capture:true});
+  document.addEventListener('touchcancel',function(){pinch=null;cancelDrag()},{capture:true});
+
+  const oldFit=window.fitCanvasStage;
+  window.fitCanvasStage=window.fitCanvasToScreen=function(){
+    canvasState.userZoomTouched=false;
+    if(mobile()){fitTouch();return}
+    return oldFit?.apply(this,arguments);
+  };
+  try{fitCanvasStage=window.fitCanvasStage;fitCanvasToScreen=window.fitCanvasToScreen}catch(_){ }
+
+  /* -------- Layers: direct lock + reliable touch reorder, no stuck editor -------- */
+  window.v120ToggleLayerLock=function(kind,id){
+    const ref=kind==='object'?canvasState.objects.find(x=>x.id===id):canvasState.vectors.find(x=>x.id===id);if(!ref)return;
+    ref.locked=!ref.locked;try{renderCanvasObjects();renderVectors();renderCanvasInspector();renderLayerList();markCanvasDirty();pushHistory()}catch(_){ }
+  };
+  window.layerPointerStart=function(e,kind,id){
+    if(e.pointerType==='mouse'&&e.button!==0)return;
+    e.preventDefault();e.stopPropagation();
+    const source=e.currentTarget.closest('.layerItem'),pid=e.pointerId;
+    document.body.classList.add('layerDragging');
+    let target=null,done=false;
+    try{e.currentTarget.setPointerCapture?.(pid)}catch(_){ }
+    const move=ev=>{
+      if(ev.pointerId!==pid)return;ev.preventDefault();
+      document.querySelectorAll('.layerItem.layerDropTarget').forEach(x=>x.classList.remove('layerDropTarget'));
+      const hit=document.elementFromPoint(ev.clientX,ev.clientY)?.closest?.('.layerItem');
+      if(hit&&hit!==source){hit.classList.add('layerDropTarget');target=hit}else target=null;
+    };
+    const clean=()=>{if(done)return;done=true;document.removeEventListener('pointermove',move,true);document.removeEventListener('pointerup',up,true);document.removeEventListener('pointercancel',up,true);document.body.classList.remove('layerDragging');document.querySelectorAll('.layerItem.layerDropTarget').forEach(x=>x.classList.remove('layerDropTarget'))};
+    const up=ev=>{if(ev.pointerId!==pid)return;const t=target;clean();if(t)reorderLayerItem(kind,id,t.dataset.layerKind,t.dataset.layerId)};
+    document.addEventListener('pointermove',move,{capture:true,passive:false});document.addEventListener('pointerup',up,true);document.addEventListener('pointercancel',up,true);
+    setTimeout(clean,12000);
+  };
+
+  const oldRenderLayers=window.renderLayerList||renderLayerList;
+  window.renderLayerList=function(){
+    oldRenderLayers.apply(this,arguments);
+    document.querySelectorAll('.layerItem').forEach(row=>{
+      const kind=row.dataset.layerKind,id=row.dataset.layerId;
+      const tools=row.querySelector('.layerTools');if(!kind||!id||!tools)return;
+      const lock=tools.querySelector('button[title="Sperren"]');if(lock){lock.setAttribute('onclick',`event.stopPropagation();v120ToggleLayerLock('${kind}','${id}')`);lock.title='Sperren / entsperren'}
+      const del=tools.querySelector('.layerDeleteBtn');if(del){del.innerHTML='×';del.title='Löschen'}
+    });
+  };
+  try{renderLayerList=window.renderLayerList}catch(_){ }
+
+  /* -------- Desktop: expose the same text library/editor used on phone -------- */
+  const oldDesktopPanel=window.v113DesktopPanel;
+  window.v113DesktopPanel=function(mode,btn){
+    if(mode!=='text'||mobile())return oldDesktopPanel?.apply(this,arguments);
+    const drawer=document.getElementById('canvasQuickDrawer'),nav=document.querySelector('.v102DesktopLeft>.canvasQuickNav')||document.querySelector('.canvasQuickNav');if(!drawer||!nav)return;
+    nav.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===btn||x.dataset.v113Mode===mode));drawer.classList.add('open');drawer.style.display='block';
+    let lib='';try{lib=mobileTextLibraryHTML()}catch(_){ }
+    let edit='';try{if(typeof mobileSelectedText==='function'&&mobileSelectedText())edit=mobileTextControlsHTML()}catch(_){ }
+    drawer.innerHTML=`<div class="v120DesktopTextFull">${lib}${edit}<div class="mobileDrawerActions"><button onclick="v91PickFont()">Aa＋ Schrift hinzufügen</button><button onclick="openTextFormatManager()">Textformate verwalten</button><button onclick="createCustomStylePreset()">＋ Eigenes Textformat</button></div></div>`;
+    localStorage.setItem('studia-v113-desktop-panel','text');
+  };
+
+  /* Refresh desktop Text panel when selecting text, so its full controls appear. */
+  document.addEventListener('pointerup',()=>{if(!mobile()&&inEditor()&&canvasState.selectedType==='object'){
+    const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(o&&['text','block','task','merke'].includes(o.kind)){
+      const active=document.querySelector('[data-v113-mode="text"].active');if(active)setTimeout(()=>window.v113DesktopPanel('text',active),0);
+    }
+  }},false);
+
+  function initialize(){
+    if(!inEditor())return;
+    if(mobile()){touchView.ready=false;setTimeout(fitTouch,80)}
+    try{renderLayerList()}catch(_){ }
+    const mark=document.getElementById('headerEyebrow');if(mark)mark.textContent='VERSION 120';
+  }
+  const mo=new MutationObserver(()=>{if(inEditor())setTimeout(initialize,30)});mo.observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['class']});
+  addEventListener('resize',()=>{if(inEditor()&&mobile()&&!canvasState.userZoomTouched)setTimeout(fitTouch,60)});
+  setTimeout(initialize,250);
+})();
+</script>
+<!-- ===== /Studia V120 interaction core ===== -->
 </body>
 </html><style id="v93-bottom-nav-stability">
 @media (max-width:899px){
@@ -11840,6 +12164,7 @@ html,body,button,input,select,textarea{font-family:ui-rounded,"SF Pro Rounded","
 .tableObj table{width:100%;height:100%;border-collapse:collapse;table-layout:fixed}
 .tableObj td{transition:background-color .15s ease}
 </style>
+
 <style id="v96-ui">
 /* ===== V96 compact mobile editor + notebook reference design ===== */
 @media (max-width:899px){
@@ -11906,6 +12231,9 @@ html,body,button,input,select,textarea{font-family:ui-rounded,"SF Pro Rounded","
   .v96PageStrip{display:flex;align-items:center;justify-content:center;gap:10px;padding:8px 10px 18px}.v96PageThumbs{display:flex;gap:7px}.v96PageThumb,.v96PageAdd{width:58px;height:48px;border:1px solid #ead7d1;background:#fff;border-radius:11px;color:#80675f}.v96PageThumb.active{background:#fff0ef;border-color:#e49a9a}.v96PageActions{display:flex;gap:6px}.v96PageActions button{width:38px;height:38px;border:1px solid #ead7d1;background:#fff;border-radius:10px;color:#80675f}
 }
 </style>
+
+
+
 <style id="v97-notebook-topic-reference">
 @media (max-width:899px){
   body:has(#view-subject-detail.active)>.app>.header,
@@ -11943,6 +12271,9 @@ html,body,button,input,select,textarea{font-family:ui-rounded,"SF Pro Rounded","
 }
 @media (max-width:390px){.v97TopicCard{padding-left:10px;padding-right:10px}.v97TopicStats em span{font-size:8.6px}.v97SubjectTools{grid-template-columns:minmax(0,1fr) 108px}.v97ResourceCard{padding:10px}.v97ResourceCard>p{font-size:9px}.v97TopicPage>h2{font-size:34px}}
 </style>
+
+
+
 <style id="v100-subjects-desktop-editor">
 /* ===== VERSION 108 — subjects reference + desktop editor reference ===== */
 @media (max-width:899px){
@@ -12023,6 +12354,7 @@ html,body,button,input,select,textarea{font-family:ui-rounded,"SF Pro Rounded","
 }
 @media(max-width:899px){.v100DesktopOnly,.v100RightTabs,.v100RightPage,.v100DesktopBottom{display:none!important}}
 </style>
+
 <style id="v102-polish">
 :root{--studia-ink:#6c554d;--studia-muted:#a4877d;--studia-line:#efd7d0;--studia-pink:#e8a0a5;--studia-cream:#fffaf5;--studia-blush:#fff2f1;--studia-sage:#edf3df;--studia-yellow:#fff2cf;--studia-blue:#eaf3fb}
 html,body{background:#fff7f4!important}body:not(.editorMode){background:radial-gradient(circle at 12% 8%,rgba(247,205,210,.55),transparent 28rem),radial-gradient(circle at 88% 28%,rgba(231,241,204,.58),transparent 30rem),radial-gradient(circle at 35% 100%,rgba(255,233,196,.42),transparent 28rem),linear-gradient(180deg,#fff8f6 0%,#fffdf8 100%)!important}
@@ -12173,6 +12505,9 @@ body:has(#view-subjects.active)>.app>.header,body:has(#view-subject-detail.activ
 <style id="v103-hand-cursor">
 @media(min-width:900px){body.editorMode #canvasViewport.v103Hand{cursor:grab!important}body.editorMode #canvasViewport.v103Hand.v102Panning{cursor:grabbing!important}}
 </style>
+
+
+
 <!-- V106 PATCH INSERTED -->
 <style id="v106-ui-patch">
 @media (max-width:899px){
@@ -12353,6 +12688,8 @@ body:has(#view-subjects.active)>.app>.header,body:has(#view-subject-detail.activ
   window.addEventListener('resize',()=>afterPaint(v106EnhanceFontPreview));
 })();
 </script>
+
+
 <!-- V107 FINAL PATCH -->
 <style id="v107-final-style">
 @media (min-width:900px){
@@ -12488,6 +12825,8 @@ body.editorMode #canvasViewport.v102Panning{cursor:grabbing!important;user-selec
   window.addEventListener('resize', ()=>setTimeout(()=>{ fillDesktopDrawer(); enhanceTopbar(); }, 80));
 })();
 </script>
+
+
 <!-- V108 CANVAS INTERACTION FIX -->
 <style id="v108-canvas-fix">
 /* Canvas is now a free workspace. The page itself remains the only visible sheet. */
@@ -12760,6 +13099,7 @@ body.editorMode #v96PageStrip{display:none!important}
   window.addEventListener('resize',()=>{if(isEditor())setTimeout(()=>{surface();v108ApplyZoom(canvasZoom||1,false)},40)});
 })();
 </script>
+
 <!-- V109 UI + INTERACTION STABILIZATION -->
 <style id="v109-final-fixes">
 /* ---------- universal overflow / sizing safety ---------- */
@@ -13025,6 +13365,8 @@ body.editorMode .cobj table{max-width:100%!important}
   setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 116';document.title='Studia'},40);
 })();
 </script>
+
+
 <!-- ===== Studia V111 local backup system ===== -->
 <style id="v111-backup-style">
 .v111BackupPanel{overflow:hidden}
@@ -13106,6 +13448,8 @@ body.editorMode .cobj table{max-width:100%!important}
 })();
 </script>
 <!-- ===== /Studia V111 local backup system ===== -->
+
+
 <!-- ===== Studia V112 hard stabilization ===== -->
 <style id="v112-hard-stabilization-style">
 /* Universal overflow guards. */
@@ -13223,7 +13567,150 @@ body.editorMode .cobj[contenteditable="true"],body.editorMode td[contenteditable
   .graphModal,.visualGraphFunctionModal,.formulaModal,.visualFormulaModal{width:min(1240px,95vw)!important;max-width:1240px!important;max-height:90vh!important;overflow:auto!important}
 }
 </style>
+<script id="v112-hard-stabilization-script">
+(function(){
+  const mobile=()=>window.innerWidth<900;
+  const inEditor=()=>document.body.classList.contains('editorMode')&&!!document.querySelector('#view-sheet-editor.active');
+  const VP=()=>document.getElementById('canvasViewport');
+  const ST=()=>document.getElementById('canvasStage');
+  const SF=()=>document.getElementById('v96PanSurface');
+  const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+  const MOVE='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M3 12h18M12 3 9 6M12 3l3 3M12 21l-3-3M12 21l3-3M3 12l3-3M3 12l3 3M21 12l-3-3M21 12l-3 3"/></svg>';
+  let pinch=null,pinching=false,altDown=false,desktopPan=null;
+  let phoneView={x:0,y:12,z:1,touched:false};
 
+  function localMid(a,b,v){const r=v.getBoundingClientRect();return{x:(a.clientX+b.clientX)/2-r.left,y:(a.clientY+b.clientY)/2-r.top}}
+  function applyPhoneView(){
+    const st=ST(),sf=SF();if(!st||!sf)return;
+    canvasZoom=phoneView.z;st.dataset.scale=String(phoneView.z);st.style.zoom='';
+    st.style.left='0px';st.style.top='0px';st.style.transform=`translate3d(${phoneView.x}px,${phoneView.y}px,0) scale(${phoneView.z})`;st.style.transformOrigin='0 0';
+    sf.style.width='100%';sf.style.height='100%';
+    const a=document.getElementById('canvasZoomLabel');if(a)a.textContent=Math.round(phoneView.z*100)+'%';
+    const b=document.getElementById('v91ZoomLabel');if(b)b.textContent=Math.round(phoneView.z*100)+'%';
+  }
+  function fitPhone(force=true){
+    const v=VP();if(!v)return;const z=clamp(Math.min((v.clientWidth-24)/canvasPageWidth(),(v.clientHeight-30)/canvasPageHeight()),.18,1);
+    phoneView.z=z;phoneView.x=(v.clientWidth-canvasPageWidth()*z)/2;phoneView.y=12;phoneView.touched=!force;applyPhoneView();
+  }
+  function zoomPhone(z,focus){
+    const v=VP();if(!v)return;z=clamp(z,.16,3.5);const f=focus||{x:v.clientWidth/2,y:v.clientHeight/2};
+    const wx=(f.x-phoneView.x)/phoneView.z,wy=(f.y-phoneView.y)/phoneView.z;
+    phoneView.x=f.x-wx*z;phoneView.y=f.y-wy*z;phoneView.z=z;phoneView.touched=true;applyPhoneView();
+  }
+  function applyDesktopZoom(value,preserve=true,focus=null){
+    const v=VP(),st=ST(),sf=SF();if(!v||!st||!sf)return;const old=clamp(Number(st.dataset.scale)||canvasZoom||1,.15,4),z=clamp(Number(value)||1,.18,3.5),g=36;
+    const fx=focus?.x??v.clientWidth/2,fy=focus?.y??v.clientHeight/2;
+    let wx=null,wy=null;if(preserve){wx=(v.scrollLeft+fx-g)/old;wy=(v.scrollTop+fy-g)/old}
+    canvasZoom=z;canvasState.userZoomTouched=true;st.dataset.scale=String(z);st.style.zoom='';st.style.left=g+'px';st.style.top=g+'px';st.style.transform=`scale(${z})`;st.style.transformOrigin='0 0';
+    sf.style.width=(canvasPageWidth()*z+g*2)+'px';sf.style.height=(canvasPageHeight()*z+g*2)+'px';
+    if(preserve&&wx!=null)requestAnimationFrame(()=>{v.scrollLeft=Math.max(0,g+wx*z-fx);v.scrollTop=Math.max(0,g+wy*z-fy)});
+  }
+  function fitDesktop(){const v=VP();if(!v)return;const z=clamp(Math.min((v.clientWidth-72)/canvasPageWidth(),(v.clientHeight-72)/canvasPageHeight()),.18,1);applyDesktopZoom(z,false);requestAnimationFrame(()=>{v.scrollLeft=0;v.scrollTop=0})}
+
+  window.v112ApplyZoom=function(v,preserve=true,focus=null){if(mobile())zoomPhone(v,focus);else applyDesktopZoom(v,preserve,focus)};
+  window.v108ApplyZoom=window.v112ApplyZoom;window.v96ApplyZoom=window.v112ApplyZoom;
+  window.setCanvasZoom=function(v){window.v112ApplyZoom(v,true)};
+  window.canvasZoomBy=function(d){window.v112ApplyZoom((canvasZoom||1)+Number(d||0),true)};
+  window.fitCanvasStage=window.fitCanvasToScreen=function(){canvasState.userZoomTouched=false;if(mobile())fitPhone(true);else fitDesktop()};
+  try{fitCanvasStage=window.fitCanvasStage;fitCanvasToScreen=window.fitCanvasToScreen;v96ApplyZoom=window.v112ApplyZoom}catch(_){}
+
+  // Real two-finger zoom + pan on iPhone. Single-finger object taps are deliberately left alone.
+  window.addEventListener('touchstart',function(e){if(window.__STUDIA_V115_OWNS_GESTURES)return;
+    if(!inEditor()||!mobile()||e.touches.length!==2)return;const v=VP();if(!v)return;const a=e.touches[0],b=e.touches[1],m=localMid(a,b,v);if(m.x<0||m.y<0||m.x>v.clientWidth||m.y>v.clientHeight)return;
+    e.preventDefault();e.stopImmediatePropagation();pinching=true;const z=phoneView.z||canvasZoom||1;pinch={d:Math.max(1,Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY)),z,x:phoneView.x,y:phoneView.y,wx:(m.x-phoneView.x)/z,wy:(m.y-phoneView.y)/z};canvasState.userZoomTouched=true;
+  },{capture:true,passive:false});
+  window.addEventListener('touchmove',function(e){if(window.__STUDIA_V115_OWNS_GESTURES)return;
+    if(!pinch||!inEditor()||e.touches.length!==2)return;const v=VP();if(!v)return;e.preventDefault();e.stopImmediatePropagation();const a=e.touches[0],b=e.touches[1],m=localMid(a,b,v),d=Math.max(1,Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY)),z=clamp(pinch.z*(d/pinch.d),.16,3.5);
+    phoneView.z=z;phoneView.x=m.x-pinch.wx*z;phoneView.y=m.y-pinch.wy*z;phoneView.touched=true;applyPhoneView();
+  },{capture:true,passive:false});
+  const endPinch=e=>{if(e.touches&&e.touches.length>=2)return;pinch=null;setTimeout(()=>{pinching=false},80)};
+  window.addEventListener('touchend',endPinch,{capture:true,passive:true});window.addEventListener('touchcancel',()=>{pinch=null;pinching=false},{capture:true,passive:true});
+  ['gesturestart','gesturechange','gestureend'].forEach(n=>window.addEventListener(n,e=>{if(inEditor()&&mobile()){e.preventDefault();e.stopImmediatePropagation()}},{capture:true,passive:false}));
+
+  // Adobe-like desktop navigation.
+  window.addEventListener('keydown',e=>{if(e.key==='Alt')altDown=true},true);window.addEventListener('keyup',e=>{if(e.key==='Alt')altDown=false},true);window.addEventListener('blur',()=>{altDown=false;desktopPan=null});
+  window.addEventListener('wheel',function(e){if(window.__STUDIA_V115_OWNS_GESTURES)return;
+    if(!inEditor()||mobile()||!(e.altKey||altDown))return;const v=VP();if(!v)return;const r=v.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;
+    e.preventDefault();e.stopImmediatePropagation();const focus={x:e.clientX-r.left,y:e.clientY-r.top},factor=Math.exp(-e.deltaY*.0024);applyDesktopZoom((canvasZoom||1)*factor,true,focus);
+  },{capture:true,passive:false});
+  window.addEventListener('mousedown',function(e){if(window.__STUDIA_V115_OWNS_GESTURES)return;if(!inEditor()||mobile()||e.button!==1)return;const v=VP();if(!v)return;const r=v.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;e.preventDefault();e.stopImmediatePropagation();desktopPan={x:e.clientX,y:e.clientY,l:v.scrollLeft,t:v.scrollTop};v.classList.add('v108Pan')},true);
+  window.addEventListener('mousemove',function(e){if(!desktopPan)return;const v=VP();if(!v)return;v.scrollLeft=desktopPan.l-(e.clientX-desktopPan.x);v.scrollTop=desktopPan.t-(e.clientY-desktopPan.y)},true);
+  const endDesk=()=>{desktopPan=null;VP()?.classList.remove('v108Pan')};window.addEventListener('mouseup',endDesk,true);window.addEventListener('auxclick',e=>{if(inEditor()&&e.button===1)e.preventDefault()},true);
+
+  // Clean object event model: mobile tap selects, move ONLY via the four-arrow handle; desktop drag moves directly.
+  window.attachCanvasObjectEvents=function(){
+    document.querySelectorAll('#canvasObjects .cobj').forEach(el=>{
+      const oid=el.dataset.id;if(!oid)return;let down=null,lastTap=0;
+      el.addEventListener('pointerdown',e=>{
+        const o=canvasState.objects.find(x=>x.id===oid);if(!o)return;
+        if(e.target.closest('.v108MoveHandle'))return;
+        if(e.target.classList.contains('rotateHandle')){if(o.locked)return;e.preventDefault();e.stopPropagation();startRotateObject(e,oid);return}
+        if(e.target.classList.contains('resizeHandle')){if(o.locked)return;e.preventDefault();e.stopPropagation();startResizeObject(e,oid);return}
+        if(e.target.classList.contains('tableMoveHandle')){if(o.locked)return;e.preventDefault();e.stopPropagation();selectCanvasObject(oid);startDragObject(e,oid);return}
+        if(e.target.tagName==='TD'){if(!(canvasState.selectedType==='object'&&canvasState.selectedId===oid))selectCanvasObject(oid);o.activeCell={r:+e.target.dataset.r||0,c:+e.target.dataset.c||0};renderCanvasInspector();return}
+        if(canvasState.multiMode||e.shiftKey){e.preventDefault();e.stopPropagation();toggleObjectInMultiSelection(oid);return}
+        if(mobile()){
+          if(o.editing)return;down={id:e.pointerId,x:e.clientX,y:e.clientY};return;
+        }
+        if(o.locked)return;e.preventDefault();e.stopPropagation();if(!(canvasState.selectedIds||[]).includes(oid))selectCanvasObject(oid);
+        if((canvasState.selectedIds.length+canvasState.selectedVectorIds.length)>1)startDragSelection(e);else startDragObject(e,oid);
+      });
+      el.addEventListener('pointerup',e=>{
+        if(!mobile()||!down||down.id!==e.pointerId){down=null;return}const o=canvasState.objects.find(x=>x.id===oid),m=Math.hypot(e.clientX-down.x,e.clientY-down.y);down=null;if(!o||pinching||m>8)return;
+        const now=Date.now(),dbl=now-lastTap<330;lastTap=now;selectCanvasObject(oid);
+        if(dbl&&['text','block','task','merke'].includes(o.kind)&&!o.isChecklist){o.editing=true;renderCanvasObjects();setTimeout(()=>{const x=document.querySelector(`.cobj[data-id="${oid}"]`);try{x?.focus({preventScroll:true})}catch(_){x?.focus()}},0)}
+      });
+      if(el.isContentEditable)el.addEventListener('input',()=>{const o=canvasState.objects.find(x=>x.id===oid);if(o)o.text=el.innerHTML;markCanvasDirty()});
+      el.querySelectorAll('td').forEach(td=>td.addEventListener('input',()=>{const o=canvasState.objects.find(x=>x.id===oid);if(o)o.cells[+td.dataset.r][+td.dataset.c]=td.innerText;markCanvasDirty()}));
+    });
+  };
+  try{attachCanvasObjectEvents=window.attachCanvasObjectEvents}catch(_){}
+
+  window.attachVectorEvents=function(){
+    const root=document.getElementById('canvasObjects');if(!root)return;
+    root.querySelectorAll('.vectorTouchProxy').forEach(el=>{let down=null;el.addEventListener('pointerdown',e=>{const id=el.dataset.vid,v=canvasState.vectors.find(x=>x.id===id);if(!v)return;e.preventDefault();e.stopPropagation();if(canvasState.multiMode||e.shiftKey){toggleVectorInMultiSelection(id);return}if(mobile()){down={id:e.pointerId,x:e.clientX,y:e.clientY};return}selectVector(id);if(!v.locked)startVectorDrag(e,id)});el.addEventListener('pointerup',e=>{if(!mobile()||!down||down.id!==e.pointerId){down=null;return}const m=Math.hypot(e.clientX-down.x,e.clientY-down.y),id=el.dataset.vid;down=null;if(!pinching&&m<8)selectVector(id)})});
+    root.querySelectorAll('.vectorResizeHandle').forEach(el=>el.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();selectVector(el.dataset.vid);startVectorResize(e,el.dataset.vid)}));
+    root.querySelectorAll('.vectorRotateHandle').forEach(el=>el.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();selectVector(el.dataset.vid);startVectorRotate(e,el.dataset.vid)}));
+    root.querySelectorAll('.pathNode').forEach(el=>el.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();startNodeDrag(e,+el.dataset.index)}));
+  };
+  try{attachVectorEvents=window.attachVectorEvents}catch(_){}
+
+  // Delegated move handles survive every render and are the only mobile drag affordance.
+  document.addEventListener('pointerdown',function(e){
+    if(!inEditor()||!mobile())return;const t=e.target instanceof Element?e.target:null,handle=t?.closest('.v108MoveHandle,.v108VectorMoveHandle');if(!handle)return;e.preventDefault();e.stopImmediatePropagation();
+    if(handle.dataset.oid){const id=handle.dataset.oid;if(!(canvasState.selectedIds||[]).includes(id))selectCanvasObject(id);startDragObject(e,id)}
+    else if(handle.dataset.vid){selectVector(handle.dataset.vid);startVectorDrag(e,handle.dataset.vid)}
+  },true);
+
+  // Keep the text/actions drawer and the persistent bottom toolbar in a deterministic state.
+  const baseOpen=window.editorOpenGroup;
+  window.editorOpenGroup=function(group,btn){const r=baseOpen(group,btn);const editing=(group==='textEdit'||group==='text')&&!!mobileSelectedText();document.body.classList.toggle('v112TextEditing',editing);requestAnimationFrame(()=>{const d=document.getElementById('canvasQuickDrawer');if(d){const s=d.querySelector('.mobileTextModeContent,.mobileTextLibrary,.mobileDrawerSection,.mobilePagePanel');if(s)s.style.touchAction='pan-y'}});return r};
+  try{editorOpenGroup=window.editorOpenGroup}catch(_){}
+  const baseClose=window.closeEditorDrawer;
+  window.closeEditorDrawer=function(){document.body.classList.remove('v112TextEditing');const r=baseClose();requestAnimationFrame(()=>{const n=document.querySelector('.canvasQuickNav');if(n){n.style.removeProperty('display');n.style.removeProperty('visibility');n.style.removeProperty('opacity')}});return r};
+  try{closeEditorDrawer=window.closeEditorDrawer}catch(_){}
+
+  // Shrink only obviously over-wide single-line heading text boxes; never touch paragraphs/callouts.
+  function tidyTextBoxes(){
+    let changed=false;for(const o of canvasState.objects||[]){if(o.kind!=='text')continue;const raw=String(o.text||'').replace(/<[^>]*>/g,'').trim(),fs=Number(o.style?.fontSize)||16;if(!raw||raw.length>48||/[\n\r]/.test(raw)||fs<22)continue;const pad=Number(o.style?.padding??7),est=clamp(raw.length*fs*.61+pad*2+16,90,canvasPageWidth()-30),h=clamp(fs*(Number(o.style?.lineHeight)||1.25)+pad*2+8,36,140);if(o.w>est*1.35){o.w=Math.round(est);changed=true}if(o.h>h*1.7){o.h=Math.round(h);changed=true}}
+    if(changed){renderCanvasObjects();markCanvasDirty(false)}
+  }
+
+  const baseSheet=window.renderSheetEditor||renderSheetEditor;
+  window.renderSheetEditor=function(){
+    baseSheet();setTimeout(()=>{if(mobile()){phoneView={x:0,y:12,z:1,touched:false};fitPhone(true)}else fitDesktop();tidyTextBoxes();document.body.classList.remove('v112TextEditing');},180);
+  };
+  try{renderSheetEditor=window.renderSheetEditor}catch(_){}
+  window.addEventListener('resize',()=>{if(!inEditor())return;setTimeout(()=>{if(mobile()&&!phoneView.touched)fitPhone(true);else if(!mobile())applyDesktopZoom(canvasZoom||1,false)},60)});
+
+  // Force final compact layer render after earlier wrappers.
+  const baseLayers=window.renderLayerList||renderLayerList;
+  window.renderLayerList=function(){baseLayers();const m=document.querySelector('#canvasQuickDrawer.open .mobileLayerList');if(m){m.querySelectorAll('button').forEach(b=>{b.style.minWidth='0';b.style.maxWidth='none'})}};
+  try{renderLayerList=window.renderLayerList}catch(_){}
+
+  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 116';document.title='Studia'},40);
+})();
+</script>
 <!-- ===== /Studia V112 hard stabilization ===== -->
 <style id="v112-last-specificity-fixes">
 @media(max-width:899px){
@@ -13234,6 +13721,7 @@ body.editorMode .cobj[contenteditable="true"],body.editorMode td[contenteditable
   body:has(#view-topic-detail.active) .app:before,body:has(#view-topic-detail.active) .app:after{display:none!important}
 }
 </style>
+
 <!-- ===== Studia V113 editor + topic stabilization + encrypted device sync ===== -->
 <style id="v113-stability-style">
 html,body{overflow-x:hidden!important}
@@ -13369,6 +13857,156 @@ html,body{overflow-x:hidden!important}
 @media(max-width:600px){.v113SyncGrid,.v113SyncButtons{grid-template-columns:1fr}.v113SyncGrid .full{grid-column:auto}.v113SyncStatus{align-items:flex-start;flex-direction:column}.v113SyncStatus span{text-align:left}}
 </style>
 
+<script id="v113-stability-script">
+(function(){
+  const mobile=()=>window.innerWidth<900;
+  const inEditor=()=>document.body.classList.contains('editorMode')&&!!document.querySelector('#view-sheet-editor.active');
+  const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+  const stage=()=>document.getElementById('canvasStage');
+  const viewport=()=>document.getElementById('canvasViewport');
+  const surface=()=>document.getElementById('v96PanSurface') || (typeof v96EnsurePanSurface==='function'?v96EnsurePanSurface():null);
+
+  // Critical fix: V63 had transform:none!important; zoom state changed but the page never visually scaled.
+  // Every zoom API now writes an inline !important transform, so legacy CSS cannot block it again.
+  function setStageTransform(value){const st=stage();if(st)st.style.setProperty('transform',value,'important')}
+  function setScaleLabel(z){const a=document.getElementById('canvasZoomLabel');if(a)a.textContent=Math.round(z*100)+'%';const b=document.getElementById('v91ZoomLabel');if(b)b.textContent=Math.round(z*100)+'%'}
+  function applyDesktopZoom(value,preserve=true,focus=null){
+    const vp=viewport(),st=stage(),sf=surface();if(!vp||!st||!sf)return;
+    const old=clamp(Number(st.dataset.scale)||window.canvasZoom||1,.15,4),z=clamp(Number(value)||1,.18,3.5),g=38;
+    const fx=focus?.x??vp.clientWidth/2,fy=focus?.y??vp.clientHeight/2;
+    let wx=null,wy=null;if(preserve){wx=(vp.scrollLeft+fx-g)/old;wy=(vp.scrollTop+fy-g)/old}
+    window.canvasZoom=z;canvasState.userZoomTouched=true;st.dataset.scale=String(z);st.style.zoom='';st.style.left=g+'px';st.style.top=g+'px';setStageTransform(`scale(${z})`);st.style.transformOrigin='0 0';
+    sf.style.width=(canvasPageWidth()*z+g*2)+'px';sf.style.height=(canvasPageHeight()*z+g*2)+'px';setScaleLabel(z);
+    if(preserve&&wx!=null)requestAnimationFrame(()=>{vp.scrollLeft=Math.max(0,g+wx*z-fx);vp.scrollTop=Math.max(0,g+wy*z-fy)});
+  }
+  function fitDesktop(){const vp=viewport();if(!vp)return;const z=clamp(Math.min((vp.clientWidth-76)/canvasPageWidth(),(vp.clientHeight-76)/canvasPageHeight()),.18,1);applyDesktopZoom(z,false);requestAnimationFrame(()=>{vp.scrollLeft=0;vp.scrollTop=0})}
+  window.v113ApplyDesktopZoom=applyDesktopZoom;
+  if(!mobile()){
+    window.v96ApplyZoom=applyDesktopZoom;window.v108ApplyZoom=applyDesktopZoom;window.v112ApplyZoom=applyDesktopZoom;
+    try{v96ApplyZoom=applyDesktopZoom}catch(_){ }
+  }
+
+  // Alt + wheel and middle-mouse hand: bind directly to the real viewport after every editor render.
+  function bindDesktopNavigation(){
+    const vp=viewport();if(!vp||vp.dataset.v113Nav==='1'||mobile())return;vp.dataset.v113Nav='1';let pan=null;
+    vp.addEventListener('wheel',e=>{if(window.__STUDIA_V115_OWNS_GESTURES)return;if(!e.altKey)return;e.preventDefault();e.stopPropagation();const r=vp.getBoundingClientRect(),focus={x:e.clientX-r.left,y:e.clientY-r.top};applyDesktopZoom((window.canvasZoom||1)*Math.exp(-e.deltaY*.0022),true,focus)},{passive:false});
+    vp.addEventListener('mousedown',e=>{if(window.__STUDIA_V115_OWNS_GESTURES)return;if(e.button!==1)return;e.preventDefault();e.stopPropagation();pan={x:e.clientX,y:e.clientY,l:vp.scrollLeft,t:vp.scrollTop};vp.classList.add('v113Pan')},true);
+    window.addEventListener('mousemove',e=>{if(!pan)return;vp.scrollLeft=pan.l-(e.clientX-pan.x);vp.scrollTop=pan.t-(e.clientY-pan.y)},true);
+    const stop=()=>{pan=null;vp.classList.remove('v113Pan')};window.addEventListener('mouseup',stop,true);window.addEventListener('blur',stop);
+    vp.addEventListener('auxclick',e=>{if(e.button===1)e.preventDefault()});
+  }
+
+  // Object movement uses raw pointer deltas / current visual scale. No more jumping when the canvas is zoomed.
+  window.startDragObject=function(e,oid){
+    const o=canvasState.objects.find(x=>x.id===oid);if(!o||o.locked)return;e.preventDefault?.();e.stopPropagation?.();
+    const st=stage(),sc=Math.max(.01,Number(st?.dataset.scale)||window.canvasZoom||1),sx=e.clientX,sy=e.clientY,ox=o.x,oy=o.y;let moved=false;
+    const move=ev=>{const dx=(ev.clientX-sx)/sc,dy=(ev.clientY-sy)/sc;if(Math.hypot(dx,dy)>.5)moved=true;const rawX=Math.max(0,Math.min(canvasPageWidth()-o.w,ox+dx)),rawY=Math.max(0,Math.min(canvasPageHeight()-o.h,oy+dy)),sn=snapObjectPosition(o,rawX,rawY);o.x=sn.x;o.y=sn.y;const el=document.querySelector(`.cobj[data-id="${oid}"]`);if(el){el.style.left=o.x+'px';el.style.top=o.y+'px'}markCanvasDirty(false)};
+    const up=()=>{clearGuides();window.removeEventListener('pointermove',move,true);window.removeEventListener('pointerup',up,true);window.removeEventListener('pointercancel',up,true);if(moved)pushHistory();renderCanvasInspector?.()};
+    window.addEventListener('pointermove',move,true);window.addEventListener('pointerup',up,true);window.addEventListener('pointercancel',up,true);
+  };
+  try{startDragObject=window.startDragObject}catch(_){ }
+
+  window.startVectorDrag=function(e,vid){
+    const v=canvasState.vectors.find(x=>x.id===vid);if(!v||v.locked)return;e.preventDefault?.();e.stopPropagation?.();
+    const st=stage(),sc=Math.max(.01,Number(st?.dataset.scale)||window.canvasZoom||1),sx=e.clientX,sy=e.clientY,snap=JSON.parse(JSON.stringify(v));let moved=false;
+    const move=ev=>{const dx=(ev.clientX-sx)/sc,dy=(ev.clientY-sy)/sc;if(Math.hypot(dx,dy)>.5)moved=true;if(v.type==='rect'){v.x=snap.x+dx;v.y=snap.y+dy}else if(v.type==='ellipse'){v.cx=snap.cx+dx;v.cy=snap.cy+dy}else if(v.points){v.points=snap.points.map(pt=>[pt[0]+dx,pt[1]+dy])}renderVectors();markCanvasDirty(false)};
+    const up=()=>{window.removeEventListener('pointermove',move,true);window.removeEventListener('pointerup',up,true);window.removeEventListener('pointercancel',up,true);if(moved)pushHistory()};
+    window.addEventListener('pointermove',move,true);window.addEventListener('pointerup',up,true);window.addEventListener('pointercancel',up,true);
+  };
+  try{startVectorDrag=window.startVectorDrag}catch(_){ }
+
+  // Real vector line + smooth curve tools. They are normal vectors, so move/resize/layers all work.
+  window.addVectorLine=function(){
+    const v={id:id(),z:nextCanvasZ(),type:'path',points:[[210,410],[585,410]],fill:'none',stroke:'#8d7369',strokeWidth:4,dash:'solid',closed:false,rotation:0,locked:false};
+    canvasState.vectors.push(v);canvasState.vectorTool='select';selectVector(v.id);pushHistory();markCanvasDirty();cuteToast?.('Linie eingefügt ♡');
+  };
+  window.addVectorCurve=function(){
+    const p0=[205,470],p1=[300,300],p2=[495,300],p3=[590,470],pts=[];
+    for(let i=0;i<=28;i++){const t=i/28,u=1-t,x=u*u*u*p0[0]+3*u*u*t*p1[0]+3*u*t*t*p2[0]+t*t*t*p3[0],y=u*u*u*p0[1]+3*u*u*t*p1[1]+3*u*t*t*p2[1]+t*t*t*p3[1];pts.push([x,y])}
+    const v={id:id(),z:nextCanvasZ(),type:'path',points:pts,fill:'none',stroke:'#8d7369',strokeWidth:4,dash:'solid',closed:false,rotation:0,locked:false,smoothCurve:true};
+    canvasState.vectors.push(v);canvasState.vectorTool='select';selectVector(v.id);pushHistory();markCanvasDirty();cuteToast?.('Kurve eingefügt ♡');
+  };
+
+  // Add the new line/curve tools to the phone Elements drawer every time it opens.
+  function patchMobileElements(){
+    if(!mobile())return;const d=document.getElementById('canvasQuickDrawer');if(!d?.classList.contains('open'))return;
+    const section=d.querySelector('.mobileDrawerSection .mobileToolGrid');if(!section||section.querySelector('[data-v113-line]'))return;
+    const line=document.createElement('button');line.dataset.v113Line='1';line.innerHTML='<b>—</b><span>Linie</span>';line.onclick=()=>addVectorLine();
+    const curve=document.createElement('button');curve.dataset.v113Curve='1';curve.innerHTML='<b>⌁</b><span>Kurve</span>';curve.onclick=()=>addVectorCurve();
+    section.append(line,curve);
+  }
+
+  // Stable toolbar state: it may only disappear while the text-edit sub-toolbar intentionally replaces it.
+  function reconcileMobileChrome(){
+    if(!inEditor()||!mobile())return;const nav=document.querySelector('.canvasQuickNav'),drawer=document.getElementById('canvasQuickDrawer');if(!nav)return;
+    const open=!!drawer?.classList.contains('open');if(!open){document.body.classList.remove('editorDrawerOpen','v112TextEditing');nav.style.setProperty('display','grid','important')}
+    else if(document.body.classList.contains('v112TextEditing'))nav.style.setProperty('display','none','important');
+    else nav.style.setProperty('display','grid','important');
+    const tools=document.getElementById('mobileSelectionTools');if(tools&&open)tools.style.setProperty('display','none','important');else if(tools)tools.style.removeProperty('display');
+  }
+  const chromeObserver=new MutationObserver(()=>requestAnimationFrame(reconcileMobileChrome));chromeObserver.observe(document.body,{attributes:true,attributeFilter:['class'],subtree:false});
+  const drawerObserverTarget=document.getElementById('canvasQuickDrawer');if(drawerObserverTarget)chromeObserver.observe(drawerObserverTarget,{attributes:true,attributeFilter:['class']});
+
+  const prevOpenGroup=window.editorOpenGroup;
+  window.editorOpenGroup=function(group,btn){const r=prevOpenGroup(group,btn);requestAnimationFrame(()=>{patchMobileElements();reconcileMobileChrome()});return r};
+  try{editorOpenGroup=window.editorOpenGroup}catch(_){ }
+  const prevCloseDrawer=window.closeEditorDrawer;
+  window.closeEditorDrawer=function(){const r=prevCloseDrawer();document.body.classList.remove('v112TextEditing');requestAnimationFrame(reconcileMobileChrome);return r};
+  try{closeEditorDrawer=window.closeEditorDrawer}catch(_){ }
+
+  // Desktop left palette: five reliable modes instead of stale/overlapping click layers.
+  const PICON={
+    text:'<svg viewBox="0 0 24 24"><path d="M5 5h14M12 5v14M8.5 19h7"/></svg>',
+    rect:'<svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2"/></svg>',
+    image:'<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8" cy="9" r="2"/><path d="m5 18 5-5 3 3 2-2 4 4"/></svg>',
+    table:'<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 4v16M15 4v16"/></svg>',
+    line:'<svg viewBox="0 0 24 24"><path d="M4 17 20 7"/></svg>',
+    curve:'<svg viewBox="0 0 24 24"><path d="M4 17c4-12 12-12 16 0"/></svg>',
+    formula:'<svg viewBox="0 0 24 24"><path d="M17 5H8l5 7-5 7h9"/></svg>',
+    graph:'<svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16M7 15l4-5 3 2 5-6"/></svg>',
+    page:'<svg viewBox="0 0 24 24"><path d="M7 3h8l3 3v15H7zM15 3v4h3"/></svg>',
+    layers:'<svg viewBox="0 0 24 24"><path d="m12 4 8 4-8 4-8-4zM4 12l8 4 8-4M4 16l8 4 8-4"/></svg>',
+    template:'<svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>',
+    pen:'<svg viewBox="0 0 24 24"><path d="m4 20 4-1 10-10-3-3L5 16zM14 7l3 3"/></svg>'
+  };
+  const pbtn=(label,icon,action)=>`<button onclick="${action}"><span class="v113PaletteIcon">${PICON[icon]||PICON.rect}</span><span>${label}</span></button>`;
+  function elementsPalette(){return `<div class="v113PaletteGroup"><div class="v113PaletteTitle">Text & Inhalt</div><div class="v113PaletteGrid">${pbtn('Textfeld','text','addCanvasTextBox()')}${pbtn('Checkliste','page','addCanvasChecklist()')}${pbtn('Bild / Datei','image','openCanvasMediaPicker()')}${pbtn('Tabelle','table','openTableDialog()')}</div></div><div class="v113PaletteGroup"><div class="v113PaletteTitle">Formen & Linien</div><div class="v113PaletteGrid">${pbtn('Rechteck','rect',"addVectorShape('rect')")}${pbtn('Kreis','rect',"addVectorShape('ellipse')")}${pbtn('Dreieck','rect',"addVectorShape('triangle')")}${pbtn('Linie','line','addVectorLine()')}${pbtn('Kurve','curve','addVectorCurve()')}${pbtn('Freihand','pen',"setVectorTool('pen')")}</div></div><div class="v113PaletteGroup"><div class="v113PaletteTitle">Mathematik</div><div class="v113PaletteGrid">${pbtn('Formel','formula','openFormulaDialog()')}${pbtn('Graph','graph','openGraphDialog()')}</div></div><div class="v113PaletteGroup"><div class="v113PaletteTitle">Papier & Deko</div><div class="v113PaletteGrid">${pbtn('Kariertes Papier','page',"addPaperSticker('grid')")}${pbtn('Liniertes Papier','page',"addPaperSticker('line')")}${pbtn('Klebeband','line','addTapeSticker()')}${pbtn('Sticker','template','toggleStickerPanel()')}</div></div>`}
+  function textPalette(){const presets=typeof canvasPresets==='function'?canvasPresets():[];return `<div class="v113PaletteGroup"><div class="v113PaletteTitle">Text</div><div class="v113PaletteGrid">${pbtn('Textfeld','text','addCanvasTextBox()')}${pbtn('Eigenes Format','template','createCustomStylePreset()')}</div></div><div class="v113PaletteGroup"><div class="v113PaletteTitle">Textformate</div><div class="v113PaletteGrid">${presets.map(x=>pbtn(x.name,'text',x.bundle?`insertSavedTextFormat('${x.id}')`:`addCanvasText('${x.id}')`)).join('')}</div></div>`}
+  function templatesPalette(){try{renderPageTemplates()}catch(_){}const source=document.getElementById('pageTemplatePicker')?.innerHTML||'';return `<div class="v113PaletteGroup"><div class="v113PaletteTitle">Vorlagen</div><div class="v113TemplateHost">${source}</div><div class="v113PaletteGrid" style="margin-top:8px">${pbtn('Aktuelle Seite speichern','template','saveCurrentPageTemplate()')}${pbtn('Verwalten','template','openPageTemplateManager()')}</div></div>`}
+  window.v113DesktopPanel=function(mode,btn){
+    if(mobile())return;const drawer=document.getElementById('canvasQuickDrawer'),nav=document.querySelector('.v102DesktopLeft>.canvasQuickNav')||document.querySelector('.canvasQuickNav');if(!drawer||!nav)return;
+    nav.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===btn||x.dataset.v113Mode===mode));drawer.classList.add('open');drawer.style.display='block';
+    if(mode==='elements')drawer.innerHTML=elementsPalette();
+    if(mode==='text')drawer.innerHTML=textPalette();
+    if(mode==='templates')drawer.innerHTML=templatesPalette();
+    if(mode==='pages'){drawer.innerHTML='<div class="v113PaletteGroup"><div class="v113PaletteTitle">Seiten</div><p class="small">Seiteneinstellungen und Reihenfolge findest du rechts.</p></div>';try{v102RightTab('page')}catch(_){}}
+    if(mode==='layers'){drawer.innerHTML='<div class="v113PaletteGroup"><div class="v113PaletteTitle">Ebenen</div><p class="small">Ebenen per Drag & Drop rechts sortieren.</p></div>';try{v102RightTab('layers')}catch(_){}}
+    localStorage.setItem('studia-v113-desktop-panel',mode);
+  };
+  function desktopInit(){
+    if(mobile()||!inEditor())return;const nav=document.querySelector('.v102DesktopLeft>.canvasQuickNav')||document.querySelector('.canvasQuickNav'),drawer=document.getElementById('canvasQuickDrawer');if(!nav||!drawer)return;
+    nav.innerHTML=`<button data-v113-mode="elements" onclick="v113DesktopPanel('elements',this)"><span class="editorNavIcon">${PICON.rect}</span><span>Elemente</span></button><button data-v113-mode="text" onclick="v113DesktopPanel('text',this)"><span class="editorNavIcon">${PICON.text}</span><span>Text</span></button><button data-v113-mode="templates" onclick="v113DesktopPanel('templates',this)"><span class="editorNavIcon">${PICON.template}</span><span>Vorlagen</span></button><button data-v113-mode="pages" onclick="v113DesktopPanel('pages',this)"><span class="editorNavIcon">${PICON.page}</span><span>Seiten</span></button><button data-v113-mode="layers" onclick="v113DesktopPanel('layers',this)"><span class="editorNavIcon">${PICON.layers}</span><span>Ebenen</span></button>`;
+    const mode=localStorage.getItem('studia-v113-desktop-panel')||'elements',button=nav.querySelector(`[data-v113-mode="${mode}"]`)||nav.querySelector('button');v113DesktopPanel(button?.dataset.v113Mode||'elements',button);bindDesktopNavigation();
+  }
+
+  // Topic view = one contained viewport. This also removes the old 100vw/left:50% gap hack.
+  function topicLock(){const on=!!document.querySelector('#view-topic-detail.active');document.body.classList.toggle('v113TopicLock',on&&!inEditor())}
+  const prevOpenView=window.openView;
+  window.openView=function(name){const r=prevOpenView(name);requestAnimationFrame(()=>{topicLock();reconcileMobileChrome()});return r};
+  try{openView=window.openView}catch(_){ }
+
+  // Reapply final editor wiring after all legacy render wrappers finish.
+  const prevRender=window.renderSheetEditor||renderSheetEditor;
+  window.renderSheetEditor=function(){
+    prevRender();setTimeout(()=>{desktopInit();bindDesktopNavigation();reconcileMobileChrome();if(!mobile())fitDesktop();},260);
+  };
+  try{renderSheetEditor=window.renderSheetEditor}catch(_){ }
+  window.addEventListener('resize',()=>setTimeout(()=>{topicLock();if(inEditor()){desktopInit();reconcileMobileChrome()}},100));
+
+  setTimeout(()=>{topicLock();if(inEditor()){desktopInit();reconcileMobileChrome()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 116';document.title='Studia'},120);
+})();
+</script>
+
 <script id="v113-device-sync-script">
 (function(){
   const GIST_KEY='studia-sync-gist-id',AUTO_KEY='studia-sync-auto',LOCAL_TS='studia-sync-local-ts',LAST_PULL='studia-sync-last-pull';
@@ -13410,6 +14048,8 @@ html,body{overflow-x:hidden!important}
 })();
 </script>
 <!-- ===== /Studia V113 ===== -->
+
+
 <!-- ===== Studia V115 clean editor controller ===== -->
 <style id="v115-clean-editor-style">
 html,body{max-width:100%!important;overflow-x:hidden!important}
@@ -13484,7 +14124,63 @@ html,body{max-width:100%!important;overflow-x:hidden!important}
   body.editorMode #canvasInspector input,body.editorMode #canvasInspector select,body.editorMode #canvasInspector button{box-sizing:border-box!important;min-width:0!important;max-width:100%!important}
 }
 </style>
+<script id="v115-clean-editor-script">
+(function(){
+  window.__STUDIA_V115_OWNS_GESTURES=true;
+  const mobile=()=>window.innerWidth<900;
+  const editor=()=>document.body.classList.contains('editorMode')&&!!document.querySelector('#view-sheet-editor.active');
+  const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+  const stage=()=>document.getElementById('canvasStage');
+  const surface=()=>document.getElementById('v96PanSurface')||document.getElementById('canvasStage')?.parentElement;
+  const pageW=()=>typeof canvasPageWidth==='function'?canvasPageWidth():794;
+  const pageH=()=>typeof canvasPageHeight==='function'?canvasPageHeight():1123;
+  let mobileView={x:0,y:12,z:.45,touched:false},pinch=null,desktopPan=null;
 
+  function replaceViewport(){
+    const old=document.getElementById('canvasViewport');if(!old||old.dataset.v115clean==='1')return old;
+    const neo=old.cloneNode(false);neo.dataset.v115clean='1';while(old.firstChild)neo.appendChild(old.firstChild);old.replaceWith(neo);return neo;
+  }
+  const viewport=()=>document.getElementById('canvasViewport');
+  function label(z){const a=document.getElementById('canvasZoomLabel');if(a)a.textContent=Math.round(z*100)+'%';const b=document.getElementById('v91ZoomLabel');if(b)b.textContent=Math.round(z*100)+'%'}
+  function applyMobile(){const st=stage(),sf=surface();if(!st)return;window.canvasZoom=mobileView.z;st.dataset.scale=String(mobileView.z);st.style.setProperty('left','0px','important');st.style.setProperty('top','0px','important');st.style.setProperty('transform',`translate3d(${mobileView.x}px,${mobileView.y}px,0) scale(${mobileView.z})`,'important');st.style.setProperty('transform-origin','0 0','important');if(sf&&sf!==st){sf.style.setProperty('width','100%','important');sf.style.setProperty('height','100%','important')}label(mobileView.z)}
+  function fitMobile(force=false){const v=viewport();if(!v)return;if(mobileView.touched&&!force){applyMobile();return}const z=clamp(Math.min((v.clientWidth-24)/pageW(),(v.clientHeight-24)/pageH()),.18,1);mobileView={x:(v.clientWidth-pageW()*z)/2,y:12,z,touched:false};applyMobile()}
+  function zoomMobile(z,focus){const v=viewport();if(!v)return;z=clamp(z,.18,3.5);const f=focus||{x:v.clientWidth/2,y:v.clientHeight/2},wx=(f.x-mobileView.x)/mobileView.z,wy=(f.y-mobileView.y)/mobileView.z;mobileView.x=f.x-wx*z;mobileView.y=f.y-wy*z;mobileView.z=z;mobileView.touched=true;applyMobile()}
+
+  function applyDesktop(z,preserve=true,focus=null){const v=viewport(),st=stage(),sf=surface();if(!v||!st||!sf)return;const old=clamp(Number(st.dataset.scale)||window.canvasZoom||1,.15,4),g=44;z=clamp(Number(z)||1,.18,3.5);const fx=focus?.x??v.clientWidth/2,fy=focus?.y??v.clientHeight/2;let wx=null,wy=null;if(preserve){wx=(v.scrollLeft+fx-g)/old;wy=(v.scrollTop+fy-g)/old}window.canvasZoom=z;st.dataset.scale=String(z);st.style.setProperty('left',g+'px','important');st.style.setProperty('top',g+'px','important');st.style.setProperty('transform',`scale(${z})`,'important');st.style.setProperty('transform-origin','0 0','important');sf.style.width=(pageW()*z+g*2)+'px';sf.style.height=(pageH()*z+g*2)+'px';label(z);if(preserve&&wx!=null)requestAnimationFrame(()=>{v.scrollLeft=Math.max(0,g+wx*z-fx);v.scrollTop=Math.max(0,g+wy*z-fy)})}
+  function fitDesktop(){const v=viewport();if(!v)return;const z=clamp(Math.min((v.clientWidth-88)/pageW(),(v.clientHeight-88)/pageH()),.18,1);applyDesktop(z,false);requestAnimationFrame(()=>{v.scrollLeft=0;v.scrollTop=0})}
+  window.v115ApplyZoom=function(z,preserve=true,focus=null){mobile()?zoomMobile(z,focus):applyDesktop(z,preserve,focus)};
+  window.setCanvasZoom=z=>window.v115ApplyZoom(z,true);
+  window.canvasZoomBy=d=>window.v115ApplyZoom((window.canvasZoom||1)+Number(d||0),true);
+  window.fitCanvasStage=window.fitCanvasToScreen=function(){mobileView.touched=false;mobile()?fitMobile(true):fitDesktop()};
+  try{fitCanvasStage=window.fitCanvasStage;fitCanvasToScreen=window.fitCanvasToScreen;v96ApplyZoom=window.v115ApplyZoom;v108ApplyZoom=window.v115ApplyZoom;v112ApplyZoom=window.v115ApplyZoom}catch(_){ }
+
+  function bindViewport(){
+    const v=replaceViewport();if(!v||v.dataset.v115bound==='1')return;v.dataset.v115bound='1';
+    // Phone: exactly two fingers own canvas zoom/pan. One finger is left to object selection/editing.
+    v.addEventListener('touchstart',e=>{if(!editor()||!mobile()||e.touches.length!==2)return;const r=v.getBoundingClientRect(),a=e.touches[0],b=e.touches[1],mx=(a.clientX+b.clientX)/2-r.left,my=(a.clientY+b.clientY)/2-r.top;if(mx<0||my<0||mx>v.clientWidth||my>v.clientHeight)return;e.preventDefault();e.stopImmediatePropagation();const d=Math.max(1,Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY));pinch={d,z:mobileView.z,wx:(mx-mobileView.x)/mobileView.z,wy:(my-mobileView.y)/mobileView.z};mobileView.touched=true},{capture:true,passive:false});
+    v.addEventListener('touchmove',e=>{if(!pinch||!editor()||!mobile()||e.touches.length!==2)return;const r=v.getBoundingClientRect(),a=e.touches[0],b=e.touches[1],mx=(a.clientX+b.clientX)/2-r.left,my=(a.clientY+b.clientY)/2-r.top,d=Math.max(1,Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY)),z=clamp(pinch.z*d/pinch.d,.18,3.5);e.preventDefault();e.stopImmediatePropagation();mobileView.z=z;mobileView.x=mx-pinch.wx*z;mobileView.y=my-pinch.wy*z;applyMobile()},{capture:true,passive:false});
+    const end=e=>{if(!e.touches||e.touches.length<2)pinch=null};v.addEventListener('touchend',end,{capture:true,passive:true});v.addEventListener('touchcancel',()=>{pinch=null},{capture:true,passive:true});
+    // Laptop: Alt + wheel zooms around pointer; middle mouse pans like Adobe.
+    v.addEventListener('wheel',e=>{if(!editor()||mobile()||!e.altKey)return;e.preventDefault();e.stopImmediatePropagation();const r=v.getBoundingClientRect(),focus={x:e.clientX-r.left,y:e.clientY-r.top};applyDesktop((window.canvasZoom||1)*Math.exp(-e.deltaY*.0022),true,focus)},{capture:true,passive:false});
+    v.addEventListener('mousedown',e=>{if(!editor()||mobile()||e.button!==1)return;e.preventDefault();e.stopImmediatePropagation();desktopPan={x:e.clientX,y:e.clientY,l:v.scrollLeft,t:v.scrollTop};v.style.cursor='grabbing'},{capture:true});
+    window.addEventListener('mousemove',e=>{if(!desktopPan)return;v.scrollLeft=desktopPan.l-(e.clientX-desktopPan.x);v.scrollTop=desktopPan.t-(e.clientY-desktopPan.y)},true);
+    const stop=()=>{desktopPan=null;if(v)v.style.cursor=''};window.addEventListener('mouseup',stop,true);window.addEventListener('blur',stop);v.addEventListener('auxclick',e=>{if(e.button===1)e.preventDefault()});
+  }
+
+  // Desktop vector shapes: direct drag always works from the transparent hit target.
+  document.addEventListener('pointerdown',e=>{if(!editor()||mobile()||e.button!==0)return;const t=e.target instanceof Element?e.target:null,hit=t?.closest('.vectorTouchProxy,.shapeHit');if(!hit||t.closest('.vectorResizeHandle,.vectorRotateHandle,.pathNode'))return;const vid=hit.dataset.vid,v=(window.canvasState?.vectors||[]).find(x=>x.id===vid);if(!vid||!v||v.locked)return;e.preventDefault();e.stopImmediatePropagation();if(e.shiftKey&&typeof toggleVectorInMultiSelection==='function'){toggleVectorInMultiSelection(vid);return}selectVector(vid);startVectorDrag(e,vid)},true);
+
+  function syncDrawerState(){if(!editor()||!mobile())return;const d=document.getElementById('canvasQuickDrawer'),text=!!d?.querySelector('.mobileTextEditor')&&d.classList.contains('open');document.body.classList.toggle('v115TextEdit',text);const nav=document.querySelector('.canvasQuickNav');if(nav){nav.style.removeProperty('left');nav.style.removeProperty('right');nav.style.removeProperty('width');nav.style.removeProperty('transform')}}
+  function init(forceFit=false){if(!editor())return;bindViewport();syncDrawerState();if(mobile())setTimeout(()=>fitMobile(forceFit),40);else setTimeout(fitDesktop,40)}
+
+  const oldOpen=window.editorOpenGroup;window.editorOpenGroup=function(){const r=oldOpen.apply(this,arguments);requestAnimationFrame(syncDrawerState);return r};try{editorOpenGroup=window.editorOpenGroup}catch(_){ }
+  const oldClose=window.closeEditorDrawer;window.closeEditorDrawer=function(){const r=oldClose.apply(this,arguments);document.body.classList.remove('v115TextEdit');requestAnimationFrame(syncDrawerState);return r};try{closeEditorDrawer=window.closeEditorDrawer}catch(_){ }
+  const oldRender=window.renderSheetEditor||renderSheetEditor;window.renderSheetEditor=function(){const r=oldRender.apply(this,arguments);setTimeout(()=>init(true),360);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){ }
+  const mo=new MutationObserver(()=>requestAnimationFrame(syncDrawerState));setTimeout(()=>{const d=document.getElementById('canvasQuickDrawer');if(d)mo.observe(d,{attributes:true,childList:true,subtree:true});if(editor())init(true)},180);
+  window.addEventListener('resize',()=>{if(!editor())return;setTimeout(()=>{bindViewport();mobile()?fitMobile(false):fitDesktop()},100)});
+  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 116';document.title='Studia'},80);
+})();
+</script>
 <!-- ===== /Studia V115 ===== -->
 <style id="v115-topbar-last-fix">
 @media(max-width:899px){
@@ -13499,6 +14195,7 @@ html,body{max-width:100%!important;overflow-x:hidden!important}
  body.editorMode .canvasTopbar .editorActions>button{grid-column:auto!important;grid-row:auto!important;position:static!important}
 }
 </style>
+
 <!-- ===== Studia V116 focused mobile editor fixes ===== -->
 <style id="v116-mobile-editor-fix">
 @media (max-width:899px){
@@ -13534,16 +14231,108 @@ html,body{max-width:100%!important;overflow-x:hidden!important}
   body.editorMode #canvasQuickDrawer.open .mobileTextModeContent{max-width:100%!important;overflow-x:hidden!important}
 }
 </style>
+<script id="v116-mobile-editor-fix-script">
+(function(){
+  const isMobile=()=>window.innerWidth<900;
+  const inEditor=()=>document.body.classList.contains('editorMode')&&!!document.querySelector('#view-sheet-editor.active');
+  const NS='http://www.w3.org/2000/svg';
 
+  function killFloatingSelectionTools(){
+    const el=document.getElementById('mobileSelectionTools');
+    if(!el)return;
+    el.classList.remove('show');
+    el.innerHTML='';
+    el.style.setProperty('display','none','important');
+  }
+  window.updateMobileSelectionTools=function(){killFloatingSelectionTools()};
+  try{updateMobileSelectionTools=window.updateMobileSelectionTools}catch(_){ }
+
+  function polishLayerUI(root=document){
+    if(!isMobile())return;
+    root.querySelectorAll?.('.mobileLayerList .layerDeleteBtn').forEach(btn=>{
+      btn.innerHTML='×';
+      btn.setAttribute('aria-label','Ebene löschen');
+      btn.title='Löschen';
+    });
+    root.querySelectorAll?.('.mobileLayerList .layerTools button').forEach(btn=>{
+      btn.style.removeProperty('flex');
+      btn.style.removeProperty('width');
+    });
+  }
+
+  const oldLayers=window.renderLayerList||((typeof renderLayerList==='function')?renderLayerList:null);
+  if(oldLayers){
+    window.renderLayerList=function(){
+      const r=oldLayers.apply(this,arguments);
+      requestAnimationFrame(()=>polishLayerUI(document));
+      return r;
+    };
+    try{renderLayerList=window.renderLayerList}catch(_){ }
+  }
+
+  function addShapeMoveHandles(){
+    if(!inEditor()||!isMobile())return;
+    const selectedIds=new Set([...(window.canvasState?.selectedVectorIds||[]),window.canvasState?.selectedType==='vector'?window.canvasState?.selectedId:null].filter(Boolean));
+    document.querySelectorAll('.vectorObj').forEach(svg=>{
+      svg.querySelectorAll('.v116ShapeMoveHandle').forEach(x=>x.remove());
+      const vid=svg.getAttribute('data-vector-wrap');
+      if(!selectedIds.has(vid))return;
+      const v=(window.canvasState?.vectors||[]).find(x=>x.id===vid);if(!v||v.locked)return;
+      const b=typeof vectorBounds==='function'?vectorBounds(v):null;if(!b)return;
+      const pageW=typeof canvasPageWidth==='function'?canvasPageWidth():794;
+      const x=Math.max(24,Math.min(pageW-24,b.x+b.w/2));
+      const y=Math.max(24,b.y-28);
+      const g=document.createElementNS(NS,'g');
+      g.setAttribute('class','v116ShapeMoveHandle');
+      g.setAttribute('data-vid',vid);
+      g.setAttribute('transform',`translate(${x} ${y})`);
+      g.innerHTML='<circle r="19"></circle><path d="M0 -10V10M-10 0H10M0 -10l-4 4M0 -10l4 4M0 10l-4-4M0 10l4-4M-10 0l4-4M-10 0l4 4M10 0l-4-4M10 0l-4 4"></path>';
+      g.addEventListener('pointerdown',e=>{
+        e.preventDefault();e.stopPropagation();
+        try{selectVector(vid)}catch(_){ }
+        try{startVectorDrag(e,vid)}catch(_){ }
+      },{passive:false});
+      svg.appendChild(g);
+    });
+  }
+
+  const oldVectors=window.renderVectors||((typeof renderVectors==='function')?renderVectors:null);
+  if(oldVectors){
+    window.renderVectors=function(){
+      const r=oldVectors.apply(this,arguments);
+      requestAnimationFrame(addShapeMoveHandles);
+      return r;
+    };
+    try{renderVectors=window.renderVectors}catch(_){ }
+  }
+
+  /* Desktop: reinforce direct shape dragging without touching phone pinch gestures. */
+  document.addEventListener('pointerdown',e=>{
+    if(!inEditor()||isMobile()||e.button!==0)return;
+    const hit=e.target instanceof Element?e.target.closest('.vectorTouchProxy,.shapeHit'):null;
+    if(!hit)return;
+    const vid=hit.getAttribute('data-vid');
+    const v=(window.canvasState?.vectors||[]).find(x=>x.id===vid);
+    if(!vid||!v||v.locked)return;
+    e.preventDefault();e.stopImmediatePropagation();
+    try{selectVector(vid);startVectorDrag(e,vid)}catch(_){ }
+  },true);
+
+  function sweep(){
+    killFloatingSelectionTools();
+    polishLayerUI(document);
+    addShapeMoveHandles();
+  }
+
+  const drawer=document.getElementById('canvasQuickDrawer');
+  if(drawer)new MutationObserver(()=>requestAnimationFrame(sweep)).observe(drawer,{subtree:true,childList:true,attributes:true});
+  document.addEventListener('click',()=>requestAnimationFrame(sweep),true);
+  window.addEventListener('resize',()=>setTimeout(sweep,40));
+  setTimeout(()=>{
+    sweep();
+    const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 116';
+    document.title='Studia';
+  },220);
+})();
+</script>
 <!-- ===== /Studia V116 ===== -->
-<style id="v118-core-fix">
-/* V118: one clean interaction layer */
-.canvasViewport{touch-action:none!important;overscroll-behavior:none!important;overflow:hidden!important}
-.canvasStage,.canvasPage,.canvasObjects,.canvasSvg{touch-action:none!important}
-.cobj,.shapeHit,.vectorTouchProxy{cursor:grab!important}
-.cobj.dragging,.shapeHit.dragging{cursor:grabbing!important}
-#canvasQuickDrawer,.layerList,.modal{overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important}
-.layerItem{min-height:42px!important}
-.layerBtns{flex-shrink:0!important}.layerBtns span{cursor:pointer!important}
-</style>
-
