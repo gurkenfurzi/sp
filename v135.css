@@ -1,0 +1,79 @@
+:root{--v135-pink:#ef9ea7;--v135-pink-soft:#fff0f1;--v135-ink:#3f3834;--v135-line:#ebe2de;--v135-green:#eaf3da}
+.v132Hit{touch-action:none!important;cursor:grab!important}
+.v132Hit.dragging{cursor:grabbing!important}
+.v135MenuBar{display:none}
+.v135ToolIcon{width:18px;height:18px;display:block;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.v135SideClose,.v135SideOpen{display:none}
+.v135Modal{width:min(760px,92vw);display:grid;gap:14px;color:var(--v135-ink)}
+.v135Modal h2{margin:0;font-size:23px}.v135Modal p{margin:0;color:#897a73;line-height:1.5}
+.v135ModalHead{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.v135ModalHead button{width:38px;height:38px;border:1px solid var(--v135-line);border-radius:12px;background:#fff;color:#5e534e;font-size:20px}
+.v135FormGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.v135FormGrid .full{grid-column:1/-1}.v135FormGrid label{display:grid;gap:5px;margin:0;color:#74665f;font-size:10px;font-weight:850}
+.v135FormGrid input,.v135FormGrid select,.v135FormGrid textarea{width:100%;box-sizing:border-box;border:1px solid var(--v135-line);border-radius:11px;background:#fff;padding:10px;color:#4d4541;min-height:40px}
+.v135FormGrid textarea{min-height:90px;resize:vertical;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:10px}
+.v135ActionRow{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px}
+.v135ActionRow button,.v135SoftButton{min-height:40px;border:1px solid var(--v135-line);border-radius:12px;background:#fff;padding:0 14px;color:#584d48;font-weight:850}
+.v135ActionRow .primary{background:var(--v135-pink-soft);border-color:#f2c1c6;color:#9b5e65}
+.v135Hint{padding:10px 12px;border-radius:12px;background:#fff8f2;border:1px solid #f1e4d8;color:#8b7568;font-size:10px;line-height:1.5}
+.v135StickerGrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;max-height:60vh;overflow:auto;padding:2px}
+.v135StickerGrid button{aspect-ratio:1;border:1px solid var(--v135-line);border-radius:16px;background:#fffdfb;padding:8px;display:grid;place-items:center;transition:.16s ease}
+.v135StickerGrid button:hover{transform:translateY(-2px);border-color:#f1b3b9;box-shadow:0 8px 18px rgba(133,84,76,.09)}
+.v135StickerGrid img{width:100%;height:100%;object-fit:contain}
+.v135Special{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:hidden;border-radius:inherit}
+.v135Special svg{display:block;width:100%;height:100%}
+.v135StrokeOverlay{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.paperSticker.gridPaper{background-image:linear-gradient(color-mix(in srgb,var(--v135-paper-line,#9aafc1) 38%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--v135-paper-line,#9aafc1) 38%,transparent) 1px,transparent 1px)!important}
+.paperSticker.linePaper{background-image:repeating-linear-gradient(to bottom,transparent 0,transparent calc(var(--lineSize,28px) - 1px),color-mix(in srgb,var(--v135-paper-line,#9aafc1) 44%,transparent) calc(var(--lineSize,28px) - 1px),color-mix(in srgb,var(--v135-paper-line,#9aafc1) 44%,transparent) var(--lineSize,28px))!important}
+.v135ChartTitle,.v135TimelineTitle{font:800 15px Inter,Arial,sans-serif;fill:#4f4540}
+.v135LinkBadge{position:absolute;right:6px;top:6px;width:25px;height:25px;border-radius:999px;background:#fff;border:1px solid #e6d7d1;display:grid;place-items:center;color:#a2656c;pointer-events:auto;cursor:pointer;box-shadow:0 3px 8px rgba(77,54,48,.08)}
+.v135LinkBadge svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+.cobj.v135Linked{color:#8f5f91!important;text-decoration:underline!important;text-decoration-thickness:1.4px!important;text-underline-offset:3px!important}
+.v135InspectorBlock{display:grid;gap:8px;padding:10px;border:1px solid var(--v135-line);border-radius:13px;background:#fffdfa}
+.v135InspectorTitle{display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:900;color:#594e49}
+.v135InspectorTitle span{font-size:8px;color:#a18b82;text-transform:uppercase;letter-spacing:.09em}
+.v135InspectorGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.v135InspectorGrid label{display:grid;gap:4px;margin:0;font-size:8px;color:#8e7a70;font-weight:850}
+.v135InspectorGrid input,.v135InspectorGrid select,.v135InspectorGrid button{width:100%;box-sizing:border-box;min-height:34px;border:1px solid var(--v135-line);border-radius:9px;background:#fff;color:#5f524c;padding:5px 7px}
+.v135AlignGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.v135AlignGrid button{height:36px;border:1px solid var(--v135-line);border-radius:10px;background:#fff;color:#5b514c;font-weight:850;font-size:10px}
+.v135LayerWrap{display:grid;gap:9px}.v135LayersToolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:1px 2px 6px}
+.v135LayersToolbar b{font-size:12px}.v135LayersToolbar button{height:32px;border:1px solid #f0c6c9;border-radius:10px;background:#fff3f4;color:#a05e65;padding:0 10px;font-weight:850;font-size:9px}
+.v135LayerGroup{border:1px solid var(--v135-line);border-radius:13px;background:#fff;overflow:hidden;animation:v135LayerIn .24s ease both}
+@keyframes v135LayerIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.v135LayerGroupHead{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:4px;min-height:38px;padding:0 6px 0 10px;background:#fff8f7;border-bottom:1px solid #f2e8e4}
+.v135LayerGroupHead b{font-size:10px;color:#5d504b}.v135LayerGroupHead span{font-size:8px;color:#a28e85}
+.v135LayerGroupHead button{width:28px;height:28px;border:0;border-radius:8px;background:transparent;color:#8f7970}
+.v135LayerItems{display:grid;padding:5px}.v135LayerEmpty{padding:12px;text-align:center;color:#aa968d;font-size:9px}
+.v135LayerRow{grid-template-columns:28px minmax(0,1fr) auto 30px!important;border-radius:9px!important;min-height:38px!important;margin:0!important}
+.v135LayerRow select{width:72px;height:28px;border:1px solid #eee3df;border-radius:8px;background:#fff;color:#7c6961;font-size:8px;padding:0 4px}
+.v135LayerLock{width:28px;height:28px;border:0;border-radius:8px;background:transparent;color:#8b756c;padding:5px}.v135LayerLock svg{width:16px;height:16px}
+.v135LayerIcon{width:24px;height:24px;border-radius:8px;background:#fff0f1;color:#a8646c;display:grid;place-items:center;flex:0 0 auto}.v135LayerIcon svg{width:15px!important;height:15px!important}
+.v135MobileExtras{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin:9px 0}.v135MobileExtras button{min-height:44px;border:1px solid var(--v135-line);border-radius:12px;background:#fff;color:#6a5851;font-weight:850;font-size:10px}
+.v135CloudState{min-height:22px;color:#8e776d;font-size:10px}
+.v135ColorRow{display:flex;gap:7px;align-items:center}.v135ColorRow input[type=color]{width:44px!important;padding:3px!important}.v135ColorRow input[type=text]{flex:1}
+.formulaModal,.graphModal{width:min(1120px,94vw)!important;max-width:none!important;max-height:88vh!important;overflow:auto!important}
+.visualFormulaModal .formulaTemplateGrid{grid-template-columns:repeat(6,minmax(0,1fr))!important}
+@media print{.canvasPage.showPageMargins:after,.v132InteractionLayer,.v135LinkBadge{display:none!important}}
+
+@media(min-width:900px){
+ body.editorMode .v135MenuBar{display:flex;position:absolute;left:225px;bottom:8px;align-items:center;gap:2px;z-index:4}
+ body.editorMode .v135MenuBar button{height:25px;border:0;border-radius:7px;background:transparent;color:#514944;padding:0 9px;font-size:9px;font-weight:750}
+ body.editorMode .v135MenuBar button:hover{background:#fff1f1;color:#945a61}
+ body.editorMode #desktopEditorSidebar{position:relative!important}
+ body.editorMode .v135SideClose{display:grid;position:sticky;top:4px;margin:5px 6px -39px auto;z-index:20;width:32px;height:32px;place-items:center;border:0;border-radius:10px;background:#fff;color:#574d48;font-size:19px}
+ body.editorMode .v135SideOpen{display:grid;place-items:center;width:31px;height:31px;border:1px solid transparent;border-radius:8px;background:transparent;color:#4c4440}
+ body.editorMode.v135SideClosed .canvasEditorShell{grid-template-columns:384px minmax(0,1fr) 0!important}
+ body.editorMode.v135SideClosed #desktopEditorSidebar{display:none!important}
+ body.editorMode .v134FormatTools{min-width:max-content}
+ body.editorMode .v134FormatTools .v135TextButton{font-size:12px!important;font-weight:800!important}
+ body.editorMode .v134FormatTools .v135TextButton svg{width:16px;height:16px}
+}
+@media(min-width:900px) and (max-width:1199px){body.editorMode.v135SideClosed .canvasEditorShell{grid-template-columns:314px minmax(400px,1fr) 0!important}}
+@media(max-width:899px){
+ .v135FormGrid{grid-template-columns:1fr}.v135FormGrid .full{grid-column:1}.v135StickerGrid{grid-template-columns:repeat(3,1fr)}
+ .formulaModal,.graphModal{width:94vw!important;max-height:82dvh!important;padding:2px!important}
+ .visualFormulaModal .formulaTemplateGrid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+ .v135Modal{width:min(94vw,560px)}
+ body.editorMode #canvasQuickDrawer.open{overflow-y:auto!important;-webkit-overflow-scrolling:touch!important}
+}
