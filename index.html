@@ -5615,7 +5615,7 @@ function renderCanvasObjects(){
    const cls=(o.kind==="block"||o.kind==="file")?"calloutObj":o.kind==="task"?"taskObj":o.kind==="merke"?"merkeObj":"textObj";
    const s=o.style||{};
    const editCls=o.editing?" editing":"";
-   return `<div class="cobj ${cls} ${sel}${lockCls}${editCls}" data-id="${o.id}" contenteditable="${o.editing?"true":"false"}" style="${base}transform:rotate(${o.rotation||0}deg);font-size:${s.fontSize||16}px;font-weight:${s.fontWeight||400};color:${s.color||"#333"};font-family:${s.fontFamily||"Arial"};background:${s.background||"transparent"};border:${s.borderWidth||0}px ${s.borderStyle||"solid"} ${s.borderColor||"transparent"};border-radius:${s.borderRadius||0}px;padding:${s.padding??7}px;text-align:${s.textAlign||"left"};opacity:${s.opacity??1};box-shadow:${s.boxShadow||"none"};letter-spacing:${s.letterSpacing||0}px;line-height:${s.lineHeight||1.25}">${o.text||""}<span class="rotateHandle"></span><span class="resizeHandle"></span></div>`;
+  return `<div class="cobj ${cls} ${sel}${lockCls}${editCls}" data-id="${o.id}" contenteditable="${o.editing?"true":"false"}" style="${base}transform:rotate(${o.rotation||0}deg);font-size:${s.fontSize||16}px;font-weight:${s.fontWeight||400};font-style:${s.fontStyle||"normal"};text-decoration:${s.textDecoration||"none"};color:${s.color||"#333"};font-family:${s.fontFamily||"Arial"};background:${s.background||"transparent"};border:${s.borderWidth||0}px ${s.borderStyle||"solid"} ${s.borderColor||"transparent"};border-radius:${s.borderRadius||0}px;padding:${s.padding??7}px;text-align:${s.textAlign||"left"};opacity:${s.opacity??1};box-shadow:${s.boxShadow||"none"};letter-spacing:${s.letterSpacing||0}px;line-height:${s.lineHeight||1.25}">${o.text||""}<span class="rotateHandle"></span><span class="resizeHandle"></span></div>`;
  }).join("");
  attachCanvasObjectEvents();renderLayerList();
  // V35: renderCanvasObjects replaces the shared layer DOM, so restore vectors every time.
@@ -15458,6 +15458,7 @@ const stage=()=>document.getElementById('canvasStage'),viewport=()=>document.get
 let selectionMode=true,drag=null,mouseDrag=null,pinch=null,pan=null,space=false,lastTap={id:null,time:0},view={z:1,x:0,y:0,touched:false},multiObjects=new Set(),multiVectors=new Set();
 
 const ICON={
+ search:'<circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/>',
  select:'<path d="M5 3l12 9-6 1.5L8.5 19z"/><path d="m12 14 4 6"/>',
  multi:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/><path d="m14.5 7 1.5 1.5L20 5"/>',
  group:'<rect x="3" y="7" width="8" height="10" rx="2"/><rect x="13" y="7" width="8" height="10" rx="2"/><path d="M11 12h2"/>',
@@ -15500,6 +15501,7 @@ const ICON={
  papergrid:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 3v18M12 3v18M16 3v18M4 8h16M4 13h16M4 18h16"/>',
  paperline:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M7 8h10M7 12h10M7 16h10"/>',
  tape:'<path d="m4 9 15-4 1 10-15 4z"/><path d="m8 8 1 10M15 6l1 10"/>',
+ audio:'<path d="M9 18V6l10-2v12"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/>',
  sticker:'<path d="M12 3a8 8 0 0 0-8 8v6a4 4 0 0 0 4 4h5l7-7v-3a8 8 0 0 0-8-8z"/><path d="M13 21v-5a2 2 0 0 1 2-2h5"/>',
  left:'<path d="M5 4v16M19 7l-5 5 5 5M14 12H7"/>',
  right:'<path d="M19 4v16M5 7l5 5-5 5M10 12h7"/>',
@@ -15592,3 +15594,181 @@ setTimeout(()=>{buildTop();if(editor())init(true);const eye=document.getElementB
 })();
 </script>
 <!-- ===== /Studia V133 ===== -->
+
+<!-- ===== Studia V134 reference-inspired desktop editor ===== -->
+<style id="v134-reference-desktop-style">
+@media(min-width:900px){
+ body.editorMode{--v134-bg:#fbf8f5;--v134-paper:#fffefd;--v134-line:#eee6e2;--v134-pink:#fde8e8;--v134-pink-strong:#f3a7aa;--v134-text:#2e2927;background:var(--v134-bg)!important}
+ body.editorMode .canvasEditorShell{display:grid!important;grid-template-columns:370px minmax(430px,1fr) 280px!important;grid-template-rows:92px 46px minmax(0,1fr) 42px!important;gap:0!important;width:100vw!important;height:100dvh!important;padding:0!important;background:#fcfaf8!important;overflow:hidden!important}
+ body.editorMode .canvasTopbar{grid-column:1/-1!important;grid-row:1!important;position:relative!important;inset:auto!important;margin:0!important;width:auto!important;height:92px!important;min-height:92px!important;padding:12px 18px!important;gap:11px!important;border:0!important;border-bottom:1px solid var(--v134-line)!important;border-radius:0!important;background:rgba(255,254,252,.98)!important;box-shadow:none!important;overflow:hidden!important}
+ body.editorMode .v134Brand{display:flex;align-items:center;gap:10px;flex:0 0 172px;height:58px;padding-right:17px;border-right:1px solid var(--v134-line);color:#25211f}
+ body.editorMode .v134BrandMark{width:42px;height:42px;display:grid;place-items:center;border:1px solid #f6c8ca;border-radius:50%;background:#fff1f1;color:#db777d}
+ body.editorMode .v134BrandMark svg{width:27px;height:27px;fill:none;stroke:currentColor;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round}
+ body.editorMode .v134Brand b{font-size:20px;letter-spacing:-.035em}
+ body.editorMode .canvasTopbar>.editorIcon:first-of-type{width:38px!important;height:38px!important;min-width:38px!important;border:1px solid var(--v134-line)!important;border-radius:11px!important;background:#fff!important;color:#554c48!important}
+ body.editorMode .canvasTopbar .editorTitle{flex:0 1 260px!important;min-width:150px!important;max-width:310px!important;display:grid!important;gap:4px!important;color:var(--v134-text)!important}
+ body.editorMode .canvasTopbar .editorTitle b{font-size:16px!important;font-weight:850!important}
+ body.editorMode .canvasTopbar .editorTitle .autosaveState{font-size:11px!important;color:#6f7972!important}
+ body.editorMode .canvasTopbar .editorActions{margin-left:auto!important;width:auto!important;display:flex!important;gap:7px!important}
+ body.editorMode .canvasTopbar .editorActions button{width:auto!important;min-width:40px!important;height:38px!important;padding:0 11px!important;border:1px solid var(--v134-line)!important;border-radius:11px!important;background:#fff!important;color:#4e4642!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:7px!important}
+ body.editorMode .canvasTopbar .editorActions button.primaryIcon{background:#f8cfd1!important;border-color:#f4c2c5!important;color:#5f393b!important}
+ body.editorMode .canvasTopbar .editorActions button span{display:inline!important;font-size:10px!important;font-weight:850!important;white-space:nowrap}
+ body.editorMode .canvasTopbar .editorActions .v133Icon{width:17px;height:17px}
+
+ body.editorMode .desktopCommandBar{grid-column:1/-1!important;grid-row:2!important;position:relative!important;display:flex!important;align-items:center!important;gap:7px!important;margin:0!important;padding:5px 14px!important;border:0!important;border-bottom:1px solid var(--v134-line)!important;border-radius:0!important;background:rgba(255,254,252,.98)!important;box-shadow:none!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none}
+ body.editorMode .desktopCommandBar::-webkit-scrollbar{display:none}
+ body.editorMode .desktopCommandBar .historyBar{display:flex!important;gap:2px!important;flex:0 0 auto!important}
+ body.editorMode .desktopCommandBar>.historyBar{position:static!important;inset:auto!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;transform:none!important}
+ body.editorMode .desktopCommandBar .historyBtn{width:31px!important;height:31px!important;min-width:31px!important;padding:0!important;border:0!important;border-radius:8px!important;background:transparent!important;color:#4d4541!important}
+ body.editorMode .desktopCommandBar .historyBtn:hover{background:#f7efec!important}
+ body.editorMode .desktopCommandBar .v132SelectionBar{flex:0 0 auto!important;width:auto!important;overflow:visible!important;gap:3px!important;padding-right:8px!important;border-right:1px solid var(--v134-line)}
+ body.editorMode .desktopCommandBar>.v132SelectionBar{position:static!important;inset:auto!important;transform:none!important}
+ body.editorMode .desktopCommandBar .v132SelectionBar button{width:31px;height:31px;border:0;border-radius:8px;background:transparent;color:#4e4541}
+ body.editorMode .desktopCommandBar .v132SelectionBar button:hover,body.editorMode .desktopCommandBar .v132SelectionBar button.active{background:#fde7e7;border:0;color:#a85f64;transform:none}
+ body.editorMode .desktopCommandBar .v132SelectionBar .v132SelectTool{min-width:31px;width:31px;padding:0}
+ body.editorMode .desktopCommandBar .v132SelectionBar .v132SelectTool span{display:none}
+ body.editorMode .v134FormatTools{display:flex;align-items:center;gap:4px;flex:0 0 auto;height:34px}
+ body.editorMode .v134FormatTools .sep{width:1px;height:22px;margin:0 4px;background:var(--v134-line)}
+ body.editorMode .v134FormatTools button,body.editorMode .v134FormatTools select,body.editorMode .v134FormatTools input[type=number]{height:31px!important;min-height:31px!important;margin:0!important;border:1px solid transparent!important;border-radius:8px!important;background:transparent!important;color:#403a37!important;font-size:11px!important}
+ body.editorMode .v134FormatTools button{min-width:31px;padding:0 8px;font-weight:850}
+ body.editorMode .v134FormatTools button:hover,body.editorMode .v134FormatTools select:hover,body.editorMode .v134FormatTools input:hover{border-color:var(--v134-line)!important;background:#fff!important}
+ body.editorMode .v134FormatTools select{padding:0 25px 0 9px!important}
+ body.editorMode .v134FormatTools .font{width:112px}.v134FormatTools .zoom{width:74px}.v134FormatTools .size{width:52px;padding:0 6px!important}
+ body.editorMode .v134FormatTools .v133Icon{width:16px;height:16px}
+
+ body.editorMode .v102DesktopLeft{grid-column:1!important;grid-row:3/5!important;display:grid!important;grid-template-columns:92px minmax(0,1fr)!important;grid-template-rows:minmax(0,1fr)!important;width:auto!important;height:auto!important;min-height:0!important;margin:0!important;border:0!important;border-right:1px solid var(--v134-line)!important;border-radius:0!important;background:#fffefd!important;box-shadow:none!important;overflow:hidden!important}
+ body.editorMode .v102DesktopLeft>.canvasQuickNav{grid-column:1!important;grid-row:1!important;position:relative!important;inset:auto!important;display:grid!important;grid-template-columns:1fr!important;grid-auto-rows:64px!important;align-content:start!important;gap:2px!important;width:92px!important;height:100%!important;min-height:100%!important;padding:9px 8px!important;border:0!important;border-right:1px solid var(--v134-line)!important;border-radius:0!important;background:#fff!important;overflow-y:auto!important;overflow-x:hidden!important;box-shadow:none!important;scrollbar-width:none}
+ body.editorMode .v102DesktopLeft>.canvasQuickNav::-webkit-scrollbar{display:none}
+ body.editorMode .canvasQuickNav button{width:76px!important;height:62px!important;min-height:62px!important;margin:0!important;padding:6px 2px!important;border:1px solid transparent!important;border-radius:10px!important;background:transparent!important;color:#3e3734!important;display:grid!important;place-items:center!important;align-content:center!important;gap:3px!important;outline:0!important;box-shadow:none!important;transition:.14s ease!important}
+ body.editorMode .canvasQuickNav button:focus,body.editorMode .canvasQuickNav button:focus-visible{outline:0!important;box-shadow:none!important}
+ body.editorMode .canvasQuickNav button:hover,body.editorMode .canvasQuickNav button.active{transform:none!important;border-color:transparent!important;background:#fde9e9!important;color:#8f5559!important}
+ body.editorMode .canvasQuickNav button .editorNavIcon{width:24px!important;height:24px!important;display:grid!important;place-items:center!important}
+ body.editorMode .canvasQuickNav button .editorNavIcon .v133Icon{width:21px;height:21px}
+ body.editorMode .canvasQuickNav button>span:last-child{font-size:9px!important;font-weight:750!important;line-height:1.05!important}
+ body.editorMode .v102DesktopLeft>#canvasQuickDrawer{grid-column:2!important;grid-row:1!important;display:block!important;position:relative!important;inset:auto!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;width:auto!important;height:100%!important;min-width:0!important;min-height:0!important;max-width:none!important;max-height:none!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:#fffefd!important;box-shadow:none!important;overflow:hidden!important;transform:none!important;opacity:1!important;visibility:visible!important}
+ body.editorMode #canvasQuickDrawer .mobileDrawerHead{display:none!important}
+ body.editorMode .v134Palette{height:100%;min-height:0;display:flex;flex-direction:column;overflow:hidden;background:#fffefd}
+ body.editorMode .v134PaletteSearch{display:flex;align-items:center;gap:8px;margin:14px 14px 8px;padding:0 11px;height:39px;min-height:39px;border:1px solid #e8e2df;border-radius:9px;background:#fff;color:#918884}
+ body.editorMode .v134PaletteSearch .v133Icon{width:17px;height:17px}
+ body.editorMode .v134PaletteSearch input{width:100%;height:35px!important;min-height:35px!important;padding:0!important;border:0!important;background:transparent!important;outline:0!important;font-size:11px!important;box-shadow:none!important}
+ body.editorMode .v134PaletteScroll{flex:1 1 auto;min-height:0;padding:4px 14px 28px;overflow-y:auto;overflow-x:hidden;scrollbar-color:#c8bfbb transparent;scrollbar-width:thin}
+ body.editorMode .v134PaletteSection{display:grid;gap:8px;margin:9px 0 18px}
+ body.editorMode .v134PaletteTitle{display:flex;align-items:center;justify-content:space-between;gap:8px;color:#2f2926;font-size:11px;font-weight:900}
+ body.editorMode .v134PaletteTitle small{color:#807671;font-size:9px;font-weight:700}
+ body.editorMode .v134PaletteGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+ body.editorMode .v134PaletteGrid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+ body.editorMode .v134PaletteTile{min-width:0;min-height:68px;padding:7px 4px;border:1px solid #eee7e3;border-radius:8px;background:#fff;display:grid;place-items:center;align-content:center;gap:5px;color:#665b56;font-size:9px;font-weight:750;box-shadow:0 2px 8px rgba(92,72,65,.025);transition:.13s ease}
+ body.editorMode .v134PaletteTile:hover{transform:translateY(-1px);border-color:#efc9c9;background:#fff9f8}
+ body.editorMode .v134PaletteTile .v133Icon{width:29px;height:29px;color:#a36e70}
+ body.editorMode .v134PaletteTile .v134FormulaPreview{font-family:"Cambria Math",serif;font-size:18px;color:#5d504a;white-space:nowrap}
+ body.editorMode .v134PaletteTile .v134ShapePreview{width:35px;height:31px;border:1.5px solid #d7c9c4;background:#f7eeee}
+ body.editorMode .v134PaletteTile .v134ShapePreview.circle{border-radius:50%}
+ body.editorMode .v134PaletteTile .v134ShapePreview.line{height:2px;border:0;background:#504843;transform:rotate(-18deg)}
+ body.editorMode .v134PaletteEmpty{display:none;padding:14px;color:#8f8580;font-size:11px;text-align:center}
+
+ body.editorMode #canvasViewport{grid-column:2!important;grid-row:3!important;position:relative!important;inset:auto!important;width:auto!important;height:auto!important;min-height:0!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:radial-gradient(circle at 10% 12%,rgba(255,230,232,.68),transparent 24rem),radial-gradient(circle at 92% 84%,rgba(239,246,222,.72),transparent 25rem),#f8f6f2!important;box-shadow:inset 0 0 0 1px rgba(237,229,225,.55)!important;overflow:hidden!important}
+ body.editorMode #canvasPage{box-shadow:0 3px 14px rgba(68,53,47,.13)!important}
+ body.editorMode #desktopEditorSidebar{grid-column:3!important;grid-row:3/5!important;position:relative!important;inset:auto!important;width:auto!important;height:auto!important;min-height:0!important;margin:0!important;padding:0!important;border:0!important;border-left:1px solid var(--v134-line)!important;border-radius:0!important;background:#fffefd!important;box-shadow:none!important;overflow-y:auto!important;overflow-x:hidden!important}
+ body.editorMode #desktopEditorSidebar .v102RightTabs{position:sticky;top:0;z-index:8;display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:4px!important;padding:9px!important;border-bottom:1px solid var(--v134-line)!important;background:rgba(255,254,252,.96)!important;backdrop-filter:blur(12px)}
+ body.editorMode #desktopEditorSidebar .v102RightTabs button{height:35px!important;border:0!important;border-radius:9px!important;background:transparent!important;font-size:10px!important;font-weight:850!important}
+ body.editorMode #desktopEditorSidebar .v102RightTabs button.active{background:#fde4e4!important;color:#995a5e!important}
+ body.editorMode #desktopEditorSidebar .objectPanel{margin:0!important;padding:14px!important;border:0!important;border-bottom:1px solid var(--v134-line)!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+ body.editorMode #v102PagePanel .rowBetween{display:grid!important;grid-template-columns:1fr!important;gap:9px!important;margin-bottom:10px}
+ body.editorMode #v102PagePanel .rowBetween>b{font-size:14px}
+ body.editorMode #v102PagePanel .rowBetween .miniIcon{width:auto!important;min-width:100%!important;height:34px!important;border:1px solid #f2cccc!important;border-radius:9px!important;background:#fff1f1!important;color:#a45f64!important;font-size:10px!important;font-weight:850!important}
+ body.editorMode .v102SidePages{display:grid!important;grid-template-columns:1fr!important;gap:9px!important}
+ body.editorMode .v102SidePages button{min-height:78px!important;border:1px solid #e9e1dd!important;border-radius:10px!important;background:#fff!important;text-align:left!important}
+ body.editorMode .v102SidePages button.active{border:2px solid #f2a5aa!important;background:#fff8f8!important}
+ body.editorMode .v102SidePageSettings{display:grid!important;gap:9px!important;margin-top:18px!important;padding-top:15px!important;border-top:1px solid var(--v134-line)}
+ body.editorMode .v102SidePageSettings:before{content:'Seiteneinstellungen';font-size:13px;font-weight:900;color:#302a27}
+ body.editorMode .v102SidePageSettings label{font-size:10px!important;font-weight:750!important;color:#645b56!important}
+ body.editorMode .v102SidePageSettings input,body.editorMode .v102SidePageSettings select{height:36px!important;min-height:36px!important;border:1px solid #e9e1dd!important;border-radius:9px!important;background:#fff!important}
+ body.editorMode .v102SidePageSettings .two{display:grid!important;grid-template-columns:1fr 1fr!important;gap:7px!important}
+ body.editorMode #v96PageStrip{display:none!important}
+ body.editorMode .v134BottomBar{grid-column:2!important;grid-row:4!important;display:flex;align-items:center;gap:8px;padding:5px 14px;border-top:1px solid var(--v134-line);background:#fffefd;color:#5e5550;z-index:5}
+ body.editorMode .v134BottomBar .notes{height:30px;padding:0 10px;border:0;border-radius:8px;background:#fff5f3;color:#5f5550;font-size:10px;font-weight:800}
+ body.editorMode .v134BottomBar .spacer{flex:1}
+ body.editorMode .v134BottomBar button.icon{width:28px;height:28px;padding:0;border:0;border-radius:8px;background:transparent;color:#4f4844;font-weight:900}
+ body.editorMode .v134BottomBar input[type=range]{width:130px;accent-color:#d98f94}
+ body.editorMode .v134BottomBar output{min-width:40px;font-size:10px;font-weight:850;text-align:center}
+}
+@media(min-width:900px) and (max-width:1199px){
+ body.editorMode .canvasEditorShell{grid-template-columns:314px minmax(400px,1fr) 250px!important}
+ body.editorMode .v102DesktopLeft{grid-template-columns:78px minmax(0,1fr)!important}
+ body.editorMode .v102DesktopLeft>.canvasQuickNav{width:78px!important;padding-inline:5px!important}
+ body.editorMode .canvasQuickNav button{width:67px!important}
+ body.editorMode .v134Brand{flex-basis:140px}
+ body.editorMode .v134Brand b{font-size:18px}
+ body.editorMode .canvasTopbar .editorTitle{max-width:220px!important}
+}
+@media(max-width:899px){body.editorMode .canvasTopbar .primaryIcon:after{display:none!important;content:none!important}}
+</style>
+<script id="v134-reference-desktop-script">
+(()=>{
+'use strict';
+const desktop=()=>innerWidth>=900&&document.body.classList.contains('editorMode')&&!!document.querySelector('#view-sheet-editor.active');
+const I=n=>(window.v133Icon?.(n)||'');
+const esc134=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const bunny='<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M10 12C7 8 7 3 10 3c2 0 3 4 4 7M22 12c3-4 3-9 0-9-2 0-3 4-4 7"/><path d="M8 12c2-3 5-4 8-4s6 1 8 4c2 3 2 9 0 12-2 3-5 5-8 5s-6-2-8-5c-2-3-2-9 0-12z"/><circle cx="12" cy="17" r="1"/><circle cx="20" cy="17" r="1"/><path d="M14 22c1 1 3 1 4 0M16 19v2"/></svg>';
+let currentDesktopMode='elements';
+function navButton(mode,label,icon){return `<button data-v134="${mode}" title="${esc134(label)}"><span class="editorNavIcon">${I(icon)}</span><span>${esc134(label)}</span></button>`}
+function navSentinel(){return '<i data-v129="v134" data-v133="v134" class="v134NavSentinel" hidden></i>'}
+function desktopNavHTML(){return navSentinel()+navButton('templates','Vorlagen','template')+navButton('elements','Elemente','elements')+navButton('text','Text','text')+navButton('images','Bilder','image')+navButton('shapes','Formen','rect')+navButton('stickers','Sticker','sticker')+navButton('charts','Diagramme','graph')+navButton('tables','Tabellen','table')+navButton('formulas','Formeln','formula')+navButton('files','Dateien','file')+navButton('audio','Audio','audio')}
+function mobileNavHTML(){return navSentinel()+navButton('text','Text','text')+navButton('elements','Elemente','elements')+navButton('templates','Vorlagen','template')+navButton('pages','Seiten','pages')+navButton('layers','Ebenen','layers')}
+function tile(label,icon,action,preview=''){return `<button class="v134PaletteTile" data-v134-label="${esc134(label.toLowerCase())}" onclick="${action}" title="${esc134(label)}">${preview||I(icon)}<span>${esc134(label)}</span></button>`}
+function section(title,items,cols=''){return `<section class="v134PaletteSection"><div class="v134PaletteTitle"><span>${esc134(title)}</span><small>Alle anzeigen</small></div><div class="v134PaletteGrid ${cols}">${items.join('')}</div></section>`}
+function searchShell(content,placeholder='Elemente suchen'){return `<div class="v134Palette"><label class="v134PaletteSearch">${I('search')}<input placeholder="${placeholder}" oninput="v134FilterPalette(this.value)"></label><div class="v134PaletteScroll">${content}<div class="v134PaletteEmpty">Keine passenden Elemente gefunden.</div></div></div>`}
+function elementsPalette(){return searchShell(
+ section('Zuletzt verwendet',[
+  tile('Rechteck','rect',"addVectorShape('rect')",'<i class="v134ShapePreview"></i>'),tile('Graph','graph','openGraphDialog()'),tile('Stern','star','addRoundedStar()')
+ ])+
+ section('Formen',[
+  tile('Rechteck','rect',"addVectorShape('rect')",'<i class="v134ShapePreview"></i>'),tile('Kreis','circle',"addVectorShape('ellipse')",'<i class="v134ShapePreview circle"></i>'),tile('Linie','line','addVectorLine()', '<i class="v134ShapePreview line"></i>'),tile('Dreieck','triangle',"addVectorShape('triangle')"),tile('Stern','star','addRoundedStar()'),tile('Kurve','curve','addVectorCurve()')
+ ])+
+ section('Sticker & Papier',[
+  tile('Sticker','sticker','toggleStickerPanel()'),tile('Klebeband','tape','addTapeSticker()'),tile('Kariert','papergrid',"addPaperSticker('grid')")
+ ])+
+ section('Diagramme',[
+  tile('Funktionsgraph','graph','openGraphDialog()'),tile('Freihandkurve','curve','addVectorCurve()'),tile('Trennlinie','line','addCanvasDivider()')
+ ])+
+ section('Tabellen',[
+  tile('Tabelle','table','openTableDialog()'),tile('Checkliste','checklist','addCanvasChecklist()'),tile('Liniertes Papier','paperline',"addPaperSticker('line')")
+ ])+
+ section('Formeln',[
+  tile('a² + b² = c²','formula','openFormulaDialog()','<b class="v134FormulaPreview">a²+b²=c²</b>'),tile('Bruch','formula','openFormulaDialog()','<b class="v134FormulaPreview">a⁄b</b>'),tile('Wurzel','formula','openFormulaDialog()','<b class="v134FormulaPreview">√x</b>')
+ ]));}
+function customPalette(mode){
+ const map={
+  images:section('Bilder & Medien',[tile('Bild / Foto','image','openCanvasMediaPicker()'),tile('Bilddatei','image',"document.getElementById('canvasImageInput').click()"),tile('Kamera','image',"document.getElementById('canvasCameraInput').click()")]),
+  shapes:section('Formen & Linien',[tile('Rechteck','rect',"addVectorShape('rect')"),tile('Kreis','circle',"addVectorShape('ellipse')"),tile('Dreieck','triangle',"addVectorShape('triangle')"),tile('Stern','star','addRoundedStar()'),tile('Linie','line','addVectorLine()'),tile('Kurve','curve','addVectorCurve()'),tile('Freihand','pen',"setVectorTool('pen')")]),
+  stickers:section('Sticker & Deko',[tile('Sticker öffnen','sticker','toggleStickerPanel()'),tile('Klebeband','tape','addTapeSticker()'),tile('Kariertes Papier','papergrid',"addPaperSticker('grid')"),tile('Liniertes Papier','paperline',"addPaperSticker('line')")]),
+  charts:section('Diagramme',[tile('Funktionsgraph','graph','openGraphDialog()'),tile('Kurve','curve','addVectorCurve()'),tile('Achsen / Linie','line','addVectorLine()')]),
+  tables:section('Tabellen',[tile('Tabelle einfügen','table','openTableDialog()'),tile('Checkliste','checklist','addCanvasChecklist()')]),
+  formulas:section('Formeln',[tile('Formel einfügen','formula','openFormulaDialog()'),tile('Pythagoras','formula','openFormulaDialog()','<b class="v134FormulaPreview">a²+b²=c²</b>'),tile('Bruch','formula','openFormulaDialog()','<b class="v134FormulaPreview">a⁄b</b>'),tile('Wurzel','formula','openFormulaDialog()','<b class="v134FormulaPreview">√x</b>')]),
+  files:section('Dateien',[tile('Datei hochladen','file',"document.getElementById('canvasAnyFileInput').click()"),tile('Bilddatei','image',"document.getElementById('canvasImageInput').click()")]),
+  audio:section('Audio & Anhänge',[tile('Audiodatei','audio',"document.getElementById('canvasAnyFileInput').click()"),tile('Datei anhängen','file',"document.getElementById('canvasAnyFileInput').click()")])
+ };
+ return searchShell(map[mode]||'',mode==='formulas'?'Formeln suchen':'Elemente suchen');
+}
+function setDrawerHTML(html,mode=currentDesktopMode){const d=document.getElementById('canvasQuickDrawer');if(!d)return;d.classList.add('open');d.dataset.v134Mode=mode;d.innerHTML=html}
+window.v134FilterPalette=function(q){const term=String(q||'').trim().toLowerCase(),buttons=[...document.querySelectorAll('#canvasQuickDrawer .v134PaletteTile')];let shown=0;buttons.forEach(b=>{const show=!term||(b.dataset.v134Label||'').includes(term);b.hidden=!show;if(show)shown++});document.querySelector('#canvasQuickDrawer .v134PaletteEmpty')?.style.setProperty('display',shown?'none':'block')};
+window.v134Open=function(mode,btn){if(!desktop())return window.v132Open?.(mode,btn);currentDesktopMode=mode;document.querySelectorAll('.canvasQuickNav button').forEach(b=>b.classList.toggle('active',b===btn));if(['templates','text'].includes(mode)){window.v132Open?.(mode,btn);return}if(mode==='elements'){setDrawerHTML(elementsPalette(),mode);return}setDrawerHTML(customPalette(mode),mode)};
+function buildDesktopNav(){const nav=document.querySelector('.canvasQuickNav');if(!nav)return;if(!nav.querySelector('[data-v134]'))nav.innerHTML=desktopNavHTML();nav.querySelectorAll('[data-v134]').forEach(b=>{b.onclick=()=>v134Open(b.dataset.v134,b);b.classList.toggle('active',b.dataset.v134===currentDesktopMode)})}
+function buildMobileNav(){const nav=document.querySelector('.canvasQuickNav');if(!nav)return;nav.innerHTML=mobileNavHTML();nav.querySelectorAll('[data-v134]').forEach(b=>b.onclick=()=>window.v132Open?.(b.dataset.v134,b))}
+function formatTools(){return `<div class="v134FormatTools"><select class="zoom" title="Zoom" onchange="setCanvasZoom(+this.value)"><option value=".5">50%</option><option value=".75">75%</option><option value="1" selected>100%</option><option value="1.25">125%</option><option value="1.5">150%</option></select><span class="sep"></span><select class="font" title="Schriftart" onchange="applyTextProperty('fontFamily',this.value)"><option>Inter</option><option>Arial</option><option>Georgia</option><option>Trebuchet MS</option><option>Verdana</option><option>Times New Roman</option></select><input class="size" title="Schriftgröße" type="number" min="6" max="180" value="16" onchange="applyTextProperty('fontSize',+this.value)"><button title="Fett" onclick="v134ToggleText('fontWeight')">B</button><button title="Kursiv" onclick="v134ToggleText('fontStyle')"><i>I</i></button><button title="Unterstrichen" onclick="v134ToggleText('textDecoration')"><u>U</u></button><label title="Textfarbe" style="width:31px;height:31px;display:grid;place-items:center;font-weight:900;cursor:pointer">A<input type="color" value="#333333" onchange="applyTextProperty('color',this.value)" style="position:absolute;opacity:0;width:1px;height:1px"></label><span class="sep"></span><button title="Links" onclick="applyTextProperty('textAlign','left')">≡</button><button title="Zentriert" onclick="applyTextProperty('textAlign','center')">≣</button><button title="Rechts" onclick="applyTextProperty('textAlign','right')">≡</button><span class="sep"></span><button title="Formel" onclick="openFormulaDialog()">${I('formula')}</button><button title="Graph" onclick="openGraphDialog()">${I('graph')}</button><button title="Tabelle" onclick="openTableDialog()">${I('table')}</button></div>`}
+window.v134ToggleText=function(prop){if(canvasState?.selectedType!=='object'||!canvasState.selectedId)return cuteToast?.('Wähle zuerst einen Text ♡');const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(!o||!['text','block','task','merke'].includes(o.kind))return cuteToast?.('Wähle zuerst einen Text ♡');o.style||={};if(prop==='fontWeight')o.style.fontWeight=String(o.style.fontWeight)==='700'?'400':'700';if(prop==='fontStyle')o.style.fontStyle=o.style.fontStyle==='italic'?'normal':'italic';if(prop==='textDecoration')o.style.textDecoration=o.style.textDecoration==='underline'?'none':'underline';renderCanvasObjects();renderCanvasInspector();markCanvasDirty();pushHistory()};
+function labelHeaderButtons(){const map={'Seite & Ansicht':['pages','Ansicht'],Exportieren:['export','Export'],'PDF / Drucken':['print','Drucken'],Speichern:['save','Speichern']};document.querySelectorAll('.canvasTopbar .editorActions button[title]').forEach(b=>{const v=map[b.title];if(!v)return;b.innerHTML=I(v[0])+`<span>${v[1]}</span>`;b.dataset.v133Icon=v[0]})}
+function ensureBottom(shell){let bar=shell.querySelector('.v134BottomBar');if(!bar){bar=document.createElement('div');bar.className='v134BottomBar';bar.innerHTML=`<button class="notes" onclick="cuteToast('Notizen kannst du als Textfeld einfügen ♡')">▤ Notizen</button><span class="spacer"></span><button class="icon" onclick="canvasZoomBy(-.1)">−</button><input type="range" min=".25" max="2" step=".05" value="1" oninput="setCanvasZoom(+this.value);this.nextElementSibling.value=Math.round(this.value*100)+'%'"><output>100%</output><button class="icon" onclick="canvasZoomBy(.1)">＋</button><button class="icon" title="Einpassen" onclick="fitCanvasStage()">${I('fit')}</button>`;shell.appendChild(bar)}return bar}
+function polishRightPanel(){const add=document.querySelector('#v102PagePanel .rowBetween .miniIcon');if(add)add.innerHTML='+ Seite hinzufügen'}
+function makeSelectionBar(){const bar=document.createElement('div');bar.className='v132SelectionBar';bar.setAttribute('aria-label','Auswahlwerkzeuge');bar.innerHTML=`<button class="v132SelectTool active" title="Auswahlwerkzeug" aria-label="Auswahlwerkzeug" onclick="v132ToggleSelection()">${I('select')}<span>Auswahl</span></button><button class="v132MultiTool" title="Mehrere auswählen" aria-label="Mehrfachauswahl" onclick="v132ToggleMulti()">${I('multi')}</button><button title="Gruppieren" aria-label="Gruppieren" onclick="groupSelectedItems();requestAnimationFrame(v132SyncHits)">${I('group')}</button><button title="Duplizieren" aria-label="Duplizieren" onclick="duplicateSelected();requestAnimationFrame(v132SyncHits)">${I('duplicate')}</button><button title="Textformat erstellen" aria-label="Textformat erstellen" onclick="v132TextFormat()">${I('textformat')}</button>`;return bar}
+function ensureDesktop(){if(!desktop())return;const shell=document.querySelector('.canvasEditorShell'),top=document.querySelector('.canvasTopbar'),command=document.querySelector('.desktopCommandBar'),nav=document.querySelector('.canvasQuickNav'),drawer=document.getElementById('canvasQuickDrawer');if(!shell||!top||!command||!nav||!drawer)return;command.querySelectorAll('.desktopCmdGroup').forEach(x=>x.remove());let brand=top.querySelector('.v134Brand');if(!brand){brand=document.createElement('div');brand.className='v134Brand';brand.innerHTML=`<span class="v134BrandMark">${bunny}</span><b>Studia</b>`;top.prepend(brand)}const history=top.querySelector('.historyBar')||document.querySelector('.desktopCommandBar .historyBar');let selection=top.querySelector('.v132SelectionBar')||document.querySelector('.desktopCommandBar .v132SelectionBar');if(!selection)selection=makeSelectionBar();if(history&&history.parentElement!==command)command.prepend(history);if(selection.parentElement!==command){if(history)history.after(selection);else command.prepend(selection)}if(!command.querySelector('.v134FormatTools'))command.insertAdjacentHTML('beforeend',formatTools());labelHeaderButtons();buildDesktopNav();ensureBottom(shell);const any=document.getElementById('canvasAnyFileInput');if(any)any.accept='image/*,audio/*,.mp3,.wav,.m4a,.ogg,.pdf,.doc,.docx,.ppt,.pptx,.txt';const custom=['elements','images','shapes','stickers','charts','tables','formulas','files','audio'];if(custom.includes(currentDesktopMode)&&drawer.dataset.v134Mode!==currentDesktopMode)setDrawerHTML(currentDesktopMode==='elements'?elementsPalette():customPalette(currentDesktopMode),currentDesktopMode);if(!drawer.querySelector('.v134Palette')&&!drawer.querySelector('.mobileTextLibrary,.mobileTemplateGrid'))setDrawerHTML(elementsPalette(),'elements');if(!shell.dataset.v134PageOpened){shell.dataset.v134PageOpened='1';try{v102RightTab('page')}catch(_){}}polishRightPanel();document.body.classList.add('v134Desktop')}
+function restoreMobile(){document.body.classList.remove('v134Desktop');const top=document.querySelector('.canvasTopbar'),actions=top?.querySelector('.editorActions'),history=document.querySelector('.desktopCommandBar .historyBar'),selection=document.querySelector('.desktopCommandBar .v132SelectionBar');top?.querySelector('.v134Brand')?.remove();if(selection&&top)top.insertBefore(selection,history&&history.parentElement===top?history:actions);if(history&&top)top.insertBefore(history,actions);document.querySelector('.v134BottomBar')?.remove();const nav=document.querySelector('.canvasQuickNav');if(nav?.querySelector('[data-v134="audio"]'))buildMobileNav()}
+function reconcile(){desktop()?ensureDesktop():restoreMobile()}
+const oldRender=window.renderSheetEditor;window.renderSheetEditor=function(){const r=oldRender.apply(this,arguments);setTimeout(reconcile,820);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){}
+const oldOpen=window.openStudySheetEditor;if(oldOpen)window.openStudySheetEditor=function(){const r=oldOpen.apply(this,arguments);setTimeout(reconcile,900);return r};
+const observer=new MutationObserver(()=>requestAnimationFrame(()=>{if(document.body.classList.contains('editorMode'))reconcile()}));observer.observe(document.body,{subtree:true,childList:true});
+window.addEventListener('resize',()=>setTimeout(reconcile,220));
+setTimeout(reconcile,980);
+})();
+</script>
+<!-- ===== /Studia V134 ===== -->
