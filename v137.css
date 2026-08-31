@@ -1,0 +1,98 @@
+/* Studia V137 - ordered editor, reliable viewer and responsive dialogs */
+:root{--v137-rose:#e89aa3;--v137-rose-soft:#fff0f1;--v137-ink:#544944;--v137-line:#eadfda;--v137-paper:#fffdfb}
+
+/* Every modal must fit its actual viewport. Old 560px/760px conflicts caused horizontal clipping. */
+#modalWrap.modalWrap.open{display:flex!important;align-items:center!important;justify-content:center!important;box-sizing:border-box!important;padding:max(12px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))!important;overflow:auto!important}
+#modalWrap .modal{box-sizing:border-box!important;width:min(760px,calc(100vw - 24px))!important;max-width:760px!important;max-height:calc(100dvh - 24px)!important;height:auto!important;overflow-x:hidden!important;overflow-y:auto!important;padding:clamp(14px,2.2vw,22px)!important}
+#modalWrap .modal>*{min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
+#modalWrap .v135Modal,#modalWrap .formulaModal,#modalWrap .graphModal,#modalWrap .visualFormulaModal{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important;overflow:visible!important}
+#modalWrap .v135FormGrid,#modalWrap .graphModal>*{min-width:0!important;max-width:100%!important}
+#modalWrap input,#modalWrap select,#modalWrap textarea,#modalWrap button{max-width:100%;box-sizing:border-box}
+#modalWrap input[type="color"]{width:100%!important;min-width:0!important;padding:5px!important}
+#modalWrap .v135ActionRow{position:sticky;bottom:-1px;z-index:3;margin:0 -4px -4px;padding:10px 4px 4px;background:linear-gradient(180deg,rgba(255,250,246,0),#fffaf6 28%);flex-wrap:wrap!important}
+
+/* The legacy application menu is intentionally removed. */
+body.editorMode .v135MenuBar{display:none!important}
+
+/* One readable, grouped text toolbar. */
+.v137FormatToolbar{display:flex;align-items:center;gap:5px;min-width:max-content;height:100%}
+.v137ToolGroup{display:flex;align-items:center;gap:3px;padding:0 6px;border-left:1px solid #eee4e0}
+.v137ToolGroup:first-child{border-left:0;padding-left:0}
+.v137ToolGroup button,.v137ToolGroup label{position:relative;display:grid;place-items:center;width:31px;height:31px;min-width:31px;border:0;border-radius:9px;background:transparent;color:#504844;padding:0;cursor:pointer;font-size:12px;font-weight:850}
+.v137ToolGroup button:hover,.v137ToolGroup label:hover{background:#fff0f1;color:#a26068}
+.v137ToolGroup svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.v137ToolGroup select,.v137ToolGroup input[type="number"]{height:31px;box-sizing:border-box;border:1px solid #eee4e0;border-radius:9px;background:#fff;color:#554b47;padding:0 8px;font-size:10px}
+.v137ToolGroup .v137Font{width:112px}.v137ToolGroup .v137Size{width:54px}.v137ToolGroup .v137Zoom{width:66px}
+.v137ToolGroup input[type="color"]{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.v137ViewButton{gap:6px!important;min-width:max-content!important;padding:0 12px!important;background:#fff4f4!important;border-color:#f2cdd0!important;color:#8e5b61!important}
+.v137ViewButton span{font-size:10px;font-weight:900}
+.v137ViewButton svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* Cute notebook replaces the animal mark. */
+.v134BrandMark.v137Notebook{border-radius:13px!important;background:#fff3f3!important;color:#d97984!important}
+.v134BrandMark.v137Notebook svg{width:25px!important;height:25px!important}
+
+/* Inspector: Appearance and Arrange are separate and work for multi-selection. */
+#canvasInspector>.v131ArrangePanel,#canvasInspector>.v135InspectorBlock{display:none!important}
+.v137Inspector{display:grid;gap:10px;margin-bottom:10px}
+.v137InspectorSection{display:grid;gap:9px;padding:12px;border-bottom:1px solid var(--v137-line);background:#fffdfb}
+.v137InspectorHead{display:flex;align-items:center;justify-content:space-between;gap:8px}.v137InspectorHead b{font-size:12px;color:var(--v137-ink)}.v137InspectorHead span{font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:#a48f87}
+.v137AppearanceGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.v137AppearanceGrid label{display:grid;gap:4px;font-size:8px;font-weight:850;color:#8d7971}.v137AppearanceGrid input,.v137AppearanceGrid select{width:100%;min-width:0;height:34px;box-sizing:border-box;border:1px solid var(--v137-line);border-radius:9px;background:#fff;color:#5e534e;padding:4px 7px}
+.v137ArrangeGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.v137ArrangeGrid button,.v137LayerActions button{display:flex;align-items:center;justify-content:center;gap:5px;min-height:37px;border:1px solid var(--v137-line);border-radius:10px;background:#fff;color:#625650;font-size:9px;font-weight:850}.v137ArrangeGrid svg,.v137LayerActions svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.v137LayerActions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+
+/* Layers remain readable on phone, with visible lock/unlock icons. */
+.v135LayerLock{display:grid!important;place-items:center!important;color:#7c655d!important;background:#fff6f3!important;border:1px solid #f0e2dc!important}
+.v135LayerLock svg{display:block!important;width:16px!important;height:16px!important;fill:none!important;stroke:currentColor!important}
+@media(max-width:899px){
+ body.editorMode .canvasEditorShell .canvasTopbar .editorActions>button.v137ViewButton{display:flex!important;width:34px!important;min-width:34px!important;height:34px!important;padding:0!important;border-radius:11px!important}
+ body.editorMode .canvasEditorShell .canvasTopbar .editorActions>button.v137ViewButton span{display:none!important}
+ body.editorMode #canvasQuickDrawer.open:has(.mobileLayerList){display:block!important;visibility:visible!important;opacity:1!important;overflow:auto!important}
+ body.editorMode #canvasQuickDrawer.open .mobileLayerList{display:block!important;min-height:120px!important;max-height:calc(48dvh - 70px)!important;overflow-y:auto!important;overflow-x:hidden!important;padding:2px!important}
+ body.editorMode #canvasQuickDrawer.open .v135LayerRow{display:grid!important;grid-template-columns:30px minmax(0,1fr) 70px 32px!important;width:100%!important;min-width:0!important;gap:4px!important;padding:4px!important}
+ body.editorMode #canvasQuickDrawer.open .v135LayerRow select{display:block!important;width:70px!important;min-width:0!important}
+ body.editorMode #canvasQuickDrawer.open .v135LayerLock{display:grid!important;width:30px!important;height:30px!important;padding:6px!important}
+}
+
+/* Imported sticker images always render at a useful size. */
+.cobj.imageObj>img,.v135StickerGrid img{display:block!important;width:100%!important;height:100%!important;object-fit:contain!important;opacity:1!important;visibility:visible!important}
+.v137DecorTitle{display:flex;align-items:center;gap:7px}.v137DecorTitle svg{width:18px;height:18px}
+
+/* Remove the scattered mobile extras; their tools are placed in their proper sections. */
+.v135MobileExtras{display:none!important}
+.v137ElementExtras,.v137MobileTextExtras{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:10px}
+.v137ElementExtras button,.v137MobileTextExtras button{min-height:46px;border:1px solid var(--v137-line);border-radius:12px;background:#fff;color:#685952;font-size:10px;font-weight:850;display:flex;align-items:center;justify-content:center;gap:7px}
+.v137ElementExtras svg,.v137MobileTextExtras svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8}
+
+/* Dark custom cursor stays visible on light pages, also while dragging. */
+.v132Hit,.v132Hit.dragging,body.editorMode.v132Dragging,body.editorMode.v132Dragging *{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M4 2l14 10-7 1 4 7-3 2-4-7-4 5z' fill='%233f3532' stroke='%23ef9aa3' stroke-width='1.4'/%3E%3C/svg%3E") 3 2,move!important}
+
+/* Marquee selection for drag/double-click-drag. */
+.v137Marquee{position:absolute;z-index:60000;pointer-events:none;border:1.5px solid #dc7f89;border-radius:5px;background:rgba(238,154,164,.14);box-shadow:0 0 0 1px rgba(255,255,255,.65) inset}
+
+/* Read-only view mode: only the page and a compact viewer bar remain. */
+.v137ViewerBar{display:none}
+body.v137ViewMode .canvasEditorShell{display:grid!important;grid-template-columns:1fr!important;grid-template-rows:58px minmax(0,1fr)!important;background:#f6f2ef!important}
+body.v137ViewMode .canvasTopbar,body.v137ViewMode .desktopCommandBar,body.v137ViewMode .v102DesktopLeft,body.v137ViewMode .canvasQuickNav,body.v137ViewMode #canvasQuickDrawer,body.v137ViewMode #desktopEditorSidebar,body.v137ViewMode #v96PageStrip,body.v137ViewMode .v134BottomBar,body.v137ViewMode #mobileSelectionTools{display:none!important}
+body.editorMode.v137ViewMode .canvasEditorShell .canvasQuickNav,body.editorMode.v137ViewMode .canvasEditorShell #canvasQuickDrawer{display:none!important}
+body.v137ViewMode .v137ViewerBar{grid-column:1!important;grid-row:1!important;display:flex!important;align-items:center;justify-content:space-between;gap:12px;padding:8px 16px;border-bottom:1px solid #e6dcd7;background:rgba(255,253,251,.97);z-index:100}
+.v137ViewerTitle{display:flex;align-items:center;gap:9px;min-width:0;color:#514844}.v137ViewerTitle svg{width:24px;height:24px;fill:none;stroke:#d77d87;stroke-width:1.7}.v137ViewerTitle b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v137ViewerTitle span{font-size:9px;color:#9a8780}
+.v137ViewerBar button{display:flex;align-items:center;gap:6px;height:38px;border:1px solid #efd3d5;border-radius:12px;background:#fff3f4;color:#8f5960;padding:0 13px;font-weight:900}.v137ViewerBar button svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8}
+body.v137ViewMode #canvasViewport{grid-column:1!important;grid-row:2!important;margin:0!important;border:0!important;border-radius:0!important;background:#eee9e5!important;padding:24px!important;overflow:auto!important;touch-action:pan-x pan-y!important}
+body.v137ViewMode #canvasStage{margin:auto!important}
+body.v137ViewMode .v132InteractionLayer,body.v137ViewMode .resizeHandle,body.v137ViewMode .rotateHandle,body.v137ViewMode .vectorHandle,body.v137ViewMode .pathNode,body.v137ViewMode #canvasGuides{display:none!important;pointer-events:none!important}
+body.v137ViewMode #canvasObjects{pointer-events:auto!important}
+body.v137ViewMode #canvasObjects .cobj{pointer-events:auto!important;cursor:default!important;outline:0!important;user-select:text!important}
+body.v137ViewMode #canvasObjects .cobj.v135Linked,body.v137ViewMode #canvasObjects .cobj.v137Linked{cursor:pointer!important}
+body.v137ViewMode #canvasObjects .vectorObj{pointer-events:none!important}
+
+/* Cloud belongs to Settings only. */
+.v137CloudSettings{display:grid;gap:8px}.v137CloudSettings button{justify-self:start}
+
+@media(max-width:720px){
+ #modalWrap .modal{width:calc(100vw - 18px)!important;max-height:calc(100dvh - 18px)!important;padding:14px!important;border-radius:18px!important}
+ #modalWrap .v135FormGrid{grid-template-columns:1fr!important}.v135FormGrid .full{grid-column:1!important}
+ #modalWrap .v135ActionRow{display:grid!important;grid-template-columns:1fr 1fr!important}.v135ActionRow button{width:100%!important;padding:0 8px!important}
+ .v137ViewerBar{padding:8px 10px!important}.v137ViewerTitle span{display:none}.v137ViewerBar button span{display:none}
+}
+@media print{.v137ViewerBar,.v137Marquee{display:none!important}}
