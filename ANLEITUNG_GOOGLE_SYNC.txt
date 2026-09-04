@@ -1,0 +1,26 @@
+STUDIA - HANDY UND LAPTOP MIT GOOGLE APPS SCRIPT SYNCHRONISIEREN
+
+1. Öffne https://script.google.com und erstelle ein neues Projekt.
+2. Öffne in dieser Studia-ZIP den Ordner "google-apps-script".
+3. Kopiere den vollständigen Inhalt von "Code.gs" in den Apps-Script-Editor.
+4. Klicke oben rechts auf "Bereitstellen" und dann "Neue Bereitstellung".
+5. Wähle als Typ "Web-App".
+6. Stelle ein:
+   - Ausführen als: Ich
+   - Wer hat Zugriff: Jeder
+7. Klicke auf "Bereitstellen" und erlaube dem eigenen Script den Zugriff auf
+   die private Studia-Sicherungsdatei in deinem Google Drive.
+8. Kopiere die angezeigte Web-App-URL. Sie muss mit "/exec" enden.
+9. Öffne in Studia: Einstellungen > Geräte-Sync.
+10. Füge die Web-App-URL ein und erfinde einen persönlichen Sync-Schlüssel
+    mit mindestens 12 Zeichen. Behandle ihn wie ein Passwort.
+11. Trage auf Handy und Laptop dieselbe URL und denselben Sync-Schlüssel ein.
+12. Auf dem Gerät mit den aktuellen Daten: "Jetzt synchronisieren".
+13. Auf dem anderen Gerät: "Cloud laden".
+
+WICHTIG
+- Der erste Upload muss von dem Gerät kommen, dessen Daten behalten werden sollen.
+- "Cloud laden" ersetzt den lokalen Stand durch den zuletzt hochgeladenen Stand.
+- Das Script speichert die Daten als private JSON-Datei im Google Drive des
+  Script-Eigentümers. Der Sync-Schlüssel wird nicht in diese Datei geschrieben.
+- Google Apps Script kann bei der ersten Benutzung eine Berechtigungsabfrage zeigen.
