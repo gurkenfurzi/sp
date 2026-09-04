@@ -1,0 +1,429 @@
+/* v135.css consolidated */
+:root{--v135-pink:#ef9ea7;--v135-pink-soft:#fff0f1;--v135-ink:#3f3834;--v135-line:#ebe2de;--v135-green:#eaf3da}
+.v132Hit{touch-action:none!important;cursor:grab!important}
+.v132Hit.dragging{cursor:grabbing!important}
+.v135MenuBar{display:none}
+.v135ToolIcon{width:18px;height:18px;display:block;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.v135SideClose,.v135SideOpen{display:none}
+.v135Modal{width:min(760px,92vw);display:grid;gap:14px;color:var(--v135-ink)}
+.v135Modal h2{margin:0;font-size:23px}.v135Modal p{margin:0;color:#897a73;line-height:1.5}
+.v135ModalHead{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.v135ModalHead button{width:38px;height:38px;border:1px solid var(--v135-line);border-radius:12px;background:#fff;color:#5e534e;font-size:20px}
+.v135FormGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.v135FormGrid .full{grid-column:1/-1}.v135FormGrid label{display:grid;gap:5px;margin:0;color:#74665f;font-size:10px;font-weight:850}
+.v135FormGrid input,.v135FormGrid select,.v135FormGrid textarea{width:100%;box-sizing:border-box;border:1px solid var(--v135-line);border-radius:11px;background:#fff;padding:10px;color:#4d4541;min-height:40px}
+.v135FormGrid textarea{min-height:90px;resize:vertical;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:10px}
+.v135ActionRow{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px}
+.v135ActionRow button,.v135SoftButton{min-height:40px;border:1px solid var(--v135-line);border-radius:12px;background:#fff;padding:0 14px;color:#584d48;font-weight:850}
+.v135ActionRow .primary{background:var(--v135-pink-soft);border-color:#f2c1c6;color:#9b5e65}
+.v135Hint{padding:10px 12px;border-radius:12px;background:#fff8f2;border:1px solid #f1e4d8;color:#8b7568;font-size:10px;line-height:1.5}
+.v135StickerGrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;max-height:60vh;overflow:auto;padding:2px}
+.v135StickerGrid button{aspect-ratio:1;border:1px solid var(--v135-line);border-radius:16px;background:#fffdfb;padding:8px;display:grid;place-items:center;transition:.16s ease}
+.v135StickerGrid button:hover{transform:translateY(-2px);border-color:#f1b3b9;box-shadow:0 8px 18px rgba(133,84,76,.09)}
+.v135StickerGrid img{width:100%;height:100%;object-fit:contain}
+.v135Special{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:hidden;border-radius:inherit}
+.v135Special svg{display:block;width:100%;height:100%}
+.v135StrokeOverlay{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.paperSticker.gridPaper{background-image:linear-gradient(color-mix(in srgb,var(--v135-paper-line,#9aafc1) 38%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--v135-paper-line,#9aafc1) 38%,transparent) 1px,transparent 1px)!important}
+.paperSticker.linePaper{background-image:repeating-linear-gradient(to bottom,transparent 0,transparent calc(var(--lineSize,28px) - 1px),color-mix(in srgb,var(--v135-paper-line,#9aafc1) 44%,transparent) calc(var(--lineSize,28px) - 1px),color-mix(in srgb,var(--v135-paper-line,#9aafc1) 44%,transparent) var(--lineSize,28px))!important}
+.v135ChartTitle,.v135TimelineTitle{font:800 15px Inter,Arial,sans-serif;fill:#4f4540}
+.v135LinkBadge{position:absolute;right:6px;top:6px;width:25px;height:25px;border-radius:999px;background:#fff;border:1px solid #e6d7d1;display:grid;place-items:center;color:#a2656c;pointer-events:auto;cursor:pointer;box-shadow:0 3px 8px rgba(77,54,48,.08)}
+.v135LinkBadge svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+.cobj.v135Linked{color:#8f5f91!important;text-decoration:underline!important;text-decoration-thickness:1.4px!important;text-underline-offset:3px!important}
+.v135InspectorBlock{display:grid;gap:8px;padding:10px;border:1px solid var(--v135-line);border-radius:13px;background:#fffdfa}
+.v135InspectorTitle{display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:900;color:#594e49}
+.v135InspectorTitle span{font-size:8px;color:#a18b82;text-transform:uppercase;letter-spacing:.09em}
+.v135InspectorGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.v135InspectorGrid label{display:grid;gap:4px;margin:0;font-size:8px;color:#8e7a70;font-weight:850}
+.v135InspectorGrid input,.v135InspectorGrid select,.v135InspectorGrid button{width:100%;box-sizing:border-box;min-height:34px;border:1px solid var(--v135-line);border-radius:9px;background:#fff;color:#5f524c;padding:5px 7px}
+.v135AlignGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.v135AlignGrid button{height:36px;border:1px solid var(--v135-line);border-radius:10px;background:#fff;color:#5b514c;font-weight:850;font-size:10px}
+.v135LayerWrap{display:grid;gap:9px}.v135LayersToolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:1px 2px 6px}
+.v135LayersToolbar b{font-size:12px}.v135LayersToolbar button{height:32px;border:1px solid #f0c6c9;border-radius:10px;background:#fff3f4;color:#a05e65;padding:0 10px;font-weight:850;font-size:9px}
+.v135LayerGroup{border:1px solid var(--v135-line);border-radius:13px;background:#fff;overflow:hidden;animation:v135LayerIn .24s ease both}
+@keyframes v135LayerIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.v135LayerGroupHead{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:4px;min-height:38px;padding:0 6px 0 10px;background:#fff8f7;border-bottom:1px solid #f2e8e4}
+.v135LayerGroupHead b{font-size:10px;color:#5d504b}.v135LayerGroupHead span{font-size:8px;color:#a28e85}
+.v135LayerGroupHead button{width:28px;height:28px;border:0;border-radius:8px;background:transparent;color:#8f7970}
+.v135LayerItems{display:grid;padding:5px}.v135LayerEmpty{padding:12px;text-align:center;color:#aa968d;font-size:9px}
+.v135LayerRow{grid-template-columns:28px minmax(0,1fr) auto 30px!important;border-radius:9px!important;min-height:38px!important;margin:0!important}
+.v135LayerRow select{width:72px;height:28px;border:1px solid #eee3df;border-radius:8px;background:#fff;color:#7c6961;font-size:8px;padding:0 4px}
+.v135LayerLock{width:28px;height:28px;border:0;border-radius:8px;background:transparent;color:#8b756c;padding:5px}.v135LayerLock svg{width:16px;height:16px}
+.v135LayerIcon{width:24px;height:24px;border-radius:8px;background:#fff0f1;color:#a8646c;display:grid;place-items:center;flex:0 0 auto}.v135LayerIcon svg{width:15px!important;height:15px!important}
+.v135MobileExtras{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin:9px 0}.v135MobileExtras button{min-height:44px;border:1px solid var(--v135-line);border-radius:12px;background:#fff;color:#6a5851;font-weight:850;font-size:10px}
+.v135CloudState{min-height:22px;color:#8e776d;font-size:10px}
+.v135ColorRow{display:flex;gap:7px;align-items:center}.v135ColorRow input[type=color]{width:44px!important;padding:3px!important}.v135ColorRow input[type=text]{flex:1}
+.formulaModal,.graphModal{width:min(1120px,94vw)!important;max-width:none!important;max-height:88vh!important;overflow:auto!important}
+.visualFormulaModal .formulaTemplateGrid{grid-template-columns:repeat(6,minmax(0,1fr))!important}
+@media print{.canvasPage.showPageMargins:after,.v132InteractionLayer,.v135LinkBadge{display:none!important}}
+
+@media(min-width:900px){
+ body.editorMode .v135MenuBar{display:flex;position:absolute;left:225px;bottom:8px;align-items:center;gap:2px;z-index:4}
+ body.editorMode .v135MenuBar button{height:25px;border:0;border-radius:7px;background:transparent;color:#514944;padding:0 9px;font-size:9px;font-weight:750}
+ body.editorMode .v135MenuBar button:hover{background:#fff1f1;color:#945a61}
+ body.editorMode #desktopEditorSidebar{position:relative!important}
+ body.editorMode .v135SideClose{display:grid;position:sticky;top:4px;margin:5px 6px -39px auto;z-index:20;width:32px;height:32px;place-items:center;border:0;border-radius:10px;background:#fff;color:#574d48;font-size:19px}
+ body.editorMode .v135SideOpen{display:grid;place-items:center;width:31px;height:31px;border:1px solid transparent;border-radius:8px;background:transparent;color:#4c4440}
+ body.editorMode.v135SideClosed .canvasEditorShell{grid-template-columns:384px minmax(0,1fr) 0!important}
+ body.editorMode.v135SideClosed #desktopEditorSidebar{display:none!important}
+ body.editorMode .v134FormatTools{min-width:max-content}
+ body.editorMode .v134FormatTools .v135TextButton{font-size:12px!important;font-weight:800!important}
+ body.editorMode .v134FormatTools .v135TextButton svg{width:16px;height:16px}
+}
+@media(min-width:900px) and (max-width:1199px){body.editorMode.v135SideClosed .canvasEditorShell{grid-template-columns:314px minmax(400px,1fr) 0!important}}
+@media(max-width:899px){
+ .v135FormGrid{grid-template-columns:1fr}.v135FormGrid .full{grid-column:1}.v135StickerGrid{grid-template-columns:repeat(3,1fr)}
+ .formulaModal,.graphModal{width:94vw!important;max-height:82dvh!important;padding:2px!important}
+ .visualFormulaModal .formulaTemplateGrid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+ .v135Modal{width:min(94vw,560px)}
+ body.editorMode #canvasQuickDrawer.open{overflow-y:auto!important;-webkit-overflow-scrolling:touch!important}
+}
+
+/* v137.css consolidated */
+/* Studia V137 - ordered editor, reliable viewer and responsive dialogs */
+:root{--v137-rose:#e89aa3;--v137-rose-soft:#fff0f1;--v137-ink:#544944;--v137-line:#eadfda;--v137-paper:#fffdfb}
+
+/* Every modal must fit its actual viewport. Old 560px/760px conflicts caused horizontal clipping. */
+#modalWrap.modalWrap.open{display:flex!important;align-items:center!important;justify-content:center!important;box-sizing:border-box!important;padding:max(12px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))!important;overflow:auto!important}
+#modalWrap .modal{box-sizing:border-box!important;width:min(760px,calc(100vw - 24px))!important;max-width:760px!important;max-height:calc(100dvh - 24px)!important;height:auto!important;overflow-x:hidden!important;overflow-y:auto!important;padding:clamp(14px,2.2vw,22px)!important}
+#modalWrap .modal>*{min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
+#modalWrap .v135Modal,#modalWrap .formulaModal,#modalWrap .graphModal,#modalWrap .visualFormulaModal{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important;overflow:visible!important}
+#modalWrap .v135FormGrid,#modalWrap .graphModal>*{min-width:0!important;max-width:100%!important}
+#modalWrap input,#modalWrap select,#modalWrap textarea,#modalWrap button{max-width:100%;box-sizing:border-box}
+#modalWrap input[type="color"]{width:100%!important;min-width:0!important;padding:5px!important}
+#modalWrap .v135ActionRow{position:sticky;bottom:-1px;z-index:3;margin:0 -4px -4px;padding:10px 4px 4px;background:linear-gradient(180deg,rgba(255,250,246,0),#fffaf6 28%);flex-wrap:wrap!important}
+
+/* The legacy application menu is intentionally removed. */
+body.editorMode .v135MenuBar{display:none!important}
+
+/* One readable, grouped text toolbar. */
+.v137FormatToolbar{display:flex;align-items:center;gap:5px;min-width:max-content;height:100%}
+.v137ToolGroup{display:flex;align-items:center;gap:3px;padding:0 6px;border-left:1px solid #eee4e0}
+.v137ToolGroup:first-child{border-left:0;padding-left:0}
+.v137ToolGroup button,.v137ToolGroup label{position:relative;display:grid;place-items:center;width:31px;height:31px;min-width:31px;border:0;border-radius:9px;background:transparent;color:#504844;padding:0;cursor:pointer;font-size:12px;font-weight:850}
+.v137ToolGroup button:hover,.v137ToolGroup label:hover{background:#fff0f1;color:#a26068}
+.v137ToolGroup svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.v137ToolGroup select,.v137ToolGroup input[type="number"]{height:31px;box-sizing:border-box;border:1px solid #eee4e0;border-radius:9px;background:#fff;color:#554b47;padding:0 8px;font-size:10px}
+.v137ToolGroup .v137Font{width:112px}.v137ToolGroup .v137Size{width:54px}.v137ToolGroup .v137Zoom{width:66px}
+.v137ToolGroup input[type="color"]{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.v137ViewButton{gap:6px!important;min-width:max-content!important;padding:0 12px!important;background:#fff4f4!important;border-color:#f2cdd0!important;color:#8e5b61!important}
+.v137ViewButton span{font-size:10px;font-weight:900}
+.v137ViewButton svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* Cute notebook replaces the animal mark. */
+.v134BrandMark.v137Notebook{border-radius:13px!important;background:#fff3f3!important;color:#d97984!important}
+.v134BrandMark.v137Notebook svg{width:25px!important;height:25px!important}
+
+/* Inspector: Appearance and Arrange are separate and work for multi-selection. */
+#canvasInspector>.v131ArrangePanel,#canvasInspector>.v135InspectorBlock{display:none!important}
+.v137Inspector{display:grid;gap:10px;margin-bottom:10px}
+.v137InspectorSection{display:grid;gap:9px;padding:12px;border-bottom:1px solid var(--v137-line);background:#fffdfb}
+.v137InspectorHead{display:flex;align-items:center;justify-content:space-between;gap:8px}.v137InspectorHead b{font-size:12px;color:var(--v137-ink)}.v137InspectorHead span{font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:#a48f87}
+.v137AppearanceGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.v137AppearanceGrid label{display:grid;gap:4px;font-size:8px;font-weight:850;color:#8d7971}.v137AppearanceGrid input,.v137AppearanceGrid select{width:100%;min-width:0;height:34px;box-sizing:border-box;border:1px solid var(--v137-line);border-radius:9px;background:#fff;color:#5e534e;padding:4px 7px}
+.v137ArrangeGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.v137ArrangeGrid button,.v137LayerActions button{display:flex;align-items:center;justify-content:center;gap:5px;min-height:37px;border:1px solid var(--v137-line);border-radius:10px;background:#fff;color:#625650;font-size:9px;font-weight:850}.v137ArrangeGrid svg,.v137LayerActions svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.v137LayerActions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+
+/* Layers remain readable on phone, with visible lock/unlock icons. */
+.v135LayerLock{display:grid!important;place-items:center!important;color:#7c655d!important;background:#fff6f3!important;border:1px solid #f0e2dc!important}
+.v135LayerLock svg{display:block!important;width:16px!important;height:16px!important;fill:none!important;stroke:currentColor!important}
+@media(max-width:899px){
+ body.editorMode .canvasEditorShell .canvasTopbar .editorActions>button.v137ViewButton{display:flex!important;width:34px!important;min-width:34px!important;height:34px!important;padding:0!important;border-radius:11px!important}
+ body.editorMode .canvasEditorShell .canvasTopbar .editorActions>button.v137ViewButton span{display:none!important}
+ body.editorMode #canvasQuickDrawer.open:has(.mobileLayerList){display:block!important;visibility:visible!important;opacity:1!important;overflow:auto!important}
+ body.editorMode #canvasQuickDrawer.open .mobileLayerList{display:block!important;min-height:120px!important;max-height:calc(48dvh - 70px)!important;overflow-y:auto!important;overflow-x:hidden!important;padding:2px!important}
+ body.editorMode #canvasQuickDrawer.open .v135LayerRow{display:grid!important;grid-template-columns:30px minmax(0,1fr) 70px 32px!important;width:100%!important;min-width:0!important;gap:4px!important;padding:4px!important}
+ body.editorMode #canvasQuickDrawer.open .v135LayerRow select{display:block!important;width:70px!important;min-width:0!important}
+ body.editorMode #canvasQuickDrawer.open .v135LayerLock{display:grid!important;width:30px!important;height:30px!important;padding:6px!important}
+}
+
+/* Imported sticker images always render at a useful size. */
+.cobj.imageObj>img,.v135StickerGrid img{display:block!important;width:100%!important;height:100%!important;object-fit:contain!important;opacity:1!important;visibility:visible!important}
+.v137DecorTitle{display:flex;align-items:center;gap:7px}.v137DecorTitle svg{width:18px;height:18px}
+
+/* Remove the scattered mobile extras; their tools are placed in their proper sections. */
+.v135MobileExtras{display:none!important}
+.v137ElementExtras,.v137MobileTextExtras{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:10px}
+.v137ElementExtras button,.v137MobileTextExtras button{min-height:46px;border:1px solid var(--v137-line);border-radius:12px;background:#fff;color:#685952;font-size:10px;font-weight:850;display:flex;align-items:center;justify-content:center;gap:7px}
+.v137ElementExtras svg,.v137MobileTextExtras svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8}
+
+/* Dark custom cursor stays visible on light pages, also while dragging. */
+.v132Hit,.v132Hit.dragging,body.editorMode.v132Dragging,body.editorMode.v132Dragging *{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M4 2l14 10-7 1 4 7-3 2-4-7-4 5z' fill='%233f3532' stroke='%23ef9aa3' stroke-width='1.4'/%3E%3C/svg%3E") 3 2,move!important}
+
+/* Marquee selection for drag/double-click-drag. */
+.v137Marquee{position:absolute;z-index:60000;pointer-events:none;border:1.5px solid #dc7f89;border-radius:5px;background:rgba(238,154,164,.14);box-shadow:0 0 0 1px rgba(255,255,255,.65) inset}
+
+/* Read-only view mode: only the page and a compact viewer bar remain. */
+.v137ViewerBar{display:none}
+body.v137ViewMode .canvasEditorShell{display:grid!important;grid-template-columns:1fr!important;grid-template-rows:58px minmax(0,1fr)!important;background:#f6f2ef!important}
+body.v137ViewMode .canvasTopbar,body.v137ViewMode .desktopCommandBar,body.v137ViewMode .v102DesktopLeft,body.v137ViewMode .canvasQuickNav,body.v137ViewMode #canvasQuickDrawer,body.v137ViewMode #desktopEditorSidebar,body.v137ViewMode #v96PageStrip,body.v137ViewMode .v134BottomBar,body.v137ViewMode #mobileSelectionTools{display:none!important}
+body.editorMode.v137ViewMode .canvasEditorShell .canvasQuickNav,body.editorMode.v137ViewMode .canvasEditorShell #canvasQuickDrawer{display:none!important}
+body.v137ViewMode .v137ViewerBar{grid-column:1!important;grid-row:1!important;display:flex!important;align-items:center;justify-content:space-between;gap:12px;padding:8px 16px;border-bottom:1px solid #e6dcd7;background:rgba(255,253,251,.97);z-index:100}
+.v137ViewerTitle{display:flex;align-items:center;gap:9px;min-width:0;color:#514844}.v137ViewerTitle svg{width:24px;height:24px;fill:none;stroke:#d77d87;stroke-width:1.7}.v137ViewerTitle b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v137ViewerTitle span{font-size:9px;color:#9a8780}
+.v137ViewerBar button{display:flex;align-items:center;gap:6px;height:38px;border:1px solid #efd3d5;border-radius:12px;background:#fff3f4;color:#8f5960;padding:0 13px;font-weight:900}.v137ViewerBar button svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8}
+body.v137ViewMode #canvasViewport{grid-column:1!important;grid-row:2!important;margin:0!important;border:0!important;border-radius:0!important;background:#eee9e5!important;padding:24px!important;overflow:auto!important;touch-action:pan-x pan-y!important}
+body.v137ViewMode #canvasStage{margin:auto!important}
+body.v137ViewMode .v132InteractionLayer,body.v137ViewMode .resizeHandle,body.v137ViewMode .rotateHandle,body.v137ViewMode .vectorHandle,body.v137ViewMode .pathNode,body.v137ViewMode #canvasGuides{display:none!important;pointer-events:none!important}
+body.v137ViewMode #canvasObjects{pointer-events:auto!important}
+body.v137ViewMode #canvasObjects .cobj{pointer-events:auto!important;cursor:default!important;outline:0!important;user-select:text!important}
+body.v137ViewMode #canvasObjects .cobj.v135Linked,body.v137ViewMode #canvasObjects .cobj.v137Linked{cursor:pointer!important}
+body.v137ViewMode #canvasObjects .vectorObj{pointer-events:none!important}
+
+/* Cloud belongs to Settings only. */
+.v137CloudSettings{display:grid;gap:8px}.v137CloudSettings button{justify-self:start}
+
+@media(max-width:720px){
+ #modalWrap .modal{width:calc(100vw - 18px)!important;max-height:calc(100dvh - 18px)!important;padding:14px!important;border-radius:18px!important}
+ #modalWrap .v135FormGrid{grid-template-columns:1fr!important}.v135FormGrid .full{grid-column:1!important}
+ #modalWrap .v135ActionRow{display:grid!important;grid-template-columns:1fr 1fr!important}.v135ActionRow button{width:100%!important;padding:0 8px!important}
+ .v137ViewerBar{padding:8px 10px!important}.v137ViewerTitle span{display:none}.v137ViewerBar button span{display:none}
+}
+@media print{.v137ViewerBar,.v137Marquee{display:none!important}}
+
+/* v138.css consolidated */
+/* Studia V138 — reliable geometry, compact tools and strict viewer */
+:root{--v138-pink:#e98e99;--v138-soft:#fff4f3;--v138-line:#eadbd5;--v138-ink:#5d504b}
+
+/* Never flash the old animal mark while the editor chrome is being rebuilt. */
+.v134BrandMark:not(.v137Notebook) svg{display:none!important}
+.v134BrandMark:not(.v137Notebook):before{content:"";display:block;width:17px;height:21px;border:2px solid #d97c88;border-radius:4px;background:linear-gradient(90deg,transparent 0 4px,#f3aeb6 4px 6px,transparent 6px),repeating-linear-gradient(0deg,transparent 0 4px,#efc8ca 4px 5px);box-shadow:inset 3px 0 #fff}
+
+/* The interaction overlay selects an item once. Its real handles must then be reachable. */
+body.editorMode:not(.v137ViewMode) .v132Hit.v138TransformTarget{pointer-events:auto!important;z-index:2147482000!important;overflow:visible!important}
+body.editorMode .cobj .resizeHandle,body.editorMode .cobj .rotateHandle{display:none!important}
+.v138TransformHandle{position:absolute!important;display:block!important;width:34px!important;height:34px!important;min-width:34px!important;padding:0!important;border:5px solid #fff!important;border-radius:50%!important;background:#e98995!important;box-shadow:0 0 0 2px #c76d79,0 3px 10px rgba(101,61,63,.24)!important;touch-action:none!important;pointer-events:auto!important;z-index:2147483000!important}
+.v138TransformHandle.v138Resize{right:-19px!important;bottom:-19px!important;border-radius:9px!important;cursor:nwse-resize!important}
+.v138TransformHandle.v138Rotate{left:50%!important;top:-58px!important;transform:translateX(-50%)!important;cursor:grab!important}
+.v138TransformHandle.v138Rotate:after{content:"";position:absolute;left:50%;top:28px;width:2px;height:27px;transform:translateX(-50%);background:#c76d79;pointer-events:none}
+body.v138Transforming,body.v138Transforming *{cursor:grabbing!important;user-select:none!important}
+
+/* Exactly five compact sections on phone and laptop. */
+body.editorMode .canvasQuickNav .v138NavSentinel{display:none!important}
+body.editorMode .canvasQuickNav button[data-v138]{border-radius:13px!important}
+body.editorMode .canvasQuickNav button[data-v138] svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* Graph/formula windows: everything fits without a narrow horizontal viewport. */
+#modalWrap .modal:has(.graphModal){width:min(1120px,calc(100vw - 28px))!important;max-width:1120px!important;max-height:calc(100dvh - 24px)!important;overflow:auto!important}
+#modalWrap .modal:has(.visualGraphFunctionModal){width:min(980px,calc(100vw - 28px))!important;max-width:980px!important;max-height:calc(100dvh - 24px)!important;overflow:auto!important}
+#modalWrap .graphModal,#modalWrap .visualGraphFunctionModal{width:100%!important;min-width:0!important;box-sizing:border-box!important}
+#modalWrap .graphBuilderLayout{grid-template-columns:minmax(390px,.95fr) minmax(360px,1.05fr)!important;gap:18px!important}
+#modalWrap .graphControls,#modalWrap .graphPreviewWrap{min-width:0!important}
+.vfExponentSlot .vfFrac,sup .vfFrac{display:inline-grid!important;vertical-align:middle!important;font-size:.78em!important;line-height:1!important}
+
+/* A strict reader: only linked objects can receive a click, never a drag. */
+body.v137ViewMode #canvasObjects .cobj{pointer-events:none!important;user-select:text!important;cursor:default!important}
+body.v137ViewMode #canvasObjects .cobj.v135Linked,
+body.v137ViewMode #canvasObjects .cobj.v137Linked{pointer-events:auto!important;cursor:pointer!important}
+body.v137ViewMode #canvasObjects .vectorObj{pointer-events:none!important}
+
+/* Inspector: geometry is available for text, formats, shapes, tables and media. */
+.v138GeometryGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.v138GeometryGrid label{display:grid;gap:4px;font-size:8px;font-weight:850;color:#8d7971}
+.v138GeometryGrid input{width:100%;min-width:0;height:34px;box-sizing:border-box;border:1px solid var(--v138-line);border-radius:9px;background:#fff;color:var(--v138-ink);padding:4px 7px}
+.v138ArrangeExtras{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+.v138ArrangeExtras button{min-height:37px;border:1px solid var(--v138-line);border-radius:10px;background:#fff;color:#625650;font-size:9px;font-weight:850}
+.v138TransparentActions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:7px}
+.v138TransparentActions button{min-height:34px;border:1px dashed #e5c7c4;border-radius:10px;background:#fff9f8;color:#8b6966;font-size:9px;font-weight:850}
+.v137LayerActions{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+.v137LayerActions button:nth-child(n+3){display:none!important}
+
+/* Unified selection buttons, including delete and mobile properties. */
+.v138Delete{color:#b95862!important;background:#fff3f3!important;border-color:#f0cfd2!important}
+.v138Properties{display:none!important}
+.v132SelectionBar button svg,#mobileSelectionTools button svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* Mobile property sheet and stable text library scrolling. */
+.v138ObjectTools{display:grid;gap:12px;padding:12px 12px 90px}
+.v138ObjectTools section{display:grid;gap:9px;padding:12px;border:1px solid var(--v138-line);border-radius:16px;background:#fffdfb}
+.v138ObjectTools h3{margin:0;color:var(--v138-ink);font-size:13px}
+.v138ObjectGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.v138ObjectGrid label{display:grid;gap:4px;font-size:9px;font-weight:850;color:#8d7971}
+.v138ObjectGrid input,.v138ObjectGrid select{width:100%;min-width:0;height:38px;box-sizing:border-box;border:1px solid var(--v138-line);border-radius:10px;background:#fff;padding:5px 8px}
+.v138ObjectActions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.v138ObjectActions button,.v138TextActions button{min-height:38px;border:1px solid var(--v138-line);border-radius:10px;background:#fff;color:var(--v138-ink);font-weight:850;font-size:10px}
+.v138TextActions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.v138EffectLink{display:flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;min-height:38px!important;font-size:10px!important}
+.v138EffectLink svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8}
+.v138Effects{padding:9px 11px!important}.v138Effects h3{font-size:11px!important}.v138Effects .v138EffectLink{min-height:34px!important}
+.v137MobileTextExtras{display:none!important}
+
+/* Home version and clearer consistent action icons. */
+#view-home .v138Version{display:inline-flex;align-items:center;height:22px;padding:0 9px;border:1px solid #f0d4d4;border-radius:999px;background:#fff5f4;color:#a66a70;font-size:9px;font-weight:900;letter-spacing:.08em;margin:0 0 9px}
+.homeMiniActions .v138TodayAction{display:flex!important;align-items:center!important;justify-content:center!important;gap:7px!important}
+.homeMiniActions .v138TodayAction svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+
+@media(max-width:899px){
+ #modalWrap .modal:has(.graphModal),#modalWrap .modal:has(.visualGraphFunctionModal){width:calc(100vw - 10px)!important;max-height:calc(100dvh - 10px)!important;padding:12px!important}
+ #modalWrap .graphBuilderLayout{grid-template-columns:1fr!important}
+ #modalWrap .graphPreviewWrap{min-height:280px!important}
+ .v138Properties{display:flex!important}
+ .mobileTextLibrary,.mobileTextModeContent,.mobileDrawerSection{overflow:visible!important}
+ .mobileTextLibrary .mobileDrawerActions,.mobileTextLibrary .mobileDrawerActions button{position:static!important;inset:auto!important;transform:none!important}
+ #canvasQuickDrawer.open{overflow-y:auto!important;overscroll-behavior:contain!important}
+ .v132SelectionBar{overflow-x:auto!important;scrollbar-width:none}
+ .v138GeometryGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+@media(min-width:900px){
+ body.editorMode .canvasQuickNav{width:82px!important}
+ body.editorMode .canvasQuickNav button[data-v138]{width:70px!important;min-height:62px!important;padding:7px 4px!important}
+}
+
+/* v139.css consolidated */
+/* Studia V139 — stable palette and cleaner text-format library */
+:root{--v139-rose:#e78c98;--v139-soft:#fff4f4;--v139-line:#eadbd6;--v139-ink:#594d48}
+
+body.editorMode .canvasQuickNav .v139NavSentinel{display:none!important}
+body.editorMode .canvasQuickNav button[data-v139]{display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:5px;border-radius:13px!important;color:#756661!important}
+body.editorMode .canvasQuickNav button[data-v139].active{background:#fff0f1!important;color:#b6606b!important}
+body.editorMode .canvasQuickNav button[data-v139] svg{display:block!important;width:20px!important;height:20px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round;stroke-linejoin:round}
+
+.v139InsertTools{display:grid;gap:9px;margin-top:14px;padding:12px;border:1px solid var(--v139-line);border-radius:16px;background:linear-gradient(145deg,#fffdfb,#fff6f5)}
+.v139PaletteHead{display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--v139-ink)}
+.v139PaletteHead b{font-size:12px}.v139PaletteHead span{font-size:8px;font-weight:900;letter-spacing:.09em;text-transform:uppercase;color:#ad8783}
+.v139InsertGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.v139InsertGrid button{display:flex;min-width:0;min-height:66px;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:8px 4px;border:1px solid #ecdcd8;border-radius:13px;background:#fff;color:#665752;font-size:9px;font-weight:900;cursor:pointer}
+.v139InsertGrid button:hover{border-color:#e8adb3;background:#fff0f1;color:#a55f68;transform:translateY(-1px)}
+.v139InsertGrid svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+.v139TextHeaderTools{display:grid;grid-template-columns:1fr;gap:7px;margin:0 0 12px;padding:10px;border:1px solid var(--v139-line);border-radius:15px;background:#fff8f7}
+.v139TextHeaderTools button{display:flex;align-items:center;gap:9px;min-height:42px;padding:0 11px;border:1px solid #eadbd7;border-radius:11px;background:#fff;color:#655650;font-size:10px;font-weight:900;text-align:left;cursor:pointer}
+.v139TextHeaderTools button:first-child{background:#fff0f1;border-color:#efc8cc;color:#9c5f66}
+.v139TextHeaderTools svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+#canvasQuickDrawer.v139TextDrawer .mobileTextLibrary{display:grid!important;gap:12px!important;padding:0 2px 22px!important;background:transparent!important;overflow:visible!important}
+#canvasQuickDrawer.v139TextDrawer .mobileLibraryHead{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important;position:static!important;padding:4px 1px 2px!important;background:transparent!important;border:0!important}
+#canvasQuickDrawer.v139TextDrawer .mobileLibraryHead b{font-size:15px!important;color:var(--v139-ink)!important}
+#canvasQuickDrawer.v139TextDrawer .mobileLibraryHead button{min-height:32px!important;padding:0 10px!important;border:1px solid var(--v139-line)!important;border-radius:10px!important;background:#fff!important;color:#7c6861!important;font-size:9px!important;font-weight:900!important}
+#canvasQuickDrawer.v139TextDrawer .mobileFormatGrid{display:grid!important;grid-template-columns:1fr!important;gap:8px!important}
+#canvasQuickDrawer.v139TextDrawer .mobileFormatCard{display:grid!important;grid-template-columns:52px minmax(0,1fr)!important;grid-template-rows:auto auto!important;align-items:center!important;column-gap:10px!important;min-height:66px!important;width:100%!important;padding:9px 11px!important;border:1px solid #eadbd7!important;border-radius:14px!important;background:#fff!important;box-shadow:0 4px 14px rgba(98,69,64,.045)!important;text-align:left!important;color:#62534e!important}
+#canvasQuickDrawer.v139TextDrawer .mobileFormatCard:hover{border-color:#eab1b6!important;background:#fff8f7!important}
+#canvasQuickDrawer.v139TextDrawer .mobileFormatPreview{grid-row:1/3!important;display:grid!important;place-items:center!important;width:48px!important;height:48px!important;border-radius:12px!important;background:#fff0f1!important;color:#a65f68!important;font-size:17px!important;font-weight:900!important}
+#canvasQuickDrawer.v139TextDrawer .mobileFormatName{align-self:end!important;font-size:11px!important;font-weight:900!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#canvasQuickDrawer.v139TextDrawer .mobileFormatCard small{align-self:start!important;font-size:8px!important;color:#9b8580!important}
+#canvasQuickDrawer.v139TextDrawer .mobileDrawerActions{position:static!important;display:block!important;margin:2px 0 0!important;padding:0!important;background:transparent!important}
+#canvasQuickDrawer.v139TextDrawer .mobileDrawerActions button{position:static!important;width:100%!important;min-height:42px!important;border:1px solid #efc8cc!important;border-radius:12px!important;background:#fff0f1!important;color:#9a5b63!important;font-size:10px!important;font-weight:900!important}
+
+/* Only one modern resize and rotation system is visible. Path nodes remain for curve editing. */
+body.editorMode .vectorObj .vectorHandle,body.editorMode .vectorObj .vectorRotateLine{display:none!important;pointer-events:none!important}
+
+.v139CloudGuide{display:grid;gap:8px;margin:10px 0 14px;padding:12px;border:1px solid #eadbd6;border-radius:14px;background:#fff8f6;color:#625550;font-size:10px;line-height:1.45}
+.v139CloudGuide>b{font-size:13px}.v139CloudGuide ol{margin:0;padding-left:18px}.v139CloudGuide li+li{margin-top:4px}
+.v139CloudGuide details{border-top:1px solid #eadbd6;padding-top:8px}.v139CloudGuide summary{cursor:pointer;font-weight:900;color:#8e5d62}.v139CloudGuide pre{max-width:100%;overflow:auto;padding:9px;border-radius:10px;background:#fff;color:#594d48;font:9px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre}
+
+@media(max-width:899px){
+ #canvasQuickDrawer.v139TextDrawer .mobileFormatGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ #canvasQuickDrawer.v139TextDrawer .mobileFormatCard{grid-template-columns:1fr!important;grid-template-rows:auto auto auto!important;justify-items:center!important;gap:4px!important;min-height:112px!important;padding:9px 6px!important;text-align:center!important}
+ #canvasQuickDrawer.v139TextDrawer .mobileFormatPreview{grid-row:auto!important}
+ .v139InsertGrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+
+/* v140.css consolidated */
+/* Studia V140 */
+body.editorMode .cobj .resizeHandle,body.editorMode .cobj .rotateHandle,
+body.editorMode .vectorObj .vectorHandle,body.editorMode .vectorObj .vectorRotateLine,
+body.editorMode .vectorObj .vectorSelectBox{display:none!important;visibility:hidden!important;pointer-events:none!important}
+body.editorMode .canvasQuickNav button svg{display:block!important;opacity:1!important;visibility:visible!important}
+
+.v140InsertTools{margin:14px 0 4px;padding:12px;border:1px solid #eadbd6;border-radius:17px;background:#fff9f7}
+.v140ToolHead{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;color:#5d504b}
+.v140ToolHead b{font-size:12px}.v140ToolHead span{font-size:8px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#af8884}
+.v140ToolGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.v140ToolGrid button{display:grid;place-items:center;gap:5px;min-height:66px;padding:8px 4px;border:1px solid #eadbd7;border-radius:13px;background:#fff;color:#6b5c57;font:900 9px/1.2 inherit;cursor:pointer}
+.v140ToolGrid button:hover{background:#fff0f1;border-color:#e7b6bb;color:#a35e68;transform:translateY(-1px)}
+.v140ToolGrid svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+.v140TextTools{display:grid;gap:7px;margin:0 0 13px;padding:10px;border:1px solid #eadbd6;border-radius:16px;background:linear-gradient(145deg,#fffdfb,#fff5f4)}
+.v140TextTools button{display:flex;align-items:center;gap:10px;min-height:50px;padding:8px 11px;border:1px solid #eadbd7;border-radius:12px;background:#fff;color:#62544f;text-align:left;cursor:pointer}
+.v140TextTools button:first-child{background:#fff0f1;border-color:#efc7cb;color:#965a63}
+.v140TextTools svg{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.v140TextTools span{display:grid;gap:2px;min-width:0}.v140TextTools b{font-size:10px}.v140TextTools small{font-size:8px;color:#9d8781}
+
+#canvasQuickDrawer.v140TextDrawer .mobileTextLibrary{padding:2px 3px 24px!important}
+#canvasQuickDrawer.v140TextDrawer .mobileLibraryHead>div{display:grid!important;gap:2px!important}
+#canvasQuickDrawer.v140TextDrawer .mobileDrawerKicker{font-size:8px!important;font-weight:950!important;letter-spacing:.12em!important;color:#b27c80!important}
+#canvasQuickDrawer.v140TextDrawer .mobileFormatGrid{display:grid!important;grid-template-columns:1fr!important;gap:8px!important}
+#canvasQuickDrawer.v140TextDrawer .mobileFormatCard{grid-template-columns:56px minmax(0,1fr)!important;grid-template-rows:auto auto!important;justify-items:stretch!important;min-height:72px!important;padding:9px 11px!important;border:1px solid #eadbd6!important;border-radius:15px!important;background:#fff!important;box-shadow:0 4px 13px rgba(91,65,59,.05)!important;text-align:left!important}
+#canvasQuickDrawer.v140TextDrawer .mobileFormatPreview{grid-row:1/3!important;width:50px!important;height:50px!important;border-radius:12px!important;background:#fff1f2!important}
+#canvasQuickDrawer.v140TextDrawer .mobileFormatName{align-self:end!important;font-size:11px!important;color:#5c504c!important}
+#canvasQuickDrawer.v140TextDrawer .mobileFormatCard small{align-self:start!important;color:#a08a84!important}
+#canvasQuickDrawer.v140TextDrawer .mobileDrawerActions{position:static!important;margin-top:3px!important}
+
+.v140StickerImport{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:10px 0 14px}
+.v140StickerImport button{display:flex;align-items:center;gap:10px;min-height:70px;padding:10px 12px;border:1px solid #ead7d3;border-radius:15px;background:#fff9f7;color:#62534e;text-align:left;cursor:pointer}
+.v140StickerImport button:hover{border-color:#e6aeb5;background:#fff0f1}
+.v140StickerImport svg{width:34px;height:34px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.v140StickerImport span{display:grid;gap:3px}.v140StickerImport b{font-size:11px}.v140StickerImport small{font-size:8px;color:#9d8781}
+.cobj.imageObj img{pointer-events:none}
+
+.v140SyncModal{width:min(720px,calc(100vw - 28px))!important}.v140SyncState{min-height:32px;margin-top:10px;padding:8px 10px;border-radius:10px;background:#f6f4f1;color:#655952;font-size:10px}.v140SyncState:empty{display:none}.v140SyncState.error{background:#fff0f0;color:#a04752}
+.v140SyncHelp{margin-top:13px;padding:10px 12px;border:1px solid #eadbd6;border-radius:13px;background:#fff9f7;color:#655852;font-size:10px;line-height:1.45}.v140SyncHelp summary{cursor:pointer;font-weight:900;color:#945b64}.v140SyncHelp ol{padding-left:18px}
+
+@media(max-width:899px){
+ #canvasQuickDrawer.v140TextDrawer .mobileFormatGrid{grid-template-columns:1fr!important}
+ #canvasQuickDrawer.v140TextDrawer .mobileFormatCard{grid-template-columns:50px minmax(0,1fr)!important;grid-template-rows:auto auto!important;justify-items:stretch!important;min-height:68px!important;text-align:left!important}
+ #canvasQuickDrawer.v140TextDrawer .mobileFormatPreview{grid-row:1/3!important;width:45px!important;height:45px!important}
+ .v140StickerImport{grid-template-columns:1fr}.v140StickerImport button{min-height:60px}
+}
+
+/* v141.css consolidated */
+:root{--v141-rose:#e88f99;--v141-ink:#463d39;--v141-line:#eadfda;--v141-soft:#fff7f6}
+
+/* Only one insert block: Diagram, Timeline and Sticker live under Elements. */
+.v135MobileExtras,.v137ElementExtras,.v138ElementTools,.v139InsertTools,.v138TransparentActions{display:none!important}
+
+/* Keep the desktop navigation legible and repair disappearing chrome. */
+@media(min-width:900px){
+ body.editorMode:not(.v137ViewMode) .canvasQuickNav{display:flex!important;visibility:visible!important;opacity:1!important}
+ body.editorMode:not(.v137ViewMode) .canvasQuickNav button{visibility:visible!important;opacity:1!important}
+ body.editorMode:not(.v137ViewMode):not(.v135SideClosed) #desktopEditorSidebar{display:block!important;visibility:visible!important;opacity:1!important;min-width:272px!important}
+ body.editorMode #desktopEditorSidebar .v135SideClose{right:5px}
+ body.editorMode .v140InsertTools{margin-bottom:18px}
+}
+
+/* A real mobile bottom sheet for properties. */
+#v141PropertiesOverlay{position:fixed;inset:0;z-index:2147482500;display:grid;align-items:end;pointer-events:none}
+.v141PropertiesBackdrop{position:absolute;inset:0;border:0;background:rgba(52,42,38,.28);backdrop-filter:blur(2px);pointer-events:auto}
+.v141PropertiesSheet{position:relative;display:flex;flex-direction:column;width:100%;max-height:min(78dvh,760px);border:1px solid #f0d8d6;border-bottom:0;border-radius:24px 24px 0 0;background:#fffdfb;box-shadow:0 -18px 55px rgba(60,43,38,.2);overflow:hidden;pointer-events:auto;transform:translateY(20px);opacity:.7;transition:transform .22s ease,opacity .22s ease;padding-bottom:env(safe-area-inset-bottom)}
+.v141PropertiesSheet.open{transform:none;opacity:1}
+.v141SheetHandle{flex:0 0 auto;width:42px;height:5px;margin:8px auto 3px;border-radius:99px;background:#ddceca}
+.v141PropertiesBody{min-height:0;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y;padding-bottom:24px}
+.v141PropertiesBody>.mobileDrawerHead{position:sticky!important;top:0;z-index:8;margin:0!important;padding:10px 14px!important;background:rgba(255,253,251,.96)!important;backdrop-filter:blur(12px);border-bottom:1px solid var(--v141-line)}
+.v141PropertiesBody .v138ObjectTools{padding:12px 14px 32px!important;display:grid!important;gap:12px!important}
+.v141PropertiesBody .v138ObjectTools>section{margin:0!important;padding:13px!important;border:1px solid var(--v141-line)!important;border-radius:16px!important;background:#fff!important;box-shadow:0 5px 18px rgba(64,46,40,.045)}
+.v141PropertiesBody .v138ObjectTools h3{margin:0 0 10px!important;font-size:13px!important;color:var(--v141-ink)}
+.v141PropertiesBody .v138ObjectGrid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+.v141PropertiesBody .v138ObjectGrid label{min-width:0!important}
+.v141PropertiesBody .v138ObjectGrid input,.v141PropertiesBody .v138ObjectGrid select{width:100%!important;min-width:0!important;box-sizing:border-box!important}
+.v141PropertiesBody .v138ObjectGrid label.v141ColorWithNone{display:grid!important;grid-template-columns:minmax(0,1fr) 34px!important;grid-template-rows:auto 34px!important;column-gap:6px!important}.v141PropertiesBody .v138ObjectGrid label.v141ColorWithNone>input{grid-column:1!important;grid-row:2!important}.v141TransparentIcon{grid-column:2;grid-row:2;display:grid;place-items:center;width:34px;height:34px;padding:0;border:1px solid #ead8d5;border-radius:9px;background:repeating-conic-gradient(#f3e9e6 0 25%,#fff 0 50%) 50%/10px 10px;color:#b66b72}.v141TransparentIcon svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.v141PropertiesBody .v138ObjectActions{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important}
+body.v141PropertiesOpen{overflow:hidden!important}
+
+/* Sticker tint controls on desktop and mobile. */
+.v141StickerSection{display:grid;gap:9px}
+.v141StickerColor{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:stretch}
+.v141StickerColor label,.v141StickerColor button{min-height:42px;border:1px solid var(--v141-line);border-radius:12px;background:#fff;color:var(--v141-ink);font:inherit;font-size:10px;font-weight:850}
+.v141StickerColor label{display:flex;align-items:center;gap:8px;padding:5px 8px;cursor:pointer}.v141StickerColor label svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7}.v141StickerColor input{width:34px;height:28px;margin-left:auto;border:0;background:transparent}.v141StickerColor button{padding:0 11px;cursor:pointer}
+.v141StickerSection p{margin:0;color:#8c7a73;font-size:9px;line-height:1.45}
+.cobj.v141StickerTinted{isolation:isolate}
+.cobj.v141StickerTinted>img{opacity:0!important}
+.cobj.v141StickerTinted:before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:var(--v141-sticker-color);-webkit-mask-image:var(--v141-sticker-mask);mask-image:var(--v141-sticker-mask);-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;-webkit-mask-size:contain;mask-size:contain}
+
+/* Dialogs always fit the screen and scroll vertically, never horizontally. */
+#modalWrap{padding:max(8px,env(safe-area-inset-top)) 8px max(8px,env(safe-area-inset-bottom));box-sizing:border-box}
+#modalWrap .modal,#modalWrap .v135Modal{box-sizing:border-box!important;width:min(720px,calc(100vw - 16px))!important;max-width:100%!important;max-height:calc(100dvh - 16px)!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+#modalWrap .v141ChartDialog,#modalWrap .v141TimelineDialog{width:min(780px,calc(100vw - 16px))!important}
+#modalWrap .v135FormGrid>*{min-width:0!important}#modalWrap input,#modalWrap select,#modalWrap textarea{max-width:100%!important;box-sizing:border-box!important}
+@media(max-width:600px){
+ #modalWrap .modal,#modalWrap .v135Modal{padding:14px!important;border-radius:20px!important}
+ #modalWrap .v135FormGrid{grid-template-columns:1fr!important}.v135FormGrid .full{grid-column:1!important}
+ #modalWrap .v135ActionRow{position:sticky;bottom:-14px;z-index:5;margin:12px -14px -14px!important;padding:10px 14px calc(10px + env(safe-area-inset-bottom))!important;background:rgba(255,253,251,.97);border-top:1px solid var(--v141-line);backdrop-filter:blur(10px)}
+}
+
+/* One clear Google sync card and unmistakable upload/download actions. */
+.v113SyncPanel{display:none!important}
+.v141GoogleSyncCard{display:grid!important;gap:13px!important;border-color:#eaded9!important;background:linear-gradient(145deg,#fff,#fff8f6)!important}
+.v141SettingsTitle{display:flex;align-items:flex-start;gap:12px}.v141SettingsTitle>span{display:grid;place-items:center;flex:0 0 42px;height:42px;border-radius:14px;background:#ffe9e9;color:#b6656c}.v141SettingsTitle svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7}.v141SettingsTitle h2,.v141SettingsTitle p{margin:0}.v141SettingsTitle p{margin-top:4px!important}
+.v141SyncModal{display:grid;gap:12px}.v141SyncIntro{margin:0;color:#74645d;line-height:1.5}
+.v141SyncChoices{display:grid;grid-template-columns:1fr 1fr;gap:10px}.v141SyncChoices button{display:grid;gap:5px;text-align:left;min-height:92px;padding:13px;border:1px solid #ead9d4;border-radius:15px;background:#fff;color:#534640;cursor:pointer}.v141SyncChoices button b{font-size:12px}.v141SyncChoices button span{font-size:9px;line-height:1.45;color:#806f68}.v141SyncChoices .v141Upload{background:#fff0f1;border-color:#efc3c7;color:#9d565d}.v141SyncChoices .v141Download{background:#f5f9ff;border-color:#cfdfed;color:#4f718c}
+.v141SyncWarning{padding:10px 12px;border:1px solid #f1d6ae;border-radius:12px;background:#fff9eb;color:#795d32;font-size:10px;line-height:1.5}
+@media(max-width:600px){.v141SyncChoices{grid-template-columns:1fr}.v141SyncChoices button{min-height:78px}.v141SyncModal .v135ModalHead{position:sticky;top:-14px;z-index:6;margin:-14px -14px 0;padding:14px;background:rgba(255,253,251,.97);backdrop-filter:blur(10px)}}
