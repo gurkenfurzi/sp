@@ -393,8 +393,8 @@ document.addEventListener('keydown',e=>{if(!editor())return;const typing=e.targe
 function correctLayerIcons(){for(const row of qa('[data-layer-kind][data-layer-id]')){const ref=row.dataset.layerKind==='object'?(canvasState.objects||[]).find(x=>x.id===row.dataset.layerId):(canvasState.vectors||[]).find(x=>x.id===row.dataset.layerId),b=row.querySelector('.v135LayerLock,.v130LayerTools button[title="Sperren"],.v130LayerTools button[title="Entsperren"]');if(!ref||!b)continue;b.innerHTML=window.v133Icon?.(ref.locked?'lock':'unlock')||'';b.title=ref.locked?'Entsperren':'Sperren';b.setAttribute('aria-label',b.title)}}
 
 /* Today gets the requested version and one visual icon system. */
-function polishToday(){const home=q('#view-home');if(!home)return;home.querySelector('.v138Version')?.remove();const eye=q('#headerEyebrow');if(eye&&eye.textContent!=='VERSION 143')eye.textContent='VERSION 143';const specs=[['Aufgabe','task'],['Test','test'],['Fächer','subjects'],['Lernen','learn']];qa('.homeMiniActions button',home).forEach((b,i)=>{const spec=specs[i];if(!spec||b.dataset.v138Today==='1')return;b.dataset.v138Today='1';b.classList.add('v138TodayAction');b.innerHTML=icons[spec[1]]+`<span>${spec[0]}</span>`})}
-function watchVersion(){const eye=q('#headerEyebrow');if(!eye||eye.dataset.v138Watch==='1')return;eye.dataset.v138Watch='1';const enforce=()=>{if(!editor()&&eye.textContent!=='VERSION 143')eye.textContent='VERSION 143'};new MutationObserver(enforce).observe(eye,{childList:true,subtree:true,characterData:true});enforce()}
+function polishToday(){const home=q('#view-home');if(!home)return;home.querySelector('.v138Version')?.remove();const eye=q('#headerEyebrow');if(eye&&eye.textContent!=='VERSION 147')eye.textContent='VERSION 147';const specs=[['Aufgabe','task'],['Test','test'],['Fächer','subjects'],['Lernen','learn']];qa('.homeMiniActions button',home).forEach((b,i)=>{const spec=specs[i];if(!spec||b.dataset.v138Today==='1')return;b.dataset.v138Today='1';b.classList.add('v138TodayAction');b.innerHTML=icons[spec[1]]+`<span>${spec[0]}</span>`})}
+function watchVersion(){const eye=q('#headerEyebrow');if(!eye||eye.dataset.v138Watch==='1')return;eye.dataset.v138Watch='1';const enforce=()=>{if(!editor()&&eye.textContent!=='VERSION 147')eye.textContent='VERSION 147'};new MutationObserver(enforce).observe(eye,{childList:true,subtree:true,characterData:true});enforce()}
 
 function cleanMobileDrawer(){qa('.v137MobileTextExtras,.v135MobileExtras').forEach(x=>x.remove())}
 function reconcile(){if(!editor()){polishToday();return}compactNav();enhanceSelectionBars();decorateInspector();correctLayerIcons();cleanMobileDrawer();decorateTransformHandles();if(q('#canvasQuickDrawer.open'))ensureElementTools()}
@@ -434,6 +434,7 @@ const schedule=()=>{if(scheduled)return;scheduled=true;requestAnimationFrame(()=
 
 function navMarkup(){const item=(mode,label)=>`<button data-v133="${mode}" data-v138="${mode}" data-v139="${mode}" title="${label}"><span class="editorNavIcon">${navIcons[mode]}</span><span>${label}</span></button>`;return '<i class="v138NavSentinel v139NavSentinel" data-v128="v139" data-v134="v139" data-v138="sentinel"></i>'+item('text','Text')+item('elements','Elemente')+item('templates','Vorlagen')+item('pages','Seiten')+item('layers','Ebenen')}
 function stableNav(){
+ if(innerWidth>=900&&document.body?.dataset?.v147Rail==='1')return;
  const nav=q('.canvasQuickNav');if(!editor()||!nav)return;const buttons=qa('button',nav),labels=buttons.map(b=>b.textContent.trim()).join('|'),valid=buttons.length===5&&labels==='Text|Elemente|Vorlagen|Seiten|Ebenen'&&buttons.every(b=>b.dataset.v139&&b.querySelector('svg'));
  if(!valid){const old=buttons.find(b=>b.classList.contains('active'))?.dataset.v138;if(old)lastMode=old;nav.innerHTML=navMarkup()}
  qa('button[data-v139]',nav).forEach(b=>{b.classList.toggle('active',b.dataset.v139===lastMode);b.onclick=()=>{lastMode=b.dataset.v139;if(typeof window.v138NavOpen==='function')window.v138NavOpen(lastMode,b);else window.v132Open?.(lastMode,b);setTimeout(stabilizeDrawer,40);setTimeout(stabilizeDrawer,140)}})
@@ -442,10 +443,12 @@ window.v139ForceNav=function(mode){if(mode)lastMode=mode;stableNav()};
 function callTool(name){const fn=window[name];if(typeof fn!=='function')return window.cuteToast?.('Werkzeug konnte nicht geladen werden');try{fn()}catch(err){console.error('[Studia V139]',name,err);window.cuteToast?.('Werkzeug bitte noch einmal öffnen')}}
 function toolButton(label,icon,fn){const b=document.createElement('button');b.type='button';b.innerHTML=navIcons[icon]+`<span>${label}</span>`;b.addEventListener('click',()=>callTool(fn));return b}
 function ensureElementActions(){
+ if(innerWidth>=900&&document.body?.dataset?.v147Rail==='1')return;
  const d=q('#canvasQuickDrawer.open');if(!d||lastMode!=='elements')return;qa('.v137ElementExtras,.v138ElementTools',d).forEach(x=>x.remove());if(d.querySelector('.v140InsertTools')){qa('.v139InsertTools',d).forEach(x=>x.remove());return}let box=q('.v139InsertTools',d);if(!box){box=document.createElement('section');box.className='v139InsertTools';box.innerHTML='<div class="v139PaletteHead"><b>Diagramme & Deko</b><span>Einfügen</span></div><div class="v139InsertGrid"></div>';const grid=q('.v139InsertGrid',box);grid.append(toolButton('Diagramm','chart','openChartDialog'),toolButton('Timeline','timeline','openTimelineDialog'),toolButton('Sticker','sticker','openStickerLibrary'));(q('.v133ElementGroups',d)||q('.v134Palette',d)||d).appendChild(box)}
  for(const b of qa('button',d)){const name=b.textContent.trim();if(name==='Diagramm')b.onclick=()=>callTool('openChartDialog');if(name==='Timeline')b.onclick=()=>callTool('openTimelineDialog');if(name==='Sticker'||name==='Sticker öffnen'||name==='Süße Sticker')b.onclick=()=>callTool('openStickerLibrary')}
 }
 function ensureTextActions(){
+ if(innerWidth>=900&&document.body?.dataset?.v147Rail==='1')return;
  const d=q('#canvasQuickDrawer.open');if(!d)return;const isText=lastMode==='text'||/Textformate/.test(d.textContent||'');if(!isText)return;d.classList.add('v139TextDrawer');
  qa('.v128DesktopParityBar,.v129DesktopTextExtras,.v121DesktopFontActions,.v123DesktopTextActions,.v132DesktopTextExtras',d).forEach(x=>x.remove());
  if(d.querySelector('.v140TextTools')){qa('.v139TextHeaderTools',d).forEach(x=>x.remove());return}
@@ -493,14 +496,14 @@ const frameIcon='<svg viewBox="0 0 80 34" aria-hidden="true"><path d="M77 6v22c-
 let wantedMode='elements',navGuard=0,elementMarkup='';
 
 function rememberMode(){const a=q('.canvasQuickNav button.active');wantedMode=a?.dataset.v139||a?.dataset.v138||wantedMode}
-function forceNav(){if(!editor())return;window.dispatchEvent(new Event('v140-stabilize'));if(typeof window.v138NavOpen!=='function')return;const nav=q('.canvasQuickNav');if(!nav)return;const labels=qa('button',nav).map(x=>x.textContent.trim()).join('|');if(labels!=='Text|Elemente|Vorlagen|Seiten|Ebenen'||qa('button svg',nav).length<5){q('.v139NavSentinel',nav)?.remove();nav.innerHTML='';if(typeof window.v139ForceNav==='function')window.v139ForceNav(wantedMode);else return}qa('button',nav).forEach(b=>{const mode=b.dataset.v139||b.dataset.v138;if(!mode)return;b.classList.toggle('active',mode===wantedMode);b.onclick=()=>{wantedMode=mode;window.v138NavOpen(mode,b);setTimeout(enhanceDrawer,0);setTimeout(enhanceDrawer,80)}})}
-function guardNav(){clearInterval(navGuard);let n=0;navGuard=setInterval(()=>{forceNav();if(++n>24)clearInterval(navGuard)},100)}
+function forceNav(){if(innerWidth>=900&&document.body?.dataset?.v147Rail==='1')return;if(!editor())return;window.dispatchEvent(new Event('v140-stabilize'));if(typeof window.v138NavOpen!=='function')return;const nav=q('.canvasQuickNav');if(!nav)return;const labels=qa('button',nav).map(x=>x.textContent.trim()).join('|');if(labels!=='Text|Elemente|Vorlagen|Seiten|Ebenen'||qa('button svg',nav).length<5){q('.v139NavSentinel',nav)?.remove();nav.innerHTML='';if(typeof window.v139ForceNav==='function')window.v139ForceNav(wantedMode);else return}qa('button',nav).forEach(b=>{const mode=b.dataset.v139||b.dataset.v138;if(!mode)return;b.classList.toggle('active',mode===wantedMode);b.onclick=()=>{wantedMode=mode;window.v138NavOpen(mode,b);setTimeout(enhanceDrawer,0);setTimeout(enhanceDrawer,80)}})}
+function guardNav(){if(innerWidth>=900&&document.body?.dataset?.v147Rail==='1'){clearInterval(navGuard);return}clearInterval(navGuard);let n=0;navGuard=setInterval(()=>{forceNav();if(++n>24)clearInterval(navGuard)},100)}
 
-function addToolCard(){const d=q('#canvasQuickDrawer.open');if(!d||wantedMode!=='elements')return;let box=q('.v140InsertTools',d);qa('.v138ElementTools,.v139InsertTools',d).forEach(x=>x.remove());if(box)return;box=document.createElement('section');box.className='v140InsertTools';box.innerHTML=`<div class="v140ToolHead"><b>Diagramme & Deko</b><span>direkt einfügen</span></div><div class="v140ToolGrid"><button data-v140-tool="chart">${icon('M4 20V4M4 20h16M8 17v-5m5 5V8m5 9V5')}<span>Diagramm</span></button><button data-v140-tool="timeline">${icon('M4 12h16M6 9v6m6-6v6m6-6v6')}<span>Timeline</span></button><button data-v140-tool="sticker">${icon('M12 3a8 8 0 0 0-8 8v6a4 4 0 0 0 4 4h5l7-7v-3a8 8 0 0 0-8-8Z')}<span>Sticker</span></button></div>`;
+function addToolCard(){if(innerWidth>=900&&document.body?.dataset?.v147Rail==='1')return;const d=q('#canvasQuickDrawer.open');if(!d||wantedMode!=='elements')return;let box=q('.v140InsertTools',d);qa('.v138ElementTools,.v139InsertTools',d).forEach(x=>x.remove());if(box)return;box=document.createElement('section');box.className='v140InsertTools';box.innerHTML=`<div class="v140ToolHead"><b>Diagramme & Deko</b><span>direkt einfügen</span></div><div class="v140ToolGrid"><button data-v140-tool="chart">${icon('M4 20V4M4 20h16M8 17v-5m5 5V8m5 9V5')}<span>Diagramm</span></button><button data-v140-tool="timeline">${icon('M4 12h16M6 9v6m6-6v6m6-6v6')}<span>Timeline</span></button><button data-v140-tool="sticker">${icon('M12 3a8 8 0 0 0-8 8v6a4 4 0 0 0 4 4h5l7-7v-3a8 8 0 0 0-8-8Z')}<span>Sticker</span></button></div>`;
 box.addEventListener('click',e=>{const b=e.target.closest('[data-v140-tool]');if(!b)return;e.preventDefault();e.stopPropagation();({chart:window.openChartDialog,timeline:window.openTimelineDialog,sticker:window.openStickerLibrary})[b.dataset.v140Tool]?.()});
 (q('.v133ElementGroups',d)||q('.v134Palette',d)||d).appendChild(box)}
-function addTextTools(){const d=q('#canvasQuickDrawer.open');if(!d||wantedMode!=='text')return;d.classList.add('v140TextDrawer');qa('.v138ElementTools,.v139InsertTools,.v140InsertTools,.v139TextHeaderTools,.v128DesktopParityBar,.v129DesktopTextExtras,.v121DesktopFontActions,.v123DesktopTextActions,.v132DesktopTextExtras',d).forEach(x=>x.remove());if(innerWidth<900||q('.v140TextTools',d))return;const bar=document.createElement('div');bar.className='v140TextTools';bar.innerHTML=`<button data-action="font">${uploadIcon}<span><b>Schrift hinzufügen</b><small>TTF, OTF, WOFF oder WOFF2</small></span></button><button data-action="preset">${icon('M12 5v14M5 12h14')}<span><b>Textformat erstellen</b><small>Aus der aktuellen Auswahl</small></span></button><button data-action="manage">${icon('M4 6h16M7 12h10M9 18h6')}<span><b>Formate verwalten</b><small>Sortieren und löschen</small></span></button>`;bar.onclick=e=>{const a=e.target.closest('button')?.dataset.action;if(a==='font')window.v91PickFont?.();if(a==='preset')window.createCustomStylePreset?.();if(a==='manage')window.openTextFormatManager?.()};d.prepend(bar)}
-function enhanceDrawer(){if(!editor())return;rememberMode();const d=q('#canvasQuickDrawer.open');if(wantedMode==='elements'&&d&&!elementMarkup){const copy=d.cloneNode(true);qa('.v138ElementTools,.v139InsertTools,.v140InsertTools',copy).forEach(x=>x.remove());elementMarkup=copy.innerHTML}if(wantedMode==='elements')addToolCard();if(wantedMode==='text')addTextTools()}
+function addTextTools(){if(innerWidth>=900&&document.body?.dataset?.v147Rail==='1')return;const d=q('#canvasQuickDrawer.open');if(!d||wantedMode!=='text')return;d.classList.add('v140TextDrawer');qa('.v138ElementTools,.v139InsertTools,.v140InsertTools,.v139TextHeaderTools,.v128DesktopParityBar,.v129DesktopTextExtras,.v121DesktopFontActions,.v123DesktopTextActions,.v132DesktopTextExtras',d).forEach(x=>x.remove());if(innerWidth<900||q('.v140TextTools',d))return;const bar=document.createElement('div');bar.className='v140TextTools';bar.innerHTML=`<button data-action="font">${uploadIcon}<span><b>Schrift hinzufügen</b><small>TTF, OTF, WOFF oder WOFF2</small></span></button><button data-action="preset">${icon('M12 5v14M5 12h14')}<span><b>Textformat erstellen</b><small>Aus der aktuellen Auswahl</small></span></button><button data-action="manage">${icon('M4 6h16M7 12h10M9 18h6')}<span><b>Formate verwalten</b><small>Sortieren und löschen</small></span></button>`;bar.onclick=e=>{const a=e.target.closest('button')?.dataset.action;if(a==='font')window.v91PickFont?.();if(a==='preset')window.createCustomStylePreset?.();if(a==='manage')window.openTextFormatManager?.()};d.prepend(bar)}
+function enhanceDrawer(){if(innerWidth>=900&&document.body?.dataset?.v147Rail==='1')return;if(!editor())return;rememberMode();const d=q('#canvasQuickDrawer.open');if(wantedMode==='elements'&&d&&!elementMarkup){const copy=d.cloneNode(true);qa('.v138ElementTools,.v139InsertTools,.v140InsertTools',copy).forEach(x=>x.remove());elementMarkup=copy.innerHTML}if(wantedMode==='elements')addToolCard();if(wantedMode==='text')addTextTools()}
 function directDrawer(mode){const d=q('#canvasQuickDrawer');if(!d)return false;let html='';if(mode==='text'){try{html=mobileTextLibraryHTML()}catch(_){html='<div class="mobileDrawerSection mobileTextLibrary"><div class="mobileLibraryHead"><div><span class="mobileDrawerKicker">TEXT</span><b>Textformate</b></div><button onclick="openTextFormatManager()">Verwalten</button></div><div class="mobileDrawerActions"><button onclick="createCustomStylePreset()">＋ Neues Textformat</button></div></div>'}}else if(mode==='elements'&&elementMarkup)html=elementMarkup;else return false;try{openEditorGroup=mode==='text'?'textLibrary':'elements'}catch(_){}window.v139ForceNav?.(mode);d.dataset.v134Mode=mode;d.dataset.v137Mode=mode;d.classList.add('open');document.body.classList.add('editorDrawerOpen');d.innerHTML=html;qa('.canvasQuickNav button').forEach(x=>x.classList.toggle('active',(x.dataset.v139||x.dataset.v138)===mode));setTimeout(enhanceDrawer,0);return true}
 
 /* The original AI ticket outline is rebuilt from dimensions, so corners and stroke never stretch. */
@@ -617,7 +620,7 @@ function repairDesktopChrome(){
  if(!openedDesktopOnce){document.body.classList.remove('v135SideClosed');localStorage.setItem('studia-v135-side','open');openedDesktopOnce=true}
  const nav=q('.canvasQuickNav');if(nav){nav.style.removeProperty('display');nav.removeAttribute('hidden')}
  const side=q('#desktopEditorSidebar');if(side){side.style.removeProperty('display');side.removeAttribute('hidden')}
- if(typeof window.v139ForceNav==='function'&&qa('.canvasQuickNav button').length!==5)window.v139ForceNav('elements');
+ if(document.body?.dataset?.v147Rail!=='1'&&typeof window.v139ForceNav==='function'&&qa('.canvasQuickNav button').length!==5)window.v139ForceNav('elements');
 }
 
 function cleanSettings(){
@@ -669,7 +672,7 @@ const textKinds=new Set(['text','block','task','merke']);
 const selectedText=()=>{try{const o=(canvasState?.objects||[]).find(x=>x.id===canvasState?.selectedId);return o&&textKinds.has(o.kind)?o:null}catch(_){return null}};
 
 /* ---------- version ---------- */
-function setVersion(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 146';document.title='Studia'}
+function setVersion(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 147';document.title='Studia'}
 setVersion();setTimeout(setVersion,250);setTimeout(setVersion,1800);
 
 /* ---------- custom fonts: visible input + IndexedDB + previews ---------- */
@@ -740,6 +743,7 @@ try{v138OpenProperties=window.v138OpenProperties}catch(_){ }
 
 /* ---------- desktop left rail: visually only Text / Elemente / Vorlagen ---------- */
 function desktopTextHub(){
+ if(document.body?.dataset?.v147Rail==='1')return;
  if(!isEditor()||!isDesktop())return;
  const nav=q('.canvasQuickNav');if(nav){for(const b of qa('button',nav)){const label=b.textContent.trim();b.classList.toggle('v144DesktopHiddenNav',label==='Seiten'||label==='Ebenen')}}
  const drawer=q('#canvasQuickDrawer.open');if(!drawer)return;
@@ -1009,6 +1013,7 @@ function openRail(mode,btn){
   try{if(mode==='text')return window.editorOpenGroup?.('textLibrary',btn);if(mode==='templates')return window.editorOpenGroup?.('templates',btn);return window.editorOpenGroup?.('elements',btn)}catch(_){ }
 }
 function ensureDesktopRail(){
+  if(document.body?.dataset?.v147Rail==='1')return;
   if(!isEditor()||!isDesktop())return;
   const nav=q('.canvasQuickNav');if(!nav)return;
   const labels=qa('button',nav).map(b=>b.textContent.trim());
@@ -1033,6 +1038,199 @@ window.addEventListener('resize',()=>setTimeout(observeRail,60));
 setTimeout(observeRail,200);setTimeout(observeRail,800);setTimeout(observeRail,1500);
 
 /* Update visible build number without touching existing sync compatibility keys. */
-setTimeout(()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 146'},50);
+setTimeout(()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 147'},50);
 })();
 /* ===== /Studia V146 ===== */
+
+/* ===== Studia V147: desktop panels + direct text editing + mobile selection bar ===== */
+(()=>{
+'use strict';
+const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
+const desktop=()=>innerWidth>=900&&document.body.classList.contains('editorMode');
+const mobile=()=>innerWidth<900&&document.body.classList.contains('editorMode');
+const textKinds=new Set(['text','block','task','merke','file']);
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const ico=(name,fallback='•')=>{try{return window.v133Icon?.(name)||fallback}catch(_){return fallback}};
+/* V147 owns desktop navigation/drawers. This flag makes retired V139–V146 nav guards no-op. */
+if(innerWidth>=900)document.body.dataset.v147Rail='1';
+let activeDesktopPanel='elements';
+
+function getState(){try{return typeof canvasState!=='undefined'?canvasState:window.canvasState}catch(_){return window.canvasState}}
+function drawer(){return q('#canvasQuickDrawer')}
+function setActiveButton(mode){qa('.canvasQuickNav button').forEach(b=>b.classList.toggle('active',(b.dataset.v147||b.dataset.v146||b.dataset.v134)===mode))}
+function panelShell(title,kicker,body,actions=''){return `<div class="v147Panel"><div class="v147PanelHead"><div><span>${esc(kicker)}</span><b>${esc(title)}</b></div>${actions}</div><div class="v147PanelScroll">${body}</div></div>`}
+function openPanelHTML(mode,html){const d=drawer();if(!d)return;activeDesktopPanel=mode;d.classList.add('open','v147DesktopDrawer');d.classList.remove('v140TextDrawer','v139TextDrawer');d.dataset.v147Mode=mode;d.dataset.v134Mode=mode;d.innerHTML=html;document.body.classList.add('editorDrawerOpen');setActiveButton(mode)}
+
+function textPanel(){
+ const presets=typeof window.canvasPresets==='function'?window.canvasPresets():[];
+ const cards=presets.map(p=>`<button class="v147TextFormatCard" data-preset="${esc(p.id)}"><span class="v147FormatGlyph" style="font-family:${esc(p.fontFamily||'Arial')};font-weight:${esc(p.fontWeight||700)};color:${esc(p.color||'#725b53')}">${p.id==='h1'?'H1':p.id==='h2'?'H2':'Aa'}</span><span><b>${esc(p.name||'Textformat')}</b><small>${p.bundle?'Gruppe':p.type==='block'?'Text + Kasten':'Text'}</small></span></button>`).join('');
+ return panelShell('Text','TEXT',`
+   <div class="v147TextActions">
+    <button type="button" onclick="v144OpenFontBrowser?.()">${ico('text','Aa')}<span><b>Schriften</b><small>Vorschau & auswählen</small></span></button>
+    <button type="button" data-v147-font-upload>${ico('plus','＋')}<span><b>Schrift hinzufügen</b><small>TTF · OTF · WOFF</small></span></button>
+    <button type="button" onclick="createCustomStylePreset()">${ico('template','H1')}<span><b>Textformat erstellen</b><small>Eigenes Format speichern</small></span></button>
+   </div>
+   <div class="v147SectionTitle"><b>Textformate</b><button type="button" onclick="openTextFormatManager()">Verwalten</button></div>
+   <div class="v147TextFormatList">${cards||'<div class="v147Empty">Noch keine Textformate.</div>'}</div>
+   <button class="v147WideAction" type="button" onclick="createCustomStylePreset()">＋ Neues Textformat</button>
+ `);
+}
+
+function templatePanel(){
+ let own=[];try{own=JSON.parse(localStorage.getItem('schoolbloom-page-templates')||'[]')}catch(_){own=[]}
+ const defaults=[
+  ['clean','Clean Notes','Klare Überschrift + Merkkasten','clean'],
+  ['cute','Cute Study','Pastell, Sticker und Aufgabe','cute'],
+  ['exam','Exam Prep','Definitionen + Aufgaben','exam'],
+  ['blank','Leer','Komplett frei gestalten','blank']
+ ];
+ const built=defaults.map(([id,name,desc,kind])=>`<button class="v147TemplateCard" data-template="${id}"><span class="v147TemplatePreview ${kind}"><i></i><i></i><i></i></span><span><b>${name}</b><small>${desc}</small></span></button>`).join('');
+ const custom=own.map(t=>`<button class="v147TemplateCard custom" data-saved-template="${esc(t.id)}"><span class="v147TemplatePreview own"><i></i><i></i><i></i></span><span><b>${esc(t.name||'Eigene Vorlage')}</b><small>Eigene Seitenvorlage</small></span></button>`).join('');
+ return panelShell('Vorlagen','VORLAGEN',`
+  <div class="v147TemplateActions"><button type="button" onclick="saveCurrentPageTemplate()">＋ Aktuelle Seite als Vorlage</button><button type="button" onclick="openPageTemplateManager()">Verwalten</button></div>
+  <div class="v147SectionTitle"><b>Vorlagen auswählen</b><span>${defaults.length+own.length} Vorlagen</span></div>
+  <div class="v147TemplateList">${built}${custom}</div>
+ `);
+}
+
+function elementTile(label,symbol,action){return `<button class="v147ElementTile" data-label="${esc(label.toLowerCase())}" data-action="${esc(action)}"><span>${symbol}</span><b>${esc(label)}</b></button>`}
+function elementsPanel(){
+ const sections=[
+  ['Basis',[['Textfeld','T','addCanvasTextBox()'],['Bild / Foto','▧','openCanvasMediaPicker()'],['Datei','⌁',"document.getElementById('canvasAnyFileInput')?.click()"],['Checkliste','☑','addCanvasChecklist()']]],
+  ['Formen',[['Rechteck','□',"addVectorShape('rect')"],['Kreis','○',"addVectorShape('ellipse')"],['Dreieck','△',"addVectorShape('triangle')"],['Linie','—','addVectorLine?.()||addCanvasDivider()'],['Kurve','〰',"addVectorCurve?.()||setVectorTool?.('pen')"],['Stern','☆','addRoundedStar?.()']]],
+  ['Lernen & Mathe',[['Formel','∑','openFormulaDialog()'],['Graph','⌁','openGraphDialog()'],['Tabelle','▦','openTableDialog()'],['Trennlinie','—','addCanvasDivider()']]],
+  ['Deko',[['Sticker','✿','toggleStickerPanel()'],['Klebeband','▰','addTapeSticker()'],['Kariert','▩',"addPaperSticker('grid')"],['Liniert','≡',"addPaperSticker('line')"]]]
+ ];
+ const body=`<label class="v147Search">${ico('search','⌕')}<input type="search" placeholder="Elemente suchen" oninput="v147FilterElements(this.value)"></label>`+sections.map(([title,items])=>`<section class="v147ElementSection"><div class="v147SectionTitle"><b>${title}</b></div><div class="v147ElementGrid">${items.map(x=>elementTile(...x)).join('')}</div></section>`).join('')+`<div class="v147Empty v147ElementEmpty" hidden>Keine passenden Elemente.</div>`;
+ return panelShell('Elemente','ELEMENTE',body);
+}
+
+window.v147FilterElements=function(value){const term=String(value||'').trim().toLowerCase();let visible=0;qa('.v147ElementTile',drawer()).forEach(b=>{const ok=!term||(b.dataset.label||'').includes(term);b.hidden=!ok;if(ok)visible++});qa('.v147ElementSection',drawer()).forEach(sec=>sec.hidden=!qa('.v147ElementTile:not([hidden])',sec).length);const e=q('.v147ElementEmpty',drawer());if(e)e.hidden=!!visible};
+
+window.v147OpenDesktopPanel=function(mode,btn=null){
+ if(!desktop())return false;
+ if(!['text','elements','templates'].includes(mode))mode='elements';
+ if(mode==='text')openPanelHTML(mode,textPanel());
+ else if(mode==='templates')openPanelHTML(mode,templatePanel());
+ else openPanelHTML(mode,elementsPanel());
+ setActiveButton(mode);
+ return true;
+};
+
+document.addEventListener('click',e=>{
+ if(!desktop())return;const b=e.target instanceof Element?e.target.closest('.canvasQuickNav button[data-v147]'):null;if(!b)return;
+ e.preventDefault();e.stopImmediatePropagation();window.v147OpenDesktopPanel(b.dataset.v147,b);
+},true);
+
+document.addEventListener('click',e=>{
+ if(!desktop())return;const d=drawer();if(!d?.classList.contains('v147DesktopDrawer'))return;
+ const fontUpload=e.target instanceof Element?e.target.closest('[data-v147-font-upload]'):null;if(fontUpload){e.preventDefault();e.stopPropagation();window.v144PickFont?.();return}
+ const preset=e.target instanceof Element?e.target.closest('.v147TextFormatCard[data-preset]'):null;if(preset){e.preventDefault();const p=(window.canvasPresets?.()||[]).find(x=>x.id===preset.dataset.preset);if(!p)return;if(p.bundle)window.insertSavedTextFormat?.(p.id);else window.addCanvasText?.(p.id);return}
+ const tpl=e.target instanceof Element?e.target.closest('.v147TemplateCard[data-template]'):null;if(tpl){e.preventDefault();window.applyCanvasTemplate?.(tpl.dataset.template);return}
+ const own=e.target instanceof Element?e.target.closest('.v147TemplateCard[data-saved-template]'):null;if(own){e.preventDefault();window.applySavedPageTemplate?.(own.dataset.savedTemplate);return}
+ const tile=e.target instanceof Element?e.target.closest('.v147ElementTile[data-action]'):null;if(tile){e.preventDefault();try{Function(tile.dataset.action)()}catch(err){console.error('[Studia V147] element action',err)}return}
+},true);
+
+const oldV134=window.v134Open;
+window.v134Open=function(mode,btn){if(desktop()&&['text','elements','templates'].includes(mode))return window.v147OpenDesktopPanel(mode,btn);return oldV134?.apply(this,arguments)};
+
+function railMarkup(){return `
+ <button data-v134="text" data-v146="text" data-v147="text" title="Text"><span class="editorNavIcon">${ico('text','Aa')}</span><span>Text</span></button>
+ <button data-v134="elements" data-v146="elements" data-v147="elements" title="Elemente"><span class="editorNavIcon">${ico('elements','◇')}</span><span>Elemente</span></button>
+ <button data-v134="templates" data-v146="templates" data-v147="templates" title="Vorlagen"><span class="editorNavIcon">${ico('template','▧')}</span><span>Vorlagen</span></button>`}
+function ownDesktopRail(){
+ if(!desktop())return null;
+ let nav=q('.canvasQuickNav');if(!nav)return null;
+ /* Detach anonymous legacy MutationObservers by replacing their observed node once. */
+ if(nav.dataset.v147Owned!=='1'){
+   const fresh=nav.cloneNode(false);fresh.innerHTML=railMarkup();fresh.dataset.v147Owned='1';
+   fresh.dataset.v139Watch='1';fresh.dataset.v146Observed='1';fresh.setAttribute('aria-label','Editor-Werkzeuge');
+   nav.replaceWith(fresh);nav=fresh;
+ }
+ document.body.dataset.v147Rail='1';
+ nav.classList.add('v146DesktopRail','v147DesktopRail');nav.dataset.v146Rail='1';
+ if(qa('button[data-v147]',nav).length!==3)nav.innerHTML=railMarkup();
+ return nav;
+}
+function stabilizeRail(){
+ if(!desktop())return;
+ const nav=ownDesktopRail();if(!nav)return;
+ setActiveButton(activeDesktopPanel);
+ if(!drawer()?.querySelector('.v147Panel'))window.v147OpenDesktopPanel(activeDesktopPanel);
+}
+let railTimer=0;let v147RailObserver=null;
+function watchRail(){
+ const nav=ownDesktopRail();if(!nav)return;
+ if(!v147RailObserver){v147RailObserver=new MutationObserver(()=>{clearTimeout(railTimer);railTimer=setTimeout(stabilizeRail,0)})}
+ if(nav.dataset.v147Observed!=='1'){nav.dataset.v147Observed='1';v147RailObserver.observe(nav,{childList:true})}
+ stabilizeRail();
+}
+new MutationObserver(()=>{if(desktop())setTimeout(watchRail,0)}).observe(document.body,{attributes:true,attributeFilter:['class']});
+window.addEventListener('resize',()=>{if(innerWidth>=900){document.body.dataset.v147Rail='1';setTimeout(watchRail,80)}else{delete document.body.dataset.v147Rail}});
+setTimeout(watchRail,120);setTimeout(watchRail,500);setTimeout(watchRail,1100);
+
+function wrapRefresh(name,mode){const old=window[name];if(typeof old!=='function'||old.__v147Wrapped)return;const fn=function(){const r=old.apply(this,arguments);Promise.resolve(r).finally(()=>setTimeout(()=>{if(desktop()&&activeDesktopPanel===mode)window.v147OpenDesktopPanel(mode)},80));return r};fn.__v147Wrapped=true;window[name]=fn;try{globalThis[name]=fn}catch(_){}}
+['saveCustomStylePreset','performDeleteCustomStylePreset','restoreDefaultTextFormats'].forEach(n=>wrapRefresh(n,'text'));
+['confirmSaveCurrentPageTemplate','performDeletePageTemplate'].forEach(n=>wrapRefresh(n,'templates'));
+
+function selectedText(){const st=getState();if(!st||st.selectedType!=='object'||!st.selectedId)return null;const o=(st.objects||[]).find(x=>x.id===st.selectedId);return o&&textKinds.has(o.kind)&&!o.isChecklist?o:null}
+function textObjectById(id){const st=getState();return (st?.objects||[]).find(o=>String(o.id)===String(id)&&textKinds.has(o.kind)&&!o.isChecklist)||null}
+function textElement(id){return q(`.cobj[data-id="${CSS.escape(String(id))}"]`)}
+function patchDesktopTextHit(){
+ if(!desktop())return;
+ const st=getState(),o=selectedText();
+ qa('.v132Hit[data-v147-text-pass]').forEach(h=>{h.style.removeProperty('pointer-events');delete h.dataset.v147TextPass});
+ qa('.cobj.v147DirectText').forEach(el=>{if(!o||String(el.dataset.id)!==String(o.id))el.classList.remove('v147DirectText')});
+ if(!o||st?.multiMode||(st?.selectedIds?.length||0)>1)return;
+ const h=q(`.v132Hit[data-kind="object"][data-id="${CSS.escape(String(o.id))}"]`);
+ if(h){h.dataset.v147TextPass='1';h.style.setProperty('pointer-events','none','important')}
+ const el=textElement(o.id);if(el){el.classList.add('v147DirectText');el.style.setProperty('pointer-events','auto','important')}
+}
+const hitLayerObserver=new MutationObserver(()=>requestAnimationFrame(patchDesktopTextHit));
+function bindHitLayer(){const layer=q('#v132InteractionLayer');if(layer&&!layer.dataset.v147Watch){layer.dataset.v147Watch='1';hitLayerObserver.observe(layer,{childList:true});patchDesktopTextHit()}}
+new MutationObserver(()=>{if(desktop())setTimeout(bindHitLayer,0)}).observe(document.body,{subtree:true,childList:true});setTimeout(bindHitLayer,400);
+const oldSyncHits=window.v132SyncHits;if(typeof oldSyncHits==='function')window.v132SyncHits=function(){const r=oldSyncHits.apply(this,arguments);requestAnimationFrame(patchDesktopTextHit);return r};
+
+function placeCaret(el,x,y){try{let range=null;if(document.caretPositionFromPoint){const p=document.caretPositionFromPoint(x,y);if(p){range=document.createRange();range.setStart(p.offsetNode,p.offset);range.collapse(true)}}else if(document.caretRangeFromPoint)range=document.caretRangeFromPoint(x,y);if(range&&el.contains(range.startContainer)){const sel=getSelection();sel.removeAllRanges();sel.addRange(range);el.focus({preventScroll:true});return true}}catch(_){}return false}
+function beginTextEditing(id,x,y){
+ const o=textObjectById(id);if(!o||o.locked)return false;
+ (getState()?.objects||[]).forEach(v=>{if(v!==o)v.editing=false});o.editing=true;
+ window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.v132SyncHits?.();
+ requestAnimationFrame(()=>{const el=textElement(id);if(!el)return;el.classList.add('v147DirectText');try{el.focus({preventScroll:true})}catch(_){el.focus()}if(Number.isFinite(x)&&Number.isFinite(y))placeCaret(el,x,y);patchDesktopTextHit()});
+ return true;
+}
+window.v147BeginTextEditing=beginTextEditing;
+/* Desktop text interaction: first click selects, the next click places the caret; drag still moves the selected text. */
+let textPointer=null;
+window.addEventListener('pointerdown',e=>{
+ if(!desktop()||e.pointerType!=='mouse'||e.button!==0)return;
+ const t=e.target instanceof Element?e.target:null;if(!t)return;
+ /* Editing text must receive native browser caret/selection events with no canvas interception. */
+ const editable=t.closest('.cobj[contenteditable="true"]');if(editable)return
+ const direct=t.closest('.cobj.v147DirectText');if(!direct)return;
+ const id=direct.dataset.id,o=textObjectById(id),st=getState();if(!o||o.locked||o.editing)return;
+ const isSelected=st?.selectedType==='object'&&String(st?.selectedId)===String(id)&&(st?.selectedIds?.length||1)<=1&&!st?.multiMode;
+ if(!isSelected)return;
+ e.preventDefault();e.stopImmediatePropagation();
+ const start={x:e.clientX,y:e.clientY},origin={x:o.x,y:o.y};textPointer={id,start,origin,moved:false};
+ const move=ev=>{if(!textPointer||String(textPointer.id)!==String(id))return;const dx=ev.clientX-start.x,dy=ev.clientY-start.y;if(!textPointer.moved&&Math.hypot(dx,dy)>5)textPointer.moved=true;if(!textPointer.moved)return;const scale=(typeof canvasZoom==='number'&&canvasZoom)||1;o.x=Math.max(0,Math.min((window.canvasPageWidth?.()||794)-o.w,origin.x+dx/scale));o.y=Math.max(0,Math.min((window.canvasPageHeight?.()||1123)-o.h,origin.y+dy/scale));const el=textElement(id);if(el){el.style.left=o.x+'px';el.style.top=o.y+'px'}window.markCanvasDirty?.(false)};
+ const up=ev=>{window.removeEventListener('pointermove',move,true);window.removeEventListener('pointerup',up,true);const p=textPointer;textPointer=null;if(!p)return;if(p.moved){window.pushHistory?.();window.renderCanvasInspector?.();window.v132SyncHits?.()}else beginTextEditing(id,ev.clientX,ev.clientY)};
+ window.addEventListener('pointermove',move,true);window.addEventListener('pointerup',up,true);
+},true);
+/* Double click always enters edit mode, even if a legacy overlay briefly returned. */
+window.addEventListener('dblclick',e=>{if(!desktop())return;const t=e.target instanceof Element?e.target:null;const hit=t?.closest?.('.v132Hit[data-kind="object"],.cobj');if(!hit)return;const id=hit.dataset.id,o=textObjectById(id);if(!o)return;e.preventDefault();e.stopImmediatePropagation();if(!(getState()?.selectedId===id)){try{window.selectCanvasObject?.(id)}catch(_){}}beginTextEditing(id,e.clientX,e.clientY)},true);
+
+let mobileBar=null,formatPop=null;
+function ensureMobileBar(){if(mobileBar)return mobileBar;mobileBar=document.createElement('div');mobileBar.id='v147SelectionBar';mobileBar.innerHTML=`<button type="button" data-act="bold"><b>B</b></button><label class="v147SelectionColor" title="Farbe"><span>●</span><input type="color" value="#333333"></label><button type="button" data-act="formats"><b>Aa</b><span>Format</span></button>`;document.body.appendChild(mobileBar);mobileBar.addEventListener('pointerdown',e=>{window.v146RememberTextSelection?.();if(e.target.closest('button'))e.preventDefault()},true);mobileBar.querySelector('[data-act="bold"]').onclick=()=>{window.v146RestoreTextSelection?.();window.formatSelectedText?.('bold');updateMobileSelectionBar()};mobileBar.querySelector('.v147SelectionColor input').addEventListener('input',e=>{window.v146RestoreTextSelection?.();window.applyTextProperty?.('color',e.target.value);updateMobileSelectionBar()});mobileBar.querySelector('[data-act="formats"]').onclick=()=>toggleFormatPopover();return mobileBar}
+function selectedRangeInfo(){if(!mobile())return null;const sel=getSelection?.();if(!sel||!sel.rangeCount||sel.isCollapsed)return null;const r=sel.getRangeAt(0),node=r.commonAncestorContainer.nodeType===1?r.commonAncestorContainer:r.commonAncestorContainer.parentElement,el=node?.closest?.('.cobj[contenteditable="true"]');if(!el)return null;return{range:r,el}}
+function hideMobileBar(){mobileBar?.classList.remove('show');formatPop?.remove();formatPop=null}
+function updateMobileSelectionBar(){const info=selectedRangeInfo();if(!info){hideMobileBar();return}window.v146RememberTextSelection?.();const bar=ensureMobileBar(),rect=info.range.getBoundingClientRect(),bw=bar.offsetWidth||190,bh=bar.offsetHeight||42;let left=(rect.left+rect.right)/2-bw/2;left=Math.max(8,Math.min(innerWidth-bw-8,left));let top=rect.top-bh-9;if(top<62)top=Math.min(innerHeight-bh-8,rect.bottom+9);bar.style.left=left+'px';bar.style.top=top+'px';bar.classList.add('show');if(formatPop){formatPop.style.left=Math.max(8,Math.min(innerWidth-formatPop.offsetWidth-8,left))+'px';formatPop.style.top=Math.min(innerHeight-formatPop.offsetHeight-8,top+bh+6)+'px'}}
+function toggleFormatPopover(){window.v146RememberTextSelection?.();if(formatPop){formatPop.remove();formatPop=null;return}const presets=window.canvasPresets?.()||[];formatPop=document.createElement('div');formatPop.id='v147FormatPopover';formatPop.innerHTML=`<div class="v147PopHead">Textformat</div>${presets.map(p=>`<button type="button" data-id="${esc(p.id)}"><span style="font-family:${esc(p.fontFamily||'Arial')};font-weight:${esc(p.fontWeight||700)};color:${esc(p.color||'#725b53')}">Aa</span><b>${esc(p.name||'Format')}</b></button>`).join('')}`;document.body.appendChild(formatPop);formatPop.addEventListener('pointerdown',e=>{window.v146RememberTextSelection?.();e.preventDefault()},true);formatPop.onclick=e=>{const b=e.target.closest('button[data-id]');if(!b)return;applyPresetToSelection(b.dataset.id);formatPop.remove();formatPop=null};updateMobileSelectionBar()}
+function applyPresetToSelection(id){const p=(window.canvasPresets?.()||[]).find(x=>x.id===id);if(!p)return;window.v146RestoreTextSelection?.();if(p.fontFamily)window.applyTextProperty?.('fontFamily',p.fontFamily);if(p.fontSize)window.applyTextProperty?.('fontSize',p.fontSize);if(p.color)window.applyTextProperty?.('color',p.color);if(p.fontWeight)window.applyTextProperty?.('fontWeight',p.fontWeight);if(p.fontStyle)window.applyTextProperty?.('fontStyle',p.fontStyle);updateMobileSelectionBar()}
+window.v147ApplyPresetToSelection=applyPresetToSelection;
+document.addEventListener('selectionchange',()=>setTimeout(updateMobileSelectionBar,0));document.addEventListener('pointerup',()=>setTimeout(updateMobileSelectionBar,20),true);window.addEventListener('resize',()=>setTimeout(updateMobileSelectionBar,20));
+
+function enforceVersion(){const eye=q('#headerEyebrow');if(eye&&eye.textContent!=='VERSION 147')eye.textContent='VERSION 147';qa('.v131VersionBadge,.v131QuickStrip,#buildVersionBadge').forEach(x=>x.remove());document.documentElement.classList.add('v147VersionReady')}
+const versionMO=new MutationObserver(enforceVersion);setTimeout(()=>{const eye=q('#headerEyebrow');if(eye)versionMO.observe(eye,{childList:true,subtree:true,characterData:true});enforceVersion()},0);setTimeout(enforceVersion,80);setTimeout(enforceVersion,300);setTimeout(enforceVersion,900);
+})();
+/* ===== /Studia V147 ===== */
