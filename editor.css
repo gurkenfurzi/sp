@@ -428,15 +428,12 @@ body.v141PropertiesOpen{overflow:hidden!important}
 .v141SyncWarning{padding:10px 12px;border:1px solid #f1d6ae;border-radius:12px;background:#fff9eb;color:#795d32;font-size:10px;line-height:1.5}
 @media(max-width:600px){.v141SyncChoices{grid-template-columns:1fr}.v141SyncChoices button{min-height:78px}.v141SyncModal .v135ModalHead{position:sticky;top:-14px;z-index:6;margin:-14px -14px 0;padding:14px;background:rgba(255,253,251,.97);backdrop-filter:blur(10px)}}
 
-/* ===== Studia V142 — text tools, desktop parity, sync polish ===== */
-.v142DesktopTextTools{display:grid;gap:8px;margin:0 0 12px;padding:10px;border:1px solid #eadbd7;border-radius:15px;background:#fff8f7}
-.v142DesktopTextTools button,.v142DesktopTextTools label{min-height:42px;border:1px solid #eadbd7;border-radius:11px;background:#fff;color:#655650;font:900 10px/1.2 inherit;display:flex;align-items:center;gap:9px;padding:0 11px;cursor:pointer}
-.v142DesktopTextTools label{background:#fff0f1;border-color:#efc8cc;color:#9c5f66}.v142DesktopTextTools input[type=file]{display:none}
-.v142FontModal{width:min(700px,calc(100vw - 24px))!important}.v142FontGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;max-height:56vh;overflow:auto;padding:3px}
-.v142FontCard{display:grid;grid-template-columns:76px minmax(0,1fr) auto;align-items:center;gap:11px;min-height:72px;border:1px solid #eadbd7;border-radius:14px;background:#fff;padding:9px 11px;text-align:left;color:#5c504c;cursor:pointer}.v142FontCard:hover{background:#fff8f7;border-color:#eab1b6}.v142FontSample{font-size:25px;white-space:nowrap}.v142FontMeta{display:grid;gap:3px;min-width:0}.v142FontMeta b{font-size:11px;overflow:hidden;text-overflow:ellipsis}.v142FontMeta small{font-size:8px;color:#9b8580}.v142FontUpload{display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;margin-top:10px;border:1px dashed #e5b9bb;border-radius:12px;background:#fff0f1;color:#985d64;font-weight:900;cursor:pointer}.v142FontUpload input{display:none}
-.v142TextProps{display:grid;gap:10px}.v142TextPropsHead{display:flex;align-items:center;justify-content:space-between;gap:10px}.v142TextPropsHead h3{margin:0;font-size:15px}.v142TextTabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;padding:5px;border:1px solid #eadbd7;border-radius:13px;background:#fff8f7}.v142TextTabs button{min-width:0;height:35px;border:0;border-radius:9px;background:transparent;color:#856f67;font-size:8px;font-weight:900}.v142TextTabs button.active{background:#fff;color:#9b5d64;box-shadow:0 2px 8px rgba(90,60,54,.08)}
-.v142TextContent{min-height:130px}.v142FontShortcut{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:48px;border:1px solid #eadbd7;border-radius:12px;background:#fff;padding:7px 10px;color:#655650;font-weight:900;cursor:pointer}.v142FontShortcut .aa{font-size:22px}
-.v142SyncAuto{margin-top:10px;padding:10px 12px;border:1px solid #dce8dc;border-radius:12px;background:#f7fff7;color:#58705a;font-size:10px;line-height:1.45}.v142SyncAuto b{display:block;margin-bottom:3px}
-@media(max-width:899px){.v142FontGrid{grid-template-columns:1fr}.v142TextTabs{overflow-x:auto;grid-template-columns:repeat(5,minmax(72px,1fr))}.v142TextProps{padding-bottom:8px}}
-@media(min-width:900px){body.editorMode .canvasQuickNav .v142DesktopOnlyHide{display:none!important}}
-/* ===== /Studia V142 ===== */
+/* ===== Studia V143 STABILITY =====
+   Desktop rail stays visually limited to Text / Elemente / Vorlagen without mutating editor DOM. */
+@media (min-width:900px){
+ body.editorMode .canvasQuickNav button[data-v139="pages"],
+ body.editorMode .canvasQuickNav button[data-v139="layers"],
+ body.editorMode .canvasQuickNav button[data-v138="pages"],
+ body.editorMode .canvasQuickNav button[data-v138="layers"]{display:none!important}
+}
+/* ===== /Studia V143 STABILITY ===== */
