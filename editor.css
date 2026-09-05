@@ -558,3 +558,160 @@ body.v141PropertiesOpen{overflow:hidden!important}
 html:not(.v147VersionReady) #headerEyebrow{visibility:hidden!important}
 html.v147VersionReady #headerEyebrow{visibility:visible!important}
 /* ===== /Studia V147 stability hotfix ===== */
+
+/* ===== Studia V148 — isolated desktop left rail ===== */
+@media (min-width:900px){
+  body.editorMode.v148DesktopTools .v102DesktopLeft{
+    position:relative!important;
+    display:block!important;
+    min-width:0!important;
+    min-height:0!important;
+    overflow:hidden!important;
+  }
+  body.editorMode.v148DesktopTools .v102DesktopLeft>.canvasQuickNav,
+  body.editorMode.v148DesktopTools .v102DesktopLeft>#canvasQuickDrawer{
+    display:none!important;
+    visibility:hidden!important;
+    pointer-events:none!important;
+  }
+  body.editorMode #v148DesktopTools{
+    position:absolute!important;
+    inset:0!important;
+    z-index:1600!important;
+    display:grid!important;
+    grid-template-columns:84px minmax(0,1fr)!important;
+    grid-template-rows:minmax(0,1fr)!important;
+    width:100%!important;
+    height:100%!important;
+    min-width:0!important;
+    min-height:0!important;
+    background:#fffefd!important;
+    overflow:hidden!important;
+  }
+  #v148DesktopRail{
+    grid-column:1!important;
+    min-width:0!important;
+    height:100%!important;
+    padding:10px 7px!important;
+    display:flex!important;
+    flex-direction:column!important;
+    gap:5px!important;
+    border-right:1px solid #eadeda!important;
+    background:#fff!important;
+    overflow:hidden!important;
+  }
+  #v148DesktopRail button{
+    width:100%!important;
+    min-width:0!important;
+    height:66px!important;
+    flex:0 0 66px!important;
+    margin:0!important;
+    padding:7px 3px!important;
+    border:0!important;
+    border-radius:14px!important;
+    background:transparent!important;
+    color:#62534e!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:5px!important;
+    cursor:pointer!important;
+    pointer-events:auto!important;
+    font:inherit!important;
+    box-shadow:none!important;
+    transform:none!important;
+  }
+  #v148DesktopRail button:hover{background:#fff3f2!important}
+  #v148DesktopRail button.active{background:#f8dfdf!important;color:#965b62!important}
+  #v148DesktopRail button svg{width:24px!important;height:24px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important;pointer-events:none!important}
+  #v148DesktopRail button span{font-size:9px!important;font-weight:850!important;line-height:1!important;white-space:nowrap!important;pointer-events:none!important}
+  #v148DesktopPanel{
+    grid-column:2!important;
+    min-width:0!important;
+    min-height:0!important;
+    height:100%!important;
+    display:flex!important;
+    flex-direction:column!important;
+    background:#fffefd!important;
+    overflow:hidden!important;
+  }
+  .v148PanelHead{
+    flex:0 0 auto!important;
+    padding:14px 14px 11px!important;
+    border-bottom:1px solid #eee2dd!important;
+    background:#fffefd!important;
+  }
+  .v148PanelHead small{display:block!important;margin-bottom:3px!important;font-size:8px!important;font-weight:950!important;letter-spacing:.13em!important;color:#b7787e!important}
+  .v148PanelHead b{display:block!important;font-size:16px!important;color:#4f433e!important}
+  .v148PanelBody{
+    flex:1 1 auto!important;
+    min-width:0!important;
+    min-height:0!important;
+    padding:12px 13px 28px!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    overscroll-behavior:contain!important;
+    scrollbar-gutter:stable!important;
+  }
+  .v148PanelBody::-webkit-scrollbar{width:8px}
+  .v148PanelBody::-webkit-scrollbar-thumb{background:#e7d7d1;border:2px solid #fffefd;border-radius:8px}
+  .v148Actions{display:grid!important;gap:7px!important;margin-bottom:16px!important}
+  .v148Action,.v148Upload{
+    position:relative!important;
+    min-width:0!important;
+    min-height:52px!important;
+    padding:8px 10px!important;
+    border:1px solid #eadeda!important;
+    border-radius:13px!important;
+    background:#fff!important;
+    color:#62544e!important;
+    display:grid!important;
+    grid-template-columns:38px minmax(0,1fr)!important;
+    align-items:center!important;
+    gap:9px!important;
+    text-align:left!important;
+    cursor:pointer!important;
+    box-sizing:border-box!important;
+  }
+  .v148Action:hover,.v148Upload:hover{border-color:#efc6ca!important;background:#fff9f8!important}
+  .v148ActionIcon{width:36px!important;height:36px!important;border-radius:11px!important;background:#fff0f1!important;color:#9e646a!important;display:grid!important;place-items:center!important;font-weight:900!important;font-size:14px!important}
+  .v148ActionText{min-width:0!important;display:grid!important;gap:2px!important}
+  .v148ActionText b{font-size:10px!important;color:#5b4e49!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  .v148ActionText small{font-size:8px!important;color:#9b8780!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  .v148Upload input{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important}
+  .v148SectionHead{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important;margin:8px 0 9px!important}
+  .v148SectionHead b{font-size:11px!important;color:#594c47!important}
+  .v148SectionHead button{border:0!important;background:transparent!important;color:#a45f68!important;font-size:9px!important;font-weight:900!important;cursor:pointer!important}
+  .v148FormatList,.v148TemplateList{display:grid!important;gap:8px!important}
+  .v148FormatCard,.v148TemplateCard{
+    width:100%!important;
+    min-width:0!important;
+    padding:9px!important;
+    border:1px solid #eadbd6!important;
+    border-radius:13px!important;
+    background:#fff!important;
+    color:#5e514b!important;
+    text-align:left!important;
+    cursor:pointer!important;
+    box-sizing:border-box!important;
+  }
+  .v148FormatCard{display:grid!important;grid-template-columns:50px minmax(0,1fr)!important;align-items:center!important;gap:10px!important}
+  .v148FormatCard:hover,.v148TemplateCard:hover{border-color:#edc2c6!important;background:#fff9f8!important}
+  .v148FormatPreview{width:48px!important;height:48px!important;border-radius:12px!important;background:#fff0f1!important;display:grid!important;place-items:center!important;font-size:17px!important}
+  .v148CardText{min-width:0!important;display:grid!important;gap:3px!important}
+  .v148CardText b{font-size:10px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  .v148CardText small{font-size:8px!important;color:#9a8680!important}
+  .v148TemplateCard{display:grid!important;grid-template-columns:62px minmax(0,1fr)!important;align-items:center!important;gap:10px!important}
+  .v148PagePreview{width:58px!important;height:72px!important;border:1px solid #e5d8d4!important;border-radius:8px!important;background:linear-gradient(#efb8bb 0 8px,transparent 8px),repeating-linear-gradient(to bottom,transparent 0 17px,#ece2de 17px 20px)!important;background-size:42px 8px,42px 20px!important;background-position:8px 9px,8px 15px!important;background-repeat:no-repeat!important;box-shadow:0 3px 9px rgba(70,50,45,.06)!important}
+  .v148Search{display:flex!important;align-items:center!important;gap:8px!important;height:38px!important;padding:0 10px!important;margin-bottom:13px!important;border:1px solid #e8dfdb!important;border-radius:11px!important;background:#fff!important}
+  .v148Search input{min-width:0!important;flex:1!important;height:34px!important;padding:0!important;border:0!important;outline:0!important;background:transparent!important;font-size:10px!important;box-shadow:none!important}
+  .v148ElementSection{margin-bottom:16px!important}
+  .v148ElementGrid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}
+  .v148ElementTile{min-width:0!important;min-height:65px!important;padding:7px 5px!important;border:1px solid #ece2de!important;border-radius:12px!important;background:#fff!important;color:#62534e!important;display:grid!important;place-items:center!important;align-content:center!important;gap:5px!important;cursor:pointer!important}
+  .v148ElementTile:hover{border-color:#efc7ca!important;background:#fff9f8!important}
+  .v148ElementTile .sym{font-size:22px!important;line-height:1!important;color:#a1686d!important}
+  .v148ElementTile b{font-size:8px!important;text-align:center!important}
+  .v148Empty{padding:18px 8px!important;text-align:center!important;color:#9b8981!important;font-size:9px!important}
+}
+/* ===== /Studia V148 ===== */
