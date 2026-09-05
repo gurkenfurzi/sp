@@ -657,3 +657,180 @@ document.addEventListener('click',e=>{if(!isEditor())return;const b=e.target.clo
 const observer=new MutationObserver(()=>requestAnimationFrame(reconcile));observer.observe(document.body,{attributes:true,attributeFilter:['class']});
 window.addEventListener('resize',()=>setTimeout(reconcile,100));setTimeout(reconcile,500);setTimeout(reconcile,1400);
 })();
+
+/* ===== Studia V144 — stable text tools, font library and automatic device sync ===== */
+(function(){
+'use strict';
+const q=(s,r=document)=>r.querySelector(s), qa=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const isEditor=()=>document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
+const isDesktop=()=>innerWidth>=900;
+const textKinds=new Set(['text','block','task','merke']);
+const selectedText=()=>{try{const o=(canvasState?.objects||[]).find(x=>x.id===canvasState?.selectedId);return o&&textKinds.has(o.kind)?o:null}catch(_){return null}};
+
+/* ---------- version ---------- */
+function setVersion(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 144';document.title='Studia'}
+setVersion();setTimeout(setVersion,250);setTimeout(setVersion,1800);
+
+/* ---------- custom fonts: visible input + IndexedDB + previews ---------- */
+const FONT_KEY='schoolbloom-v91-custom-fonts', FONT_OLD='schoolbloom-custom-fonts';
+const FONT_DB='studia-fonts-v144', FONT_STORE='fonts';
+function fontDB(){return new Promise((res,rej)=>{const r=indexedDB.open(FONT_DB,1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains(FONT_STORE))r.result.createObjectStore(FONT_STORE,{keyPath:'name'})};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+async function fontDBPut(obj){const db=await fontDB();return new Promise((res,rej)=>{const tx=db.transaction(FONT_STORE,'readwrite');tx.objectStore(FONT_STORE).put(obj);tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error)})}
+async function fontDBAll(){try{const db=await fontDB();return await new Promise((res,rej)=>{const r=db.transaction(FONT_STORE).objectStore(FONT_STORE).getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>rej(r.error)})}catch(_){return []}}
+function localFonts(){try{return JSON.parse(localStorage.getItem(FONT_KEY)||'[]').filter(x=>x?.name&&x?.data)}catch(_){return []}}
+function fontNameFromFile(f){return (f?.name||'Eigene Schrift').replace(/\.(ttf|otf|woff2?)$/i,'').trim()||'Eigene Schrift'}
+async function installFont(font){if(!font?.name||!font?.data)return false;try{
+  if(document.fonts?.check?.(`12px ${JSON.stringify(font.name)}`))return true;
+  if('FontFace' in window&&document.fonts){const face=new FontFace(font.name,`url(${JSON.stringify(font.data)})`);await face.load();document.fonts.add(face);return true}
+ }catch(err){console.warn('[Studia V144] FontFace load failed',err)}
+ const sid='v144-font-'+font.name.replace(/[^a-z0-9_-]/gi,'-');if(!q('#'+CSS.escape(sid))){const st=document.createElement('style');st.id=sid;st.textContent=`@font-face{font-family:${JSON.stringify(font.name)};src:url(${JSON.stringify(font.data)});font-display:swap}`;document.head.appendChild(st)}return true;
+}
+async function allCustomFonts(){const map=new Map();for(const f of localFonts())map.set(f.name,f);for(const f of await fontDBAll())map.set(f.name,f);return [...map.values()]}
+async function loadAllFonts(){for(const f of await allCustomFonts())await installFont(f);refreshDesktopFontSelects()}
+function persistLegacyFont(font){
+ try{let a=localFonts().filter(x=>x.name!==font.name);a.push(font);localStorage.setItem(FONT_KEY,JSON.stringify(a))}catch(e){console.warn('[Studia V144] local font cache full; IndexedDB remains active',e)}
+ try{let a=JSON.parse(localStorage.getItem(FONT_OLD)||'[]');a=a.filter(x=>x?.name!==font.name&&x?.css!==font.name);a.push({name:font.name,css:font.name,data:font.data});localStorage.setItem(FONT_OLD,JSON.stringify(a))}catch(_){ }
+}
+window.v144HandleFontFile=async function(input){const f=input?.files?.[0];if(!f)return;try{
+ if(f.size>8*1024*1024)throw new Error('Die Schriftdatei ist zu groß. Bitte unter 8 MB verwenden.');
+ const dataUrl=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result||''));r.onerror=()=>rej(r.error);r.readAsDataURL(f)});
+ const font={name:fontNameFromFile(f),data:dataUrl,type:f.type||''};
+ /* Validate before claiming success. */
+ if('FontFace' in window){const test=new FontFace(font.name,`url(${JSON.stringify(dataUrl)})`);await test.load();document.fonts?.add(test)}
+ await fontDBPut(font);persistLegacyFont(font);await installFont(font);refreshDesktopFontSelects();
+ try{window.v91LoadFonts?.()}catch(_){ }
+ window.cuteToast?.(`Schrift „${font.name}“ hinzugefügt ♡`);
+ if(q('#v144FontBrowser'))window.v144OpenFontBrowser();
+ scheduleAutoPush(300);
+ }catch(err){console.error(err);alert('Die Schrift konnte nicht hinzugefügt werden: '+String(err.message||err))}finally{input.value=''}};
+
+function ensureGlobalFontInput(){if(q('#v144GlobalFontInput'))return;const inp=document.createElement('input');inp.id='v144GlobalFontInput';inp.type='file';inp.accept='.ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2';inp.hidden=true;inp.addEventListener('change',()=>v144HandleFontFile(inp));document.body.appendChild(inp)}
+window.v144PickFont=function(){ensureGlobalFontInput();q('#v144GlobalFontInput')?.click()};
+/* Make every old “add font” action use the reliable input. */
+window.v91PickFont=window.v144PickFont;
+
+const baseFonts=[
+ {name:'Inter',css:'Inter, Arial, sans-serif'}, {name:'Arial',css:'Arial, sans-serif'},
+ {name:'Lato',css:'Lato, Arial, sans-serif'}, {name:'Playfair Display',css:"'Playfair Display', Georgia, serif"},
+ {name:'Georgia',css:'Georgia, serif'}, {name:'Verdana',css:'Verdana, sans-serif'},
+ {name:'Trebuchet MS',css:"'Trebuchet MS', sans-serif"}, {name:'Times New Roman',css:"'Times New Roman', serif"}
+];
+async function fontChoices(){const custom=await allCustomFonts();return [...baseFonts,...custom.map(f=>({name:f.name,css:JSON.stringify(f.name),custom:true}))]}
+function useFont(css){const o=selectedText();if(!o)return window.cuteToast?.('Wähle zuerst einen Text aus ♡');window.applyTextProperty?.('fontFamily',css);window.renderCanvasObjects?.();window.renderCanvasInspector?.()}
+window.v144UseFont=function(css){useFont(css);q('#modalWrap')&&window.closeModal?.()};
+window.v144OpenFontBrowser=async function(){const fonts=await fontChoices(),current=selectedText()?.style?.fontFamily||'';const cards=fonts.map(f=>`<button class="v144FontCard ${current&&String(current).includes(f.name)?'selected':''}" onclick='v144UseFont(${JSON.stringify(f.css)})'><span style="font-family:${esc(f.css)}">Aa Bb 123</span><b style="font-family:${esc(f.css)}">${esc(f.name)}</b><small>${f.custom?'Eigene Schrift':'Standard'}</small></button>`).join('');window.openModal?.(`<div class="v135Modal v144FontModal" id="v144FontBrowser"><div class="v135ModalHead"><div><span class="eyebrow">SCHRIFTEN</span><h2>Schrift auswählen</h2></div><button onclick="closeModal()">×</button></div><p>Du siehst jede Schrift direkt als Vorschau. Eigene TTF-, OTF-, WOFF- oder WOFF2-Dateien kannst du hier hinzufügen.</p><label class="v144RealFontUpload"><span><b>Aa＋</b><strong>Eigene Schrift hinzufügen</strong><small>TTF · OTF · WOFF · WOFF2</small></span><input type="file" accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2" onchange="v144HandleFontFile(this)"></label><div class="v144FontGrid">${cards}</div></div>`)};
+window.v144UseFontInline=async function(css){useFont(css);await window.v96OpenFontPicker?.()};
+window.v96OpenFontPicker=async function(){const o=selectedText();if(!o)return window.cuteToast?.('Wähle zuerst einen Text aus ♡');const content=q('#mobileTextModeContent');if(!content)return;const fonts=await fontChoices(),current=o.style?.fontFamily||'Arial';content.innerHTML=`<div class="v96FontPicker v144InlineFontPicker"><div class="v96InlineHead"><button onclick="mobileTextMode('text')">‹</button><div><b>Schriftart</b><small>Vorschau antippen und direkt anwenden.</small></div></div><label class="v144RealFontUpload v144InlineUpload"><span><b>Aa＋</b><strong>Eigene Schrift hinzufügen</strong><small>TTF · OTF · WOFF · WOFF2</small></span><input type="file" accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2" onchange="v144HandleFontFile(this)"></label><div class="v144FontGrid">${fonts.map(f=>`<button class="v144FontCard ${String(current).includes(f.name)?'selected':''}" onclick='v144UseFontInline(${JSON.stringify(f.css)})'><span style="font-family:${esc(f.css)}">Aa Bb 123</span><b style="font-family:${esc(f.css)}">${esc(f.name)}</b><small>${f.custom?'Eigene Schrift':'Standard'}</small></button>`).join('')}</div></div>`};
+
+function refreshDesktopFontSelects(){allCustomFonts().then(custom=>{for(const sel of qa('.v134FormatTools select.font,.v137Font')){const cur=sel.value;const list=[...baseFonts,...custom.map(f=>({name:f.name,css:f.name}))];sel.innerHTML=list.map(f=>`<option value="${esc(f.css)}" style="font-family:${esc(f.css)}">${esc(f.name)}</option>`).join('');if([...sel.options].some(o=>o.value===cur))sel.value=cur;sel.style.fontFamily=sel.value||'Arial'} })}
+
+/* ---------- mobile text properties: reuse the full Text/Aussehen/Abstand/Position/Effekte controls ---------- */
+const oldProperties=window.v138OpenProperties;
+window.v138OpenProperties=function(){
+ if(innerWidth>=900||!selectedText())return oldProperties?.apply(this,arguments);
+ q('#v141PropertiesOverlay')?.remove();
+ const html=(typeof window.mobileTextControlsHTML==='function'?window.mobileTextControlsHTML():typeof mobileTextControlsHTML==='function'?mobileTextControlsHTML():'');
+ const overlay=document.createElement('div');overlay.id='v141PropertiesOverlay';overlay.className='v144TextPropertiesOverlay';overlay.innerHTML=`<button class="v141PropertiesBackdrop" aria-label="Eigenschaften schließen" onclick="v141CloseProperties()"></button><section class="v141PropertiesSheet v144TextPropertiesSheet"><div class="v141SheetHandle"></div><div class="v144TextPropHead"><div><b>Text</b><small>Eigenschaften</small></div><button onclick="v141CloseProperties()">×</button></div><div class="v144TextPropertiesBody">${html}</div></section>`;document.body.appendChild(overlay);document.body.classList.add('v141PropertiesOpen');requestAnimationFrame(()=>q('.v141PropertiesSheet',overlay)?.classList.add('open'));
+};
+try{v138OpenProperties=window.v138OpenProperties}catch(_){ }
+
+/* ---------- desktop left rail: visually only Text / Elemente / Vorlagen ---------- */
+function desktopTextHub(){
+ if(!isEditor()||!isDesktop())return;
+ const nav=q('.canvasQuickNav');if(nav){for(const b of qa('button',nav)){const label=b.textContent.trim();b.classList.toggle('v144DesktopHiddenNav',label==='Seiten'||label==='Ebenen')}}
+ const drawer=q('#canvasQuickDrawer.open');if(!drawer)return;
+ const active=qa('.canvasQuickNav button').find(b=>b.classList.contains('active'))?.textContent.trim();
+ if(active!=='Text'&&!/Textformate|Text bearbeiten|Schrift/.test(drawer.textContent||''))return;
+ qa('.v139TextHeaderTools,.v128DesktopParityBar,.v129DesktopTextExtras,.v121DesktopFontActions,.v123DesktopTextActions,.v132DesktopTextExtras').forEach(x=>x.remove());
+ if(!q('.v144DesktopTextHub',drawer)){
+   const hub=document.createElement('div');hub.className='v144DesktopTextHub';hub.innerHTML=`<button onclick="v144OpenFontBrowser()"><span class="v144HubIcon">Aa</span><span><b>Schriften</b><small>Vorschau & auswählen</small></span></button><label class="v144HubUpload"><span class="v144HubIcon">＋</span><span><b>Schrift hinzufügen</b><small>TTF · OTF · WOFF</small></span><input type="file" accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2" onchange="v144HandleFontFile(this)"></label><button onclick="createCustomStylePreset()"><span class="v144HubIcon">H1</span><span><b>Textformat</b><small>Eigenes Format erstellen</small></span></button>`;drawer.prepend(hub)
+ }
+}
+const drawerObserver=new MutationObserver(()=>requestAnimationFrame(desktopTextHub));
+setTimeout(()=>{const d=q('#canvasQuickDrawer');if(d)drawerObserver.observe(d,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});desktopTextHub()},700);
+window.addEventListener('resize',()=>setTimeout(desktopTextHub,100));
+document.addEventListener('click',e=>{if(e.target.closest('.canvasQuickNav button'))setTimeout(desktopTextHub,50)},true);
+
+/* ---------- sticker color: ensure it is available on both property surfaces ---------- */
+function ensureStickerColorUI(){
+ if(!isEditor())return;let selected=[];try{const ids=new Set([...(canvasState.selectedIds||[]),canvasState.selectedId].filter(Boolean));selected=(canvasState.objects||[]).filter(o=>ids.has(o.id)&&o.stickerAsset&&!o.frameAsset)}catch(_){return}if(!selected.length)return;
+ const color=selected[0].tintColor||'#e7919b';
+ for(const host of [q('#canvasInspector'),q('.v141PropertiesBody'),q('.v144TextPropertiesBody')].filter(Boolean)){
+  if(q('.v144StickerColors',host))continue;const section=document.createElement('section');section.className='v144StickerColors';section.innerHTML=`<div><b>Stickerfarbe</b><small>Farbe des Stickers ändern</small></div><label><input type="color" value="${color}" onchange="v141StickerTint(this.value)"><span>Farbe</span></label><button onclick="v141StickerOriginal()">Original</button>`;host.prepend(section)
+ }
+}
+const oldInspector144=window.renderCanvasInspector;window.renderCanvasInspector=function(){const r=oldInspector144?.apply(this,arguments);requestAnimationFrame(ensureStickerColorUI);return r};try{renderCanvasInspector=window.renderCanvasInspector}catch(_){ }
+
+/* ---------- group duplication: duplicated group always gets a fresh independent group id ---------- */
+window.duplicateSelected=function(){
+ try{
+  const ids=new Set([...(canvasState.selectedIds||[]),canvasState.selectedType==='object'?canvasState.selectedId:null].filter(Boolean));
+  const vids=new Set([...(canvasState.selectedVectorIds||[]),canvasState.selectedType==='vector'?canvasState.selectedId:null].filter(Boolean));
+  const groupIds=new Set();
+  for(const o of canvasState.objects||[])if(ids.has(o.id)&&o.groupId)groupIds.add(o.groupId);
+  for(const v of canvasState.vectors||[])if(vids.has(v.id)&&v.groupId)groupIds.add(v.groupId);
+  if(groupIds.size){for(const o of canvasState.objects||[])if(groupIds.has(o.groupId))ids.add(o.id);for(const v of canvasState.vectors||[])if(groupIds.has(v.groupId))vids.add(v.id)}
+  if(!ids.size&&!vids.size)return window.cuteToast?.('Wähle zuerst etwas aus ♡');
+  const clone=x=>typeof structuredClone==='function'?structuredClone(x):JSON.parse(JSON.stringify(x));
+  const newIds=[],newVids=[],map=new Map(),seed=(crypto.randomUUID?.()||Date.now().toString(36)+Math.random().toString(36).slice(2));
+  const newGroup=old=>{if(!old)return '';if(!map.has(old))map.set(old,'grp-v144-'+seed+'-'+map.size);return map.get(old)};let z=typeof nextCanvasZ==='function'?nextCanvasZ():100;
+  for(const src of (canvasState.objects||[]).filter(o=>ids.has(o.id))){const o=clone(src);o.id=typeof id==='function'?id():'o-'+crypto.randomUUID();o.x=(+o.x||0)+18;o.y=(+o.y||0)+18;o.z=z++;o.locked=false;o.editing=false;if(o.groupId)o.groupId=newGroup(o.groupId);canvasState.objects.push(o);newIds.push(o.id)}
+  for(const src of (canvasState.vectors||[]).filter(v=>vids.has(v.id))){const v=clone(src);v.id=typeof id==='function'?id():'v-'+crypto.randomUUID();v.z=z++;v.locked=false;if(v.groupId)v.groupId=newGroup(v.groupId);if(v.x!=null){v.x=(+v.x||0)+18;v.y=(+v.y||0)+18}if(v.cx!=null){v.cx=(+v.cx||0)+18;v.cy=(+v.cy||0)+18}if(Array.isArray(v.points))v.points=v.points.map(p=>[(+p[0]||0)+18,(+p[1]||0)+18]);canvasState.vectors.push(v);newVids.push(v.id)}
+  canvasState.selectedIds=newIds;canvasState.selectedVectorIds=newVids;canvasState.selectedType=newIds.length?'object':'vector';canvasState.selectedId=newIds.at(-1)||newVids.at(-1)||null;canvasState.multiMode=false;
+  renderCanvasObjects?.();renderVectors?.();renderCanvasInspector?.();renderLayerList?.();markCanvasDirty?.();pushHistory?.();window.v132SyncHits?.();window.cuteToast?.('Als getrennte Gruppe dupliziert ♡');
+ }catch(err){console.error('[Studia V144] duplicate',err);window.cuteToast?.('Duplizieren fehlgeschlagen')}
+};
+try{duplicateSelected=window.duplicateSelected}catch(_){ }
+
+/* ---------- automatic Google Apps Script sync ---------- */
+const SYNC_URL='studia-gas-url',SYNC_KEY='studia-gas-key',DEVICE='studia-auto-device-v144',LAST_REMOTE='studia-auto-last-remote-v144',LAST_LOCAL='studia-auto-last-local-v144';
+let syncPushTimer=null,syncBusy=false,syncApplying=false,lastPullAt=0,pollTimer=null;
+function deviceId(){let d=localStorage.getItem(DEVICE);if(!d){d=crypto.randomUUID?.()||'dev-'+Date.now().toString(36)+Math.random().toString(36).slice(2);localStorage.setItem(DEVICE,d)}return d}
+function readSyncConfig(fromUI=false){const url=String((fromUI?q('#v144SyncUrl')?.value:null)||localStorage.getItem(SYNC_URL)||'').trim(),key=String((fromUI?q('#v144SyncKey')?.value:null)||localStorage.getItem(SYNC_KEY)||'').trim();return{url,key,valid:/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec(?:\?.*)?$/.test(url)&&key.length>=12}}
+function setSyncStatus(text,bad=false){const el=q('#v144SyncStatus');if(el){el.textContent=text;el.classList.toggle('error',bad)}const chip=q('#v144SyncChip');if(chip){chip.textContent=bad?'Sync-Fehler':text;chip.classList.toggle('error',bad)}}
+async function syncExtras(){return{fonts:await allCustomFonts()}}
+async function makeEnvelope(){return{format:'studia-auto-v144',version:144,updatedAt:Date.now(),deviceId:deviceId(),data:JSON.parse(JSON.stringify(window.data||data||{})),extras:await syncExtras()}}
+async function restoreExtras(extras){for(const f of extras?.fonts||[]){if(!f?.name||!f?.data)continue;await fontDBPut(f);persistLegacyFont(f);await installFont(f)}refreshDesktopFontSelects()}
+function scheduleAutoPush(delay=800){const c=readSyncConfig();if(!c.valid||syncApplying)return;clearTimeout(syncPushTimer);syncPushTimer=setTimeout(()=>autoPush(),delay)}
+window.scheduleAutoPush=scheduleAutoPush;
+async function autoPush(){if(syncBusy||syncApplying)return;const c=readSyncConfig();if(!c.valid)return;syncBusy=true;try{setSyncStatus('Synchronisiere …');const env=await makeEnvelope(),form=new FormData();form.set('action','save');form.set('key',c.key);form.set('payload',JSON.stringify(env));await fetch(c.url,{method:'POST',mode:'no-cors',body:form});localStorage.setItem(LAST_LOCAL,String(env.updatedAt));setSyncStatus('Synchronisiert ✓');setTimeout(()=>autoPull(false),1200)}catch(err){console.warn('[Studia V144] auto push failed',err);setSyncStatus('Sync fehlgeschlagen',true)}finally{syncBusy=false}}
+function jsonpLoad(c){return new Promise((resolve,reject)=>{const cb='studiaAuto_'+Date.now()+'_'+Math.random().toString(36).slice(2),script=document.createElement('script'),timeout=setTimeout(()=>done(new Error('Zeitüberschreitung beim Sync')),12000);function done(err,val){clearTimeout(timeout);try{delete window[cb]}catch(_){ }script.remove();err?reject(err):resolve(val)}window[cb]=r=>done(null,r);script.onerror=()=>done(new Error('Web-App nicht erreichbar. Prüfe /exec-URL und Bereitstellung.'));const u=new URL(c.url);u.searchParams.set('action','load');u.searchParams.set('key',c.key);u.searchParams.set('callback',cb);u.searchParams.set('_',Date.now());script.src=u.toString();document.head.appendChild(script)})}
+function currentDataHash(){try{return JSON.stringify(window.data||data||{})}catch(_){return ''}}
+async function applyRemote(env,serverStamp){
+ const remoteData=env?.format==='studia-auto-v144'?env.data:env,extras=env?.extras||{};if(!remoteData||typeof remoteData!=='object')throw new Error('Cloud-Daten ungültig.');
+ const before=currentDataHash(),after=JSON.stringify(remoteData);if(before===after){localStorage.setItem(LAST_REMOTE,String(serverStamp||Date.now()));await restoreExtras(extras);return false}
+ syncApplying=true;try{const target=window.data||data;Object.keys(target).forEach(k=>delete target[k]);Object.assign(target,JSON.parse(after));await restoreExtras(extras);const baseSave=window.__v144BaseSave||window.save;window.__v144SuppressNext=true;baseSave?.();localStorage.setItem(LAST_REMOTE,String(serverStamp||Date.now()));setSyncStatus('Neuer Stand geladen ✓');window.cuteToast?.('Änderungen vom anderen Gerät geladen ♡');
+   if(isEditor()&&typeof selectedSheetId!=='undefined'&&selectedSheetId){setTimeout(()=>{try{window.openStudySheetEditor?.(selectedSheetId)}catch(_){window.renderAll?.()}},60)}else{window.renderAll?.()}
+   return true
+ }finally{syncApplying=false}
+}
+async function autoPull(force=false){if(syncBusy||syncApplying)return false;const c=readSyncConfig();if(!c.valid)return false;const now=Date.now();if(!force&&now-lastPullAt<7000)return false;lastPullAt=now;syncBusy=true;try{if(force)setSyncStatus('Prüfe Änderungen …');const result=await jsonpLoad(c);if(!result?.ok){const msg=String(result?.error||'');if(/noch keine|keine Sicherung|Keine Daten/i.test(msg)){await autoPush();return false}throw new Error(msg||'Cloud-Daten konnten nicht geladen werden.')}const stamp=Date.parse(result.updatedAt||'')||0,last=+localStorage.getItem(LAST_REMOTE)||0;if(!force&&stamp&&stamp<=last)return false;const parsed=JSON.parse(result.payload||'{}');const changed=await applyRemote(parsed,stamp||Date.now());if(!changed)setSyncStatus('Synchronisiert ✓');return changed}catch(err){console.warn('[Studia V144] auto pull failed',err);if(force)setSyncStatus(String(err.message||err),true);return false}finally{syncBusy=false}}
+window.v144AutoPull=()=>autoPull(true);window.v144AutoPush=()=>autoPush();
+
+/* Save hook: every real data change schedules cloud upload. */
+try{
+ const baseSave=window.save||save;window.__v144BaseSave=baseSave;window.save=function(){const r=baseSave.apply(this,arguments);if(window.__v144SuppressNext){window.__v144SuppressNext=false;return r}if(!syncApplying){localStorage.setItem(LAST_LOCAL,String(Date.now()));scheduleAutoPush(650)}return r};try{save=window.save}catch(_){ }
+}catch(err){console.warn('[Studia V144] save hook unavailable',err)}
+
+/* No upload/download buttons: setup once, then it stays automatic. */
+window.openAccountDialog=function(){const c=readSyncConfig();window.openModal?.(`<div class="v135Modal v144SyncModal"><div class="v135ModalHead"><div><span class="eyebrow">AUTOMATISCHER SYNC</span><h2>Handy + Laptop</h2></div><button onclick="closeModal()">×</button></div><p>Einmal verbinden. Danach synchronisiert Studia Änderungen automatisch – ohne „Cloud laden“ oder „Hochladen“.</p><div class="v135FormGrid"><label class="full">Apps-Script-Web-App-URL<input id="v144SyncUrl" type="url" placeholder="https://script.google.com/macros/s/…/exec" value="${esc(c.url)}" oninput="v144RememberSyncConfig()"></label><label class="full">Persönlicher Sync-Schlüssel<input id="v144SyncKey" autocomplete="off" placeholder="auf Handy und Laptop exakt gleich" value="${esc(c.key)}" oninput="v144RememberSyncConfig()"></label></div><div class="v144AutoSyncCard"><span class="v144SyncDot"></span><div><b>Automatisch</b><small>Nach jeder Änderung · beim Öffnen · bei Internet-Rückkehr · beim Herunterziehen zum Aktualisieren</small></div></div><div id="v144SyncStatus" class="v140SyncState">${c.valid?'Bereit zur automatischen Synchronisierung':'URL und Schlüssel einmal eintragen'}</div><div class="v135ActionRow"><button class="primary" onclick="v144ConnectSync()">Automatisch verbinden</button></div><details class="v140SyncHelp"><summary>Einmalige Einrichtung</summary><ol><li>In <b>script.google.com</b> ein Projekt erstellen.</li><li><b>google-apps-script/Code.gs</b> aus dieser ZIP hineinkopieren.</li><li>Bereitstellen → Neue Bereitstellung → Web-App.</li><li>Ausführen als „Ich“, Zugriff „Jeder“.</li><li>Die <b>/exec</b>-URL und denselben Schlüssel auf Handy und Laptop eintragen.</li></ol></details></div>`)};
+window.v144RememberSyncConfig=function(){const c=readSyncConfig(true);localStorage.setItem(SYNC_URL,c.url);localStorage.setItem(SYNC_KEY,c.key);setSyncStatus(c.valid?'Automatik bereit ✓':'URL oder Schlüssel noch unvollständig',!c.valid&&!!(c.url||c.key))};
+window.v144ConnectSync=async function(){v144RememberSyncConfig();const c=readSyncConfig();if(!c.valid)return setSyncStatus('Bitte gültige /exec-URL und mindestens 12 Zeichen Schlüssel eingeben.',true);setSyncStatus('Verbindung wird geprüft …');const changed=await autoPull(true);if(!changed)await autoPush();setSyncStatus('Automatischer Sync aktiv ✓');startPolling();setTimeout(()=>window.closeModal?.(),700)};
+/* retire manual cloud buttons/functions */
+window.v140SyncUpload=()=>autoPush();window.v140SyncDownload=()=>autoPull(true);window.v135CloudUpload=()=>autoPush();window.v135CloudDownload=()=>autoPull(true);
+
+function startPolling(){if(pollTimer)clearInterval(pollTimer);if(!readSyncConfig().valid)return;pollTimer=setInterval(()=>{if(document.visibilityState==='visible'&&navigator.onLine!==false)autoPull(false)},15000)}
+window.addEventListener('online',()=>{autoPull(true);scheduleAutoPush(400)});window.addEventListener('focus',()=>autoPull(false));document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')autoPull(false)});window.addEventListener('pageshow',()=>setTimeout(()=>autoPull(false),500));
+
+/* Pull-to-refresh gesture in the app. Safari's own reload also hits pageshow and checks the cloud. */
+let pull=null;function scrollTop(){return Math.max(0,document.scrollingElement?.scrollTop||document.documentElement.scrollTop||0)}
+function pullIndicator(){let el=q('#v144PullSync');if(!el){el=document.createElement('div');el.id='v144PullSync';el.innerHTML='<span>↻</span><b>Zum Aktualisieren ziehen</b>';document.body.appendChild(el)}return el}
+document.addEventListener('touchstart',e=>{if(e.touches.length!==1||scrollTop()>2||isEditor()||q('.modalWrap.show,.modalWrap.open'))return;pull={y:e.touches[0].clientY,d:0}}, {passive:true});
+document.addEventListener('touchmove',e=>{if(!pull||e.touches.length!==1)return;pull.d=Math.max(0,e.touches[0].clientY-pull.y);const el=pullIndicator();el.classList.toggle('ready',pull.d>58);el.style.transform=`translate(-50%,${Math.min(72,pull.d*.55)-78}px)`}, {passive:true});
+document.addEventListener('touchend',()=>{if(!pull)return;const ready=pull.d>58,el=q('#v144PullSync');pull=null;if(el){el.style.transform='translate(-50%,-78px)';el.classList.remove('ready')}if(ready){window.cuteToast?.('Prüfe Änderungen …');autoPull(true)}}, {passive:true});
+
+/* Initial boot */
+ensureGlobalFontInput();loadAllFonts();startPolling();setTimeout(()=>{desktopTextHub();ensureStickerColorUI();if(readSyncConfig().valid)autoPull(false)},1200);
+})();
+/* ===== /Studia V144 ===== */
