@@ -438,7 +438,7 @@ body.v141PropertiesOpen{overflow:hidden!important}
 }
 /* ===== /Studia V143 STABILITY ===== */
 
-/* ===== Studia V144 ===== */
+/* ===== Studia V145 ===== */
 @media(min-width:900px){
  body.editorMode .canvasQuickNav{grid-template-columns:1fr!important;align-content:start!important}
  body.editorMode .canvasQuickNav .v144DesktopHiddenNav{display:none!important}
@@ -456,4 +456,46 @@ body.v141PropertiesOpen{overflow:hidden!important}
 .v144StickerColors{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:7px;align-items:center;margin:0 0 10px;padding:10px;border:1px solid #eadbd5;border-radius:13px;background:#fffaf8}.v144StickerColors>div{display:grid}.v144StickerColors b{font-size:10px}.v144StickerColors small{font-size:8px;color:#9d857d}.v144StickerColors label,.v144StickerColors button{min-height:36px;border:1px solid #eadbd5;border-radius:10px;background:#fff;color:#735f58;padding:5px 8px;font-size:9px;font-weight:850}.v144StickerColors label{display:flex;align-items:center;gap:5px;cursor:pointer}.v144StickerColors input{width:28px;height:24px;border:0;background:none}
 .v144AutoSyncCard{display:flex;align-items:center;gap:10px;margin:10px 0;padding:10px 12px;border:1px solid #dce8cb;border-radius:14px;background:#f7fbed}.v144SyncDot{width:10px;height:10px;border-radius:50%;background:#8fab69;box-shadow:0 0 0 5px rgba(143,171,105,.14)}.v144AutoSyncCard>div{display:grid;gap:2px}.v144AutoSyncCard b{font-size:11px}.v144AutoSyncCard small{font-size:8px;line-height:1.4;color:#83906d}.v144SyncModal .v135ActionRow{justify-content:flex-end}.v140SyncState.error{color:#b45f67!important}
 #v144PullSync{position:fixed;left:50%;top:0;z-index:30000;transform:translate(-50%,-78px);display:flex;align-items:center;gap:7px;padding:9px 12px;border:1px solid #e8d5cf;border-radius:999px;background:rgba(255,251,248,.98);color:#806a61;box-shadow:0 8px 24px rgba(91,65,57,.12);font-size:9px;font-weight:900;transition:transform .16s ease;pointer-events:none}#v144PullSync span{font-size:16px}#v144PullSync.ready{color:#6d8755;border-color:#d7e3c6;background:#f7fbed}
-/* ===== /Studia V144 ===== */
+/* ===== /Studia V145 ===== */
+
+
+/* ===== Studia V145 — mobile font scrolling + mobile print ===== */
+@media(max-width:899px){
+  body.editorMode #mobileTextModeContent.v145FontScrollMode{
+    display:flex!important;flex-direction:column!important;flex:1 1 auto!important;
+    min-height:0!important;height:100%!important;max-height:none!important;
+    overflow:hidden!important;padding:4px 2px 0!important;
+  }
+  body.editorMode #mobileTextModeContent.v145FontScrollMode .v145InlineFontPicker{
+    display:flex!important;flex-direction:column!important;flex:1 1 auto!important;
+    min-height:0!important;height:100%!important;max-height:none!important;overflow:hidden!important;
+  }
+  body.editorMode #mobileTextModeContent.v145FontScrollMode .v96InlineHead,
+  body.editorMode #mobileTextModeContent.v145FontScrollMode .v144InlineUpload{flex:0 0 auto!important}
+  body.editorMode #mobileTextModeContent.v145FontScrollMode .v145FontScrollList{
+    display:grid!important;grid-template-columns:1fr!important;flex:1 1 auto!important;
+    min-height:90px!important;max-height:none!important;height:auto!important;
+    overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important;
+    -webkit-overflow-scrolling:touch!important;touch-action:pan-y!important;
+    padding:2px 2px calc(18px + env(safe-area-inset-bottom))!important;
+  }
+  body.editorMode .canvasTopbar .editorActions>button[title="PDF / Drucken"],
+  body.editorMode .canvasTopbar .editorActions>button[onclick*="printCanvasSheet"]{
+    display:flex!important;width:32px!important;min-width:32px!important;height:32px!important;
+    padding:0!important;border-radius:10px!important;align-items:center!important;justify-content:center!important;
+  }
+  body.editorMode .canvasTopbar .editorActions>button[title="PDF / Drucken"] span,
+  body.editorMode .canvasTopbar .editorActions>button[onclick*="printCanvasSheet"] span{display:none!important}
+}
+/* ===== /Studia V145 ===== */
+
+/* ===== Studia V146 ===== */
+.cobj[contenteditable="true"]{user-select:text!important;-webkit-user-select:text!important;-webkit-touch-callout:default!important;touch-action:auto!important;cursor:text!important}
+@media(min-width:900px){
+ body.editorMode .canvasQuickNav.v146DesktopRail{display:grid!important;grid-template-columns:1fr!important;grid-template-rows:repeat(3,58px)!important;align-content:start!important;gap:4px!important;overflow:hidden!important}
+ body.editorMode .canvasQuickNav.v146DesktopRail>button[data-v146]{display:grid!important;visibility:visible!important;opacity:1!important;width:100%!important;height:58px!important;min-height:58px!important;grid-template-columns:34px minmax(0,1fr)!important;grid-auto-flow:column!important;align-items:center!important;justify-content:start!important;padding:7px 11px!important;pointer-events:auto!important}
+ body.editorMode .canvasQuickNav.v146DesktopRail>button[data-v146]>span:last-child{display:block!important;font-size:10px!important;text-align:left!important;white-space:nowrap!important}
+}
+/* Highlighted text remains selectable while property sheets/toolbars are open. */
+.mobileTextEditor,.v134FormatTools,.v137FormatToolbar,.v144TextPropertiesBody{user-select:none;-webkit-user-select:none}
+/* ===== /Studia V146 ===== */

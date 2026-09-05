@@ -1,4 +1,4 @@
-const CACHE_NAME='studia-shell-v144';
+const CACHE_NAME='studia-shell-v146';
 const SHELL=['./','./index.html','./editor.css','./editor.js','./manifest.webmanifest','./favicon.png','./icon-192.png','./icon-512.png','./apple-touch-icon.png','./assets/stickers/title-1.png','./assets/stickers/title-2.png','./assets/stickers/title-3.png','./assets/stickers/title-4.png','./assets/stickers/pins-1.png','./assets/stickers/pins-2.png','./assets/stickers/notes-1.png','./assets/stickers/notes-2.png','./assets/stickers/notes-3.png','./assets/stickers/notes-4.png','./assets/stickers/notes-5.png','./assets/stickers/notes-6.png','./assets/stickers/notes-7.png','./assets/stickers/rrahmen.svg'];
 self.addEventListener('install',event=>{self.skipWaiting();event.waitUntil(caches.open(CACHE_NAME).then(c=>c.addAll(SHELL).catch(()=>{})))});
 self.addEventListener('activate',event=>{event.waitUntil((async()=>{for(const key of await caches.keys()){if(key!==CACHE_NAME)await caches.delete(key)}await self.clients.claim()})())});
