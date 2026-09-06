@@ -889,3 +889,271 @@ function version(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 149';
 version();setTimeout(version,450);setTimeout(version,1900);
 })();
 /* ===== /Studia V149 ===== */
+
+
+/* ===== Studia V150 — account sync like Auftragshelfer + reliable desktop rail ===== */
+(()=>{
+'use strict';
+if(window.__STUDIA_V150__)return;window.__STUDIA_V150__=true;
+const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const inEditor=()=>document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
+const desktop=()=>innerWidth>=900&&inEditor();
+function setVersion150(){const e=q('#headerEyebrow');if(e){if(e.textContent!=='VERSION 152')e.textContent='VERSION 152';if(e.dataset.v151Watch!=='1'){e.dataset.v151Watch='1';new MutationObserver(()=>{if(e.textContent!=='VERSION 152')e.textContent='VERSION 152'}).observe(e,{childList:true,subtree:true,characterData:true})}}document.documentElement.classList.add('v151Ready');document.title='Studia'}
+setVersion150();setTimeout(setVersion150,300);setTimeout(setVersion150,1800);
+
+/* Disable the older key-based V145 transport. Its local save hooks may remain,
+   but without the old key it cannot make network requests. */
+try{localStorage.removeItem('studia-gas-key');localStorage.setItem('studia-sync-auto','0')}catch(_){ }
+
+/* ---------- laptop rail: independent from all historical .canvasQuickNav rebuilders ---------- */
+const railHTML=`
+<button data-v151="text" aria-label="Text"><span class="editorNavIcon"><svg viewBox="0 0 24 24"><path d="M5 5h14M12 5v14M8.5 19h7"/></svg></span><span>Text</span></button>
+<button data-v151="elements" aria-label="Elemente"><span class="editorNavIcon"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1.4"/><circle cx="17" cy="7" r="3"/><path d="M4.5 19l3.2-5.5L11 19zM14 14h6v6h-6z"/></svg></span><span>Elemente</span></button>
+<button data-v151="templates" aria-label="Vorlagen"><span class="editorNavIcon"><svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="15" rx="2"/><path d="M9 8h6M9 11h6M9 14h4"/></svg></span><span>Vorlagen</span></button>`;
+let v151RailMode='elements';
+function injectDesktopTextTools(){
+ const d=q('#canvasQuickDrawer');if(!desktop()||!d)return;
+ if(!/Textformate|TEXT|Textformat/.test(d.textContent||''))return;
+ qa('.v144DesktopTextHub,.v139TextHeaderTools,.v140TextTools,.v128DesktopParityBar,.v129DesktopTextExtras,.v121DesktopFontActions,.v123DesktopTextActions,.v132DesktopTextExtras',d).forEach(x=>x.remove());
+ if(q('.v150DesktopTextTools',d))return;
+ const hub=document.createElement('div');hub.className='v150DesktopTextTools';
+ hub.innerHTML=`<button type="button" onclick="v144OpenFontBrowser()"><span class="v150TextToolIcon">Aa</span><span><strong>Schriften</strong><small>Vorschau & auswählen</small></span></button>
+ <label class="v150FontUpload"><span class="v150TextToolIcon">＋</span><span><strong>Schrift hinzufügen</strong><small>TTF · OTF · WOFF · WOFF2</small></span><input type="file" accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2" onchange="v150FontPicked(this)"></label>
+ <button class="v150TextFormatsAction" type="button" onclick="createCustomStylePreset()"><span class="v150TextToolIcon">H1</span><span><strong>Textformat erstellen</strong><small>Eigenes Format speichern</small></span></button>`;
+ d.prepend(hub);
+}
+window.v150FontPicked=async function(input){
+ try{
+   if(typeof window.v144HandleFontFile==='function')await window.v144HandleFontFile(input);
+   else throw new Error('Schrift-Import ist nicht geladen.');
+ }catch(err){console.error('[Studia] font import',err);alert('Schrift konnte nicht hinzugefügt werden: '+String(err?.message||err))}
+ finally{v150FontCacheDirty=true;v150MarkDirty(450);setTimeout(injectDesktopTextTools,80)}
+};
+function openV151Panel(mode,btn){
+ if(!desktop())return;
+ v151RailMode=mode;
+ qa('#v151DesktopRail button[data-v151]').forEach(b=>b.classList.toggle('active',b===btn));
+ /* Let V134 keep its internal desktop mode in sync, but the visible rail itself is ours. */
+ try{
+   if(typeof window.v134Open==='function')window.v134Open(mode,btn);
+   else if(typeof window.v132Open==='function')window.v132Open(mode,btn);
+   else if(typeof window.editorOpenGroup==='function')window.editorOpenGroup(mode==='text'?'textLibrary':mode,btn);
+ }catch(err){console.warn('[Studia V151] open panel fallback',err);try{window.editorOpenGroup?.(mode==='text'?'textLibrary':mode,btn)}catch(_){}}
+ /* Clicking Text always means the text-format library, even when a text object is selected. */
+ if(mode==='text'){
+   try{window.editorOpenGroup?.('textLibrary',btn)}catch(_){ }
+   setTimeout(injectDesktopTextTools,0);setTimeout(injectDesktopTextTools,80);
+ }
+ if(mode==='templates')setTimeout(()=>{try{window.renderPageTemplates?.()}catch(_){}},30);
+}
+window.v151OpenRail=openV151Panel;
+window.v150OpenRail=openV151Panel;
+function ensureDesktopRail(){
+ if(!desktop())return;
+ const left=q('.v102DesktopLeft'),drawer=q('#canvasQuickDrawer');if(!left||!drawer)return;
+ let rail=q('#v151DesktopRail',left);
+ if(!rail){rail=document.createElement('nav');rail.id='v151DesktopRail';rail.className='v150DesktopRail v151DesktopRail';rail.setAttribute('aria-label','Editor-Werkzeuge');rail.innerHTML=railHTML;left.insertBefore(rail,drawer)}
+ if(qa('button[data-v151]',rail).length!==3)rail.innerHTML=railHTML;
+ qa('button[data-v151]',rail).forEach(b=>{b.onclick=e=>{e.preventDefault();e.stopPropagation();openV151Panel(b.dataset.v151,b)}});
+ const active=rail.querySelector(`[data-v151="${v151RailMode}"]`)||rail.querySelector('[data-v151="elements"]');qa('button[data-v151]',rail).forEach(b=>b.classList.toggle('active',b===active));
+ if(!rail.dataset.opened){rail.dataset.opened='1';setTimeout(()=>openV151Panel(v151RailMode,active),0)}
+ if(v151RailMode==='text')setTimeout(injectDesktopTextTools,0);
+}
+let railScheduled=false;function scheduleRail(){if(railScheduled)return;railScheduled=true;requestAnimationFrame(()=>{railScheduled=false;ensureDesktopRail()})}
+const railObserver=new MutationObserver(()=>{if(desktop()&&!q('#v151DesktopRail'))scheduleRail()});railObserver.observe(document.body,{childList:true,subtree:true});
+document.addEventListener('click',e=>{if(e.target.closest?.('#v151DesktopRail [data-v151="text"]'))setTimeout(injectDesktopTextTools,20)},false);
+window.addEventListener('resize',()=>setTimeout(scheduleRail,80));
+const baseRender150=window.renderSheetEditor;if(baseRender150)window.renderSheetEditor=function(){const r=baseRender150.apply(this,arguments);setTimeout(scheduleRail,140);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){ }
+setTimeout(scheduleRail,150);
+
+/* ---------- username/password account sync ---------- */
+const URL_KEY='studia-gas-url';
+const TOKEN_KEY='studia-account-token-v150';
+const USER_KEY='studia-account-username-v150';
+const DEVICE_KEY='studia-account-device-v150';
+const LAST_REMOTE='studia-account-last-remote-v150';
+const LAST_LOCAL='studia-account-last-local-v150';
+const TECH_PREFIXES=['studia-account-','studia-auto-','studia-sync-','studia-local-backup-','studia-daily-backup-'];
+let v150User=null,v150Busy=false,v150Applying=false,v150DirtyAt=0,v150PushTimer=null,v150Poll=null,v150LastCheck=0;
+let v150FileCache=null,v150FilesDirty=true,v150FontCache=null,v150FontCacheDirty=true;
+const token=()=>String(localStorage.getItem(TOKEN_KEY)||'');
+const username=()=>String(localStorage.getItem(USER_KEY)||'');
+function scriptUrl(){const saved=String(localStorage.getItem(URL_KEY)||'').trim(),file=String(window.STUDIA_SYNC_CONFIG?.scriptUrl||'').trim();return (saved||file).replace(/\/$/,'')}
+function urlValid(u=scriptUrl()){return /^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec(?:\?.*)?$/.test(String(u||''))}
+function accountConfigured(){return urlValid()&&!!token()}
+function deviceId(){let d=localStorage.getItem(DEVICE_KEY);if(!d){d=crypto.randomUUID?.()||'dev-'+Date.now().toString(36)+Math.random().toString(36).slice(2);localStorage.setItem(DEVICE_KEY,d)}return d}
+function accountStatus(text,bad=false){const el=q('#v150AccountStatus');if(el){el.textContent=text;el.classList.toggle('error',bad)}}
+function actionFor(path,method='GET'){const m=String(method).toUpperCase(),map={'/api/me':'me','/api/state':'state','/api/state/meta':'state_meta','/api/auth/register':'register','/api/auth/login':'login','/api/auth/recover':'recover'};if(path==='/api/state'&&m!=='GET')return'state_put';return map[path]||''}
+async function request(path,options={}){
+ const base=scriptUrl();if(!urlValid(base))throw new Error('Apps-Script-Web-App-URL fehlt oder ist keine /exec-URL.');
+ const method=String(options.method||'GET').toUpperCase(),action=actionFor(path,method);if(!action)throw new Error('Unbekannte Sync-Aktion.');let response;
+ if(method==='GET'){
+   const u=new URL(base);u.searchParams.set('action',action);if(token())u.searchParams.set('token',token());for(const[k,v]of Object.entries(options.query||{}))if(v!==undefined&&v!==null)u.searchParams.set(k,String(v));u.searchParams.set('_',Date.now());
+   response=await fetch(u.toString(),{method:'GET',redirect:'follow',cache:'no-store'});
+ }else{
+   let payload={};if(options.body){if(typeof options.body==='string'){try{payload=JSON.parse(options.body)}catch{payload={value:options.body}}}else payload=options.body}
+   payload.action=action;if(token())payload.token=token();
+   response=await fetch(base,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
+ }
+ const raw=await response.text();let data;try{data=JSON.parse(raw)}catch{throw new Error('Google-Sync hat keine gültige Antwort geliefert. Prüfe die Apps-Script-Bereitstellung.')}
+ if(data?.ok===false){const err=new Error(data.error||'Synchronisierung fehlgeschlagen.');err.status=Number(data.status||400);throw err}return data;
+}
+function syncKey(k){k=String(k||'');if(!(k.startsWith('schoolhub')||k.startsWith('schoolbloom')||k.startsWith('studia-')))return false;if(k===URL_KEY||k===TOKEN_KEY||k===USER_KEY||k===DEVICE_KEY||k===LAST_REMOTE||k===LAST_LOCAL||k==='studia-gas-key')return false;if(TECH_PREFIXES.some(p=>k.startsWith(p)))return false;return true}
+function packLocalStorage(){const out={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&syncKey(k))out[k]=localStorage.getItem(k)}return out}
+function fastHash(s){let h=2166136261>>>0;s=String(s||'');for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return(h>>>0).toString(36)}
+function blobToData(blob){return new Promise((res,rej)=>{if(!blob)return res('');const r=new FileReader();r.onload=()=>res(String(r.result||''));r.onerror=()=>rej(r.error);r.readAsDataURL(blob)})}
+function dataToBlob(url){const [head,body]=String(url||'').split(',');if(!body)return new Blob([]);const mime=(head.match(/data:([^;]+)/)||[])[1]||'application/octet-stream',bin=atob(body),u8=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u8[i]=bin.charCodeAt(i);return new Blob([u8],{type:mime})}
+async function readFiles(){if(!v150FilesDirty&&v150FileCache)return v150FileCache;try{const db=await dbOpen();const rows=await new Promise((res,rej)=>{const r=db.transaction(STORE).objectStore(STORE).getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>rej(r.error)}),out=[];for(const f of rows)out.push({id:f.id,name:f.name||'',type:f.type||f.blob?.type||'',data:await blobToData(f.blob||new Blob([]))});v150FileCache=out;v150FilesDirty=false;return out}catch(err){console.warn('[V150] files',err);return[]}}
+function fontDB150(){return new Promise((res,rej)=>{const r=indexedDB.open('studia-fonts-v144',1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains('fonts'))r.result.createObjectStore('fonts',{keyPath:'name'})};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+async function readFonts(){if(!v150FontCacheDirty&&v150FontCache)return v150FontCache;try{const db=await fontDB150(),rows=await new Promise((res,rej)=>{const r=db.transaction('fonts').objectStore('fonts').getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>rej(r.error)});v150FontCache=rows;v150FontCacheDirty=false;return rows}catch(_){return[]}}
+async function envelope(){const ls=packLocalStorage(),files=await readFiles(),fonts=await readFonts(),updatedAt=v150DirtyAt||Date.now(),stateHash=fastHash(JSON.stringify(ls)+'|'+files.map(f=>f.id+':'+String(f.data||'').length).join('|')+'|'+fonts.map(f=>f.name+':'+String(f.data||'').length).join('|'));return{format:'studia-account-full-v151',version:151,updatedAt,deviceId:deviceId(),stateHash,state:{localStorage:ls,files,fonts}}}
+async function clearAndRestoreFiles(files){try{const db=await dbOpen();await new Promise((res,rej)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).clear();tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error)});for(const f of files||[])await dbPut({id:f.id,name:f.name||'',type:f.type||'',blob:dataToBlob(f.data||'')});v150FileCache=files||[];v150FilesDirty=false}catch(err){console.warn('[V150] restore files',err)}}
+async function clearAndRestoreFonts(fonts){try{const db=await fontDB150();await new Promise((res,rej)=>{const tx=db.transaction('fonts','readwrite');const st=tx.objectStore('fonts');st.clear();for(const f of fonts||[])if(f?.name&&f?.data)st.put(f);tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error)});v150FontCache=fonts||[];v150FontCacheDirty=false;for(const f of fonts||[]){if(!f?.name||!f?.data)continue;try{if('FontFace'in window&&document.fonts){const face=new FontFace(f.name,`url(${JSON.stringify(f.data)})`);await face.load();document.fonts.add(face)}}catch(_){const sid='v150-font-'+f.name.replace(/[^a-z0-9_-]/gi,'-');if(!q('#'+CSS.escape(sid))){const st=document.createElement('style');st.id=sid;st.textContent=`@font-face{font-family:${JSON.stringify(f.name)};src:url(${JSON.stringify(f.data)});font-display:swap}`;document.head.appendChild(st)}}}try{window.v91LoadFonts?.()}catch(_){ }}catch(err){console.warn('[V150] restore fonts',err)}}
+async function applyEnvelope(env,serverUpdated){if(!env?.state?.localStorage)throw new Error('Cloud-Stand ist ungültig.');v150Applying=true;try{const remote=env.state.localStorage;for(let i=localStorage.length-1;i>=0;i--){const k=localStorage.key(i);if(k&&syncKey(k)&&!(k in remote))localStorage.removeItem(k)}for(const[k,v]of Object.entries(remote))if(syncKey(k))localStorage.setItem(k,String(v));const main=remote['schoolhub-v1'];if(main){try{const parsed=JSON.parse(main),target=window.data||data;Object.keys(target).forEach(k=>delete target[k]);Object.assign(target,parsed)}catch(err){console.warn('[V150] data parse',err)}}await clearAndRestoreFiles(env.state.files||[]);await clearAndRestoreFonts(env.state.fonts||[]);localStorage.setItem(LAST_REMOTE,String(Number(serverUpdated||env.updatedAt||Date.now())));v150DirtyAt=0;window.renderAll?.();if(inEditor()&&typeof selectedSheetId!=='undefined'&&selectedSheetId&&(window.data||data)?.studySheets?.some(x=>x.id===selectedSheetId))setTimeout(()=>window.openStudySheetEditor?.(selectedSheetId),80);return true}finally{v150Applying=false}}
+function v150MarkDirty(delay=700){if(v150Applying)return;v150DirtyAt=Date.now();try{localStorage.setItem(LAST_LOCAL,String(v150DirtyAt))}catch(_){ }clearTimeout(v150PushTimer);if(accountConfigured())v150PushTimer=setTimeout(v150Push,delay)}
+window.v150MarkDirty=v150MarkDirty;
+async function v150Push(){if(v150Busy||v150Applying||!v150DirtyAt||!accountConfigured()||navigator.onLine===false)return false;v150Busy=true;try{accountStatus('Synchronisiert …');const env=await envelope(),r=await request('/api/state',{method:'PUT',body:{data:env}});localStorage.setItem(LAST_REMOTE,String(Number(r.updatedAt||Date.now())));v150DirtyAt=0;accountStatus('✓ Automatisch synchronisiert');return true}catch(err){console.warn('[V150] push',err);accountStatus(navigator.onLine===false?'Offline – wird später synchronisiert':'Sync-Fehler – versucht es automatisch erneut',true);return false}finally{v150Busy=false}}
+async function v150Pull(force=false){if(v150Busy||v150Applying||!accountConfigured()||navigator.onLine===false)return false;if(v150DirtyAt){v150MarkDirty(250);return false}const now=Date.now();if(!force&&now-v150LastCheck<3500)return false;v150LastCheck=now;v150Busy=true;try{if(force)accountStatus('Prüfe Änderungen …');const meta=await request('/api/state/meta');const remoteAt=Number(meta.updatedAt||0),last=Number(localStorage.getItem(LAST_REMOTE)||0);if(!force&&remoteAt<=last){accountStatus('✓ Automatisch synchronisiert');return false}const r=await request('/api/state');if(!r.data){v150DirtyAt=Date.now();setTimeout(v150Push,0);return false}await applyEnvelope(r.data,Number(r.updatedAt||remoteAt||Date.now()));accountStatus('✓ Automatisch synchronisiert');window.cuteToast?.('Alle Geräte sind aktuell ♡');return true}catch(err){console.warn('[V150] pull',err);if(err.status===401){localStorage.removeItem(TOKEN_KEY);v150User=null;accountStatus('Anmeldung muss erneuert werden.',true)}else accountStatus(navigator.onLine===false?'Offline – wird später synchronisiert':'Sync-Fehler – versucht es automatisch erneut',true);return false}finally{v150Busy=false}}
+window.v150Push=v150Push;window.v150Pull=()=>v150Pull(true);
+function startAccountPolling(){if(v150Poll)clearInterval(v150Poll);if(!accountConfigured())return;v150Poll=setInterval(()=>{if(document.visibilityState==='visible')v150Pull(false)},10000);setTimeout(()=>v150Pull(true),700)}
+
+async function initAccount(){if(!accountConfigured())return;try{const me=await request('/api/me');v150User=me.user;localStorage.setItem(USER_KEY,v150User?.username||username());startAccountPolling()}catch(err){console.warn('[V150] account init',err);if(err.status===401){localStorage.removeItem(TOKEN_KEY);v150User=null}}}
+window.v150RememberUrl=function(){const field=q('#v150ScriptUrl'),u=String(field?.value||scriptUrl()||'').trim().replace(/\/$/,'');if(field&&u)localStorage.setItem(URL_KEY,u);accountStatus(urlValid(u)?'Web-App verbunden ✓':'Bitte eine gültige /exec-URL eintragen.',!urlValid(u));return urlValid(u)};
+window.v150Login=async function(){const u=String(q('#v150Username')?.value||'').trim(),p=String(q('#v150Password')?.value||'');v150RememberUrl();if(!u||p.length<8)return accountStatus('Benutzername und Passwort (mind. 8 Zeichen) eingeben.',true);try{accountStatus('Anmelden …');const r=await request('/api/auth/login',{method:'POST',body:{username:u,password:p}});localStorage.setItem(TOKEN_KEY,r.token);localStorage.setItem(USER_KEY,r.user?.username||u);v150User=r.user;accountStatus('Angemeldet · lade deine Studia-Daten …');const state=await request('/api/state');if(state.data)await applyEnvelope(state.data,Number(state.updatedAt||Date.now()));else{v150DirtyAt=Date.now();await v150Push()}startAccountPolling();window.closeModal?.();window.cuteToast?.('Dauerhaft angemeldet ♡')}catch(err){accountStatus(String(err.message||err),true)}};
+window.v150Register=async function(){const u=String(q('#v150Username')?.value||'').trim(),p=String(q('#v150Password')?.value||'');v150RememberUrl();if(u.length<3||p.length<8)return accountStatus('Benutzername mind. 3 Zeichen, Passwort mind. 8 Zeichen.',true);try{accountStatus('Konto wird erstellt …');const r=await request('/api/auth/register',{method:'POST',body:{username:u,password:p}});localStorage.setItem(TOKEN_KEY,r.token);localStorage.setItem(USER_KEY,r.user?.username||u);v150User=r.user;v150DirtyAt=Date.now();await v150Push();startAccountPolling();window.openModal?.(`<div class="v135Modal v150AccountModal"><div class="v135ModalHead"><div><span class="eyebrow">KONTO ERSTELLT</span><h2>Wiederherstellungscode</h2></div><button onclick="closeModal()">×</button></div><p>Diesen Code sicher speichern. Damit kannst du dein Passwort zurücksetzen, falls du es vergisst.</p><div class="v150AccountState" style="font-size:14px;letter-spacing:.08em;text-align:center">${esc(r.recoveryCode||'')}</div><div class="v150PermanentNote"><b>✓ Dauerhaft</b><span>Du bleibst auf diesem Gerät angemeldet und Studia synchronisiert automatisch.</span></div></div>`)}catch(err){accountStatus(String(err.message||err),true)}};
+window.openAccountDialog=function(){const logged=!!token(),name=v150User?.username||username(),url=scriptUrl();window.openModal?.(`<div class="v135Modal v150AccountModal"><div class="v135ModalHead"><div><span class="eyebrow">KONTO & SYNC</span><h2>Studia-Konto</h2></div><button onclick="closeModal()">×</button></div>${logged?`<div class="v150AccountHero"><span class="v150AccountAvatar">S</span><div><b>${esc(name||'Studia')}</b><small>dauerhaft angemeldet</small></div></div><div class="v150PermanentNote"><b>✓ Immer Sync</b><span>Fächer, Themen, Lernblätter, Hausaufgaben, Editor-Texte, Karteikarten, Quizze, Tests, Einstellungen, Schriften und Dateien werden automatisch auf allen Geräten gleich gehalten.</span></div><div id="v150AccountStatus" class="v150AccountState">✓ Automatisch synchronisiert</div>`:`<div class="v150AccountForm"><label>Benutzername<input id="v150Username" autocomplete="username" minlength="3" maxlength="32" value="${esc(name)}" placeholder="z. B. Stella"></label><label>Passwort<input id="v150Password" type="password" autocomplete="current-password" minlength="8" placeholder="mindestens 8 Zeichen"></label></div><div id="v150AccountStatus" class="v150AccountState">Mit demselben Konto auf Handy und Laptop anmelden.</div><div class="v150AccountActions"><button class="primary" onclick="v150Login()">Anmelden</button><button onclick="v150Register()">Konto erstellen</button></div>`}${urlValid(String(window.STUDIA_SYNC_CONFIG?.scriptUrl||''))?'':`<details class="v150AccountSetup" ${urlValid(url)?'':'open'}><summary>Einmalige Google-Sync-Einrichtung</summary><div class="v150AccountForm"><label>Apps-Script-Web-App-URL<input id="v150ScriptUrl" type="url" value="${esc(url)}" placeholder="https://script.google.com/macros/s/…/exec" oninput="v150RememberUrl()"></label><small>Wenn du die URL einmal in google-sync-config.js einträgst, brauchst du sie auf keinem Gerät mehr einzugeben.</small></div></details>`}</div>`)};
+
+/* Automatic save hooks. The old V145 functions remain local-only because its key
+   was disabled above. */
+try{const prev=window.save||save;window.save=function(){const r=prev.apply(this,arguments);v150MarkDirty(650);return r};try{save=window.save}catch(_){ }}catch(_){ }
+try{const prevSet=Storage.prototype.setItem,prevRemove=Storage.prototype.removeItem;Storage.prototype.setItem=function(k,v){const r=prevSet.call(this,k,v);if(this===localStorage&&!v150Applying&&syncKey(k))v150MarkDirty(750);return r};Storage.prototype.removeItem=function(k){const r=prevRemove.call(this,k);if(this===localStorage&&!v150Applying&&syncKey(k))v150MarkDirty(750);return r}}catch(_){ }
+try{const prevPut=window.dbPut||dbPut,prevDelete=window.dbDelete||dbDelete;window.dbPut=async function(){const r=await prevPut.apply(this,arguments);if(!v150Applying){v150FilesDirty=true;v150MarkDirty(650)}return r};window.dbDelete=async function(){const r=await prevDelete.apply(this,arguments);if(!v150Applying){v150FilesDirty=true;v150MarkDirty(650)}return r};try{dbPut=window.dbPut;dbDelete=window.dbDelete}catch(_){ }}catch(_){ }
+if(typeof window.v144HandleFontFile==='function'){const prevFont=window.v144HandleFontFile;window.v144HandleFontFile=async function(){const r=await prevFont.apply(this,arguments);v150FontCacheDirty=true;v150MarkDirty(450);return r}}
+document.addEventListener('input',e=>{if(e.target?.closest?.('#v150Username,#v150Password,#v150ScriptUrl'))return;v150MarkDirty(900)},true);
+document.addEventListener('change',e=>{if(e.target?.closest?.('#v150Username,#v150Password,#v150ScriptUrl'))return;v150MarkDirty(450)},true);
+document.addEventListener('pointerup',e=>{if(inEditor()&&e.target?.closest?.('#canvasViewport'))v150MarkDirty(650)},true);
+window.addEventListener('online',()=>{if(v150DirtyAt)setTimeout(v150Push,350);else v150Pull(true)});window.addEventListener('focus',()=>v150Pull(false));window.addEventListener('pageshow',()=>setTimeout(()=>v150Pull(false),250));document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')v150Pull(false)});
+
+/* pull down outside editor -> immediately check the account cloud */
+let pull150=null;function scrollTop150(){return Math.max(0,document.scrollingElement?.scrollTop||document.documentElement.scrollTop||0)}
+function indicator150(){let x=q('#v150PullSync');if(!x){x=document.createElement('div');x.id='v150PullSync';x.innerHTML='<span>↻</span><b>Zum Synchronisieren ziehen</b>';document.body.appendChild(x)}return x}
+document.addEventListener('touchstart',e=>{if(!accountConfigured()||e.touches.length!==1||scrollTop150()>2||inEditor()||q('.modalWrap.show,.modalWrap.open'))return;pull150={y:e.touches[0].clientY,d:0}},{passive:true});
+document.addEventListener('touchmove',e=>{if(!pull150||e.touches.length!==1)return;pull150.d=Math.max(0,e.touches[0].clientY-pull150.y);const x=indicator150();x.classList.toggle('ready',pull150.d>62);x.style.transform=`translate(-50%,${Math.min(76,pull150.d*.56)-82}px)`},{passive:true});
+document.addEventListener('touchend',()=>{if(!pull150)return;const ready=pull150.d>62,x=q('#v150PullSync');pull150=null;if(x){x.style.transform='translate(-50%,-82px)';x.classList.remove('ready')}if(ready){window.cuteToast?.('Prüfe alle Geräte …');v150Pull(true)}},{passive:true});
+
+function polishAccountSettings(){
+ const view=q('#view-settings');if(!view)return;const box=q('.v137CloudSettings',view);if(!box)return;
+ box.classList.add('v141GoogleSyncCard');
+ box.innerHTML=`<div class="v141SettingsTitle"><span>☁</span><div><h2>Studia-Konto</h2><p class="small">Benutzername + Passwort · dauerhaft angemeldet · automatische Synchronisierung auf allen Geräten.</p></div></div><button class="primary" onclick="openAccountDialog()">Konto & Sync öffnen</button>`;
+}
+const accountSettingsObserver=new MutationObserver(()=>{if(q('#view-settings.active'))requestAnimationFrame(polishAccountSettings)});accountSettingsObserver.observe(document.body,{attributes:true,attributeFilter:['class'],subtree:true});
+setTimeout(polishAccountSettings,500);
+setTimeout(()=>{ensureDesktopRail();initAccount();polishAccountSettings();setVersion150()},350);
+})();
+/* ===== /Studia V150 ===== */
+
+/* ===== Studia V152 — direct desktop panels + real partial text editing ===== */
+(()=>{
+'use strict';
+if(window.__STUDIA_V152__)return;window.__STUDIA_V152__=true;
+const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const desktop=()=>innerWidth>=900&&document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
+const mobile=()=>innerWidth<900&&document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
+const textKinds=new Set(['text','block','task','merke','file']);
+function st(){try{return typeof canvasState!=='undefined'?canvasState:window.canvasState}catch(_){return window.canvasState}}
+function textObj(id){return (st()?.objects||[]).find(o=>String(o.id)===String(id)&&textKinds.has(o.kind)&&!o.isChecklist)||null}
+function selectedText(){const s=st();return s?.selectedType==='object'?textObj(s.selectedId):null}
+function textEl(id){return q(`.cobj[data-id="${CSS.escape(String(id))}"]`)}
+
+/* ---------- Desktop rail panels: no legacy drawer router ---------- */
+let panelMode='elements';
+function panelShell(title,kicker,body){return `<div class="v152Panel"><div class="v152PanelHead"><div><span>${esc(kicker)}</span><b>${esc(title)}</b></div></div><div class="v152PanelScroll">${body}</div></div>`}
+function textPanel(){
+ const presets=typeof window.canvasPresets==='function'?window.canvasPresets():[];
+ const cards=presets.map(p=>`<button class="v152TextFormatCard" type="button" onclick="${p.bundle?`insertSavedTextFormat('${esc(p.id)}')`:`addCanvasText('${esc(p.id)}')`}"><span class="v152FormatGlyph" style="font-family:${esc(p.fontFamily||'Arial')};font-weight:${esc(p.fontWeight||700)};color:${esc(p.color||'#725b53')}">${p.id==='h1'?'H1':p.id==='h2'?'H2':'Aa'}</span><span><b>${esc(p.name||'Textformat')}</b><small>${p.bundle?'Gruppe':p.type==='block'?'Text + Kasten':'Text'}</small></span></button>`).join('');
+ return panelShell('Text','TEXT',`<div class="v152TextActions">
+   <button type="button" onclick="window.v144OpenFontBrowser?.()"><span class="v152ToolGlyph">Aa</span><span><b>Schriften</b><small>Vorschau & auswählen</small></span></button>
+   <label><span class="v152ToolGlyph">＋</span><span><b>Schrift hinzufügen</b><small>TTF · OTF · WOFF · WOFF2</small></span><input type="file" accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2" onchange="v152FontPicked(this)"></label>
+   <button type="button" onclick="createCustomStylePreset()"><span class="v152ToolGlyph">H1</span><span><b>Textformat erstellen</b><small>Eigenes Format speichern</small></span></button>
+ </div><div class="v152SectionTitle"><b>Textformate</b><button type="button" onclick="openTextFormatManager()">Verwalten</button></div><div class="v152TextFormatList">${cards||'<div class="v152Empty">Noch keine Textformate.</div>'}</div><button class="v152WideAction" type="button" onclick="createCustomStylePreset()">＋ Neues Textformat</button>`)
+}
+function templatePanel(){
+ let own=[];try{own=JSON.parse(localStorage.getItem('schoolbloom-page-templates')||'[]')}catch(_){own=[]}
+ const defs=[['clean','Clean Notes','Klare Überschrift + Merkkasten','clean'],['cute','Cute Study','Pastell, Sticker und Aufgabe','cute'],['exam','Exam Prep','Definitionen + Aufgaben','exam'],['blank','Leer','Komplett frei gestalten','blank']];
+ const built=defs.map(([id,name,desc,kind])=>`<button class="v152TemplateCard" type="button" onclick="applyCanvasTemplate('${id}')"><span class="v152TemplatePreview ${kind}"><i></i><i></i><i></i></span><span><b>${name}</b><small>${desc}</small></span></button>`).join('');
+ const custom=own.map(t=>`<button class="v152TemplateCard" type="button" onclick="applySavedPageTemplate('${esc(t.id)}')"><span class="v152TemplatePreview own"><i></i><i></i><i></i></span><span><b>${esc(t.name||'Eigene Vorlage')}</b><small>Eigene Seitenvorlage</small></span></button>`).join('');
+ return panelShell('Vorlagen','VORLAGEN',`<div class="v152TemplateActions"><button type="button" onclick="saveCurrentPageTemplate()">＋ Aktuelle Seite als Vorlage</button><button type="button" onclick="openPageTemplateManager()">Verwalten</button></div><div class="v152SectionTitle"><b>Vorlagen auswählen</b><span>${defs.length+own.length} Vorlagen</span></div><div class="v152TemplateList">${built}${custom}</div>`)
+}
+function tile(label,symbol,action){return `<button class="v152ElementTile" type="button" data-v152-label="${esc(label.toLowerCase())}" onclick="${action}"><span>${symbol}</span><b>${esc(label)}</b></button>`}
+function elementsPanel(){
+ const sections=[
+  ['Basis',[['Textfeld','T','addCanvasTextBox()'],['Bild / Foto','▧','openCanvasMediaPicker()'],['Datei','⌁',"document.getElementById('canvasAnyFileInput')?.click()"],['Checkliste','☑','addCanvasChecklist()']]],
+  ['Formen',[['Rechteck','□',"addVectorShape('rect')"],['Kreis','○',"addVectorShape('ellipse')"],['Dreieck','△',"addVectorShape('triangle')"],['Linie','—',"window.addVectorLine?.()||addCanvasDivider()"],['Kurve','〰',"window.addVectorCurve?.()||window.setVectorTool?.('pen')"],['Stern','☆','window.addRoundedStar?.()']]],
+  ['Lernen & Mathe',[['Formel','∑','openFormulaDialog()'],['Graph','⌁','openGraphDialog()'],['Tabelle','▦','openTableDialog()'],['Trennlinie','—','addCanvasDivider()']]],
+  ['Deko',[['Sticker','✿','toggleStickerPanel()'],['Klebeband','▰','addTapeSticker()'],['Kariert','▩',"addPaperSticker('grid')"],['Liniert','≡',"addPaperSticker('line')"]]]
+ ];
+ const body=`<label class="v152Search">⌕<input type="search" placeholder="Elemente suchen" oninput="v152FilterElements(this.value)"></label>${sections.map(([title,items])=>`<section class="v152ElementSection"><div class="v152SectionTitle"><b>${title}</b></div><div class="v152ElementGrid">${items.map(x=>tile(...x)).join('')}</div></section>`).join('')}<div class="v152Empty v152ElementEmpty" hidden>Keine passenden Elemente.</div>`;
+ return panelShell('Elemente','ELEMENTE',body)
+}
+window.v152FilterElements=function(value){const term=String(value||'').trim().toLowerCase(),d=q('#canvasQuickDrawer');let n=0;qa('.v152ElementTile',d).forEach(b=>{const ok=!term||(b.dataset.v152Label||'').includes(term);b.hidden=!ok;if(ok)n++});qa('.v152ElementSection',d).forEach(s=>s.hidden=!qa('.v152ElementTile:not([hidden])',s).length);const empty=q('.v152ElementEmpty',d);if(empty)empty.hidden=!!n};
+window.v152OpenPanel=function(mode){if(!desktop())return false;if(!['text','elements','templates'].includes(mode))mode='elements';panelMode=mode;const d=q('#canvasQuickDrawer');if(!d)return false;d.classList.add('open','v152DesktopDrawer');d.classList.remove('v147DesktopDrawer');d.dataset.v152Mode=mode;d.innerHTML=mode==='text'?textPanel():mode==='templates'?templatePanel():elementsPanel();document.body.classList.add('editorDrawerOpen');qa('#v151DesktopRail button[data-v151]').forEach(b=>b.classList.toggle('active',b.dataset.v151===mode));return true};
+window.v152FontPicked=async function(input){try{if(!input?.files?.[0])return;if(typeof window.v144HandleFontFile!=='function')throw new Error('Schrift-Import ist nicht geladen.');await window.v144HandleFontFile(input);window.cuteToast?.('Schrift hinzugefügt ♡');setTimeout(()=>window.v152OpenPanel('text'),80)}catch(err){console.error('[Studia V152] font import',err);alert('Schrift konnte nicht hinzugefügt werden: '+String(err?.message||err))}finally{if(input)input.value=''}};
+function ensureV152Rail(){if(!desktop())return null;const left=q('.v102DesktopLeft'),drawer=q('#canvasQuickDrawer');if(!left||!drawer)return null;let rail=q('#v151DesktopRail',left);if(!rail){rail=document.createElement('nav');rail.id='v151DesktopRail';rail.className='v150DesktopRail v151DesktopRail';rail.setAttribute('aria-label','Editor-Werkzeuge');rail.innerHTML=`<button data-v151="text" aria-label="Text"><span class="editorNavIcon">Aa</span><span>Text</span></button><button data-v151="elements" aria-label="Elemente"><span class="editorNavIcon">◇</span><span>Elemente</span></button><button data-v151="templates" aria-label="Vorlagen"><span class="editorNavIcon">▧</span><span>Vorlagen</span></button>`;left.insertBefore(rail,drawer)}return rail}
+window.v152EnsureRail=ensureV152Rail;
+/* Capture before the old V151 bubble handler: Text/Vorlagen always open our real panel. */
+document.addEventListener('click',e=>{if(!desktop())return;const b=e.target instanceof Element?e.target.closest('#v151DesktopRail button[data-v151]'):null;if(!b)return;e.preventDefault();e.stopImmediatePropagation();window.v152OpenPanel(b.dataset.v151)},true);
+setTimeout(()=>{if(desktop()){ensureV152Rail();window.v152OpenPanel(panelMode)}},650);new MutationObserver(()=>{if(desktop()&&!q('#v151DesktopRail'))requestAnimationFrame(ensureV152Rail)}).observe(document.body,{childList:true,subtree:true});
+
+/* ---------- One drag surface per text object. Tap = caret, drag = move. ---------- */
+let activeDrag=null;
+function scale(){const s=q('#canvasStage');if(!s)return 1;const r=s.getBoundingClientRect(),w=typeof window.canvasPageWidth==='function'?window.canvasPageWidth():794;return r.width/w||window.canvasZoom||1}
+function layer(){let l=q('#v152TextHitLayer');const stage=q('#canvasStage');if(!stage)return null;if(!l){l=document.createElement('div');l.id='v152TextHitLayer';stage.appendChild(l)}l.style.width=(typeof window.canvasPageWidth==='function'?window.canvasPageWidth():794)+'px';l.style.height=(typeof window.canvasPageHeight==='function'?window.canvasPageHeight():1123)+'px';return l}
+function selectDirect(id){try{window.selectCanvasObject?.(id)}catch(_){const s=st();if(!s)return;s.selectedType='object';s.selectedId=id;s.selectedIds=[id];s.selectedVectorIds=[];window.renderCanvasInspector?.();window.renderLayerList?.()}}
+function placeCaret(el,x,y){try{let range=null;if(document.caretPositionFromPoint){const p=document.caretPositionFromPoint(x,y);if(p){range=document.createRange();range.setStart(p.offsetNode,p.offset);range.collapse(true)}}else if(document.caretRangeFromPoint)range=document.caretRangeFromPoint(x,y);if(range&&el.contains(range.startContainer)){const s=getSelection();s.removeAllRanges();s.addRange(range);return true}}catch(_){ }return false}
+function patchEditingText(){const s=st(),id=s?.objects?.find(o=>o.editing&&textKinds.has(o.kind)&&!o.isChecklist)?.id;qa('#canvasObjects .cobj.v152EditingText').forEach(el=>{if(String(el.dataset.id)!==String(id))el.classList.remove('v152EditingText')});if(!id)return;const el=textEl(id);if(el){el.classList.add('v152EditingText');el.style.setProperty('pointer-events','auto','important')}/* kill all historical hit/move overlays for this editing text */qa(`[data-id="${CSS.escape(String(id))}"].v132Hit,[data-id="${CSS.escape(String(id))}"].v131MoveProxy,[data-id="${CSS.escape(String(id))}"].v129MoveProxy,[data-id="${CSS.escape(String(id))}"].v126MoveProxy`).forEach(x=>x.style.setProperty('pointer-events','none','important'))}
+function beginEdit(id,x,y){const o=textObj(id);if(!o||o.locked)return false;(st()?.objects||[]).forEach(v=>{if(v!==o)v.editing=false});o.editing=true;window.renderCanvasObjects?.();window.renderCanvasInspector?.();requestAnimationFrame(()=>{const el=textEl(id);if(!el)return;el.classList.add('v152EditingText');try{el.focus({preventScroll:true})}catch(_){el.focus()}if(Number.isFinite(x)&&Number.isFinite(y))placeCaret(el,x,y);patchEditingText();syncTextHits()});return true}
+window.v152BeginTextEdit=beginEdit;
+function syncTextHits(){const l=layer();if(!l)return;l.replaceChildren();for(const o of st()?.objects||[]){if(!textKinds.has(o.kind)||o.isChecklist||o.locked||o.editing)continue;const hit=document.createElement('div');hit.className='v152TextHit';hit.dataset.id=o.id;hit.style.left=(+o.x||0)+'px';hit.style.top=(+o.y||0)+'px';hit.style.width=Math.max(18,(+o.w||80)-16)+'px';hit.style.height=Math.max(18,(+o.h||40)-16)+'px';hit.style.transform=`rotate(${+o.rotation||0}deg)`;hit.style.transformOrigin='50% 50%';hit.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;e.preventDefault();e.stopPropagation();selectDirect(o.id);const z=scale();activeDrag={pid:e.pointerId,id:o.id,sx:e.clientX,sy:e.clientY,ox:+o.x||0,oy:+o.y||0,z,moved:false,hit};try{hit.setPointerCapture?.(e.pointerId)}catch(_){ }},{passive:false});hit.addEventListener('pointermove',e=>{const d=activeDrag;if(!d||d.pid!==e.pointerId||d.id!==o.id)return;const dx=(e.clientX-d.sx)/d.z,dy=(e.clientY-d.sy)/d.z;if(!d.moved&&Math.hypot(dx,dy)<5)return;d.moved=true;e.preventDefault();const W=typeof window.canvasPageWidth==='function'?window.canvasPageWidth():794,H=typeof window.canvasPageHeight==='function'?window.canvasPageHeight():1123;o.x=Math.max(0,Math.min(Math.max(0,W-o.w),d.ox+dx));o.y=Math.max(0,Math.min(Math.max(0,H-o.h),d.oy+dy));const el=textEl(o.id);if(el){el.style.left=o.x+'px';el.style.top=o.y+'px'}hit.style.left=o.x+'px';hit.style.top=o.y+'px';window.markCanvasDirty?.(false)},{passive:false});const end=e=>{const d=activeDrag;if(!d||d.pid!==e.pointerId||d.id!==o.id)return;activeDrag=null;try{hit.releasePointerCapture?.(e.pointerId)}catch(_){ }if(d.moved){window.pushHistory?.();window.renderCanvasInspector?.();window.v132SyncHits?.();syncTextHits()}else beginEdit(o.id,e.clientX,e.clientY)};hit.addEventListener('pointerup',end);hit.addEventListener('pointercancel',()=>{activeDrag=null;syncTextHits()});l.appendChild(hit)}patchEditingText()}
+const baseRender=window.renderCanvasObjects;window.renderCanvasObjects=function(){const r=baseRender?.apply(this,arguments);requestAnimationFrame(syncTextHits);return r};try{renderCanvasObjects=window.renderCanvasObjects}catch(_){ }
+const v152ObjectRoot=q('#canvasObjects');if(v152ObjectRoot)new MutationObserver(()=>requestAnimationFrame(syncTextHits)).observe(v152ObjectRoot,{childList:true});setTimeout(syncTextHits,650);
+
+/* ---------- Partial rich-text formatting: selected words only ---------- */
+let savedRange=null,savedObjectId=null,selTimer=null;
+function editingEl(id=savedObjectId||st()?.selectedId){return id?q(`.cobj[data-id="${CSS.escape(String(id))}"][contenteditable="true"]`):null}
+function rangeInside(el,r){if(!el||!r)return false;const n=r.commonAncestorContainer;return n===el||el.contains(n.nodeType===1?n:n.parentNode)}
+function rememberRange(){if(!document.body.classList.contains('editorMode'))return false;const s=getSelection?.();if(!s||!s.rangeCount)return false;const r=s.getRangeAt(0);if(r.collapsed)return false;const node=r.commonAncestorContainer.nodeType===1?r.commonAncestorContainer:r.commonAncestorContainer.parentElement,el=node?.closest?.('.cobj[contenteditable="true"]');if(!el||!rangeInside(el,r))return false;const o=textObj(el.dataset.id);if(!o)return false;try{savedRange=r.cloneRange();savedObjectId=o.id;return true}catch(_){return false}}
+function restoreRange(){if(!savedRange||!savedObjectId)return false;const el=editingEl(savedObjectId);if(!el||!rangeInside(el,savedRange)){savedRange=null;savedObjectId=null;return false}try{const s=getSelection();s.removeAllRanges();s.addRange(savedRange.cloneRange());el.focus({preventScroll:true});return true}catch(_){return false}}
+function hasRange(){if(rememberRange())return true;return !!(savedRange&&savedObjectId&&editingEl(savedObjectId)&&!savedRange.collapsed)}
+function syncHTML(push=true){const id=savedObjectId||st()?.selectedId,el=editingEl(id),o=textObj(id);if(!el||!o)return;o.text=el.innerHTML;window.markCanvasDirty?.();if(push)window.pushHistory?.();try{const s=getSelection();if(s?.rangeCount)savedRange=s.getRangeAt(0).cloneRange()}catch(_){ }}
+function exec(cmd,value=null){if(!hasRange()||!restoreRange())return false;try{document.execCommand('styleWithCSS',false,true)}catch(_){ }let ok=false;try{ok=document.execCommand(cmd,false,value)}catch(_){ }syncHTML(true);return ok!==false}
+function fontSize(px){if(!hasRange()||!restoreRange())return false;try{document.execCommand('styleWithCSS',false,false);document.execCommand('fontSize',false,'7');const el=editingEl(savedObjectId);el?.querySelectorAll('font[size="7"]').forEach(n=>{n.removeAttribute('size');n.style.fontSize=`${Math.max(6,Math.min(180,Number(px)||16))}px`});syncHTML(true);return true}catch(_){return false}}
+function rich(prop,value){if(!hasRange())return false;if(prop==='color')return exec('foreColor',value);if(prop==='fontFamily')return exec('fontName',String(value).replace(/^['"]|['"]$/g,''));if(prop==='fontSize')return fontSize(value);if(prop==='fontWeight'){restoreRange();const on=!!document.queryCommandState?.('bold'),want=Number(value)>=600;if(on!==want)return exec('bold');return true}if(prop==='fontStyle'){restoreRange();const on=!!document.queryCommandState?.('italic'),want=String(value)==='italic';if(on!==want)return exec('italic');return true}if(prop==='textDecoration'){restoreRange();const on=!!document.queryCommandState?.('underline'),want=String(value).includes('underline');if(on!==want)return exec('underline');return true}if(prop==='textAlign'){const m={left:'justifyLeft',center:'justifyCenter',right:'justifyRight',justify:'justifyFull'};return m[value]?exec(m[value]):false}return false}
+window.v152RememberRange=rememberRange;window.v152RestoreRange=restoreRange;window.v152HasRange=hasRange;
+document.addEventListener('selectionchange',()=>{clearTimeout(selTimer);selTimer=setTimeout(()=>{rememberRange();updateMobileBar()},0)});
+document.addEventListener('pointerup',e=>{if(e.target.closest?.('.cobj[contenteditable="true"]'))setTimeout(()=>{rememberRange();updateMobileBar()},10)},true);
+document.addEventListener('keyup',e=>{if(e.target.closest?.('.cobj[contenteditable="true"]'))setTimeout(()=>{rememberRange();updateMobileBar()},0)},true);
+document.addEventListener('pointerdown',e=>{if(e.target.closest?.('.v134FormatTools,.v137FormatToolbar,#canvasInspector,#canvasQuickDrawer,#v152SelectionBar,#v152FormatPopover,.v144FontModal'))rememberRange()},true);
+const baseApply=window.applyTextProperty;window.applyTextProperty=function(prop,value){if(rich(prop,value))return;return baseApply?.apply(this,arguments)};try{applyTextProperty=window.applyTextProperty}catch(_){ }
+const baseFormat=window.formatSelectedText;window.formatSelectedText=function(cmd){const map={bold:'bold',italic:'italic',underline:'underline',strikeThrough:'strikeThrough',insertUnorderedList:'insertUnorderedList',insertOrderedList:'insertOrderedList'};if(map[cmd]&&hasRange())return exec(map[cmd]);return baseFormat?.apply(this,arguments)};try{formatSelectedText=window.formatSelectedText}catch(_){ }
+const b134=window.v134ToggleText;window.v134ToggleText=function(prop){if(hasRange()){const m={fontWeight:'bold',fontStyle:'italic',textDecoration:'underline'};if(m[prop])return exec(m[prop])}return b134?.apply(this,arguments)};
+const b137=window.v137ToggleText;window.v137ToggleText=function(kind){if(hasRange()){const m={fontWeight:'bold',fontStyle:'italic',underline:'underline',strike:'strikeThrough'};if(m[kind])return exec(m[kind])}return b137?.apply(this,arguments)};
+const b137t=window.v137Text;window.v137Text=function(prop,value){if(rich(prop,value))return;return b137t?.apply(this,arguments)};
+
+/* ---------- Mobile selection toolbar ---------- */
+let bar=null,pop=null;
+function rangeInfo(){if(!mobile())return null;const s=getSelection?.();if(!s||!s.rangeCount||s.isCollapsed)return null;const r=s.getRangeAt(0),n=r.commonAncestorContainer.nodeType===1?r.commonAncestorContainer:r.commonAncestorContainer.parentElement,el=n?.closest?.('.cobj[contenteditable="true"]');return el?{r,el}:null}
+function ensureBar(){if(bar)return bar;bar=document.createElement('div');bar.id='v152SelectionBar';bar.innerHTML=`<button type="button" data-a="bold"><b>B</b></button><button type="button" data-a="italic"><i>I</i></button><button type="button" data-a="underline"><u>U</u></button><label class="v152SelectionColor" title="Farbe"><span>●</span><input type="color" value="#333333"></label><button type="button" data-a="format"><b>Aa</b><span>Format</span></button>`;document.body.appendChild(bar);bar.addEventListener('pointerdown',e=>{rememberRange();if(e.target.closest('button'))e.preventDefault()},true);bar.querySelector('[data-a="bold"]').onclick=()=>{restoreRange();window.formatSelectedText?.('bold');updateMobileBar()};bar.querySelector('[data-a="italic"]').onclick=()=>{restoreRange();window.formatSelectedText?.('italic');updateMobileBar()};bar.querySelector('[data-a="underline"]').onclick=()=>{restoreRange();window.formatSelectedText?.('underline');updateMobileBar()};bar.querySelector('input[type=color]').addEventListener('input',e=>{restoreRange();window.applyTextProperty?.('color',e.target.value);updateMobileBar()});bar.querySelector('[data-a="format"]').onclick=togglePop;return bar}
+function hideBar(){bar?.classList.remove('show');pop?.remove();pop=null}
+function updateMobileBar(){const info=rangeInfo();if(!info){hideBar();return}rememberRange();const b=ensureBar(),rect=info.r.getBoundingClientRect(),bw=b.offsetWidth||230,bh=b.offsetHeight||42;let left=(rect.left+rect.right)/2-bw/2;left=Math.max(8,Math.min(innerWidth-bw-8,left));let top=rect.top-bh-9;if(top<58)top=Math.min(innerHeight-bh-8,rect.bottom+9);b.style.left=left+'px';b.style.top=top+'px';b.classList.add('show');if(pop){pop.style.left=Math.max(8,Math.min(innerWidth-pop.offsetWidth-8,left))+'px';pop.style.top=Math.min(innerHeight-pop.offsetHeight-8,top+bh+6)+'px'}}
+function applyPreset(id){const p=(window.canvasPresets?.()||[]).find(x=>x.id===id);if(!p)return;restoreRange();if(p.fontFamily)window.applyTextProperty?.('fontFamily',p.fontFamily);if(p.fontSize)window.applyTextProperty?.('fontSize',p.fontSize);if(p.color)window.applyTextProperty?.('color',p.color);if(p.fontWeight)window.applyTextProperty?.('fontWeight',p.fontWeight);if(p.fontStyle)window.applyTextProperty?.('fontStyle',p.fontStyle);updateMobileBar()}
+function togglePop(){rememberRange();if(pop){pop.remove();pop=null;return}const presets=window.canvasPresets?.()||[];pop=document.createElement('div');pop.id='v152FormatPopover';pop.innerHTML=`<div class="v152PopHead">TEXTFORMAT</div>${presets.map(p=>`<button type="button" data-id="${esc(p.id)}"><span style="font-family:${esc(p.fontFamily||'Arial')};font-weight:${esc(p.fontWeight||700)};color:${esc(p.color||'#725b53')}">Aa</span><b>${esc(p.name||'Format')}</b></button>`).join('')}`;document.body.appendChild(pop);pop.addEventListener('pointerdown',e=>{rememberRange();e.preventDefault()},true);pop.onclick=e=>{const b=e.target.closest('button[data-id]');if(!b)return;applyPreset(b.dataset.id);pop.remove();pop=null};updateMobileBar()}
+window.v152ApplyPresetToSelection=applyPreset;
+window.addEventListener('resize',()=>{setTimeout(syncTextHits,50);setTimeout(updateMobileBar,50)});
+
+/* Keep one current visible version. */
+function version(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 152')e.textContent='VERSION 152';document.documentElement.classList.add('v151Ready');document.title='Studia'}
+const vm=new MutationObserver(version);setTimeout(()=>{const e=q('#headerEyebrow');if(e)vm.observe(e,{childList:true,subtree:true,characterData:true});version()},0);setTimeout(version,100);setTimeout(version,800);
+})();
+/* ===== /Studia V152 ===== */

@@ -516,3 +516,136 @@ body.v141PropertiesOpen{overflow:hidden!important}
   .v144DesktopTextHub>:nth-child(3){grid-column:1/-1!important}
 }
 /* ===== /Studia V149 ===== */
+
+
+/* ===== Studia V150 — stable desktop rail + account sync ===== */
+@media (min-width:900px){
+  body.editorMode .v102DesktopLeft>.canvasQuickNav.v150DesktopRail{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    grid-auto-rows:64px!important;
+    align-content:start!important;
+    gap:5px!important;
+    width:92px!important;
+    min-width:92px!important;
+    height:auto!important;
+    padding:10px 8px!important;
+    overflow:hidden!important;
+    background:#fff!important;
+  }
+  body.editorMode .v102DesktopLeft>.canvasQuickNav.v150DesktopRail>button[data-v150]{
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:4px!important;
+    width:76px!important;
+    height:60px!important;
+    min-height:60px!important;
+    padding:6px 4px!important;
+    margin:0!important;
+    border:1px solid transparent!important;
+    border-radius:13px!important;
+    background:transparent!important;
+    color:#655650!important;
+    text-align:center!important;
+    cursor:pointer!important;
+    box-sizing:border-box!important;
+  }
+  body.editorMode .v102DesktopLeft>.canvasQuickNav.v150DesktopRail>button[data-v150]:hover,
+  body.editorMode .v102DesktopLeft>.canvasQuickNav.v150DesktopRail>button[data-v150].active{
+    background:#fde9e9!important;
+    color:#975d62!important;
+    border-color:#f2d3d3!important;
+  }
+  body.editorMode .v150DesktopRail .editorNavIcon{width:24px!important;height:24px!important;display:grid!important;place-items:center!important}
+  body.editorMode .v150DesktopRail .editorNavIcon svg{width:22px!important;height:22px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+  body.editorMode .v150DesktopRail>button>span:last-child{font-size:9px!important;font-weight:850!important;line-height:1!important}
+  body.editorMode .v102DesktopLeft>#canvasQuickDrawer{overflow-y:auto!important;overflow-x:hidden!important;min-height:0!important;overscroll-behavior:contain!important;scrollbar-gutter:stable}
+  .v150DesktopTextTools{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 12px;padding:0 0 12px;border-bottom:1px solid #eee0db}
+  .v150DesktopTextTools>button,.v150FontUpload{
+    position:relative;display:grid;grid-template-columns:38px minmax(0,1fr);align-items:center;gap:9px;
+    min-height:58px;padding:8px 10px;border:1px solid #eadbd5;border-radius:14px;background:#fff;color:#6f5d56;text-align:left;cursor:pointer;box-sizing:border-box;overflow:hidden
+  }
+  .v150DesktopTextTools>button:hover,.v150FontUpload:hover{background:#fff5f3;border-color:#e7c5c4}
+  .v150TextToolIcon{display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:#f8e5e5;color:#a2676c;font-size:14px;font-weight:950}
+  .v150DesktopTextTools strong{display:block;font-size:10px}.v150DesktopTextTools small{display:block;margin-top:2px;font-size:8px;color:#9d8880}
+  .v150FontUpload input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+  .v150TextFormatsAction{grid-column:1/-1!important}
+}
+.v150AccountModal{display:grid;gap:12px}.v150AccountHero{display:flex;gap:11px;align-items:center;padding:12px;border:1px solid #eadfd8;border-radius:16px;background:linear-gradient(145deg,#fff,#fff8f5)}
+.v150AccountAvatar{display:grid;place-items:center;width:44px;height:44px;border-radius:14px;background:#f6dedf;color:#a16167;font-weight:950}.v150AccountHero>div{display:grid;gap:2px}.v150AccountHero b{font-size:12px}.v150AccountHero small{font-size:9px;color:#927b72}
+.v150AccountForm{display:grid;gap:9px}.v150AccountForm label{display:grid;gap:5px;font-size:9px;font-weight:850;color:#806b63}.v150AccountForm input{width:100%;box-sizing:border-box;min-height:44px;border:1px solid #e8d9d4;border-radius:12px;background:#fff;padding:9px 11px;color:#554944}
+.v150AccountActions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.v150AccountActions button{min-height:44px;border-radius:12px;border:1px solid #e8d6d2;background:#fff;color:#755f58;font-weight:900}.v150AccountActions .primary{background:#e99da3;color:#fff;border-color:#e99da3}
+.v150AccountState{padding:10px 12px;border:1px solid #dbe7ca;border-radius:13px;background:#f7faef;color:#718359;font-size:9px;font-weight:850}.v150AccountState.error{border-color:#f0cccc;background:#fff4f4;color:#a75a61}
+.v150AccountSetup{border:1px solid #eee1db;border-radius:13px;background:#fffaf7;padding:9px 11px}.v150AccountSetup summary{cursor:pointer;font-size:9px;font-weight:900;color:#7b665e}.v150AccountSetup .v150AccountForm{margin-top:9px}
+.v150PermanentNote{display:flex;gap:8px;align-items:flex-start;padding:9px 11px;border-radius:13px;background:#f7faef;color:#718359;font-size:9px;line-height:1.45}.v150PermanentNote b{white-space:nowrap}
+#v150PullSync{position:fixed;left:50%;top:0;z-index:31000;transform:translate(-50%,-82px);display:flex;align-items:center;gap:7px;padding:9px 13px;border:1px solid #e7d4cf;border-radius:999px;background:rgba(255,251,248,.98);box-shadow:0 8px 24px rgba(92,64,57,.13);font-size:9px;font-weight:900;color:#7c675f;transition:transform .16s ease;pointer-events:none}#v150PullSync.ready{color:#6e8559;border-color:#d5e2c4;background:#f8fbf0}
+/* ===== /Studia V150 ===== */
+
+
+/* ===== Studia V151 — independent desktop rail ===== */
+@media(min-width:900px){
+  /* Historical scripts may still rebuild this old nav. It is intentionally hidden;
+     V151 owns the visible desktop rail in a separate DOM node. */
+  body.editorMode .v102DesktopLeft>.canvasQuickNav{display:none!important}
+  body.editorMode .v102DesktopLeft{grid-template-columns:92px minmax(0,1fr)!important;grid-template-rows:minmax(0,1fr)!important}
+  body.editorMode #v151DesktopRail.v151DesktopRail{
+    grid-column:1!important;grid-row:1!important;display:grid!important;grid-template-columns:1fr!important;grid-auto-rows:64px!important;
+    align-content:start!important;gap:5px!important;width:92px!important;height:100%!important;min-height:0!important;padding:10px 8px!important;
+    overflow-y:auto!important;overflow-x:hidden!important;border:0!important;border-right:1px solid #eee2de!important;background:#fff!important;box-sizing:border-box!important;scrollbar-width:none
+  }
+  body.editorMode #v151DesktopRail::-webkit-scrollbar{display:none}
+  body.editorMode #v151DesktopRail>button[data-v151]{
+    display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;
+    width:76px!important;height:60px!important;min-height:60px!important;margin:0!important;padding:6px 4px!important;border:1px solid transparent!important;
+    border-radius:13px!important;background:transparent!important;color:#655650!important;text-align:center!important;cursor:pointer!important;box-sizing:border-box!important
+  }
+  body.editorMode #v151DesktopRail>button[data-v151]:hover,body.editorMode #v151DesktopRail>button[data-v151].active{background:#fde9e9!important;color:#975d62!important;border-color:#f2d3d3!important}
+  body.editorMode #v151DesktopRail .editorNavIcon{width:24px!important;height:24px!important;display:grid!important;place-items:center!important}
+  body.editorMode #v151DesktopRail .editorNavIcon svg{width:22px!important;height:22px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+  body.editorMode #v151DesktopRail>button>span:last-child{font-size:9px!important;font-weight:850!important;line-height:1!important}
+  body.editorMode .v102DesktopLeft>#canvasQuickDrawer{grid-column:2!important;grid-row:1!important;overflow-y:auto!important;overflow-x:hidden!important;min-height:0!important;overscroll-behavior:contain!important}
+  body.editorMode .v102DesktopLeft>#canvasQuickDrawer .v134Palette{height:100%!important;min-height:0!important;overflow:hidden!important}
+  body.editorMode .v102DesktopLeft>#canvasQuickDrawer .v134PaletteScroll{overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important}
+}
+html:not(.v151Ready) #headerEyebrow{visibility:hidden!important}
+/* ===== /Studia V151 ===== */
+
+/* ===== Studia V152 — working desktop panels + real rich text selection ===== */
+@media(min-width:900px){
+  body.editorMode #canvasQuickDrawer.v152DesktopDrawer{display:block!important;overflow:hidden!important;overscroll-behavior:none!important;padding:0!important;min-height:0!important}
+  .v152Panel{height:100%;min-height:0;display:flex;flex-direction:column;background:#fffefd;color:#5f514b}
+  .v152PanelHead{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:15px 14px 11px;border-bottom:1px solid #eee2dd;background:rgba(255,254,252,.98)}
+  .v152PanelHead>div{display:grid;gap:2px}.v152PanelHead span{font-size:8px;font-weight:950;letter-spacing:.13em;color:#b57b80}.v152PanelHead b{font-size:15px;color:#4d423d}
+  .v152PanelScroll{flex:1 1 auto;min-height:0;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important;scrollbar-gutter:stable;padding:12px 14px 28px;-webkit-overflow-scrolling:touch}
+  .v152SectionTitle{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 0 9px}.v152SectionTitle>b{font-size:11px;color:#5a4d47}.v152SectionTitle>span{font-size:8px;color:#9b8780}.v152SectionTitle>button{border:0;background:transparent;color:#a45f68;font-size:9px;font-weight:900;cursor:pointer}
+  .v152TextActions{display:grid;grid-template-columns:1fr;gap:7px;margin-bottom:16px}.v152TextActions>button,.v152TextActions>label{position:relative;display:grid;grid-template-columns:38px minmax(0,1fr);align-items:center;gap:9px;min-height:56px;padding:8px 10px;border:1px solid #eadeda;border-radius:13px;background:#fff;color:#62544e;text-align:left;cursor:pointer;box-sizing:border-box}.v152TextActions>button:hover,.v152TextActions>label:hover{border-color:#edc2c6;background:#fff9f8}.v152TextActions>button>span:last-child,.v152TextActions>label>span:last-child{display:grid;gap:2px}.v152TextActions b{font-size:10px}.v152TextActions small{font-size:8px;color:#9b8780}.v152TextActions input[type=file]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+  .v152ToolGlyph{display:grid!important;place-items:center;width:38px;height:38px;border-radius:11px;background:#fff0f1;color:#a1686d;font-size:15px;font-weight:950}
+  .v152TextFormatList{display:grid;gap:8px}.v152TextFormatCard{display:grid;grid-template-columns:52px minmax(0,1fr);align-items:center;gap:10px;min-height:66px;padding:8px 10px;border:1px solid #eadbd6;border-radius:14px;background:#fff;text-align:left;color:#5e514b;cursor:pointer}.v152TextFormatCard:hover{border-color:#edc2c6;background:#fff9f8}.v152FormatGlyph{display:grid;place-items:center;width:48px;height:48px;border-radius:12px;background:#fff0f1;font-size:17px}.v152TextFormatCard>span:last-child{display:grid;gap:3px;min-width:0}.v152TextFormatCard b{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v152TextFormatCard small{font-size:8px;color:#9a8680}
+  .v152WideAction{width:100%;min-height:42px;margin-top:10px;border:1px solid #efc6ca;border-radius:12px;background:#fff0f1;color:#9b5c64;font-size:10px;font-weight:900;cursor:pointer}
+  .v152TemplateActions{display:grid;grid-template-columns:1fr auto;gap:7px;margin-bottom:14px}.v152TemplateActions button{min-height:40px;padding:0 10px;border:1px solid #eadad5;border-radius:11px;background:#fff;color:#655750;font-size:9px;font-weight:900;cursor:pointer}.v152TemplateActions button:first-child{background:#fff0f1;border-color:#efc9cc;color:#9a5c64}
+  .v152TemplateList{display:grid;gap:9px}.v152TemplateCard{display:grid;grid-template-columns:72px minmax(0,1fr);gap:10px;align-items:center;padding:9px;border:1px solid #eadfda;border-radius:14px;background:#fff;text-align:left;color:#5e514b;cursor:pointer}.v152TemplateCard:hover{border-color:#edc2c6;background:#fff9f8}.v152TemplateCard>span:last-child{display:grid;gap:4px;min-width:0}.v152TemplateCard b{font-size:10px}.v152TemplateCard small{font-size:8px;line-height:1.35;color:#9a8780}
+  .v152TemplatePreview{position:relative;display:block;width:68px;height:82px;border:1px solid #e4d8d4;border-radius:8px;background:#fff;box-shadow:0 3px 10px rgba(80,59,52,.06);overflow:hidden}.v152TemplatePreview:before{content:'';position:absolute;left:8px;right:8px;top:10px;height:8px;border-radius:4px;background:#efb4b7}.v152TemplatePreview i{position:absolute;left:8px;right:8px;height:3px;border-radius:3px;background:#e8ded9}.v152TemplatePreview i:nth-child(1){top:30px}.v152TemplatePreview i:nth-child(2){top:40px;right:18px}.v152TemplatePreview i:nth-child(3){top:57px;height:12px;background:#fff0df}.v152TemplatePreview.cute{background:#fffaf9}.v152TemplatePreview.exam:before{background:#bccf96}.v152TemplatePreview.blank:before,.v152TemplatePreview.blank i{opacity:.25}.v152TemplatePreview.own:before{background:#c6b2dc}
+  .v152Search{display:flex;align-items:center;gap:8px;height:40px;margin-bottom:13px;padding:0 10px;border:1px solid #e8dfdb;border-radius:11px;background:#fff;color:#9a8981}.v152Search input{min-width:0;flex:1;height:36px!important;padding:0!important;border:0!important;outline:0!important;background:transparent!important;font-size:10px!important;box-shadow:none!important}
+  .v152ElementSection{margin-bottom:17px}.v152ElementGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.v152ElementTile{display:grid;place-items:center;align-content:center;gap:6px;min-height:72px;padding:7px 3px;border:1px solid #ece2de;border-radius:12px;background:#fff;color:#62534e;cursor:pointer}.v152ElementTile:hover{border-color:#efc7ca;background:#fff9f8}.v152ElementTile>span{font-size:24px;line-height:1;color:#a1686d}.v152ElementTile>b{font-size:8px;line-height:1.2;text-align:center}.v152Empty{padding:18px 9px;text-align:center;color:#9d8981;font-size:9px}
+}
+
+/* Text itself must receive native caret and drag-selection while editing. */
+body.editorMode #canvasObjects .cobj.v152EditingText[contenteditable="true"]{pointer-events:auto!important;cursor:text!important;user-select:text!important;-webkit-user-select:text!important;-webkit-touch-callout:default!important;touch-action:auto!important;z-index:2147400!important;overflow:auto!important}
+body.editorMode #canvasObjects .cobj.v152EditingText[contenteditable="true"] *{user-select:text!important;-webkit-user-select:text!important}
+#v152TextHitLayer{position:absolute;left:0;top:0;pointer-events:none;z-index:2147300;width:794px;height:1123px;transform-origin:0 0}
+#v152TextHitLayer .v152TextHit{position:absolute;box-sizing:border-box;pointer-events:auto;touch-action:none;background:rgba(255,255,255,.001);cursor:text}
+#v152TextHitLayer .v152TextHit.dragging{cursor:grabbing}
+
+/* Cute inline toolbar shown only when text is actually highlighted on mobile. */
+#v152SelectionBar{position:fixed;z-index:2147483300;display:flex;align-items:center;gap:4px;min-height:42px;padding:5px;border:1px solid #efcfd0;border-radius:14px;background:rgba(255,252,250,.98);box-shadow:0 10px 30px rgba(79,54,50,.16);backdrop-filter:blur(12px);opacity:0;visibility:hidden;transform:translateY(4px) scale(.97);transition:opacity .12s ease,transform .12s ease,visibility .12s;pointer-events:none}
+#v152SelectionBar.show{opacity:1;visibility:visible;transform:none;pointer-events:auto}
+#v152SelectionBar button,#v152SelectionBar label{height:31px;min-width:32px;border:0;border-radius:9px;background:#fff5f4;color:#805e5d;display:flex;align-items:center;justify-content:center;gap:4px;padding:0 8px;font:900 10px/1 inherit}
+#v152SelectionBar button span{font-size:8px}#v152SelectionBar .v152SelectionColor{position:relative;width:32px;padding:0}#v152SelectionBar .v152SelectionColor span{font-size:17px;color:#e68e98}#v152SelectionBar .v152SelectionColor input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+#v152FormatPopover{position:fixed;z-index:2147483301;width:min(290px,calc(100vw - 16px));max-height:240px;overflow:auto;padding:7px;border:1px solid #efcfce;border-radius:14px;background:#fffdfb;box-shadow:0 14px 34px rgba(73,51,47,.18);-webkit-overflow-scrolling:touch}
+.v152PopHead{padding:4px 6px 7px;font-size:8px;font-weight:950;letter-spacing:.1em;color:#b16f76}
+#v152FormatPopover button{display:grid;grid-template-columns:38px minmax(0,1fr);align-items:center;gap:8px;width:100%;min-height:44px;padding:5px 7px;border:0;border-radius:10px;background:transparent;color:#5e514b;text-align:left}
+#v152FormatPopover button:active{background:#fff0f1}#v152FormatPopover button span{display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:#fff0f1}#v152FormatPopover button b{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(min-width:900px){#v152SelectionBar,#v152FormatPopover{display:none!important}}
+/* ===== /Studia V152 ===== */
