@@ -899,7 +899,7 @@ const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelecto
 const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const inEditor=()=>document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
 const desktop=()=>innerWidth>=900&&inEditor();
-function setVersion150(){const e=q('#headerEyebrow');if(e){if(e.textContent!=='VERSION 156')e.textContent='VERSION 156';if(e.dataset.v151Watch!=='1'){e.dataset.v151Watch='1';new MutationObserver(()=>{if(e.textContent!=='VERSION 156')e.textContent='VERSION 156'}).observe(e,{childList:true,subtree:true,characterData:true})}}document.documentElement.classList.add('v151Ready');document.title='Studia'}
+function setVersion150(){const e=q('#headerEyebrow');if(e){if(e.textContent!=='VERSION 157')e.textContent='VERSION 157';if(e.dataset.v151Watch!=='1'){e.dataset.v151Watch='1';new MutationObserver(()=>{if(e.textContent!=='VERSION 157')e.textContent='VERSION 157'}).observe(e,{childList:true,subtree:true,characterData:true})}}document.documentElement.classList.add('v151Ready');document.title='Studia'}
 setVersion150();setTimeout(setVersion150,300);setTimeout(setVersion150,1800);
 
 /* Disable the older key-based V145 transport. Its local save hooks may remain,
@@ -1153,7 +1153,7 @@ window.v152ApplyPresetToSelection=applyPreset;
 window.addEventListener('resize',()=>{setTimeout(syncTextHits,50);setTimeout(updateMobileBar,50)});
 
 /* Keep one current visible version. */
-function version(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 156')e.textContent='VERSION 156';document.documentElement.classList.add('v151Ready');document.title='Studia'}
+function version(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 157')e.textContent='VERSION 157';document.documentElement.classList.add('v151Ready');document.title='Studia'}
 const vm=new MutationObserver(version);setTimeout(()=>{const e=q('#headerEyebrow');if(e)vm.observe(e,{childList:true,subtree:true,characterData:true});version()},0);setTimeout(version,100);setTimeout(version,800);
 })();
 /* ===== /Studia V152 ===== */
@@ -1360,7 +1360,192 @@ window.addEventListener('resize',()=>setTimeout(()=>{enhanceToolbar();positionMo
 setTimeout(()=>{enableDirectText();enhanceToolbar()},350);setTimeout(()=>{enableDirectText();enhanceToolbar()},1200);
 
 /* Keep the visible build number current despite older observers. */
-function version156(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 156')e.textContent='VERSION 156';document.title='Studia'}
+function version156(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 157')e.textContent='VERSION 157';document.title='Studia'}
 setTimeout(version156,50);setTimeout(version156,900);
 })();
 /* ===== /Studia V156 ===== */
+
+/* ===== Studia V157 — clean icon system, Illustrator shortcuts, shift multi-select & reliable format painter ===== */
+(function(){
+'use strict';
+const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
+const isEditor=()=>document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
+const st=()=>{try{return window.canvasState||canvasState}catch(_){return null}};
+const textKinds=new Set(['text','block','task','merke','file']);
+const textObj=id=>st()?.objects?.find(o=>String(o.id)===String(id)&&textKinds.has(o.kind)&&!o.isChecklist)||null;
+
+const ICON={
+ undo:'<path d="M9 7 4 12l5 5"/><path d="M5 12h8a6 6 0 0 1 6 6"/>',
+ redo:'<path d="m15 7 5 5-5 5"/><path d="M19 12h-8a6 6 0 0 0-6 6"/>',
+ select:'<path d="m5 3 13 8-6 2-3 6z"/><path d="m12 13 4 6"/>',
+ duplicate:'<rect x="8" y="8" width="11" height="11" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>',
+ group:'<rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/>',
+ ungroup:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><path d="M14 6h4v4M10 18H6v-4"/>',
+ lock:'<rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
+ unlock:'<rect x="5" y="10" width="14" height="10" rx="2"/><path d="M9 10V7a4 4 0 0 1 7-2"/>',
+ trash:'<path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/>',
+ bold:'<path d="M7 4h6a4 4 0 0 1 0 8H7z"/><path d="M7 12h7a4 4 0 0 1 0 8H7z"/>',
+ italic:'<path d="M10 4h8M6 20h8M14 4 10 20"/>',
+ underline:'<path d="M7 4v7a5 5 0 0 0 10 0V4M5 21h14"/>',
+ strike:'<path d="M17 6.5A5 5 0 0 0 13 4h-2a4 4 0 0 0-1 7.87M7 17.5A5 5 0 0 0 11 20h2a4 4 0 0 0 1-7.87M4 12h16"/>',
+ color:'<path d="m7 18 5-14 5 14M9 13h6"/><path d="M5 21h14"/>',
+ left:'<path d="M4 6h16M4 10h11M4 14h16M4 18h10"/>',
+ center:'<path d="M4 6h16M7 10h10M4 14h16M7 18h10"/>',
+ right:'<path d="M4 6h16M9 10h11M4 14h16M10 18h10"/>',
+ justify:'<path d="M4 6h16M4 10h16M4 14h16M4 18h16"/>',
+ link:'<path d="M10 13a5 5 0 0 0 7.5.5l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7.5-.5l-2 2a5 5 0 0 0 7 7l1-1"/>',
+ painter:'<path d="M4 4h12v7H4z"/><path d="M8 11v3h5v6M13 14h3"/>',
+ addfont:'<path d="M5 18 10 5h2l5 13M7 14h8"/><path d="M19 7v6M16 10h6"/>',
+ chevron:'<path d="m8 10 4 4 4-4"/>',
+ page:'<rect x="6" y="3" width="12" height="18" rx="2"/><path d="M9 7h6M9 11h6"/>',
+ export:'<path d="M12 4v11M8 8l4-4 4 4M5 14v5h14v-5"/>',
+ print:'<path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="7" y="14" width="10" height="7"/>',
+ save:'<path d="M5 3h12l2 2v16H5z"/><path d="M8 3v6h8V3M8 21v-7h8v7"/>',
+ text:'<path d="M5 5V3h14v2M12 3v18M8 21h8"/>',
+ shapes:'<rect x="4" y="4" width="8" height="8" rx="1"/><circle cx="16" cy="16" r="4"/>',
+ template:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h5M8 16h3M14 15h3v3h-3z"/>',
+ image:'<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m4 17 5-5 4 4 2-2 5 4"/>',
+ file:'<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v5h5"/>',
+ checklist:'<path d="m4 7 2 2 3-4M11 7h9M4 14l2 2 3-4M11 14h9"/>',
+ rect:'<rect x="4" y="5" width="16" height="14" rx="2"/>',
+ circle:'<circle cx="12" cy="12" r="8"/>',
+ triangle:'<path d="m12 4 8 15H4z"/>',
+ line:'<path d="M4 18 20 6"/>',
+ curve:'<path d="M4 17c4-10 7 5 11-5 2-5 3-5 5-5"/>',
+ star:'<path d="m12 3 2.7 5.5 6 .9-4.4 4.3 1 6-5.3-2.8-5.3 2.8 1-6-4.4-4.3 6-.9z"/>',
+ formula:'<path d="M18 5H8l5 7-5 7h10"/>',
+ graph:'<path d="M4 19V5M4 19h16"/><path d="m7 15 3-4 3 2 4-6"/>',
+ table:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 4v16M15 4v16"/>',
+ sticker:'<path d="M12 3a7 7 0 0 1 7 7v2l-7 9-7-9v-2a7 7 0 0 1 7-7z"/><path d="M9 9h.01M15 9h.01M9.5 13c1.5 1.2 3.5 1.2 5 0"/>',
+ tape:'<path d="M5 7h14v10H5z"/><path d="m8 7-2 4m10 6 2-4"/>',
+ grid:'<rect x="4" y="4" width="16" height="16" rx="1"/><path d="M9 4v16M15 4v16M4 9h16M4 15h16"/>',
+ lines:'<rect x="4" y="4" width="16" height="16" rx="1"/><path d="M7 9h10M7 13h10M7 17h7"/>',
+ fit:'<path d="M8 4H4v4M16 4h4v4M8 20H4v-4M16 20h4v-4"/>',
+ keyboard:'<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M6 10h1M10 10h1M14 10h1M18 10h1M7 14h10"/>',
+ front:'<path d="m12 5 5 5h-3v8h-4v-8H7z"/>',
+ back:'<path d="m12 19-5-5h3V6h4v8h3z"/>',
+ search:'<circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/>'
+};
+function icon(name,cls='v157Icon'){return `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICON[name]||ICON.select}</svg>`}
+
+/* ---------- a smaller, coherent desktop command bar ---------- */
+function cleanSelectionBar(){
+ const bar=q('.desktopCommandBar .v132SelectionBar');if(!bar)return;
+ if(bar.dataset.v157==='1'&&q('.v157Icon',bar))return;bar.dataset.v157='1';
+ bar.innerHTML=`<button class="v132SelectTool active" title="Auswahlwerkzeug (V)" aria-label="Auswahlwerkzeug" onclick="if(document.body.classList.contains('v132SelectionOff'))v132ToggleSelection()">${icon('select')}</button><button title="Duplizieren · Strg/⌘ D" aria-label="Duplizieren" onclick="duplicateSelected();requestAnimationFrame(window.v132SyncHits)">${icon('duplicate')}</button><button title="Gruppieren · Strg/⌘ G" aria-label="Gruppieren" onclick="groupSelectedItems();requestAnimationFrame(window.v132SyncHits)">${icon('group')}</button>`;
+}
+function toolbarHTML(){return `<div class="v156Toolbar v157Toolbar" aria-label="Textformatierung">
+ <div class="v156ToolGroup v156FontGroup v157FontGroup"><button class="v156FontButton" type="button" title="Schrift auswählen" onclick="v156ChooseFont()"><span class="v156FontAa">Aa</span><span class="v156FontName">Schrift</span>${icon('chevron','v157ChevronIcon')}</button><button class="v156AddFont v157IconButton" type="button" title="Schrift hinzufügen" aria-label="Schrift hinzufügen" onclick="v144PickFont()">${icon('addfont')}</button><input class="v156Size" title="Schriftgröße" aria-label="Schriftgröße" type="number" min="6" max="180" value="16" onchange="v137Text('fontSize',+this.value)"></div>
+ <div class="v156ToolGroup v156StyleGroup"><button title="Fett · Strg/⌘ B" aria-label="Fett" onclick="v137ToggleText('fontWeight')">${icon('bold')}</button><button title="Kursiv · Strg/⌘ I" aria-label="Kursiv" onclick="v137ToggleText('fontStyle')">${icon('italic')}</button><button title="Unterstreichen · Strg/⌘ U" aria-label="Unterstreichen" onclick="v137ToggleText('underline')">${icon('underline')}</button><button title="Durchstreichen" aria-label="Durchstreichen" onclick="v137ToggleText('strike')">${icon('strike')}</button><label class="v156Color" title="Textfarbe" aria-label="Textfarbe">${icon('color')}<input type="color" value="#333333" oninput="v137Text('color',this.value)"></label></div>
+ <div class="v156ToolGroup v156AlignGroup"><button title="Linksbündig" aria-label="Linksbündig" onclick="v137Text('textAlign','left')">${icon('left')}</button><button title="Zentriert" aria-label="Zentriert" onclick="v137Text('textAlign','center')">${icon('center')}</button><button title="Rechtsbündig" aria-label="Rechtsbündig" onclick="v137Text('textAlign','right')">${icon('right')}</button><button class="v157Justify" title="Blocksatz" aria-label="Blocksatz" onclick="v137Text('textAlign','justify')">${icon('justify')}</button></div>
+ <div class="v156ToolGroup v157LastGroup"><button title="Hyperlink für markierten Text · Strg/⌘ K" aria-label="Hyperlink" onclick="openHyperlinkDialog()">${icon('link')}</button><button class="v157Painter" data-v157-painter type="button" title="Format übertragen · I" aria-label="Format übertragen" onclick="v157TogglePainter()">${icon('painter')}<span>Format übertragen</span></button></div>
+ </div>`}
+function cleanFormatToolbar(){const host=q('.v134FormatTools');if(!host)return;if(host.dataset.v157==='1'&&q('.v157Toolbar',host))return;host.dataset.v157='1';host.innerHTML=toolbarHTML();host.classList.add('v156FormatHost','v157FormatHost')}
+
+function topIcons(){
+ const undo=q('#undoBtn'),redo=q('#redoBtn');if(undo)undo.innerHTML=icon('undo');if(redo)redo.innerHTML=icon('redo');
+ const actions=q('.canvasTopbar .editorActions');if(actions){const m=[['button[onclick*="toggleTopViewMenu"]','page'],['button[onclick*="exportCanvasHTML"]','export'],['button[onclick*="printCanvasSheet"]','print'],['button[onclick*="saveCanvasSheet"]','save']];for(const [sel,k] of m){const b=q(sel,actions);if(!b)continue;const label=b.querySelector('.pageTopLabel')?.textContent||b.querySelector('span:not(.pageTopIcon)')?.textContent||'';b.innerHTML=icon(k)+(label?`<span>${label}</span>`:'')}}
+}
+
+function sideRailIcons(){const rail=q('#v151DesktopRail');if(!rail)return;const m={text:'text',elements:'shapes',templates:'template'};for(const b of qa('button[data-v151]',rail)){const k=m[b.dataset.v151];if(!k)continue;const holder=q('.editorNavIcon',b);if(holder)holder.innerHTML=icon(k);}}
+function panelIcons(){
+ const map={'Textfeld':'text','Bild / Foto':'image','Datei':'file','Checkliste':'checklist','Rechteck':'rect','Kreis':'circle','Dreieck':'triangle','Linie':'line','Kurve':'curve','Stern':'star','Formel':'formula','Graph':'graph','Tabelle':'table','Trennlinie':'line','Sticker':'sticker','Klebeband':'tape','Kariert':'grid','Liniert':'lines'};
+ for(const b of qa('.v152ElementTile')){const label=q('b',b)?.textContent?.trim(),k=map[label];if(k){const s=q(':scope>span',b);if(s)s.innerHTML=icon(k)}}
+ const search=q('.v152Search');if(search&&!q('.v157SearchIcon',search)){for(const n of [...search.childNodes])if(n.nodeType===3)n.nodeValue='';search.insertAdjacentHTML('afterbegin',icon('search','v157SearchIcon'))}
+ for(const a of qa('.v152TextActions>button,.v152TextActions>label')){const title=q('b',a)?.textContent||'',glyph=q('.v152ToolGlyph',a);if(!glyph)continue;const k=title.includes('hinzufügen')?'addfont':title.includes('Schriften')?'text':'template';glyph.innerHTML=icon(k)}
+}
+function viewMenuIcons(){
+ const menu=q('#topViewMenu');if(!menu)return;const map=[['button[onclick*="fitCanvasStage"]','fit'],['#portraitBtn','page'],['#landscapeBtn','page'],['button[onclick*="alignSelectedToPageMargin(\'left\')"]','left'],['button[onclick*="alignSelectedToPageMargin(\'right\')"]','right'],['button[onclick*="fitSelectedToPageMargins"]','justify']];
+ for(const [sel,k] of map){for(const b of qa(sel,menu)){if(q('.v157Icon',b))continue;for(const n of [...b.childNodes])if(n.nodeType===3)n.nodeValue=n.nodeValue.replace(/^[^\p{L}\p{N}]+/u,'').trimStart();b.insertAdjacentHTML('afterbegin',icon(k))}}
+}
+function uniformVisibleIcons(){if(!isEditor())return;topIcons();cleanSelectionBar();cleanFormatToolbar();sideRailIcons();panelIcons();viewMenuIcons()}
+
+/* ---------- Shift + click object selection, including text objects ---------- */
+function renderSelection(){try{window.renderCanvasObjects?.();window.renderVectors?.();window.renderCanvasInspector?.();window.renderLayerList?.();window.updateMultiSelectStatus?.();window.updateMobileSelectionTools?.();requestAnimationFrame(()=>window.v132SyncHits?.())}catch(_){}}
+function toggleTextObjectInSelection(id){
+ const s=st();if(!s)return;for(const o of s.objects||[])if(textKinds.has(o.kind))o.editing=false;
+ const ids=new Set(s.selectedIds||[]);ids.has(id)?ids.delete(id):ids.add(id);s.selectedIds=[...ids];s.selectedVectorIds=[...(s.selectedVectorIds||[])];s.multiMode=false;
+ if(ids.has(id)){s.selectedType='object';s.selectedId=id}else{s.selectedId=s.selectedIds.at(-1)||s.selectedVectorIds.at(-1)||null;s.selectedType=s.selectedIds.length?'object':s.selectedVectorIds.length?'vector':null}
+ renderSelection();
+}
+window.addEventListener('pointerdown',e=>{
+ if(!isEditor()||!e.shiftKey||(e.pointerType==='mouse'&&e.button!==0))return;const t=e.target instanceof Element?e.target.closest('#canvasObjects .cobj.v156DirectText[data-id]'):null;if(!t)return;
+ /* Inside the currently edited text, Shift+click keeps its normal text-range meaning. */
+ const current=document.activeElement?.closest?.('#canvasObjects .cobj.v156DirectText[data-id]');if(current===t)return;
+ e.preventDefault();e.stopImmediatePropagation();toggleTextObjectInSelection(t.dataset.id);
+},true);
+
+/* ---------- reliable format painter ---------- */
+let paintStyle=null,paintArmed=false,paintSourceId='',paintSourceSig='',pendingPaint=null;
+function rangeInfo(){const s=getSelection?.();if(!s?.rangeCount||s.isCollapsed)return null;const r=s.getRangeAt(0),n=r.commonAncestorContainer.nodeType===1?r.commonAncestorContainer:r.commonAncestorContainer.parentElement,el=n?.closest?.('#canvasObjects .cobj.v156DirectText[data-id],#canvasObjects .cobj[contenteditable="true"][data-id]');return el&&el.contains(r.commonAncestorContainer.nodeType===1?r.commonAncestorContainer:r.commonAncestorContainer.parentNode)?{s,r,el}:null}
+function cssAtRange(info){const n=info.r.startContainer.nodeType===1?info.r.startContainer:info.r.startContainer.parentElement,c=getComputedStyle(n||info.el),p=getComputedStyle(info.el);return{fontFamily:c.fontFamily,fontSize:c.fontSize,fontWeight:c.fontWeight,fontStyle:c.fontStyle,textDecorationLine:c.textDecorationLine||c.textDecoration||'none',color:c.color,letterSpacing:c.letterSpacing,lineHeight:c.lineHeight,textAlign:p.textAlign||'left'}}
+function objectStyle(o){const x=o?.style||{};return{fontFamily:x.fontFamily||'Arial',fontSize:(+x.fontSize||16)+'px',fontWeight:String(x.fontWeight||400),fontStyle:x.fontStyle||'normal',textDecorationLine:x.textDecoration||'none',color:x.color||'#333333',letterSpacing:(+x.letterSpacing||0)+'px',lineHeight:String(x.lineHeight||1.25),textAlign:x.textAlign||'left'}}
+function paintSig(info){try{return info.el.dataset.id+'|'+info.r.toString()+'|'+info.r.startOffset+'|'+info.r.endOffset}catch(_){return''}}
+function capturePaintSource(){
+ const info=rangeInfo();if(info)return{style:cssAtRange(info),id:String(info.el.dataset.id),sig:paintSig(info)};
+ const o=textObj(st()?.selectedId);return o?{style:objectStyle(o),id:String(o.id),sig:'object:'+o.id}:null;
+}
+function sourceForPainter(){const src=pendingPaint||capturePaintSource();pendingPaint=null;if(!src)return null;paintSourceId=src.id;paintSourceSig=src.sig;return src.style}
+function setPainterState(on){paintArmed=!!on;document.body.classList.toggle('v157PainterArmed',paintArmed);q('[data-v157-painter]')?.classList.toggle('active',paintArmed)}
+document.addEventListener('pointerdown',e=>{if(e.target instanceof Element&&e.target.closest('[data-v157-painter]'))pendingPaint=capturePaintSource()},true);
+window.v157TogglePainter=function(){
+ if(paintArmed){paintStyle=null;pendingPaint=null;setPainterState(false);window.cuteToast?.('Format übertragen beendet');return}
+ paintStyle=sourceForPainter();if(!paintStyle)return window.cuteToast?.('Markiere zuerst formatierten Text oder wähle ein Textfeld ♡');setPainterState(true);window.cuteToast?.('Format aufgenommen · Zieltext markieren');
+};
+function syncTextHTML(el){const o=textObj(el?.dataset.id);if(!o||!el)return;o.text=el.innerHTML;window.markCanvasDirty?.();window.pushHistory?.()}
+function applyStyleToRange(info){
+ if(!paintStyle||!info||info.r.collapsed)return false;const span=document.createElement('span');span.className='v157PaintedText';const p=paintStyle;
+ span.style.fontFamily=p.fontFamily;span.style.fontSize=p.fontSize;span.style.fontWeight=p.fontWeight;span.style.fontStyle=p.fontStyle;span.style.textDecorationLine=p.textDecorationLine;span.style.color=p.color;span.style.letterSpacing=p.letterSpacing;span.style.lineHeight=p.lineHeight;
+ try{span.appendChild(info.r.extractContents());info.r.insertNode(span);const nr=document.createRange();nr.selectNodeContents(span);info.s.removeAllRanges();info.s.addRange(nr);if(p.textAlign&&p.textAlign!=='start'){try{window.v137Text?.('textAlign',p.textAlign)}catch(_){}}syncTextHTML(info.el);return true}catch(err){console.error('[Studia V157] format painter range',err);return false}
+}
+function applyStyleToObject(el){const o=textObj(el?.dataset.id);if(!o||String(o.id)===paintSourceId)return false;o.style||={};const p=paintStyle;o.style.fontFamily=p.fontFamily;o.style.fontSize=Math.max(6,parseFloat(p.fontSize)||16);o.style.fontWeight=p.fontWeight;o.style.fontStyle=p.fontStyle;o.style.textDecoration=p.textDecorationLine;o.style.color=p.color;o.style.letterSpacing=parseFloat(p.letterSpacing)||0;o.style.lineHeight=parseFloat(p.lineHeight)||1.25;o.style.textAlign=p.textAlign||'left';window.markCanvasDirty?.();window.pushHistory?.();window.renderCanvasObjects?.();return true}
+function finishPainter(success){if(!success)return;paintStyle=null;setPainterState(false);window.cuteToast?.('Format übertragen ♡')}
+document.addEventListener('pointerup',e=>{
+ if(!paintArmed||!isEditor())return;const el=e.target instanceof Element?e.target.closest('#canvasObjects .cobj.v156DirectText[data-id],#canvasObjects .cobj[contenteditable="true"][data-id]'):null;if(!el)return;
+ setTimeout(()=>{if(!paintArmed)return;const info=rangeInfo();if(info&&paintSig(info)!==paintSourceSig&&String(info.el.dataset.id)!==paintSourceId||info&&paintSig(info)!==paintSourceSig){finishPainter(applyStyleToRange(info));return}if(!info||info.r.collapsed)finishPainter(applyStyleToObject(el))},25);
+},true);
+
+/* ---------- Adobe Illustrator-like shortcuts for canvas objects ---------- */
+function typing(){const a=document.activeElement;return !!(a&&(a.matches?.('input,textarea,select')||a.isContentEditable))}
+function selectTool(){if(document.body.classList.contains('v132SelectionOff'))window.v132ToggleSelection?.();document.body.classList.remove('v132SelectionOff')}
+function cutSelection(){window.copySelectedCanvasItems?.();window.deleteSelectedCanvasItem?.()}
+function shortcutHandled(e){e.preventDefault();e.stopImmediatePropagation()}
+document.addEventListener('keydown',e=>{
+ if(!isEditor()||innerWidth<900)return;const key=e.key.toLowerCase(),mod=e.ctrlKey||e.metaKey,isType=typing();
+ if(isType){return}
+ if(mod&&key==='z'&&e.shiftKey){shortcutHandled(e);window.redoCanvas?.();return}
+ if(mod&&key==='y'){shortcutHandled(e);window.redoCanvas?.();return}
+ if(mod&&key==='z'){shortcutHandled(e);window.undoCanvas?.();return}
+ if(mod&&key==='c'){shortcutHandled(e);window.copySelectedCanvasItems?.();return}
+ if(mod&&key==='v'){shortcutHandled(e);window.pasteCanvasItems?.();return}
+ if(mod&&key==='x'){shortcutHandled(e);cutSelection();return}
+ if(mod&&key==='d'){shortcutHandled(e);window.duplicateSelected?.();return}
+ if(mod&&key==='a'){shortcutHandled(e);window.selectAllCanvasItems?.();return}
+ if(mod&&key==='0'){shortcutHandled(e);window.fitCanvasStage?.();return}
+ if(mod&&key==='s'){shortcutHandled(e);window.saveCanvasSheet?.();window.cuteToast?.('Gespeichert ✓');return}
+ if(mod&&key==='k'){shortcutHandled(e);window.openHyperlinkDialog?.();return}
+ if((e.key==='Delete'||e.key==='Backspace')){shortcutHandled(e);window.deleteSelectedCanvasItem?.();return}
+ if(!mod&&!e.altKey&&!e.shiftKey&&key==='v'){shortcutHandled(e);selectTool();return}
+ if(!mod&&!e.altKey&&!e.shiftKey&&key==='t'){shortcutHandled(e);window.addCanvasTextBox?.();return}
+ if(!mod&&!e.altKey&&!e.shiftKey&&key==='m'){shortcutHandled(e);window.addVectorShape?.('rect');return}
+ if(!mod&&!e.altKey&&!e.shiftKey&&key==='l'){shortcutHandled(e);window.addVectorShape?.('ellipse');return}
+ if(!mod&&!e.altKey&&!e.shiftKey&&key==='p'){shortcutHandled(e);window.setVectorTool?.('pen');return}
+ if(!mod&&!e.altKey&&!e.shiftKey&&key==='i'){shortcutHandled(e);window.v157TogglePainter?.();return}
+ if(e.key==='Escape'&&paintArmed){shortcutHandled(e);paintStyle=null;setPainterState(false);return}
+},true);
+
+/* Keep native editing shortcuts inside rich-text fields instead of letting old document shortcuts steal them. */
+function protectTextShortcuts(){for(const el of qa('#canvasObjects .cobj[contenteditable="true"]')){if(el.dataset.v157Keys)return;el.dataset.v157Keys='1';el.addEventListener('keydown',e=>{const k=e.key.toLowerCase();if((e.ctrlKey||e.metaKey)&&['c','x','v','a','z','y','b','i','u'].includes(k))e.stopPropagation()})}}
+
+/* Update the shortcut cheat sheet with the Illustrator-style keys. */
+const oldHelp=window.openShortcutHelp;window.openShortcutHelp=function(){
+ if(!window.openModal)return oldHelp?.apply(this,arguments);
+ window.openModal(`<div class="shortcutModal v157ShortcutModal"><div class="presetModalHead"><div><span class="eyebrow">EDITOR</span><h2>Tastenkürzel</h2></div><button class="miniIcon" onclick="closeModal()">×</button></div><div class="shortcutGrid"><span><kbd>V</kbd> Auswahlwerkzeug</span><span><kbd>Shift + Klick</kbd> Mehrfachauswahl</span><span><kbd>Ctrl/⌘ C</kbd> Kopieren</span><span><kbd>Ctrl/⌘ V</kbd> Einfügen</span><span><kbd>Ctrl/⌘ X</kbd> Ausschneiden</span><span><kbd>Ctrl/⌘ D</kbd> Duplizieren</span><span><kbd>Ctrl/⌘ Z</kbd> Rückgängig</span><span><kbd>Ctrl/⌘ ⇧ Z</kbd> Wiederholen</span><span><kbd>Ctrl/⌘ A</kbd> Alles auswählen</span><span><kbd>Ctrl/⌘ G</kbd> Gruppieren</span><span><kbd>Ctrl/⌘ ⇧ G</kbd> Gruppe lösen</span><span><kbd>Delete</kbd> Löschen</span><span><kbd>T</kbd> Textfeld</span><span><kbd>M</kbd> Rechteck</span><span><kbd>L</kbd> Kreis / Ellipse</span><span><kbd>P</kbd> Zeichenstift</span><span><kbd>I</kbd> Format übertragen</span><span><kbd>Ctrl/⌘ K</kbd> Hyperlink</span><span><kbd>Ctrl/⌘ S</kbd> Speichern</span><span><kbd>Ctrl/⌘ 0</kbd> An Bildschirm</span></div></div>`);
+};try{openShortcutHelp=window.openShortcutHelp}catch(_){}
+
+function version157(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 157';document.title='Studia'}
+let polishTimer=0;function polish(){if(!isEditor())return;uniformVisibleIcons();protectTextShortcuts();version157()}
+const observer=new MutationObserver(()=>{if(!isEditor())return;clearTimeout(polishTimer);polishTimer=setTimeout(polish,30)});observer.observe(document.body,{childList:true,subtree:true});
+window.addEventListener('resize',()=>setTimeout(polish,100));setTimeout(polish,80);setTimeout(polish,500);setTimeout(polish,1400);
+})();
+/* ===== /Studia V157 ===== */
