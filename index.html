@@ -1,79 +1,6 @@
 <!doctype html>
 <html lang="de">
 <head>
-<script id="studia-v159-recovery">
-(function(){
-  'use strict';
-  const BUILD='159';
-  try{document.documentElement.dataset.studiaRecovery=BUILD}catch(_){ }
-
-  function clearStaleUi(){
-    try{
-      const body=document.body;if(!body)return;
-      body.style.pointerEvents='';
-      const sheetActive=!!document.querySelector('#view-sheet-editor.active');
-      const modal=document.querySelector('#modalWrap');
-      const modalContent=document.querySelector('#modal');
-      if(modal && (!modalContent || !modalContent.children.length)){
-        modal.classList.remove('open');
-        body.classList.remove('modalOpen');
-        body.style.top='';
-      }
-      if(!sheetActive){
-        body.classList.remove('editorMode','editorDrawerOpen','v141PropertiesOpen','v157PainterArmed','v156PainterArmed','v132SelectionOff');
-        document.querySelector('#v141PropertiesOverlay')?.remove();
-        document.querySelector('.v137Marquee')?.remove();
-        document.querySelector('.pathDrawHint')?.remove();
-      }
-      for(const el of [document.querySelector('.app'),document.querySelector('#nav'),document.querySelector('main')]){
-        if(el){el.style.removeProperty('pointer-events');el.style.removeProperty('user-select')}
-      }
-    }catch(err){console.warn('[Studia V159] UI recovery',err)}
-  }
-
-  // Do not let a stale editor view/overlay restore on the very first recovery boot.
-  try{
-    if(!sessionStorage.getItem('studia-v159-recovery-boot')){
-      sessionStorage.setItem('studia-v159-recovery-boot','1');
-      sessionStorage.removeItem('studia-last-view');
-      sessionStorage.removeItem('studia-last-sheet');
-    }
-  }catch(_){ }
-
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',clearStaleUi,{once:true});
-  else clearStaleUi();
-  window.addEventListener('load',()=>{clearStaleUi();setTimeout(clearStaleUi,250)},{once:true});
-
-  // Emergency cache reset: removes only Cache Storage / Service Workers, NEVER Studia localStorage data.
-  if('serviceWorker' in navigator && location.protocol.startsWith('http')){
-    (async()=>{
-      try{
-        const controller=navigator.serviceWorker.controller;
-        const safeUrl='sw.js?v=159';
-        const isSafeWorker=w=>!!(w&&String(w.scriptURL||'').includes(safeUrl));
-        const regs=await navigator.serviceWorker.getRegistrations();
-        const stale=regs.filter(r=>![r.installing,r.waiting,r.active].some(isSafeWorker));
-        await Promise.all(stale.map(r=>r.unregister().catch(()=>false)));
-        if('caches' in window){
-          const keys=await caches.keys();
-          await Promise.all(keys.filter(k=>/^studia-shell-/i.test(k)).map(k=>caches.delete(k)));
-        }
-        if(controller && !isSafeWorker(controller)){
-          let reloaded=false;
-          try{reloaded=sessionStorage.getItem('studia-v159-sw-reloaded')==='1'}catch(_){ }
-          if(!reloaded){
-            try{sessionStorage.setItem('studia-v159-sw-reloaded','1')}catch(_){ }
-            location.reload();
-            return;
-          }
-        }
-        // Keep a tiny no-cache worker so Studia notifications still have a registration.
-        await navigator.serviceWorker.register('./'+safeUrl,{updateViaCache:'none'}).catch(()=>null);
-      }catch(err){console.warn('[Studia V159] cache recovery',err)}
-    })();
-  }
-})();
-</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#fff8f5">
@@ -6335,14 +6262,12 @@ window.openShortcutHelp=function(){
  <div class="shortcutGrid">
   <span><kbd>Ctrl/⌘ Z</kbd> Rückgängig</span><span><kbd>Ctrl/⌘ Y</kbd> Wiederholen</span>
   <span><kbd>Ctrl/⌘ C</kbd> Kopieren</span><span><kbd>Ctrl/⌘ V</kbd> Einfügen</span>
-  <span><kbd>Ctrl/⌘ X</kbd> Ausschneiden</span><span><kbd>V</kbd> Auswahlwerkzeug</span>
   <span><kbd>Ctrl/⌘ D</kbd> Duplizieren</span><span><kbd>Ctrl/⌘ A</kbd> Alles auswählen</span>
   <span><kbd>Ctrl/⌘ G</kbd> Gruppieren</span><span><kbd>Ctrl/⌘ ⇧ G</kbd> Gruppe lösen</span>
   <span><kbd>Delete</kbd> Löschen mit Warnung</span><span><kbd>Shift + Klick</kbd> Mehrfachauswahl</span>
   <span><kbd>Ziehen</kbd> Auswahlrahmen</span><span><kbd>Pfeiltasten</kbd> 1 px bewegen</span>
   <span><kbd>Shift + Pfeil</kbd> 10 px bewegen</span><span><kbd>Ctrl/⌘ 0</kbd> An Bildschirm</span>
-  <span><kbd>Ctrl/⌘ S</kbd> Speichern</span><span><kbd>T / M / L / P</kbd> Text / Rechteck / Kreis / Zeichenstift</span>
-  <span><kbd>I</kbd> Format übertragen</span><span><kbd>?</kbd> Diese Übersicht</span>
+  <span><kbd>Ctrl/⌘ S</kbd> Speichern</span><span><kbd>?</kbd> Diese Übersicht</span>
  </div></div>`);
 }
 document.addEventListener("keydown",e=>{
@@ -6350,12 +6275,10 @@ document.addEventListener("keydown",e=>{
  const active=document.activeElement,isTyping=active&&(active.matches("input,textarea,select")||active.isContentEditable);
  const mod=e.ctrlKey||e.metaKey,key=e.key.toLowerCase();
  if(isTyping && !(mod&&["s","z","y"].includes(key)))return;
- if(mod&&key==="z"&&e.shiftKey){e.preventDefault();redoCanvas();return}
  if(mod&&key==="z"){e.preventDefault();undoCanvas();return}
- if(mod&&key==="y"){e.preventDefault();redoCanvas();return}
+ if(mod&&(key==="y"||(key==="z"&&e.shiftKey))){e.preventDefault();redoCanvas();return}
  if(mod&&key==="c"){e.preventDefault();copySelectedCanvasItems();return}
  if(mod&&key==="v"){e.preventDefault();pasteCanvasItems();return}
- if(mod&&key==="x"){e.preventDefault();copySelectedCanvasItems();deleteSelectedCanvasItem();return}
  if(mod&&key==="d"){e.preventDefault();duplicateSelected();return}
  if(mod&&key==="a"){e.preventDefault();selectAllCanvasItems();return}
  if(mod&&key==="g"&&!e.shiftKey){e.preventDefault();groupSelectedItems();return}
@@ -6366,12 +6289,6 @@ document.addEventListener("keydown",e=>{
  if(["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"].includes(e.key)&&!isTyping){
    e.preventDefault();const n=e.shiftKey?10:1;nudgeSelection(e.key==="ArrowLeft"?-n:e.key==="ArrowRight"?n:0,e.key==="ArrowUp"?-n:e.key==="ArrowDown"?n:0);return;
  }
- if(!mod&&!e.altKey&&!e.shiftKey&&key==="v"&&!isTyping){e.preventDefault();if(document.body.classList.contains("v132SelectionOff"))v132ToggleSelection();return}
- if(!mod&&!e.altKey&&!e.shiftKey&&key==="t"&&!isTyping){e.preventDefault();addCanvasTextBox();return}
- if(!mod&&!e.altKey&&!e.shiftKey&&key==="m"&&!isTyping){e.preventDefault();addVectorShape("rect");return}
- if(!mod&&!e.altKey&&!e.shiftKey&&key==="l"&&!isTyping){e.preventDefault();addVectorShape("ellipse");return}
- if(!mod&&!e.altKey&&!e.shiftKey&&key==="p"&&!isTyping){e.preventDefault();setVectorTool?.("pen");return}
- if(!mod&&!e.altKey&&!e.shiftKey&&key==="i"&&!isTyping){e.preventDefault();window.v156TogglePainter?.();return}
  if(e.key==="?"&&!isTyping){e.preventDefault();openShortcutHelp()}
 });
 
@@ -11038,8 +10955,13 @@ if(localStorage.getItem("schoolbloom-plan-parser-version")!=="42"){
    setTimeout(()=>loadRemotePlan(true),250);
  }
 }
-/* V159 RECOVERY: service-worker registration is intentionally disabled for this build.
-   Existing registrations/caches are removed by the early recovery bootstrap. */
+if("serviceWorker" in navigator && location.protocol.startsWith("http")){
+  window.addEventListener("load",()=>{
+    navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"})
+      .then(reg=>reg.update().catch(()=>{}))
+      .catch(()=>{});
+  },{once:true});
+}
 
 
 /* ===== V92 RECOVERY + SAFE EDITOR ENHANCEMENTS ===== */
@@ -15857,6 +15779,6 @@ setTimeout(reconcile,980);
 })();
 </script>
 <!-- ===== /Studia V134 ===== -->
-<link rel="stylesheet" href="editor.css?v=159">
-<script src="google-sync-config.js?v=159"></script>
-<script src="editor.js?v=159"></script>
+<link rel="stylesheet" href="editor.css?v=155">
+<script src="google-sync-config.js?v=155"></script>
+<script src="editor.js?v=155"></script>
