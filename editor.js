@@ -393,8 +393,8 @@ document.addEventListener('keydown',e=>{if(!editor())return;const typing=e.targe
 function correctLayerIcons(){for(const row of qa('[data-layer-kind][data-layer-id]')){const ref=row.dataset.layerKind==='object'?(canvasState.objects||[]).find(x=>x.id===row.dataset.layerId):(canvasState.vectors||[]).find(x=>x.id===row.dataset.layerId),b=row.querySelector('.v135LayerLock,.v130LayerTools button[title="Sperren"],.v130LayerTools button[title="Entsperren"]');if(!ref||!b)continue;b.innerHTML=window.v133Icon?.(ref.locked?'lock':'unlock')||'';b.title=ref.locked?'Entsperren':'Sperren';b.setAttribute('aria-label',b.title)}}
 
 /* Today gets the requested version and one visual icon system. */
-function polishToday(){const home=q('#view-home');if(!home)return;home.querySelector('.v138Version')?.remove();const eye=q('#headerEyebrow');if(eye&&eye.textContent!=='VERSION 143')eye.textContent='VERSION 143';const specs=[['Aufgabe','task'],['Test','test'],['Fächer','subjects'],['Lernen','learn']];qa('.homeMiniActions button',home).forEach((b,i)=>{const spec=specs[i];if(!spec||b.dataset.v138Today==='1')return;b.dataset.v138Today='1';b.classList.add('v138TodayAction');b.innerHTML=icons[spec[1]]+`<span>${spec[0]}</span>`})}
-function watchVersion(){const eye=q('#headerEyebrow');if(!eye||eye.dataset.v138Watch==='1')return;eye.dataset.v138Watch='1';const enforce=()=>{if(!editor()&&eye.textContent!=='VERSION 143')eye.textContent='VERSION 143'};new MutationObserver(enforce).observe(eye,{childList:true,subtree:true,characterData:true});enforce()}
+function polishToday(){const home=q('#view-home');if(!home)return;home.querySelector('.v138Version')?.remove();const eye=q('#headerEyebrow');if(eye&&eye.textContent!=='VERSION 163')eye.textContent='VERSION 163';const specs=[['Aufgabe','task'],['Test','test'],['Fächer','subjects'],['Lernen','learn']];qa('.homeMiniActions button',home).forEach((b,i)=>{const spec=specs[i];if(!spec||b.dataset.v138Today==='1')return;b.dataset.v138Today='1';b.classList.add('v138TodayAction');b.innerHTML=icons[spec[1]]+`<span>${spec[0]}</span>`})}
+function watchVersion(){const eye=q('#headerEyebrow');if(eye&&!editor()&&eye.textContent!=='VERSION 163')eye.textContent='VERSION 163'}
 
 function cleanMobileDrawer(){qa('.v137MobileTextExtras,.v135MobileExtras').forEach(x=>x.remove())}
 function reconcile(){if(!editor()){polishToday();return}compactNav();enhanceSelectionBars();decorateInspector();correctLayerIcons();cleanMobileDrawer();decorateTransformHandles();if(q('#canvasQuickDrawer.open'))ensureElementTools()}
@@ -669,7 +669,7 @@ const textKinds=new Set(['text','block','task','merke']);
 const selectedText=()=>{try{const o=(canvasState?.objects||[]).find(x=>x.id===canvasState?.selectedId);return o&&textKinds.has(o.kind)?o:null}catch(_){return null}};
 
 /* ---------- version ---------- */
-function setVersion(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 149';document.title='Studia'}
+function setVersion(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 163')e.textContent='VERSION 163';document.title='Studia'}
 setVersion();setTimeout(setVersion,250);setTimeout(setVersion,1800);
 
 /* ---------- custom fonts: visible input + IndexedDB + previews ---------- */
@@ -885,7 +885,7 @@ document.addEventListener('change',e=>{
 },true);
 
 /* Keep a single current version label after all historical startup scripts finish. */
-function version(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 149';document.title='Studia'}
+function version(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 163')e.textContent='VERSION 163';document.title='Studia'}
 version();setTimeout(version,450);setTimeout(version,1900);
 })();
 /* ===== /Studia V149 ===== */
@@ -899,7 +899,7 @@ const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelecto
 const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const inEditor=()=>document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
 const desktop=()=>innerWidth>=900&&inEditor();
-function setVersion150(){const e=q('#headerEyebrow');if(e){if(e.textContent!=='VERSION 155')e.textContent='VERSION 155';if(e.dataset.v151Watch!=='1'){e.dataset.v151Watch='1';new MutationObserver(()=>{if(e.textContent!=='VERSION 155')e.textContent='VERSION 155'}).observe(e,{childList:true,subtree:true,characterData:true})}}document.documentElement.classList.add('v151Ready');document.title='Studia'}
+function setVersion150(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 163')e.textContent='VERSION 163';document.documentElement.classList.add('v151Ready');document.title='Studia'}
 setVersion150();setTimeout(setVersion150,300);setTimeout(setVersion150,1800);
 
 /* Disable the older key-based V145 transport. Its local save hooks may remain,
@@ -1153,7 +1153,7 @@ window.v152ApplyPresetToSelection=applyPreset;
 window.addEventListener('resize',()=>{setTimeout(syncTextHits,50);setTimeout(updateMobileBar,50)});
 
 /* Keep one current visible version. */
-function version(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 155')e.textContent='VERSION 155';document.documentElement.classList.add('v151Ready');document.title='Studia'}
-const vm=new MutationObserver(version);setTimeout(()=>{const e=q('#headerEyebrow');if(e)vm.observe(e,{childList:true,subtree:true,characterData:true});version()},0);setTimeout(version,100);setTimeout(version,800);
+function version(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 163')e.textContent='VERSION 163';document.documentElement.classList.add('v151Ready');document.title='Studia'}
+setTimeout(version,0);setTimeout(version,100);setTimeout(version,800);setTimeout(version,2200);
 })();
 /* ===== /Studia V152 ===== */
