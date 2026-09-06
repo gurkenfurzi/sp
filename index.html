@@ -6262,12 +6262,14 @@ window.openShortcutHelp=function(){
  <div class="shortcutGrid">
   <span><kbd>Ctrl/⌘ Z</kbd> Rückgängig</span><span><kbd>Ctrl/⌘ Y</kbd> Wiederholen</span>
   <span><kbd>Ctrl/⌘ C</kbd> Kopieren</span><span><kbd>Ctrl/⌘ V</kbd> Einfügen</span>
+  <span><kbd>Ctrl/⌘ X</kbd> Ausschneiden</span><span><kbd>V</kbd> Auswahlwerkzeug</span>
   <span><kbd>Ctrl/⌘ D</kbd> Duplizieren</span><span><kbd>Ctrl/⌘ A</kbd> Alles auswählen</span>
   <span><kbd>Ctrl/⌘ G</kbd> Gruppieren</span><span><kbd>Ctrl/⌘ ⇧ G</kbd> Gruppe lösen</span>
   <span><kbd>Delete</kbd> Löschen mit Warnung</span><span><kbd>Shift + Klick</kbd> Mehrfachauswahl</span>
   <span><kbd>Ziehen</kbd> Auswahlrahmen</span><span><kbd>Pfeiltasten</kbd> 1 px bewegen</span>
   <span><kbd>Shift + Pfeil</kbd> 10 px bewegen</span><span><kbd>Ctrl/⌘ 0</kbd> An Bildschirm</span>
-  <span><kbd>Ctrl/⌘ S</kbd> Speichern</span><span><kbd>?</kbd> Diese Übersicht</span>
+  <span><kbd>Ctrl/⌘ S</kbd> Speichern</span><span><kbd>T / M / L / P</kbd> Text / Rechteck / Kreis / Zeichenstift</span>
+  <span><kbd>I</kbd> Format übertragen</span><span><kbd>?</kbd> Diese Übersicht</span>
  </div></div>`);
 }
 document.addEventListener("keydown",e=>{
@@ -6275,10 +6277,12 @@ document.addEventListener("keydown",e=>{
  const active=document.activeElement,isTyping=active&&(active.matches("input,textarea,select")||active.isContentEditable);
  const mod=e.ctrlKey||e.metaKey,key=e.key.toLowerCase();
  if(isTyping && !(mod&&["s","z","y"].includes(key)))return;
+ if(mod&&key==="z"&&e.shiftKey){e.preventDefault();redoCanvas();return}
  if(mod&&key==="z"){e.preventDefault();undoCanvas();return}
- if(mod&&(key==="y"||(key==="z"&&e.shiftKey))){e.preventDefault();redoCanvas();return}
+ if(mod&&key==="y"){e.preventDefault();redoCanvas();return}
  if(mod&&key==="c"){e.preventDefault();copySelectedCanvasItems();return}
  if(mod&&key==="v"){e.preventDefault();pasteCanvasItems();return}
+ if(mod&&key==="x"){e.preventDefault();copySelectedCanvasItems();deleteSelectedCanvasItem();return}
  if(mod&&key==="d"){e.preventDefault();duplicateSelected();return}
  if(mod&&key==="a"){e.preventDefault();selectAllCanvasItems();return}
  if(mod&&key==="g"&&!e.shiftKey){e.preventDefault();groupSelectedItems();return}
@@ -6289,6 +6293,12 @@ document.addEventListener("keydown",e=>{
  if(["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"].includes(e.key)&&!isTyping){
    e.preventDefault();const n=e.shiftKey?10:1;nudgeSelection(e.key==="ArrowLeft"?-n:e.key==="ArrowRight"?n:0,e.key==="ArrowUp"?-n:e.key==="ArrowDown"?n:0);return;
  }
+ if(!mod&&!e.altKey&&!e.shiftKey&&key==="v"&&!isTyping){e.preventDefault();if(document.body.classList.contains("v132SelectionOff"))v132ToggleSelection();return}
+ if(!mod&&!e.altKey&&!e.shiftKey&&key==="t"&&!isTyping){e.preventDefault();addCanvasTextBox();return}
+ if(!mod&&!e.altKey&&!e.shiftKey&&key==="m"&&!isTyping){e.preventDefault();addVectorShape("rect");return}
+ if(!mod&&!e.altKey&&!e.shiftKey&&key==="l"&&!isTyping){e.preventDefault();addVectorShape("ellipse");return}
+ if(!mod&&!e.altKey&&!e.shiftKey&&key==="p"&&!isTyping){e.preventDefault();setVectorTool?.("pen");return}
+ if(!mod&&!e.altKey&&!e.shiftKey&&key==="i"&&!isTyping){e.preventDefault();window.v156TogglePainter?.();return}
  if(e.key==="?"&&!isTyping){e.preventDefault();openShortcutHelp()}
 });
 
@@ -15779,6 +15789,6 @@ setTimeout(reconcile,980);
 })();
 </script>
 <!-- ===== /Studia V134 ===== -->
-<link rel="stylesheet" href="editor.css?v=157">
-<script src="google-sync-config.js?v=156"></script>
-<script src="editor.js?v=157"></script>
+<link rel="stylesheet" href="editor.css?v=158">
+<script src="google-sync-config.js?v=158"></script>
+<script src="editor.js?v=158"></script>
