@@ -899,7 +899,7 @@ const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelecto
 const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const inEditor=()=>document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
 const desktop=()=>innerWidth>=900&&inEditor();
-function setVersion150(){const e=q('#headerEyebrow');if(e){if(e.textContent!=='VERSION 158')e.textContent='VERSION 158';if(e.dataset.v151Watch!=='1'){e.dataset.v151Watch='1';new MutationObserver(()=>{if(e.textContent!=='VERSION 158')e.textContent='VERSION 158'}).observe(e,{childList:true,subtree:true,characterData:true})}}document.documentElement.classList.add('v151Ready');document.title='Studia'}
+function setVersion150(){const e=q('#headerEyebrow');if(e){if(e.textContent!=='VERSION 159')e.textContent='VERSION 159';if(e.dataset.v151Watch!=='1'){e.dataset.v151Watch='1';new MutationObserver(()=>{if(e.textContent!=='VERSION 159')e.textContent='VERSION 159'}).observe(e,{childList:true,subtree:true,characterData:true})}}document.documentElement.classList.add('v151Ready');document.title='Studia'}
 setVersion150();setTimeout(setVersion150,300);setTimeout(setVersion150,1800);
 
 /* Disable the older key-based V145 transport. Its local save hooks may remain,
@@ -1153,7 +1153,7 @@ window.v152ApplyPresetToSelection=applyPreset;
 window.addEventListener('resize',()=>{setTimeout(syncTextHits,50);setTimeout(updateMobileBar,50)});
 
 /* Keep one current visible version. */
-function version(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 158')e.textContent='VERSION 158';document.documentElement.classList.add('v151Ready');document.title='Studia'}
+function version(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 159')e.textContent='VERSION 159';document.documentElement.classList.add('v151Ready');document.title='Studia'}
 const vm=new MutationObserver(version);setTimeout(()=>{const e=q('#headerEyebrow');if(e)vm.observe(e,{childList:true,subtree:true,characterData:true});version()},0);setTimeout(version,100);setTimeout(version,800);
 })();
 /* ===== /Studia V152 ===== */
@@ -1371,7 +1371,7 @@ window.addEventListener('resize',()=>setTimeout(()=>{enhanceToolbar();positionMo
 setTimeout(()=>{enableDirectText();enhanceToolbar()},350);setTimeout(()=>{enableDirectText();enhanceToolbar()},1200);
 
 /* Keep the visible build number current despite older observers. */
-function version156(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 158')e.textContent='VERSION 158';document.title='Studia'}
+function version156(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 159')e.textContent='VERSION 159';document.title='Studia'}
 setTimeout(version156,50);setTimeout(version156,900);
 })();
 /* ===== /Studia V156 ===== */
