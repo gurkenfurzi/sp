@@ -649,3 +649,56 @@ body.editorMode #canvasObjects .cobj.v152EditingText[contenteditable="true"] *{u
 #v152FormatPopover button:active{background:#fff0f1}#v152FormatPopover button span{display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:#fff0f1}#v152FormatPopover button b{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media(min-width:900px){#v152SelectionBar,#v152FormatPopover{display:none!important}}
 /* ===== /Studia V152 ===== */
+
+/* ===== Studia V153 — clean independent laptop rail + text selection ===== */
+@media(min-width:900px){
+  body.editorMode .v102DesktopLeft{
+    display:grid!important;grid-template-columns:76px minmax(0,1fr)!important;grid-template-rows:minmax(0,1fr)!important;
+    min-height:0!important;overflow:hidden!important;background:#fffefd!important;
+  }
+  /* Retire every historical laptop rail/drawer visually; their background logic can no longer wreck the visible UI. */
+  body.editorMode .v102DesktopLeft>.canvasQuickNav,
+  body.editorMode .v102DesktopLeft>#canvasQuickDrawer,
+  body.editorMode #v151DesktopRail{display:none!important}
+  body.editorMode #v153DesktopRail{
+    grid-column:1;grid-row:1;display:flex;flex-direction:column;align-items:stretch;gap:5px;
+    padding:10px 7px;border-right:1px solid #eee1dc;background:#fff;overflow:hidden;z-index:5
+  }
+  body.editorMode #v153DesktopRail>button{
+    width:100%;height:66px;min-height:66px;border:1px solid transparent;border-radius:14px;background:transparent;color:#76645e;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:6px 3px;font:850 9px/1.1 inherit;cursor:pointer
+  }
+  body.editorMode #v153DesktopRail>button:hover{background:#fff7f6;border-color:#f3e3df;color:#995f65}
+  body.editorMode #v153DesktopRail>button.active{background:#fdebec;border-color:#f0d1d3;color:#995a62}
+  .v153RailIcon{width:25px;height:25px;display:grid;place-items:center}
+  .v153RailIcon svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  body.editorMode #v153DesktopPanel{grid-column:2;grid-row:1;min-width:0;min-height:0;height:100%;overflow:hidden;background:#fffefd;color:#594c47;display:flex;flex-direction:column}
+  .v153PanelHead{flex:0 0 auto;display:grid;gap:2px;padding:15px 15px 12px;border-bottom:1px solid #eee2dd;background:#fffefd}
+  .v153PanelHead>span{font-size:8px;letter-spacing:.14em;font-weight:950;color:#b4737b}.v153PanelHead>b{font-size:16px;letter-spacing:-.02em}.v153PanelHead>small{font-size:9px;color:#a08b84}
+  .v153PanelScroll{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-gutter:stable;padding:13px 14px 26px}
+  .v153PanelSection{margin:0 0 20px}.v153SectionHead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 9px}.v153SectionHead>b{font-size:11px}.v153SectionHead>span{font-size:8px;color:#a28d85}.v153SectionHead>button{border:0;background:transparent;color:#a65f68;font-size:9px;font-weight:900;padding:4px;cursor:pointer}
+  .v153PresetList{display:grid;gap:7px}.v153PresetCard{display:grid;grid-template-columns:48px minmax(0,1fr);align-items:center;gap:10px;width:100%;min-height:62px;padding:7px 9px;border:1px solid #eadeda;border-radius:13px;background:#fff;color:#5f514b;text-align:left;cursor:pointer}.v153PresetCard:hover{border-color:#ecc4c7;background:#fff9f8}.v153PresetPreview{width:44px;height:44px;border-radius:11px;background:#fff0f1;display:grid;place-items:center;overflow:hidden}.v153PresetCard>span:last-child{display:grid;gap:2px;min-width:0}.v153PresetCard b{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v153PresetCard small{font-size:8px;color:#a08b84}
+  .v153SoftAction{width:100%;min-height:42px;margin-top:8px;border:1px dashed #e7c5c7;border-radius:12px;background:#fff8f7;color:#9b6067;display:flex;align-items:center;justify-content:center;gap:7px;font-size:9px;font-weight:900;cursor:pointer}.v153SoftAction svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+  .v153FontActions{display:grid;grid-template-columns:1fr;gap:7px}.v153FontActions>button,.v153FontUpload{position:relative;min-height:54px;border:1px solid #eadeda;border-radius:13px;background:#fff;color:#62534e;display:grid;grid-template-columns:32px minmax(0,1fr);align-items:center;gap:9px;padding:8px 10px;text-align:left;cursor:pointer}.v153FontActions svg,.v153FontUpload>svg{width:22px;height:22px;fill:none;stroke:#a1646c;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.v153FontActions span,.v153FontUpload span{display:grid;gap:2px}.v153FontActions b,.v153FontUpload b{font-size:10px}.v153FontActions small,.v153FontUpload small{font-size:8px;color:#9f8a83}.v153FontUpload input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+  .v153FontSearch,.v153ElementSearch{height:39px;margin:9px 0 10px;border:1px solid #e9dfdb;border-radius:11px;background:#fff;display:flex;align-items:center;gap:7px;padding:0 10px;color:#a18c85}.v153FontSearch svg,.v153ElementSearch svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8}.v153FontSearch input,.v153ElementSearch input{flex:1;min-width:0;height:36px!important;border:0!important;outline:0!important;background:transparent!important;box-shadow:none!important;padding:0!important;font-size:10px!important;color:#5f514b!important}
+  .v153FontList{display:grid;grid-template-columns:1fr;gap:6px}.v153FontCard{min-height:58px;border:1px solid #eadeda;border-radius:12px;background:#fff;color:#5b4e48;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 8px;align-items:center;padding:7px 10px;text-align:left;cursor:pointer}.v153FontCard:hover{border-color:#ecc4c7;background:#fff9f8}.v153FontCard>span{grid-column:1/-1;font-size:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v153FontCard>b{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .v153ElementGroups{display:grid;gap:17px}.v153ElementGroup{display:grid;gap:8px}.v153ElementGroup h3{margin:0;font-size:10px;color:#6c5b55}.v153ElementGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.v153ElementTile{min-height:72px;border:1px solid #ebe0dc;border-radius:13px;background:#fff;color:#62534e;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:7px;cursor:pointer}.v153ElementTile:hover{border-color:#ecc4c7;background:#fff9f8}.v153ElementTile>span{width:27px;height:27px;display:grid;place-items:center;color:#a1686d}.v153ElementTile svg{width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.v153ElementTile>b{font-size:9px;text-align:center;line-height:1.15}
+  .v153TemplateActions{display:grid;gap:7px;margin-bottom:15px}.v153TemplateActions>button{min-height:42px;border:1px solid #eadeda;border-radius:12px;background:#fff;color:#655650;display:flex;align-items:center;justify-content:center;gap:7px;font-size:9px;font-weight:900;cursor:pointer}.v153TemplateActions>button:first-child{background:#fff0f1;border-color:#efc9cc;color:#995d64}.v153TemplateActions svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2}
+  .v153TemplateGrid{display:grid;gap:8px}.v153TemplateCard{display:grid;grid-template-columns:64px minmax(0,1fr);align-items:center;gap:10px;min-height:82px;padding:8px;border:1px solid #eadfda;border-radius:13px;background:#fff;color:#5f514b;text-align:left;cursor:pointer}.v153TemplateCard:hover{border-color:#ecc4c7;background:#fff9f8}.v153TemplateCard>span:last-child{display:grid;gap:3px;min-width:0}.v153TemplateCard b{font-size:10px}.v153TemplateCard small{font-size:8px;color:#9e8982}
+  .v153TemplateThumb{position:relative;width:58px;height:70px;border:1px solid #e6dad6;border-radius:8px;background:#fff;overflow:hidden;box-shadow:0 2px 8px rgba(93,69,62,.06)}.v153TemplateThumb:before{content:'';position:absolute;left:7px;right:7px;top:9px;height:7px;border-radius:4px;background:#efb6ba}.v153TemplateThumb i{position:absolute;left:7px;right:7px;height:3px;border-radius:3px;background:#eadfdb}.v153TemplateThumb i:nth-child(1){top:27px}.v153TemplateThumb i:nth-child(2){top:37px;right:17px}.v153TemplateThumb i:nth-child(3){top:51px;height:10px;background:#fff0df}.v153TemplateThumb.exam:before{background:#bdcf98}.v153TemplateThumb.cute{background:#fff9f8}.v153TemplateThumb.blank:before,.v153TemplateThumb.blank i{opacity:.25}.v153TemplateThumb.own:before{background:#c9b4dc}
+  .v153Empty{margin:0;padding:14px 8px;text-align:center;color:#a08b84;font-size:9px}
+}
+
+/* Our text interaction surface is above historical drag hit-layers, but disappears while text is being edited. */
+#v153TextInputLayer{position:absolute;left:0;top:0;pointer-events:none;z-index:2147482300;transform-origin:0 0}
+#v153TextInputLayer .v153TextTap{position:absolute;pointer-events:auto;touch-action:none;background:rgba(255,255,255,.001);cursor:text;box-sizing:border-box}
+body.editorMode #canvasObjects .cobj.v153EditingText[contenteditable="true"],
+body.editorMode #canvasObjects .cobj[contenteditable="true"].editing{
+  pointer-events:auto!important;user-select:text!important;-webkit-user-select:text!important;-webkit-touch-callout:default!important;
+  cursor:text!important;touch-action:auto!important;z-index:2147482400!important;overflow:visible!important
+}
+body.editorMode #canvasObjects .cobj.v153EditingText[contenteditable="true"] *,
+body.editorMode #canvasObjects .cobj[contenteditable="true"].editing *{user-select:text!important;-webkit-user-select:text!important}
+/* The old V152 interaction surface is retired; keeping two text hit systems caused the caret to lose every time. */
+#v152TextHitLayer{display:none!important;pointer-events:none!important}
+/* ===== /Studia V153 ===== */
