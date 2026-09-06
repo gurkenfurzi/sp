@@ -393,8 +393,8 @@ document.addEventListener('keydown',e=>{if(!editor())return;const typing=e.targe
 function correctLayerIcons(){for(const row of qa('[data-layer-kind][data-layer-id]')){const ref=row.dataset.layerKind==='object'?(canvasState.objects||[]).find(x=>x.id===row.dataset.layerId):(canvasState.vectors||[]).find(x=>x.id===row.dataset.layerId),b=row.querySelector('.v135LayerLock,.v130LayerTools button[title="Sperren"],.v130LayerTools button[title="Entsperren"]');if(!ref||!b)continue;b.innerHTML=window.v133Icon?.(ref.locked?'lock':'unlock')||'';b.title=ref.locked?'Entsperren':'Sperren';b.setAttribute('aria-label',b.title)}}
 
 /* Today gets the requested version and one visual icon system. */
-function polishToday(){const home=q('#view-home');if(!home)return;home.querySelector('.v138Version')?.remove();const eye=q('#headerEyebrow');if(eye&&eye.textContent!=='VERSION 163')eye.textContent='VERSION 163';const specs=[['Aufgabe','task'],['Test','test'],['Fächer','subjects'],['Lernen','learn']];qa('.homeMiniActions button',home).forEach((b,i)=>{const spec=specs[i];if(!spec||b.dataset.v138Today==='1')return;b.dataset.v138Today='1';b.classList.add('v138TodayAction');b.innerHTML=icons[spec[1]]+`<span>${spec[0]}</span>`})}
-function watchVersion(){const eye=q('#headerEyebrow');if(eye&&!editor()&&eye.textContent!=='VERSION 163')eye.textContent='VERSION 163'}
+function polishToday(){const home=q('#view-home');if(!home)return;home.querySelector('.v138Version')?.remove();const eye=q('#headerEyebrow');if(eye&&eye.textContent!=='VERSION 164')eye.textContent='VERSION 164';const specs=[['Aufgabe','task'],['Test','test'],['Fächer','subjects'],['Lernen','learn']];qa('.homeMiniActions button',home).forEach((b,i)=>{const spec=specs[i];if(!spec||b.dataset.v138Today==='1')return;b.dataset.v138Today='1';b.classList.add('v138TodayAction');b.innerHTML=icons[spec[1]]+`<span>${spec[0]}</span>`})}
+function watchVersion(){const eye=q('#headerEyebrow');if(eye&&!editor()&&eye.textContent!=='VERSION 164')eye.textContent='VERSION 164'}
 
 function cleanMobileDrawer(){qa('.v137MobileTextExtras,.v135MobileExtras').forEach(x=>x.remove())}
 function reconcile(){if(!editor()){polishToday();return}compactNav();enhanceSelectionBars();decorateInspector();correctLayerIcons();cleanMobileDrawer();decorateTransformHandles();if(q('#canvasQuickDrawer.open'))ensureElementTools()}
@@ -669,7 +669,7 @@ const textKinds=new Set(['text','block','task','merke']);
 const selectedText=()=>{try{const o=(canvasState?.objects||[]).find(x=>x.id===canvasState?.selectedId);return o&&textKinds.has(o.kind)?o:null}catch(_){return null}};
 
 /* ---------- version ---------- */
-function setVersion(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 163')e.textContent='VERSION 163';document.title='Studia'}
+function setVersion(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 164')e.textContent='VERSION 164';document.title='Studia'}
 setVersion();setTimeout(setVersion,250);setTimeout(setVersion,1800);
 
 /* ---------- custom fonts: visible input + IndexedDB + previews ---------- */
@@ -885,7 +885,7 @@ document.addEventListener('change',e=>{
 },true);
 
 /* Keep a single current version label after all historical startup scripts finish. */
-function version(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 163')e.textContent='VERSION 163';document.title='Studia'}
+function version(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 164')e.textContent='VERSION 164';document.title='Studia'}
 version();setTimeout(version,450);setTimeout(version,1900);
 })();
 /* ===== /Studia V149 ===== */
@@ -899,7 +899,7 @@ const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelecto
 const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const inEditor=()=>document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
 const desktop=()=>innerWidth>=900&&inEditor();
-function setVersion150(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 163')e.textContent='VERSION 163';document.documentElement.classList.add('v151Ready');document.title='Studia'}
+function setVersion150(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 164')e.textContent='VERSION 164';document.documentElement.classList.add('v151Ready');document.title='Studia'}
 setVersion150();setTimeout(setVersion150,300);setTimeout(setVersion150,1800);
 
 /* Disable the older key-based V145 transport. Its local save hooks may remain,
@@ -1153,7 +1153,210 @@ window.v152ApplyPresetToSelection=applyPreset;
 window.addEventListener('resize',()=>{setTimeout(syncTextHits,50);setTimeout(updateMobileBar,50)});
 
 /* Keep one current visible version. */
-function version(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 163')e.textContent='VERSION 163';document.documentElement.classList.add('v151Ready');document.title='Studia'}
+function version(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 164')e.textContent='VERSION 164';document.documentElement.classList.add('v151Ready');document.title='Studia'}
 setTimeout(version,0);setTimeout(version,100);setTimeout(version,800);setTimeout(version,2200);
 })();
 /* ===== /Studia V152 ===== */
+
+/* ===== Studia V164 — safe editor-only tools (no boot/navigation changes) ===== */
+(function(){
+'use strict';
+const q=(s,r=document)=>r.querySelector(s), qa=(s,r=document)=>[...r.querySelectorAll(s)];
+const isEditor=()=>document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
+const textKinds=new Set(['text','block','task','merke','file']);
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const svg=(body,cls='')=>`<svg class="v164Icon ${cls}" viewBox="0 0 24 24" aria-hidden="true">${body}</svg>`;
+const I={
+ plus:svg('<path d="M12 5v14M5 12h14"/>'),
+ font:svg('<path d="M5 19 10.2 5h3.6L19 19M7.4 13h9.2"/>'),
+ left:svg('<path d="M4 6h14M4 10h10M4 14h14M4 18h9"/>'),
+ center:svg('<path d="M5 6h14M7 10h10M5 14h14M7 18h10"/>'),
+ right:svg('<path d="M6 6h14M10 10h10M6 14h14M11 18h9"/>'),
+ justify:svg('<path d="M4 6h16M4 10h16M4 14h16M4 18h16"/>'),
+ link:svg('<path d="M10 13a5 5 0 0 0 7.1.1l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1M14 11a5 5 0 0 0-7.1-.1l-2 2A5 5 0 0 0 12 20l1.1-1.1"/>'),
+ paint:svg('<path d="M14 4 20 10 11 19H5v-6l9-9Z"/><path d="m12 6 6 6M5 19l-1 1"/>'),
+ edit:svg('<path d="m4 20 4.2-1 10.6-10.6a2.1 2.1 0 0 0-3-3L5.2 16 4 20Z"/><path d="m14.5 6.5 3 3"/>'),
+ trash:svg('<path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/>'),
+ close:svg('<path d="m6 6 12 12M18 6 6 18"/>')
+};
+
+/* ---------- compact, safe desktop text toolbar ---------- */
+function storedFontNames(){
+ const out=[];
+ for(const key of ['schoolbloom-v91-custom-fonts','schoolbloom-custom-fonts']){
+  try{for(const f of JSON.parse(localStorage.getItem(key)||'[]'))if(f?.name&&!out.includes(f.name))out.push(f.name)}catch(_){ }
+ }
+ return out;
+}
+function fontOptions(){
+ const base=['Arial','Inter','Trebuchet MS','Verdana','Georgia','Times New Roman'];
+ return [...new Set([...base,...storedFontNames()])].map(n=>`<option value="${esc(n)}" style="font-family:${esc(n)}">${esc(n)}</option>`).join('');
+}
+function toolbarHTML(){return `<div class="v164FormatToolbar">
+ <div class="v164ToolGroup v164FontGroup">
+  <button class="v164FontPreview" type="button" title="Schriften mit Vorschau" onclick="window.v144OpenFontBrowser?.()">${I.font}</button>
+  <select class="v137Font v164FontSelect" title="Schrift" onchange="applyTextProperty('fontFamily',this.value);this.style.fontFamily=this.value">${fontOptions()}</select>
+  <button type="button" title="Schrift hinzufügen" onclick="v164AddFont()">${I.plus}</button>
+  <input class="v164Size" title="Schriftgröße" type="number" min="6" max="180" value="16" onchange="applyTextProperty('fontSize',+this.value)">
+ </div>
+ <div class="v164ToolGroup v164TextStyle" aria-label="Textformat">
+  <button type="button" title="Fett" onclick="formatSelectedText('bold')"><b>B</b></button>
+  <button type="button" title="Kursiv" onclick="formatSelectedText('italic')"><i>I</i></button>
+  <button type="button" title="Unterstrichen" onclick="formatSelectedText('underline')"><u>U</u></button>
+  <button type="button" title="Durchgestrichen" onclick="formatSelectedText('strikeThrough')"><s>S</s></button>
+  <label class="v164Color" title="Textfarbe"><span>A</span><input type="color" value="#333333" onchange="applyTextProperty('color',this.value)"></label>
+ </div>
+ <div class="v164ToolGroup v164Align" aria-label="Ausrichtung">
+  <button type="button" title="Linksbündig" onclick="applyTextProperty('textAlign','left')">${I.left}</button>
+  <button type="button" title="Zentriert" onclick="applyTextProperty('textAlign','center')">${I.center}</button>
+  <button type="button" title="Rechtsbündig" onclick="applyTextProperty('textAlign','right')">${I.right}</button>
+  <button type="button" title="Blocksatz" onclick="applyTextProperty('textAlign','justify')">${I.justify}</button>
+ </div>
+ <div class="v164ToolGroup v164Actions">
+  <button type="button" title="Hyperlink" onclick="v164Hyperlink()">${I.link}</button>
+  <button class="v164PainterBtn" type="button" title="Format übertragen (I)" onclick="v164ToggleFormatPainter()">${I.paint}</button>
+ </div>
+ </div>`}
+function populateFonts(){
+ const sel=q('.v164FontSelect');if(!sel)return;const cur=sel.value;sel.innerHTML=fontOptions();if([...sel.options].some(o=>o.value===cur))sel.value=cur;sel.style.fontFamily=sel.value||'Arial';
+}
+function ensureToolbar(){
+ if(!isEditor()||innerWidth<900)return;const host=q('.v134FormatTools');if(!host)return;
+ if(host.dataset.v164!=='1'){host.dataset.v164='1';host.innerHTML=toolbarHTML()}
+ populateFonts();syncPainterButton();normalizeEditorIcons();
+}
+window.v164AddFont=function(){window.v91PickFont?.();setTimeout(populateFonts,700);setTimeout(populateFonts,1800)};
+
+/* ---------- shift-click = multi-select, including text hit layer ---------- */
+function toggleObject(id){
+ if(typeof window.toggleObjectInMultiSelection==='function')return window.toggleObjectInMultiSelection(id);
+ const set=new Set(canvasState.selectedIds||[]);set.has(id)?set.delete(id):set.add(id);canvasState.selectedIds=[...set];canvasState.selectedVectorIds=canvasState.selectedVectorIds||[];canvasState.selectedType=canvasState.selectedIds.length?'object':canvasState.selectedVectorIds.length?'vector':null;canvasState.selectedId=canvasState.selectedIds.at(-1)||canvasState.selectedVectorIds.at(-1)||null;canvasState.multiMode=(canvasState.selectedIds.length+canvasState.selectedVectorIds.length)>1;renderCanvasObjects?.();renderCanvasInspector?.();
+}
+document.addEventListener('pointerdown',e=>{
+ if(!isEditor()||!e.shiftKey)return;const hit=e.target instanceof Element?e.target.closest('.v152TextHit'):null;if(!hit)return;
+ e.preventDefault();e.stopImmediatePropagation();toggleObject(hit.dataset.id);
+},{capture:true,passive:false});
+
+/* ---------- selected-word hyperlinks ---------- */
+function selectedEditable(){const s=getSelection?.();if(!s?.rangeCount)return null;const r=s.getRangeAt(0),n=r.commonAncestorContainer.nodeType===1?r.commonAncestorContainer:r.commonAncestorContainer.parentElement;return n?.closest?.('.cobj[contenteditable="true"]')||null}
+window.v164Hyperlink=function(){
+ if(window.v152HasRange?.()){
+  window.v152RememberRange?.();const s=getSelection?.(),text=s?.toString?.().trim()||'markierter Text';
+  openModal?.(`<div class="v135Modal v164LinkModal"><div class="v135ModalHead"><div><span class="eyebrow">HYPERLINK</span><h2>Markierten Text verlinken</h2></div><button class="v164IconOnly" onclick="closeModal()">${I.close}</button></div><p class="v164LinkSelection">${esc(text)}</p><div class="v135FormGrid"><label class="full">Web-Adresse<input id="v164RichLinkUrl" type="text" placeholder="https://…"></label></div><div class="v135ActionRow"><button onclick="closeModal()">Abbrechen</button><button class="primary" onclick="v164ApplyRichLink()">Link speichern</button></div></div>`);return;
+ }
+ window.openHyperlinkDialog?.();
+};
+window.v164ApplyRichLink=function(){
+ let url=q('#v164RichLinkUrl')?.value.trim()||'';if(!url)return;
+ if(!/^[a-z][a-z0-9+.-]*:/i.test(url)&&!url.startsWith('#'))url='https://'+url;
+ if(!window.v152RestoreRange?.())return;
+ const el=selectedEditable();if(!el)return;
+ try{document.execCommand('createLink',false,url)}catch(_){return}
+ el.querySelectorAll('a[href]').forEach(a=>{a.target='_blank';a.rel='noopener noreferrer'});
+ const o=(canvasState.objects||[]).find(x=>String(x.id)===String(el.dataset.id));if(o)o.text=el.innerHTML;
+ markCanvasDirty?.();pushHistory?.();closeModal?.();cuteToast?.('Link gesetzt ♡');
+};
+
+/* ---------- real format painter ---------- */
+let painter=null;
+function nodePath(node,root){const parts=[];let n=node;while(n&&n!==root){const p=n.parentNode;if(!p)break;parts.push([].indexOf.call(p.childNodes,n));n=p}return parts.reverse().join('.')}
+function currentRangeSignature(){
+ const s=getSelection?.();if(!s?.rangeCount||s.isCollapsed)return '';const r=s.getRangeAt(0),el=selectedEditable();if(!el)return '';
+ return `${el.dataset.id}|${nodePath(r.startContainer,el)}:${r.startOffset}|${nodePath(r.endContainer,el)}:${r.endOffset}`;
+}
+function captureRangeFormat(){
+ if(!window.v152HasRange?.()||!window.v152RestoreRange?.())return null;const s=getSelection?.();if(!s?.rangeCount)return null;const r=s.getRangeAt(0),el=selectedEditable();if(!el)return null;
+ const n=r.startContainer.nodeType===1?r.startContainer:r.startContainer.parentElement,cs=getComputedStyle(n||el),block=getComputedStyle(el);
+ return {mode:'range',sourceSig:currentRangeSignature(),style:{fontFamily:cs.fontFamily,fontSize:parseFloat(cs.fontSize)||16,color:cs.color,bold:!!document.queryCommandState?.('bold'),italic:!!document.queryCommandState?.('italic'),underline:!!document.queryCommandState?.('underline'),strike:!!document.queryCommandState?.('strikeThrough'),textAlign:block.textAlign||'left'}};
+}
+function captureObjectFormat(){
+ const o=(canvasState.objects||[]).find(x=>String(x.id)===String(canvasState.selectedId));if(!o||!textKinds.has(o.kind))return null;
+ const st=o.style||{};return {mode:'object',sourceId:o.id,style:{fontFamily:st.fontFamily,fontSize:st.fontSize,color:st.color,fontWeight:st.fontWeight,fontStyle:st.fontStyle,textDecoration:st.textDecoration,textAlign:st.textAlign,lineHeight:st.lineHeight,letterSpacing:st.letterSpacing}};
+}
+function syncPainterButton(){q('.v164PainterBtn')?.classList.toggle('active',!!painter);document.body.classList.toggle('v164PainterOn',!!painter)}
+function stopPainter(msg=''){painter=null;syncPainterButton();if(msg)cuteToast?.(msg)}
+window.v164ToggleFormatPainter=function(){
+ if(painter){stopPainter();return}
+ window.v152RememberRange?.();painter=captureRangeFormat()||captureObjectFormat();
+ if(!painter){cuteToast?.('Markiere Text oder wähle ein Textfeld aus ♡');return}
+ syncPainterButton();cuteToast?.('Format aufgenommen · Ziel markieren ♡');
+};
+function setToggle(cmd,want){const on=!!document.queryCommandState?.(cmd);if(on!==!!want)document.execCommand(cmd,false,null)}
+function applyRangePainter(){
+ if(!painter||painter.mode!=='range'||!window.v152RestoreRange?.())return false;const el=selectedEditable();if(!el)return false;const st=painter.style;
+ try{
+  document.execCommand('styleWithCSS',false,true);
+  if(st.fontFamily)document.execCommand('fontName',false,String(st.fontFamily).replace(/^['"]|['"]$/g,''));
+  if(st.color)document.execCommand('foreColor',false,st.color);
+  document.execCommand('styleWithCSS',false,false);document.execCommand('fontSize',false,'7');
+  el.querySelectorAll('font[size="7"]').forEach(n=>{n.removeAttribute('size');n.style.fontSize=`${Math.max(6,Math.min(180,Number(st.fontSize)||16))}px`});
+  document.execCommand('styleWithCSS',false,true);setToggle('bold',st.bold);setToggle('italic',st.italic);setToggle('underline',st.underline);setToggle('strikeThrough',st.strike);
+  const align={left:'justifyLeft',center:'justifyCenter',right:'justifyRight',justify:'justifyFull'}[st.textAlign];if(align)document.execCommand(align,false,null);
+ }catch(_){return false}
+ const o=(canvasState.objects||[]).find(x=>String(x.id)===String(el.dataset.id));if(o)o.text=el.innerHTML;markCanvasDirty?.();pushHistory?.();renderCanvasInspector?.();return true;
+}
+function applyObjectPainter(id){
+ if(!painter||painter.mode!=='object'||String(id)===String(painter.sourceId))return false;const o=(canvasState.objects||[]).find(x=>String(x.id)===String(id));if(!o||!textKinds.has(o.kind))return false;o.style||={};
+ for(const [k,v] of Object.entries(painter.style))if(v!==undefined&&v!==null&&v!=='')o.style[k]=v;
+ renderCanvasObjects?.();renderCanvasInspector?.();markCanvasDirty?.();pushHistory?.();return true;
+}
+document.addEventListener('pointerup',e=>{
+ if(!painter||!isEditor()||e.target.closest?.('.v164FormatToolbar'))return;
+ if(painter.mode==='range'){
+  setTimeout(()=>{if(!painter)return;window.v152RememberRange?.();const sig=currentRangeSignature();if(!sig||sig===painter.sourceSig)return;if(applyRangePainter())stopPainter('Format übertragen ♡')},20);
+ }else{
+  const hit=e.target instanceof Element?e.target.closest('[data-id]'):null,id=hit?.dataset?.id;if(!id)return;setTimeout(()=>{if(applyObjectPainter(id))stopPainter('Format übertragen ♡')},0);
+ }
+},true);
+
+/* ---------- Illustrator-like shortcuts without touching typing ---------- */
+function typingTarget(){const a=document.activeElement;return !!(a&&(a.matches?.('input,textarea,select')||a.isContentEditable))}
+function cutSelection(){copySelectedCanvasItems?.();if(typeof performDeleteSelectedCanvasItem==='function')performDeleteSelectedCanvasItem();else deleteSelectedCanvasItem?.()}
+function chooseSelectTool(){try{setVectorTool?.('select')}catch(_){ }if(document.body.classList.contains('v132SelectionOff'))window.v132ToggleSelection?.()}
+document.addEventListener('keydown',e=>{
+ if(!isEditor()||innerWidth<900)return;const mod=e.ctrlKey||e.metaKey,key=e.key.toLowerCase(),typing=typingTarget();
+ /* In text editing, keep native browser text shortcuts instead of canvas shortcuts. */
+ if(typing){if(mod&&['a','c','v','x','z','y'].includes(key))e.stopPropagation();if(mod&&key==='k'){e.preventDefault();e.stopImmediatePropagation();window.v152RememberRange?.();window.v164Hyperlink()}return}
+ if(mod&&e.shiftKey&&key==='z'){e.preventDefault();e.stopImmediatePropagation();redoCanvas?.();return}
+ if(mod&&key==='x'){e.preventDefault();e.stopImmediatePropagation();cutSelection();return}
+ if(key==='escape'&&painter){e.preventDefault();e.stopImmediatePropagation();stopPainter('Format übertragen beendet');return}
+ if(mod||e.altKey)return;
+ if(key==='v'){e.preventDefault();e.stopImmediatePropagation();chooseSelectTool();return}
+ if(key==='t'){e.preventDefault();e.stopImmediatePropagation();addCanvasTextBox?.();return}
+ if(key==='m'){e.preventDefault();e.stopImmediatePropagation();addVectorShape?.('rect');return}
+ if(key==='l'){e.preventDefault();e.stopImmediatePropagation();addVectorShape?.('ellipse');return}
+ if(key==='p'){e.preventDefault();e.stopImmediatePropagation();setVectorTool?.('pen');return}
+ if(key==='i'){e.preventDefault();e.stopImmediatePropagation();window.v164ToggleFormatPainter();return}
+},{capture:true});
+
+/* ---------- help + icon cleanup ---------- */
+window.openShortcutHelp=function(){openModal?.(`<div class="shortcutModal v164ShortcutModal"><div class="presetModalHead"><div><span class="eyebrow">DESKTOP</span><h2>Tastenkürzel</h2></div><button class="miniIcon" onclick="closeModal()">${I.close}</button></div><div class="shortcutGrid">
+ <span><kbd>Ctrl/⌘ Z</kbd> Rückgängig</span><span><kbd>Ctrl/⌘ ⇧ Z</kbd> Wiederholen</span>
+ <span><kbd>Ctrl/⌘ C</kbd> Kopieren</span><span><kbd>Ctrl/⌘ X</kbd> Ausschneiden</span>
+ <span><kbd>Ctrl/⌘ V</kbd> Einfügen</span><span><kbd>Ctrl/⌘ D</kbd> Duplizieren</span>
+ <span><kbd>Ctrl/⌘ A</kbd> Alles auswählen</span><span><kbd>Shift + Klick</kbd> Mehrfachauswahl</span>
+ <span><kbd>Ctrl/⌘ G</kbd> Gruppieren</span><span><kbd>Ctrl/⌘ ⇧ G</kbd> Gruppe lösen</span>
+ <span><kbd>V</kbd> Auswahl</span><span><kbd>T</kbd> Textfeld</span>
+ <span><kbd>M</kbd> Rechteck</span><span><kbd>L</kbd> Kreis / Ellipse</span>
+ <span><kbd>P</kbd> Zeichenstift</span><span><kbd>I</kbd> Format übertragen</span>
+ <span><kbd>Ctrl/⌘ K</kbd> Hyperlink</span><span><kbd>Shift + Pfeil</kbd> 10 px bewegen</span>
+ </div></div>`)};
+function normalizeEditorIcons(){
+ if(!isEditor())return;
+ const map={Umbenennen:I.edit,Löschen:I.trash,'Leiste schließen':I.close};
+ for(const [title,ico] of Object.entries(map))for(const b of qa(`button[title="${title}"]`)){
+  if(b.closest('.v164FormatToolbar'))continue;
+  if(!b.querySelector('svg')&&(b.childElementCount===0||/^[×✎✕]$/.test(b.textContent.trim())))b.innerHTML=ico;
+ }
+ qa('.v135LayerGroupHead button svg,.v135SideClose svg,.v164IconOnly svg').forEach(s=>s.classList.add('v164Icon'));
+}
+
+/* Do not observe the DOM continuously. Hook only editor renders and a few safe timers. */
+const baseRenderSheet=window.renderSheetEditor;if(baseRenderSheet)window.renderSheetEditor=function(){const r=baseRenderSheet.apply(this,arguments);setTimeout(ensureToolbar,80);setTimeout(normalizeEditorIcons,120);return r};
+try{renderSheetEditor=window.renderSheetEditor}catch(_){ }
+const baseLayer=window.renderLayerList;if(baseLayer)window.renderLayerList=function(){const r=baseLayer.apply(this,arguments);requestAnimationFrame(normalizeEditorIcons);return r};
+try{renderLayerList=window.renderLayerList}catch(_){ }
+window.addEventListener('resize',()=>setTimeout(ensureToolbar,100));
+setTimeout(ensureToolbar,600);setTimeout(ensureToolbar,1500);setTimeout(()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 164'},2400);
+})();
+/* ===== /Studia V164 ===== */

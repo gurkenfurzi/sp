@@ -649,3 +649,27 @@ body.editorMode #canvasObjects .cobj.v152EditingText[contenteditable="true"] *{u
 #v152FormatPopover button:active{background:#fff0f1}#v152FormatPopover button span{display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:#fff0f1}#v152FormatPopover button b{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media(min-width:900px){#v152SelectionBar,#v152FormatPopover{display:none!important}}
 /* ===== /Studia V152 ===== */
+
+/* ===== Studia V164 — compact cute editor toolbar ===== */
+body.editorMode .v134FormatTools{padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important;min-width:0!important}
+.v164FormatToolbar{display:flex;align-items:center;gap:7px;min-height:42px;padding:4px 6px;border:1px solid #efd8d4;border-radius:15px;background:rgba(255,251,248,.96);box-shadow:0 5px 16px rgba(111,78,72,.07);white-space:nowrap}
+.v164ToolGroup{display:flex;align-items:center;gap:3px;padding-right:7px;border-right:1px solid #f0ddda}
+.v164ToolGroup:last-child{padding-right:0;border-right:0}
+.v164FormatToolbar button,.v164FormatToolbar label{box-sizing:border-box;height:30px;min-width:30px;border:1px solid transparent;border-radius:9px;background:transparent;color:#735b56;display:inline-flex;align-items:center;justify-content:center;padding:0 7px;font:800 12px/1 Inter,Arial,sans-serif;cursor:pointer;transition:background .12s ease,border-color .12s ease,transform .12s ease}
+.v164FormatToolbar button:hover,.v164FormatToolbar label:hover{background:#fff0ee;border-color:#efd2cf}
+.v164FormatToolbar button:active{transform:scale(.94)}
+.v164FormatToolbar .v164PainterBtn.active{background:#efaaa8;color:#fff;border-color:#e99b99;box-shadow:0 0 0 3px rgba(239,170,168,.16)}
+.v164Icon{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.v164FontGroup{gap:4px}.v164FontPreview{width:30px}.v164FontSelect{height:30px;width:126px;border:0;border-radius:9px;background:#fff7f5;color:#6f5954;padding:0 25px 0 9px;font:750 11px/1 Inter,Arial,sans-serif;outline:none;cursor:pointer}.v164FontSelect:focus{box-shadow:0 0 0 2px rgba(231,145,155,.16)}
+.v164Size{box-sizing:border-box;width:48px;height:30px;border:0;border-radius:9px;background:#fff7f5;color:#6f5954;text-align:center;font:750 11px Inter,Arial,sans-serif;outline:none}
+.v164TextStyle button{font-size:12px}.v164TextStyle b,.v164TextStyle i,.v164TextStyle u,.v164TextStyle s{font-size:13px}
+.v164Color{position:relative;width:31px;padding:0!important;font-size:13px!important}.v164Color span{position:relative;top:-1px}.v164Color span:after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:2px;border-radius:2px;background:#e98f99}.v164Color input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.v164Align button{width:30px;padding:0}.v164Actions button{width:31px;padding:0}
+body.v164PainterOn #canvasStage{cursor:copy!important}body.v164PainterOn .cobj,body.v164PainterOn .v152TextHit{cursor:copy!important}
+.v164LinkSelection{padding:10px 12px;border:1px solid #f0d7d4;border-radius:12px;background:#fff7f5;color:#705d58;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v164IconOnly{width:34px!important;height:34px!important;padding:0!important}
+.v164ShortcutModal .shortcutGrid kbd{min-width:78px}
+body.editorMode .v135LayerGroupHead button .v164Icon,body.editorMode .v135SideClose .v164Icon{width:15px;height:15px}
+@media(max-width:1280px){.v164FormatToolbar{gap:4px;padding:3px 4px}.v164ToolGroup{padding-right:4px}.v164FontSelect{width:105px}.v164FormatToolbar button,.v164FormatToolbar label{min-width:28px;padding:0 5px}.v164Size{width:44px}}
+@media(max-width:1050px){.v164FontPreview{display:none}.v164FontSelect{width:92px}.v164FormatToolbar{transform:scale(.94);transform-origin:left center}}
+/* ===== /Studia V164 ===== */
