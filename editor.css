@@ -925,3 +925,14 @@ body.v166RightPan #canvasViewport{cursor:grabbing!important;user-select:none!imp
 .v138TransformHandle.v173StretchY:after{content:"";position:absolute;inset:5px 8px;border-top:2px solid #c76d79;border-bottom:2px solid #c76d79}
 @media(max-width:899px){.v138TransformHandle.v173StretchX,.v138TransformHandle.v173StretchY{width:32px!important;height:32px!important;min-width:32px!important}.v138TransformHandle.v173StretchX{right:-18px!important}.v138TransformHandle.v173StretchY{bottom:-18px!important}}
 /* ===== /Studia V173 ===== */
+
+/* ===== Studia V176 — editing text must receive taps according to layer order ===== */
+@media (max-width:899px){
+  body.editorMode.v176EditingText .cobj[contenteditable="true"]{
+    pointer-events:auto!important;
+    user-select:text!important;
+    -webkit-user-select:text!important;
+    -webkit-touch-callout:default!important;
+  }
+}
+/* ===== /Studia V176 ===== */

@@ -2196,3 +2196,75 @@ window.addEventListener('pageshow',()=>setTimeout(()=>ensureFonts172(true),250))
 setTimeout(()=>ensureFonts172(true),450);
 })();
 /* ===== /Studia V172 ===== */
+
+/* ===== Studia V176 — layer-correct text editing hitboxes ===== */
+(()=>{
+'use strict';
+if(window.__STUDIA_V176_LAYER_TEXT__)return;window.__STUDIA_V176_LAYER_TEXT__=true;
+const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
+const mobile=()=>window.innerWidth<900;
+const inEditor=()=>document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
+const state=()=>{try{return canvasState}catch(_){return window.canvasState}};
+const textKinds=new Set(['text','block','task','merke','file']);
+function refForHit(h,s){
+  if(!h||!s)return null;
+  const id=String(h.dataset.id||'');
+  if(h.dataset.kind==='vector')return (s.vectors||[]).find(v=>String(v.id)===id)||null;
+  return (s.objects||[]).find(o=>String(o.id)===id)||null;
+}
+function restoreBlocked176(){
+  qa('.v132Hit[data-v176-under-text="1"]').forEach(h=>{
+    h.removeAttribute('data-v176-under-text');
+    h.style.removeProperty('pointer-events');
+  });
+  document.body.classList.remove('v176EditingText');
+}
+function syncTextLayerHits176(){
+  restoreBlocked176();
+  if(!mobile()||!inEditor())return;
+  const s=state();if(!s)return;
+  const editing=(s.objects||[])
+    .filter(o=>o?.editing&&textKinds.has(o.kind)&&!o.isChecklist)
+    .sort((a,b)=>(+b.z||0)-(+a.z||0))[0];
+  if(!editing)return;
+  document.body.classList.add('v176EditingText');
+  const ez=+editing.z||0;
+  /* The interaction layer sits above the real canvas. Disable only hit proxies
+     belonging to layers at/below the text being edited. This makes the actual
+     layer order decide who receives the tap. */
+  qa('#v132InteractionLayer .v132Hit').forEach(h=>{
+    const ref=refForHit(h,s);if(!ref)return;
+    const rz=+ref.z||0;
+    if(String(ref.id)===String(editing.id)||rz<ez){
+      h.dataset.v176UnderText='1';
+      h.style.setProperty('pointer-events','none','important');
+    }
+  });
+  const el=q(`#canvasObjects .cobj[data-id="${CSS.escape(String(editing.id))}"][contenteditable="true"]`);
+  if(el){
+    el.style.setProperty('pointer-events','auto','important');
+    el.style.setProperty('user-select','text','important');
+    el.style.setProperty('-webkit-user-select','text','important');
+    el.style.setProperty('touch-action','manipulation','important');
+  }
+}
+window.v176SyncTextLayerHits=syncTextLayerHits176;
+
+/* Re-evaluate after every render/selection change without observers or loops. */
+const oldRender=window.renderCanvasObjects;
+if(oldRender)window.renderCanvasObjects=function(){const r=oldRender.apply(this,arguments);requestAnimationFrame(syncTextLayerHits176);return r};
+try{renderCanvasObjects=window.renderCanvasObjects}catch(_){ }
+const oldInspector=window.renderCanvasInspector;
+if(oldInspector)window.renderCanvasInspector=function(){const r=oldInspector.apply(this,arguments);requestAnimationFrame(syncTextLayerHits176);return r};
+try{renderCanvasInspector=window.renderCanvasInspector}catch(_){ }
+
+/* Pointer capture on window runs before the older document-level hit handlers.
+   If an already-editing text is touched, refresh the proxy blocking first. */
+window.addEventListener('pointerdown',()=>{if(mobile()&&inEditor())syncTextLayerHits176()},{capture:true,passive:true});
+window.addEventListener('resize',()=>setTimeout(syncTextLayerHits176,80));
+setTimeout(syncTextLayerHits176,700);setTimeout(syncTextLayerHits176,2200);
+
+/* One-shot version label only — never MutationObserver. */
+setTimeout(()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 176'},900);
+})();
+/* ===== /Studia V176 ===== */
