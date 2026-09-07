@@ -913,3 +913,15 @@ body.v166RightPan #canvasViewport{cursor:grabbing!important;user-select:none!imp
   .v171StickerModal{max-height:calc(100dvh - 18px)}.v171StickerLegend{grid-template-columns:82px 1fr 100px}.v171StickerRow{grid-template-columns:28px 78px 18px 1fr 32px;padding:8px}.v171StickerRows{max-height:52dvh}
 }
 /* ===== /Studia V171 ===== */
+
+/* ===== Studia V173 — sticker/frame proportional scale ===== */
+.v138TransformHandle.v173Scale:before{content:"";position:absolute;inset:7px;border:2px solid #fff;border-left-width:0;border-top-width:0;border-radius:2px;opacity:.95}
+.v138TransformHandle.v173StretchX,.v138TransformHandle.v173StretchY{width:28px!important;height:28px!important;min-width:28px!important;border-width:4px!important;background:#fff!important;box-shadow:0 0 0 2px #c76d79,0 2px 8px rgba(101,61,63,.16)!important}
+.v138TransformHandle.v173StretchX{right:-16px!important;top:50%!important;transform:translateY(-50%)!important;border-radius:999px!important;cursor:ew-resize!important}
+.v138TransformHandle.v173StretchY{bottom:-16px!important;left:50%!important;transform:translateX(-50%)!important;border-radius:999px!important;cursor:ns-resize!important}
+.v138TransformHandle.v173StretchX:before{content:"";position:absolute;left:7px;right:7px;top:50%;height:2px;background:#c76d79;transform:translateY(-50%);border-radius:2px}
+.v138TransformHandle.v173StretchX:after{content:"";position:absolute;inset:8px 5px;border-left:2px solid #c76d79;border-right:2px solid #c76d79}
+.v138TransformHandle.v173StretchY:before{content:"";position:absolute;top:7px;bottom:7px;left:50%;width:2px;background:#c76d79;transform:translateX(-50%);border-radius:2px}
+.v138TransformHandle.v173StretchY:after{content:"";position:absolute;inset:5px 8px;border-top:2px solid #c76d79;border-bottom:2px solid #c76d79}
+@media(max-width:899px){.v138TransformHandle.v173StretchX,.v138TransformHandle.v173StretchY{width:32px!important;height:32px!important;min-width:32px!important}.v138TransformHandle.v173StretchX{right:-18px!important}.v138TransformHandle.v173StretchY{bottom:-18px!important}}
+/* ===== /Studia V173 ===== */
