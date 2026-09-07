@@ -1,12 +1,42 @@
-STUDIA V142 – GOOGLE-SYNC
+STUDIA V166 – KONTO + AUTOMATISCHER GERÄTE-SYNC
+=================================================
 
-1. Öffne https://script.google.com und erstelle ein neues Projekt.
-2. Kopiere google-apps-script/Code.gs komplett hinein.
-3. Bereitstellen > Neue Bereitstellung > Web-App.
-4. Ausführen als: Ich. Zugriff: Jeder.
-5. Kopiere die URL, die auf /exec endet (NICHT /dev).
-6. In Studia unter Einstellungen > Google-Sync dieselbe /exec-URL und denselben persönlichen Sync-Schlüssel auf Handy und Laptop eintragen.
-7. Einmal auf dem Gerät mit dem richtigen Stand „Jetzt synchronisieren“ drücken.
-8. Danach läuft die Synchronisierung automatisch: lokale Änderungen werden nach kurzer Pause hochgeladen; das andere Gerät prüft regelmäßig und lädt neuere Cloud-Daten selbst.
+Danach reicht in Studia: Benutzername + Passwort ODER „Mit Google anmelden“.
+Handy und Laptop benutzen dann automatisch denselben kompletten Studia-Stand.
 
-Wenn „Web-App nicht erreichbar“ erscheint, wurde fast immer die /dev-URL benutzt oder die Bereitstellung ist nicht für „Jeder“ freigegeben.
+SYNCHRONISIERT WIRD:
+- Fächer, Themen und Ordner
+- Lernblätter / Editor-Inhalte
+- Hausaufgaben, Tests, Noten
+- Karteikarten, Quizze, Lernsets
+- Bilder und hochgeladene Dateien
+- eigene Schriften und Textformate
+- Einstellungen und sonstige Studia-Daten
+
+A) GOOGLE APPS SCRIPT EINMAL EINRICHTEN
+1. https://script.google.com öffnen und „Neues Projekt“ erstellen.
+2. Den Inhalt aus google-apps-script/Code.gs komplett in Code.gs kopieren.
+3. Einmal die Funktion setup() ausführen und die Google-Berechtigungen bestätigen.
+4. Bereitstellen → Neue Bereitstellung → Typ „Web-App“.
+5. Ausführen als: „Ich“.
+6. Zugriff: „Jeder“.
+7. Bereitstellen und die URL kopieren, die auf /exec endet.
+8. In google-sync-config.js bei scriptUrl diese /exec-URL eintragen.
+9. Die geänderte google-sync-config.js zusammen mit der App auf GitHub Pages hochladen.
+
+B) OPTIONAL: „MIT GOOGLE ANMELDEN“
+Benutzername + Passwort funktioniert bereits nach Teil A.
+Für den Google-Button zusätzlich:
+1. In Google Cloud Console eine OAuth-Client-ID vom Typ „Webanwendung“ erstellen.
+2. Als autorisierten JavaScript-Ursprung deine GitHub-Pages-Domain eintragen,
+   z. B. https://gurkenfurzi.github.io
+3. Die Client-ID in google-sync-config.js bei googleClientId eintragen.
+4. Optional (empfohlen): In Apps Script → Projekteinstellungen → Skripteigenschaften
+   STUDIA_GOOGLE_CLIENT_ID = dieselbe Client-ID setzen.
+5. Apps Script nach der Code.gs-Änderung als neue Web-App-Version bereitstellen.
+
+WICHTIG
+- Auf Handy und Laptop mit demselben Studia-Konto anmelden.
+- Nach Änderungen synchronisiert Studia automatisch.
+- Beim Öffnen / Zurückkehren zur App wird der Cloud-Stand erneut geprüft.
+- Das Login bleibt auf dem Gerät gespeichert, bis du dich ausdrücklich abmeldest.

@@ -393,8 +393,8 @@ document.addEventListener('keydown',e=>{if(!editor())return;const typing=e.targe
 function correctLayerIcons(){for(const row of qa('[data-layer-kind][data-layer-id]')){const ref=row.dataset.layerKind==='object'?(canvasState.objects||[]).find(x=>x.id===row.dataset.layerId):(canvasState.vectors||[]).find(x=>x.id===row.dataset.layerId),b=row.querySelector('.v135LayerLock,.v130LayerTools button[title="Sperren"],.v130LayerTools button[title="Entsperren"]');if(!ref||!b)continue;b.innerHTML=window.v133Icon?.(ref.locked?'lock':'unlock')||'';b.title=ref.locked?'Entsperren':'Sperren';b.setAttribute('aria-label',b.title)}}
 
 /* Today gets the requested version and one visual icon system. */
-function polishToday(){const home=q('#view-home');if(!home)return;home.querySelector('.v138Version')?.remove();const eye=q('#headerEyebrow');if(eye&&eye.textContent!=='VERSION 164')eye.textContent='VERSION 164';const specs=[['Aufgabe','task'],['Test','test'],['Fächer','subjects'],['Lernen','learn']];qa('.homeMiniActions button',home).forEach((b,i)=>{const spec=specs[i];if(!spec||b.dataset.v138Today==='1')return;b.dataset.v138Today='1';b.classList.add('v138TodayAction');b.innerHTML=icons[spec[1]]+`<span>${spec[0]}</span>`})}
-function watchVersion(){const eye=q('#headerEyebrow');if(eye&&!editor()&&eye.textContent!=='VERSION 164')eye.textContent='VERSION 164'}
+function polishToday(){const home=q('#view-home');if(!home)return;home.querySelector('.v138Version')?.remove();const eye=q('#headerEyebrow');if(eye&&eye.textContent!=='VERSION 166')eye.textContent='VERSION 166';const specs=[['Aufgabe','task'],['Test','test'],['Fächer','subjects'],['Lernen','learn']];qa('.homeMiniActions button',home).forEach((b,i)=>{const spec=specs[i];if(!spec||b.dataset.v138Today==='1')return;b.dataset.v138Today='1';b.classList.add('v138TodayAction');b.innerHTML=icons[spec[1]]+`<span>${spec[0]}</span>`})}
+function watchVersion(){const eye=q('#headerEyebrow');if(eye&&!editor()&&eye.textContent!=='VERSION 166')eye.textContent='VERSION 166'}
 
 function cleanMobileDrawer(){qa('.v137MobileTextExtras,.v135MobileExtras').forEach(x=>x.remove())}
 function reconcile(){if(!editor()){polishToday();return}compactNav();enhanceSelectionBars();decorateInspector();correctLayerIcons();cleanMobileDrawer();decorateTransformHandles();if(q('#canvasQuickDrawer.open'))ensureElementTools()}
@@ -669,7 +669,7 @@ const textKinds=new Set(['text','block','task','merke']);
 const selectedText=()=>{try{const o=(canvasState?.objects||[]).find(x=>x.id===canvasState?.selectedId);return o&&textKinds.has(o.kind)?o:null}catch(_){return null}};
 
 /* ---------- version ---------- */
-function setVersion(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 164')e.textContent='VERSION 164';document.title='Studia'}
+function setVersion(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 166')e.textContent='VERSION 166';document.title='Studia'}
 setVersion();setTimeout(setVersion,250);setTimeout(setVersion,1800);
 
 /* ---------- custom fonts: visible input + IndexedDB + previews ---------- */
@@ -885,7 +885,7 @@ document.addEventListener('change',e=>{
 },true);
 
 /* Keep a single current version label after all historical startup scripts finish. */
-function version(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 164')e.textContent='VERSION 164';document.title='Studia'}
+function version(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 166')e.textContent='VERSION 166';document.title='Studia'}
 version();setTimeout(version,450);setTimeout(version,1900);
 })();
 /* ===== /Studia V149 ===== */
@@ -899,7 +899,7 @@ const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelecto
 const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const inEditor=()=>document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
 const desktop=()=>innerWidth>=900&&inEditor();
-function setVersion150(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 164')e.textContent='VERSION 164';document.documentElement.classList.add('v151Ready');document.title='Studia'}
+function setVersion150(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 166')e.textContent='VERSION 166';document.documentElement.classList.add('v151Ready');document.title='Studia'}
 setVersion150();setTimeout(setVersion150,300);setTimeout(setVersion150,1800);
 
 /* Disable the older key-based V145 transport. Its local save hooks may remain,
@@ -984,18 +984,21 @@ function urlValid(u=scriptUrl()){return /^https:\/\/script\.google\.com\/macros\
 function accountConfigured(){return urlValid()&&!!token()}
 function deviceId(){let d=localStorage.getItem(DEVICE_KEY);if(!d){d=crypto.randomUUID?.()||'dev-'+Date.now().toString(36)+Math.random().toString(36).slice(2);localStorage.setItem(DEVICE_KEY,d)}return d}
 function accountStatus(text,bad=false){const el=q('#v150AccountStatus');if(el){el.textContent=text;el.classList.toggle('error',bad)}}
-function actionFor(path,method='GET'){const m=String(method).toUpperCase(),map={'/api/me':'me','/api/state':'state','/api/state/meta':'state_meta','/api/auth/register':'register','/api/auth/login':'login','/api/auth/recover':'recover'};if(path==='/api/state'&&m!=='GET')return'state_put';return map[path]||''}
+function actionFor(path,method='GET'){const m=String(method).toUpperCase(),map={'/api/me':'me','/api/state':'state','/api/state/meta':'state_meta','/api/auth/register':'register','/api/auth/login':'login','/api/auth/google':'google_login','/api/auth/recover':'recover'};if(path==='/api/state'&&m!=='GET')return'state_put';return map[path]||''}
 async function request(path,options={}){
  const base=scriptUrl();if(!urlValid(base))throw new Error('Apps-Script-Web-App-URL fehlt oder ist keine /exec-URL.');
  const method=String(options.method||'GET').toUpperCase(),action=actionFor(path,method);if(!action)throw new Error('Unbekannte Sync-Aktion.');let response;
- if(method==='GET'){
-   const u=new URL(base);u.searchParams.set('action',action);if(token())u.searchParams.set('token',token());for(const[k,v]of Object.entries(options.query||{}))if(v!==undefined&&v!==null)u.searchParams.set(k,String(v));u.searchParams.set('_',Date.now());
-   response=await fetch(u.toString(),{method:'GET',redirect:'follow',cache:'no-store'});
- }else{
-   let payload={};if(options.body){if(typeof options.body==='string'){try{payload=JSON.parse(options.body)}catch{payload={value:options.body}}}else payload=options.body}
-   payload.action=action;if(token())payload.token=token();
-   response=await fetch(base,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
- }
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),15000);
+ try{
+  if(method==='GET'){
+    const u=new URL(base);u.searchParams.set('action',action);if(token())u.searchParams.set('token',token());for(const[k,v]of Object.entries(options.query||{}))if(v!==undefined&&v!==null)u.searchParams.set(k,String(v));u.searchParams.set('_',Date.now());
+    response=await fetch(u.toString(),{method:'GET',redirect:'follow',cache:'no-store',signal:controller.signal});
+  }else{
+    let payload={};if(options.body){if(typeof options.body==='string'){try{payload=JSON.parse(options.body)}catch{payload={value:options.body}}}else payload=options.body}
+    payload.action=action;if(token())payload.token=token();
+    response=await fetch(base,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload),signal:controller.signal});
+  }
+ }catch(err){if(err?.name==='AbortError')throw new Error('Studia-Sync hat zu lange gebraucht. Prüfe Internet oder Apps-Script-URL.');throw err}finally{clearTimeout(timer)}
  const raw=await response.text();let data;try{data=JSON.parse(raw)}catch{throw new Error('Google-Sync hat keine gültige Antwort geliefert. Prüfe die Apps-Script-Bereitstellung.')}
  if(data?.ok===false){const err=new Error(data.error||'Synchronisierung fehlgeschlagen.');err.status=Number(data.status||400);throw err}return data;
 }
@@ -1011,14 +1014,14 @@ async function envelope(){const ls=packLocalStorage(),files=await readFiles(),fo
 async function clearAndRestoreFiles(files){try{const db=await dbOpen();await new Promise((res,rej)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).clear();tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error)});for(const f of files||[])await dbPut({id:f.id,name:f.name||'',type:f.type||'',blob:dataToBlob(f.data||'')});v150FileCache=files||[];v150FilesDirty=false}catch(err){console.warn('[V150] restore files',err)}}
 async function clearAndRestoreFonts(fonts){try{const db=await fontDB150();await new Promise((res,rej)=>{const tx=db.transaction('fonts','readwrite');const st=tx.objectStore('fonts');st.clear();for(const f of fonts||[])if(f?.name&&f?.data)st.put(f);tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error)});v150FontCache=fonts||[];v150FontCacheDirty=false;for(const f of fonts||[]){if(!f?.name||!f?.data)continue;try{if('FontFace'in window&&document.fonts){const face=new FontFace(f.name,`url(${JSON.stringify(f.data)})`);await face.load();document.fonts.add(face)}}catch(_){const sid='v150-font-'+f.name.replace(/[^a-z0-9_-]/gi,'-');if(!q('#'+CSS.escape(sid))){const st=document.createElement('style');st.id=sid;st.textContent=`@font-face{font-family:${JSON.stringify(f.name)};src:url(${JSON.stringify(f.data)});font-display:swap}`;document.head.appendChild(st)}}}try{window.v91LoadFonts?.()}catch(_){ }}catch(err){console.warn('[V150] restore fonts',err)}}
 async function applyEnvelope(env,serverUpdated){if(!env?.state?.localStorage)throw new Error('Cloud-Stand ist ungültig.');v150Applying=true;try{const remote=env.state.localStorage;for(let i=localStorage.length-1;i>=0;i--){const k=localStorage.key(i);if(k&&syncKey(k)&&!(k in remote))localStorage.removeItem(k)}for(const[k,v]of Object.entries(remote))if(syncKey(k))localStorage.setItem(k,String(v));const main=remote['schoolhub-v1'];if(main){try{const parsed=JSON.parse(main),target=window.data||data;Object.keys(target).forEach(k=>delete target[k]);Object.assign(target,parsed)}catch(err){console.warn('[V150] data parse',err)}}await clearAndRestoreFiles(env.state.files||[]);await clearAndRestoreFonts(env.state.fonts||[]);localStorage.setItem(LAST_REMOTE,String(Number(serverUpdated||env.updatedAt||Date.now())));v150DirtyAt=0;window.renderAll?.();if(inEditor()&&typeof selectedSheetId!=='undefined'&&selectedSheetId&&(window.data||data)?.studySheets?.some(x=>x.id===selectedSheetId))setTimeout(()=>window.openStudySheetEditor?.(selectedSheetId),80);return true}finally{v150Applying=false}}
-function v150MarkDirty(delay=700){if(v150Applying)return;v150DirtyAt=Date.now();try{localStorage.setItem(LAST_LOCAL,String(v150DirtyAt))}catch(_){ }clearTimeout(v150PushTimer);if(accountConfigured())v150PushTimer=setTimeout(v150Push,delay)}
+function v150MarkDirty(delay=500){if(v150Applying)return;v150DirtyAt=Date.now();try{localStorage.setItem(LAST_LOCAL,String(v150DirtyAt))}catch(_){ }clearTimeout(v150PushTimer);if(accountConfigured())v150PushTimer=setTimeout(v150Push,delay)}
 window.v150MarkDirty=v150MarkDirty;
-async function v150Push(){if(v150Busy||v150Applying||!v150DirtyAt||!accountConfigured()||navigator.onLine===false)return false;v150Busy=true;try{accountStatus('Synchronisiert …');const env=await envelope(),r=await request('/api/state',{method:'PUT',body:{data:env}});localStorage.setItem(LAST_REMOTE,String(Number(r.updatedAt||Date.now())));v150DirtyAt=0;accountStatus('✓ Automatisch synchronisiert');return true}catch(err){console.warn('[V150] push',err);accountStatus(navigator.onLine===false?'Offline – wird später synchronisiert':'Sync-Fehler – versucht es automatisch erneut',true);return false}finally{v150Busy=false}}
+async function v150Push(){if(v150Busy||v150Applying||!v150DirtyAt||!accountConfigured()||navigator.onLine===false)return false;v150Busy=true;try{accountStatus('Synchronisiert …');/* Last-write-wins across devices: if the cloud changed after this device's last cloud snapshot AND is newer than this local edit, pull it instead of overwriting it. */const meta=await request('/api/state/meta'),remoteAt=Number(meta.updatedAt||0),lastRemote=Number(localStorage.getItem(LAST_REMOTE)||0),localAt=Number(v150DirtyAt||0);if(remoteAt>lastRemote&&remoteAt>localAt){const cloud=await request('/api/state');if(cloud.data)await applyEnvelope(cloud.data,Number(cloud.updatedAt||remoteAt));accountStatus('✓ Neueren Stand vom anderen Gerät geladen');return true}const env=await envelope(),r=await request('/api/state',{method:'PUT',body:{data:env}});localStorage.setItem(LAST_REMOTE,String(Number(r.updatedAt||Date.now())));v150DirtyAt=0;accountStatus('✓ Automatisch synchronisiert');return true}catch(err){console.warn('[V150] push',err);accountStatus(navigator.onLine===false?'Offline – wird später synchronisiert':'Sync-Fehler – versucht es automatisch erneut',true);return false}finally{v150Busy=false}}
 async function v150Pull(force=false){if(v150Busy||v150Applying||!accountConfigured()||navigator.onLine===false)return false;if(v150DirtyAt){v150MarkDirty(250);return false}const now=Date.now();if(!force&&now-v150LastCheck<3500)return false;v150LastCheck=now;v150Busy=true;try{if(force)accountStatus('Prüfe Änderungen …');const meta=await request('/api/state/meta');const remoteAt=Number(meta.updatedAt||0),last=Number(localStorage.getItem(LAST_REMOTE)||0);if(!force&&remoteAt<=last){accountStatus('✓ Automatisch synchronisiert');return false}const r=await request('/api/state');if(!r.data){v150DirtyAt=Date.now();setTimeout(v150Push,0);return false}await applyEnvelope(r.data,Number(r.updatedAt||remoteAt||Date.now()));accountStatus('✓ Automatisch synchronisiert');window.cuteToast?.('Alle Geräte sind aktuell ♡');return true}catch(err){console.warn('[V150] pull',err);if(err.status===401){localStorage.removeItem(TOKEN_KEY);v150User=null;accountStatus('Anmeldung muss erneuert werden.',true)}else accountStatus(navigator.onLine===false?'Offline – wird später synchronisiert':'Sync-Fehler – versucht es automatisch erneut',true);return false}finally{v150Busy=false}}
 window.v150Push=v150Push;window.v150Pull=()=>v150Pull(true);
-function startAccountPolling(){if(v150Poll)clearInterval(v150Poll);if(!accountConfigured())return;v150Poll=setInterval(()=>{if(document.visibilityState==='visible')v150Pull(false)},10000);setTimeout(()=>v150Pull(true),700)}
+function startAccountPolling(){if(v150Poll)clearInterval(v150Poll);if(!accountConfigured())return;v150Poll=setInterval(()=>{if(document.visibilityState==='visible')v150Pull(false)},5000);setTimeout(()=>v150Pull(true),250)}
 
-async function initAccount(){if(!accountConfigured())return;try{const me=await request('/api/me');v150User=me.user;localStorage.setItem(USER_KEY,v150User?.username||username());startAccountPolling()}catch(err){console.warn('[V150] account init',err);if(err.status===401){localStorage.removeItem(TOKEN_KEY);v150User=null}}}
+async function initAccount(){if(!accountConfigured())return;try{/* Persisted dirty timestamp survives a fast app close, so the next open still uploads the last edit instead of losing it. */const pending=Number(localStorage.getItem(LAST_LOCAL)||0),seen=Number(localStorage.getItem(LAST_REMOTE)||0);if(pending>seen)v150DirtyAt=Math.max(v150DirtyAt,pending);const me=await request('/api/me');v150User=me.user;localStorage.setItem(USER_KEY,v150User?.username||username());startAccountPolling()}catch(err){console.warn('[V150] account init',err);if(err.status===401){localStorage.removeItem(TOKEN_KEY);v150User=null}}}
 window.v150RememberUrl=function(){const field=q('#v150ScriptUrl'),u=String(field?.value||scriptUrl()||'').trim().replace(/\/$/,'');if(field&&u)localStorage.setItem(URL_KEY,u);accountStatus(urlValid(u)?'Web-App verbunden ✓':'Bitte eine gültige /exec-URL eintragen.',!urlValid(u));return urlValid(u)};
 window.v150Login=async function(){const u=String(q('#v150Username')?.value||'').trim(),p=String(q('#v150Password')?.value||'');v150RememberUrl();if(!u||p.length<8)return accountStatus('Benutzername und Passwort (mind. 8 Zeichen) eingeben.',true);try{accountStatus('Anmelden …');const r=await request('/api/auth/login',{method:'POST',body:{username:u,password:p}});localStorage.setItem(TOKEN_KEY,r.token);localStorage.setItem(USER_KEY,r.user?.username||u);v150User=r.user;accountStatus('Angemeldet · lade deine Studia-Daten …');const state=await request('/api/state');if(state.data)await applyEnvelope(state.data,Number(state.updatedAt||Date.now()));else{v150DirtyAt=Date.now();await v150Push()}startAccountPolling();window.closeModal?.();window.cuteToast?.('Dauerhaft angemeldet ♡')}catch(err){accountStatus(String(err.message||err),true)}};
 window.v150Register=async function(){const u=String(q('#v150Username')?.value||'').trim(),p=String(q('#v150Password')?.value||'');v150RememberUrl();if(u.length<3||p.length<8)return accountStatus('Benutzername mind. 3 Zeichen, Passwort mind. 8 Zeichen.',true);try{accountStatus('Konto wird erstellt …');const r=await request('/api/auth/register',{method:'POST',body:{username:u,password:p}});localStorage.setItem(TOKEN_KEY,r.token);localStorage.setItem(USER_KEY,r.user?.username||u);v150User=r.user;v150DirtyAt=Date.now();await v150Push();startAccountPolling();window.openModal?.(`<div class="v135Modal v150AccountModal"><div class="v135ModalHead"><div><span class="eyebrow">KONTO ERSTELLT</span><h2>Wiederherstellungscode</h2></div><button onclick="closeModal()">×</button></div><p>Diesen Code sicher speichern. Damit kannst du dein Passwort zurücksetzen, falls du es vergisst.</p><div class="v150AccountState" style="font-size:14px;letter-spacing:.08em;text-align:center">${esc(r.recoveryCode||'')}</div><div class="v150PermanentNote"><b>✓ Dauerhaft</b><span>Du bleibst auf diesem Gerät angemeldet und Studia synchronisiert automatisch.</span></div></div>`)}catch(err){accountStatus(String(err.message||err),true)}};
@@ -1086,21 +1089,25 @@ function templatePanel(){
  const custom=own.map(t=>`<button class="v152TemplateCard" type="button" onclick="applySavedPageTemplate('${esc(t.id)}')"><span class="v152TemplatePreview own"><i></i><i></i><i></i></span><span><b>${esc(t.name||'Eigene Vorlage')}</b><small>Eigene Seitenvorlage</small></span></button>`).join('');
  return panelShell('Vorlagen','VORLAGEN',`<div class="v152TemplateActions"><button type="button" onclick="saveCurrentPageTemplate()">＋ Aktuelle Seite als Vorlage</button><button type="button" onclick="openPageTemplateManager()">Verwalten</button></div><div class="v152SectionTitle"><b>Vorlagen auswählen</b><span>${defs.length+own.length} Vorlagen</span></div><div class="v152TemplateList">${built}${custom}</div>`)
 }
-function tile(label,symbol,action){return `<button class="v152ElementTile" type="button" data-v152-label="${esc(label.toLowerCase())}" onclick="${action}"><span>${symbol}</span><b>${esc(label)}</b></button>`}
+function v152PanelIcon(name){const p={
+ text:'<path d="M5 5h14M12 5v14M8.5 19h7"/>',image:'<rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="m6 17 4-4 3 3 2-2 3 3"/>',file:'<path d="M7 3h7l4 4v14H7zM14 3v5h4"/>',check:'<rect x="4" y="4" width="16" height="16" rx="3"/><path d="m8 12 2.5 2.5L16 9"/>',
+ rect:'<rect x="5" y="6" width="14" height="12" rx="2"/>',circle:'<circle cx="12" cy="12" r="7"/>',triangle:'<path d="m12 5 7 14H5z"/>',line:'<path d="M5 17 19 7"/>',curve:'<path d="M4 16c4-8 7 3 11-5 2-4 4-3 5-3"/>',star:'<path d="m12 4 2.4 5 5.6.8-4 3.9.9 5.5L12 16.6 7.1 19.2 8 13.7 4 9.8 9.6 9z"/>',
+ formula:'<path d="M18 5H8l5 7-5 7h10"/>',graph:'<path d="M5 19V5M5 19h14M8 15l3-4 3 2 4-6"/>',table:'<rect x="4" y="5" width="16" height="14" rx="2"/><path d="M4 10h16M10 5v14"/>',sticker:'<path d="M12 20c-4.7-3.3-7-5.8-7-9a4 4 0 0 1 7-2.7A4 4 0 0 1 19 11c0 3.2-2.3 5.7-7 9Z"/>',tape:'<path d="M6 8h12v8H6zM8 8l2 8M14 8l2 8"/>',grid:'<rect x="5" y="5" width="14" height="14" rx="2"/><path d="M5 10h14M5 15h14M10 5v14M15 5v14"/>',lined:'<path d="M5 6h14M5 10h14M5 14h14M5 18h14"/>',search:'<circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/>'};return `<svg class="v165PanelIcon" viewBox="0 0 24 24" aria-hidden="true">${p[name]||p.rect}</svg>`}
+function tile(label,iconName,action){return `<button class="v152ElementTile" type="button" data-v152-label="${esc(label.toLowerCase())}" onclick="${action}"><span>${v152PanelIcon(iconName)}</span><b>${esc(label)}</b></button>`}
 function elementsPanel(){
  const sections=[
-  ['Basis',[['Textfeld','T','addCanvasTextBox()'],['Bild / Foto','▧','openCanvasMediaPicker()'],['Datei','⌁',"document.getElementById('canvasAnyFileInput')?.click()"],['Checkliste','☑','addCanvasChecklist()']]],
-  ['Formen',[['Rechteck','□',"addVectorShape('rect')"],['Kreis','○',"addVectorShape('ellipse')"],['Dreieck','△',"addVectorShape('triangle')"],['Linie','—',"window.addVectorLine?.()||addCanvasDivider()"],['Kurve','〰',"window.addVectorCurve?.()||window.setVectorTool?.('pen')"],['Stern','☆','window.addRoundedStar?.()']]],
-  ['Lernen & Mathe',[['Formel','∑','openFormulaDialog()'],['Graph','⌁','openGraphDialog()'],['Tabelle','▦','openTableDialog()'],['Trennlinie','—','addCanvasDivider()']]],
-  ['Deko',[['Sticker','✿','toggleStickerPanel()'],['Klebeband','▰','addTapeSticker()'],['Kariert','▩',"addPaperSticker('grid')"],['Liniert','≡',"addPaperSticker('line')"]]]
+  ['Basis',[['Textfeld','text','addCanvasTextBox()'],['Bild / Foto','image','openCanvasMediaPicker()'],['Datei','file',"document.getElementById('canvasAnyFileInput')?.click()"],['Checkliste','check','addCanvasChecklist()']]],
+  ['Formen',[['Rechteck','rect',"addVectorShape('rect')"],['Kreis','circle',"addVectorShape('ellipse')"],['Dreieck','triangle',"addVectorShape('triangle')"],['Linie','line',"window.addVectorLine?.()||addCanvasDivider()"],['Kurve','curve',"window.addVectorCurve?.()||window.setVectorTool?.('pen')"],['Stern','star','window.addRoundedStar?.()']]],
+  ['Lernen & Mathe',[['Formel','formula','openFormulaDialog()'],['Graph','graph','openGraphDialog()'],['Tabelle','table','openTableDialog()'],['Trennlinie','line','addCanvasDivider()']]],
+  ['Deko',[['Sticker','sticker','toggleStickerPanel()'],['Klebeband','tape','addTapeSticker()'],['Kariert','grid',"addPaperSticker('grid')"],['Liniert','lined',"addPaperSticker('line')"]]]
  ];
- const body=`<label class="v152Search">⌕<input type="search" placeholder="Elemente suchen" oninput="v152FilterElements(this.value)"></label>${sections.map(([title,items])=>`<section class="v152ElementSection"><div class="v152SectionTitle"><b>${title}</b></div><div class="v152ElementGrid">${items.map(x=>tile(...x)).join('')}</div></section>`).join('')}<div class="v152Empty v152ElementEmpty" hidden>Keine passenden Elemente.</div>`;
+ const body=`<label class="v152Search">${v152PanelIcon('search')}<input type="search" placeholder="Elemente suchen" oninput="v152FilterElements(this.value)"></label>${sections.map(([title,items])=>`<section class="v152ElementSection"><div class="v152SectionTitle"><b>${title}</b></div><div class="v152ElementGrid">${items.map(x=>tile(...x)).join('')}</div></section>`).join('')}<div class="v152Empty v152ElementEmpty" hidden>Keine passenden Elemente.</div>`;
  return panelShell('Elemente','ELEMENTE',body)
 }
 window.v152FilterElements=function(value){const term=String(value||'').trim().toLowerCase(),d=q('#canvasQuickDrawer');let n=0;qa('.v152ElementTile',d).forEach(b=>{const ok=!term||(b.dataset.v152Label||'').includes(term);b.hidden=!ok;if(ok)n++});qa('.v152ElementSection',d).forEach(s=>s.hidden=!qa('.v152ElementTile:not([hidden])',s).length);const empty=q('.v152ElementEmpty',d);if(empty)empty.hidden=!!n};
 window.v152OpenPanel=function(mode){if(!desktop())return false;if(!['text','elements','templates'].includes(mode))mode='elements';panelMode=mode;const d=q('#canvasQuickDrawer');if(!d)return false;d.classList.add('open','v152DesktopDrawer');d.classList.remove('v147DesktopDrawer');d.dataset.v152Mode=mode;d.innerHTML=mode==='text'?textPanel():mode==='templates'?templatePanel():elementsPanel();document.body.classList.add('editorDrawerOpen');qa('#v151DesktopRail button[data-v151]').forEach(b=>b.classList.toggle('active',b.dataset.v151===mode));return true};
 window.v152FontPicked=async function(input){try{if(!input?.files?.[0])return;if(typeof window.v144HandleFontFile!=='function')throw new Error('Schrift-Import ist nicht geladen.');await window.v144HandleFontFile(input);window.cuteToast?.('Schrift hinzugefügt ♡');setTimeout(()=>window.v152OpenPanel('text'),80)}catch(err){console.error('[Studia V152] font import',err);alert('Schrift konnte nicht hinzugefügt werden: '+String(err?.message||err))}finally{if(input)input.value=''}};
-function ensureV152Rail(){if(!desktop())return null;const left=q('.v102DesktopLeft'),drawer=q('#canvasQuickDrawer');if(!left||!drawer)return null;let rail=q('#v151DesktopRail',left);if(!rail){rail=document.createElement('nav');rail.id='v151DesktopRail';rail.className='v150DesktopRail v151DesktopRail';rail.setAttribute('aria-label','Editor-Werkzeuge');rail.innerHTML=`<button data-v151="text" aria-label="Text"><span class="editorNavIcon">Aa</span><span>Text</span></button><button data-v151="elements" aria-label="Elemente"><span class="editorNavIcon">◇</span><span>Elemente</span></button><button data-v151="templates" aria-label="Vorlagen"><span class="editorNavIcon">▧</span><span>Vorlagen</span></button>`;left.insertBefore(rail,drawer)}return rail}
+function ensureV152Rail(){if(!desktop())return null;const left=q('.v102DesktopLeft'),drawer=q('#canvasQuickDrawer');if(!left||!drawer)return null;let rail=q('#v151DesktopRail',left);if(!rail){rail=document.createElement('nav');rail.id='v151DesktopRail';rail.className='v150DesktopRail v151DesktopRail';rail.setAttribute('aria-label','Editor-Werkzeuge');rail.innerHTML=`<button data-v151="text" aria-label="Text"><span class="editorNavIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14M12 5v14M8.5 19h7"/></svg></span><span>Text</span></button><button data-v151="elements" aria-label="Elemente"><span class="editorNavIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1.4"/><circle cx="17" cy="7" r="3"/><path d="M5 19l3-5 3 5M14 14h6v6h-6z"/></svg></span><span>Elemente</span></button><button data-v151="templates" aria-label="Vorlagen"><span class="editorNavIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="4" width="12" height="16" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/></svg></span><span>Vorlagen</span></button>`;left.insertBefore(rail,drawer)}return rail}
 window.v152EnsureRail=ensureV152Rail;
 /* Capture before the old V151 bubble handler: Text/Vorlagen always open our real panel. */
 document.addEventListener('click',e=>{if(!desktop())return;const b=e.target instanceof Element?e.target.closest('#v151DesktopRail button[data-v151]'):null;if(!b)return;e.preventDefault();e.stopImmediatePropagation();window.v152OpenPanel(b.dataset.v151)},true);
@@ -1153,7 +1160,7 @@ window.v152ApplyPresetToSelection=applyPreset;
 window.addEventListener('resize',()=>{setTimeout(syncTextHits,50);setTimeout(updateMobileBar,50)});
 
 /* Keep one current visible version. */
-function version(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 164')e.textContent='VERSION 164';document.documentElement.classList.add('v151Ready');document.title='Studia'}
+function version(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 166')e.textContent='VERSION 166';document.documentElement.classList.add('v151Ready');document.title='Studia'}
 setTimeout(version,0);setTimeout(version,100);setTimeout(version,800);setTimeout(version,2200);
 })();
 /* ===== /Studia V152 ===== */
@@ -1192,34 +1199,31 @@ function fontOptions(){
  const base=['Arial','Inter','Trebuchet MS','Verdana','Georgia','Times New Roman'];
  return [...new Set([...base,...storedFontNames()])].map(n=>`<option value="${esc(n)}" style="font-family:${esc(n)}">${esc(n)}</option>`).join('');
 }
-function toolbarHTML(){return `<div class="v164FormatToolbar">
- <div class="v164ToolGroup v164FontGroup">
-  <button class="v164FontPreview" type="button" title="Schriften mit Vorschau" onclick="window.v144OpenFontBrowser?.()">${I.font}</button>
-  <select class="v137Font v164FontSelect" title="Schrift" onchange="applyTextProperty('fontFamily',this.value);this.style.fontFamily=this.value">${fontOptions()}</select>
-  <button type="button" title="Schrift hinzufügen" onclick="v164AddFont()">${I.plus}</button>
-  <input class="v164Size" title="Schriftgröße" type="number" min="6" max="180" value="16" onchange="applyTextProperty('fontSize',+this.value)">
+function toolbarHTML(){return `<div class="v164FormatToolbar v165FormatToolbar">
+ <div class="v164ToolGroup v164FontGroup v165FontGroup">
+  <button class="v165FontMenuBtn" type="button" title="Schrift auswählen · Vorschau" onclick="v165ToggleFontMenu(this)"><span class="v165FontSample" style="font-family:Inter">Inter</span><svg class="v164Icon v165Chevron" viewBox="0 0 24 24"><path d="m7 9 5 5 5-5"/></svg></button>
+  <button class="v165AddFontBtn" type="button" title="Schrift hinzufügen" onclick="v164AddFont()">${I.plus}<span>Schrift</span></button>
+  <input class="v164Size v165Size" title="Schriftgröße" type="number" min="6" max="180" value="16" onchange="applyTextProperty('fontSize',+this.value)">
  </div>
- <div class="v164ToolGroup v164TextStyle" aria-label="Textformat">
+ <div class="v164ToolGroup v164TextStyle v165TextStyle" aria-label="Textformat">
   <button type="button" title="Fett" onclick="formatSelectedText('bold')"><b>B</b></button>
   <button type="button" title="Kursiv" onclick="formatSelectedText('italic')"><i>I</i></button>
   <button type="button" title="Unterstrichen" onclick="formatSelectedText('underline')"><u>U</u></button>
   <button type="button" title="Durchgestrichen" onclick="formatSelectedText('strikeThrough')"><s>S</s></button>
-  <label class="v164Color" title="Textfarbe"><span>A</span><input type="color" value="#333333" onchange="applyTextProperty('color',this.value)"></label>
+  <label class="v164Color v165Color" title="Textfarbe"><span>A</span><input type="color" value="#333333" onchange="applyTextProperty('color',this.value)"></label>
  </div>
- <div class="v164ToolGroup v164Align" aria-label="Ausrichtung">
+ <div class="v164ToolGroup v164Align v165Align" aria-label="Ausrichtung">
   <button type="button" title="Linksbündig" onclick="applyTextProperty('textAlign','left')">${I.left}</button>
   <button type="button" title="Zentriert" onclick="applyTextProperty('textAlign','center')">${I.center}</button>
   <button type="button" title="Rechtsbündig" onclick="applyTextProperty('textAlign','right')">${I.right}</button>
   <button type="button" title="Blocksatz" onclick="applyTextProperty('textAlign','justify')">${I.justify}</button>
  </div>
- <div class="v164ToolGroup v164Actions">
-  <button type="button" title="Hyperlink" onclick="v164Hyperlink()">${I.link}</button>
-  <button class="v164PainterBtn" type="button" title="Format übertragen (I)" onclick="v164ToggleFormatPainter()">${I.paint}</button>
+ <div class="v164ToolGroup v164Actions v165Actions">
+  <button type="button" title="Hyperlink auf markierten Text" onclick="v164Hyperlink()">${I.link}</button>
+  <button class="v165PainterBtn" type="button" title="Format übertragen (I)" onclick="v165ToggleFormatPainter()">${I.paint}</button>
  </div>
  </div>`}
-function populateFonts(){
- const sel=q('.v164FontSelect');if(!sel)return;const cur=sel.value;sel.innerHTML=fontOptions();if([...sel.options].some(o=>o.value===cur))sel.value=cur;sel.style.fontFamily=sel.value||'Arial';
-}
+function populateFonts(){try{window.v165RefreshFontButton?.()}catch(_){}}
 function ensureToolbar(){
  if(!isEditor()||innerWidth<900)return;const host=q('.v134FormatTools');if(!host)return;
  if(host.dataset.v164!=='1'){host.dataset.v164='1';host.innerHTML=toolbarHTML()}
@@ -1326,7 +1330,7 @@ document.addEventListener('keydown',e=>{
  if(key==='m'){e.preventDefault();e.stopImmediatePropagation();addVectorShape?.('rect');return}
  if(key==='l'){e.preventDefault();e.stopImmediatePropagation();addVectorShape?.('ellipse');return}
  if(key==='p'){e.preventDefault();e.stopImmediatePropagation();setVectorTool?.('pen');return}
- if(key==='i'){e.preventDefault();e.stopImmediatePropagation();window.v164ToggleFormatPainter();return}
+ if(key==='i'){e.preventDefault();e.stopImmediatePropagation();(window.v165ToggleFormatPainter||window.v164ToggleFormatPainter)?.();return}
 },{capture:true});
 
 /* ---------- help + icon cleanup ---------- */
@@ -1357,6 +1361,346 @@ try{renderSheetEditor=window.renderSheetEditor}catch(_){ }
 const baseLayer=window.renderLayerList;if(baseLayer)window.renderLayerList=function(){const r=baseLayer.apply(this,arguments);requestAnimationFrame(normalizeEditorIcons);return r};
 try{renderLayerList=window.renderLayerList}catch(_){ }
 window.addEventListener('resize',()=>setTimeout(ensureToolbar,100));
-setTimeout(ensureToolbar,600);setTimeout(ensureToolbar,1500);setTimeout(()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 164'},2400);
+setTimeout(ensureToolbar,600);setTimeout(ensureToolbar,1500);setTimeout(()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 166'},2400);
 })();
 /* ===== /Studia V164 ===== */
+
+
+/* ===== Studia V165 — precise text editing, cute chrome, print isolation & sticker palette ===== */
+(function(){
+'use strict';
+if(window.__STUDIA_V165__)return;window.__STUDIA_V165__=true;
+const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
+const editor=()=>document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
+const textKinds=new Set(['text','block','task','merke','file']);
+const state=()=>{try{return canvasState}catch(_){return window.canvasState}};
+const selectedTextObj=()=>{const s=state();return (s?.objects||[]).find(o=>String(o.id)===String(s?.selectedId)&&textKinds.has(o.kind))||null};
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+/* ---------- text: middle edits, border moves ---------- */
+let drag165=null;
+function zoom165(){const st=q('#canvasStage');if(!st)return 1;const r=st.getBoundingClientRect();return r.width/Math.max(1,(typeof canvasPageWidth==='function'?canvasPageWidth():794))||1}
+function chooseText165(id){try{selectCanvasObject(id)}catch(_){const s=state();if(!s)return;s.selectedType='object';s.selectedId=id;s.selectedIds=[id];s.selectedVectorIds=[];renderCanvasInspector?.()}}
+function toggleMulti165(id){if(typeof toggleObjectInMultiSelection==='function')return toggleObjectInMultiSelection(id);const s=state();if(!s)return;const set=new Set(s.selectedIds||[]);set.has(id)?set.delete(id):set.add(id);s.selectedIds=[...set];s.selectedType=s.selectedIds.length?'object':null;s.selectedId=s.selectedIds.at(-1)||null;s.multiMode=s.selectedIds.length>1;renderCanvasObjects?.();renderCanvasInspector?.()}
+function dragStart165(e,o,wrap){if(o.locked)return;e.preventDefault();e.stopImmediatePropagation();chooseText165(o.id);const z=zoom165();drag165={id:o.id,pid:e.pointerId,sx:e.clientX,sy:e.clientY,ox:+o.x||0,oy:+o.y||0,z,moved:false,wrap};try{e.currentTarget.setPointerCapture?.(e.pointerId)}catch(_){}document.body.classList.add('v165MovingText')}
+function dragMove165(e){const d=drag165;if(!d||d.pid!==e.pointerId)return;const s=state(),o=(s?.objects||[]).find(x=>String(x.id)===String(d.id));if(!o)return;const dx=(e.clientX-d.sx)/d.z,dy=(e.clientY-d.sy)/d.z;if(!d.moved&&Math.hypot(dx,dy)<3)return;d.moved=true;e.preventDefault();let nx=d.ox+dx,ny=d.oy+dy;const W=typeof canvasPageWidth==='function'?canvasPageWidth():794,H=typeof canvasPageHeight==='function'?canvasPageHeight():1123;nx=Math.max(0,Math.min(Math.max(0,W-o.w),nx));ny=Math.max(0,Math.min(Math.max(0,H-o.h),ny));try{if(typeof snapObjectPosition==='function'){const sn=snapObjectPosition(o,nx,ny);nx=sn.x;ny=sn.y}}catch(_){}o.x=nx;o.y=ny;const el=q(`.cobj[data-id="${CSS.escape(String(o.id))}"]`);if(el){el.style.left=nx+'px';el.style.top=ny+'px'}if(d.wrap){d.wrap.style.left=nx+'px';d.wrap.style.top=ny+'px'}markCanvasDirty?.(false)}
+function dragEnd165(e){const d=drag165;if(!d||d.pid!==e.pointerId)return;drag165=null;document.body.classList.remove('v165MovingText');try{clearGuides?.()}catch(_){}if(d.moved){pushHistory?.();renderCanvasInspector?.();window.v132SyncHits?.()}setTimeout(buildTextInteractions165,0)}
+function addMoveEdge165(wrap,edge,o){const h=document.createElement('div');h.className=`v165TextMoveEdge ${edge}`;h.title='Am Rand ziehen = Textfeld bewegen';h.addEventListener('pointerdown',e=>{if(e.shiftKey){e.preventDefault();e.stopImmediatePropagation();toggleMulti165(o.id);return}dragStart165(e,o,wrap)},{capture:true,passive:false});h.addEventListener('pointermove',dragMove165,{passive:false});h.addEventListener('pointerup',dragEnd165);h.addEventListener('pointercancel',dragEnd165);wrap.appendChild(h)}
+function buildTextInteractions165(){if(!editor())return;const layer=q('#v152TextHitLayer'),s=state();if(!layer||!s)return;const current=qa(':scope > .v165TextInteraction',layer);if(current.length&&current.length===(s.objects||[]).filter(o=>textKinds.has(o.kind)&&!o.isChecklist&&!o.editing).length&&!q(':scope > .v152TextHit',layer))return;layer.replaceChildren();for(const o of s.objects||[]){if(!textKinds.has(o.kind)||o.isChecklist||o.editing)continue;const wrap=document.createElement('div');wrap.className='v165TextInteraction'+(((s.selectedIds||[]).includes(o.id)||String(s.selectedId)===String(o.id))?' selected':'')+(o.locked?' locked':'');wrap.dataset.id=o.id;Object.assign(wrap.style,{left:(+o.x||0)+'px',top:(+o.y||0)+'px',width:Math.max(18,+o.w||80)+'px',height:Math.max(18,+o.h||40)+'px',transform:`rotate(${+o.rotation||0}deg)`,transformOrigin:'50% 50%'});const edit=document.createElement('div');edit.className='v165TextEditArea';edit.title=o.locked?'Textfeld ist gesperrt':'In die Mitte klicken = Text bearbeiten';edit.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;if(e.shiftKey){e.preventDefault();e.stopImmediatePropagation();toggleMulti165(o.id);return}e.preventDefault();e.stopImmediatePropagation();chooseText165(o.id);if(o.locked)return;if(painter165){if(applyObject165(o.id,painter165.style))stopPainter165('Format übertragen ♡');return}const x=e.clientX,y=e.clientY;setTimeout(()=>window.v152BeginTextEdit?.(o.id,x,y),0)},{capture:true,passive:false});wrap.appendChild(edit);for(const edge of ['top','right','bottom','left'])addMoveEdge165(wrap,edge,o);layer.appendChild(wrap)}layer.dataset.v165='1'}
+function scheduleText165(){requestAnimationFrame(()=>requestAnimationFrame(buildTextInteractions165))}
+const renderObjects165=window.renderCanvasObjects;if(renderObjects165)window.renderCanvasObjects=function(){const r=renderObjects165.apply(this,arguments);scheduleText165();return r};try{renderCanvasObjects=window.renderCanvasObjects}catch(_){}
+setTimeout(buildTextInteractions165,750);setTimeout(buildTextInteractions165,1700);
+
+/* Keep selection/range intact when the user reaches for a toolbar control. */
+document.addEventListener('pointerdown',e=>{if(e.target.closest?.('.v165FormatToolbar,#v165FontMenu,.v165FontMenu'))window.v152RememberRange?.()},true);
+
+/* ---------- font dropdown with real previews ---------- */
+function customFonts165(){const out=[];for(const k of ['schoolbloom-v91-custom-fonts','schoolbloom-custom-fonts']){try{for(const f of JSON.parse(localStorage.getItem(k)||'[]'))if(f?.name&&!out.includes(f.name))out.push(f.name)}catch(_){}}return out}
+function fontList165(){return [...new Set(['Inter','Arial','Trebuchet MS','Verdana','Georgia','Times New Roman',...customFonts165()])]}
+function currentFont165(){const s=getSelection?.();if(s?.rangeCount&&!s.isCollapsed){const r=s.getRangeAt(0),n=r.startContainer.nodeType===1?r.startContainer:r.startContainer.parentElement,el=n?.closest?.('.cobj[contenteditable="true"]');if(el){const cs=getComputedStyle(n||el);return String(cs.fontFamily||'Inter').split(',')[0].replace(/["']/g,'').trim()}}const o=selectedTextObj();return String(o?.style?.fontFamily||'Inter').split(',')[0].replace(/["']/g,'').trim()}
+window.v165RefreshFontButton=function(){const b=q('.v165FontMenuBtn'),sample=q('.v165FontSample',b);if(!sample)return;const f=currentFont165()||'Inter';sample.textContent=f;sample.style.fontFamily=`"${f}", sans-serif`;const size=q('.v165Size');const o=selectedTextObj();if(size&&o?.style?.fontSize)size.value=o.style.fontSize}
+function closeFont165(){q('#v165FontMenu')?.remove();q('.v165FontMenuBtn')?.classList.remove('open')}
+window.v165ToggleFontMenu=function(btn){window.v152RememberRange?.();const old=q('#v165FontMenu');if(old){closeFont165();return}const r=btn.getBoundingClientRect(),menu=document.createElement('div');menu.id='v165FontMenu';menu.className='v165FontMenu';menu.style.left=Math.min(innerWidth-264,Math.max(8,r.left))+'px';menu.style.top=(r.bottom+7)+'px';menu.innerHTML=`<div class="v165FontMenuHead"><b>Schrift</b><span>Vorschau</span></div><div class="v165FontMenuList">${fontList165().map(f=>`<button type="button" data-font="${esc(f)}" style="font-family:'${esc(f)}',sans-serif"><span class="v165FontAa">Aa</span><span>${esc(f)}</span></button>`).join('')}</div>`;document.body.appendChild(menu);btn.classList.add('open');menu.addEventListener('pointerdown',e=>{window.v152RememberRange?.();if(e.target.closest('button'))e.preventDefault()},true);menu.addEventListener('click',e=>{const b=e.target.closest('button[data-font]');if(!b)return;const f=b.dataset.font;window.v152RestoreRange?.();applyTextProperty?.('fontFamily',f);const sm=q('.v165FontSample');if(sm){sm.textContent=f;sm.style.fontFamily=`"${f}",sans-serif`}closeFont165()})}
+document.addEventListener('pointerdown',e=>{if(q('#v165FontMenu')&&!e.target.closest?.('#v165FontMenu,.v165FontMenuBtn'))closeFont165()},true);
+document.addEventListener('selectionchange',()=>setTimeout(window.v165RefreshFontButton,0));
+
+/* ---------- format painter: range -> range OR object -> range/object ---------- */
+let painter165=null;
+function rangeStyle165(){window.v152RememberRange?.();if(!window.v152HasRange?.()||!window.v152RestoreRange?.())return null;const s=getSelection?.();if(!s?.rangeCount||s.isCollapsed)return null;const r=s.getRangeAt(0),n=r.startContainer.nodeType===1?r.startContainer:r.startContainer.parentElement,el=n?.closest?.('.cobj[contenteditable="true"]');if(!el)return null;const cs=getComputedStyle(n||el),bs=getComputedStyle(el);return{fontFamily:cs.fontFamily,fontSize:parseFloat(cs.fontSize)||16,color:cs.color,bold:!!document.queryCommandState?.('bold'),italic:!!document.queryCommandState?.('italic'),underline:!!document.queryCommandState?.('underline'),strike:!!document.queryCommandState?.('strikeThrough'),textAlign:bs.textAlign||'left',lineHeight:bs.lineHeight,letterSpacing:cs.letterSpacing}}
+function objectStyle165(){const o=selectedTextObj();if(!o)return null;const st=o.style||{};return{fontFamily:st.fontFamily||'Arial',fontSize:+st.fontSize||16,color:st.color||'#333333',bold:Number(st.fontWeight||400)>=600,italic:st.fontStyle==='italic',underline:String(st.textDecoration||'').includes('underline'),strike:String(st.textDecoration||'').includes('line-through'),textAlign:st.textAlign||'left',lineHeight:st.lineHeight,letterSpacing:st.letterSpacing}}
+function painterState165(on){q('.v165PainterBtn')?.classList.toggle('active',!!on);document.body.classList.toggle('v165PainterOn',!!on)}
+function stopPainter165(msg){painter165=null;painterState165(false);if(msg)cuteToast?.(msg)}
+window.v165ToggleFormatPainter=function(){if(painter165){stopPainter165();return}const style=rangeStyle165()||objectStyle165();if(!style){cuteToast?.('Markiere Text oder wähle ein Textfeld aus ♡');return}painter165={style,sourceId:state()?.selectedId||null};painterState165(true);cuteToast?.('Format aufgenommen · Ziel markieren ♡')}
+function toggleCmd165(cmd,want){const on=!!document.queryCommandState?.(cmd);if(on!==!!want)document.execCommand(cmd,false,null)}
+function applyRange165(style){if(!window.v152HasRange?.()||!window.v152RestoreRange?.())return false;const s=getSelection?.();if(!s?.rangeCount||s.isCollapsed)return false;const r=s.getRangeAt(0),n=r.commonAncestorContainer.nodeType===1?r.commonAncestorContainer:r.commonAncestorContainer.parentElement,el=n?.closest?.('.cobj[contenteditable="true"]');if(!el)return false;try{document.execCommand('styleWithCSS',false,true);if(style.fontFamily)document.execCommand('fontName',false,String(style.fontFamily).replace(/["']/g,'').split(',')[0]);if(style.color)document.execCommand('foreColor',false,style.color);document.execCommand('styleWithCSS',false,false);document.execCommand('fontSize',false,'7');for(const f of el.querySelectorAll('font[size="7"]')){f.removeAttribute('size');f.style.fontSize=`${Math.max(6,Math.min(180,+style.fontSize||16))}px`}document.execCommand('styleWithCSS',false,true);toggleCmd165('bold',style.bold);toggleCmd165('italic',style.italic);toggleCmd165('underline',style.underline);toggleCmd165('strikeThrough',style.strike);const a={left:'justifyLeft',center:'justifyCenter',right:'justifyRight',justify:'justifyFull'}[style.textAlign];if(a)document.execCommand(a,false,null)}catch(_){return false}const o=(state()?.objects||[]).find(x=>String(x.id)===String(el.dataset.id));if(o)o.text=el.innerHTML;markCanvasDirty?.();pushHistory?.();renderCanvasInspector?.();return true}
+function applyObject165(id,style){const o=(state()?.objects||[]).find(x=>String(x.id)===String(id));if(!o||!textKinds.has(o.kind))return false;o.style||={};Object.assign(o.style,{fontFamily:style.fontFamily,fontSize:style.fontSize,color:style.color,fontWeight:style.bold?700:400,fontStyle:style.italic?'italic':'normal',textDecoration:[style.underline?'underline':'',style.strike?'line-through':''].filter(Boolean).join(' ')||'none',textAlign:style.textAlign||'left'});if(style.lineHeight)o.style.lineHeight=parseFloat(style.lineHeight)||o.style.lineHeight;if(style.letterSpacing&&style.letterSpacing!=='normal')o.style.letterSpacing=parseFloat(style.letterSpacing)||0;renderCanvasObjects?.();renderCanvasInspector?.();markCanvasDirty?.();pushHistory?.();return true}
+document.addEventListener('pointerup',e=>{if(!painter165||!editor()||e.target.closest?.('.v165FormatToolbar,#v165FontMenu'))return;setTimeout(()=>{if(!painter165)return;window.v152RememberRange?.();if(window.v152HasRange?.()&&applyRange165(painter165.style)){stopPainter165('Format übertragen ♡');return}const id=e.target instanceof Element?e.target.closest?.('[data-id]')?.dataset?.id:null;if(id&&String(id)!==String(painter165.sourceId)&&applyObject165(id,painter165.style))stopPainter165('Format übertragen ♡')},25)},true);
+document.addEventListener('keydown',e=>{if(!editor())return;if(e.key==='Escape'&&painter165){e.preventDefault();e.stopImmediatePropagation();stopPainter165('Format übertragen beendet')}},true);
+
+/* ---------- clean print: page only, no Studia UI ---------- */
+function fontFaceCSS165(){let out='';try{for(const ss of document.styleSheets){let rules;try{rules=ss.cssRules}catch(_){continue}for(const r of rules||[])if(r.type===CSSRule.FONT_FACE_RULE)out+=r.cssText+'\n'}}catch(_){}return out}
+window.printCanvasSheet=function(){let title='Lernblatt';try{const d=typeof data!=='undefined'?data:window.data,sid=typeof selectedSheetId!=='undefined'?selectedSheetId:window.selectedSheetId;title=(d?.studySheets||[]).find(x=>x.id===sid)?.title||q('.editorTitle b')?.textContent||title}catch(_){}const W=typeof canvasPageWidth==='function'?canvasPageWidth():794,H=typeof canvasPageHeight==='function'?canvasPageHeight():1123,html=typeof serializedCanvas==='function'?serializedCanvas():'',pageCSS=typeof pagePatternCSS==='function'?pagePatternCSS():'';const w=window.open('','_blank','noopener=false,width=1000,height=900');if(!w){alert('Bitte Pop-ups für Studia erlauben, damit das Lernblatt gedruckt werden kann.');return}w.document.open();w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${esc(title)}</title><style>${fontFaceCSS165()}@page{size:A4;margin:0!important}html,body{margin:0!important;padding:0!important;background:#fff!important;width:${W}px;height:${H}px;overflow:hidden}.page{position:relative;width:${W}px;height:${H}px;margin:0!important;padding:0!important;overflow:hidden;box-shadow:none!important;border:0!important;${pageCSS}}@media print{html,body,.page{margin:0!important;padding:0!important;box-shadow:none!important;border:0!important}}</style></head><body><main class="page">${html}</main><script>addEventListener('load',()=>setTimeout(()=>{focus();print()},120));<\/script></body></html>`);w.document.close()}
+
+/* ---------- sticker palette: edit individual colors ---------- */
+function stickers165(){const ids=new Set([...(state()?.selectedIds||[]),state()?.selectedId].filter(Boolean));return (state()?.objects||[]).filter(o=>ids.has(o.id)&&o.stickerAsset&&!o.frameAsset)}
+function loadImage165(src){return new Promise((res,rej)=>{const im=new Image();im.onload=()=>res(im);im.onerror=rej;im.src=src})}
+const hex165=(r,g,b)=>'#'+[r,g,b].map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('');
+function rgb165(hex){const h=String(hex||'#000').replace('#','');return h.length===3?[...h].map(x=>parseInt(x+x,16)): [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]}
+function dist165(a,b){return Math.hypot(a[0]-b[0],a[1]-b[1],a[2]-b[2])}
+async function analyze165(o){if(Array.isArray(o.stickerPaletteSources)&&o.stickerPaletteSources.length)return o.stickerPaletteSources;const src=o.stickerPaletteOriginal||o.src;o.stickerPaletteOriginal=src;const im=await loadImage165(src),max=150,sc=Math.min(1,max/Math.max(im.naturalWidth,im.naturalHeight)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(im.naturalWidth*sc));c.height=Math.max(1,Math.round(im.naturalHeight*sc));const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(im,0,0,c.width,c.height);const d=x.getImageData(0,0,c.width,c.height).data,bins=new Map();let darkest=null,lightest=null;for(let i=0;i<d.length;i+=4){if(d[i+3]<48)continue;const rgb=[d[i],d[i+1],d[i+2]],lum=.2126*rgb[0]+.7152*rgb[1]+.0722*rgb[2];if(!darkest||lum<darkest.lum)darkest={rgb,lum};if(!lightest||lum>lightest.lum)lightest={rgb,lum};const qv=rgb.map(v=>Math.round(v/24)*24),k=qv.join(',');const b=bins.get(k)||{n:0,sum:[0,0,0]};b.n++;b.sum[0]+=rgb[0];b.sum[1]+=rgb[1];b.sum[2]+=rgb[2];bins.set(k,b)}let cand=[...bins.values()].sort((a,b)=>b.n-a.n).slice(0,24).map(b=>b.sum.map(v=>v/b.n));if(darkest)cand.push(darkest.rgb);if(lightest)cand.push(lightest.rgb);const merged=[];for(const c0 of cand){if(merged.some(m=>dist165(m,c0)<24))continue;merged.push(c0);if(merged.length>=16)break}o.stickerPaletteSources=merged.map(v=>hex165(...v));o.stickerPaletteTargets=[...o.stickerPaletteSources];return o.stickerPaletteSources}
+async function renderSticker165(o){const src=o.stickerPaletteOriginal||o.src,sources=(o.stickerPaletteSources||[]).map(rgb165),targets=(o.stickerPaletteTargets||o.stickerPaletteSources||[]).map(rgb165);if(!sources.length)return;const im=await loadImage165(src),c=document.createElement('canvas');c.width=im.naturalWidth;c.height=im.naturalHeight;const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(im,0,0);const img=x.getImageData(0,0,c.width,c.height),d=img.data;for(let i=0;i<d.length;i+=4){if(d[i+3]<10)continue;const p=[d[i],d[i+1],d[i+2]];let bi=0,bd=1e9;for(let j=0;j<sources.length;j++){const dd=dist165(p,sources[j]);if(dd<bd){bd=dd;bi=j}}const s=sources[bi],t=targets[bi];if(!t||dist165(s,t)<2)continue;const lp=(p[0]+p[1]+p[2])/3,ls=(s[0]+s[1]+s[2])/3,delta=(lp-ls)*.72;d[i]=Math.max(0,Math.min(255,t[0]+delta));d[i+1]=Math.max(0,Math.min(255,t[1]+delta));d[i+2]=Math.max(0,Math.min(255,t[2]+delta))}x.putImageData(img,0,0);o.src=c.toDataURL('image/png');delete o.tintColor;renderCanvasObjects?.();renderCanvasInspector?.();markCanvasDirty?.();pushHistory?.()}
+function paletteModal165(o){const rows=(o.stickerPaletteSources||[]).map((src,i)=>`<div class="v165StickerColorRow"><span class="v165OriginalSwatch" style="background:${src}" title="Original ${src}"></span><span class="v165ColorArrow">→</span><label><input type="color" value="${o.stickerPaletteTargets?.[i]||src}" onchange="v165StickerColor('${esc(o.id)}',${i},this.value)"><span>Farbe ${i+1}</span></label><button type="button" title="Diese Farbe zurücksetzen" onclick="v165StickerColor('${esc(o.id)}',${i},'${src}')">↺</button></div>`).join('');openModal?.(`<div class="v135Modal v165StickerModal"><div class="v135ModalHead"><div><span class="eyebrow">STICKERFARBEN</span><h2>Jede Farbe einzeln</h2></div><button onclick="closeModal()">×</button></div><p class="small">Jede erkannte Stickerfarbe hat ihren eigenen Farbwähler. Schattierungen bleiben erhalten.</p><div class="v165StickerPalette">${rows}</div><div class="v135ActionRow"><button onclick="v165ResetStickerColors('${esc(o.id)}')">Alle Originalfarben</button><button class="primary" onclick="closeModal()">Fertig</button></div></div>`)}
+window.v165OpenStickerColors=async function(){const list=stickers165();if(list.length!==1){cuteToast?.('Wähle genau einen Sticker aus ♡');return}const o=list[0];cuteToast?.('Stickerfarben werden erkannt …');try{await analyze165(o);paletteModal165(o)}catch(err){console.error('[V165 sticker palette]',err);alert('Die Farben dieses Stickers konnten nicht gelesen werden.') }}
+window.v165StickerColor=async function(id,i,value){const o=(state()?.objects||[]).find(x=>String(x.id)===String(id));if(!o)return;o.stickerPaletteTargets||=[...(o.stickerPaletteSources||[])];o.stickerPaletteTargets[i]=value;const inp=q(`.v165StickerColorRow:nth-child(${i+1}) input[type=color]`);if(inp)inp.value=value;await renderSticker165(o)}
+window.v165ResetStickerColors=async function(id){const o=(state()?.objects||[]).find(x=>String(x.id)===String(id));if(!o)return;if(o.stickerPaletteOriginal)o.src=o.stickerPaletteOriginal;o.stickerPaletteTargets=[...(o.stickerPaletteSources||[])];delete o.tintColor;renderCanvasObjects?.();renderCanvasInspector?.();markCanvasDirty?.();pushHistory?.();closeModal?.();cuteToast?.('Originalfarben wiederhergestellt ♡')}
+function addStickerButton165(){if(!editor())return;for(const host of [q('#canvasInspector .v137Inspector'),q('#canvasInspector')].filter(Boolean)){host.querySelectorAll('.v141StickerSection,.v144StickerColors').forEach(x=>x.remove());if(host.querySelector('.v165StickerPaletteAction'))continue;const list=stickers165();if(list.length!==1)continue;const sec=document.createElement('section');sec.className='v165StickerPaletteAction';sec.innerHTML=`<div><b>Einzelfarben</b><small>Jede Stickerfarbe separat ändern</small></div><button type="button" onclick="v165OpenStickerColors()"><span>✦</span> Farben bearbeiten</button>`;host.prepend(sec)}}
+const inspector165=window.renderCanvasInspector;if(inspector165)window.renderCanvasInspector=function(){const r=inspector165.apply(this,arguments);requestAnimationFrame(()=>{addStickerButton165();window.v165RefreshFontButton?.()});return r};try{renderCanvasInspector=window.renderCanvasInspector}catch(_){}
+
+/* ---------- small safe UI hooks ---------- */
+function ui165(){if(!editor())return;window.v165RefreshFontButton?.();addStickerButton165();buildTextInteractions165();const txt=q('.v132SelectionBar button[title="Textformat erstellen"]');if(txt)txt.style.display='none'}
+const sheet165=window.renderSheetEditor;if(sheet165)window.renderSheetEditor=function(){const r=sheet165.apply(this,arguments);setTimeout(ui165,120);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){}
+window.addEventListener('resize',()=>{closeFont165();setTimeout(ui165,120)});setTimeout(ui165,700);setTimeout(ui165,1800);
+})();
+/* ===== /Studia V165 ===== */
+
+/* ===== Studia V166 — phone editor, account sync, layer drag, print cleanup ===== */
+(()=>{
+'use strict';
+if(window.__STUDIA_V166__) return; window.__STUDIA_V166__=true;
+const q=(s,r=document)=>r.querySelector(s), qa=(s,r=document)=>[...r.querySelectorAll(s)];
+const mobile=()=>innerWidth<900;
+const editor=()=>document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
+const st=()=>{try{return canvasState}catch(_){return window.canvasState}};
+const textKinds=new Set(['text','block','task','merke','file']);
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const svg=(d)=>`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;
+const ICON={
+ edit:svg('M4 20h4l11-11a2.8 2.8 0 0 0-4-4L4 16v4ZM13.5 6.5l4 4'),
+ trash:svg('M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5'),
+ duplicate:svg('M8 8h11v11H8zM5 16H4V5h11v1'),
+ lock:svg('M7 10V8a5 5 0 0 1 10 0v2M6 10h12v10H6z'),
+ group:svg('M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6zM10 7h4M7 10v4M17 10v4M10 17h4'),
+ ungroup:svg('M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z'),
+ more:svg('M5 12h.01M12 12h.01M19 12h.01'),
+ close:svg('M6 6l12 12M18 6 6 18')
+};
+
+/* ---------- account: username/password + Google + aggressive full sync ---------- */
+const ACCOUNT_TOKEN='studia-account-token-v150', ACCOUNT_USER='studia-account-username-v150', URL_KEY='studia-gas-url';
+function gasUrl(){return String(localStorage.getItem(URL_KEY)||window.STUDIA_SYNC_CONFIG?.scriptUrl||'').trim().replace(/\/$/,'')}
+function gasValid(u=gasUrl()){return /^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec(?:\?.*)?$/.test(String(u||''))}
+function googleClientId(){const v=String(window.STUDIA_SYNC_CONFIG?.googleClientId||'').trim();return v&&!v.startsWith('DEINE_')?v:''}
+function accountStatus166(text,bad=false){const x=q('#v150AccountStatus');if(x){x.textContent=text;x.classList.toggle('error',!!bad)}}
+function timeoutFetch(url,opts={},ms=15000){const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);return fetch(url,{...opts,signal:c.signal}).finally(()=>clearTimeout(t))}
+async function gasPost166(action,body={}){
+ const url=gasUrl();if(!gasValid(url))throw new Error('Die Apps-Script-/exec-URL ist noch nicht eingerichtet.');
+ const token=String(localStorage.getItem(ACCOUNT_TOKEN)||'');
+ const r=await timeoutFetch(url,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action,...body,...(token?{token}:{})})});
+ const raw=await r.text();let data;try{data=JSON.parse(raw)}catch{throw new Error('Google-Sync hat keine gültige Antwort geliefert.');}
+ if(data?.ok===false)throw new Error(data.error||'Anmeldung fehlgeschlagen.');return data;
+}
+function loadGoogleIdentity166(){return new Promise((resolve,reject)=>{
+ if(window.google?.accounts?.id)return resolve();
+ let s=q('#v166GoogleIdentity');if(s){s.addEventListener('load',()=>resolve(),{once:true});s.addEventListener('error',()=>reject(new Error('Google-Anmeldung konnte nicht geladen werden.')),{once:true});return}
+ s=document.createElement('script');s.id='v166GoogleIdentity';s.src='https://accounts.google.com/gsi/client';s.async=true;s.defer=true;s.onload=()=>resolve();s.onerror=()=>reject(new Error('Google-Anmeldung konnte nicht geladen werden.'));document.head.appendChild(s);
+ })}
+window.v166GoogleCredential=async function(credential){
+ try{accountStatus166('Google-Konto wird verbunden …');const r=await gasPost166('google_login',{credential});localStorage.setItem(ACCOUNT_TOKEN,r.token);localStorage.setItem(ACCOUNT_USER,r.user?.username||r.user?.email||'Google');accountStatus166('Angemeldet · synchronisiere alle Daten …');await window.v150Pull?.();window.closeModal?.();window.cuteToast?.('Google-Konto verbunden ♡');setTimeout(()=>location.reload(),350)}catch(err){accountStatus166(String(err?.message||err),true)}
+};
+window.v166RenderGoogleButton=async function(){
+ const host=q('#v166GoogleButton');if(!host)return;const cid=googleClientId();
+ if(!cid){host.innerHTML='<button class="v166GoogleFallback" type="button" onclick="v166ShowGoogleSetup()"><span class="v166GoogleG">G</span><span>Mit Google anmelden</span></button>';return}
+ try{await loadGoogleIdentity166();host.innerHTML='';google.accounts.id.initialize({client_id:cid,callback:r=>window.v166GoogleCredential(r.credential),auto_select:false,cancel_on_tap_outside:true});google.accounts.id.renderButton(host,{type:'standard',theme:'outline',size:'large',shape:'pill',text:'signin_with',width:320,logo_alignment:'left'})}catch(err){host.innerHTML=`<button class="v166GoogleFallback" type="button" onclick="v166RenderGoogleButton()"><span class="v166GoogleG">G</span><span>${esc(err?.message||'Google erneut laden')}</span></button>`}
+};
+window.v166ShowGoogleSetup=function(){accountStatus166('Für Google-Login einmal die Google OAuth Client-ID in google-sync-config.js eintragen. Benutzername + Passwort funktioniert unabhängig davon.',true)};
+window.v166Logout=async function(){try{await gasPost166('logout')}catch(_){}localStorage.removeItem(ACCOUNT_TOKEN);localStorage.removeItem(ACCOUNT_USER);window.closeModal?.();window.cuteToast?.('Abgemeldet');setTimeout(()=>location.reload(),180)};
+window.openAccountDialog=function(){
+ const logged=!!localStorage.getItem(ACCOUNT_TOKEN),name=localStorage.getItem(ACCOUNT_USER)||'',url=gasUrl();
+ window.openModal?.(`<div class="v135Modal v150AccountModal v166AccountModal"><div class="v135ModalHead"><div><span class="eyebrow">STUDIA KONTO</span><h2>${logged?'Dein Konto':'Überall dieselben Daten'}</h2></div><button class="iconbtn" onclick="closeModal()" aria-label="Schließen">${ICON.close}</button></div>
+ ${logged?`<div class="v150AccountHero"><span class="v150AccountAvatar">S</span><div><b>${esc(name||'Studia')}</b><small>auf diesem Gerät dauerhaft angemeldet</small></div></div><div class="v166SyncPromise"><b>Automatischer Voll-Sync</b><span>Nach Änderungen, beim Öffnen, beim Zurückkehren zur App und regelmäßig im Vordergrund.</span></div><div class="v166SyncList">Fächer · Themen · Lernblätter · Hausaufgaben · Tests · Noten · Karteikarten · Quizze · Editor · Bilder/Dateien · Schriften · Einstellungen</div><div id="v150AccountStatus" class="v150AccountState">✓ Synchronisierung aktiv</div><div class="v166AccountActions"><button class="primary" onclick="v150Pull()">Jetzt abgleichen</button><button onclick="v166Logout()">Abmelden</button></div>`:`<p class="v166AccountIntro">Ein Konto auf Handy und Laptop. Studia hält danach <b>alles automatisch gleich</b>.</p><div class="v150AccountForm v166AccountForm"><label>Benutzername<input id="v150Username" autocomplete="username" minlength="3" maxlength="32" value="${esc(name)}" placeholder="Benutzername"></label><label>Passwort<input id="v150Password" type="password" autocomplete="current-password" minlength="8" placeholder="mindestens 8 Zeichen"></label></div><div class="v166AccountActions"><button class="primary" onclick="v150Login()">Anmelden</button><button onclick="v150Register()">Konto erstellen</button></div><div class="v166Or"><span></span><b>oder</b><span></span></div><div id="v166GoogleButton" class="v166GoogleButton"></div><div id="v150AccountStatus" class="v150AccountState">Mit demselben Konto auf allen Geräten anmelden.</div>`}
+ ${gasValid(String(window.STUDIA_SYNC_CONFIG?.scriptUrl||''))?'':`<details class="v150AccountSetup v166AccountSetup" ${gasValid(url)?'':'open'}><summary>Einmalige Sync-Einrichtung</summary><label>Apps-Script-Web-App-URL<input id="v150ScriptUrl" type="url" value="${esc(url)}" placeholder="https://script.google.com/macros/s/…/exec" oninput="v150RememberUrl()"></label><small>Die URL am besten direkt in <b>google-sync-config.js</b> eintragen. Dann ist sie auf Handy und Laptop automatisch vorhanden.</small></details>`}</div>`);
+ if(!logged)setTimeout(()=>window.v166RenderGoogleButton?.(),30)
+};
+/* V150 already captures the whole app state. Make foreground/open sync extra eager. */
+window.addEventListener('pageshow',()=>setTimeout(()=>window.v150Pull?.(),120));
+window.addEventListener('focus',()=>setTimeout(()=>window.v150Pull?.(),120));
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')setTimeout(()=>window.v150Pull?.(),150)});
+
+/* ---------- mobile text: tap/drag selects & moves; explicit pencil enters editing ---------- */
+const baseSelect166=window.selectCanvasObject;
+window.selectCanvasObject=function(oid){
+ const s=st(),o=(s?.objects||[]).find(x=>String(x.id)===String(oid));if(!s||!o)return baseSelect166?.apply(this,arguments);
+ if(o.groupId&&!s.multiMode&&typeof window.selectWholeGroup==='function'){window.selectWholeGroup(o.groupId);setTimeout(window.updateMobileSelectionTools,0);return}
+ const same=s.selectedType==='object'&&String(s.selectedId)===String(oid)&&(s.selectedIds||[]).length===1;
+ s.selectedType='object';s.selectedId=oid;s.selectedIds=[oid];s.selectedVectorIds=[];
+ if(!same)window.renderCanvasObjects?.();window.renderVectors?.();window.renderCanvasInspector?.();window.renderLayerList?.();window.updateMultiSelectStatus?.();window.updateMobileSelectionTools?.();
+};
+try{selectCanvasObject=window.selectCanvasObject}catch(_){}
+window.v166EditSelectedText=function(){
+ const s=st(),o=(s?.objects||[]).find(x=>String(x.id)===String(s?.selectedId));if(!o||!textKinds.has(o.kind))return window.cuteToast?.('Wähle zuerst ein Textfeld ♡');
+ const el=q(`.cobj[data-id="${CSS.escape(String(o.id))}"]`),r=el?.getBoundingClientRect();window.v152BeginTextEdit?.(o.id,r?r.left+r.width/2:undefined,r?r.top+r.height/2:undefined);setTimeout(()=>window.editorOpenGroup?.('textEdit',null),30);setTimeout(()=>{const d=q('#canvasQuickDrawer');if(!d?.classList.contains('open')||!/Text bearbeiten/i.test(d.textContent||'')){if(d)d.classList.remove('open');try{openEditorGroup=null}catch(_){}window.editorOpenGroup?.('textEdit',null)}qa('.canvasQuickNav button').forEach(x=>x.classList.remove('active'))},140)
+};
+/* Window capture runs before the old document/target handlers. On phones the entire text field is a move/select surface. */
+window.addEventListener('pointerdown',e=>{
+ if((window.__STUDIA_V167_MOBILE__&&mobile())||!mobile()||!editor()||document.body.classList.contains('v165PainterOn'))return;const area=e.target instanceof Element?e.target.closest('.v165TextEditArea'):null;if(!area)return;
+ const wrap=area.closest('.v165TextInteraction'),id=wrap?.dataset.id;if(!id)return;e.preventDefault();e.stopImmediatePropagation();window.selectCanvasObject(id);const o=(st()?.objects||[]).find(x=>String(x.id)===String(id));if(!o?.locked&&typeof window.startDragObject==='function')window.startDragObject(e,id)
+},true);
+
+/* ---------- mobile selected-text color: don't lose the range when native color picker opens ---------- */
+let colorPick166=false,colorRange166=false;
+window.addEventListener('pointerdown',e=>{const inp=e.target instanceof Element?e.target.closest('#v152SelectionBar input[type="color"]'):null;if(!inp)return;window.v152RememberRange?.();colorRange166=!!window.v152HasRange?.();colorPick166=true;document.body.classList.add('v166ColorPicking');q('#v152SelectionBar')?.classList.add('show')},true);
+window.addEventListener('input',e=>{const inp=e.target instanceof Element?e.target.closest('#v152SelectionBar input[type="color"]'):null;if(!inp||!colorPick166)return;e.stopImmediatePropagation();if(colorRange166)window.v152RestoreRange?.();window.applyTextProperty?.('color',inp.value);q('#v152SelectionBar')?.classList.add('show')},true);
+window.addEventListener('change',e=>{const inp=e.target instanceof Element?e.target.closest('#v152SelectionBar input[type="color"]'):null;if(!inp)return;e.stopImmediatePropagation();if(colorRange166)window.v152RestoreRange?.();window.applyTextProperty?.('color',inp.value);q('#v152SelectionBar')?.classList.add('show');setTimeout(()=>{colorPick166=false;colorRange166=false;document.body.classList.remove('v166ColorPicking')},300)},true);
+
+/* ---------- mobile top selection tools: edit pencil directly left of trash ---------- */
+function selectedGroup166(){const s=st();if(!s)return false;const ids=new Set(s.selectedIds||[]),vids=new Set(s.selectedVectorIds||[]),items=[...(s.objects||[]).filter(o=>ids.has(o.id)),...(s.vectors||[]).filter(v=>vids.has(v.id))];const gs=[...new Set(items.map(x=>x.groupId).filter(Boolean))];return items.length>0&&gs.length===1&&items.every(x=>x.groupId===gs[0])}
+window.v166ToggleGroup=function(){if(selectedGroup166())window.ungroupSelectedItems?.();else window.groupSelectedItems?.();setTimeout(()=>{syncGroupUI166();window.updateMobileSelectionTools?.()},40)};
+window.updateMobileSelectionTools=function(){
+ const el=q('#mobileSelectionTools'),s=st();if(!el)return;const count=(s?.selectedIds?.length||0)+(s?.selectedVectorIds?.length||0),o=(s?.objects||[]).find(x=>String(x.id)===String(s?.selectedId));
+ if(!mobile()||!editor()||!count||document.body.classList.contains('v112TextEditing')||document.body.classList.contains('v115TextEdit')||!!o?.editing){el.classList.remove('show');el.innerHTML='';return}
+ const canEdit=!!o&&textKinds.has(o.kind),grouped=selectedGroup166();el.innerHTML=`<button onclick="duplicateSelected()" title="Duplizieren" aria-label="Duplizieren">${ICON.duplicate}</button><button onclick="toggleSelectedLock()" title="Sperren" aria-label="Sperren">${ICON.lock}</button><button onclick="v166ToggleGroup()" title="${grouped?'Entgruppieren':'Gruppieren'}" aria-label="${grouped?'Entgruppieren':'Gruppieren'}">${grouped?ICON.ungroup:ICON.group}</button>${canEdit?`<button class="v166TextEditButton" onclick="v166EditSelectedText()" title="Text bearbeiten" aria-label="Text bearbeiten">${ICON.edit}</button>`:''}<button class="danger" onclick="deleteSelectedCanvasItem()" title="Löschen" aria-label="Löschen">${ICON.trash}</button><button onclick="editorOpenGroup('selection')" title="Mehr" aria-label="Mehr">${ICON.more}</button>`;el.classList.add('show')
+};
+try{updateMobileSelectionTools=window.updateMobileSelectionTools}catch(_){}
+
+/* ---------- mobile nav: correct drawer + correct pink active item ---------- */
+function navMode166(b){const raw=b?.dataset?.v139||b?.dataset?.v138||b?.dataset?.v133||b?.dataset?.group||'',txt=(b?.textContent||'').trim().toLowerCase();if(raw)return raw==='text'?'text':raw;if(txt.includes('element'))return'elements';if(txt.includes('vorlag'))return'templates';if(txt.includes('seite'))return'pages';if(txt.includes('ebene'))return'layers';return'text'}
+function setNavActive166(mode){qa('.canvasQuickNav button').forEach(b=>b.classList.toggle('active',navMode166(b)===mode))}
+window.addEventListener('click',e=>{
+ if((window.__STUDIA_V167_MOBILE__&&mobile())||!mobile()||!editor())return;const b=e.target instanceof Element?e.target.closest('.canvasQuickNav button'):null;if(!b)return;const mode=navMode166(b),expected={text:/Text|Schrift/i,elements:/Elemente|Formen|Mathematik/i,templates:/Vorlagen/i,pages:/Seiten|Ausrichtung|Seitenfarbe/i,layers:/Ebenen/i}[mode];
+ /* Let the older consolidated nav handler run too, because it owns its private wantedMode. We only correct its visual/content result afterwards. */
+ setTimeout(()=>{const d=q('#canvasQuickDrawer');if(d?.classList.contains('open')){setNavActive166(mode);if(expected&&!expected.test(d.textContent||'')){d.classList.remove('open');try{openEditorGroup=null}catch(_){}window.editorOpenGroup?.(mode==='text'?'textLibrary':mode,b);if(d.classList.contains('open'))setNavActive166(mode)}}else qa('.canvasQuickNav button').forEach(x=>x.classList.remove('active'))},45)
+},true);
+const closeDrawer166=window.closeEditorDrawer;if(closeDrawer166)window.closeEditorDrawer=function(){const r=closeDrawer166.apply(this,arguments);qa('.canvasQuickNav button').forEach(b=>b.classList.remove('active'));return r};try{closeEditorDrawer=window.closeEditorDrawer}catch(_){}
+const openGroup166=window.editorOpenGroup;if(openGroup166)window.editorOpenGroup=function(){const r=openGroup166.apply(this,arguments);requestAnimationFrame(()=>{syncGroupUI166();decorateLayers166()});return r};try{editorOpenGroup=window.editorOpenGroup}catch(_){}
+
+/* ---------- layers: drag an item into another layer group (mouse + touch) ---------- */
+let layerDrag166=null,touchLayer166=null;
+function decorateLayers166(){
+ const groups=st()?.layerGroups||[];for(const host of [q('#layerList'),q('#canvasQuickDrawer.open .mobileLayerList')].filter(Boolean)){
+  const sections=qa('.v135LayerGroup',host);sections.forEach((sec,i)=>{const gid=groups[i]?.id;if(!gid)return;sec.dataset.v166Layer=gid;const drop=sec.querySelector('.v135LayerItems')||sec;if(!drop.dataset.v166Drop){drop.dataset.v166Drop='1';drop.addEventListener('dragover',e=>{if(!layerDrag166)return;e.preventDefault();drop.classList.add('v166LayerDrop')});drop.addEventListener('dragleave',()=>drop.classList.remove('v166LayerDrop'));drop.addEventListener('drop',e=>{if(!layerDrag166)return;e.preventDefault();drop.classList.remove('v166LayerDrop');const d=layerDrag166;layerDrag166=null;window.v135AssignLayer?.(d.kind,d.id,gid)})}
+  });
+  qa('.v135LayerRow',host).forEach(row=>{row.draggable=true;const handle=row.querySelector('.v130LayerHandle');if(handle)handle.draggable=true;if(row.dataset.v166Drag)return;row.dataset.v166Drag='1';row.addEventListener('dragstart',e=>{layerDrag166={kind:row.dataset.layerKind,id:row.dataset.layerId};try{e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',row.dataset.layerId||'')}catch(_){}});row.addEventListener('dragend',()=>{layerDrag166=null;qa('.v166LayerDrop').forEach(x=>x.classList.remove('v166LayerDrop'))})})
+ }
+}
+const renderLayers166=window.renderLayerList;if(renderLayers166)window.renderLayerList=function(){const r=renderLayers166.apply(this,arguments);requestAnimationFrame(decorateLayers166);return r};try{renderLayerList=window.renderLayerList}catch(_){}
+window.addEventListener('pointerdown',e=>{if(!editor()||!mobile())return;const h=e.target instanceof Element?e.target.closest('.v135LayerRow .v130LayerHandle'):null;if(!h)return;const row=h.closest('.v135LayerRow');if(!row)return;e.preventDefault();e.stopImmediatePropagation();touchLayer166={pid:e.pointerId,kind:row.dataset.layerKind,id:row.dataset.layerId,target:null};document.body.classList.add('v166DraggingLayer')},true);
+window.addEventListener('pointermove',e=>{if(!touchLayer166||e.pointerId!==touchLayer166.pid)return;e.preventDefault();const sec=document.elementFromPoint(e.clientX,e.clientY)?.closest?.('.v135LayerGroup');qa('.v166LayerDrop').forEach(x=>x.classList.remove('v166LayerDrop'));if(sec){const drop=sec.querySelector('.v135LayerItems')||sec;drop.classList.add('v166LayerDrop');touchLayer166.target=sec.dataset.v166Layer||null}},true);
+window.addEventListener('pointerup',e=>{if(!touchLayer166||e.pointerId!==touchLayer166.pid)return;const d=touchLayer166;touchLayer166=null;document.body.classList.remove('v166DraggingLayer');qa('.v166LayerDrop').forEach(x=>x.classList.remove('v166LayerDrop'));if(d.target)window.v135AssignLayer?.(d.kind,d.id,d.target)},true);
+
+/* ---------- one group / ungroup toggle everywhere ---------- */
+function syncGroupUI166(){
+ const grouped=selectedGroup166();for(const b of qa('body.editorMode button[title="Gruppieren"],body.editorMode button[aria-label="Gruppieren"],body.editorMode button[title="Entgruppieren"],body.editorMode button[aria-label="Entgruppieren"],body.editorMode button[onclick="v166ToggleGroup()"]')){b.onclick=()=>window.v166ToggleGroup();const label=grouped?'Entgruppieren':'Gruppieren',hadSpan=!!b.querySelector('span');b.setAttribute('title',label);b.setAttribute('aria-label',label);if(b.closest('.desktopCmdButtons,.v132SelectionBar'))b.innerHTML=(grouped?ICON.ungroup:ICON.group)+(hadSpan?`<span>${label}</span>`:'');else{const span=b.querySelector('span');if(span)span.textContent=label}}
+ qa('body.editorMode button[title="Gruppierung lösen"],body.editorMode button[aria-label="Gruppierung lösen"]').forEach(b=>{if(!b.closest('#mobileSelectionTools'))b.classList.add('v166HideSeparateUngroup')})
+ const insp=q('#canvasInspector .multiInspector .alignRow');if(insp){const gs=qa('button',insp).filter(b=>/groupSelectedItems|ungroupSelectedItems/.test(b.getAttribute('onclick')||''));if(gs.length){gs[0].setAttribute('onclick','v166ToggleGroup()');gs[0].innerHTML=(grouped?'▢ Entgruppieren':'▣ Gruppieren');gs.slice(1).forEach(x=>x.remove())}}
+ const drawer=q('#canvasQuickDrawer.open');if(drawer){const gs=qa('button',drawer).filter(b=>/groupSelectedItems|ungroupSelectedItems/.test(b.getAttribute('onclick')||''));if(gs.length){gs[0].setAttribute('onclick','v166ToggleGroup()');gs[0].innerHTML=(grouped?ICON.ungroup:ICON.group)+`<span>${grouped?'Entgruppieren':'Gruppieren'}</span>`;gs.slice(1).forEach(x=>x.remove())}}
+}
+const renderInspector166=window.renderCanvasInspector;if(renderInspector166)window.renderCanvasInspector=function(){const r=renderInspector166.apply(this,arguments);requestAnimationFrame(()=>{syncGroupUI166();window.updateMobileSelectionTools?.()});return r};try{renderCanvasInspector=window.renderCanvasInspector}catch(_){}
+
+/* ---------- desktop pan: right-drag added; middle + Space/left and Alt-wheel stay canvas-only ---------- */
+let rightPan166=false;
+window.addEventListener('mousedown',e=>{if(!editor()||mobile()||e.button!==2)return;const vp=q('#canvasViewport');if(!vp?.contains(e.target))return;e.preventDefault();e.stopImmediatePropagation();rightPan166=true;document.body.classList.add('v166RightPan');/* Feed the editor's proven middle-mouse pan system, so zoom/pan state stays in one place. */vp.dispatchEvent(new MouseEvent('mousedown',{button:1,buttons:4,clientX:e.clientX,clientY:e.clientY,bubbles:true,cancelable:true,view:window}))},true);
+window.addEventListener('mouseup',e=>{if(!rightPan166)return;rightPan166=false;document.body.classList.remove('v166RightPan')},true);
+window.addEventListener('blur',()=>{rightPan166=false;document.body.classList.remove('v166RightPan')});
+window.addEventListener('contextmenu',e=>{if(editor()&&!mobile()&&q('#canvasViewport')?.contains(e.target))e.preventDefault()},true);
+
+/* ---------- print: in-app preview + about:blank print document + zero browser margin ---------- */
+function printData166(){let title='Lernblatt';try{const d=typeof data!=='undefined'?data:window.data,sid=typeof selectedSheetId!=='undefined'?selectedSheetId:window.selectedSheetId;title=(d?.studySheets||[]).find(x=>x.id===sid)?.title||q('.editorTitle b')?.textContent||title}catch(_){}const W=typeof canvasPageWidth==='function'?canvasPageWidth():794,H=typeof canvasPageHeight==='function'?canvasPageHeight():1123,html=typeof serializedCanvas==='function'?serializedCanvas():'',pageCSS=typeof pagePatternCSS==='function'?pagePatternCSS():'';return{title,W,H,html,pageCSS,landscape:W>H}}
+window.v166DoPrint=function(){
+ const d=printData166();window.closeModal?.();const w=window.open('about:blank','_blank','noopener=false,width=1000,height=900');if(!w){alert('Bitte Pop-ups für Studia erlauben.');return}
+ const fonts=typeof fontFaceCSS165==='function'?fontFaceCSS165():'';w.document.open();w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title></title><style>${fonts}@page{size:A4 ${d.landscape?'landscape':'portrait'};margin:0} @page{@top-left{content:none}@top-center{content:none}@top-right{content:none}@bottom-left{content:none}@bottom-center{content:none}@bottom-right{content:none}}html,body{margin:0!important;padding:0!important;background:#fff!important;width:${d.W}px;height:${d.H}px;overflow:hidden!important}.page{position:relative;width:${d.W}px;height:${d.H}px;margin:0!important;padding:0!important;overflow:hidden!important;box-shadow:none!important;border:0!important;${d.pageCSS}}@media print{html,body,.page{margin:0!important;padding:0!important;border:0!important;box-shadow:none!important}}</style></head><body><main class="page">${d.html}</main><script>document.title='';addEventListener('afterprint',()=>close());addEventListener('load',()=>setTimeout(()=>{focus();print()},180));<\/script></body></html>`);w.document.close()
+};
+window.printCanvasSheet=function(){const d=printData166();const stage=q('#canvasStage');const preview=stage?stage.outerHTML.replace(/id="canvasStage"/,'id="v166PrintStage"'):'';window.openModal?.(`<div class="v135Modal v166PrintModal"><div class="v135ModalHead"><div><span class="eyebrow">DRUCKEN</span><h2>${esc(d.title)}</h2></div><button class="iconbtn" onclick="closeModal()" aria-label="Schließen">${ICON.close}</button></div><div class="v166PrintPreview">${preview}</div><p class="small">Gedruckt wird nur die Dokumentseite – ohne Studia-Leisten oder Website-Inhalt.</p><div class="v166PrintActions"><button onclick="closeModal()">Abbrechen</button><button class="primary" onclick="v166DoPrint()">Drucken</button></div></div>`)};
+try{printCanvasSheet=window.printCanvasSheet}catch(_){}
+
+/* ---------- every modal gets a real X, including “Test eintragen” ---------- */
+function ensureModalX166(){const modal=q('#modalWrap.open #modal');if(!modal||modal.querySelector('.v166GlobalModalX'))return;const hasClose=modal.querySelector('.v135ModalHead button[onclick*="closeModal"],button[aria-label="Schließen"],button[title="Schließen"]');if(hasClose)return;const b=document.createElement('button');b.type='button';b.className='v166GlobalModalX';b.setAttribute('aria-label','Schließen');b.innerHTML=ICON.close;b.onclick=()=>window.closeModal?.();(modal.firstElementChild||modal).appendChild(b)}
+const baseOpenModal166=window.openModal;if(baseOpenModal166)window.openModal=function(){const r=baseOpenModal166.apply(this,arguments);requestAnimationFrame(ensureModalX166);return r};try{openModal=window.openModal}catch(_){}
+
+/* initial polish — no MutationObserver, no boot changes */
+function init166(){if(editor()){decorateLayers166();syncGroupUI166();window.updateMobileSelectionTools?.()}const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 166'}
+setTimeout(init166,150);setTimeout(init166,2800);
+})();
+/* ===== /Studia V166 ===== */
+
+/* ===== Studia V167 — mobile text/element/color/sticker/print fixes ===== */
+(()=>{
+'use strict';
+if(window.__STUDIA_V167_MOBILE__)return;window.__STUDIA_V167_MOBILE__=true;
+const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
+const mobile=()=>innerWidth<900;
+const editor=()=>document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
+const state=()=>{try{return canvasState}catch(_){return window.canvasState}};
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+/* ---------- Mobile text gesture source of truth ----------
+   V132 already does: one tap selects, drag moves, second tap edits.
+   Later text hit-layers are disabled via mobile CSS above. ---------- */
+function ensureStableHits167(){if(!mobile()||!editor())return;try{window.v132SyncHits?.()}catch(_){} }
+const renderObj167=window.renderCanvasObjects;
+if(renderObj167)window.renderCanvasObjects=function(){const r=renderObj167.apply(this,arguments);if(mobile())requestAnimationFrame(ensureStableHits167);return r};
+try{renderCanvasObjects=window.renderCanvasObjects}catch(_){}
+
+/* ---------- Selected text color: preserve the Range across iOS UI ---------- */
+let colorAnchor167=null;
+const palette167=['#2f2927','#655651','#8e6c67','#b77b7d','#e58f98','#f0aaa8','#f7c8c3','#fff0ed','#c85d68','#a44d68','#7d5c91','#6e7faa','#4f82a8','#5b8d7b','#79a56d','#b2bc62','#d9dd38','#e8b55f','#df8b55','#ffffff','#f6f1eb','#d7d2cf','#9c9692','#58524f'];
+function closeColor167(){q('#v167TextColorPopover')?.remove();document.body.classList.remove('v167ColorOpen');colorAnchor167=null}
+function savedRange167(){try{window.v152RememberRange?.();return !!window.v152HasRange?.()}catch(_){return false}}
+function applyColor167(value){try{window.v152RestoreRange?.();window.applyTextProperty?.('color',value);window.v152RememberRange?.();q('#v152SelectionBar')?.classList.add('show')}catch(err){console.error('[V167 text color]',err)} }
+function openColor167(anchor){
+ if(!savedRange167())return;closeColor167();colorAnchor167=anchor;document.body.classList.add('v167ColorOpen');
+ const p=document.createElement('div');p.id='v167TextColorPopover';p.innerHTML=`<div class="v167ColorHead"><span>Textfarbe</span><button type="button" aria-label="Schließen">×</button></div><div class="v167Swatches">${palette167.map(c=>`<button class="v167Swatch" type="button" data-color="${c}" style="background:${c}" aria-label="${c}"></button>`).join('')}</div><label class="v167Custom">Eigene Farbe <span>＋</span><input type="color" value="#e58f98"></label>`;
+ document.body.appendChild(p);const r=anchor.getBoundingClientRect(),pw=Math.min(286,innerWidth-20);p.style.left=Math.max(10,Math.min(innerWidth-pw-10,r.left+r.width/2-pw/2))+'px';p.style.top=Math.max(62,Math.min(innerHeight-250,r.bottom+8))+'px';
+ p.querySelector('.v167ColorHead button').onclick=closeColor167;
+ p.addEventListener('pointerdown',e=>{if(!e.target.closest('input')){e.preventDefault();window.v152RestoreRange?.()}},true);
+ p.addEventListener('click',e=>{const b=e.target.closest('.v167Swatch[data-color]');if(!b)return;applyColor167(b.dataset.color);closeColor167()});
+ const custom=p.querySelector('input[type=color]');custom.addEventListener('pointerdown',()=>{window.v152RememberRange?.()},true);custom.addEventListener('input',e=>{applyColor167(e.target.value)});custom.addEventListener('change',e=>{applyColor167(e.target.value);setTimeout(closeColor167,40)});
+}
+window.v167ApplyTextColor=applyColor167;
+window.addEventListener('pointerdown',e=>{
+ if(!mobile()||!editor())return;const lab=e.target instanceof Element?e.target.closest('#v152SelectionBar .v152SelectionColor'):null;if(!lab)return;e.preventDefault();e.stopImmediatePropagation();savedRange167();openColor167(lab)
+},{capture:true,passive:false});
+window.addEventListener('resize',closeColor167);
+
+/* ---------- Elements button always means ALL elements ---------- */
+function icon167(name){try{return window.v133Icon?.(name)||''}catch(_){return''}}
+function tile167(label,icon,action){return `<button class="v167ElementTile" type="button" onclick="${action}">${icon167(icon)}<span>${esc(label)}</span></button>`}
+function section167(title,items){return `<section class="v167ElementSection"><h3>${esc(title)}</h3><div class="v167ElementGrid">${items.map(x=>tile167(...x)).join('')}</div></section>`}
+function elementsHTML167(){return `<div class="v167ElementsPanel"><div class="v167ElementsHead"><div><small>ELEMENTE</small><b>Alles hinzufügen</b></div><button type="button" onclick="closeEditorDrawer()" aria-label="Schließen">×</button></div><div class="v167ElementsScroll">${section167('Text & Inhalt',[
+ ['Textfeld','text','addCanvasTextBox()'],['Checkliste','checklist','addCanvasChecklist()'],['Bild / Foto','image','openCanvasMediaPicker()'],['Datei','file',"document.getElementById('canvasAnyFileInput')?.click()"],['Tabelle','table','openTableDialog()']
+ ])}${section167('Formen & Linien',[
+ ['Rechteck','rect',"addVectorShape('rect')"],['Kreis','circle',"addVectorShape('ellipse')"],['Dreieck','triangle',"addVectorShape('triangle')"],['Stern','star','addRoundedStar()'],['Linie','line','addVectorLine()'],['Kurve','curve','addVectorCurve()'],['Freihand','pen',"setVectorTool('pen')"]
+ ])}${section167('Mathe & Diagramme',[
+ ['Formel','formula','openFormulaDialog()'],['Funktionsgraph','graph','openGraphDialog()'],['Diagramm','graph','openChartDialog()'],['Timeline','line','openTimelineDialog()'],['Tabelle','table','openTableDialog()']
+ ])}${section167('Sticker & Papier',[
+ ['Sticker','sticker','toggleStickerPanel()'],['Klebeband','tape','addTapeSticker()'],['Kariert','papergrid',"addPaperSticker('grid')"],['Liniert','paperline',"addPaperSticker('line')"]
+ ])}</div></div>`}
+function mode167(b){const raw=b?.dataset?.v134||b?.dataset?.v133||b?.dataset?.v139||b?.dataset?.v138||b?.dataset?.group||'',t=(b?.textContent||'').toLowerCase();if(raw)return raw==='textLibrary'?'text':raw;if(t.includes('element'))return'elements';if(t.includes('vorlag'))return'templates';if(t.includes('seite'))return'pages';if(t.includes('ebene'))return'layers';return'text'}
+function activate167(btn){qa('.canvasQuickNav button').forEach(x=>x.classList.toggle('active',x===btn))}
+function openElements167(btn){
+ const d=q('#canvasQuickDrawer');if(!d)return;try{openEditorGroup='elements'}catch(_){}d.classList.add('open','v167ElementsDrawer');d.classList.remove('v139TextDrawer','v140TextDrawer');d.dataset.v167Mode='elements';d.innerHTML=elementsHTML167();document.body.classList.add('editorDrawerOpen');activate167(btn)
+}
+window.v167OpenElements=openElements167;
+window.addEventListener('click',e=>{
+ if(!mobile()||!editor())return;const b=e.target instanceof Element?e.target.closest('.canvasQuickNav button'):null;if(!b)return;const mode=mode167(b);e.preventDefault();e.stopImmediatePropagation();
+ if(mode==='elements'){openElements167(b);return}
+ const d=q('#canvasQuickDrawer');d?.classList.remove('v167ElementsDrawer');try{window.v132Open?.(mode,b)}catch(_){try{window.editorOpenGroup?.(mode==='text'?'textLibrary':mode,b)}catch(__){}}setTimeout(()=>activate167(b),25)
+},{capture:true});
+const closeDrawer167=window.closeEditorDrawer;if(closeDrawer167)window.closeEditorDrawer=function(){const r=closeDrawer167.apply(this,arguments);q('#canvasQuickDrawer')?.classList.remove('v167ElementsDrawer');return r};try{closeEditorDrawer=window.closeEditorDrawer}catch(_){}
+
+/* ---------- Sticker: palette button directly on mobile selection toolbar ---------- */
+function selectedSticker167(){const s=state();if(!s)return null;const ids=new Set([...(s.selectedIds||[]),s.selectedId].filter(Boolean));const list=(s.objects||[]).filter(o=>ids.has(o.id)&&(o.stickerAsset||o.kind==='sticker')&&!o.frameAsset);return list.length===1?list[0]:null}
+function stickerButton167(){if(!mobile()||!editor())return;const bar=q('#mobileSelectionTools');if(!bar)return;bar.querySelector('.v167StickerColors')?.remove();if(!selectedSticker167())return;const b=document.createElement('button');b.type='button';b.className='v167StickerColors';b.title='Stickerfarben';b.setAttribute('aria-label','Stickerfarben');b.innerHTML=icon167('sticker');b.onclick=e=>{e.preventDefault();e.stopPropagation();window.v165OpenStickerColors?.()};const trash=bar.querySelector('button.danger,[title="Löschen"]');if(trash)bar.insertBefore(b,trash);else bar.appendChild(b)}
+const mobileTools167=window.updateMobileSelectionTools;if(mobileTools167)window.updateMobileSelectionTools=function(){const r=mobileTools167.apply(this,arguments);requestAnimationFrame(stickerButton167);return r};try{updateMobileSelectionTools=window.updateMobileSelectionTools}catch(_){}
+const insp167=window.renderCanvasInspector;if(insp167)window.renderCanvasInspector=function(){const r=insp167.apply(this,arguments);requestAnimationFrame(stickerButton167);return r};try{renderCanvasInspector=window.renderCanvasInspector}catch(_){}
+
+/* ---------- Mobile print becomes a real one-page PDF (no website/date/page footer) ---------- */
+function pageData167(){const W=typeof canvasPageWidth==='function'?canvasPageWidth():794,H=typeof canvasPageHeight==='function'?canvasPageHeight():1123;let title='Studia-Lernblatt';try{const d=typeof data!=='undefined'?data:window.data,sid=typeof selectedSheetId!=='undefined'?selectedSheetId:window.selectedSheetId;title=(d?.studySheets||[]).find(x=>x.id===sid)?.title||title}catch(_){}return{W,H,title:String(title).replace(/[^a-z0-9äöüß _-]/gi,'_'),landscape:W>H}}
+function absoluteImages167(root){for(const im of qa('img',root)){const src=im.getAttribute('src');if(!src||/^data:|^blob:/i.test(src))continue;try{im.setAttribute('src',new URL(src,location.href).href)}catch(_){}}}
+async function pageCanvas167(){
+ const d=pageData167(),tmp=document.createElement('div');tmp.innerHTML=typeof serializedCanvas==='function'?serializedCanvas():'';absoluteImages167(tmp);tmp.querySelectorAll('.resizeHandle,.rotateHandle,.vectorSelectBox,.vectorHandle,.vectorRotateLine,.pathNode,.guideLine,.shapeHit,.vectorTouchProxy,.v135LinkBadge,.tableMoveHandle').forEach(x=>x.remove());tmp.querySelectorAll('[contenteditable]').forEach(x=>x.removeAttribute('contenteditable'));
+ let bg='background:#fff;';try{bg=pagePatternCSS?.()||bg}catch(_){}
+ const xhtml=`<div xmlns="http://www.w3.org/1999/xhtml" style="position:relative;width:${d.W}px;height:${d.H}px;overflow:hidden;box-sizing:border-box;${bg}">${tmp.innerHTML}</div>`;
+ const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${d.W}" height="${d.H}" viewBox="0 0 ${d.W} ${d.H}"><foreignObject x="0" y="0" width="100%" height="100%">${xhtml}</foreignObject></svg>`;
+ const blob=new Blob([svg],{type:'image/svg+xml;charset=utf-8'}),url=URL.createObjectURL(blob),img=new Image();
+ try{await new Promise((res,rej)=>{img.onload=res;img.onerror=()=>rej(new Error('Druckbild konnte nicht erstellt werden.'));img.src=url})}finally{setTimeout(()=>URL.revokeObjectURL(url),2000)}
+ const c=document.createElement('canvas'),scale=Math.min(2,Math.max(1,1600/Math.max(d.W,d.H)));c.width=Math.round(d.W*scale);c.height=Math.round(d.H*scale);const ctx=c.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);ctx.drawImage(img,0,0,c.width,c.height);return{canvas:c,...d}
+}
+const te167=new TextEncoder();
+function ascii167(s){return te167.encode(s)}
+function join167(parts){const n=parts.reduce((a,b)=>a+b.length,0),out=new Uint8Array(n);let p=0;for(const b of parts){out.set(b,p);p+=b.length}return out}
+function b64bytes167(dataUrl){const b=atob(dataUrl.split(',')[1]||''),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u}
+function pdf167(jpeg,w,h,landscape){
+ const PW=landscape?841.89:595.28,PH=landscape?595.28:841.89,parts=[],offs=[0];let len=0;const push=x=>{parts.push(x);len+=x.length};const obj=(n,s)=>{offs[n]=len;push(ascii167(`${n} 0 obj\n${s}\nendobj\n`))};push(ascii167('%PDF-1.4\n%\xE2\xE3\xCF\xD3\n'));obj(1,'<< /Type /Catalog /Pages 2 0 R >>');obj(2,'<< /Type /Pages /Kids [3 0 R] /Count 1 >>');obj(3,`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${PW.toFixed(2)} ${PH.toFixed(2)}] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>`);offs[4]=len;push(ascii167(`4 0 obj\n<< /Type /XObject /Subtype /Image /Width ${w} /Height ${h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpeg.length} >>\nstream\n`));push(jpeg);push(ascii167('\nendstream\nendobj\n'));const content=`q\n${PW.toFixed(2)} 0 0 ${PH.toFixed(2)} 0 0 cm\n/Im0 Do\nQ\n`;obj(5,`<< /Length ${ascii167(content).length} >>\nstream\n${content}endstream`);const xref=len;let xs='xref\n0 6\n0000000000 65535 f \n';for(let i=1;i<=5;i++)xs+=String(offs[i]).padStart(10,'0')+' 00000 n \n';xs+=`trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;push(ascii167(xs));return new Blob(parts,{type:'application/pdf'})
+}
+window.v167OpenPrintPDF=async function(){
+ const blank=window.open('about:blank','_blank');if(blank){try{blank.document.write('<div class="v167PdfWait">Druck-PDF wird erstellt …</div>')}catch(_){}}
+ try{const r=await pageCanvas167(),jpeg=b64bytes167(r.canvas.toDataURL('image/jpeg',.98)),pdf=pdf167(jpeg,r.canvas.width,r.canvas.height,r.landscape),url=URL.createObjectURL(pdf);if(blank){blank.location.replace(url)}else{const a=document.createElement('a');a.href=url;a.target='_blank';a.download=r.title+'.pdf';a.click()}setTimeout(()=>URL.revokeObjectURL(url),120000)}catch(err){try{blank?.close()}catch(_){}console.error('[V167 PDF]',err);alert('Das Druck-PDF konnte nicht erstellt werden: '+String(err?.message||err))}
+};
+const printDesktop167=window.printCanvasSheet;
+window.printCanvasSheet=function(){if(!mobile())return printDesktop167?.apply(this,arguments);return window.v167OpenPrintPDF()};try{printCanvasSheet=window.printCanvasSheet}catch(_){}
+
+/* ---------- version + safe refresh ---------- */
+function init167(){if(!editor())return;ensureStableHits167();stickerButton167();const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 167'}
+setTimeout(init167,900);setTimeout(init167,3200);
+})();
+/* ===== /Studia V167 ===== */
