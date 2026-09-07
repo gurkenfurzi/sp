@@ -345,9 +345,7 @@ function decorateTransformHandles(){
 document.addEventListener('pointerdown',e=>{const h=e.target instanceof Element?e.target.closest('.v138TransformHandle'):null;if(!h)return;const ref=h.dataset.kind==='object'?(canvasState.objects||[]).find(x=>x.id===h.dataset.id):(canvasState.vectors||[]).find(x=>x.id===h.dataset.id);if(ref)startTransform(e,h.dataset.mode,{kind:h.dataset.kind,id:h.dataset.id,ref})},{capture:true,passive:false});
 function startTransform(e,mode,one){
  if(e.button!==0&&e.pointerType==='mouse')return;e.preventDefault();e.stopImmediatePropagation();const p=transformPoint(e.clientX,e.clientY),b=one.kind==='object'?{x:one.ref.x,y:one.ref.y,w:one.ref.w,h:one.ref.h}:vbox(one.ref);if(!p||!b)return;
- const isFrame=one.kind==='object'&&one.ref.frameAsset;
- if(isFrame)ensureFrameScale174(one.ref);
- transformDrag={mode,one,start:p,b:{...b},rotation:Number(one.ref.rotation)||0,clientX:e.clientX,clientY:e.clientY,frameDesignScale:isFrame?Math.max(.08,Number(one.ref.frameDesignScale)||1):null};document.body.classList.add('v138Transforming');
+ transformDrag={mode,one,start:p,b:{...b},rotation:Number(one.ref.rotation)||0,clientX:e.clientX,clientY:e.clientY,frameBorderWidth:one.kind==='object'&&one.ref.frameAsset?Math.max(.5,Number(one.ref.style?.borderWidth)||5):null};document.body.classList.add('v138Transforming');
  const move=ev=>{if(!transformDrag)return;ev.preventDefault();ev.stopImmediatePropagation();transformDrag.clientX=ev.clientX;transformDrag.clientY=ev.clientY;if(!transformFrame)transformFrame=requestAnimationFrame(applyTransformFrame)};
  const up=ev=>{window.removeEventListener('pointermove',move,true);window.removeEventListener('pointerup',up,true);window.removeEventListener('pointercancel',up,true);if(!transformDrag)return;transformDrag.clientX=ev.clientX;transformDrag.clientY=ev.clientY;if(transformFrame)cancelAnimationFrame(transformFrame);transformFrame=0;applyTransformFrame();transformDrag=null;document.body.classList.remove('v138Transforming');markCanvasDirty();pushHistory();renderCanvasInspector();renderLayerList();window.cuteToast?.(mode==='rotate'?'Gedreht ♡':mode==='scale'?'Gesamtgröße geändert ♡':mode==='stretchX'?'Breite geändert ♡':mode==='stretchY'?'Höhe geändert ♡':'Größe geändert ♡')};
  window.addEventListener('pointermove',move,{capture:true,passive:false});window.addEventListener('pointerup',up,{capture:true,passive:false});window.addEventListener('pointercancel',up,{capture:true,passive:false});
@@ -360,9 +358,7 @@ function applyTransformFrame(){
    const nw=Math.max(20,d.b.w*factor),nh=Math.max(20,d.b.h*factor);
    if(d.one.kind==='object'){
      ref.w=nw;ref.h=nh;
-     /* V174: Gesamtgröße eines Rahmens skaliert die eigentliche Sticker-Geometrie
-        (Einbuchtungen/Rundungen/Kontur) mit. Breite/Höhe separat tun das NICHT. */
-     if(ref.frameAsset&&d.frameDesignScale!=null)ref.frameDesignScale=Math.max(.08,d.frameDesignScale*factor);
+     if(ref.frameAsset&&d.frameBorderWidth!=null){ref.style||={};ref.style.borderWidth=Math.max(.5,d.frameBorderWidth*factor)}
    }else resizeVector(ref,nw,nh)
  }
  else if(d.mode==='stretchX'){
@@ -532,47 +528,23 @@ function addTextTools(){const d=q('#canvasQuickDrawer.open');if(!d||wantedMode!=
 function enhanceDrawer(){if(!editor())return;rememberMode();const d=q('#canvasQuickDrawer.open');if(wantedMode==='elements'&&d&&!elementMarkup){const copy=d.cloneNode(true);qa('.v138ElementTools,.v139InsertTools,.v140InsertTools',copy).forEach(x=>x.remove());elementMarkup=copy.innerHTML}if(wantedMode==='elements')addToolCard();if(wantedMode==='text')addTextTools()}
 function directDrawer(mode){const d=q('#canvasQuickDrawer');if(!d)return false;let html='';if(mode==='text'){try{html=mobileTextLibraryHTML()}catch(_){html='<div class="mobileDrawerSection mobileTextLibrary"><div class="mobileLibraryHead"><div><span class="mobileDrawerKicker">TEXT</span><b>Textformate</b></div><button onclick="openTextFormatManager()">Verwalten</button></div><div class="mobileDrawerActions"><button onclick="createCustomStylePreset()">＋ Neues Textformat</button></div></div>'}}else if(mode==='elements'&&elementMarkup)html=elementMarkup;else return false;try{openEditorGroup=mode==='text'?'textLibrary':'elements'}catch(_){}window.v139ForceNav?.(mode);d.dataset.v134Mode=mode;d.dataset.v137Mode=mode;d.classList.add('open');document.body.classList.add('editorDrawerOpen');d.innerHTML=html;qa('.canvasQuickNav button').forEach(x=>x.classList.toggle('active',(x.dataset.v139||x.dataset.v138)===mode));setTimeout(enhanceDrawer,0);return true}
 
-/* V174 — Ticket frame has TWO independent size concepts:
-   1) w/h = outer box (can be stretched wider/taller)
-   2) frameDesignScale = the visual size of corners/notches/stroke.
-   Only the "Gesamtgröße" handle changes frameDesignScale. This keeps the
-   Illustrator-like proportions identical when the whole sticker is scaled. */
-const FRAME174_BASE_W=460,FRAME174_BASE_H=170,FRAME174_BASE_STROKE=5,FRAME174_BASE_R=30.6;
-function ensureFrameScale174(o){
- if(!o?.frameAsset)return o;
- o.style||={};
- if(!(Number(o.frameDesignScale)>0)){
-   /* Migrate V173 frames. In V173 uniform scaling changed w/h AND borderWidth.
-      min(width-ratio,height-ratio) recovers that uniform scale even if the user
-      subsequently stretched only one axis. */
-   const inferred=Math.max(.08,Math.min((+o.w||FRAME174_BASE_W)/FRAME174_BASE_W,(+o.h||FRAME174_BASE_H)/FRAME174_BASE_H));
-   const oldStroke=Math.max(.5,Number(o.style.borderWidth)||FRAME174_BASE_STROKE);
-   o.frameDesignScale=inferred;
-   o.frameBaseBorderWidth=Math.max(.5,oldStroke/inferred);
-   o.style.borderWidth=o.frameBaseBorderWidth;
- }else if(!(Number(o.frameBaseBorderWidth)>0)){
-   o.frameBaseBorderWidth=Math.max(.5,Number(o.style.borderWidth)||FRAME174_BASE_STROKE);
- }
- return o;
-}
-function frameSvg(w,h,color,baseWidth,designScale=1){
- w=Math.max(40,Math.round(w));h=Math.max(28,Math.round(h));
- const sc=Math.max(.08,+designScale||1),baseStroke=Math.max(.5,Math.min(30,+baseWidth||FRAME174_BASE_STROKE));
- const width=Math.max(.35,baseStroke*sc);
- /* These values are from the ORIGINAL 460×170 frame, then scaled uniformly.
-    They no longer depend on the current stretched width/height. */
- let m=(baseStroke/2+2)*sc,r=FRAME174_BASE_R*sc;
- /* Guard only against impossible/extreme stretch sizes. Normal proportional
-    resizing never reaches these caps, so its geometry stays mathematically exact. */
- const maxR=Math.max(3,Math.min((h-2*m)*.46,(w-2*m)*.22));
- r=Math.max(3,Math.min(r,maxR));m=Math.max(width/2+.5,Math.min(m,Math.max(width/2+.5,h*.12)));
- const k=r*.55;
+/* The original AI ticket outline is rebuilt from dimensions, so corners and stroke never stretch. */
+function frameSvg(w,h,color,width){
+ /* V175: keep the proven V173 resize/drag system. Only the frame geometry changes.
+    The old SVG clamped frames to 90×55 and the side notches to 14–48px, so small
+    frames were internally drawn too large and then squeezed. That made the notches
+    and corners look wrong. Geometry now scales continuously with the actual height. */
+ w=Math.max(20,Math.round(w));h=Math.max(20,Math.round(h));width=Math.max(.35,+width||5);
+ const designScale=Math.max(.04,h/170),m=Math.max(width/2+.35,width/2+2*designScale);
+ let r=30.6*designScale;
+ const maxR=Math.max(1,Math.min(Math.max(1,(h-2*m)*.49),Math.max(1,(w-2*m)*.24)));
+ r=Math.max(1,Math.min(r,maxR));const k=r*.55;
  const d=`M${w-m} ${m+r}V${h-m-r}C${w-m-k} ${h-m-r} ${w-m-r} ${h-m-k} ${w-m-r} ${h-m}H${m+r}C${m+r} ${h-m-k} ${m+k} ${h-m-r} ${m} ${h-m-r}V${m+r}C${m+k} ${m+r} ${m+r} ${m+k} ${m+r} ${m}H${w-m-r}C${w-m-r} ${m+k} ${w-m-k} ${m+r} ${w-m} ${m+r}Z`;
  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}"><path d="${d}" fill="none" stroke="${esc(color)}" stroke-width="${width}" stroke-linejoin="round"/></svg>`
 }
 function svgData(svg){return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)}
-window.v140AddFrame=function(){const o={id:id(),z:nextCanvasZ(),kind:'image',src:'',name:'Ticket-Rahmen',x:130,y:160,w:FRAME174_BASE_W,h:FRAME174_BASE_H,rotation:0,locked:false,stickerAsset:true,frameAsset:true,frameDesignScale:1,frameBaseBorderWidth:FRAME174_BASE_STROKE,style:{borderColor:'#4f4642',borderWidth:FRAME174_BASE_STROKE}};o.src=svgData(frameSvg(o.w,o.h,o.style.borderColor,o.frameBaseBorderWidth,o.frameDesignScale));canvasState.objects.push(o);closeModal?.();canvasState.selectedType='object';canvasState.selectedId=o.id;canvasState.selectedIds=[o.id];canvasState.selectedVectorIds=[];renderCanvasObjects();renderCanvasInspector();markCanvasDirty();pushHistory();window.v132SyncHits?.();cuteToast?.('Rahmen eingefügt ♡')};
-function refreshFrames(){for(const o of canvasState.objects||[]){if(!o.frameAsset)continue;ensureFrameScale174(o);const color=o.style?.borderColor||'#4f4642',baseWidth=Math.max(.5,Number(o.style?.borderWidth)||o.frameBaseBorderWidth||FRAME174_BASE_STROKE);o.frameBaseBorderWidth=baseWidth;const ds=Math.max(.08,Number(o.frameDesignScale)||1),sig=[Math.round(o.w*100)/100,Math.round(o.h*100)/100,color,Math.round(baseWidth*100)/100,Math.round(ds*10000)/10000].join(':');if(o.frameSignature===sig)continue;o.frameSignature=sig;o.src=svgData(frameSvg(o.w,o.h,color,baseWidth,ds));const img=q(`.cobj[data-id="${CSS.escape(o.id)}"] img`);if(img)img.src=o.src}}
+window.v140AddFrame=function(){const o={id:id(),z:nextCanvasZ(),kind:'image',src:'',name:'Ticket-Rahmen',x:130,y:160,w:460,h:170,rotation:0,locked:false,stickerAsset:true,frameAsset:true,style:{borderColor:'#4f4642',borderWidth:5}};o.src=svgData(frameSvg(o.w,o.h,o.style.borderColor,o.style.borderWidth));canvasState.objects.push(o);closeModal?.();canvasState.selectedType='object';canvasState.selectedId=o.id;canvasState.selectedIds=[o.id];canvasState.selectedVectorIds=[];renderCanvasObjects();renderCanvasInspector();markCanvasDirty();pushHistory();window.v132SyncHits?.();cuteToast?.('Rahmen eingefügt ♡')};
+function refreshFrames(){for(const o of canvasState.objects||[]){if(!o.frameAsset)continue;o.style||={};const sig=[Math.round(o.w),Math.round(o.h),o.style.borderColor||'#4f4642',o.style.borderWidth||5].join(':');if(o.frameSignature===sig)continue;o.frameSignature=sig;o.src=svgData(frameSvg(o.w,o.h,o.style.borderColor||'#4f4642',o.style.borderWidth||5));const img=q(`.cobj[data-id="${CSS.escape(o.id)}"] img`);if(img)img.src=o.src}}
 window.v140UploadSticker=function(){const input=document.createElement('input');input.type='file';input.accept='image/png,image/jpeg,image/webp,image/gif,image/svg+xml,.png,.jpg,.jpeg,.webp,.gif,.svg';input.onchange=()=>{const f=input.files?.[0];if(!f)return;const reader=new FileReader();reader.onload=()=>{const img=new Image();img.onload=()=>{const ratio=Math.max(.2,Math.min(5,img.naturalWidth/Math.max(1,img.naturalHeight))),w=ratio>1.5?320:ratio<.72?150:230,h=Math.round(w/ratio),o={id:id(),z:nextCanvasZ(),kind:'image',src:String(reader.result),name:f.name,x:150,y:150,w,h,rotation:0,locked:false,stickerAsset:true};canvasState.objects.push(o);closeModal?.();canvasState.selectedType='object';canvasState.selectedId=o.id;canvasState.selectedIds=[o.id];canvasState.selectedVectorIds=[];renderCanvasObjects();renderCanvasInspector();markCanvasDirty();pushHistory();window.v132SyncHits?.();cuteToast?.('Sticker-Datei eingefügt ♡')};img.onerror=()=>cuteToast?.('Diese Bilddatei konnte nicht geladen werden');img.src=String(reader.result)};reader.readAsDataURL(f)};input.click()};
 
 const originalSticker=window.openStickerLibrary;
@@ -2118,7 +2090,7 @@ window.v165OpenStickerColors=async function(){const o=sticker171();if(!o)return 
 window.v171ResetStickerColors=async function(){const o=(st()?.objects||[]).find(x=>String(x.id)===String(stickerId171));if(!o)return;o.stickerExactMap171={};o.src=o.stickerExactOriginal171||o.stickerPaletteOriginal||o.src;delete o.tintColor;window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.();window.closeModal?.();window.cuteToast?.('Alle Originalfarben wiederhergestellt ♡')};
 
 /* cache-busting visible version only; never observe/mutate in a loop */
-function version171(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 173'}setTimeout(version171,6500);setTimeout(version171,8000);
+function version171(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 175'}setTimeout(version171,6500);setTimeout(version171,8000);
 })();
 /* ===== /Studia V171 ===== */
 
