@@ -873,3 +873,24 @@ body.v166RightPan #canvasViewport{cursor:grabbing!important;user-select:none!imp
   body.editorMode .v168TextHit.selected{outline:2px solid #e99e9a!important;outline-offset:3px!important}
 }
 /* ===== /Studia V169 ===== */
+
+/* ===== Studia V170 — mobile live text drag + absolutely no guide ticks ===== */
+@media (max-width:899px){
+  /* Old V165 edge grips are the short pink "random lines" visible while moving. */
+  body.editorMode #v152TextHitLayer .v165TextInteraction,
+  body.editorMode #v152TextHitLayer .v165TextMoveEdge,
+  body.editorMode #v152TextHitLayer .v165TextMoveEdge:before,
+  body.editorMode #v152TextHitLayer .v165TextMoveEdge:after{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}
+
+  /* All legacy smart-guide visuals stay completely off on phones. */
+  body.editorMode #canvasGuides,
+  body.editorMode #canvasGuides *,
+  body.editorMode .canvasGuides,
+  body.editorMode .canvasGuides *,
+  body.editorMode .guideLine,
+  body.editorMode .guideLabel{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}
+
+  /* Keep the actual object visible and smooth while it follows the finger. */
+  body.v170LiveTextDrag #canvasObjects .cobj{backface-visibility:hidden;-webkit-backface-visibility:hidden}
+}
+/* ===== /Studia V170 ===== */
