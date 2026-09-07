@@ -1804,3 +1804,105 @@ function version168(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 16
 setTimeout(version168,800);setTimeout(version168,3600);setTimeout(version168,5200);
 })();
 /* ===== /Studia V168 ===== */
+
+/* ===== Studia V169 — reliable mobile double tap, no stray guides, working print ===== */
+(()=>{
+'use strict';
+if(window.__STUDIA_V169__)return;window.__STUDIA_V169__=true;
+const q=(s,r=document)=>r.querySelector(s);
+const mobile=()=>innerWidth<900;
+const editor=()=>document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
+const state=()=>{try{return canvasState}catch(_){return window.canvasState}};
+const W=()=>typeof window.canvasPageWidth==='function'?window.canvasPageWidth():794;
+const H=()=>typeof window.canvasPageHeight==='function'?window.canvasPageHeight():1123;
+const zoom=()=>{const s=q('#canvasStage'),r=s?.getBoundingClientRect();return r?Math.max(.01,r.width/W()):1};
+const textKinds169=new Set(['text','block','task','merke','file']);
+let drag169=null;
+let tap169={id:null,time:0,x:0,y:0};
+function obj169(id){return (state()?.objects||[]).find(o=>String(o.id)===String(id))}
+function clear169(){try{window.clearGuides?.()}catch(_){}const g=q('#canvasGuides');if(g)g.replaceChildren()}
+function select169(o,hit){const s=state();if(!s||!o)return;(s.objects||[]).forEach(x=>{if(x!==o)x.editing=false});s.multiMode=false;s.selectedType='object';s.selectedId=o.id;s.selectedIds=[o.id];s.selectedVectorIds=[];q('#v168MobileTextLayer .v168TextHit.selected')?.classList.remove('selected');hit?.classList.add('selected')}
+function syncAfter169(){try{window.renderCanvasInspector?.();window.renderLayerList?.();window.updateMultiSelectStatus?.();window.updateMobileSelectionTools?.()}catch(_){} }
+function edit169(o,x,y){if(!o||o.locked)return;clear169();tap169={id:null,time:0,x:0,y:0};setTimeout(()=>{if(window.v152BeginTextEdit?.(o.id,x,y)!==false){setTimeout(()=>{const el=q(`.cobj[data-id="${CSS.escape(String(o.id))}"][contenteditable="true"]`);try{el?.focus({preventScroll:true})}catch(_){el?.focus()}},30)}},0)}
+
+/* Intercept only the body of V168 text hits. Resize/rotate handles keep their proven V168 code. */
+document.addEventListener('pointerdown',e=>{
+ if(!mobile()||!editor())return;
+ const hit=e.target instanceof Element?e.target.closest('.v168TextHit'):null;
+ if(!hit||e.target.closest('.v168TextHandle'))return;
+ if(e.pointerType==='mouse'&&e.button!==0)return;
+ const o=obj169(hit.dataset.id);if(!o||!textKinds169.has(o.kind)||o.isChecklist)return;
+ e.preventDefault();e.stopImmediatePropagation();clear169();select169(o,hit);
+ if(o.locked){syncAfter169();return}
+ const z=zoom();drag169={pid:e.pointerId,id:o.id,sx:e.clientX,sy:e.clientY,ox:+o.x||0,oy:+o.y||0,z,moved:false,hit};
+ try{hit.setPointerCapture?.(e.pointerId)}catch(_){}
+},true);
+
+document.addEventListener('pointermove',e=>{
+ const d=drag169;if(!d||e.pointerId!==d.pid||!mobile()||!editor())return;
+ const o=obj169(d.id);if(!o){drag169=null;return}
+ const dx=e.clientX-d.sx,dy=e.clientY-d.sy;
+ /* 12 screen px prevents normal finger wobble from cancelling a double tap. */
+ if(!d.moved&&Math.hypot(dx,dy)<12)return;
+ d.moved=true;e.preventDefault();e.stopImmediatePropagation();clear169();
+ const ux=dx/d.z,uy=dy/d.z;o.x=Math.max(0,Math.min(Math.max(0,W()-(+o.w||0)),d.ox+ux));o.y=Math.max(0,Math.min(Math.max(0,H()-(+o.h||0)),d.oy+uy));
+ const el=q(`#canvasObjects .cobj[data-id="${CSS.escape(String(o.id))}"]`);if(el){el.style.left=o.x+'px';el.style.top=o.y+'px'}
+ if(d.hit?.isConnected){d.hit.style.left=o.x+'px';d.hit.style.top=o.y+'px'}
+ try{window.markCanvasDirty?.(false)}catch(_){}
+},true);
+
+function end169(e,cancel=false){
+ const d=drag169;if(!d||e.pointerId!==d.pid)return;drag169=null;clear169();const o=obj169(d.id);if(!o)return;
+ try{d.hit?.releasePointerCapture?.(e.pointerId)}catch(_){}
+ if(cancel){syncAfter169();return}
+ if(d.moved){tap169={id:null,time:0,x:0,y:0};try{window.pushHistory?.()}catch(_){}syncAfter169();return}
+ e.preventDefault();e.stopImmediatePropagation();
+ const now=Date.now(),near=Math.hypot(e.clientX-tap169.x,e.clientY-tap169.y)<42;
+ const dbl=String(tap169.id)===String(o.id)&&near&&(now-tap169.time)<520;
+ if(dbl){edit169(o,e.clientX,e.clientY);return}
+ tap169={id:o.id,time:now,x:e.clientX,y:e.clientY};syncAfter169();
+}
+document.addEventListener('pointerup',e=>end169(e,false),true);
+document.addEventListener('pointercancel',e=>end169(e,true),true);
+
+/* Native dblclick is an additional fallback on browsers that emit it for double-tap. */
+document.addEventListener('dblclick',e=>{
+ if(!mobile()||!editor())return;const hit=e.target instanceof Element?e.target.closest('.v168TextHit'):null;if(!hit||e.target.closest('.v168TextHandle'))return;
+ const o=obj169(hit.dataset.id);if(!o||o.locked||!textKinds169.has(o.kind))return;e.preventDefault();e.stopImmediatePropagation();edit169(o,e.clientX,e.clientY)
+},true);
+
+/* Every mobile move/edit lifecycle clears legacy visual snapping guides. */
+document.addEventListener('pointerdown',()=>{if(mobile()&&editor())clear169()},true);
+document.addEventListener('pointerup',()=>{if(mobile()&&editor())setTimeout(clear169,0)},true);
+setInterval(()=>{if(mobile()&&editor()&&q('#canvasGuides')?.childElementCount)clear169()},1000);
+
+/* ---------- Mobile print: instant clean print page, no raster/PDF wait screen. ---------- */
+function printTitle169(){let t='Lernblatt';try{const d=typeof data!=='undefined'?data:window.data,sid=typeof selectedSheetId!=='undefined'?selectedSheetId:window.selectedSheetId;t=(d?.studySheets||[]).find(x=>x.id===sid)?.title||q('.editorTitle b')?.textContent||t}catch(_){}return String(t).replace(/[<>]/g,'').slice(0,100)||'Lernblatt'}
+function fontCss169(){try{return typeof window.fontFaceCSS165==='function'?window.fontFaceCSS165():''}catch(_){return''}}
+window.v169PrintMobile=function(){
+ if(!mobile())return false;
+ const html=typeof window.serializedCanvas==='function'?window.serializedCanvas():'';if(!html){alert('Das Lernblatt konnte nicht für den Druck vorbereitet werden.');return false}
+ const pw=W(),ph=H(),land=pw>ph;let pageCss='background:#fff;';try{pageCss=window.pagePatternCSS?.()||pageCss}catch(_){}
+ const mmW=land?297:210,mmH=land?210:297,title=printTitle169(),fonts=fontCss169();
+ const win=window.open('about:blank','_blank');if(!win){alert('Bitte Pop-ups für Studia erlauben, damit die Druckansicht geöffnet werden kann.');return false}
+ try{
+  win.document.open();
+  win.document.write(`<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title></title><style>${fonts}
+  @page{size:${mmW}mm ${mmH}mm;margin:0!important}
+  *{box-sizing:border-box;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  html,body{margin:0!important;padding:0!important;background:#fff!important;width:${mmW}mm;height:${mmH}mm;overflow:hidden}
+  .printPage{position:relative;width:${pw}px;height:${ph}px;transform-origin:0 0;margin:0!important;padding:0!important;overflow:hidden!important;box-shadow:none!important;border:0!important;${pageCss}}
+  .printTools{position:fixed;left:12px;right:12px;bottom:12px;z-index:999999;display:flex;gap:10px;justify-content:center;font:800 15px system-ui,sans-serif}.printTools button{border:1px solid #ead8d3;border-radius:16px;background:#fffaf7;color:#725b56;padding:12px 18px;box-shadow:0 6px 18px rgba(90,60,50,.12)}.printTools .go{background:#ed9b9c;color:white;border-color:#ed9b9c}
+  @media print{html,body{width:${mmW}mm!important;height:${mmH}mm!important;overflow:hidden!important}.printTools{display:none!important}.printPage{margin:0!important;box-shadow:none!important;border:0!important;transform:scale(.998)!important;transform-origin:0 0!important}}
+  </style></head><body><main class="printPage">${html}</main><div class="printTools"><button onclick="window.close()">Schließen</button><button class="go" onclick="window.print()">Drucken</button></div><script>document.title='';window.addEventListener('afterprint',()=>{setTimeout(()=>window.close(),80)});setTimeout(()=>{try{window.focus();window.print()}catch(e){}},350);<\/script></body></html>`);
+  win.document.close();
+ }catch(err){console.error('[V169 print]',err);try{win.close()}catch(_){}alert('Druckansicht konnte nicht geöffnet werden: '+String(err?.message||err));return false}
+ return true
+};
+const oldPrint169=window.printCanvasSheet;
+window.printCanvasSheet=function(){if(mobile())return window.v169PrintMobile();return oldPrint169?.apply(this,arguments)};try{printCanvasSheet=window.printCanvasSheet}catch(_){}
+
+function version169(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 169'}
+setTimeout(version169,700);setTimeout(version169,2500);setTimeout(version169,5600);setTimeout(version169,8000);
+})();
+/* ===== /Studia V169 ===== */

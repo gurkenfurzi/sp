@@ -860,3 +860,16 @@ body.v166RightPan #canvasViewport{cursor:grabbing!important;user-select:none!imp
   .v132Hit[data-v168-text="1"] .v138TransformHandle{display:none!important}
 }
 /* ===== /Studia V168 ===== */
+
+/* ===== Studia V169 — mobile double tap + quiet guides ===== */
+@media (max-width:899px){
+  /* Smart snapping may still work, but its visual guide fragments must never stay on the phone. */
+  body.editorMode #canvasGuides,
+  body.editorMode .canvasGuides,
+  body.editorMode .guideLine,
+  body.editorMode .guideLabel{display:none!important;visibility:hidden!important;opacity:0!important}
+  /* Keep the selected text hit easy to grab without making it look noisy. */
+  body.editorMode .v168TextHit{touch-action:none!important;-webkit-tap-highlight-color:transparent!important}
+  body.editorMode .v168TextHit.selected{outline:2px solid #e99e9a!important;outline-offset:3px!important}
+}
+/* ===== /Studia V169 ===== */
