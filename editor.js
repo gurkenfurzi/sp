@@ -639,7 +639,7 @@ function makeDialogsReliable(){
  if(q('#v135TimeLabels',modal))modal.classList.add('v141TimelineDialog');
 }
 function reconcile(){
- repairDesktopChrome();watchDrawer();removeDuplicateTools();cleanSettings();applyStickerTints();decorateDesktopInspector();makeDialogsReliable();
+ repairDesktopChrome();watchDrawer();removeDuplicateTools();if(!q('.v171CloudSettings'))cleanSettings();applyStickerTints();decorateDesktopInspector();makeDialogsReliable();
  if(!isEditor())closeMobileProperties();
 }
 
@@ -648,7 +648,7 @@ window.renderCanvasObjects=function(){const r=baseObjects?.apply(this,arguments)
 const baseInspector=window.renderCanvasInspector;
 window.renderCanvasInspector=function(){const r=baseInspector?.apply(this,arguments);decorateDesktopInspector();return r};try{renderCanvasInspector=window.renderCanvasInspector}catch(_){ }
 const baseSettings=window.renderSettings;
-if(baseSettings)window.renderSettings=function(){const r=baseSettings.apply(this,arguments);requestAnimationFrame(cleanSettings);return r};try{renderSettings=window.renderSettings}catch(_){ }
+if(baseSettings)window.renderSettings=function(){const r=baseSettings.apply(this,arguments);if(!q('.v171CloudSettings'))requestAnimationFrame(cleanSettings);return r};try{renderSettings=window.renderSettings}catch(_){ }
 const baseModal=window.openModal;
 if(baseModal)window.openModal=function(){const r=baseModal.apply(this,arguments);requestAnimationFrame(makeDialogsReliable);return r};try{openModal=window.openModal}catch(_){ }
 
@@ -1046,11 +1046,12 @@ document.addEventListener('touchmove',e=>{if(!pull150||e.touches.length!==1)retu
 document.addEventListener('touchend',()=>{if(!pull150)return;const ready=pull150.d>62,x=q('#v150PullSync');pull150=null;if(x){x.style.transform='translate(-50%,-82px)';x.classList.remove('ready')}if(ready){window.cuteToast?.('Prüfe alle Geräte …');v150Pull(true)}},{passive:true});
 
 function polishAccountSettings(){
- const view=q('#view-settings');if(!view)return;const box=q('.v137CloudSettings',view);if(!box)return;
+ const view=q('#view-settings');if(!view)return;const box=q('.v137CloudSettings',view);if(!box||box.classList.contains('v171CloudSettings'))return;
  box.classList.add('v141GoogleSyncCard');
  box.innerHTML=`<div class="v141SettingsTitle"><span>☁</span><div><h2>Studia-Konto</h2><p class="small">Benutzername + Passwort · dauerhaft angemeldet · automatische Synchronisierung auf allen Geräten.</p></div></div><button class="primary" onclick="openAccountDialog()">Konto & Sync öffnen</button>`;
 }
-const accountSettingsObserver=new MutationObserver(()=>{if(q('#view-settings.active'))requestAnimationFrame(polishAccountSettings)});accountSettingsObserver.observe(document.body,{attributes:true,attributeFilter:['class'],subtree:true});
+/* V171 owns the settings card directly. Do not run a body-wide account observer there. */
+if(!q('.v171CloudSettings')){const accountSettingsObserver=new MutationObserver(()=>{if(q('#view-settings.active'))requestAnimationFrame(polishAccountSettings)});accountSettingsObserver.observe(document.body,{attributes:true,attributeFilter:['class'],subtree:true})}
 setTimeout(polishAccountSettings,500);
 setTimeout(()=>{ensureDesktopRail();initAccount();polishAccountSettings();setVersion150()},350);
 })();
@@ -1963,3 +1964,95 @@ const prev170=window.printCanvasSheet;window.printCanvasSheet=function(){if(mobi
 function version170(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 170'}setTimeout(version170,700);setTimeout(version170,2600);setTimeout(version170,6000);
 })();
 /* ===== /Studia V170 ===== */
+
+/* ===== Studia V171 — reliable rich text, single cloud sync, exact sticker colors ===== */
+(()=>{
+'use strict';
+if(window.__STUDIA_V171__)return;window.__STUDIA_V171__=true;
+const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
+const mobile=()=>innerWidth<900;
+const st=()=>{try{return canvasState}catch(_){return window.canvasState}};
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const textKinds=new Set(['text','block','task','merke','file']);
+
+/* ---------- robust text selection ---------- */
+let sel171=null;
+function editableRootFrom(node){const el=node?.nodeType===1?node:node?.parentElement;return el?.closest?.('.cobj[contenteditable="true"]')||null}
+function validTextNode(n,root){if(!n||n.nodeType!==3||!root.contains(n))return false;const p=n.parentElement;return !p?.closest?.('.resizeHandle,.rotateHandle,.v138TransformHandle,.v168TextHandle,.v135LinkBadge')}
+function nodePath(root,node){const a=[];let n=node;while(n&&n!==root){const p=n.parentNode;if(!p)return null;a.push(Array.prototype.indexOf.call(p.childNodes,n));n=p}return n===root?a.reverse():null}
+function fromPath(root,path){let n=root;for(const i of path||[]){n=n?.childNodes?.[i];if(!n)return null}return n}
+function charOffset(root,node,offset){try{const r=document.createRange();r.selectNodeContents(root);r.setEnd(node,offset);return r.toString().length}catch(_){return 0}}
+function pointAt(root,target){let left=Math.max(0,target|0),last=null;const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>validTextNode(n,root)?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT});while(w.nextNode()){last=w.currentNode;const n=last.nodeValue?.length||0;if(left<=n)return{node:last,offset:left};left-=n}return last?{node:last,offset:last.nodeValue?.length||0}:{node:root,offset:0}}
+function capture171(){
+ const s=getSelection?.();if(!s||!s.rangeCount||s.isCollapsed)return false;const r=s.getRangeAt(0),root=editableRootFrom(r.commonAncestorContainer);if(!root||!root.dataset.id||!root.contains(r.startContainer)||!root.contains(r.endContainer))return false;
+ const sp=nodePath(root,r.startContainer),ep=nodePath(root,r.endContainer);if(!sp||!ep)return false;
+ sel171={id:String(root.dataset.id),sp,so:r.startOffset,ep,eo:r.endOffset,sc:charOffset(root,r.startContainer,r.startOffset),ec:charOffset(root,r.endContainer,r.endOffset)};return true
+}
+function restore171(){
+ if(!sel171)return false;const root=q(`.cobj[data-id="${CSS.escape(sel171.id)}"][contenteditable="true"]`);if(!root)return false;let sn=fromPath(root,sel171.sp),en=fromPath(root,sel171.ep),so=sel171.so,eo=sel171.eo;
+ if(!sn||!en){const a=pointAt(root,sel171.sc),b=pointAt(root,sel171.ec);sn=a.node;so=a.offset;en=b.node;eo=b.offset}
+ try{const r=document.createRange();r.setStart(sn,Math.min(so,sn.nodeType===3?(sn.nodeValue?.length||0):sn.childNodes.length));r.setEnd(en,Math.min(eo,en.nodeType===3?(en.nodeValue?.length||0):en.childNodes.length));if(r.collapsed)return false;const s=getSelection();s.removeAllRanges();s.addRange(r);try{root.focus({preventScroll:true})}catch(_){root.focus()}return true}catch(_){const a=pointAt(root,sel171.sc),b=pointAt(root,sel171.ec);try{const r=document.createRange();r.setStart(a.node,a.offset);r.setEnd(b.node,b.offset);const s=getSelection();s.removeAllRanges();s.addRange(r);root.focus({preventScroll:true});return !r.collapsed}catch(__){return false}}
+}
+function has171(){return capture171()||!!(sel171&&q(`.cobj[data-id="${CSS.escape(sel171.id)}"][contenteditable="true"]`))}
+function selectedRoot171(){if(!restore171())return null;const s=getSelection();if(!s?.rangeCount||s.isCollapsed)return null;return editableRootFrom(s.getRangeAt(0).commonAncestorContainer)}
+function saveRoot171(root){if(!root)return;const s=st(),o=(s?.objects||[]).find(x=>String(x.id)===String(root.dataset.id));if(!o)return;o.text=root.innerHTML;window.markCanvasDirty?.();window.pushHistory?.();capture171()}
+function wrapStyle171(style){const root=selectedRoot171();if(!root)return false;const s=getSelection(),r=s.getRangeAt(0);try{const span=document.createElement('span');Object.assign(span.style,style);span.appendChild(r.extractContents());r.insertNode(span);const nr=document.createRange();nr.selectNodeContents(span);s.removeAllRanges();s.addRange(nr);saveRoot171(root);return true}catch(err){console.warn('[V171 rich]',err);return false}}
+function startStyle171(){if(!restore171())return{};const s=getSelection(),r=s.getRangeAt(0),n=r.startContainer.nodeType===1?r.startContainer:r.startContainer.parentElement;return n?getComputedStyle(n):{}}
+function applyProp171(prop,value){
+ if(!has171())return false;
+ if(prop==='fontFamily')return wrapStyle171({fontFamily:String(value||'').replace(/^['"]|['"]$/g,'')});
+ if(prop==='fontSize')return wrapStyle171({fontSize:`${Math.max(6,Math.min(180,Number(value)||16))}px`});
+ if(prop==='color')return wrapStyle171({color:String(value)});
+ if(prop==='fontWeight')return wrapStyle171({fontWeight:Number(value)>=600?'700':'400'});
+ if(prop==='fontStyle')return wrapStyle171({fontStyle:String(value)==='italic'?'italic':'normal'});
+ if(prop==='textDecoration')return wrapStyle171({textDecoration:String(value||'none')});
+ if(prop==='textAlign'){const root=selectedRoot171();if(!root)return false;const o=(st()?.objects||[]).find(x=>String(x.id)===String(root.dataset.id));if(!o)return false;o.style||={};o.style.textAlign=value;root.style.textAlign=value;window.markCanvasDirty?.();window.pushHistory?.();capture171();return true}
+ return false
+}
+function toggle171(kind){if(!has171())return false;const cs=startStyle171();if(kind==='bold')return wrapStyle171({fontWeight:parseInt(cs.fontWeight||'400',10)>=600?'400':'700'});if(kind==='italic')return wrapStyle171({fontStyle:cs.fontStyle==='italic'?'normal':'italic'});if(kind==='underline'){const td=String(cs.textDecorationLine||cs.textDecoration||'');return wrapStyle171({textDecoration:td.includes('underline')?'none':'underline'})}if(kind==='strikeThrough'){const td=String(cs.textDecorationLine||cs.textDecoration||'');return wrapStyle171({textDecoration:td.includes('line-through')?'none':'line-through'})}return false}
+window.v152RememberRange=capture171;window.v152RestoreRange=restore171;window.v152HasRange=has171;
+const oldApply171=window.applyTextProperty;window.applyTextProperty=function(prop,value){if(applyProp171(prop,value))return;return oldApply171?.apply(this,arguments)};try{applyTextProperty=window.applyTextProperty}catch(_){}
+const oldFmt171=window.formatSelectedText;window.formatSelectedText=function(cmd){if(['bold','italic','underline','strikeThrough'].includes(cmd)&&toggle171(cmd))return;return oldFmt171?.apply(this,arguments)};try{formatSelectedText=window.formatSelectedText}catch(_){}
+const oldLink171=window.v164ApplyRichLink;window.v164ApplyRichLink=function(){const raw=String(q('#v164RichLinkUrl')?.value||'').trim();if(!raw)return oldLink171?.apply(this,arguments);if(!has171()||!restore171())return oldLink171?.apply(this,arguments);const root=selectedRoot171();if(!root)return oldLink171?.apply(this,arguments);let url=raw;if(!/^(https?:|mailto:|tel:)/i.test(url))url='https://'+url;try{const s=getSelection(),r=s.getRangeAt(0),a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener';a.style.textDecoration='underline';a.appendChild(r.extractContents());r.insertNode(a);const nr=document.createRange();nr.selectNodeContents(a);s.removeAllRanges();s.addRange(nr);saveRoot171(root);window.closeModal?.();window.cuteToast?.('Link gesetzt ♡');return true}catch(_){return oldLink171?.apply(this,arguments)}};
+/* Never overwrite a good saved selection merely because tapping a toolbar collapsed Safari's live selection. */
+document.addEventListener('selectionchange',()=>{setTimeout(()=>capture171(),0)});
+document.addEventListener('pointerup',e=>{if(editableRootFrom(e.target))setTimeout(capture171,0)},true);
+document.addEventListener('keyup',e=>{if(editableRootFrom(e.target))setTimeout(capture171,0)},true);
+document.addEventListener('pointerdown',e=>{if(e.target instanceof Element&&e.target.closest('.v165FormatToolbar,#v165FontMenu,#v152SelectionBar,#v152FormatPopover,#canvasInspector,.v144FontModal,.v171TextTools'))capture171()},true);
+/* A new edit session must not inherit a selection from another text object. */
+const begin171=window.v152BeginTextEdit;if(begin171)window.v152BeginTextEdit=function(id){if(!sel171||String(sel171.id)!==String(id))sel171=null;return begin171.apply(this,arguments)};
+
+/* ---------- one cloud system: URL + username + password ---------- */
+const URL_KEY='studia-gas-url',USER_KEY='studia-account-username-v150',TOKEN_KEY='studia-account-token-v150';
+function cloudFields171(){const url=q('#v150ScriptUrl'),user=q('#v150Username');if(url&&!url.value)url.value=localStorage.getItem(URL_KEY)||window.STUDIA_SYNC_CONFIG?.scriptUrl||'';if(user&&!user.value)user.value=localStorage.getItem(USER_KEY)||''}
+function cloudStatus171(text,bad=false){const x=q('.v171CloudSettings #v150AccountStatus');if(!x)return;x.textContent=text;x.classList.toggle('error',!!bad)}
+function cloudUI171(){cloudFields171();const token=localStorage.getItem(TOKEN_KEY),u=localStorage.getItem(USER_KEY)||'';if(token)cloudStatus171(`Verbunden${u?' als '+u:''} · Auto-Sync aktiv ✓`);else cloudStatus171('Noch nicht verbunden.')}
+window.v171CloudLogin=async function(){cloudFields171();if(!window.v150RememberUrl?.())return;cloudStatus171('Anmelden & synchronisieren …');await window.v150Login?.();setTimeout(cloudUI171,50)};
+window.v171CloudRegister=async function(){cloudFields171();if(!window.v150RememberUrl?.())return;cloudStatus171('Konto wird erstellt …');await window.v150Register?.();setTimeout(cloudUI171,50)};
+window.v171CloudNow=async function(){if(!localStorage.getItem(TOKEN_KEY))return cloudStatus171('Bitte zuerst anmelden.',true);cloudStatus171('Geräte werden abgeglichen …');try{await window.v150Push?.();await window.v150Pull?.();cloudStatus171('Alle Geräte sind aktuell ✓')}catch(err){cloudStatus171(String(err?.message||err),true)}};
+/* Settings are static now; only populate values/status when they are opened. */
+document.addEventListener('click',e=>{const b=e.target instanceof Element?e.target.closest('[data-view="settings"],[data-view="more"],#nav-settings,#nav-more'):null;if(b)setTimeout(cloudUI171,80)},true);
+window.addEventListener('pageshow',()=>setTimeout(()=>{cloudUI171();if(localStorage.getItem(TOKEN_KEY))window.v150Pull?.()},180));
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&localStorage.getItem(TOKEN_KEY))setTimeout(()=>window.v150Pull?.(),300)});
+setTimeout(cloudUI171,800);
+
+/* ---------- exact sticker colors, every real RGB value ---------- */
+const exactCache171=new Map();
+function sticker171(){const s=st(),ids=new Set([...(s?.selectedIds||[]),s?.selectedId].filter(Boolean));const a=(s?.objects||[]).filter(o=>ids.has(o.id)&&o.stickerAsset&&!o.frameAsset);return a.length===1?a[0]:null}
+function loadImg171(src){return new Promise((res,rej)=>{const im=new Image();im.onload=()=>res(im);im.onerror=rej;im.src=src})}
+const hex171=(r,g,b)=>'#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
+function rgb171(h){h=String(h||'#000000').replace('#','');return[parseInt(h.slice(0,2),16)||0,parseInt(h.slice(2,4),16)||0,parseInt(h.slice(4,6),16)||0]}
+async function exactPalette171(o){const src=o.stickerPaletteOriginal||o.stickerExactOriginal171||o.src;o.stickerExactOriginal171=src;o.stickerPaletteOriginal=src;const key=String(o.id)+'|'+src.slice(0,96)+'|'+src.length;if(exactCache171.has(key))return exactCache171.get(key);const im=await loadImg171(src),pixels=Math.max(1,im.naturalWidth*im.naturalHeight),scale=pixels>4000000?Math.sqrt(4000000/pixels):1,c=document.createElement('canvas');c.width=Math.max(1,Math.round(im.naturalWidth*scale));c.height=Math.max(1,Math.round(im.naturalHeight*scale));const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(im,0,0,c.width,c.height);const d=x.getImageData(0,0,c.width,c.height).data,m=new Map();for(let i=0;i<d.length;i+=4){if(d[i+3]<20)continue;const k=(d[i]<<16)|(d[i+1]<<8)|d[i+2];m.set(k,(m.get(k)||0)+1)}const arr=[...m.entries()].sort((a,b)=>b[1]-a[1]).map(([k,n])=>({hex:hex171((k>>16)&255,(k>>8)&255,k&255),n}));exactCache171.set(key,arr);return arr}
+async function renderExact171(o){const src=o.stickerExactOriginal171||o.stickerPaletteOriginal||o.src,map=o.stickerExactMap171||{};if(!Object.keys(map).length){o.src=src;window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.();return}const im=await loadImg171(src),c=document.createElement('canvas');c.width=im.naturalWidth;c.height=im.naturalHeight;const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(im,0,0);const img=x.getImageData(0,0,c.width,c.height),d=img.data;for(let i=0;i<d.length;i+=4){if(d[i+3]<20)continue;const key=hex171(d[i],d[i+1],d[i+2]),to=map[key];if(!to)continue;const [r,g,b]=rgb171(to);d[i]=r;d[i+1]=g;d[i+2]=b}x.putImageData(img,0,0);o.src=c.toDataURL('image/png');delete o.tintColor;window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.()}
+let stickerPalette171=[],stickerPage171=0,stickerId171='';
+function rows171(start,end){const o=(st()?.objects||[]).find(x=>String(x.id)===String(stickerId171)),map=o?.stickerExactMap171||{};return stickerPalette171.slice(start,end).map((c,i)=>{const idx=start+i,val=map[c.hex]||c.hex;return `<div class="v171StickerRow" data-i="${idx}"><span class="v171StickerOriginal" style="background:${c.hex}"></span><code>${c.hex.toUpperCase()}</code><span>→</span><label><input type="color" value="${val}" data-src="${c.hex}"><i style="background:${val}"></i></label><button type="button" data-reset="${c.hex}" title="Originalfarbe">↺</button></div>`}).join('')}
+function appendStickerRows171(){const host=q('#v171StickerRows');if(!host)return;const start=stickerPage171*120,end=Math.min(stickerPalette171.length,start+120);host.insertAdjacentHTML('beforeend',rows171(start,end));stickerPage171++;const more=q('#v171StickerMore');if(more){more.hidden=end>=stickerPalette171.length;more.textContent=`Weitere Farben (${Math.max(0,stickerPalette171.length-end)})`}}
+window.v171MoreStickerColors=appendStickerRows171;
+function openExactModal171(o){stickerId171=String(o.id);stickerPage171=0;window.openModal?.(`<div class="v135Modal v171StickerModal"><div class="v135ModalHead"><div><span class="eyebrow">STICKERFARBEN</span><h2>Jede einzelne Farbe</h2></div><button onclick="closeModal()">×</button></div><p class="small"><b>${stickerPalette171.length}</b> tatsächlich vorkommende RGB-Farben erkannt. Auch kleine Schattierungen können einzeln geändert werden.</p><div class="v171StickerLegend"><span>Original</span><span></span><span>Neue Farbe</span></div><div id="v171StickerRows" class="v171StickerRows"></div><button id="v171StickerMore" class="ghost v171StickerMore" type="button" onclick="v171MoreStickerColors()">Weitere Farben</button><div class="v135ActionRow"><button type="button" onclick="v171ResetStickerColors()">Alle Originalfarben</button><button class="primary" onclick="closeModal()">Fertig</button></div></div>`);appendStickerRows171();const modal=q('.v171StickerModal');modal?.addEventListener('input',e=>{const inp=e.target.closest?.('input[type=color][data-src]');if(!inp)return;const ob=(st()?.objects||[]).find(x=>String(x.id)===String(stickerId171));if(!ob)return;ob.stickerExactMap171||={};if(inp.value.toLowerCase()===inp.dataset.src.toLowerCase())delete ob.stickerExactMap171[inp.dataset.src];else ob.stickerExactMap171[inp.dataset.src]=inp.value;const i=inp.parentElement?.querySelector('i');if(i)i.style.background=inp.value;clearTimeout(window.__v171StickerRenderTimer);window.__v171StickerRenderTimer=setTimeout(()=>renderExact171(ob),90)});modal?.addEventListener('click',e=>{const b=e.target.closest?.('button[data-reset]');if(!b)return;const ob=(st()?.objects||[]).find(x=>String(x.id)===String(stickerId171));if(!ob)return;ob.stickerExactMap171||={};delete ob.stickerExactMap171[b.dataset.reset];const inp=b.closest('.v171StickerRow')?.querySelector('input[type=color]');if(inp){inp.value=b.dataset.reset;inp.parentElement.querySelector('i').style.background=b.dataset.reset}renderExact171(ob)})}
+window.v165OpenStickerColors=async function(){const o=sticker171();if(!o)return window.cuteToast?.('Wähle genau einen Sticker aus ♡');window.cuteToast?.('Alle Stickerfarben werden gelesen …');try{stickerPalette171=await exactPalette171(o);openExactModal171(o)}catch(err){console.error('[V171 sticker colors]',err);alert('Die Farben dieses Stickers konnten nicht gelesen werden.')}};
+window.v171ResetStickerColors=async function(){const o=(st()?.objects||[]).find(x=>String(x.id)===String(stickerId171));if(!o)return;o.stickerExactMap171={};o.src=o.stickerExactOriginal171||o.stickerPaletteOriginal||o.src;delete o.tintColor;window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.();window.closeModal?.();window.cuteToast?.('Alle Originalfarben wiederhergestellt ♡')};
+
+/* cache-busting visible version only; never observe/mutate in a loop */
+function version171(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 171'}setTimeout(version171,6500);setTimeout(version171,8000);
+})();
+/* ===== /Studia V171 ===== */

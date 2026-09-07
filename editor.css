@@ -894,3 +894,22 @@ body.v166RightPan #canvasViewport{cursor:grabbing!important;user-select:none!imp
   body.v170LiveTextDrag #canvasObjects .cobj{backface-visibility:hidden;-webkit-backface-visibility:hidden}
 }
 /* ===== /Studia V170 ===== */
+
+/* ===== Studia V171 — stable rich text + simple cloud + exact sticker palette ===== */
+.v171CloudSettings{border:1px solid #ecd2cb!important;background:linear-gradient(145deg,#fffaf8,#fffdf9)!important;box-shadow:0 12px 30px rgba(108,77,65,.07)!important;border-radius:24px!important;padding:22px!important;display:grid!important;gap:17px!important}
+.v171CloudHead{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}.v171CloudHead h2{margin:2px 0 4px!important}.v171CloudHead p{margin:0!important}.v171CloudMark{width:42px;height:42px;border-radius:15px;display:grid;place-items:center;background:#fae7e4;color:#a86c6a;font:800 22px/1 system-ui}
+.v171CloudStatus{margin:0!important;border-radius:14px!important;padding:11px 13px!important;background:#fff!important;border:1px solid #efd9d3!important}.v171CloudStatus.error{color:#b25454!important;background:#fff4f2!important}
+.v171CloudGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.v171CloudGrid .full{grid-column:1/-1}.v171CloudGrid label{display:grid;gap:7px;font-weight:800;color:#715b54;font-size:13px}.v171CloudGrid input{width:100%;box-sizing:border-box;border:1px solid #ead6cf;border-radius:14px;background:#fff;padding:12px 13px;font:600 14px/1.35 system-ui;color:#4f4541;outline:none}.v171CloudGrid input:focus{border-color:#dda7a1;box-shadow:0 0 0 3px rgba(225,159,153,.14)}
+.v171CloudActions{display:flex;flex-wrap:wrap;gap:9px}.v171CloudInfo{display:grid;gap:4px;padding:13px 15px;border-radius:16px;background:#fff4f2;color:#745a54}.v171CloudInfo b{font-size:13px}.v171CloudInfo span{font-size:12px;line-height:1.5;opacity:.8}
+
+.v171StickerModal{width:min(620px,calc(100vw - 24px))!important;max-height:min(760px,calc(100dvh - 28px));overflow:hidden;display:flex;flex-direction:column}.v171StickerModal>.small{margin:0 0 10px}.v171StickerLegend{display:grid;grid-template-columns:120px 1fr 150px;gap:8px;padding:0 8px 7px;font:800 11px/1 system-ui;color:#9a7d75;text-transform:uppercase;letter-spacing:.05em}.v171StickerRows{overflow:auto;overscroll-behavior:contain;border:1px solid #ecd9d3;border-radius:16px;background:#fff;min-height:130px;max-height:430px}.v171StickerRow{display:grid;grid-template-columns:30px 92px 22px 1fr 34px;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid #f3e7e3}.v171StickerRow:last-child{border-bottom:0}.v171StickerOriginal{width:28px;height:28px;border-radius:9px;border:1px solid rgba(80,60,55,.13);box-shadow:inset 0 0 0 1px rgba(255,255,255,.45)}.v171StickerRow code{font:700 11px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;color:#78655e}.v171StickerRow label{display:flex;align-items:center;gap:8px;position:relative}.v171StickerRow input[type=color]{position:absolute;left:0;top:0;width:40px;height:30px;opacity:0;pointer-events:auto;cursor:pointer}.v171StickerRow label i{display:block;width:40px;height:30px;border-radius:9px;border:1px solid rgba(80,60,55,.15);box-shadow:0 2px 7px rgba(80,60,55,.07);cursor:pointer}.v171StickerRow button{width:30px;height:30px;border-radius:9px;padding:0}.v171StickerMore{margin-top:9px!important}
+
+@media(max-width:899px){
+  .v171CloudSettings{padding:17px!important;border-radius:20px!important}.v171CloudGrid{grid-template-columns:1fr}.v171CloudGrid .full{grid-column:auto}.v171CloudActions{display:grid;grid-template-columns:1fr}.v171CloudActions button{width:100%}
+  /* Editing really means text selection: canvas drag layers must no longer steal iOS selection gestures. */
+  body.editorMode #canvasObjects .cobj[contenteditable="true"]{user-select:text!important;-webkit-user-select:text!important;-webkit-touch-callout:default!important;touch-action:auto!important}
+  body.editorMode #canvasObjects .cobj.v152EditingText{pointer-events:auto!important;user-select:text!important;-webkit-user-select:text!important;touch-action:auto!important}
+  body.editorMode #canvasObjects .cobj.v152EditingText *{user-select:text!important;-webkit-user-select:text!important}
+  .v171StickerModal{max-height:calc(100dvh - 18px)}.v171StickerLegend{grid-template-columns:82px 1fr 100px}.v171StickerRow{grid-template-columns:28px 78px 18px 1fr 32px;padding:8px}.v171StickerRows{max-height:52dvh}
+}
+/* ===== /Studia V171 ===== */

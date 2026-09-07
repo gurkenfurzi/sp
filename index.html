@@ -3492,22 +3492,30 @@ html,body{background:#fff7f4;}
       <button class="dangerBtn" style="display:block;margin-top:12px" onclick="resetAll()">Alle Daten löschen</button>
     </div>
 
-    <div class="section panel v113SyncPanel">
-      <div class="v113SyncHead"><div><h2>Geräte-Sync</h2><p class="small">Optional: derselbe Studia-Stand auf Handy und Laptop.</p></div><span class="v113SyncIcon">⇄</span></div>
-      <div class="v113SyncStatus" id="v113SyncStatus"><b>Noch nicht verbunden</b><span>GitHub-Sync ist optional.</span></div>
-      <div class="v113SyncGrid">
-        <label>GitHub Token<input id="v113SyncToken" type="password" autocomplete="off" placeholder="Token mit Gist-Berechtigung"></label>
-        <label>Sync-Passwort<input id="v113SyncPass" type="password" autocomplete="off" placeholder="Auf allen Geräten gleich"></label>
-        <label class="full">Gist-ID<input id="v113SyncGist" placeholder="Wird beim Einrichten automatisch erstellt"></label>
+
+    <div class="section panel v137CloudSettings v141GoogleSyncCard v171CloudSettings">
+      <div class="v171CloudHead">
+        <div><span class="eyebrow">CLOUD</span><h2>Studia synchronisieren</h2><p class="small">Ein Konto, überall derselbe Stand – Handy und Laptop.</p></div>
+        <span class="v171CloudMark" aria-hidden="true">↻</span>
       </div>
-      <label class="v111BackupToggle"><span><b>Automatisch synchronisieren</b><small>Nach Änderungen und beim Öffnen von Studia.</small></span><input id="v113SyncAuto" type="checkbox" onchange="v113SetAutoSync(this.checked)"></label>
-      <div class="v113SyncButtons">
-        <button class="primary" onclick="v113SetupSync()">Sync einrichten</button>
-        <button class="ghost" onclick="v113SyncPush(true)">Jetzt hochladen</button>
-        <button class="ghost" onclick="v113SyncPull(true)">Jetzt herunterladen</button>
-        <button class="ghost" onclick="v113ForgetSync()">Verbindung entfernen</button>
+      <div id="v150AccountStatus" class="v150AccountState v171CloudStatus">Noch nicht verbunden.</div>
+      <div class="v171CloudGrid">
+        <label class="full">Server-Script-Service-URL
+          <input id="v150ScriptUrl" type="url" autocomplete="url" placeholder="https://script.google.com/macros/s/…/exec">
+        </label>
+        <label>Benutzername
+          <input id="v150Username" autocomplete="username" minlength="3" maxlength="32" placeholder="Benutzername">
+        </label>
+        <label>Passwort
+          <input id="v150Password" type="password" autocomplete="current-password" minlength="8" placeholder="Passwort">
+        </label>
       </div>
-      <p class="small v113SyncNote">Die Sync-Datei wird vor dem Upload mit deinem Sync-Passwort verschlüsselt. Token und Passwort bleiben nur auf diesem Gerät und werden nicht in Studia-Backups exportiert.</p>
+      <div class="v171CloudActions">
+        <button class="primary" type="button" onclick="v171CloudLogin()">Anmelden & Sync starten</button>
+        <button class="ghost" type="button" onclick="v171CloudRegister()">Neues Konto erstellen</button>
+        <button class="ghost" type="button" onclick="v171CloudNow()">Jetzt synchronisieren</button>
+      </div>
+      <div class="v171CloudInfo"><b>Immer automatisch</b><span>Beim Öffnen, nach Änderungen und während Studia im Vordergrund ist. Fächer, Themen, Lernblätter, Hausaufgaben, Tests, Noten, Karteikarten, Quizze, Editor-Inhalte, Dateien, Bilder, Schriften und Einstellungen werden gemeinsam synchronisiert.</span></div>
     </div>
   </section>
 </div>
@@ -14120,47 +14128,7 @@ html,body{overflow-x:hidden!important}
 })();
 </script>
 
-<script id="v113-device-sync-script">
-(function(){
-  const GIST_KEY='studia-sync-gist-id',AUTO_KEY='studia-sync-auto',LOCAL_TS='studia-sync-local-ts',LAST_PULL='studia-sync-last-pull';
-  const SDB='studia-sync-secrets-v1',SSTORE='settings';let syncTimer=null,syncBusy=false;
-  const enc=new TextEncoder(),dec=new TextDecoder();
-  function b64(bytes){let s='';bytes=new Uint8Array(bytes);for(let i=0;i<bytes.length;i+=0x8000)s+=String.fromCharCode(...bytes.subarray(i,i+0x8000));return btoa(s)}
-  function unb64(s){const x=atob(s),u=new Uint8Array(x.length);for(let i=0;i<x.length;i++)u[i]=x.charCodeAt(i);return u}
-  function syncStatus(title,text,cls=''){const el=document.getElementById('v113SyncStatus');if(!el)return;el.className='v113SyncStatus '+cls;el.querySelector('b').textContent=title;el.querySelector('span').textContent=text}
-  function secretDB(){return new Promise((res,rej)=>{const r=indexedDB.open(SDB,1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains(SSTORE))r.result.createObjectStore(SSTORE)};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
-  async function secretGet(k){const db=await secretDB();return await new Promise((res,rej)=>{const r=db.transaction(SSTORE).objectStore(SSTORE).get(k);r.onsuccess=()=>res(r.result||'');r.onerror=()=>rej(r.error)})}
-  async function secretSet(k,v){const db=await secretDB();return await new Promise((res,rej)=>{const tx=db.transaction(SSTORE,'readwrite');tx.objectStore(SSTORE).put(v,k);tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error)})}
-  async function secretClear(){const db=await secretDB();return await new Promise((res,rej)=>{const tx=db.transaction(SSTORE,'readwrite');tx.objectStore(SSTORE).clear();tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error)})}
-  async function getCreds(){return{token:await secretGet('token'),pass:await secretGet('pass'),gist:localStorage.getItem(GIST_KEY)||''}}
-  async function saveCreds(token,pass,gist){await secretSet('token',token);await secretSet('pass',pass);if(gist)localStorage.setItem(GIST_KEY,gist)}
-  function eligibleLocalStorage(){const out={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(!k||k.startsWith('studia-sync-')||k.startsWith('studia-local-backup-')||k.startsWith('studia-daily-backup-'))continue;if(k.startsWith('schoolhub')||k.startsWith('schoolbloom')||k.startsWith('studia-'))out[k]=localStorage.getItem(k)}return out}
-  function blobURL(blob){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result||''));r.onerror=()=>rej(r.error);r.readAsDataURL(blob)})}
-  function urlBlob(url){const [h,b]=String(url||'').split(',');if(!b)return new Blob([]);const mime=(h.match(/data:([^;]+)/)||[])[1]||'application/octet-stream',bin=atob(b),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return new Blob([u],{type:mime})}
-  async function liveFiles(){try{const db=await dbOpen();return await new Promise((res,rej)=>{const r=db.transaction(STORE).objectStore(STORE).getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>rej(r.error)})}catch(_){return[]}}
-  async function pack(){const files=[];for(const f of await liveFiles())files.push({id:f.id,name:f.name||'',type:f.type||f.blob?.type||'',data:await blobURL(f.blob||new Blob([]))});return{format:'studia-sync-v1',ts:Date.now(),localStorage:eligibleLocalStorage(),files}}
-  async function derive(pass,salt){const base=await crypto.subtle.importKey('raw',enc.encode(pass),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:180000,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
-  async function encryptPack(pkg,pass){const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12)),key=await derive(pass,salt),ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,enc.encode(JSON.stringify(pkg)));return JSON.stringify({v:1,salt:b64(salt),iv:b64(iv),data:b64(ct),ts:pkg.ts})}
-  async function decryptPack(raw,pass){const box=JSON.parse(raw),salt=unb64(box.salt),iv=unb64(box.iv),key=await derive(pass,salt),pt=await crypto.subtle.decrypt({name:'AES-GCM',iv},key,unb64(box.data));return JSON.parse(dec.decode(pt))}
-  async function gh(path,method='GET',body=null,token=''){const r=await fetch('https://api.github.com'+path,{method,headers:{'Accept':'application/vnd.github+json','Authorization':'Bearer '+token,'X-GitHub-Api-Version':'2022-11-28',...(body?{'Content-Type':'application/json'}:{})},body:body?JSON.stringify(body):undefined});if(!r.ok)throw new Error('GitHub '+r.status);return r.status===204?null:r.json()}
-  async function clearFiles(){try{const db=await dbOpen();await new Promise((res,rej)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).clear();tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error)})}catch(_){}}
-  async function applyPack(pkg){if(!pkg?.localStorage)throw new Error('Ungültige Sync-Datei');const keep={gist:localStorage.getItem(GIST_KEY)||'',auto:localStorage.getItem(AUTO_KEY)||'0'};Object.keys(localStorage).filter(k=>(k.startsWith('schoolhub')||k.startsWith('schoolbloom')||k.startsWith('studia-'))&&!k.startsWith('studia-sync-')&&!k.startsWith('studia-local-backup-')&&!k.startsWith('studia-daily-backup-')).forEach(k=>localStorage.removeItem(k));Object.entries(pkg.localStorage).forEach(([k,v])=>localStorage.setItem(k,String(v)));if(keep.gist)localStorage.setItem(GIST_KEY,keep.gist);localStorage.setItem(AUTO_KEY,keep.auto);localStorage.setItem(LOCAL_TS,String(pkg.ts||Date.now()));await clearFiles();for(const f of pkg.files||[]){try{await dbPut({id:f.id,name:f.name||'',type:f.type||'',blob:urlBlob(f.data||'')})}catch(_){}}}
-  function readFields(){return{token:String(document.getElementById('v113SyncToken')?.value||'').trim(),pass:String(document.getElementById('v113SyncPass')?.value||''),gist:String(document.getElementById('v113SyncGist')?.value||'').trim()}}
-  async function loadSettingsUI(){const c=await getCreds(),t=document.getElementById('v113SyncToken'),p=document.getElementById('v113SyncPass'),g=document.getElementById('v113SyncGist'),a=document.getElementById('v113SyncAuto');if(t)t.value=c.token;if(p)p.value=c.pass;if(g)g.value=c.gist;if(a)a.checked=localStorage.getItem(AUTO_KEY)==='1';syncStatus(c.gist?'Verbunden':'Noch nicht verbunden',c.gist?'Verschlüsselter GitHub-Sync bereit.':'GitHub-Sync ist optional.',c.gist?'ok':'')}
-  window.v113SetupSync=async function(){if(syncBusy)return;let {token,pass,gist}=readFields();if(!token||!pass)return alert('Bitte GitHub Token und Sync-Passwort eingeben.');syncBusy=true;syncStatus('Verbindung wird eingerichtet','Bitte kurz warten …','busy');try{if(!gist){const pkg=await pack(),content=await encryptPack(pkg,pass),x=await gh('/gists','POST',{description:'Studia encrypted device sync',public:false,files:{'studia-sync.json':{content}}},token);gist=x.id;localStorage.setItem(LOCAL_TS,String(pkg.ts))}await saveCreds(token,pass,gist);localStorage.setItem(GIST_KEY,gist);localStorage.setItem(AUTO_KEY,'1');const g=document.getElementById('v113SyncGist'),a=document.getElementById('v113SyncAuto');if(g)g.value=gist;if(a)a.checked=true;syncStatus('Verbunden','Handy und Laptop können denselben Stand nutzen.','ok');cuteToast?.('Geräte-Sync verbunden ✓')}catch(e){console.error(e);syncStatus('Sync fehlgeschlagen','Token/Berechtigung oder Verbindung prüfen.','bad');alert('Sync konnte nicht eingerichtet werden. Prüfe den GitHub Token und die Gist-Berechtigung.')}finally{syncBusy=false}};
-  window.v113SyncPush=async function(show=true){if(syncBusy)return;const fields=readFields(),old=await getCreds(),token=fields.token||old.token,pass=fields.pass||old.pass,gist=fields.gist||old.gist;if(!token||!pass||!gist){if(show)alert('Geräte-Sync ist noch nicht eingerichtet.');return}syncBusy=true;syncStatus('Synchronisiere','Daten werden verschlüsselt und hochgeladen …','busy');try{await saveCreds(token,pass,gist);const pkg=await pack(),content=await encryptPack(pkg,pass);if(content.length>9_000_000)throw new Error('Sync-Datei zu groß');await gh('/gists/'+encodeURIComponent(gist),'PATCH',{files:{'studia-sync.json':{content}}},token);localStorage.setItem(LOCAL_TS,String(pkg.ts));syncStatus('Aktuell','Zuletzt hochgeladen '+new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}),'ok');if(show)cuteToast?.('Auf Geräte-Sync gespeichert ✓')}catch(e){console.error(e);syncStatus('Sync fehlgeschlagen',String(e.message||e),'bad');if(show)alert(e.message==='Sync-Datei zu groß'?'Der Sync ist wegen sehr großer Dateianhänge zu groß. Die normalen lokalen Backups funktionieren weiter.':'Hochladen fehlgeschlagen. Token und Internetverbindung prüfen.')}finally{syncBusy=false}};
-  window.v113SyncPull=async function(show=true,auto=false){if(syncBusy)return false;const fields=readFields(),old=await getCreds(),token=fields.token||old.token,pass=fields.pass||old.pass,gist=fields.gist||old.gist;if(!token||!pass||!gist){if(show)alert('Geräte-Sync ist noch nicht eingerichtet.');return false}syncBusy=true;syncStatus('Prüfe Geräte-Sync','Remote-Stand wird gelesen …','busy');try{await saveCreds(token,pass,gist);const x=await gh('/gists/'+encodeURIComponent(gist),'GET',null,token),raw=x.files?.['studia-sync.json']?.content;if(!raw)throw new Error('Sync-Datei fehlt');const pkg=await decryptPack(raw,pass),localTs=Number(localStorage.getItem(LOCAL_TS)||0);if(auto&&pkg.ts<=localTs){syncStatus('Aktuell','Keine neueren Daten vorhanden.','ok');return false}if(show&&!confirm('Den Stand aus dem Geräte-Sync laden? Der aktuelle lokale Stand wird ersetzt.'))return false;await applyPack(pkg);syncStatus('Synchronisiert','Neuer Stand wurde geladen.','ok');setTimeout(()=>location.reload(),120);return true}catch(e){console.error(e);syncStatus('Sync fehlgeschlagen','Passwort, Token oder Verbindung prüfen.','bad');if(show)alert('Herunterladen fehlgeschlagen. Prüfe Sync-Passwort, GitHub Token und Gist-ID.');return false}finally{syncBusy=false;localStorage.setItem(LAST_PULL,String(Date.now()))}};
-  window.v113SetAutoSync=function(on){localStorage.setItem(AUTO_KEY,on?'1':'0');if(on){v113SyncPull(false,true);schedulePush()}else clearTimeout(syncTimer)};
-  window.v113ForgetSync=async function(){if(!confirm('Sync-Verbindung auf diesem Gerät entfernen? Deine Studia-Daten bleiben erhalten.'))return;await secretClear();localStorage.removeItem(GIST_KEY);localStorage.removeItem(AUTO_KEY);const t=document.getElementById('v113SyncToken'),p=document.getElementById('v113SyncPass'),g=document.getElementById('v113SyncGist'),a=document.getElementById('v113SyncAuto');if(t)t.value='';if(p)p.value='';if(g)g.value='';if(a)a.checked=false;syncStatus('Nicht verbunden','Lokale Daten bleiben erhalten.','')};
-  function schedulePush(){if(localStorage.getItem(AUTO_KEY)!=='1')return;clearTimeout(syncTimer);syncTimer=setTimeout(()=>v113SyncPush(false),6500)}
-
-  // Any real Studia save updates sync freshness and schedules a push. Credentials live outside localStorage.
-  try{const baseSave=window.save||save;window.save=function(){const r=baseSave.apply(this,arguments);localStorage.setItem(LOCAL_TS,String(Date.now()));schedulePush();return r};try{save=window.save}catch(_){}}catch(e){console.warn('[Studia sync] save hook unavailable',e)}
-  const oldRenderSettings=window.renderSettings||renderSettings;window.renderSettings=function(){oldRenderSettings();setTimeout(loadSettingsUI,0)};try{renderSettings=window.renderSettings}catch(_){ }
-  setTimeout(()=>{loadSettingsUI().catch(console.warn)},1300); /* V162: manual sync only during recovery */
-})();
-</script>
-<!-- ===== /Studia V113 ===== -->
+<!-- Legacy GitHub/Gist sync removed in V171: Studia account sync is the single source of truth. -->
 
 
 <!-- ===== Studia V115 clean editor controller ===== -->
@@ -15790,6 +15758,6 @@ setTimeout(reconcile,980);
 })();
 </script>
 <!-- ===== /Studia V134 ===== -->
-<link rel="stylesheet" href="editor.css?v=170">
+<link rel="stylesheet" href="editor.css?v=171">
 <script src="google-sync-config.js?v=168"></script>
-<script src="editor.js?v=170"></script>
+<script src="editor.js?v=171"></script>
