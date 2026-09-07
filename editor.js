@@ -1704,3 +1704,103 @@ function init167(){if(!editor())return;ensureStableHits167();stickerButton167();
 setTimeout(init167,900);setTimeout(init167,3200);
 })();
 /* ===== /Studia V167 ===== */
+
+/* ===== Studia V168 — mobile text movement/resize/rotate + reliable PDF ===== */
+(()=>{
+'use strict';
+if(window.__STUDIA_V168__)return;window.__STUDIA_V168__=true;
+const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
+const mobile=()=>innerWidth<900;
+const editor=()=>document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
+const st=()=>{try{return canvasState}catch(_){return window.canvasState}};
+const textKinds=new Set(['text','block','task','merke','file']);
+const isText=o=>!!o&&textKinds.has(o.kind)&&!o.isChecklist;
+const pageW=()=>typeof window.canvasPageWidth==='function'?window.canvasPageWidth():794;
+const pageH=()=>typeof window.canvasPageHeight==='function'?window.canvasPageHeight():1123;
+const scale168=()=>{const s=q('#canvasStage'),r=s?.getBoundingClientRect();return r?Math.max(.01,r.width/pageW()):1};
+const textObj=id=>(st()?.objects||[]).find(o=>String(o.id)===String(id));
+let gesture168=null,lastTap168={id:null,time:0};
+
+function layer168(){
+ const stage=q('#canvasStage');if(!stage)return null;let l=q('#v168MobileTextLayer',stage);
+ if(!l){l=document.createElement('div');l.id='v168MobileTextLayer';stage.appendChild(l)}
+ l.style.width=pageW()+'px';l.style.height=pageH()+'px';return l;
+}
+function selection168(o,hit){
+ const s=st();if(!s||!o)return;
+ (s.objects||[]).forEach(x=>{if(x!==o)x.editing=false});
+ s.multiMode=false;s.selectedType='object';s.selectedId=o.id;s.selectedIds=[o.id];s.selectedVectorIds=[];
+ qa('#canvasObjects .cobj.selected').forEach(el=>el.classList.toggle('selected',String(el.dataset.id)===String(o.id)));
+ const el=q(`#canvasObjects .cobj[data-id="${CSS.escape(String(o.id))}"]`);el?.classList.add('selected');
+ qa('#v168MobileTextLayer .v168TextHit.selected').forEach(x=>x.classList.remove('selected'));hit?.classList.add('selected');
+ try{window.renderCanvasInspector?.();window.renderLayerList?.();window.updateMultiSelectStatus?.();window.updateMobileSelectionTools?.()}catch(_){}
+}
+function markOldHit168(o){
+ const old=q(`.v132Hit[data-kind="object"][data-id="${CSS.escape(String(o.id))}"]`);if(!old)return;old.dataset.v168Text='1';old.style.pointerEvents='none';
+}
+function finishState168(message){
+ try{window.markCanvasDirty?.();window.pushHistory?.();window.renderCanvasInspector?.();window.renderLayerList?.();window.updateMobileSelectionTools?.()}catch(_){}
+ if(message)window.cuteToast?.(message);setTimeout(build168,0);
+}
+function tapOrDrag168(e,o,hit){
+ if(o.locked){e.preventDefault();e.stopImmediatePropagation();selection168(o,hit);return}
+ e.preventDefault();e.stopImmediatePropagation();selection168(o,hit);
+ const z=scale168(),d=gesture168={mode:'move',pid:e.pointerId,id:o.id,sx:e.clientX,sy:e.clientY,ox:+o.x||0,oy:+o.y||0,z,moved:false,hit};
+ document.body.classList.add('v168TextTransforming');try{hit.setPointerCapture?.(e.pointerId)}catch(_){}
+ const move=ev=>{if(gesture168!==d||ev.pointerId!==d.pid)return;const dx=(ev.clientX-d.sx)/d.z,dy=(ev.clientY-d.sy)/d.z;if(!d.moved&&Math.hypot(dx,dy)<3)return;d.moved=true;ev.preventDefault();ev.stopImmediatePropagation();o.x=Math.max(0,Math.min(Math.max(0,pageW()-o.w),d.ox+dx));o.y=Math.max(0,Math.min(Math.max(0,pageH()-o.h),d.oy+dy));const el=q(`#canvasObjects .cobj[data-id="${CSS.escape(String(o.id))}"]`);if(el){el.style.left=o.x+'px';el.style.top=o.y+'px'}hit.style.left=o.x+'px';hit.style.top=o.y+'px';window.markCanvasDirty?.(false)};
+ const up=ev=>{if(gesture168!==d||ev.pointerId!==d.pid)return;window.removeEventListener('pointermove',move,true);window.removeEventListener('pointerup',up,true);window.removeEventListener('pointercancel',cancel,true);gesture168=null;document.body.classList.remove('v168TextTransforming');try{hit.releasePointerCapture?.(e.pointerId)}catch(_){}if(d.moved){finishState168();return}const now=Date.now(),dbl=lastTap168.id===o.id&&now-lastTap168.time<390;lastTap168={id:o.id,time:now};if(dbl&&!o.locked){lastTap168={id:null,time:0};window.v152BeginTextEdit?.(o.id,ev.clientX,ev.clientY);return}build168()};
+ const cancel=ev=>{if(gesture168!==d)return;window.removeEventListener('pointermove',move,true);window.removeEventListener('pointerup',up,true);window.removeEventListener('pointercancel',cancel,true);gesture168=null;document.body.classList.remove('v168TextTransforming');build168()};
+ window.addEventListener('pointermove',move,{capture:true,passive:false});window.addEventListener('pointerup',up,{capture:true,passive:false});window.addEventListener('pointercancel',cancel,{capture:true,passive:false});
+}
+function resize168(e,o,hit){
+ if(o.locked)return;e.preventDefault();e.stopImmediatePropagation();const z=scale168(),rad=(+o.rotation||0)*Math.PI/180,d=gesture168={mode:'resize',pid:e.pointerId,id:o.id,sx:e.clientX,sy:e.clientY,ow:+o.w||80,oh:+o.h||40,z,rad,hit};document.body.classList.add('v168TextTransforming');try{e.currentTarget.setPointerCapture?.(e.pointerId)}catch(_){}
+ const move=ev=>{if(gesture168!==d||ev.pointerId!==d.pid)return;ev.preventDefault();ev.stopImmediatePropagation();const dx=(ev.clientX-d.sx)/d.z,dy=(ev.clientY-d.sy)/d.z,c=Math.cos(d.rad),s=Math.sin(d.rad),lx=dx*c+dy*s,ly=-dx*s+dy*c;o.w=Math.max(60,d.ow+lx);o.h=Math.max(30,d.oh+ly);const el=q(`#canvasObjects .cobj[data-id="${CSS.escape(String(o.id))}"]`);if(el){el.style.width=o.w+'px';el.style.height=o.h+'px'}hit.style.width=o.w+'px';hit.style.height=o.h+'px';window.markCanvasDirty?.(false)};
+ const done=ev=>{if(gesture168!==d)return;window.removeEventListener('pointermove',move,true);window.removeEventListener('pointerup',done,true);window.removeEventListener('pointercancel',done,true);gesture168=null;document.body.classList.remove('v168TextTransforming');finishState168('Größe geändert ♡')};
+ window.addEventListener('pointermove',move,{capture:true,passive:false});window.addEventListener('pointerup',done,{capture:true,passive:false});window.addEventListener('pointercancel',done,{capture:true,passive:false});
+}
+function rotate168(e,o,hit){
+ if(o.locked)return;e.preventDefault();e.stopImmediatePropagation();const el=q(`#canvasObjects .cobj[data-id="${CSS.escape(String(o.id))}"]`),r=el?.getBoundingClientRect();if(!r)return;const cx=r.left+r.width/2,cy=r.top+r.height/2,start=Math.atan2(e.clientY-cy,e.clientX-cx),base=+o.rotation||0,d=gesture168={mode:'rotate',pid:e.pointerId,id:o.id,cx,cy,start,base,hit};document.body.classList.add('v168TextTransforming');try{e.currentTarget.setPointerCapture?.(e.pointerId)}catch(_){}
+ const move=ev=>{if(gesture168!==d||ev.pointerId!==d.pid)return;ev.preventDefault();ev.stopImmediatePropagation();const a=Math.atan2(ev.clientY-d.cy,ev.clientX-d.cx);o.rotation=Math.round(d.base+(a-d.start)*180/Math.PI);const obj=q(`#canvasObjects .cobj[data-id="${CSS.escape(String(o.id))}"]`);if(obj)obj.style.transform=`rotate(${o.rotation}deg)`;hit.style.transform=`rotate(${o.rotation}deg)`;window.markCanvasDirty?.(false)};
+ const done=ev=>{if(gesture168!==d)return;window.removeEventListener('pointermove',move,true);window.removeEventListener('pointerup',done,true);window.removeEventListener('pointercancel',done,true);gesture168=null;document.body.classList.remove('v168TextTransforming');finishState168('Gedreht ♡')};
+ window.addEventListener('pointermove',move,{capture:true,passive:false});window.addEventListener('pointerup',done,{capture:true,passive:false});window.addEventListener('pointercancel',done,{capture:true,passive:false});
+}
+function handles168(hit,o){
+ const rot=document.createElement('button'),res=document.createElement('button');rot.type=res.type='button';rot.className='v168TextHandle v168TextRotate';res.className='v168TextHandle v168TextResize';rot.setAttribute('aria-label','Textfeld drehen');res.setAttribute('aria-label','Textfeld größer oder kleiner machen');rot.addEventListener('pointerdown',e=>rotate168(e,o,hit),{capture:true,passive:false});res.addEventListener('pointerdown',e=>resize168(e,o,hit),{capture:true,passive:false});hit.append(rot,res);
+}
+function build168(){
+ const l=layer168();if(!l)return;if(!mobile()||!editor()){l.remove();return}l.replaceChildren();const s=st(),sid=String(s?.selectedId??'');
+ for(const o of s?.objects||[]){if(!isText(o)||o.editing)continue;const h=document.createElement('div');h.className='v168TextHit'+(String(o.id)===sid?' selected':'')+(o.locked?' locked':'');h.dataset.id=o.id;Object.assign(h.style,{left:(+o.x||0)+'px',top:(+o.y||0)+'px',width:Math.max(18,+o.w||80)+'px',height:Math.max(18,+o.h||40)+'px',transform:`rotate(${+o.rotation||0}deg)`,transformOrigin:'50% 50%',zIndex:String(1000+(+o.z||0))});h.addEventListener('pointerdown',e=>{if(e.target.closest('.v168TextHandle'))return;if(e.pointerType==='mouse'&&e.button!==0)return;tapOrDrag168(e,o,h)},{capture:true,passive:false});if(String(o.id)===sid&&!o.locked)handles168(h,o);l.appendChild(h);markOldHit168(o)}
+}
+const render168=window.renderCanvasObjects;if(render168)window.renderCanvasObjects=function(){const r=render168.apply(this,arguments);requestAnimationFrame(build168);return r};try{renderCanvasObjects=window.renderCanvasObjects}catch(_){}
+const inspector168=window.renderCanvasInspector;if(inspector168)window.renderCanvasInspector=function(){const r=inspector168.apply(this,arguments);requestAnimationFrame(build168);return r};try{renderCanvasInspector=window.renderCanvasInspector}catch(_){}
+window.addEventListener('resize',()=>setTimeout(build168,80));setTimeout(build168,500);setTimeout(build168,1700);
+
+/* ---------- Mobile print: clone the actual page, inline images, rasterize safely, then open a real PDF. ---------- */
+function bytes168(s){return new TextEncoder().encode(s)}
+function join168(parts){const n=parts.reduce((a,b)=>a+b.length,0),out=new Uint8Array(n);let p=0;for(const b of parts){out.set(b,p);p+=b.length}return out}
+function jpegBytes168(url){const b=atob(url.split(',')[1]||''),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u}
+function pdf168(jpeg,w,h,landscape){
+ const PW=landscape?841.89:595.28,PH=landscape?595.28:841.89,parts=[],offs=[0];let len=0;const push=x=>{parts.push(x);len+=x.length},obj=(n,s)=>{offs[n]=len;push(bytes168(`${n} 0 obj\n${s}\nendobj\n`))};push(bytes168('%PDF-1.4\n%PDF\n'));obj(1,'<< /Type /Catalog /Pages 2 0 R >>');obj(2,'<< /Type /Pages /Kids [3 0 R] /Count 1 >>');obj(3,`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${PW.toFixed(2)} ${PH.toFixed(2)}] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>`);offs[4]=len;push(bytes168(`4 0 obj\n<< /Type /XObject /Subtype /Image /Width ${w} /Height ${h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpeg.length} >>\nstream\n`));push(jpeg);push(bytes168('\nendstream\nendobj\n'));const c=`q\n${PW.toFixed(2)} 0 0 ${PH.toFixed(2)} 0 0 cm\n/Im0 Do\nQ\n`;obj(5,`<< /Length ${bytes168(c).length} >>\nstream\n${c}endstream`);const xr=len;let xs='xref\n0 6\n0000000000 65535 f \n';for(let i=1;i<=5;i++)xs+=String(offs[i]).padStart(10,'0')+' 00000 n \n';xs+=`trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n${xr}\n%%EOF`;push(bytes168(xs));return new Blob(parts,{type:'application/pdf'})
+}
+function dataURL168(blob){return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>res(String(fr.result));fr.onerror=rej;fr.readAsDataURL(blob)})}
+async function inlineSrc168(src){if(!src||/^data:/i.test(src))return src;try{const u=new URL(src,location.href);if(u.protocol==='blob:')return await dataURL168(await fetch(u.href).then(r=>r.blob()));if(u.origin!==location.origin)return '';const r=await fetch(u.href,{cache:'force-cache'});if(!r.ok)throw new Error('HTTP '+r.status);return await dataURL168(await r.blob())}catch(_){return ''}}
+async function printClone168(){
+ const source=q('#canvasStage');if(!source)throw new Error('Lernblatt nicht gefunden.');const clone=source.cloneNode(true),W=pageW(),H=pageH();clone.id='v168PrintStage';clone.querySelectorAll('#v132InteractionLayer,#v152TextHitLayer,#v168MobileTextLayer,#canvasGuides,#pathDrawHint,.resizeHandle,.rotateHandle,.v138TransformHandle,.vectorSelectBox,.vectorHandle,.vectorRotateLine,.pathNode,.shapeHit,.vectorTouchProxy,.v135LinkBadge,.tableMoveHandle,.v108MoveHandle,.v108VectorMoveHandle,.v137Marquee').forEach(x=>x.remove());clone.querySelectorAll('[contenteditable]').forEach(x=>x.removeAttribute('contenteditable'));clone.querySelectorAll('.selected,.editing,.locked').forEach(x=>x.classList.remove('selected','editing','locked'));Object.assign(clone.style,{width:W+'px',height:H+'px',transform:'none',transformOrigin:'0 0',margin:'0',boxShadow:'none',border:'0',overflow:'hidden',background:'#fff'});
+ const imgs=qa('img',clone);for(const im of imgs){const src=await inlineSrc168(im.getAttribute('src'));if(src)im.setAttribute('src',src);else im.remove()}
+ const svgImgs=qa('image',clone);for(const im of svgImgs){const raw=im.getAttribute('href')||im.getAttribute('xlink:href');if(!raw)continue;const src=await inlineSrc168(raw);if(src){im.setAttribute('href',src);im.removeAttribute('xlink:href')}else im.remove()}
+ let css='';try{for(const ss of document.styleSheets){let rules;try{rules=ss.cssRules}catch(_){continue}for(const rule of rules||[]){const t=rule.cssText||'';if(/@font-face/i.test(t)||/url\s*\(/i.test(t))continue;css+=t+'\n'}}}catch(_){}
+ const wrap=document.createElement('div');wrap.setAttribute('xmlns','http://www.w3.org/1999/xhtml');wrap.style.cssText=`position:relative;width:${W}px;height:${H}px;margin:0;padding:0;overflow:hidden;background:#fff;`;const style=document.createElement('style');style.textContent=css+`\n#v168PrintStage{width:${W}px!important;height:${H}px!important;transform:none!important;margin:0!important;border:0!important;box-shadow:none!important;overflow:hidden!important}#v168PrintStage .cobj{outline:0!important;box-shadow:none!important}`;wrap.append(style,clone);const xhtml=new XMLSerializer().serializeToString(wrap),svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><foreignObject x="0" y="0" width="${W}" height="${H}">${xhtml}</foreignObject></svg>`,blob=new Blob([svg],{type:'image/svg+xml;charset=utf-8'}),url=URL.createObjectURL(blob),img=new Image();
+ try{await new Promise((res,rej)=>{const tm=setTimeout(()=>rej(new Error('Druckansicht hat zu lange gebraucht.')),12000);img.onload=()=>{clearTimeout(tm);res()};img.onerror=()=>{clearTimeout(tm);rej(new Error('Druckansicht konnte nicht gerendert werden.'))};img.src=url});const sc=Math.min(2,Math.max(1,1800/Math.max(W,H))),c=document.createElement('canvas');c.width=Math.round(W*sc);c.height=Math.round(H*sc);const ctx=c.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);ctx.drawImage(img,0,0,c.width,c.height);return{canvas:c,W,H}}finally{URL.revokeObjectURL(url)}
+}
+function title168(){let t='Lernblatt';try{const d=typeof data!=='undefined'?data:window.data,sid=typeof selectedSheetId!=='undefined'?selectedSheetId:window.selectedSheetId;t=(d?.studySheets||[]).find(x=>x.id===sid)?.title||q('.editorTitle b')?.textContent||t}catch(_){}return String(t).replace(/[^a-z0-9äöüß _-]/gi,'_').slice(0,80)||'Lernblatt'}
+window.v168PrintMobile=async function(){
+ const tab=window.open('','_blank');if(tab){try{tab.document.open();tab.document.write('<!doctype html><meta name="viewport" content="width=device-width"><title>Studia Druck</title><body style="margin:0;background:#fffaf7;font:800 15px system-ui;color:#725b56;display:grid;place-items:center;height:100vh">PDF wird erstellt …</body>');tab.document.close()}catch(_){}}
+ try{const r=await printClone168(),jpg=jpegBytes168(r.canvas.toDataURL('image/jpeg',.98)),pdf=pdf168(jpg,r.canvas.width,r.canvas.height,r.W>r.H),url=URL.createObjectURL(pdf);if(tab&&!tab.closed){tab.location.replace(url)}else{const a=document.createElement('a');a.href=url;a.target='_blank';a.download=title168()+'.pdf';document.body.appendChild(a);a.click();a.remove()}setTimeout(()=>URL.revokeObjectURL(url),180000);window.cuteToast?.('PDF bereit · über Teilen → Drucken ♡')}catch(err){console.error('[V168 print]',err);try{tab?.close()}catch(_){}alert('Drucken konnte nicht vorbereitet werden: '+String(err?.message||err))}
+};
+const desktopPrint168=window.printCanvasSheet;
+window.printCanvasSheet=function(){if(mobile())return window.v168PrintMobile();return desktopPrint168?.apply(this,arguments)};try{printCanvasSheet=window.printCanvasSheet}catch(_){}
+
+function version168(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 168'}
+setTimeout(version168,800);setTimeout(version168,3600);setTimeout(version168,5200);
+})();
+/* ===== /Studia V168 ===== */

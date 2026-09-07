@@ -841,3 +841,22 @@ body.v166RightPan #canvasViewport{cursor:grabbing!important;user-select:none!imp
   .v167PdfWait{font:800 15px system-ui,sans-serif;color:#725b56;display:grid;place-items:center;height:100dvh;background:#fffaf7;text-align:center;padding:30px}
 }
 /* ===== /Studia V167 ===== */
+
+/* ===== Studia V168 — mobile text transform + reliable PDF print ===== */
+@media(max-width:899px){
+  /* One mobile text interaction layer owns tap, drag, resize and rotate. */
+  #v168MobileTextLayer{position:absolute;inset:0;width:100%;height:100%;z-index:50000;pointer-events:none;overflow:visible!important}
+  .v168TextHit{position:absolute;box-sizing:border-box;pointer-events:auto;touch-action:none!important;background:rgba(255,255,255,.001);border:0;outline:0;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+  .v168TextHit.selected{outline:2px solid #e99e9a;outline-offset:3px;border-radius:7px}
+  .v168TextHit.locked{pointer-events:auto}
+  .v168TextHandle{position:absolute!important;display:grid!important;place-items:center!important;width:31px!important;height:31px!important;min-width:31px!important;padding:0!important;border:4px solid #fff!important;background:#ea9099!important;box-shadow:0 0 0 2px #c86f79,0 3px 10px rgba(90,55,55,.18)!important;pointer-events:auto!important;touch-action:none!important;z-index:5!important}
+  .v168TextResize{right:-17px!important;bottom:-17px!important;border-radius:9px!important}
+  .v168TextRotate{left:50%!important;top:-51px!important;transform:translateX(-50%)!important;border-radius:50%!important}
+  .v168TextRotate:after{content:"";position:absolute;left:50%;top:27px;width:2px;height:23px;transform:translateX(-50%);background:#c86f79;pointer-events:none}
+  .v168TextResize:before{content:"";width:9px;height:9px;border-right:2px solid #fff;border-bottom:2px solid #fff}
+  .v168TextRotate:before{content:"↻";font:900 15px/1 system-ui,sans-serif;color:#fff}
+  body.v168TextTransforming,body.v168TextTransforming *{user-select:none!important;-webkit-user-select:none!important}
+  /* V138 may also create handles inside its old hit box. For text hits marked by V168, keep only one set. */
+  .v132Hit[data-v168-text="1"] .v138TransformHandle{display:none!important}
+}
+/* ===== /Studia V168 ===== */
