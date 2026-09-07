@@ -36,3 +36,8 @@ WICHTIG
 - Nach Änderungen wird automatisch hochgeladen.
 - Während Studia im Vordergrund ist, wird regelmäßig nach Änderungen anderer Geräte geprüft.
 - Login und Server-URL bleiben lokal gespeichert.
+
+V172 HINWEIS
+------------
+Wenn „Anmelden“ vorher scheinbar nichts gemacht hat: Die App zeigt ab V172 die echte Serverfehlermeldung dauerhaft an.
+Falls dort steht, dass der Server nicht eingerichtet/aktuell ist, google-apps-script/Code.gs aus diesem ZIP erneut in dein Apps-Script-Projekt kopieren, setup() einmal ausführen und die Web-App als neue Version bereitstellen. Danach die /exec-URL in Studia verwenden.

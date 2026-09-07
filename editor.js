@@ -2056,3 +2056,106 @@ window.v171ResetStickerColors=async function(){const o=(st()?.objects||[]).find(
 function version171(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 171'}setTimeout(version171,6500);setTimeout(version171,8000);
 })();
 /* ===== /Studia V171 ===== */
+
+/* ===== Studia V172 — reliable account login + persistent custom fonts ===== */
+(function(){
+'use strict';
+if(window.__STUDIA_V172__)return;window.__STUDIA_V172__=true;
+const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const URL_KEY='studia-gas-url',USER_KEY='studia-account-username-v150',TOKEN_KEY='studia-account-token-v150';
+
+/* ---------- Cloud: do not hide errors, normalize URL, start sync immediately ---------- */
+function cloudBox172(){return q('.v171CloudSettings')}
+function cloudStatus172(text,bad=false){const x=q('#v150AccountStatus',cloudBox172()||document);if(!x)return;x.textContent=text;x.classList.toggle('error',!!bad);x.classList.toggle('ok',!bad&&/✓|verbunden|aktuell/i.test(text||''))}
+function normGas172(raw){
+ let s=String(raw||'').trim();if(!s)return'';
+ if(!/^https?:\/\//i.test(s))s='https://'+s.replace(/^\/+/, '');
+ try{const u=new URL(s);if(u.hostname==='script.google.com'){const m=u.pathname.match(/^\/macros\/s\/([^/]+)(?:\/(?:exec|dev))?\/?$/);if(m)return `https://script.google.com/macros/s/${m[1]}/exec`}return u.toString().replace(/[?#].*$/,'').replace(/\/+$/,'')}catch(_){return s.replace(/\/+$/,'')}
+}
+function validGas172(s){return /^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec$/.test(String(s||''))}
+function fields172(){
+ const url=q('#v150ScriptUrl'),user=q('#v150Username');
+ if(url){if(!url.value)url.value=localStorage.getItem(URL_KEY)||(!String(window.STUDIA_SYNC_CONFIG?.scriptUrl||'').startsWith('DEINE_')?window.STUDIA_SYNC_CONFIG?.scriptUrl:'')||'';const n=normGas172(url.value);if(n&&n!==url.value)url.value=n}
+ if(user&&!user.value)user.value=localStorage.getItem(USER_KEY)||'';
+}
+async function health172(base){
+ const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),12000);try{const u=new URL(base);u.searchParams.set('action','health');u.searchParams.set('_',Date.now());const r=await fetch(u.toString(),{method:'GET',cache:'no-store',redirect:'follow',signal:ctl.signal});const raw=await r.text();let data;try{data=JSON.parse(raw)}catch(_){throw new Error('Der Server antwortet nicht als Studia-Sync. Prüfe die Web-App-Bereitstellung.')}if(data?.ok===false)throw new Error(data.error||'Server ist nicht eingerichtet.');return data}finally{clearTimeout(t)}}
+function currentInputs172(){fields172();const urlEl=q('#v150ScriptUrl'),userEl=q('#v150Username'),passEl=q('#v150Password'),url=normGas172(urlEl?.value||''),user=String(userEl?.value||'').trim(),pass=String(passEl?.value||'');if(urlEl)urlEl.value=url;return{url,user,pass,urlEl,userEl,passEl}}
+function busy172(on,label){for(const b of qa('.v171CloudActions button')){b.disabled=!!on;if(b.classList.contains('primary')){if(on){b.dataset.oldLabel=b.textContent;b.textContent=label||'Bitte warten …'}else if(b.dataset.oldLabel){b.textContent=b.dataset.oldLabel;delete b.dataset.oldLabel}}}}
+async function login172(register=false){
+ const f=currentInputs172();
+ if(!validGas172(f.url)){cloudStatus172('Die Server-Script-URL ist ungültig. Sie muss mit /exec enden.',true);f.urlEl?.focus();return false}
+ if(f.user.length<3){cloudStatus172('Benutzername muss mindestens 3 Zeichen haben.',true);f.userEl?.focus();return false}
+ if(f.pass.length<8){cloudStatus172('Passwort muss mindestens 8 Zeichen haben.',true);f.passEl?.focus();return false}
+ localStorage.setItem(URL_KEY,f.url);localStorage.setItem(USER_KEY,f.user);
+ busy172(true,register?'Konto wird erstellt …':'Anmelden …');
+ try{
+  cloudStatus172('Server wird geprüft …');
+  try{await health172(f.url)}catch(probeErr){console.warn('[V172 cloud probe]',probeErr);cloudStatus172('Serverprüfung nicht eindeutig · Anmeldung wird versucht …')}
+  cloudStatus172(register?'Konto wird erstellt …':'Anmelden …');
+  /* Use the proven V150 request path; unlike V171 we NEVER overwrite its server error afterwards. */
+  if(register)await window.v150Register?.();else await window.v150Login?.();
+  if(!localStorage.getItem(TOKEN_KEY)){
+    const msg=q('#v150AccountStatus',cloudBox172()||document)?.textContent||'';
+    if(!msg||/Anmelden …|Konto wird erstellt/i.test(msg))cloudStatus172(register?'Konto konnte nicht erstellt werden. Prüfe Server und Zugangsdaten.':'Anmeldung fehlgeschlagen. Prüfe Benutzername und Passwort.',true);
+    return false;
+  }
+  const u=localStorage.getItem(USER_KEY)||f.user;cloudStatus172(`Verbunden als ${u} · Auto-Sync aktiv ✓`);
+  try{await window.v150Pull?.()}catch(_){}
+  startPoll172();return true;
+ }catch(err){const m=err?.name==='AbortError'?'Server antwortet nicht. Prüfe Internet und Apps-Script-URL.':String(err?.message||err||'Anmeldung fehlgeschlagen.');cloudStatus172(m,true);return false}
+ finally{busy172(false)}
+}
+window.v171CloudLogin=()=>login172(false);
+window.v171CloudRegister=()=>login172(true);
+window.v171CloudNow=async function(){if(!localStorage.getItem(TOKEN_KEY))return cloudStatus172('Bitte zuerst anmelden.',true);busy172(true,'Synchronisieren …');try{cloudStatus172('Geräte werden abgeglichen …');await window.v150Push?.();await window.v150Pull?.();cloudStatus172('Alle Geräte sind aktuell ✓')}catch(err){cloudStatus172(String(err?.message||err),true)}finally{busy172(false)}};
+/* Keep old helper compatible, but accept a pasted URL without /exec and normalize it. */
+window.v150RememberUrl=function(){const el=q('#v150ScriptUrl'),u=normGas172(el?.value||localStorage.getItem(URL_KEY)||'');if(el)el.value=u;if(validGas172(u)){localStorage.setItem(URL_KEY,u);cloudStatus172('Server-URL gespeichert ✓');return true}cloudStatus172('Bitte eine gültige Google-Apps-Script-/exec-URL eintragen.',true);return false};
+let poll172=null;function startPoll172(){if(poll172)clearInterval(poll172);if(!localStorage.getItem(TOKEN_KEY))return;poll172=setInterval(()=>{if(document.visibilityState==='visible'&&navigator.onLine!==false)window.v150Pull?.()},7000)}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&localStorage.getItem(TOKEN_KEY)){startPoll172();setTimeout(()=>window.v150Pull?.(),350)}});
+window.addEventListener('online',()=>{if(localStorage.getItem(TOKEN_KEY))setTimeout(()=>window.v150Pull?.(),300)});
+setTimeout(()=>{fields172();if(localStorage.getItem(TOKEN_KEY)){cloudStatus172(`Verbunden${localStorage.getItem(USER_KEY)?' als '+localStorage.getItem(USER_KEY):''} · Auto-Sync aktiv ✓`);startPoll172()}},700);
+
+/* ---------- Fonts: one registry from IndexedDB + both legacy stores ---------- */
+const FONT_DB172='studia-fonts-v144',FONT_STORE172='fonts',LS1='schoolbloom-v91-custom-fonts',LS2='schoolbloom-custom-fonts';
+const installed172=new Map();let fontCache172=[];
+const baseFonts172=[
+ {name:'Inter',css:'Inter, Arial, sans-serif'},{name:'Arial',css:'Arial, sans-serif'},{name:'Lato',css:'Lato, Arial, sans-serif'},
+ {name:'Playfair Display',css:"'Playfair Display', Georgia, serif"},{name:'Georgia',css:'Georgia, serif'},{name:'Verdana',css:'Verdana, sans-serif'},
+ {name:'Trebuchet MS',css:"'Trebuchet MS', sans-serif"},{name:'Times New Roman',css:"'Times New Roman', serif"},{name:'Courier New',css:"'Courier New', monospace"}
+];
+function stripFamily172(v){return String(v||'').trim().replace(/^['"]|['"]$/g,'').split(',')[0].replace(/["']/g,'').trim()}
+function lsFonts172(key){try{return JSON.parse(localStorage.getItem(key)||'[]').filter(f=>f?.name&&(f?.data||f?.src))}catch(_){return[]}}
+function db172(){return new Promise((res,rej)=>{const r=indexedDB.open(FONT_DB172,1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains(FONT_STORE172))r.result.createObjectStore(FONT_STORE172,{keyPath:'name'})};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+async function dbFonts172(){try{const db=await db172();return await new Promise((res,rej)=>{const r=db.transaction(FONT_STORE172).objectStore(FONT_STORE172).getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>rej(r.error)})}catch(err){console.warn('[V172 fonts db]',err);return[]}}
+async function registry172(force=false){if(fontCache172.length&&!force)return fontCache172;const map=new Map();for(const f of [...lsFonts172(LS1),...lsFonts172(LS2),...await dbFonts172()]){const name=String(f.name||f.css||'').trim();const data=String(f.data||f.src||'');if(name&&data)map.set(name,{name,data,type:f.type||'',custom:true})}fontCache172=[...map.values()].sort((a,b)=>a.name.localeCompare(b.name,'de'));return fontCache172}
+async function install172(font){if(!font?.name||!font?.data)return false;const prev=installed172.get(font.name);if(prev===font.data)return true;try{
+  /* Do NOT use document.fonts.check here: Safari may report fallback availability and skip the real custom face. */
+  if('FontFace'in window&&document.fonts){const face=new FontFace(font.name,`url(${JSON.stringify(font.data)})`);await face.load();document.fonts.add(face);installed172.set(font.name,font.data);return true}
+ }catch(err){console.warn('[V172 FontFace]',font.name,err)}
+ const id='v172-font-'+font.name.replace(/[^a-z0-9_-]/gi,'-');let st=q('#'+CSS.escape(id));if(!st){st=document.createElement('style');st.id=id;document.head.appendChild(st)}st.textContent=`@font-face{font-family:${JSON.stringify(font.name)};src:url(${JSON.stringify(font.data)});font-display:swap}`;installed172.set(font.name,font.data);return true
+}
+async function ensureFonts172(force=false){const custom=await registry172(force);for(const f of custom)await install172(f);refreshFontSelects172(custom);return custom}
+function optionExists172(sel,name){return [...sel.options].some(o=>stripFamily172(o.value)===name)}
+function refreshFontSelects172(custom=fontCache172){for(const sel of qa('select.fontSelect,.v137Font,.v134FormatTools select.font')){const cur=stripFamily172(sel.value||'');for(const f of custom){if(!optionExists172(sel,f.name)){const o=document.createElement('option');o.value=f.name;o.textContent=f.name;o.style.fontFamily=`"${f.name}",sans-serif`;sel.appendChild(o)}}if(cur&&optionExists172(sel,cur))sel.value=[...sel.options].find(o=>stripFamily172(o.value)===cur)?.value||cur;sel.style.fontFamily=sel.value||'Arial'}}
+function selectedObj172(){try{const s=typeof canvasState!=='undefined'?canvasState:window.canvasState;return (s?.objects||[]).find(o=>String(o.id)===String(s?.selectedId))||null}catch(_){return null}}
+async function applyFamily172(value){const name=stripFamily172(value);if(!name)return false;/* Use an already-saved Safari range too; opening a font menu often collapses the live selection. */const rangeSaved=!!window.v152HasRange?.();const selectedId=selectedObj172()?.id||null;const custom=(await registry172()).find(f=>f.name===name);if(custom)await install172(custom);if(rangeSaved&&window.v152RestoreRange?.()){prevApply172?.call(window,'fontFamily',name)}else if(selectedId){try{const s=typeof canvasState!=='undefined'?canvasState:window.canvasState,o=(s?.objects||[]).find(x=>String(x.id)===String(selectedId));if(o){o.style||={};o.style.fontFamily=name;window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.()}}catch(_){prevApply172?.call(window,'fontFamily',name)}}else prevApply172?.call(window,'fontFamily',name);setTimeout(refreshFontButton172,0);return true}
+const prevApply172=window.applyTextProperty;window.applyTextProperty=function(prop,value){if(prop==='fontFamily'){applyFamily172(value);return true}return prevApply172?.apply(this,arguments)};try{applyTextProperty=window.applyTextProperty}catch(_){}
+function currentFamily172(){const s=getSelection?.();if(s?.rangeCount&&!s.isCollapsed){const n=s.getRangeAt(0).startContainer,node=n.nodeType===1?n:n.parentElement;if(node)return stripFamily172(getComputedStyle(node).fontFamily)}return stripFamily172(selectedObj172()?.style?.fontFamily||'Inter')||'Inter'}
+function refreshFontButton172(){const b=q('.v165FontSample');if(!b)return;const f=currentFamily172();b.textContent=f;b.style.fontFamily=`"${f}",sans-serif`}
+function cards172(fonts,current,inline=false){return fonts.map(f=>`<button class="v144FontCard ${stripFamily172(current)===f.name?'selected':''}" type="button" data-v172-font="${esc(f.name)}" style="font-family:${f.custom?'&quot;'+esc(f.name)+'&quot;':esc(f.css||f.name)}"><span>Aa Bb 123</span><b>${esc(f.name)}</b><small>${f.custom?'Eigene Schrift':'Standard'}</small></button>`).join('')}
+async function choices172(){const custom=await ensureFonts172();return[...baseFonts172,...custom]}
+window.v144OpenFontBrowser=async function(){window.v152RememberRange?.();const fonts=await choices172(),current=currentFamily172();window.openModal?.(`<div class="v135Modal v144FontModal" id="v144FontBrowser"><div class="v135ModalHead"><div><span class="eyebrow">SCHRIFTEN</span><h2>Schrift auswählen</h2></div><button onclick="closeModal()">×</button></div><p>Jede Schrift wird direkt als Vorschau angezeigt. Eigene Schriften bleiben gespeichert.</p><label class="v144RealFontUpload"><span><b>Aa＋</b><strong>Eigene Schrift hinzufügen</strong><small>TTF · OTF · WOFF · WOFF2</small></span><input type="file" accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2" onchange="v144HandleFontFile(this)"></label><div class="v144FontGrid v172FontGrid">${cards172(fonts,current)}</div></div>`);const m=q('#v144FontBrowser');m?.addEventListener('pointerdown',e=>{if(e.target.closest('[data-v172-font]')){window.v152RememberRange?.();e.preventDefault()}},true);m?.addEventListener('click',async e=>{const b=e.target.closest('[data-v172-font]');if(!b)return;await applyFamily172(b.dataset.v172Font);window.closeModal?.();window.cuteToast?.(`Schrift „${b.dataset.v172Font}“ angewendet ♡`)})};
+window.v96OpenFontPicker=async function(){window.v152RememberRange?.();const content=q('#mobileTextModeContent');if(!content)return;const fonts=await choices172(),current=currentFamily172();content.classList.add('v145FontScrollMode');content.scrollTop=0;content.innerHTML=`<div class="v96FontPicker v144InlineFontPicker v145InlineFontPicker"><div class="v96InlineHead"><button onclick="mobileTextMode('text')">‹</button><div><b>Schriftart</b><small>Standard- und eigene Schriften.</small></div></div><label class="v144RealFontUpload v144InlineUpload"><span><b>Aa＋</b><strong>Eigene Schrift hinzufügen</strong><small>TTF · OTF · WOFF · WOFF2</small></span><input type="file" accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2" onchange="v144HandleFontFile(this)"></label><div class="v144FontGrid v145FontScrollList v172FontGrid">${cards172(fonts,current,true)}</div></div>`;content.querySelector('.v172FontGrid')?.addEventListener('pointerdown',e=>{if(e.target.closest('[data-v172-font]')){window.v152RememberRange?.();e.preventDefault()}},true);content.querySelector('.v172FontGrid')?.addEventListener('click',async e=>{const b=e.target.closest('[data-v172-font]');if(!b)return;await applyFamily172(b.dataset.v172Font);window.mobileTextMode?.('text');window.cuteToast?.(`Schrift „${b.dataset.v172Font}“ angewendet ♡`)})};
+window.v165ToggleFontMenu=async function(btn){window.v152RememberRange?.();const old=q('#v165FontMenu');if(old){old.remove();btn?.classList.remove('open');return}const fonts=await choices172(),r=btn.getBoundingClientRect(),menu=document.createElement('div');menu.id='v165FontMenu';menu.className='v165FontMenu';menu.style.left=Math.min(innerWidth-264,Math.max(8,r.left))+'px';menu.style.top=(r.bottom+7)+'px';menu.innerHTML=`<div class="v165FontMenuHead"><b>Schrift</b><span>${fonts.length} Schriften</span></div><div class="v165FontMenuList">${fonts.map(f=>`<button type="button" data-v172-font="${esc(f.name)}" style="font-family:${f.custom?'&quot;'+esc(f.name)+'&quot;':esc(f.css||f.name)}"><span class="v165FontAa">Aa</span><span>${esc(f.name)}</span>${f.custom?'<small>Eigene</small>':''}</button>`).join('')}</div>`;document.body.appendChild(menu);btn.classList.add('open');menu.addEventListener('pointerdown',e=>{if(e.target.closest('[data-v172-font]')){window.v152RememberRange?.();e.preventDefault()}},true);menu.addEventListener('click',async e=>{const b=e.target.closest('[data-v172-font]');if(!b)return;await applyFamily172(b.dataset.v172Font);menu.remove();btn.classList.remove('open')})};
+/* After any upload, invalidate all caches and immediately re-read IndexedDB. */
+if(typeof window.v144HandleFontFile==='function'){const prevUpload172=window.v144HandleFontFile;window.v144HandleFontFile=async function(){const r=await prevUpload172.apply(this,arguments);fontCache172=[];await ensureFonts172(true);setTimeout(async()=>{if(q('#v144FontBrowser'))await window.v144OpenFontBrowser?.()},30);return r}}
+/* Cloud font restores can replace IndexedDB. Re-read it after every pull. */
+if(typeof window.v150Pull==='function'){const prevPull172=window.v150Pull;window.v150Pull=async function(){const r=await prevPull172.apply(this,arguments);fontCache172=[];await ensureFonts172(true);return r}}
+/* Font selectors are recreated by several legacy panels. Refresh only after relevant UI actions, no body-wide observer. */
+document.addEventListener('click',e=>{if(e.target instanceof Element&&e.target.closest('[onclick*="Font"],.v96FontChooser,.v165FontMenuBtn,[data-v151="text"],.fontSelect'))setTimeout(()=>ensureFonts172(),80)},true);
+window.addEventListener('pageshow',()=>setTimeout(()=>ensureFonts172(true),250));
+setTimeout(()=>ensureFonts172(true),450);
+})();
+/* ===== /Studia V172 ===== */
