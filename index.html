@@ -16048,7 +16048,97 @@ window.v137ToggleViewMode=function(){if(innerWidth>=900)return window.v183OpenPr
 const oldViewSet=window.v137SetViewMode;window.v137SetViewMode=function(on){if(innerWidth>=900){if(on===false)closePreview();else window.v183OpenPreview();return}return oldViewSet?.apply(this,arguments)};
 window.v181OpenPreview=window.v183OpenPreview;
 
-window.printCanvasSheet=async function(){if(innerWidth<900&&window.v170PrintMobile)return window.v170PrintMobile();const clones=await cloneAllPages183();if(!clones.length)return alert('Keine Lernblatt-Seite gefunden.');const first=clones[0],W=+first.dataset.v183Width||794,H=+first.dataset.v183Height||1123,orientation=W>H?'landscape':'portrait';const styles=qa('style').map(x=>x.textContent).join('\n');const cssHref=new URL('editor.css?v=184',location.href).href;const w=window.open('about:blank','_blank');if(!w)return alert('Pop-up wurde blockiert. Bitte Pop-ups für Studia erlauben.');w.document.open();w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Studia Druck</title><link rel="stylesheet" href="${cssHref}"><style>${styles}</style><style>@page{margin:0;size:A4 ${orientation}}html,body{margin:0!important;padding:0!important;background:#fff!important}.v183PrintRoot{margin:0!important;padding:0!important}.v183PrintSheet{break-after:page;page-break-after:always;margin:0!important;position:relative!important;left:0!important;top:0!important;box-shadow:none!important;border:0!important;transform:none!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.v183PrintSheet:last-child{break-after:auto;page-break-after:auto}.v183PrintSheet,.v183PrintSheet *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.v183PrintToolbar{position:sticky;top:0;z-index:999999;display:flex;gap:8px;padding:10px;background:#fff;border-bottom:1px solid #ddd}@media print{.v183PrintToolbar{display:none!important}}</style></head><body><div class="v183PrintToolbar"><button onclick="print()">Drucken</button><button onclick="close()">Schließen</button></div><div class="v183PrintRoot">${clones.map(c=>{c.classList.add('v183PrintSheet');c.style.width=(+c.dataset.v183Width||W)+'px';c.style.height=(+c.dataset.v183Height||H)+'px';return c.outerHTML}).join('')}</div></body></html>`);w.document.close();setTimeout(()=>{try{w.focus();w.print()}catch(_){}},600)};
+window.printCanvasSheet=async function(){if(innerWidth<900&&window.v170PrintMobile)return window.v170PrintMobile();const clones=await cloneAllPages183();if(!clones.length)return alert('Keine Lernblatt-Seite gefunden.');const first=clones[0],W=+first.dataset.v183Width||794,H=+first.dataset.v183Height||1123,orientation=W>H?'landscape':'portrait';const styles=qa('style').map(x=>x.textContent).join('\n');const cssHref=new URL('editor.css?v=184',location.href).href;const w=window.open('about:blank','_blank');if(!w)return alert('Pop-up wurde blockiert. Bitte Pop-ups für Studia erlauben.');w.document.open();w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Studia Druck</title><link rel="stylesheet" href="${cssHref}"><style>${styles}</style><style>@page{margin:0;size:A4 ${orientation}}html,body{margin:0!important;padding:0!important;background:#fff!important}.v183PrintRoot{margin:0!important;padding:0!important}.v183PrintSheet{break-after:page;page-break-after:always;margin:0!important;position:relative!important;left:0!important;top:0!important;box-shadow:none!important;border:0!important;transform:none!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.v183PrintSheet:last-child{break-after:auto;page-break-after:auto}.v183PrintSheet,.v183PrintSheet *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.v183PrintToolbar{position:sticky;top:0;z-index:999999;display:flex;gap:8px;padding:10px;background:#fff;border-bottom:1px solid #ddd}@media print{.v183PrintToolbar{display:none!important}}</style></head><body><div class="v183PrintToolbar"><button onclick="print()">Drucken</button><button onclick="close()">Schließen</button></div><div class="v183PrintRoot">${clones.map(c=>{c.classList.add('v183PrintSheet');c.style.width=(+c.dataset.v183Width||W)+'px';c.style.height=(+c.dataset.v183Height||H)+'px';return c.outerHTML}).join('')}</div>
+
+<style id="v186-laptop-star-handle-layout-fix">
+@media (min-width:900px){
+  /* Stable desktop layout: one left palette, centered canvas, one right inspector. */
+  body.editorMode #view-sheet-editor.active{position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;margin:0!important;padding:0!important;overflow:hidden!important}
+  body.editorMode .canvasEditorShell{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important;margin:0!important;padding:0!important;display:grid!important;grid-template-columns:245px minmax(0,1fr) 330px!important;grid-template-rows:64px minmax(0,1fr)!important;gap:0!important;overflow:hidden!important;box-sizing:border-box!important}
+  body.editorMode .canvasTopbar{grid-column:1/4!important;grid-row:1!important;position:relative!important;inset:auto!important;width:auto!important;min-width:0!important;margin:0!important;box-sizing:border-box!important}
+  body.editorMode .v102DesktopLeft{grid-column:1!important;grid-row:2!important;position:relative!important;inset:auto!important;width:auto!important;min-width:0!important;max-width:none!important;height:auto!important;min-height:0!important;margin:10px 0 10px 10px!important;box-sizing:border-box!important;overflow:hidden!important}
+  body.editorMode #canvasViewport{grid-column:2!important;grid-row:2!important;position:relative!important;inset:auto!important;width:auto!important;min-width:0!important;max-width:none!important;height:auto!important;min-height:0!important;margin:10px!important;padding:36px!important;box-sizing:border-box!important;overflow:auto!important;touch-action:pan-x pan-y!important}
+  body.editorMode #desktopEditorSidebar{grid-column:3!important;grid-row:2!important;position:relative!important;inset:auto!important;width:auto!important;min-width:0!important;max-width:none!important;height:auto!important;min-height:0!important;margin:10px 10px 10px 0!important;padding:0 0 18px!important;box-sizing:border-box!important;overflow-y:auto!important;overflow-x:hidden!important;transform:none!important}
+  body.editorMode #desktopEditorSidebar>.objectPanel{width:100%!important;max-width:100%!important;margin:0!important;box-sizing:border-box!important;transform:none!important}
+  body.editorMode #canvasInspector{display:block!important;width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important;padding:0!important;box-sizing:border-box!important;overflow:visible!important;transform:none!important;text-align:left!important}
+  body.editorMode #canvasInspector>*,body.editorMode #canvasInspector .objectPanelGrid,body.editorMode #canvasInspector .positionGrid,body.editorMode #canvasInspector .tableEditGrid,body.editorMode #canvasInspector .vectorControls{width:100%!important;max-width:100%!important;min-width:0!important;margin-left:0!important;margin-right:0!important;box-sizing:border-box!important;transform:none!important}
+  body.editorMode #canvasInspector .objectPanelGrid,body.editorMode #canvasInspector .positionGrid,body.editorMode #canvasInspector .tableEditGrid,body.editorMode #canvasInspector .vectorControls{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}
+  body.editorMode #canvasInspector input,body.editorMode #canvasInspector select,body.editorMode #canvasInspector textarea,body.editorMode #canvasInspector button{max-width:100%!important;box-sizing:border-box!important}
+
+  /* Native text/table surfaces: interior is never a mover. */
+  body.editorMode #canvasObjects .cobj[data-v184-native-text="1"],
+  body.editorMode #canvasObjects .tableObj[data-v184-native-table="1"]{pointer-events:auto!important;user-select:text!important;-webkit-user-select:text!important}
+  body.editorMode #canvasObjects .cobj[data-v184-native-text="1"]{cursor:text!important}
+  body.editorMode #canvasObjects .tableObj[data-v184-native-table="1"]{cursor:default!important}
+  body.editorMode #canvasObjects .tableObj[data-v184-native-table="1"] table{pointer-events:auto!important;width:100%!important;height:100%!important}
+  body.editorMode #canvasObjects .tableObj[data-v184-native-table="1"] td{pointer-events:auto!important;cursor:text!important;user-select:text!important;-webkit-user-select:text!important;touch-action:manipulation!important;position:relative!important;z-index:2!important}
+  body.editorMode #canvasObjects .cobj[data-v184-native-text="1"]>.resizeHandle,
+  body.editorMode #canvasObjects .cobj[data-v184-native-text="1"]>.rotateHandle,
+  body.editorMode #canvasObjects .tableObj[data-v184-native-table="1"]>.resizeHandle,
+  body.editorMode #canvasObjects .tableObj[data-v184-native-table="1"]>.rotateHandle,
+  body.editorMode #canvasObjects .tableObj[data-v184-native-table="1"]>.tableMoveHandle{display:none!important;pointer-events:none!important}
+  body.editorMode .v131MoveProxy[data-v184-native-block="1"],body.editorMode .v132Hit[data-v184-native-block="1"]{display:none!important;pointer-events:none!important}
+
+  /* The only mover for text/text-formats/tables. It sits centered ABOVE the content. */
+  #v186MoveStar{position:absolute;z-index:2147483000;width:28px;height:28px;border-radius:999px;border:1.5px solid #e7b8be;background:linear-gradient(180deg,#fffdfb,#fff4f4);box-shadow:0 5px 14px rgba(99,62,66,.18);display:grid;place-items:center;color:#c97481;cursor:grab;pointer-events:auto;touch-action:none;transform:translate(-50%,-50%);font-size:16px;line-height:1;font-family:Arial,sans-serif;user-select:none;-webkit-user-select:none}
+  #v186MoveStar:hover{background:#fff0f2;box-shadow:0 6px 16px rgba(99,62,66,.22);transform:translate(-50%,-50%) scale(1.06)}
+  #v186MoveStar.dragging{cursor:grabbing;background:#ffe8ec}
+  #v186MoveStar.hidden{display:none!important}
+  #v186MoveStar::after{content:"";position:absolute;left:50%;top:100%;width:1px;height:8px;background:#e7aeb7;transform:translateX(-50%);pointer-events:none}
+}
+</style>
+<script id="v186-laptop-star-handle-interaction-fix">
+(()=>{
+'use strict';
+if(window.__STUDIA_V186__)return;window.__STUDIA_V186__=true;
+const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
+const desktop=()=>innerWidth>=900&&document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
+const state=()=>{try{return canvasState}catch(_){return window.canvasState}};
+const byId=id=>(state()?.objects||[]).find(o=>String(o.id)===String(id));
+const editable=o=>!!o&&((['text','block','task','merke','file'].includes(o.kind)&&!o.isChecklist)||o.kind==='table');
+const esc=s=>CSS.escape(String(s));
+let star=null,drag=null,queued=false,blankDown=null;
+function pw(){try{return canvasPageWidth()}catch(_){return 794}}
+function ph(){try{return canvasPageHeight()}catch(_){return 1123}}
+function scale(){const st=q('#canvasStage');if(!st)return 1;const r=st.getBoundingClientRect();return Math.max(.01,r.width/pw())}
+function vBounds(v){try{return vectorBounds(v)}catch(_){if(v.type==='rect')return{x:+v.x||0,y:+v.y||0,w:+v.w||1,h:+v.h||1};if(v.type==='ellipse')return{x:(+v.cx||0)-(+v.rx||0),y:(+v.cy||0)-(+v.ry||0),w:2*(+v.rx||1),h:2*(+v.ry||1)};const pts=v.points||[];if(!pts.length)return{x:0,y:0,w:1,h:1};const xs=pts.map(p=>+p[0]||0),ys=pts.map(p=>+p[1]||0);return{x:Math.min(...xs),y:Math.min(...ys),w:Math.max(1,Math.max(...xs)-Math.min(...xs)),h:Math.max(1,Math.max(...ys)-Math.min(...ys))}}}
+function partsFor(o){const s=state();if(!s||!o)return{objects:[],vectors:[]};if(o.groupId)return{objects:(s.objects||[]).filter(x=>x.groupId===o.groupId),vectors:(s.vectors||[]).filter(x=>x.groupId===o.groupId)};return{objects:[o],vectors:[]}}
+function bounds(parts){const bs=[];(parts.objects||[]).forEach(o=>bs.push({x:+o.x||0,y:+o.y||0,w:+o.w||1,h:+o.h||1}));(parts.vectors||[]).forEach(v=>bs.push(vBounds(v)));if(!bs.length)return{x:0,y:0,w:1,h:1};const x=Math.min(...bs.map(b=>b.x)),y=Math.min(...bs.map(b=>b.y)),r=Math.max(...bs.map(b=>b.x+b.w)),bt=Math.max(...bs.map(b=>b.y+b.h));return{x,y,w:Math.max(1,r-x),h:Math.max(1,bt-y)}}
+function ensureStar(){const st=q('#canvasStage');if(!st)return null;if(!star||!star.isConnected){star=document.createElement('div');star.id='v186MoveStar';star.className='hidden';star.title='Ziehen zum Bewegen';star.setAttribute('aria-label','Element bewegen');star.textContent='★';st.appendChild(star);star.addEventListener('pointerdown',startDrag,{capture:true,passive:false})}return star}
+function selected(){const s=state();if(!s||s.selectedType!=='object'||!s.selectedId)return null;const o=byId(s.selectedId);return editable(o)?o:null}
+function paint(){if(!desktop())return;const h=ensureStar(),o=selected();if(!h||!o||o.locked){h?.classList.add('hidden');return}const b=bounds(partsFor(o));let y=b.y-22;if(y<10)y=Math.min(ph()-10,b.y+16);h.style.left=(b.x+b.w/2)+'px';h.style.top=y+'px';h.dataset.id=String(o.id);h.classList.remove('hidden')}
+function queue(){if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;repairTables();paint();fixInspector()})}
+function clearRich(){try{window.v152ClearRange?.()}catch(_){}try{getSelection()?.removeAllRanges()}catch(_){} }
+function clearAll(){const s=state();clearRich();try{document.activeElement?.blur?.()}catch(_){}if(s){for(const o of s.objects||[])if(o.kind==='table')o.v184SelectedCells=[];s.selectedType=null;s.selectedId=null;s.selectedIds=[];s.selectedVectorIds=[];s.multiMode=false}qa('#canvasObjects .selected').forEach(n=>n.classList.remove('selected'));qa('#canvasObjects td.v184CellSelected,#canvasObjects td.v184CellActive').forEach(n=>n.classList.remove('v184CellSelected','v184CellActive'));star?.classList.add('hidden');try{window.renderVectors?.();window.renderCanvasInspector?.();window.renderLayerList?.();window.updateMultiSelectStatus?.();window.updateMobileSelectionTools?.()}catch(_){} }
+function moveVector(v,d,dx,dy){if(d.type==='rect'){v.x=(+d.x||0)+dx;v.y=(+d.y||0)+dy}else if(d.type==='ellipse'){v.cx=(+d.cx||0)+dx;v.cy=(+d.cy||0)+dy}else if(d.points)v.points=d.points.map(p=>[(+p[0]||0)+dx,(+p[1]||0)+dy])}
+function clone(x){try{return structuredClone(x)}catch(_){return JSON.parse(JSON.stringify(x))}}
+function startDrag(e){if(!desktop()||e.button!==0)return;const o=selected();if(!o||o.locked)return;e.preventDefault();e.stopImmediatePropagation();clearRich();const parts=partsFor(o),b=bounds(parts);drag={pid:e.pointerId,sx:e.clientX,sy:e.clientY,z:scale(),box:b,objects:parts.objects.map(x=>({o:x,x:+x.x||0,y:+x.y||0})),vectors:parts.vectors.map(v=>({v,d:clone(v)})),moved:false};star.classList.add('dragging');try{star.setPointerCapture?.(e.pointerId)}catch(_){}}
+window.addEventListener('pointermove',e=>{const d=drag;if(!d||e.pointerId!==d.pid||!desktop())return;e.preventDefault();e.stopImmediatePropagation();let dx=(e.clientX-d.sx)/d.z,dy=(e.clientY-d.sy)/d.z;if(!d.moved&&Math.hypot(dx,dy)<.7)return;d.moved=true;dx=Math.max(-d.box.x,Math.min(pw()-(d.box.x+d.box.w),dx));dy=Math.max(-d.box.y,Math.min(ph()-(d.box.y+d.box.h),dy));for(const a of d.objects){a.o.x=a.x+dx;a.o.y=a.y+dy;const el=q(`#canvasObjects .cobj[data-id="${esc(a.o.id)}"]`);if(el){el.style.left=a.o.x+'px';el.style.top=a.o.y+'px'}}for(const a of d.vectors)moveVector(a.v,a.d,dx,dy);if(d.vectors.length)try{window.renderVectors?.()}catch(_){}paint();try{window.markCanvasDirty?.(false)}catch(_){}},{capture:true,passive:false});
+function endDrag(e){if(!drag||e.pointerId!==drag.pid)return;const moved=drag.moved;drag=null;star?.classList.remove('dragging');if(moved){try{window.markCanvasDirty?.();window.pushHistory?.();window.renderCanvasInspector?.();window.renderLayerList?.()}catch(_){}}queue()}
+window.addEventListener('pointerup',endDrag,true);window.addEventListener('pointercancel',endDrag,true);
+
+function repairTables(){if(!desktop())return;for(const o of state()?.objects||[]){if(!editable(o))continue;const el=q(`#canvasObjects .cobj[data-id="${esc(o.id)}"]`);if(!el)continue;if(o.kind==='table'){
+ el.dataset.v184NativeTable='1';el.removeAttribute('contenteditable');el.style.pointerEvents='auto';const table=q('table',el);if(table)table.style.pointerEvents='auto';qa('td',el).forEach(td=>{td.contentEditable=o.locked?'false':'true';td.style.pointerEvents='auto';td.style.userSelect='text';td.style.webkitUserSelect='text';td.tabIndex=0});
+ }
+ qa(`.v131MoveProxy[data-id="${esc(o.id)}"],#v132InteractionLayer .v132Hit[data-id="${esc(o.id)}"]`).forEach(n=>{n.dataset.v184NativeBlock='1';n.style.pointerEvents='none';n.style.display='none'});
+ }}
+
+/* Empty canvas click clears object selection, text selection and table-cell selection. */
+function isBlankTarget(t){if(!(t instanceof Element))return false;if(t.closest('#v186MoveStar,#desktopEditorSidebar,.v102DesktopLeft,.canvasTopbar,.topViewMenu,.cobj,.vectorTouchProxy,.vectorHandle,.pathNode,.shapeHit,.guideLine'))return false;const vp=t.closest('#canvasViewport');if(!vp)return false;if(t.matches('#canvasViewport,#v96PanSurface,#canvasStage,#canvasPage,#canvasObjects,#canvasSvg,#canvasGuides'))return true;return false}
+document.addEventListener('pointerdown',e=>{if(!desktop()||e.button!==0)return;if(isBlankTarget(e.target))blankDown={pid:e.pointerId,x:e.clientX,y:e.clientY};else blankDown=null},true);
+document.addEventListener('pointerup',e=>{const b=blankDown;if(!b||b.pid!==e.pointerId)return;blankDown=null;if(Math.hypot(e.clientX-b.x,e.clientY-b.y)<=4)requestAnimationFrame(clearAll)},true);
+
+/* Keep the inspector geometrically sane even after older renderer wrappers rebuild it. */
+function fixInspector(){if(!desktop())return;const side=q('#desktopEditorSidebar'),box=q('#canvasInspector');if(!side||!box)return;side.style.transform='none';side.style.right='auto';box.style.transform='none';box.style.marginLeft='0';box.style.marginRight='0';box.style.width='100%';qa(':scope > *',box).forEach(n=>{n.style.maxWidth='100%';n.style.boxSizing='border-box'});const o=selected();const hint=q('.editorHintStrong',box);if(hint&&o){if(o.kind==='table')hint.innerHTML='<b>Tabelle:</b> Zelle klicken = schreiben · Shift-Klick = mehrere Zellen · ★ ziehen = bewegen.';else hint.innerHTML='<b>Text:</b> direkt klicken = schreiben/markieren · ★ ziehen = bewegen.'}}
+
+const oldRender=window.renderCanvasObjects;if(typeof oldRender==='function')window.renderCanvasObjects=function(){const r=oldRender.apply(this,arguments);queue();return r};try{renderCanvasObjects=window.renderCanvasObjects}catch(_){}
+const oldInspector=window.renderCanvasInspector;if(typeof oldInspector==='function')window.renderCanvasInspector=function(){const r=oldInspector.apply(this,arguments);queue();return r};try{renderCanvasInspector=window.renderCanvasInspector}catch(_){}
+const mo=new MutationObserver(queue);setTimeout(()=>{const st=q('#canvasStage');if(st)mo.observe(st,{childList:true,subtree:true})},200);
+window.addEventListener('resize',()=>setTimeout(queue,30));
+setTimeout(()=>{const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 186';queue()},250);setTimeout(queue,800);setTimeout(queue,1600);
+})();
+</script>
+</body></html>`);w.document.close();setTimeout(()=>{try{w.focus();w.print()}catch(_){}},600)};
 try{printCanvasSheet=window.printCanvasSheet}catch(_){}
 
 /* Repair pass after every render. Old desktop overlays are left available for non-text objects only. */
@@ -16058,7 +16148,7 @@ const oldInspector=window.renderCanvasInspector;if(typeof oldInspector==='functi
 const mo=new MutationObserver(()=>queueBind());setTimeout(()=>{const root=q('#canvasObjects');if(root)mo.observe(root,{childList:true,subtree:true})},500);
 document.addEventListener('selectionchange',()=>{if(desktop())window.v152RememberRange?.()});
 window.addEventListener('resize',()=>setTimeout(()=>{bindAll();paintFrame()},60));
-setTimeout(()=>{const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 184';bindAll()},900);
+setTimeout(()=>{const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 186';bindAll()},900);
 setTimeout(bindAll,1800);
 })();
 </script>
@@ -16150,7 +16240,7 @@ function bindTable(el,o){
 function repair(){if(!desktop())return;const s=state();if(!s)return;for(const o of s.objects||[]){const el=q(`#canvasObjects .cobj[data-id="${esc(o.id)}"]`);if(!el)continue;if(nativeText(o))bindText(el,o);else if(o.kind==='table')bindTable(el,o)}
  /* Anything recreated by an old layer in the same render pass is disabled again before the next frame. */
  qa('.v131MoveProxy,.v132Hit').forEach(n=>{const o=byId(n.dataset.id);if(o&&(nativeText(o)||o.kind==='table')){n.dataset.v184NativeBlock='1';n.style.pointerEvents='none'}});
- try{q('#headerEyebrow').textContent='VERSION 184'}catch(_){}
+ try{q('#headerEyebrow').textContent='VERSION 186'}catch(_){}
 }
 function queue(){if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;repair()})}
 
@@ -16167,7 +16257,7 @@ try{updateSelectedTableCellColor=window.updateSelectedTableCellColor}catch(_){}
 function sanitizeSelection(){const s=state();for(const o of s?.objects||[]){if(o.kind!=='table')continue;const valid=(o.v184SelectedCells||[]).filter(k=>{const [r,c]=String(k).split(':').map(Number);return r>=0&&r<o.rows&&c>=0&&c<o.cols});o.v184SelectedCells=valid.length?valid:[cellKey(Math.max(0,Math.min(o.rows-1,+o.activeCell?.r||0)),Math.max(0,Math.min(o.cols-1,+o.activeCell?.c||0)))]}}
 
 const oldRender=window.renderCanvasObjects;if(typeof oldRender==='function')window.renderCanvasObjects=function(){const r=oldRender.apply(this,arguments);sanitizeSelection();queue();return r};try{renderCanvasObjects=window.renderCanvasObjects}catch(_){}
-const oldInspector=window.renderCanvasInspector;if(typeof oldInspector==='function')window.renderCanvasInspector=function(){const r=oldInspector.apply(this,arguments);if(desktop()){const s=state(),o=s?.selectedType==='object'?byId(s.selectedId):null;if(o?.kind==='table'){const n=(o.v184SelectedCells||[]).length;qa('#canvasInspector label').forEach(l=>{if(l.textContent.trim().startsWith('Aktive Zelle')){const input=l.querySelector('input');l.childNodes[0].nodeValue=n>1?`Ausgewählte Zellen (${n}) `:'Aktive Zelle '}})}}queue();return r};try{renderCanvasInspector=window.renderCanvasInspector}catch(_){}
+const oldInspector=window.renderCanvasInspector;if(typeof oldInspector==='function')window.renderCanvasInspector=function(){const r=oldInspector.apply(this,arguments);queue();return r};try{renderCanvasInspector=window.renderCanvasInspector}catch(_){}
 
 /* Observe both object DOM and historical interaction layers, because some old renderers rebuild them independently. */
 const mo=new MutationObserver(queue);setTimeout(()=>{const st=q('#canvasStage');if(st)mo.observe(st,{childList:true,subtree:true})},250);
@@ -16175,3 +16265,5 @@ window.addEventListener('resize',()=>setTimeout(repair,50));
 setTimeout(repair,350);setTimeout(repair,1000);setTimeout(repair,2200);
 })();
 </script>
+
+
