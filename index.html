@@ -12039,9 +12039,7 @@ body.editorMode.v122ShapeDragging{user-select:none!important;-webkit-user-select
   }
 
   /* Keep parity even when old V102 code rewrites the desktop rail after editor open/resize. */
-  const mo=new MutationObserver(()=>{if(editor()&&!mobile())requestAnimationFrame(desktopNav)});
-  const nav=document.querySelector('.canvasQuickNav');if(nav)mo.observe(nav,{childList:true});
-  setInterval(()=>{if(editor()&&!mobile())desktopNav()},700);
+  /* V178: retired V122 desktop-nav observer/interval removed; V133 owns desktop chrome. */
   setTimeout(desktopNav,120);setTimeout(desktopNav,450);setTimeout(desktopNav,1000);
   window.addEventListener('resize',()=>setTimeout(desktopNav,120));
 
@@ -14901,7 +14899,7 @@ window.addEventListener('wheel',e=>{if(!isEditor()||!e.altKey||!VP()?.contains(e
 function installDesktopParity(){if(innerWidth<900||!isEditor())return;const nav=document.querySelector('.canvasQuickNav');if(!nav)return;nav.innerHTML='<button data-v128="text" onclick="v128Open(\'text\',this)"><b>Aa</b><span>Text</span></button><button data-v128="elements" onclick="v128Open(\'elements\',this)"><b>◇</b><span>Elemente</span></button><button data-v128="templates" onclick="v128Open(\'templates\',this)"><b>▦</b><span>Vorlagen</span></button><button data-v128="pages" onclick="v128Open(\'pages\',this)"><b>▯</b><span>Seiten</span></button><button data-v128="layers" onclick="v128Open(\'layers\',this)"><b>☷</b><span>Ebenen</span></button>';window.v128Open=function(mode,btn){const map={text:(typeof mobileSelectedText==='function'&&mobileSelectedText())?'textEdit':'textLibrary',elements:'elements',templates:'templates',pages:'pages',layers:'layers'};try{openEditorGroup=null}catch(_){}editorOpenGroup(map[mode],btn);requestAnimationFrame(()=>{const d=document.getElementById('canvasQuickDrawer');if(mode==='text'&&d&&!d.querySelector('.v128DesktopParityBar')){const bar=document.createElement('div');bar.className='v128DesktopParityBar';bar.innerHTML='<label>Aa＋ Schrift hinzufügen<input type="file" accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2" onchange="v128FontUpload(this)"></label><button onclick="createCustomStylePreset()">＋ Eigenes Textformat</button><button onclick="openTextFormatManager()">Textformate verwalten</button>';d.prepend(bar)}if(mode==='layers')renderLayerList()})};window.v128FontUpload=function(inp){const f=inp.files?.[0];if(!f)return;const r=new FileReader();r.onload=()=>{const name=(f.name||'Eigene Schrift').replace(/\.(ttf|otf|woff2?)$/i,'').trim()||'Eigene Schrift',key='schoolbloom-v91-custom-fonts';let arr=[];try{arr=JSON.parse(localStorage.getItem(key)||'[]')}catch(_){}arr=arr.filter(x=>x.name!==name);arr.push({name:name,data:String(r.result)});localStorage.setItem(key,JSON.stringify(arr));try{let oldFonts=JSON.parse(localStorage.getItem('schoolbloom-custom-fonts')||'[]');oldFonts=oldFonts.filter(x=>x.name!==name&&x.css!==name);oldFonts.push({name:name,css:name,data:String(r.result)});localStorage.setItem('schoolbloom-custom-fonts',JSON.stringify(oldFonts))}catch(_){}const st=document.createElement('style');st.textContent='@font-face{font-family:'+JSON.stringify(name)+';src:url('+JSON.stringify(String(r.result))+');font-display:swap}';document.head.appendChild(st);try{v91LoadFonts();renderCanvasInspector()}catch(_){}try{cuteToast('Schrift hinzugefügt ♡')}catch(_){}inp.value=''};r.readAsDataURL(f)};}
 const oldRender=window.renderSheetEditor;window.renderSheetEditor=function(){const r=oldRender.apply(this,arguments);setTimeout(()=>{fit();installDesktopParity()},160);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){}
 const oldOpen=window.openStudySheetEditor;if(oldOpen)window.openStudySheetEditor=function(){const r=oldOpen.apply(this,arguments);setTimeout(()=>{fit();installDesktopParity()},200);return r};
-const parityObserver=new MutationObserver(()=>{if(isEditor()&&innerWidth>=900&&document.querySelector('.canvasQuickNav')&&!document.querySelector('.canvasQuickNav [data-v128]'))setTimeout(installDesktopParity,0)});const navWatch=document.querySelector('.canvasQuickNav');if(navWatch)parityObserver.observe(navWatch,{childList:true});setInterval(()=>{if(isEditor()&&innerWidth>=900&&!document.querySelector('.canvasQuickNav [data-v128]'))installDesktopParity()},700);
+/* V178: retired V128 desktop parity watcher removed. */
 window.addEventListener('resize',()=>setTimeout(()=>{if(isEditor()){fit();installDesktopParity()}},120));setTimeout(()=>{if(isEditor()){fit();installDesktopParity()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 129'},400);
 })();
 </script>
@@ -14963,7 +14961,7 @@ function desktopParity(){if(!editor()||innerWidth<900)return;const nav=document.
 const oldRV=window.renderVectors||renderVectors;window.renderVectors=function(){const r=oldRV.apply(this,arguments);requestAnimationFrame(renderShapeProxies);return r};try{renderVectors=window.renderVectors}catch(_){}
 const oldRO=window.renderCanvasObjects||renderCanvasObjects;window.renderCanvasObjects=function(){const r=oldRO.apply(this,arguments);requestAnimationFrame(renderShapeProxies);return r};try{renderCanvasObjects=window.renderCanvasObjects}catch(_){}
 const oldOpen=window.editorOpenGroup;window.editorOpenGroup=function(){const r=oldOpen.apply(this,arguments);requestAnimationFrame(()=>{renderShapeProxies();if(innerWidth>=900)desktopParity()});return r};try{editorOpenGroup=window.editorOpenGroup}catch(_){}
-const obs=new MutationObserver(()=>{if(editor()&&innerWidth>=900&&document.querySelector('.canvasQuickNav')&&!document.querySelector('.canvasQuickNav [data-v129]'))requestAnimationFrame(desktopParity)});obs.observe(document.body,{subtree:true,childList:true});
+/* V178: retired V129 desktop parity observer removed. */
 window.addEventListener('resize',()=>setTimeout(()=>{if(editor()){fit129();desktopParity();renderShapeProxies()}},120));
 setTimeout(()=>{if(editor()){fit129();desktopParity();renderShapeProxies()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 129';document.title='Studia'},500);
 })();
@@ -15318,7 +15316,7 @@ const oldOpen=window.editorOpenGroup;window.editorOpenGroup=function(){openEdito
 const oldObjects=window.renderCanvasObjects;window.renderCanvasObjects=function(){const r=oldObjects.apply(this,arguments);requestAnimationFrame(syncMoveProxies);return r};try{renderCanvasObjects=window.renderCanvasObjects}catch(_){}
 const oldVectors=window.renderVectors;window.renderVectors=function(){const r=oldVectors.apply(this,arguments);requestAnimationFrame(syncMoveProxies);return r};try{renderVectors=window.renderVectors}catch(_){}
 const oldSheet=window.renderSheetEditor;window.renderSheetEditor=function(){const r=oldSheet.apply(this,arguments);setTimeout(()=>{ensureChrome();bindGestures();fit(true);syncMoveProxies();renderLayerList()},480);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){}
-const observer=new MutationObserver(()=>requestAnimationFrame(()=>{if(!editor())return;ensureChrome();bindGestures();decorateDrawer()}));observer.observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['class']});
+/* V178: expensive V131 subtree observer removed; explicit render/open hooks keep chrome current. */
 window.addEventListener('resize',()=>setTimeout(()=>{if(editor())fit(false)},180));
 setTimeout(()=>{ensureChrome();if(editor()){bindGestures();fit(true);syncMoveProxies();renderLayerList();renderCanvasInspector()}document.title='Studia'},700);
 })();
@@ -15758,6 +15756,6 @@ setTimeout(reconcile,980);
 })();
 </script>
 <!-- ===== /Studia V134 ===== -->
-<link rel="stylesheet" href="editor.css?v=176">
+<link rel="stylesheet" href="editor.css?v=177">
 <script src="google-sync-config.js?v=172"></script>
-<script src="editor.js?v=176"></script>
+<script src="editor.js?v=177"></script>

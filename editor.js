@@ -418,8 +418,8 @@ document.addEventListener('keydown',e=>{if(!editor())return;const typing=e.targe
 function correctLayerIcons(){for(const row of qa('[data-layer-kind][data-layer-id]')){const ref=row.dataset.layerKind==='object'?(canvasState.objects||[]).find(x=>x.id===row.dataset.layerId):(canvasState.vectors||[]).find(x=>x.id===row.dataset.layerId),b=row.querySelector('.v135LayerLock,.v130LayerTools button[title="Sperren"],.v130LayerTools button[title="Entsperren"]');if(!ref||!b)continue;b.innerHTML=window.v133Icon?.(ref.locked?'lock':'unlock')||'';b.title=ref.locked?'Entsperren':'Sperren';b.setAttribute('aria-label',b.title)}}
 
 /* Today gets the requested version and one visual icon system. */
-function polishToday(){const home=q('#view-home');if(!home)return;home.querySelector('.v138Version')?.remove();const eye=q('#headerEyebrow');if(eye&&eye.textContent!=='VERSION 166')eye.textContent='VERSION 166';const specs=[['Aufgabe','task'],['Test','test'],['Fächer','subjects'],['Lernen','learn']];qa('.homeMiniActions button',home).forEach((b,i)=>{const spec=specs[i];if(!spec||b.dataset.v138Today==='1')return;b.dataset.v138Today='1';b.classList.add('v138TodayAction');b.innerHTML=icons[spec[1]]+`<span>${spec[0]}</span>`})}
-function watchVersion(){const eye=q('#headerEyebrow');if(eye&&!editor()&&eye.textContent!=='VERSION 166')eye.textContent='VERSION 166'}
+function polishToday(){const home=q('#view-home');if(!home)return;home.querySelector('.v138Version')?.remove();const eye=q('#headerEyebrow');if(eye&&eye.textContent!=='VERSION 178')eye.textContent='VERSION 178';const specs=[['Aufgabe','task'],['Test','test'],['Fächer','subjects'],['Lernen','learn']];qa('.homeMiniActions button',home).forEach((b,i)=>{const spec=specs[i];if(!spec||b.dataset.v138Today==='1')return;b.dataset.v138Today='1';b.classList.add('v138TodayAction');b.innerHTML=icons[spec[1]]+`<span>${spec[0]}</span>`})}
+function watchVersion(){const eye=q('#headerEyebrow');if(eye&&!editor()&&eye.textContent!=='VERSION 178')eye.textContent='VERSION 178'}
 
 function cleanMobileDrawer(){qa('.v137MobileTextExtras,.v135MobileExtras').forEach(x=>x.remove())}
 function reconcile(){if(!editor()){polishToday();return}compactNav();enhanceSelectionBars();decorateInspector();correctLayerIcons();cleanMobileDrawer();decorateTransformHandles();if(q('#canvasQuickDrawer.open'))ensureElementTools()}
@@ -429,7 +429,7 @@ const baseLayers=window.renderLayerList;window.renderLayerList=function(){const 
 const baseObjects=window.renderCanvasObjects;window.renderCanvasObjects=function(){const r=baseObjects.apply(this,arguments);enhanceSelectionBars();requestAnimationFrame(decorateTransformHandles);return r};try{renderCanvasObjects=window.renderCanvasObjects}catch(_){}
 
 let queued=false;const schedule=()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;reconcile()})};
-new MutationObserver(schedule).observe(document.body,{attributes:true,attributeFilter:['class']});
+new MutationObserver(()=>{if(innerWidth<900)schedule()}).observe(document.body,{attributes:true,attributeFilter:['class']});
 window.addEventListener('resize',()=>setTimeout(reconcile,120));
 setTimeout(()=>{watchVersion();polishToday();reconcile()},1350);
 })();
@@ -478,8 +478,8 @@ function ensureTextActions(){
 }
 function stabilizeDrawer(){if(!editor())return;const active=q('.canvasQuickNav button.active');if(active?.dataset.v139)lastMode=active.dataset.v139;ensureElementActions();ensureTextActions()}
 function watchChrome(){
- const nav=q('.canvasQuickNav');if(nav&&nav.dataset.v139Watch!=='1'){nav.dataset.v139Watch='1';navObserver?.disconnect();navObserver=new MutationObserver(schedule);navObserver.observe(nav,{childList:true,subtree:true})}
- const drawer=q('#canvasQuickDrawer');if(drawer&&drawer.dataset.v139Watch!=='1'){drawer.dataset.v139Watch='1';drawerObserver?.disconnect();drawerObserver=new MutationObserver(schedule);drawerObserver.observe(drawer,{childList:true,subtree:true,attributes:true,attributeFilter:['class','data-v134-mode','data-v137-mode']})}
+ const nav=q('.canvasQuickNav');if(innerWidth<900&&nav&&nav.dataset.v139Watch!=='1'){nav.dataset.v139Watch='1';navObserver?.disconnect();navObserver=new MutationObserver(schedule);navObserver.observe(nav,{childList:true,subtree:true})}
+ const drawer=q('#canvasQuickDrawer');if(innerWidth<900&&drawer&&drawer.dataset.v139Watch!=='1'){drawer.dataset.v139Watch='1';drawerObserver?.disconnect();drawerObserver=new MutationObserver(schedule);drawerObserver.observe(drawer,{childList:true,subtree:true,attributes:true,attributeFilter:['class','data-v134-mode','data-v137-mode']})}
 }
 function stabilize(){if(!editor())return;stableNav();watchChrome();stabilizeDrawer()}
 
@@ -565,9 +565,9 @@ const baseInspector=window.renderCanvasInspector;window.renderCanvasInspector=fu
 /* A genuine paper click clears selection; empty drags remain marquee selection. */
 document.addEventListener('click',e=>{if(!editor()||document.body.classList.contains('v137ViewMode'))return;const t=e.target instanceof Element?e.target:null;if(!t||t.closest('.cobj,.vectorObj,.v132Hit,.v138TransformHandle,.pathNode,button,input,select,textarea,[contenteditable="true"]')||!t.closest('#canvasPage,#canvasStage,#canvasObjects,#v132InteractionLayer'))return;canvasState.multiMode=false;clearCanvasSelection?.();window.v132SyncHits?.();renderCanvasInspector?.()},true);
 
-const bodyWatch=new MutationObserver(()=>{if(editor()){guardNav();setTimeout(enhanceDrawer,0)}});bodyWatch.observe(document.body,{attributes:true,attributeFilter:['class']});
-const navWatch=new MutationObserver(()=>{if(editor()){rememberMode();forceNav()}});
-setTimeout(()=>{const nav=q('.canvasQuickNav');if(nav)navWatch.observe(nav,{childList:true,subtree:true});if(editor()){guardNav();enhanceDrawer()}},250);
+const bodyWatch=new MutationObserver(()=>{if(innerWidth<900&&editor()){guardNav();setTimeout(enhanceDrawer,0)}});bodyWatch.observe(document.body,{attributes:true,attributeFilter:['class']});
+const navWatch=new MutationObserver(()=>{if(innerWidth<900&&editor()){rememberMode();forceNav()}});
+setTimeout(()=>{const nav=q('.canvasQuickNav');if(innerWidth<900&&nav)navWatch.observe(nav,{childList:true,subtree:true});if(innerWidth<900&&editor()){guardNav();enhanceDrawer()}},250);
 document.addEventListener('click',e=>{const b=e.target.closest('.canvasQuickNav button');if(!b)return;const mode=b.dataset.v139||b.dataset.v138||b.dataset.v133;if(!mode)return;e.preventDefault();e.stopImmediatePropagation();wantedMode=mode;setTimeout(()=>{forceNav();if(directDrawer(mode))return;const current=q(`.canvasQuickNav button[data-v139="${mode}"]`)||q(`.canvasQuickNav button[data-v138="${mode}"]`);window.v138NavOpen?.(mode,current);setTimeout(enhanceDrawer,20)},0)},true);
 window.addEventListener('resize',()=>setTimeout(()=>{forceNav();enhanceDrawer()},120));
 })();
@@ -647,7 +647,7 @@ function removeDuplicateTools(){
  const mode=drawer.dataset.v139Mode||drawer.dataset.v138Mode||drawer.dataset.v137Mode||drawer.dataset.v134Mode||'',textView=!!drawer.querySelector('.mobileTextModeContent,.mobileTextEditor,.mobileTextLibrary')||/Text bearbeiten|Textformate/.test(drawer.textContent||'');
  if(mode!=='elements'||textView)qa('.v140InsertTools',drawer).forEach(x=>x.remove());
 }
-function watchDrawer(){const drawer=q('#canvasQuickDrawer');if(!drawer||drawer.dataset.v141Watch==='1')return;drawer.dataset.v141Watch='1';new MutationObserver(()=>requestAnimationFrame(removeDuplicateTools)).observe(drawer,{childList:true,subtree:true,attributes:true,attributeFilter:['class','data-v137-mode','data-v134-mode']})}
+function watchDrawer(){if(innerWidth>=900)return;const drawer=q('#canvasQuickDrawer');if(!drawer||drawer.dataset.v141Watch==='1')return;drawer.dataset.v141Watch='1';new MutationObserver(()=>requestAnimationFrame(removeDuplicateTools)).observe(drawer,{childList:true,subtree:true,attributes:true,attributeFilter:['class','data-v137-mode','data-v134-mode']})}
 
 function repairDesktopChrome(){
  if(!isEditor()||!isDesktop()){openedDesktopOnce=false;return}
@@ -691,7 +691,7 @@ if(baseModal)window.openModal=function(){const r=baseModal.apply(this,arguments)
 
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&q('#v141PropertiesOverlay'))closeMobileProperties()},true);
 document.addEventListener('click',e=>{if(!isEditor())return;const b=e.target.closest('.v138Properties,button[title="Eigenschaften"],button[aria-label="Eigenschaften"]');if(!b)return;e.preventDefault();e.stopImmediatePropagation();window.v138OpenProperties()},true);
-const observer=new MutationObserver(()=>requestAnimationFrame(reconcile));observer.observe(document.body,{attributes:true,attributeFilter:['class']});
+const observer=new MutationObserver(()=>{if(innerWidth<900)requestAnimationFrame(reconcile)});observer.observe(document.body,{attributes:true,attributeFilter:['class']});
 window.addEventListener('resize',()=>setTimeout(reconcile,100));setTimeout(reconcile,500);setTimeout(reconcile,1400);
 })();
 
@@ -706,7 +706,7 @@ const textKinds=new Set(['text','block','task','merke']);
 const selectedText=()=>{try{const o=(canvasState?.objects||[]).find(x=>x.id===canvasState?.selectedId);return o&&textKinds.has(o.kind)?o:null}catch(_){return null}};
 
 /* ---------- version ---------- */
-function setVersion(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 166')e.textContent='VERSION 166';document.title='Studia'}
+function setVersion(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 178')e.textContent='VERSION 178';document.title='Studia'}
 setVersion();setTimeout(setVersion,250);setTimeout(setVersion,1800);
 
 /* ---------- custom fonts: visible input + IndexedDB + previews ---------- */
@@ -787,8 +787,8 @@ function desktopTextHub(){
    const hub=document.createElement('div');hub.className='v144DesktopTextHub';hub.innerHTML=`<button onclick="v144OpenFontBrowser()"><span class="v144HubIcon">Aa</span><span><b>Schriften</b><small>Vorschau & auswählen</small></span></button><label class="v144HubUpload"><span class="v144HubIcon">＋</span><span><b>Schrift hinzufügen</b><small>TTF · OTF · WOFF</small></span><input type="file" accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2" onchange="v144HandleFontFile(this)"></label><button onclick="createCustomStylePreset()"><span class="v144HubIcon">H1</span><span><b>Textformat</b><small>Eigenes Format erstellen</small></span></button>`;drawer.prepend(hub)
  }
 }
-const drawerObserver=new MutationObserver(()=>requestAnimationFrame(desktopTextHub));
-setTimeout(()=>{const d=q('#canvasQuickDrawer');if(d)drawerObserver.observe(d,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});desktopTextHub()},700);
+const drawerObserver={observe(){},disconnect(){}};
+setTimeout(()=>{if(innerWidth<900)desktopTextHub()},700);
 window.addEventListener('resize',()=>setTimeout(desktopTextHub,100));
 document.addEventListener('click',e=>{if(e.target.closest('.canvasQuickNav button'))setTimeout(desktopTextHub,50)},true);
 
@@ -823,75 +823,22 @@ window.duplicateSelected=function(){
 };
 try{duplicateSelected=window.duplicateSelected}catch(_){ }
 
-/* ---------- automatic Google Apps Script sync: complete Studia state ---------- */
-const SYNC_URL='studia-gas-url',SYNC_KEY='studia-gas-key',DEVICE='studia-auto-device-v145',LAST_REMOTE='studia-auto-last-remote-v145',LAST_LOCAL='studia-auto-last-local-v145',LAST_HASH='studia-auto-last-hash-v145';
-let syncPushTimer=null,syncBusy=false,syncApplying=false,lastPullAt=0,pollTimer=null,localDirtyAt=0,fileCache=null,filesDirty=true;
-const nativeLSSet=Storage.prototype.setItem,nativeLSRemove=Storage.prototype.removeItem;
-function deviceId(){let d=localStorage.getItem(DEVICE);if(!d){d=crypto.randomUUID?.()||'dev-'+Date.now().toString(36)+Math.random().toString(36).slice(2);nativeLSSet.call(localStorage,DEVICE,d)}return d}
-function readSyncConfig(fromUI=false){const url=String((fromUI?q('#v144SyncUrl')?.value:null)||localStorage.getItem(SYNC_URL)||'').trim(),key=String((fromUI?q('#v144SyncKey')?.value:null)||localStorage.getItem(SYNC_KEY)||'').trim();return{url,key,valid:/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec(?:\?.*)?$/.test(url)&&key.length>=12}}
-function setSyncStatus(text,bad=false){const el=q('#v144SyncStatus');if(el){el.textContent=text;el.classList.toggle('error',bad)}const chip=q('#v144SyncChip');if(chip){chip.textContent=bad?'Sync-Fehler':text;chip.classList.toggle('error',bad)}}
-function syncableStorageKey(k){k=String(k||'');if(!(k.startsWith('schoolhub')||k.startsWith('schoolbloom')||k.startsWith('studia-')))return false;if(k===SYNC_URL||k===SYNC_KEY||k===DEVICE||k===LAST_REMOTE||k===LAST_LOCAL||k===LAST_HASH||k===FONT_KEY||k===FONT_OLD)return false;if(k.startsWith('studia-auto-')||k.startsWith('studia-sync-')||k.startsWith('studia-local-backup-')||k.startsWith('studia-daily-backup-'))return false;return true}
-function syncLocalStorage(){const out={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&syncableStorageKey(k))out[k]=localStorage.getItem(k)}return out}
-function fastHash(input){let h=2166136261>>>0;input=String(input||'');for(let i=0;i<input.length;i++){h^=input.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0).toString(36)}
-function blobToURL(blob){return new Promise((res,rej)=>{if(!blob)return res('');const r=new FileReader();r.onload=()=>res(String(r.result||''));r.onerror=()=>rej(r.error);r.readAsDataURL(blob)})}
-function urlToBlob(url){const [head,body]=String(url||'').split(',');if(!body)return new Blob([]);const mime=(head.match(/data:([^;]+)/)||[])[1]||'application/octet-stream',bin=atob(body),u8=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u8[i]=bin.charCodeAt(i);return new Blob([u8],{type:mime})}
-async function liveSyncFiles(){try{const db=await dbOpen();return await new Promise((res,rej)=>{const r=db.transaction(STORE).objectStore(STORE).getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>rej(r.error)})}catch(err){console.warn('[Studia V145] files unavailable',err);return[]}}
-async function serializedFiles(){if(!filesDirty&&fileCache)return fileCache;const out=[];for(const f of await liveSyncFiles())out.push({id:f.id,name:f.name||'',type:f.type||f.blob?.type||'',data:await blobToURL(f.blob||new Blob([]))});fileCache=out;filesDirty=false;return out}
-function filesSignature(files){return fastHash((files||[]).map(f=>`${f.id}|${f.name}|${f.type}|${String(f.data||'').length}`).join('§'))}
-function fontsSignature(fonts){return fastHash((fonts||[]).map(f=>`${f.name}|${String(f.data||'').length}`).join('§'))}
-async function fullStateEnvelope(){const localStorageState=syncLocalStorage(),files=await serializedFiles(),fonts=await allCustomFonts();const stateHash=fastHash(JSON.stringify(localStorageState)+'|'+filesSignature(files)+'|'+fontsSignature(fonts));return{format:'studia-full-auto-v145',version:145,updatedAt:localDirtyAt||Date.now(),deviceId:deviceId(),stateHash,state:{localStorage:localStorageState,files,fonts}}}
-async function restoreFiles(remoteFiles){const remoteSig=filesSignature(remoteFiles),local=await liveSyncFiles(),localSig=fastHash(local.map(f=>`${f.id}|${f.name||''}|${f.type||f.blob?.type||''}|${f.blob?.size||0}`).join('§'));/* data URLs encode size, so use id/name count fast path first */const sameIds=local.length===(remoteFiles||[]).length&&local.every((f,i)=>{const r=(remoteFiles||[]).find(x=>x.id===f.id);return !!r&&r.name===(f.name||'')});if(sameIds){fileCache=remoteFiles||[];filesDirty=false;return}try{const db=await dbOpen();await new Promise((res,rej)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).clear();tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error)});for(const f of remoteFiles||[])await dbPut({id:f.id,name:f.name||'',type:f.type||'',blob:urlToBlob(f.data||'')});fileCache=remoteFiles||[];filesDirty=false}catch(err){console.warn('[Studia V145] file restore failed',err)}}
-async function restoreFonts(fonts){for(const f of fonts||[]){if(!f?.name||!f?.data)continue;await fontDBPut(f);persistLegacyFont(f);await installFont(f)}refreshDesktopFontSelects();try{window.v91LoadFonts?.()}catch(_){ }}
-function currentMainDataString(){return localStorage.getItem('schoolhub-v1')||''}
-function noteLocalChange(delay=700){if(syncApplying)return;localDirtyAt=Date.now();nativeLSSet.call(localStorage,LAST_LOCAL,String(localDirtyAt));clearTimeout(syncPushTimer);if(readSyncConfig().valid)syncPushTimer=setTimeout(()=>autoPush(),delay)}
-function scheduleAutoPush(delay=700){noteLocalChange(delay)}
-window.scheduleAutoPush=scheduleAutoPush;
-function jsonpLoad(c,action='load'){return new Promise((resolve,reject)=>{const cb='studiaAuto_'+Date.now()+'_'+Math.random().toString(36).slice(2),script=document.createElement('script'),timeout=setTimeout(()=>done(new Error('Zeitüberschreitung beim Sync')),15000);function done(err,val){clearTimeout(timeout);try{delete window[cb]}catch(_){ }script.remove();err?reject(err):resolve(val)}window[cb]=r=>done(null,r);script.onerror=()=>done(new Error('Web-App nicht erreichbar. Prüfe /exec-URL und Bereitstellung.'));const u=new URL(c.url);u.searchParams.set('action',action);u.searchParams.set('key',c.key);u.searchParams.set('callback',cb);u.searchParams.set('_',Date.now());script.src=u.toString();document.head.appendChild(script)})}
-async function readRemote(c){const result=await jsonpLoad(c,'load');if(!result?.ok){const msg=String(result?.error||'');if(/noch keine|keine Sicherung|Keine Daten/i.test(msg))return null;throw new Error(msg||'Cloud-Daten konnten nicht geladen werden.')}let env;try{env=JSON.parse(result.payload||'{}')}catch(_){throw new Error('Cloud-Daten sind beschädigt.')}return{env,serverStamp:Date.parse(result.updatedAt||'')||0}}
-function remoteTimestamp(env){return +env?.updatedAt||0}
-async function applyFullRemote(env,serverStamp){if(!env||typeof env!=='object')throw new Error('Cloud-Daten ungültig.');/* backwards compatibility: v144 data-only envelope */if(env.format==='studia-auto-v144'||env.format==='studia-auto-v145'){const remoteData=env.data;if(!remoteData||typeof remoteData!=='object')throw new Error('Cloud-Daten ungültig.');syncApplying=true;try{const target=window.data||data;Object.keys(target).forEach(k=>delete target[k]);Object.assign(target,JSON.parse(JSON.stringify(remoteData)));nativeLSSet.call(localStorage,'schoolhub-v1',JSON.stringify(target));await restoreFonts(env.extras?.fonts||[]);nativeLSSet.call(localStorage,LAST_REMOTE,String(remoteTimestamp(env)||serverStamp||Date.now()));localDirtyAt=0;window.renderAll?.();if(isEditor()&&typeof selectedSheetId!=='undefined'&&selectedSheetId)setTimeout(()=>window.openStudySheetEditor?.(selectedSheetId),80);return true}finally{syncApplying=false}}
- const state=env.state||{},remoteLS=state.localStorage||{};if(!remoteLS||typeof remoteLS!=='object')throw new Error('Cloud-Sicherung enthält keinen Studia-Stand.');
- const currentState=syncLocalStorage(),currentFiles=await serializedFiles(),currentFonts=await allCustomFonts(),currentHash=fastHash(JSON.stringify(currentState)+'|'+filesSignature(currentFiles)+'|'+fontsSignature(currentFonts));if(env.stateHash&&env.stateHash===currentHash){nativeLSSet.call(localStorage,LAST_REMOTE,String(remoteTimestamp(env)||serverStamp||Date.now()));nativeLSSet.call(localStorage,LAST_HASH,env.stateHash);localDirtyAt=0;return false}
- syncApplying=true;try{
-  for(let i=localStorage.length-1;i>=0;i--){const k=localStorage.key(i);if(k&&syncableStorageKey(k)&&!(k in remoteLS))nativeLSRemove.call(localStorage,k)}
-  for(const [k,v] of Object.entries(remoteLS))if(syncableStorageKey(k))nativeLSSet.call(localStorage,k,String(v));
-  const main=remoteLS['schoolhub-v1'];if(main){try{const parsed=JSON.parse(main),target=window.data||data;Object.keys(target).forEach(k=>delete target[k]);Object.assign(target,parsed)}catch(err){console.warn('[Studia V145] main data parse failed',err)}}
-  await restoreFiles(state.files||[]);await restoreFonts(state.fonts||[]);
-  nativeLSSet.call(localStorage,LAST_REMOTE,String(remoteTimestamp(env)||serverStamp||Date.now()));if(env.stateHash)nativeLSSet.call(localStorage,LAST_HASH,env.stateHash);localDirtyAt=0;
-  setSyncStatus('Alles synchronisiert ✓');window.cuteToast?.('Handy und Laptop sind aktuell ♡');window.renderAll?.();
-  if(isEditor()&&typeof selectedSheetId!=='undefined'&&selectedSheetId&&(data.studySheets||[]).some(x=>x.id===selectedSheetId))setTimeout(()=>window.openStudySheetEditor?.(selectedSheetId),80);
-  return true
- }finally{syncApplying=false}
-}
-async function autoPush(){if(syncBusy||syncApplying||!localDirtyAt)return false;const c=readSyncConfig();if(!c.valid)return false;syncBusy=true;try{setSyncStatus('Synchronisiere alles …');/* prevent an older device from overwriting a newer remote edit */let remote=null;try{remote=await readRemote(c)}catch(err){if(!/noch keine|keine Sicherung|Keine Daten/i.test(String(err.message||err)))console.warn('[Studia V145] pre-push check',err)}if(remote?.env){const rt=remoteTimestamp(remote.env),seen=+localStorage.getItem(LAST_REMOTE)||0;if(rt>seen&&rt>localDirtyAt){await applyFullRemote(remote.env,remote.serverStamp);return false}}
- const env=await fullStateEnvelope(),payload=JSON.stringify(env),form=new FormData();form.set('action','save');form.set('key',c.key);form.set('payload',payload);await fetch(c.url,{method:'POST',mode:'no-cors',body:form});nativeLSSet.call(localStorage,LAST_LOCAL,String(env.updatedAt));nativeLSSet.call(localStorage,LAST_HASH,env.stateHash||'');localDirtyAt=0;setSyncStatus('Alles synchronisiert ✓');setTimeout(()=>autoPull(false),1400);return true
- }catch(err){console.warn('[Studia V145] auto push failed',err);setSyncStatus('Sync fehlgeschlagen',true);return false}finally{syncBusy=false}}
-async function autoPull(force=false){if(syncBusy||syncApplying)return false;const c=readSyncConfig();if(!c.valid)return false;const now=Date.now();if(!force&&now-lastPullAt<4500)return false;lastPullAt=now;syncBusy=true;try{if(force)setSyncStatus('Prüfe alle Daten …');const remote=await readRemote(c);if(!remote){if(localDirtyAt)await autoPush();return false}const rt=remoteTimestamp(remote.env),last=+localStorage.getItem(LAST_REMOTE)||0;if(!force&&rt&&rt<=last)return false;if(localDirtyAt&&rt&&rt<=localDirtyAt){setTimeout(()=>autoPush(),120);return false}const changed=await applyFullRemote(remote.env,remote.serverStamp);if(!changed)setSyncStatus('Alles synchronisiert ✓');return changed}catch(err){console.warn('[Studia V145] auto pull failed',err);if(force)setSyncStatus(String(err.message||err),true);return false}finally{syncBusy=false}}
-window.v144AutoPull=()=>autoPull(true);window.v144AutoPush=()=>{if(!localDirtyAt)localDirtyAt=Date.now();return autoPush()};
-
-/* Every Studia save + relevant localStorage/file change schedules an automatic sync. */
-try{const baseSave=window.save||save;window.__v145BaseSave=baseSave;window.save=function(){const r=baseSave.apply(this,arguments);if(!syncApplying)noteLocalChange(550);return r};try{save=window.save}catch(_){ }}catch(err){console.warn('[Studia V145] save hook unavailable',err)}
-try{Storage.prototype.setItem=function(k,v){const r=nativeLSSet.call(this,k,v);if(this===localStorage&&!syncApplying&&syncableStorageKey(k))noteLocalChange(700);return r};Storage.prototype.removeItem=function(k){const r=nativeLSRemove.call(this,k);if(this===localStorage&&!syncApplying&&syncableStorageKey(k))noteLocalChange(700);return r}}catch(err){console.warn('[Studia V145] storage hook unavailable',err)}
-try{const put=window.dbPut||dbPut,del=window.dbDelete||dbDelete;window.dbPut=async function(){const r=await put.apply(this,arguments);if(!syncApplying){filesDirty=true;noteLocalChange(650)}return r};window.dbDelete=async function(){const r=await del.apply(this,arguments);if(!syncApplying){filesDirty=true;noteLocalChange(650)}return r};try{dbPut=window.dbPut;dbDelete=window.dbDelete}catch(_){ }}catch(err){console.warn('[Studia V145] file hooks unavailable',err)}
-
-/* One-time setup only. There are no manual upload/download buttons. */
-window.openAccountDialog=function(){const c=readSyncConfig();window.openModal?.(`<div class="v135Modal v144SyncModal"><div class="v135ModalHead"><div><span class="eyebrow">AUTOMATISCHER SYNC</span><h2>Handy + Laptop</h2></div><button onclick="closeModal()">×</button></div><p><b>Alles</b> wird synchronisiert: Fächer, Themen, Lernblätter, Texte im Editor, Hausaufgaben, Arbeitsblätter, Karteikarten, Quizze, Tests, Einstellungen, Textformate, eigene Schriften und hochgeladene Dateien.</p><div class="v135FormGrid"><label class="full">Apps-Script-Web-App-URL<input id="v144SyncUrl" type="url" placeholder="https://script.google.com/macros/s/…/exec" value="${esc(c.url)}" oninput="v144RememberSyncConfig()"></label><label class="full">Persönlicher Sync-Schlüssel<input id="v144SyncKey" autocomplete="off" placeholder="auf Handy und Laptop exakt gleich" value="${esc(c.key)}" oninput="v144RememberSyncConfig()"></label></div><div class="v144AutoSyncCard"><span class="v144SyncDot"></span><div><b>Vollautomatisch</b><small>Nach Änderungen · beim Öffnen · bei Internet-Rückkehr · regelmäßig im Vordergrund · beim Herunterziehen zum Aktualisieren</small></div></div><div id="v144SyncStatus" class="v140SyncState">${c.valid?'Automatischer Voll-Sync ist eingerichtet':'URL und Schlüssel einmal eintragen'}</div><div class="v135ActionRow"><button class="primary" onclick="v144ConnectSync()">Automatisch verbinden</button></div><details class="v140SyncHelp"><summary>Einmalige Einrichtung</summary><ol><li>In <b>script.google.com</b> ein Projekt erstellen.</li><li><b>google-apps-script/Code.gs</b> aus dieser ZIP hineinkopieren.</li><li>Bereitstellen → Neue Bereitstellung → Web-App.</li><li>Ausführen als „Ich“, Zugriff „Jeder“.</li><li>Die <b>/exec</b>-URL und denselben Schlüssel auf Handy und Laptop eintragen.</li></ol></details></div>`) };
-window.v144RememberSyncConfig=function(){const c=readSyncConfig(true);nativeLSSet.call(localStorage,SYNC_URL,c.url);nativeLSSet.call(localStorage,SYNC_KEY,c.key);setSyncStatus(c.valid?'Automatik bereit ✓':'URL oder Schlüssel noch unvollständig',!c.valid&&!!(c.url||c.key))};
-window.v144ConnectSync=async function(){v144RememberSyncConfig();const c=readSyncConfig();if(!c.valid)return setSyncStatus('Bitte gültige /exec-URL und mindestens 12 Zeichen Schlüssel eingeben.',true);nativeLSSet.call(localStorage,'studia-sync-auto','0');setSyncStatus('Verbindung wird geprüft …');const remote=await autoPull(true);if(!remote){localDirtyAt=Date.now();await autoPush()}setSyncStatus('Automatischer Voll-Sync aktiv ✓');startPolling();setTimeout(()=>window.closeModal?.(),700)};
-window.v140SyncUpload=()=>{noteLocalChange(0);return autoPush()};window.v140SyncDownload=()=>autoPull(true);window.v135CloudUpload=()=>{noteLocalChange(0);return autoPush()};window.v135CloudDownload=()=>autoPull(true);
-
-function startPolling(){if(pollTimer)clearInterval(pollTimer);if(!readSyncConfig().valid)return;pollTimer=setInterval(()=>{if(document.visibilityState==='visible'&&navigator.onLine!==false)autoPull(false)},8000)}
-window.addEventListener('online',()=>{autoPull(true);if(localDirtyAt)setTimeout(()=>autoPush(),500)});window.addEventListener('focus',()=>autoPull(false));document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')autoPull(false)});window.addEventListener('pageshow',()=>setTimeout(()=>autoPull(false),350));
-
-/* Pull-to-refresh gesture: force a cloud check. Safari's own reload also triggers pageshow. */
-let pull=null;function scrollTop(){return Math.max(0,document.scrollingElement?.scrollTop||document.documentElement.scrollTop||0)}
-function pullIndicator(){let el=q('#v144PullSync');if(!el){el=document.createElement('div');el.id='v144PullSync';el.innerHTML='<span>↻</span><b>Zum Aktualisieren ziehen</b>';document.body.appendChild(el)}return el}
-document.addEventListener('touchstart',e=>{if(e.touches.length!==1||scrollTop()>2||isEditor()||q('.modalWrap.show,.modalWrap.open'))return;pull={y:e.touches[0].clientY,d:0}}, {passive:true});
-document.addEventListener('touchmove',e=>{if(!pull||e.touches.length!==1)return;pull.d=Math.max(0,e.touches[0].clientY-pull.y);const el=pullIndicator();el.classList.toggle('ready',pull.d>58);el.style.transform=`translate(-50%,${Math.min(72,pull.d*.55)-78}px)`}, {passive:true});
-document.addEventListener('touchend',()=>{if(!pull)return;const ready=pull.d>58,el=q('#v144PullSync');pull=null;if(el){el.style.transform='translate(-50%,-78px)';el.classList.remove('ready')}if(ready){window.cuteToast?.('Prüfe Änderungen …');autoPull(true)}}, {passive:true});
-
-/* Initial boot */
-ensureGlobalFontInput();loadAllFonts();startPolling();setTimeout(()=>{desktopTextHub();ensureStickerColorUI();if(readSyncConfig().valid)autoPull(false)},1200);
+/* ---------- V177: obsolete V145 key/load/save sync removed ---------- */
+/* The account-based V150+ transport is now the ONLY sync engine. Keeping the old
+   load/save engine alive caused duplicate polling, duplicate localStorage hooks and
+   "Unbekannte Aktion" responses against the current Apps Script. */
+window.scheduleAutoPush=function(delay=650){try{window.v150MarkDirty?.(delay)}catch(_){}};
+window.v144AutoPull=function(){try{return window.v150Pull?.()}catch(_){return false}};
+window.v144AutoPush=function(){try{window.v150MarkDirty?.(0);return window.v150Push?.()}catch(_){return false}};
+window.v140SyncUpload=window.v144AutoPush;
+window.v140SyncDownload=window.v144AutoPull;
+window.v135CloudUpload=window.v144AutoPush;
+window.v135CloudDownload=window.v144AutoPull;
+/* Keep font/mobile helpers from V145, but do not start any legacy sync timer or
+   patch Storage.prototype here. V150 installs the single current dirty hook later. */
+ensureGlobalFontInput();
+loadAllFonts();
+setTimeout(()=>{desktopTextHub();ensureStickerColorUI()},1200);
 })();
 /* ===== /Studia V145 ===== */
 
@@ -907,22 +854,12 @@ try{window.v113ForgetSync=()=>window.cuteToast?.('Geräte-Sync bleibt verbunden 
 /* V145 already syncs the complete Studia state after save/localStorage/file writes.
    This adds a debounced safety net for UI changes that an older code path might
    forget to route through save(). */
-let extraSyncTimer=null;
-function queueSync(delay){
-  clearTimeout(extraSyncTimer);
-  extraSyncTimer=setTimeout(()=>{try{window.scheduleAutoPush?.(0)}catch(_){ }},delay);
-}
-document.addEventListener('input',e=>{
-  if(e.target?.closest?.('#v144SyncUrl,#v144SyncKey'))return;
-  queueSync(900);
-},true);
-document.addEventListener('change',e=>{
-  if(e.target?.closest?.('#v144SyncUrl,#v144SyncKey'))return;
-  queueSync(350);
-},true);
+/* V177: V150 is the single dirty-change watcher. The duplicate V149 input/change
+   listeners were removed because they scheduled the same full sync twice. */
+function queueSync(delay){try{window.v150MarkDirty?.(delay)}catch(_){ }}
 
 /* Keep a single current version label after all historical startup scripts finish. */
-function version(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 166')e.textContent='VERSION 166';document.title='Studia'}
+function version(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 178')e.textContent='VERSION 178';document.title='Studia'}
 version();setTimeout(version,450);setTimeout(version,1900);
 })();
 /* ===== /Studia V149 ===== */
@@ -936,7 +873,7 @@ const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelecto
 const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const inEditor=()=>document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
 const desktop=()=>innerWidth>=900&&inEditor();
-function setVersion150(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 166')e.textContent='VERSION 166';document.documentElement.classList.add('v151Ready');document.title='Studia'}
+function setVersion150(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 178')e.textContent='VERSION 178';document.documentElement.classList.add('v151Ready');document.title='Studia'}
 setVersion150();setTimeout(setVersion150,300);setTimeout(setVersion150,1800);
 
 /* Disable the older key-based V145 transport. Its local save hooks may remain,
@@ -998,7 +935,7 @@ function ensureDesktopRail(){
  if(v151RailMode==='text')setTimeout(injectDesktopTextTools,0);
 }
 let railScheduled=false;function scheduleRail(){if(railScheduled)return;railScheduled=true;requestAnimationFrame(()=>{railScheduled=false;ensureDesktopRail()})}
-const railObserver=new MutationObserver(()=>{if(desktop()&&!q('#v151DesktopRail'))scheduleRail()});railObserver.observe(document.body,{childList:true,subtree:true});
+const railObserver={observe(){},disconnect(){}};
 document.addEventListener('click',e=>{if(e.target.closest?.('#v151DesktopRail [data-v151="text"]'))setTimeout(injectDesktopTextTools,20)},false);
 window.addEventListener('resize',()=>setTimeout(scheduleRail,80));
 const baseRender150=window.renderSheetEditor;if(baseRender150)window.renderSheetEditor=function(){const r=baseRender150.apply(this,arguments);setTimeout(scheduleRail,140);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){ }
@@ -1033,11 +970,21 @@ async function request(path,options={}){
   }else{
     let payload={};if(options.body){if(typeof options.body==='string'){try{payload=JSON.parse(options.body)}catch{payload={value:options.body}}}else payload=options.body}
     payload.action=action;if(token())payload.token=token();
-    response=await fetch(base,{method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload),signal:controller.signal});
+    /* V178: send the action twice (query + JSON body). Apps Script deployments sometimes
+       expose POST fields differently after redirects; the server accepts either source. */
+    const u=new URL(base);u.searchParams.set('action',action);u.searchParams.set('_',Date.now());
+    response=await fetch(u.toString(),{method:'POST',redirect:'follow',cache:'no-store',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload),signal:controller.signal});
   }
  }catch(err){if(err?.name==='AbortError')throw new Error('Studia-Sync hat zu lange gebraucht. Prüfe Internet oder Apps-Script-URL.');throw err}finally{clearTimeout(timer)}
  const raw=await response.text();let data;try{data=JSON.parse(raw)}catch{throw new Error('Google-Sync hat keine gültige Antwort geliefert. Prüfe die Apps-Script-Bereitstellung.')}
- if(data?.ok===false){const err=new Error(data.error||'Synchronisierung fehlgeschlagen.');err.status=Number(data.status||400);throw err}return data;
+ if(data?.ok===false){
+  const msg=String(data.error||'Synchronisierung fehlgeschlagen.');
+  if(/Unbekannte Aktion/i.test(msg)&&action==='state_meta'){
+    const fallback=await request('/api/state',{method:'GET'});return{ok:true,updatedAt:Number(fallback?.updatedAt||fallback?.data?.updatedAt||0)}
+  }
+  const pretty=/Unbekannte Aktion/i.test(msg)?'Der Cloud-Server läuft noch mit einer alten/falschen API. Bitte Code.gs aus V178 einfügen und die Apps-Script-Web-App als NEUE Version bereitstellen. Danach dieselbe /exec-URL weiterverwenden.':msg;
+  const err=new Error(pretty);err.status=Number(data.status||400);throw err
+ }return data;
 }
 function syncKey(k){k=String(k||'');if(!(k.startsWith('schoolhub')||k.startsWith('schoolbloom')||k.startsWith('studia-')))return false;if(k===URL_KEY||k===TOKEN_KEY||k===USER_KEY||k===DEVICE_KEY||k===LAST_REMOTE||k===LAST_LOCAL||k==='studia-gas-key')return false;if(TECH_PREFIXES.some(p=>k.startsWith(p)))return false;return true}
 function packLocalStorage(){const out={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&syncKey(k))out[k]=localStorage.getItem(k)}return out}
@@ -1056,7 +1003,7 @@ window.v150MarkDirty=v150MarkDirty;
 async function v150Push(){if(v150Busy||v150Applying||!v150DirtyAt||!accountConfigured()||navigator.onLine===false)return false;v150Busy=true;try{accountStatus('Synchronisiert …');/* Last-write-wins across devices: if the cloud changed after this device's last cloud snapshot AND is newer than this local edit, pull it instead of overwriting it. */const meta=await request('/api/state/meta'),remoteAt=Number(meta.updatedAt||0),lastRemote=Number(localStorage.getItem(LAST_REMOTE)||0),localAt=Number(v150DirtyAt||0);if(remoteAt>lastRemote&&remoteAt>localAt){const cloud=await request('/api/state');if(cloud.data)await applyEnvelope(cloud.data,Number(cloud.updatedAt||remoteAt));accountStatus('✓ Neueren Stand vom anderen Gerät geladen');return true}const env=await envelope(),r=await request('/api/state',{method:'PUT',body:{data:env}});localStorage.setItem(LAST_REMOTE,String(Number(r.updatedAt||Date.now())));v150DirtyAt=0;accountStatus('✓ Automatisch synchronisiert');return true}catch(err){console.warn('[V150] push',err);accountStatus(navigator.onLine===false?'Offline – wird später synchronisiert':'Sync-Fehler – versucht es automatisch erneut',true);return false}finally{v150Busy=false}}
 async function v150Pull(force=false){if(v150Busy||v150Applying||!accountConfigured()||navigator.onLine===false)return false;if(v150DirtyAt){v150MarkDirty(250);return false}const now=Date.now();if(!force&&now-v150LastCheck<3500)return false;v150LastCheck=now;v150Busy=true;try{if(force)accountStatus('Prüfe Änderungen …');const meta=await request('/api/state/meta');const remoteAt=Number(meta.updatedAt||0),last=Number(localStorage.getItem(LAST_REMOTE)||0);if(!force&&remoteAt<=last){accountStatus('✓ Automatisch synchronisiert');return false}const r=await request('/api/state');if(!r.data){v150DirtyAt=Date.now();setTimeout(v150Push,0);return false}await applyEnvelope(r.data,Number(r.updatedAt||remoteAt||Date.now()));accountStatus('✓ Automatisch synchronisiert');window.cuteToast?.('Alle Geräte sind aktuell ♡');return true}catch(err){console.warn('[V150] pull',err);if(err.status===401){localStorage.removeItem(TOKEN_KEY);v150User=null;accountStatus('Anmeldung muss erneuert werden.',true)}else accountStatus(navigator.onLine===false?'Offline – wird später synchronisiert':'Sync-Fehler – versucht es automatisch erneut',true);return false}finally{v150Busy=false}}
 window.v150Push=v150Push;window.v150Pull=()=>v150Pull(true);
-function startAccountPolling(){if(v150Poll)clearInterval(v150Poll);if(!accountConfigured())return;v150Poll=setInterval(()=>{if(document.visibilityState==='visible')v150Pull(false)},5000);setTimeout(()=>v150Pull(true),250)}
+function startAccountPolling(){if(v150Poll)clearInterval(v150Poll);if(!accountConfigured())return;v150Poll=setInterval(()=>{if(document.visibilityState==='visible')v150Pull(false)},12000);setTimeout(()=>v150Pull(true),250)}
 
 async function initAccount(){if(!accountConfigured())return;try{/* Persisted dirty timestamp survives a fast app close, so the next open still uploads the last edit instead of losing it. */const pending=Number(localStorage.getItem(LAST_LOCAL)||0),seen=Number(localStorage.getItem(LAST_REMOTE)||0);if(pending>seen)v150DirtyAt=Math.max(v150DirtyAt,pending);const me=await request('/api/me');v150User=me.user;localStorage.setItem(USER_KEY,v150User?.username||username());startAccountPolling()}catch(err){console.warn('[V150] account init',err);if(err.status===401){localStorage.removeItem(TOKEN_KEY);v150User=null}}}
 window.v150RememberUrl=function(){const field=q('#v150ScriptUrl'),u=String(field?.value||scriptUrl()||'').trim().replace(/\/$/,'');if(field&&u)localStorage.setItem(URL_KEY,u);accountStatus(urlValid(u)?'Web-App verbunden ✓':'Bitte eine gültige /exec-URL eintragen.',!urlValid(u));return urlValid(u)};
@@ -1135,8 +1082,8 @@ function tile(label,iconName,action){return `<button class="v152ElementTile" typ
 function elementsPanel(){
  const sections=[
   ['Basis',[['Textfeld','text','addCanvasTextBox()'],['Bild / Foto','image','openCanvasMediaPicker()'],['Datei','file',"document.getElementById('canvasAnyFileInput')?.click()"],['Checkliste','check','addCanvasChecklist()']]],
-  ['Formen',[['Rechteck','rect',"addVectorShape('rect')"],['Kreis','circle',"addVectorShape('ellipse')"],['Dreieck','triangle',"addVectorShape('triangle')"],['Linie','line',"window.addVectorLine?.()||addCanvasDivider()"],['Kurve','curve',"window.addVectorCurve?.()||window.setVectorTool?.('pen')"],['Stern','star','window.addRoundedStar?.()']]],
-  ['Lernen & Mathe',[['Formel','formula','openFormulaDialog()'],['Graph','graph','openGraphDialog()'],['Tabelle','table','openTableDialog()'],['Trennlinie','line','addCanvasDivider()']]],
+  ['Formen',[['Rechteck','rect',"addVectorShape('rect')"],['Kreis','circle',"addVectorShape('ellipse')"],['Dreieck','triangle',"addVectorShape('triangle')"],['Linie','line',"window.addVectorLine?window.addVectorLine():addCanvasDivider()"],['Kurve','curve',"window.addVectorCurve?window.addVectorCurve():window.setVectorTool?.('pen')"],['Stern','star','window.addRoundedStar?.()']]],
+  ['Lernen & Mathe',[['Formel','formula','openFormulaDialog()'],['Graph','graph','openGraphDialog()'],['Tabelle','table','openTableDialog()']]],
   ['Deko',[['Sticker','sticker','toggleStickerPanel()'],['Klebeband','tape','addTapeSticker()'],['Kariert','grid',"addPaperSticker('grid')"],['Liniert','lined',"addPaperSticker('line')"]]]
  ];
  const body=`<label class="v152Search">${v152PanelIcon('search')}<input type="search" placeholder="Elemente suchen" oninput="v152FilterElements(this.value)"></label>${sections.map(([title,items])=>`<section class="v152ElementSection"><div class="v152SectionTitle"><b>${title}</b></div><div class="v152ElementGrid">${items.map(x=>tile(...x)).join('')}</div></section>`).join('')}<div class="v152Empty v152ElementEmpty" hidden>Keine passenden Elemente.</div>`;
@@ -1149,10 +1096,10 @@ function ensureV152Rail(){if(!desktop())return null;const left=q('.v102DesktopLe
 window.v152EnsureRail=ensureV152Rail;
 /* Capture before the old V151 bubble handler: Text/Vorlagen always open our real panel. */
 document.addEventListener('click',e=>{if(!desktop())return;const b=e.target instanceof Element?e.target.closest('#v151DesktopRail button[data-v151]'):null;if(!b)return;e.preventDefault();e.stopImmediatePropagation();window.v152OpenPanel(b.dataset.v151)},true);
-setTimeout(()=>{if(desktop()){ensureV152Rail();window.v152OpenPanel(panelMode)}},650);new MutationObserver(()=>{if(desktop()&&!q('#v151DesktopRail'))requestAnimationFrame(ensureV152Rail)}).observe(document.body,{childList:true,subtree:true});
+setTimeout(()=>{if(desktop()){ensureV152Rail();window.v152OpenPanel(panelMode)}},650);/* V177: duplicate body-wide rail observer removed; V150 already maintains the rail. */
 
 /* ---------- One drag surface per text object. Tap = caret, drag = move. ---------- */
-let activeDrag=null;
+let activeDrag=null,lastDeskTap152={id:null,time:0,x:0,y:0};
 function scale(){const s=q('#canvasStage');if(!s)return 1;const r=s.getBoundingClientRect(),w=typeof window.canvasPageWidth==='function'?window.canvasPageWidth():794;return r.width/w||window.canvasZoom||1}
 function layer(){let l=q('#v152TextHitLayer');const stage=q('#canvasStage');if(!stage)return null;if(!l){l=document.createElement('div');l.id='v152TextHitLayer';stage.appendChild(l)}l.style.width=(typeof window.canvasPageWidth==='function'?window.canvasPageWidth():794)+'px';l.style.height=(typeof window.canvasPageHeight==='function'?window.canvasPageHeight():1123)+'px';return l}
 function selectDirect(id){try{window.selectCanvasObject?.(id)}catch(_){const s=st();if(!s)return;s.selectedType='object';s.selectedId=id;s.selectedIds=[id];s.selectedVectorIds=[];window.renderCanvasInspector?.();window.renderLayerList?.()}}
@@ -1160,12 +1107,50 @@ function placeCaret(el,x,y){try{let range=null;if(document.caretPositionFromPoin
 function patchEditingText(){const s=st(),id=s?.objects?.find(o=>o.editing&&textKinds.has(o.kind)&&!o.isChecklist)?.id;qa('#canvasObjects .cobj.v152EditingText').forEach(el=>{if(String(el.dataset.id)!==String(id))el.classList.remove('v152EditingText')});if(!id)return;const el=textEl(id);if(el){el.classList.add('v152EditingText');el.style.setProperty('pointer-events','auto','important')}/* kill all historical hit/move overlays for this editing text */qa(`[data-id="${CSS.escape(String(id))}"].v132Hit,[data-id="${CSS.escape(String(id))}"].v131MoveProxy,[data-id="${CSS.escape(String(id))}"].v129MoveProxy,[data-id="${CSS.escape(String(id))}"].v126MoveProxy`).forEach(x=>x.style.setProperty('pointer-events','none','important'))}
 function beginEdit(id,x,y){const o=textObj(id);if(!o||o.locked)return false;(st()?.objects||[]).forEach(v=>{if(v!==o)v.editing=false});o.editing=true;window.renderCanvasObjects?.();window.renderCanvasInspector?.();requestAnimationFrame(()=>{const el=textEl(id);if(!el)return;el.classList.add('v152EditingText');try{el.focus({preventScroll:true})}catch(_){el.focus()}if(Number.isFinite(x)&&Number.isFinite(y))placeCaret(el,x,y);patchEditingText();syncTextHits()});return true}
 window.v152BeginTextEdit=beginEdit;
-function syncTextHits(){const l=layer();if(!l)return;l.replaceChildren();for(const o of st()?.objects||[]){if(!textKinds.has(o.kind)||o.isChecklist||o.locked||o.editing)continue;const hit=document.createElement('div');hit.className='v152TextHit';hit.dataset.id=o.id;hit.style.left=(+o.x||0)+'px';hit.style.top=(+o.y||0)+'px';hit.style.width=Math.max(18,(+o.w||80)-16)+'px';hit.style.height=Math.max(18,(+o.h||40)-16)+'px';hit.style.transform=`rotate(${+o.rotation||0}deg)`;hit.style.transformOrigin='50% 50%';hit.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;e.preventDefault();e.stopPropagation();selectDirect(o.id);const z=scale();activeDrag={pid:e.pointerId,id:o.id,sx:e.clientX,sy:e.clientY,ox:+o.x||0,oy:+o.y||0,z,moved:false,hit};try{hit.setPointerCapture?.(e.pointerId)}catch(_){ }},{passive:false});hit.addEventListener('pointermove',e=>{const d=activeDrag;if(!d||d.pid!==e.pointerId||d.id!==o.id)return;const dx=(e.clientX-d.sx)/d.z,dy=(e.clientY-d.sy)/d.z;if(!d.moved&&Math.hypot(dx,dy)<5)return;d.moved=true;e.preventDefault();const W=typeof window.canvasPageWidth==='function'?window.canvasPageWidth():794,H=typeof window.canvasPageHeight==='function'?window.canvasPageHeight():1123;o.x=Math.max(0,Math.min(Math.max(0,W-o.w),d.ox+dx));o.y=Math.max(0,Math.min(Math.max(0,H-o.h),d.oy+dy));const el=textEl(o.id);if(el){el.style.left=o.x+'px';el.style.top=o.y+'px'}hit.style.left=o.x+'px';hit.style.top=o.y+'px';window.markCanvasDirty?.(false)},{passive:false});const end=e=>{const d=activeDrag;if(!d||d.pid!==e.pointerId||d.id!==o.id)return;activeDrag=null;try{hit.releasePointerCapture?.(e.pointerId)}catch(_){ }if(d.moved){window.pushHistory?.();window.renderCanvasInspector?.();window.v132SyncHits?.();syncTextHits()}else beginEdit(o.id,e.clientX,e.clientY)};hit.addEventListener('pointerup',end);hit.addEventListener('pointercancel',()=>{activeDrag=null;syncTextHits()});l.appendChild(hit)}patchEditingText()}
-const baseRender=window.renderCanvasObjects;window.renderCanvasObjects=function(){const r=baseRender?.apply(this,arguments);requestAnimationFrame(syncTextHits);return r};try{renderCanvasObjects=window.renderCanvasObjects}catch(_){ }
-const v152ObjectRoot=q('#canvasObjects');if(v152ObjectRoot)new MutationObserver(()=>requestAnimationFrame(syncTextHits)).observe(v152ObjectRoot,{childList:true});setTimeout(syncTextHits,650);
-
-/* ---------- Partial rich-text formatting: selected words only ---------- */
-let savedRange=null,savedObjectId=null,selTimer=null;
+function syncTextHits(){
+ const l=layer();if(!l)return;l.replaceChildren();
+ for(const o of st()?.objects||[]){
+  if(!textKinds.has(o.kind)||o.isChecklist||o.locked||o.editing)continue;
+  const hit=document.createElement('div');hit.className='v152TextHit';hit.dataset.id=o.id;
+  hit.style.left=(+o.x||0)+'px';hit.style.top=(+o.y||0)+'px';
+  hit.style.width=Math.max(18,(+o.w||80)-16)+'px';hit.style.height=Math.max(18,(+o.h||40)-16)+'px';
+  hit.style.transform=`rotate(${+o.rotation||0}deg)`;hit.style.transformOrigin='50% 50%';
+  hit.addEventListener('pointerdown',e=>{
+   if(e.pointerType==='mouse'&&e.button!==0)return;
+   e.preventDefault();e.stopPropagation();
+   /* Leaving a different text edit session must not make that old editable box steal the drag. */
+   for(const v of st()?.objects||[])if(v!==o&&v.editing)v.editing=false;
+   selectDirect(o.id);
+   const z=scale();activeDrag={pid:e.pointerId,id:o.id,sx:e.clientX,sy:e.clientY,ox:+o.x||0,oy:+o.y||0,z,moved:false,hit,pointerType:e.pointerType};
+   hit.classList.add('dragging');
+   try{hit.setPointerCapture?.(e.pointerId)}catch(_){ }
+  },{passive:false});
+  hit.addEventListener('pointermove',e=>{
+   const d=activeDrag;if(!d||d.pid!==e.pointerId||d.id!==o.id)return;
+   const dx=(e.clientX-d.sx)/d.z,dy=(e.clientY-d.sy)/d.z;
+   if(!d.moved&&Math.hypot(dx,dy)<4)return;
+   d.moved=true;e.preventDefault();
+   const W=typeof window.canvasPageWidth==='function'?window.canvasPageWidth():794,H=typeof window.canvasPageHeight==='function'?window.canvasPageHeight():1123;
+   o.x=Math.max(0,Math.min(Math.max(0,W-o.w),d.ox+dx));o.y=Math.max(0,Math.min(Math.max(0,H-o.h),d.oy+dy));
+   const el=textEl(o.id);if(el){el.style.left=o.x+'px';el.style.top=o.y+'px'}
+   hit.style.left=o.x+'px';hit.style.top=o.y+'px';window.markCanvasDirty?.(false)
+  },{passive:false});
+  const end=e=>{
+   const d=activeDrag;if(!d||d.pid!==e.pointerId||d.id!==o.id)return;activeDrag=null;hit.classList.remove('dragging');
+   try{hit.releasePointerCapture?.(e.pointerId)}catch(_){ }
+   if(d.moved){lastDeskTap152={id:null,time:0,x:0,y:0};window.pushHistory?.();window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.v132SyncHits?.();syncTextHits();return}
+   if(desktop()){
+    const now=performance.now(),dbl=String(lastDeskTap152.id)===String(o.id)&&now-lastDeskTap152.time<430&&Math.hypot(e.clientX-lastDeskTap152.x,e.clientY-lastDeskTap152.y)<14;
+    if(dbl){lastDeskTap152={id:null,time:0,x:0,y:0};beginEdit(o.id,e.clientX,e.clientY)}
+    else{lastDeskTap152={id:o.id,time:now,x:e.clientX,y:e.clientY};window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.v132SyncHits?.();syncTextHits()}
+   }else beginEdit(o.id,e.clientX,e.clientY)
+  };
+  hit.addEventListener('pointerup',end);
+  hit.addEventListener('pointercancel',()=>{activeDrag=null;hit.classList.remove('dragging');syncTextHits()});
+  l.appendChild(hit)
+ }
+ patchEditingText()
+}
 function editingEl(id=savedObjectId||st()?.selectedId){return id?q(`.cobj[data-id="${CSS.escape(String(id))}"][contenteditable="true"]`):null}
 function rangeInside(el,r){if(!el||!r)return false;const n=r.commonAncestorContainer;return n===el||el.contains(n.nodeType===1?n:n.parentNode)}
 function rememberRange(){if(!document.body.classList.contains('editorMode'))return false;const s=getSelection?.();if(!s||!s.rangeCount)return false;const r=s.getRangeAt(0);if(r.collapsed)return false;const node=r.commonAncestorContainer.nodeType===1?r.commonAncestorContainer:r.commonAncestorContainer.parentElement,el=node?.closest?.('.cobj[contenteditable="true"]');if(!el||!rangeInside(el,r))return false;const o=textObj(el.dataset.id);if(!o)return false;try{savedRange=r.cloneRange();savedObjectId=o.id;return true}catch(_){return false}}
@@ -1198,7 +1183,7 @@ window.v152ApplyPresetToSelection=applyPreset;
 window.addEventListener('resize',()=>{setTimeout(syncTextHits,50);setTimeout(updateMobileBar,50)});
 
 /* Keep one current visible version. */
-function version(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 166')e.textContent='VERSION 166';document.documentElement.classList.add('v151Ready');document.title='Studia'}
+function version(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 178')e.textContent='VERSION 178';document.documentElement.classList.add('v151Ready');document.title='Studia'}
 setTimeout(version,0);setTimeout(version,100);setTimeout(version,800);setTimeout(version,2200);
 })();
 /* ===== /Studia V152 ===== */
@@ -1399,7 +1384,7 @@ try{renderSheetEditor=window.renderSheetEditor}catch(_){ }
 const baseLayer=window.renderLayerList;if(baseLayer)window.renderLayerList=function(){const r=baseLayer.apply(this,arguments);requestAnimationFrame(normalizeEditorIcons);return r};
 try{renderLayerList=window.renderLayerList}catch(_){ }
 window.addEventListener('resize',()=>setTimeout(ensureToolbar,100));
-setTimeout(ensureToolbar,600);setTimeout(ensureToolbar,1500);setTimeout(()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 166'},2400);
+setTimeout(ensureToolbar,600);setTimeout(ensureToolbar,1500);setTimeout(()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 178'},2400);
 })();
 /* ===== /Studia V164 ===== */
 
@@ -1424,7 +1409,7 @@ function dragStart165(e,o,wrap){if(o.locked)return;e.preventDefault();e.stopImme
 function dragMove165(e){const d=drag165;if(!d||d.pid!==e.pointerId)return;const s=state(),o=(s?.objects||[]).find(x=>String(x.id)===String(d.id));if(!o)return;const dx=(e.clientX-d.sx)/d.z,dy=(e.clientY-d.sy)/d.z;if(!d.moved&&Math.hypot(dx,dy)<3)return;d.moved=true;e.preventDefault();let nx=d.ox+dx,ny=d.oy+dy;const W=typeof canvasPageWidth==='function'?canvasPageWidth():794,H=typeof canvasPageHeight==='function'?canvasPageHeight():1123;nx=Math.max(0,Math.min(Math.max(0,W-o.w),nx));ny=Math.max(0,Math.min(Math.max(0,H-o.h),ny));try{if(typeof snapObjectPosition==='function'){const sn=snapObjectPosition(o,nx,ny);nx=sn.x;ny=sn.y}}catch(_){}o.x=nx;o.y=ny;const el=q(`.cobj[data-id="${CSS.escape(String(o.id))}"]`);if(el){el.style.left=nx+'px';el.style.top=ny+'px'}if(d.wrap){d.wrap.style.left=nx+'px';d.wrap.style.top=ny+'px'}markCanvasDirty?.(false)}
 function dragEnd165(e){const d=drag165;if(!d||d.pid!==e.pointerId)return;drag165=null;document.body.classList.remove('v165MovingText');try{clearGuides?.()}catch(_){}if(d.moved){pushHistory?.();renderCanvasInspector?.();window.v132SyncHits?.()}setTimeout(buildTextInteractions165,0)}
 function addMoveEdge165(wrap,edge,o){const h=document.createElement('div');h.className=`v165TextMoveEdge ${edge}`;h.title='Am Rand ziehen = Textfeld bewegen';h.addEventListener('pointerdown',e=>{if(e.shiftKey){e.preventDefault();e.stopImmediatePropagation();toggleMulti165(o.id);return}dragStart165(e,o,wrap)},{capture:true,passive:false});h.addEventListener('pointermove',dragMove165,{passive:false});h.addEventListener('pointerup',dragEnd165);h.addEventListener('pointercancel',dragEnd165);wrap.appendChild(h)}
-function buildTextInteractions165(){if(!editor())return;const layer=q('#v152TextHitLayer'),s=state();if(!layer||!s)return;const current=qa(':scope > .v165TextInteraction',layer);if(current.length&&current.length===(s.objects||[]).filter(o=>textKinds.has(o.kind)&&!o.isChecklist&&!o.editing).length&&!q(':scope > .v152TextHit',layer))return;layer.replaceChildren();for(const o of s.objects||[]){if(!textKinds.has(o.kind)||o.isChecklist||o.editing)continue;const wrap=document.createElement('div');wrap.className='v165TextInteraction'+(((s.selectedIds||[]).includes(o.id)||String(s.selectedId)===String(o.id))?' selected':'')+(o.locked?' locked':'');wrap.dataset.id=o.id;Object.assign(wrap.style,{left:(+o.x||0)+'px',top:(+o.y||0)+'px',width:Math.max(18,+o.w||80)+'px',height:Math.max(18,+o.h||40)+'px',transform:`rotate(${+o.rotation||0}deg)`,transformOrigin:'50% 50%'});const edit=document.createElement('div');edit.className='v165TextEditArea';edit.title=o.locked?'Textfeld ist gesperrt':'In die Mitte klicken = Text bearbeiten';edit.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;if(e.shiftKey){e.preventDefault();e.stopImmediatePropagation();toggleMulti165(o.id);return}e.preventDefault();e.stopImmediatePropagation();chooseText165(o.id);if(o.locked)return;if(painter165){if(applyObject165(o.id,painter165.style))stopPainter165('Format übertragen ♡');return}const x=e.clientX,y=e.clientY;setTimeout(()=>window.v152BeginTextEdit?.(o.id,x,y),0)},{capture:true,passive:false});wrap.appendChild(edit);for(const edge of ['top','right','bottom','left'])addMoveEdge165(wrap,edge,o);layer.appendChild(wrap)}layer.dataset.v165='1'}
+function buildTextInteractions165(){if(!editor()||innerWidth>=900)return;const layer=q('#v152TextHitLayer'),s=state();if(!layer||!s)return;const current=qa(':scope > .v165TextInteraction',layer);if(current.length&&current.length===(s.objects||[]).filter(o=>textKinds.has(o.kind)&&!o.isChecklist&&!o.editing).length&&!q(':scope > .v152TextHit',layer))return;layer.replaceChildren();for(const o of s.objects||[]){if(!textKinds.has(o.kind)||o.isChecklist||o.editing)continue;const wrap=document.createElement('div');wrap.className='v165TextInteraction'+(((s.selectedIds||[]).includes(o.id)||String(s.selectedId)===String(o.id))?' selected':'')+(o.locked?' locked':'');wrap.dataset.id=o.id;Object.assign(wrap.style,{left:(+o.x||0)+'px',top:(+o.y||0)+'px',width:Math.max(18,+o.w||80)+'px',height:Math.max(18,+o.h||40)+'px',transform:`rotate(${+o.rotation||0}deg)`,transformOrigin:'50% 50%'});const edit=document.createElement('div');edit.className='v165TextEditArea';edit.title=o.locked?'Textfeld ist gesperrt':'In die Mitte klicken = Text bearbeiten';edit.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;if(e.shiftKey){e.preventDefault();e.stopImmediatePropagation();toggleMulti165(o.id);return}e.preventDefault();e.stopImmediatePropagation();chooseText165(o.id);if(o.locked)return;if(painter165){if(applyObject165(o.id,painter165.style))stopPainter165('Format übertragen ♡');return}const x=e.clientX,y=e.clientY;setTimeout(()=>window.v152BeginTextEdit?.(o.id,x,y),0)},{capture:true,passive:false});wrap.appendChild(edit);for(const edge of ['top','right','bottom','left'])addMoveEdge165(wrap,edge,o);layer.appendChild(wrap)}layer.dataset.v165='1'}
 function scheduleText165(){requestAnimationFrame(()=>requestAnimationFrame(buildTextInteractions165))}
 const renderObjects165=window.renderCanvasObjects;if(renderObjects165)window.renderCanvasObjects=function(){const r=renderObjects165.apply(this,arguments);scheduleText165();return r};try{renderCanvasObjects=window.renderCanvasObjects}catch(_){}
 setTimeout(buildTextInteractions165,750);setTimeout(buildTextInteractions165,1700);
@@ -1540,9 +1525,7 @@ window.openAccountDialog=function(){
  if(!logged)setTimeout(()=>window.v166RenderGoogleButton?.(),30)
 };
 /* V150 already captures the whole app state. Make foreground/open sync extra eager. */
-window.addEventListener('pageshow',()=>setTimeout(()=>window.v150Pull?.(),120));
-window.addEventListener('focus',()=>setTimeout(()=>window.v150Pull?.(),120));
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')setTimeout(()=>window.v150Pull?.(),150)});
+/* V178: duplicate foreground sync listeners removed; V150 is the single sync owner. */
 
 /* ---------- mobile text: tap/drag selects & moves; explicit pencil enters editing ---------- */
 const baseSelect166=window.selectCanvasObject;
@@ -1635,7 +1618,7 @@ function ensureModalX166(){const modal=q('#modalWrap.open #modal');if(!modal||mo
 const baseOpenModal166=window.openModal;if(baseOpenModal166)window.openModal=function(){const r=baseOpenModal166.apply(this,arguments);requestAnimationFrame(ensureModalX166);return r};try{openModal=window.openModal}catch(_){}
 
 /* initial polish — no MutationObserver, no boot changes */
-function init166(){if(editor()){decorateLayers166();syncGroupUI166();window.updateMobileSelectionTools?.()}const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 166'}
+function init166(){if(editor()){decorateLayers166();syncGroupUI166();window.updateMobileSelectionTools?.()}const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 178'}
 setTimeout(init166,150);setTimeout(init166,2800);
 })();
 /* ===== /Studia V166 ===== */
@@ -1738,7 +1721,7 @@ const printDesktop167=window.printCanvasSheet;
 window.printCanvasSheet=function(){if(!mobile())return printDesktop167?.apply(this,arguments);return window.v167OpenPrintPDF()};try{printCanvasSheet=window.printCanvasSheet}catch(_){}
 
 /* ---------- version + safe refresh ---------- */
-function init167(){if(!editor())return;ensureStableHits167();stickerButton167();const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 167'}
+function init167(){if(!editor())return;ensureStableHits167();stickerButton167();const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 178'}
 setTimeout(init167,900);setTimeout(init167,3200);
 })();
 /* ===== /Studia V167 ===== */
@@ -1838,7 +1821,7 @@ window.v168PrintMobile=async function(){
 const desktopPrint168=window.printCanvasSheet;
 window.printCanvasSheet=function(){if(mobile())return window.v168PrintMobile();return desktopPrint168?.apply(this,arguments)};try{printCanvasSheet=window.printCanvasSheet}catch(_){}
 
-function version168(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 168'}
+function version168(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 178'}
 setTimeout(version168,800);setTimeout(version168,3600);setTimeout(version168,5200);
 })();
 /* ===== /Studia V168 ===== */
@@ -1947,7 +1930,7 @@ window.v169PrintMobile=function(){
 const oldPrint169=window.printCanvasSheet;
 window.printCanvasSheet=function(){if(mobile())return window.v169PrintMobile();return oldPrint169?.apply(this,arguments)};try{printCanvasSheet=window.printCanvasSheet}catch(_){}
 
-function version169(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 169'}
+function version169(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 178'}
 setTimeout(version169,700);setTimeout(version169,2500);setTimeout(version169,5600);setTimeout(version169,8000);
 })();
 /* ===== /Studia V169 ===== */
@@ -1998,7 +1981,7 @@ const te170=new TextEncoder();function bytes170(s){return te170.encode(s)}functi
 function title170(){let t='Lernblatt';try{const d=typeof data!=='undefined'?data:window.data,sid=typeof selectedSheetId!=='undefined'?selectedSheetId:window.selectedSheetId;t=(d?.studySheets||[]).find(x=>x.id===sid)?.title||q('.editorTitle b')?.textContent||t}catch(_){}return String(t).replace(/[^a-z0-9äöüß _-]/gi,'_').slice(0,80)||'Lernblatt'}
 window.v170PrintMobile=async function(){if(!mobile())return false;scrubGuides170();const tab=window.open('about:blank','_blank');if(tab){try{tab.document.open();tab.document.write('<!doctype html><meta name="viewport" content="width=device-width"><title></title><body style="margin:0;background:#fff;font:800 15px system-ui;color:#725b56;display:grid;place-items:center;height:100vh">Lernblatt wird vorbereitet …</body>');tab.document.close()}catch(_){}}try{if(document.fonts?.ready)await Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,1000))]);const c=await pageCanvas170(),jpg=jpeg170(c.toDataURL('image/jpeg',.97)),pdf=pdf170(jpg,c.width,c.height,W()>H()),url=URL.createObjectURL(pdf);if(tab&&!tab.closed){tab.location.replace(url)}else{const a=document.createElement('a');a.href=url;a.target='_blank';a.download=title170()+'.pdf';document.body.appendChild(a);a.click();a.remove()}setTimeout(()=>URL.revokeObjectURL(url),180000);window.cuteToast?.('PDF bereit · ohne Website-Fußzeile ♡');return true}catch(err){console.error('[V170 PDF]',err);try{tab?.close()}catch(_){}alert('Das Druck-PDF konnte nicht erstellt werden: '+String(err?.message||err));return false}};
 const prev170=window.printCanvasSheet;window.printCanvasSheet=function(){if(mobile())return window.v170PrintMobile();return prev170?.apply(this,arguments)};try{printCanvasSheet=window.printCanvasSheet}catch(_){}
-function version170(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 170'}setTimeout(version170,700);setTimeout(version170,2600);setTimeout(version170,6000);
+function version170(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 178'}setTimeout(version170,700);setTimeout(version170,2600);setTimeout(version170,6000);
 })();
 /* ===== /Studia V170 ===== */
 
@@ -2069,8 +2052,7 @@ window.v171CloudRegister=async function(){cloudFields171();if(!window.v150Rememb
 window.v171CloudNow=async function(){if(!localStorage.getItem(TOKEN_KEY))return cloudStatus171('Bitte zuerst anmelden.',true);cloudStatus171('Geräte werden abgeglichen …');try{await window.v150Push?.();await window.v150Pull?.();cloudStatus171('Alle Geräte sind aktuell ✓')}catch(err){cloudStatus171(String(err?.message||err),true)}};
 /* Settings are static now; only populate values/status when they are opened. */
 document.addEventListener('click',e=>{const b=e.target instanceof Element?e.target.closest('[data-view="settings"],[data-view="more"],#nav-settings,#nav-more'):null;if(b)setTimeout(cloudUI171,80)},true);
-window.addEventListener('pageshow',()=>setTimeout(()=>{cloudUI171();if(localStorage.getItem(TOKEN_KEY))window.v150Pull?.()},180));
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&localStorage.getItem(TOKEN_KEY))setTimeout(()=>window.v150Pull?.(),300)});
+window.addEventListener('pageshow',()=>setTimeout(cloudUI171,180));
 setTimeout(cloudUI171,800);
 
 /* ---------- exact sticker colors, every real RGB value ---------- */
@@ -2079,18 +2061,37 @@ function sticker171(){const s=st(),ids=new Set([...(s?.selectedIds||[]),s?.selec
 function loadImg171(src){return new Promise((res,rej)=>{const im=new Image();im.onload=()=>res(im);im.onerror=rej;im.src=src})}
 const hex171=(r,g,b)=>'#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
 function rgb171(h){h=String(h||'#000000').replace('#','');return[parseInt(h.slice(0,2),16)||0,parseInt(h.slice(2,4),16)||0,parseInt(h.slice(4,6),16)||0]}
-async function exactPalette171(o){const src=o.stickerPaletteOriginal||o.stickerExactOriginal171||o.src;o.stickerExactOriginal171=src;o.stickerPaletteOriginal=src;const key=String(o.id)+'|'+src.slice(0,96)+'|'+src.length;if(exactCache171.has(key))return exactCache171.get(key);const im=await loadImg171(src),pixels=Math.max(1,im.naturalWidth*im.naturalHeight),scale=pixels>4000000?Math.sqrt(4000000/pixels):1,c=document.createElement('canvas');c.width=Math.max(1,Math.round(im.naturalWidth*scale));c.height=Math.max(1,Math.round(im.naturalHeight*scale));const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(im,0,0,c.width,c.height);const d=x.getImageData(0,0,c.width,c.height).data,m=new Map();for(let i=0;i<d.length;i+=4){if(d[i+3]<20)continue;const k=(d[i]<<16)|(d[i+1]<<8)|d[i+2];m.set(k,(m.get(k)||0)+1)}const arr=[...m.entries()].sort((a,b)=>b[1]-a[1]).map(([k,n])=>({hex:hex171((k>>16)&255,(k>>8)&255,k&255),n}));exactCache171.set(key,arr);return arr}
-async function renderExact171(o){const src=o.stickerExactOriginal171||o.stickerPaletteOriginal||o.src,map=o.stickerExactMap171||{};if(!Object.keys(map).length){o.src=src;window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.();return}const im=await loadImg171(src),c=document.createElement('canvas');c.width=im.naturalWidth;c.height=im.naturalHeight;const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(im,0,0);const img=x.getImageData(0,0,c.width,c.height),d=img.data;for(let i=0;i<d.length;i+=4){if(d[i+3]<20)continue;const key=hex171(d[i],d[i+1],d[i+2]),to=map[key];if(!to)continue;const [r,g,b]=rgb171(to);d[i]=r;d[i+1]=g;d[i+2]=b}x.putImageData(img,0,0);o.src=c.toDataURL('image/png');delete o.tintColor;window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.()}
+function dist177(a,b){const dr=a[0]-b[0],dg=a[1]-b[1],db=a[2]-b[2];return Math.sqrt(dr*dr+dg*dg+db*db)}
+async function exactPalette171(o){
+ const src=o.stickerPaletteOriginal||o.stickerExactOriginal171||o.src;o.stickerExactOriginal171=src;o.stickerPaletteOriginal=src;if(o.stickerPaletteMode177!=='cluster12'){o.stickerExactMap171={};o.src=src;o.stickerPaletteMode177='cluster12'}
+ const key='v177|'+String(o.id)+'|'+src.slice(0,96)+'|'+src.length;if(exactCache171.has(key))return exactCache171.get(key);
+ const im=await loadImg171(src),pixels=Math.max(1,im.naturalWidth*im.naturalHeight),scale=pixels>1000000?Math.sqrt(1000000/pixels):1,c=document.createElement('canvas');
+ c.width=Math.max(1,Math.round(im.naturalWidth*scale));c.height=Math.max(1,Math.round(im.naturalHeight*scale));const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(im,0,0,c.width,c.height);
+ const d=x.getImageData(0,0,c.width,c.height).data,bins=new Map();let total=0;
+ for(let i=0;i<d.length;i+=4){if(d[i+3]<40)continue;total++;const q=[Math.round(d[i]/20)*20,Math.round(d[i+1]/20)*20,Math.round(d[i+2]/20)*20].map(v=>Math.max(0,Math.min(255,v))),k=q.join(',');const b=bins.get(k)||{n:0,sum:[0,0,0]};b.n++;b.sum[0]+=d[i];b.sum[1]+=d[i+1];b.sum[2]+=d[i+2];bins.set(k,b)}
+ const cand=[...bins.values()].filter(b=>b.n>=Math.max(2,total*.00035)).sort((a,b)=>b.n-a.n).map(b=>({rgb:b.sum.map(v=>v/b.n),n:b.n}));
+ const groups=[];
+ for(const c0 of cand){let near=groups.find(g=>dist177(g.rgb,c0.rgb)<38);if(near){const nn=near.n+c0.n;near.rgb=near.rgb.map((v,i)=>(v*near.n+c0.rgb[i]*c0.n)/nn);near.n=nn}else groups.push({rgb:[...c0.rgb],n:c0.n});if(groups.length>=18&&cand.indexOf(c0)>80)break}
+ groups.sort((a,b)=>b.n-a.n);const chosen=[];for(const g of groups){if(chosen.some(x=>dist177(x.rgb,g.rgb)<30))continue;chosen.push(g);if(chosen.length>=12)break}
+ const arr=chosen.map(g=>({hex:hex171(...g.rgb.map(v=>Math.round(v))),n:g.n,rgb:g.rgb}));exactCache171.set(key,arr);return arr
+}
+async function renderExact171(o){
+ const src=o.stickerExactOriginal171||o.stickerPaletteOriginal||o.src,map=o.stickerExactMap171||{},sources=stickerPalette171.map(c=>({hex:c.hex,rgb:c.rgb||rgb171(c.hex)}));
+ if(!Object.keys(map).length){o.src=src;window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.();return}
+ const im=await loadImg171(src),c=document.createElement('canvas');c.width=im.naturalWidth;c.height=im.naturalHeight;const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(im,0,0);const img=x.getImageData(0,0,c.width,c.height),d=img.data;
+ for(let i=0;i<d.length;i+=4){if(d[i+3]<20)continue;const p=[d[i],d[i+1],d[i+2]];let best=null,bd=1e9;for(const s0 of sources){const dd=dist177(p,s0.rgb);if(dd<bd){bd=dd;best=s0}}if(!best||!map[best.hex])continue;const t=rgb171(map[best.hex]),srcRgb=best.rgb;for(let k=0;k<3;k++)d[i+k]=Math.max(0,Math.min(255,Math.round(t[k]+(p[k]-srcRgb[k])*.58)))}
+ x.putImageData(img,0,0);o.src=c.toDataURL('image/png');delete o.tintColor;window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.()
+}
 let stickerPalette171=[],stickerPage171=0,stickerId171='';
-function rows171(start,end){const o=(st()?.objects||[]).find(x=>String(x.id)===String(stickerId171)),map=o?.stickerExactMap171||{};return stickerPalette171.slice(start,end).map((c,i)=>{const idx=start+i,val=map[c.hex]||c.hex;return `<div class="v171StickerRow" data-i="${idx}"><span class="v171StickerOriginal" style="background:${c.hex}"></span><code>${c.hex.toUpperCase()}</code><span>→</span><label><input type="color" value="${val}" data-src="${c.hex}"><i style="background:${val}"></i></label><button type="button" data-reset="${c.hex}" title="Originalfarbe">↺</button></div>`}).join('')}
-function appendStickerRows171(){const host=q('#v171StickerRows');if(!host)return;const start=stickerPage171*120,end=Math.min(stickerPalette171.length,start+120);host.insertAdjacentHTML('beforeend',rows171(start,end));stickerPage171++;const more=q('#v171StickerMore');if(more){more.hidden=end>=stickerPalette171.length;more.textContent=`Weitere Farben (${Math.max(0,stickerPalette171.length-end)})`}}
+function rows171(start,end){const o=(st()?.objects||[]).find(x=>String(x.id)===String(stickerId171)),map=o?.stickerExactMap171||{};return stickerPalette171.slice(start,end).map((c,i)=>{const idx=start+i,val=map[c.hex]||c.hex;return `<div class="v171StickerRow" data-i="${idx}"><span class="v171StickerOriginal" style="background:${c.hex}"></span><span class="v177StickerName">Farbe ${idx+1}</span><span>→</span><label><input type="color" value="${val}" data-src="${c.hex}"><i style="background:${val}"></i></label><button type="button" data-reset="${c.hex}" title="Originalfarbe">↺</button></div>`}).join('')}
+function appendStickerRows171(){const host=q('#v171StickerRows');if(!host)return;const start=stickerPage171*12,end=Math.min(stickerPalette171.length,start+12);host.insertAdjacentHTML('beforeend',rows171(start,end));stickerPage171++;const more=q('#v171StickerMore');if(more){more.hidden=end>=stickerPalette171.length;more.textContent=`Weitere Farben (${Math.max(0,stickerPalette171.length-end)})`}}
 window.v171MoreStickerColors=appendStickerRows171;
-function openExactModal171(o){stickerId171=String(o.id);stickerPage171=0;window.openModal?.(`<div class="v135Modal v171StickerModal"><div class="v135ModalHead"><div><span class="eyebrow">STICKERFARBEN</span><h2>Jede einzelne Farbe</h2></div><button onclick="closeModal()">×</button></div><p class="small"><b>${stickerPalette171.length}</b> tatsächlich vorkommende RGB-Farben erkannt. Auch kleine Schattierungen können einzeln geändert werden.</p><div class="v171StickerLegend"><span>Original</span><span></span><span>Neue Farbe</span></div><div id="v171StickerRows" class="v171StickerRows"></div><button id="v171StickerMore" class="ghost v171StickerMore" type="button" onclick="v171MoreStickerColors()">Weitere Farben</button><div class="v135ActionRow"><button type="button" onclick="v171ResetStickerColors()">Alle Originalfarben</button><button class="primary" onclick="closeModal()">Fertig</button></div></div>`);appendStickerRows171();const modal=q('.v171StickerModal');modal?.addEventListener('input',e=>{const inp=e.target.closest?.('input[type=color][data-src]');if(!inp)return;const ob=(st()?.objects||[]).find(x=>String(x.id)===String(stickerId171));if(!ob)return;ob.stickerExactMap171||={};if(inp.value.toLowerCase()===inp.dataset.src.toLowerCase())delete ob.stickerExactMap171[inp.dataset.src];else ob.stickerExactMap171[inp.dataset.src]=inp.value;const i=inp.parentElement?.querySelector('i');if(i)i.style.background=inp.value;clearTimeout(window.__v171StickerRenderTimer);window.__v171StickerRenderTimer=setTimeout(()=>renderExact171(ob),90)});modal?.addEventListener('click',e=>{const b=e.target.closest?.('button[data-reset]');if(!b)return;const ob=(st()?.objects||[]).find(x=>String(x.id)===String(stickerId171));if(!ob)return;ob.stickerExactMap171||={};delete ob.stickerExactMap171[b.dataset.reset];const inp=b.closest('.v171StickerRow')?.querySelector('input[type=color]');if(inp){inp.value=b.dataset.reset;inp.parentElement.querySelector('i').style.background=b.dataset.reset}renderExact171(ob)})}
-window.v165OpenStickerColors=async function(){const o=sticker171();if(!o)return window.cuteToast?.('Wähle genau einen Sticker aus ♡');window.cuteToast?.('Alle Stickerfarben werden gelesen …');try{stickerPalette171=await exactPalette171(o);openExactModal171(o)}catch(err){console.error('[V171 sticker colors]',err);alert('Die Farben dieses Stickers konnten nicht gelesen werden.')}};
+function openExactModal171(o){stickerId171=String(o.id);stickerPage171=0;window.openModal?.(`<div class="v135Modal v171StickerModal"><div class="v135ModalHead"><div><span class="eyebrow">STICKERFARBEN</span><h2>Stickerfarben</h2></div><button onclick="closeModal()">×</button></div><p class="small"><b>${stickerPalette171.length}</b> eigenständige sichtbare Farben erkannt. Ähnliche Schattierungen sind zusammengefasst, damit die Liste übersichtlich bleibt.</p><div class="v171StickerLegend"><span>Original</span><span></span><span>Neue Farbe</span></div><div id="v171StickerRows" class="v171StickerRows"></div><button id="v171StickerMore" class="ghost v171StickerMore" type="button" onclick="v171MoreStickerColors()">Weitere Farben</button><div class="v135ActionRow"><button type="button" onclick="v171ResetStickerColors()">Alle Originalfarben</button><button class="primary" onclick="closeModal()">Fertig</button></div></div>`);appendStickerRows171();const modal=q('.v171StickerModal');modal?.addEventListener('change',e=>{const inp=e.target.closest?.('input[type=color][data-src]');if(!inp)return;const ob=(st()?.objects||[]).find(x=>String(x.id)===String(stickerId171));if(!ob)return;ob.stickerExactMap171||={};if(inp.value.toLowerCase()===inp.dataset.src.toLowerCase())delete ob.stickerExactMap171[inp.dataset.src];else ob.stickerExactMap171[inp.dataset.src]=inp.value;const i=inp.parentElement?.querySelector('i');if(i)i.style.background=inp.value;renderExact171(ob)});modal?.addEventListener('click',e=>{const b=e.target.closest?.('button[data-reset]');if(!b)return;const ob=(st()?.objects||[]).find(x=>String(x.id)===String(stickerId171));if(!ob)return;ob.stickerExactMap171||={};delete ob.stickerExactMap171[b.dataset.reset];const inp=b.closest('.v171StickerRow')?.querySelector('input[type=color]');if(inp){inp.value=b.dataset.reset;inp.parentElement.querySelector('i').style.background=b.dataset.reset}renderExact171(ob)})}
+window.v165OpenStickerColors=async function(){const o=sticker171();if(!o)return window.cuteToast?.('Wähle genau einen Sticker aus ♡');window.cuteToast?.('Stickerfarben werden erkannt …');try{stickerPalette171=await exactPalette171(o);openExactModal171(o)}catch(err){console.error('[V171 sticker colors]',err);alert('Die Farben dieses Stickers konnten nicht gelesen werden.')}};
 window.v171ResetStickerColors=async function(){const o=(st()?.objects||[]).find(x=>String(x.id)===String(stickerId171));if(!o)return;o.stickerExactMap171={};o.src=o.stickerExactOriginal171||o.stickerPaletteOriginal||o.src;delete o.tintColor;window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.();window.closeModal?.();window.cuteToast?.('Alle Originalfarben wiederhergestellt ♡')};
 
 /* cache-busting visible version only; never observe/mutate in a loop */
-function version171(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 175'}setTimeout(version171,6500);setTimeout(version171,8000);
+function version171(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 178'}setTimeout(version171,6500);setTimeout(version171,8000);
 })();
 /* ===== /Studia V171 ===== */
 
@@ -2129,7 +2130,7 @@ async function login172(register=false){
  busy172(true,register?'Konto wird erstellt …':'Anmelden …');
  try{
   cloudStatus172('Server wird geprüft …');
-  try{await health172(f.url)}catch(probeErr){console.warn('[V172 cloud probe]',probeErr);cloudStatus172('Serverprüfung nicht eindeutig · Anmeldung wird versucht …')}
+  try{const info=await health172(f.url);if(info?.service&&info.service!=='studia-google-account-sync')throw new Error('Diese URL gehört nicht zum Studia-Konto-Sync.');if(Number(info?.version||0)&&Number(info.version)<178)throw new Error('Server-Code ist veraltet (V'+info.version+'). Bitte Code.gs aus V178 bereitstellen.')}catch(probeErr){console.warn('[V178 cloud probe]',probeErr);throw probeErr}
   cloudStatus172(register?'Konto wird erstellt …':'Anmelden …');
   /* Use the proven V150 request path; unlike V171 we NEVER overwrite its server error afterwards. */
   if(register)await window.v150Register?.();else await window.v150Login?.();
@@ -2149,9 +2150,8 @@ window.v171CloudRegister=()=>login172(true);
 window.v171CloudNow=async function(){if(!localStorage.getItem(TOKEN_KEY))return cloudStatus172('Bitte zuerst anmelden.',true);busy172(true,'Synchronisieren …');try{cloudStatus172('Geräte werden abgeglichen …');await window.v150Push?.();await window.v150Pull?.();cloudStatus172('Alle Geräte sind aktuell ✓')}catch(err){cloudStatus172(String(err?.message||err),true)}finally{busy172(false)}};
 /* Keep old helper compatible, but accept a pasted URL without /exec and normalize it. */
 window.v150RememberUrl=function(){const el=q('#v150ScriptUrl'),u=normGas172(el?.value||localStorage.getItem(URL_KEY)||'');if(el)el.value=u;if(validGas172(u)){localStorage.setItem(URL_KEY,u);cloudStatus172('Server-URL gespeichert ✓');return true}cloudStatus172('Bitte eine gültige Google-Apps-Script-/exec-URL eintragen.',true);return false};
-let poll172=null;function startPoll172(){if(poll172)clearInterval(poll172);if(!localStorage.getItem(TOKEN_KEY))return;poll172=setInterval(()=>{if(document.visibilityState==='visible'&&navigator.onLine!==false)window.v150Pull?.()},7000)}
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&localStorage.getItem(TOKEN_KEY)){startPoll172();setTimeout(()=>window.v150Pull?.(),350)}});
-window.addEventListener('online',()=>{if(localStorage.getItem(TOKEN_KEY))setTimeout(()=>window.v150Pull?.(),300)});
+let poll172=null;function startPoll172(){/* V177: V150 owns the single foreground polling timer. */}
+/* V178: V150 owns visibility/online sync triggers. */
 setTimeout(()=>{fields172();if(localStorage.getItem(TOKEN_KEY)){cloudStatus172(`Verbunden${localStorage.getItem(USER_KEY)?' als '+localStorage.getItem(USER_KEY):''} · Auto-Sync aktiv ✓`);startPoll172()}},700);
 
 /* ---------- Fonts: one registry from IndexedDB + both legacy stores ---------- */
@@ -2189,7 +2189,7 @@ window.v165ToggleFontMenu=async function(btn){window.v152RememberRange?.();const
 /* After any upload, invalidate all caches and immediately re-read IndexedDB. */
 if(typeof window.v144HandleFontFile==='function'){const prevUpload172=window.v144HandleFontFile;window.v144HandleFontFile=async function(){const r=await prevUpload172.apply(this,arguments);fontCache172=[];await ensureFonts172(true);setTimeout(async()=>{if(q('#v144FontBrowser'))await window.v144OpenFontBrowser?.()},30);return r}}
 /* Cloud font restores can replace IndexedDB. Re-read it after every pull. */
-if(typeof window.v150Pull==='function'){const prevPull172=window.v150Pull;window.v150Pull=async function(){const r=await prevPull172.apply(this,arguments);fontCache172=[];await ensureFonts172(true);return r}}
+if(typeof window.v150Pull==='function'){const prevPull172=window.v150Pull;window.v150Pull=async function(){const r=await prevPull172.apply(this,arguments);if(r){fontCache172=[];await ensureFonts172(true)}return r}}
 /* Font selectors are recreated by several legacy panels. Refresh only after relevant UI actions, no body-wide observer. */
 document.addEventListener('click',e=>{if(e.target instanceof Element&&e.target.closest('[onclick*="Font"],.v96FontChooser,.v165FontMenuBtn,[data-v151="text"],.fontSelect'))setTimeout(()=>ensureFonts172(),80)},true);
 window.addEventListener('pageshow',()=>setTimeout(()=>ensureFonts172(true),250));
@@ -2265,6 +2265,99 @@ window.addEventListener('resize',()=>setTimeout(syncTextLayerHits176,80));
 setTimeout(syncTextLayerHits176,700);setTimeout(syncTextLayerHits176,2200);
 
 /* One-shot version label only — never MutationObserver. */
-setTimeout(()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 176'},900);
+setTimeout(()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 178'},900);
 })();
 /* ===== /Studia V176 ===== */
+
+/* ===== Studia V177 — desktop text + single sync + compact sticker palette ===== */
+[950,6900,8300].forEach(t=>setTimeout(()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 178'},t));
+/* ===== /Studia V177 ===== */
+
+/* ===== Studia V178 — lean desktop text + performance hardening ===== */
+(()=>{
+'use strict';
+if(window.__STUDIA_V178_DESKTOP_TEXT__)return;window.__STUDIA_V178_DESKTOP_TEXT__=true;
+const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
+const desktop=()=>innerWidth>=900&&document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
+const textKinds=new Set(['text','block','task','merke','file']);
+const st=()=>{try{return canvasState}catch(_){return window.canvasState}};
+const obj=id=>(st()?.objects||[]).find(o=>String(o.id)===String(id));
+const isText=o=>!!o&&textKinds.has(o.kind)&&!o.isChecklist;
+const pageW=()=>typeof window.canvasPageWidth==='function'?window.canvasPageWidth():794;
+const pageH=()=>typeof window.canvasPageHeight==='function'?window.canvasPageHeight():1123;
+let drag=null,lastTap={id:null,t:0,x:0,y:0},raf=0,inputTimer=0;
+
+function stage(){return q('#canvasStage')}
+function layer(){
+ const s=stage();if(!s)return null;let l=q('#v178DesktopTextLayer',s);if(!l){l=document.createElement('div');l.id='v178DesktopTextLayer';s.appendChild(l)}
+ l.style.width=pageW()+'px';l.style.height=pageH()+'px';return l
+}
+function zoom(){const s=stage();if(!s)return 1;const r=s.getBoundingClientRect();return Math.max(.05,r.width/pageW())}
+function textEl(id){return q(`#canvasObjects .cobj[data-id="${CSS.escape(String(id))}"]`)}
+function setSelectedLight(id){
+ const s=st(),o=obj(id);if(!s||!o)return;
+ s.multiMode=false;s.selectedType='object';s.selectedId=o.id;s.selectedIds=[o.id];s.selectedVectorIds=[];
+ qa('#canvasObjects .cobj.selected').forEach(x=>x.classList.remove('selected'));textEl(o.id)?.classList.add('selected');
+ qa('#v178DesktopTextLayer .v178TextHit.selected').forEach(x=>x.classList.toggle('selected',String(x.dataset.id)===String(o.id)));
+ try{window.renderCanvasInspector?.()}catch(_){}try{window.renderLayerList?.()}catch(_){}
+}
+function placeCaret(el,x,y){
+ try{let r=null;if(document.caretPositionFromPoint){const p=document.caretPositionFromPoint(x,y);if(p){r=document.createRange();r.setStart(p.offsetNode,p.offset);r.collapse(true)}}else if(document.caretRangeFromPoint)r=document.caretRangeFromPoint(x,y);if(r&&(r.startContainer===el||el.contains(r.startContainer))){const sel=getSelection();sel.removeAllRanges();sel.addRange(r);return true}}catch(_){}return false
+}
+function exitEdit(keepSelection=true){
+ const s=st();if(!s)return;let changed=false;
+ for(const o of s.objects||[]){if(!isText(o)||!o.editing)continue;const el=textEl(o.id);if(el)o.text=el.innerHTML;o.editing=false;changed=true;if(el){el.contentEditable='false';el.classList.remove('editing','v152EditingText','v178EditingText');el.style.removeProperty('z-index');el.style.removeProperty('pointer-events');el.style.removeProperty('user-select');el.style.removeProperty('-webkit-user-select')}}
+ document.body.classList.remove('v178TextEditing');if(changed){try{window.markCanvasDirty?.()}catch(_){}scheduleSync();if(keepSelection)try{window.renderCanvasInspector?.()}catch(_){}}
+}
+function enterEdit(id,x,y){
+ const o=obj(id);if(!desktop()||!isText(o)||o.locked)return false;exitEdit(false);setSelectedLight(id);o.editing=true;
+ const el=textEl(id);if(!el)return false;el.contentEditable='true';el.classList.add('editing','v152EditingText','v178EditingText');document.body.classList.add('v178TextEditing');
+ try{el.focus({preventScroll:true})}catch(_){el.focus()}if(Number.isFinite(x)&&Number.isFinite(y))placeCaret(el,x,y);
+ lastTap={id:null,t:0,x:0,y:0};scheduleSync();return true
+}
+window.v178BeginDesktopTextEdit=enterEdit;
+
+function sync(){
+ raf=0;if(!desktop()){q('#v178DesktopTextLayer')?.remove();return}const l=layer(),s=st();if(!l||!s)return;
+ const editing=(s.objects||[]).some(o=>isText(o)&&o.editing);document.body.classList.toggle('v178TextEditing',editing);
+ l.replaceChildren();const sid=String(s.selectedId||'');
+ for(const o of s.objects||[]){if(!isText(o)||o.locked||o.editing)continue;const pad=Math.min(7,Math.max(2,Math.min(+o.w||0,+o.h||0)/8)),h=document.createElement('div');h.className='v178TextHit'+(String(o.id)===sid?' selected':'');h.dataset.id=o.id;Object.assign(h.style,{left:(+o.x+pad||pad)+'px',top:(+o.y+pad||pad)+'px',width:Math.max(12,(+o.w||80)-pad*2)+'px',height:Math.max(12,(+o.h||40)-pad*2)+'px',transform:`rotate(${+o.rotation||0}deg)`,transformOrigin:'50% 50%',zIndex:String(1000+(+o.z||0))});
+ h.addEventListener('pointerdown',down,{passive:false});l.appendChild(h)}
+}
+function scheduleSync(){if(raf)return;raf=requestAnimationFrame(sync)}
+window.v178SyncDesktopText=sync;
+
+function down(e){
+ if(!desktop()||e.pointerType!=='mouse'||e.button!==0)return;const h=e.currentTarget,o=obj(h.dataset.id);if(!isText(o)||o.locked)return;e.preventDefault();e.stopPropagation();
+ if(e.shiftKey){try{window.toggleObjectInMultiSelection?.(o.id)}catch(_){}scheduleSync();return}
+ exitEdit(false);setSelectedLight(o.id);const z=zoom();drag={id:o.id,pid:e.pointerId,sx:e.clientX,sy:e.clientY,ox:+o.x||0,oy:+o.y||0,z,moved:false,hit:h,padx:(parseFloat(h.style.left)||0)-(+o.x||0),pady:(parseFloat(h.style.top)||0)-(+o.y||0)};h.classList.add('dragging');try{h.setPointerCapture?.(e.pointerId)}catch(_){}
+}
+window.addEventListener('pointermove',e=>{
+ const d=drag;if(!d||e.pointerId!==d.pid||!desktop())return;const o=obj(d.id);if(!o)return;const dx=(e.clientX-d.sx)/d.z,dy=(e.clientY-d.sy)/d.z;if(!d.moved&&Math.hypot(dx,dy)<3)return;d.moved=true;e.preventDefault();e.stopImmediatePropagation();
+ const nx=Math.max(0,Math.min(Math.max(0,pageW()-(+o.w||0)),d.ox+dx)),ny=Math.max(0,Math.min(Math.max(0,pageH()-(+o.h||0)),d.oy+dy));o.x=nx;o.y=ny;const el=textEl(o.id);if(el){el.style.left=nx+'px';el.style.top=ny+'px'}if(d.hit?.isConnected){d.hit.style.left=(nx+(d.padx||0))+'px';d.hit.style.top=(ny+(d.pady||0))+'px'}try{window.markCanvasDirty?.(false)}catch(_){}
+},{capture:true,passive:false});
+window.addEventListener('pointerup',e=>{
+ const d=drag;if(!d||e.pointerId!==d.pid)return;drag=null;const o=obj(d.id);d.hit?.classList.remove('dragging');try{d.hit?.releasePointerCapture?.(e.pointerId)}catch(_){}if(!o)return;
+ if(d.moved){e.preventDefault();e.stopImmediatePropagation();lastTap={id:null,t:0,x:0,y:0};try{window.pushHistory?.()}catch(_){}try{window.renderCanvasInspector?.()}catch(_){}scheduleSync();return}
+ const now=performance.now(),dbl=String(lastTap.id)===String(o.id)&&now-lastTap.t<460&&Math.hypot(e.clientX-lastTap.x,e.clientY-lastTap.y)<18;if(dbl){e.preventDefault();e.stopImmediatePropagation();enterEdit(o.id,e.clientX,e.clientY)}else{lastTap={id:o.id,t:now,x:e.clientX,y:e.clientY};setSelectedLight(o.id);scheduleSync()}
+},{capture:true,passive:false});
+window.addEventListener('pointercancel',e=>{if(drag&&e.pointerId===drag.pid){drag=null;scheduleSync()}},{capture:true,passive:true});
+
+/* Editing is native contenteditable. Nothing intercepts caret placement or drag-selection. */
+window.addEventListener('pointerdown',e=>{
+ if(!desktop())return;const editing=q('#canvasObjects .cobj.v178EditingText[contenteditable="true"]');if(!editing)return;const t=e.target instanceof Element?e.target:null;if(t&&(editing===t||editing.contains(t)))return;
+ if(t?.closest('.v134FormatTools,.v137FormatToolbar,.v165FormatToolbar,#canvasInspector,#canvasQuickDrawer,.v144FontModal,#v152SelectionBar,#v152FormatPopover,.v171TextTools,.v172FontMenu'))return;
+ exitEdit(true)
+},{capture:true,passive:true});
+document.addEventListener('input',e=>{if(!desktop())return;const el=e.target instanceof Element?e.target.closest?.('.cobj.v178EditingText[contenteditable="true"]'):null;if(!el)return;const o=obj(el.dataset.id);if(!o)return;o.text=el.innerHTML;clearTimeout(inputTimer);inputTimer=setTimeout(()=>{try{window.markCanvasDirty?.()}catch(_){}},120)},true);
+document.addEventListener('selectionchange',()=>{if(desktop()&&document.body.classList.contains('v178TextEditing')){try{window.v152RememberRange?.()}catch(_){}}});
+
+/* Run after real renders, but batch to one animation frame. */
+const prevRender=window.renderCanvasObjects;if(prevRender)window.renderCanvasObjects=function(){const r=prevRender.apply(this,arguments);scheduleSync();return r};try{renderCanvasObjects=window.renderCanvasObjects}catch(_){}
+window.addEventListener('resize',()=>setTimeout(scheduleSync,60));
+setTimeout(scheduleSync,250);setTimeout(scheduleSync,900);
+
+/* One version write only; never observe it. */
+setTimeout(()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 178'},650);
+})();
+/* ===== /Studia V178 ===== */

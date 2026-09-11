@@ -936,3 +936,33 @@ body.v166RightPan #canvasViewport{cursor:grabbing!important;user-select:none!imp
   }
 }
 /* ===== /Studia V176 ===== */
+
+/* ===== Studia V177 — desktop text interaction + compact sticker colors ===== */
+@media(min-width:900px){
+ body.editorMode #v152TextHitLayer .v152TextHit{cursor:move!important;touch-action:none!important}
+ body.editorMode #v152TextHitLayer .v152TextHit.dragging{cursor:grabbing!important}
+ body.editorMode #canvasObjects .cobj.v152EditingText[contenteditable="true"]{z-index:2147482500!important;pointer-events:auto!important;cursor:text!important;user-select:text!important;-webkit-user-select:text!important;touch-action:auto!important;overflow:auto!important}
+ body.editorMode #canvasObjects .cobj.v152EditingText[contenteditable="true"] *{user-select:text!important;-webkit-user-select:text!important;pointer-events:auto!important}
+}
+.v171StickerLegend{grid-template-columns:44px 1fr 150px!important}.v171StickerRow{grid-template-columns:30px minmax(76px,1fr) 22px 1fr 34px!important}.v177StickerName{font:800 12px/1.2 system-ui;color:#75635d}
+/* ===== /Studia V177 ===== */
+
+/* ===== Studia V178 — lean desktop text engine ===== */
+@media (min-width:900px){
+  /* V178 is the only desktop text hit layer. Retire the historical text proxies. */
+  body.editorMode #v152TextHitLayer{pointer-events:none!important}
+  body.editorMode #v152TextHitLayer *{pointer-events:none!important}
+  body.editorMode #v178DesktopTextLayer{position:absolute;inset:0;z-index:2147482600;pointer-events:none;overflow:visible;transform-origin:0 0}
+  body.editorMode #v178DesktopTextLayer .v178TextHit{position:absolute;box-sizing:border-box;pointer-events:auto;touch-action:none;background:rgba(255,255,255,.001);cursor:grab;border:0;outline:0;border-radius:4px}
+  body.editorMode #v178DesktopTextLayer .v178TextHit.dragging{cursor:grabbing}
+  body.editorMode #v178DesktopTextLayer .v178TextHit.selected{outline:1px solid rgba(224,139,148,.34)}
+  body.editorMode.v178TextEditing #v132InteractionLayer .v132Hit{pointer-events:none!important}
+  body.editorMode.v178TextEditing #v178DesktopTextLayer .v178TextHit{pointer-events:none!important}
+  body.editorMode #canvasObjects .cobj.v178EditingText[contenteditable="true"]{z-index:2147482700!important;pointer-events:auto!important;cursor:text!important;user-select:text!important;-webkit-user-select:text!important;-webkit-touch-callout:default!important;touch-action:auto!important;overflow:auto!important}
+  body.editorMode #canvasObjects .cobj.v178EditingText[contenteditable="true"] *{user-select:text!important;-webkit-user-select:text!important}
+  body.editorMode #canvasObjects .cobj.v178EditingText>.rotateHandle,
+  body.editorMode #canvasObjects .cobj.v178EditingText>.resizeHandle{display:none!important}
+  /* Retired divider command caused duplicate/legacy divider behavior. Use the normal Line element. */
+  body.editorMode .desktopCmdButtons button[title="Trennlinie"]{display:none!important}
+}
+/* ===== /Studia V178 ===== */
