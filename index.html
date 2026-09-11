@@ -5636,7 +5636,7 @@ function renderCanvasObjects(){
    const cls=(o.kind==="block"||o.kind==="file")?"calloutObj":o.kind==="task"?"taskObj":o.kind==="merke"?"merkeObj":"textObj";
    const s=o.style||{};
    const editCls=o.editing?" editing":"";
-  return `<div class="cobj ${cls} ${sel}${lockCls}${editCls}" data-id="${o.id}" contenteditable="${o.editing?"true":"false"}" style="${base}transform:rotate(${o.rotation||0}deg);font-size:${s.fontSize||16}px;font-weight:${s.fontWeight||400};font-style:${s.fontStyle||"normal"};text-decoration:${s.textDecoration||"none"};color:${s.color||"#333"};font-family:${s.fontFamily||"Arial"};background:${s.background||"transparent"};border:${s.borderWidth||0}px ${s.borderStyle||"solid"} ${s.borderColor||"transparent"};border-radius:${s.borderRadius||0}px;padding:${s.padding??7}px;text-align:${s.textAlign||"left"};opacity:${s.opacity??1};box-shadow:${s.boxShadow||"none"};letter-spacing:${s.letterSpacing||0}px;line-height:${s.lineHeight||1.25}">${o.text||""}<span class="rotateHandle"></span><span class="resizeHandle"></span></div>`;
+  return `<div class="cobj ${cls} ${sel}${lockCls}${editCls}" data-id="${o.id}" contenteditable="${o.locked?"false":(innerWidth>=900?"true":(o.editing?"true":"false"))}" style="${base}transform:rotate(${o.rotation||0}deg);font-size:${s.fontSize||16}px;font-weight:${s.fontWeight||400};font-style:${s.fontStyle||"normal"};text-decoration:${s.textDecoration||"none"};color:${s.color||"#333"};font-family:${s.fontFamily||"Arial"};background:${s.background||"transparent"};border:${s.borderWidth||0}px ${s.borderStyle||"solid"} ${s.borderColor||"transparent"};border-radius:${s.borderRadius||0}px;padding:${s.padding??7}px;text-align:${s.textAlign||"left"};opacity:${s.opacity??1};box-shadow:${s.boxShadow||"none"};letter-spacing:${s.letterSpacing||0}px;line-height:${s.lineHeight||1.25}">${o.text||""}<span class="rotateHandle"></span><span class="resizeHandle"></span></div>`;
  }).join("");
  attachCanvasObjectEvents();renderLayerList();
  // V35: renderCanvasObjects replaces the shared layer DOM, so restore vectors every time.
@@ -14891,7 +14891,7 @@ function startObj(e,o,el){if(o.locked)return;drag={kind:'object',id:o.id,pid:e.p
 function startVec(e,v){if(v.locked)return;drag={kind:'vector',id:v.id,pid:e.pointerId,sx:e.clientX,sy:e.clientY,scale:effectiveScale(),moved:false,snap:JSON.parse(JSON.stringify(v))};directSelectVector(v.id);e.preventDefault();e.stopImmediatePropagation()}
 function previewVector(v,dx,dy){const wrap=document.querySelector('#canvasObjects .vectorObj[data-vector-wrap="'+CSS.escape(v.id)+'"]');if(wrap)wrap.style.translate=dx+'px '+dy+'px'}
 function commitVector(v,s,dx,dy){if(v.type==='rect'){v.x=s.x+dx;v.y=s.y+dy}else if(v.type==='ellipse'){v.cx=s.cx+dx;v.cy=s.cy+dy}else if(v.points)v.points=s.points.map(p=>[p[0]+dx,p[1]+dy])}
-window.addEventListener('pointerdown',e=>{if(!isEditor()||(e.pointerType==='mouse'&&e.button!==0))return;const vp=VP();if(!vp||!vp.contains(e.target))return;const t=e.target instanceof Element?e.target:null;if(t?.closest('button,input,select,textarea,.resizeHandle,.rotateHandle,.vectorResizeHandle,.vectorRotateHandle,.pathNode,.tableMoveHandle'))return;const obj=t?.closest('#canvasObjects .cobj');if(obj){const o=canvasState.objects.find(x=>x.id===obj.dataset.id);if(o&&!o.editing){startObj(e,o,obj);return}}let v=null;const wrap=t?.closest('#canvasObjects .vectorObj');const vid=t?.closest('#canvasObjects .vectorTouchProxy,#canvasObjects .shapeHit')?.dataset.vid||wrap?.dataset.vectorWrap;if(vid)v=canvasState.vectors.find(x=>x.id===vid);if(!v){const p=stagePoint(e.clientX,e.clientY);if(p)v=hitVector(p.x,p.y)}if(v)startVec(e,v)},{capture:true,passive:false});
+window.addEventListener('pointerdown',e=>{if(!isEditor()||(e.pointerType==='mouse'&&e.button!==0))return;const vp=VP();if(!vp||!vp.contains(e.target))return;const t=e.target instanceof Element?e.target:null;if(t?.closest('button,input,select,textarea,.resizeHandle,.rotateHandle,.vectorResizeHandle,.vectorRotateHandle,.pathNode,.tableMoveHandle'))return;const obj=t?.closest('#canvasObjects .cobj');if(obj){const o=canvasState.objects.find(x=>x.id===obj.dataset.id);if(innerWidth>=900&&o&&(['text','block','task','merke','file','table'].includes(o.kind)))return;if(o&&!o.editing){startObj(e,o,obj);return}}let v=null;const wrap=t?.closest('#canvasObjects .vectorObj');const vid=t?.closest('#canvasObjects .vectorTouchProxy,#canvasObjects .shapeHit')?.dataset.vid||wrap?.dataset.vectorWrap;if(vid)v=canvasState.vectors.find(x=>x.id===vid);if(!v){const p=stagePoint(e.clientX,e.clientY);if(p)v=hitVector(p.x,p.y)}if(v)startVec(e,v)},{capture:true,passive:false});
 window.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.pid)return;e.preventDefault();e.stopImmediatePropagation();const dx=(e.clientX-drag.sx)/drag.scale,dy=(e.clientY-drag.sy)/drag.scale;if(!drag.moved&&Math.hypot(dx,dy)<2)return;drag.moved=true;if(drag.kind==='object'){const o=canvasState.objects.find(x=>x.id===drag.id);if(!o)return;o.x=clamp(drag.ox+dx,0,Math.max(0,canvasPageWidth()-o.w));o.y=clamp(drag.oy+dy,0,Math.max(0,canvasPageHeight()-o.h));if(drag.el){drag.el.style.left=o.x+'px';drag.el.style.top=o.y+'px'}}else{const v=canvasState.vectors.find(x=>x.id===drag.id);if(v)previewVector(v,dx,dy)}try{markCanvasDirty(false)}catch(_){}},{capture:true,passive:false});
 function finishDrag(e){if(!drag||e.pointerId!==drag.pid)return;e.preventDefault();e.stopImmediatePropagation();if(drag.kind==='vector'){const v=canvasState.vectors.find(x=>x.id===drag.id);if(v&&drag.moved){const dx=(e.clientX-drag.sx)/drag.scale,dy=(e.clientY-drag.sy)/drag.scale;commitVector(v,drag.snap,dx,dy)}const wrap=document.querySelector('#canvasObjects .vectorObj[data-vector-wrap="'+CSS.escape(drag.id)+'"]');if(wrap)wrap.style.translate='';try{renderVectors()}catch(_){}}if(drag.moved){try{pushHistory()}catch(_){}}drag=null}
 window.addEventListener('pointerup',finishDrag,{capture:true,passive:false});window.addEventListener('pointercancel',finishDrag,{capture:true,passive:false});
@@ -15274,7 +15274,7 @@ window.addEventListener('mousemove',e=>{const d=mouseDrag;if(!d)return;let dx=(e
 window.addEventListener('mouseup',e=>{const d=mouseDrag;if(!d)return;mouseDrag=null;document.body.classList.remove('v131Dragging');e.preventDefault();e.stopImmediatePropagation();if(d.moved){try{pushHistory()}catch(_){}}try{renderCanvasObjects();renderVectors();renderCanvasInspector();renderLayerList()}catch(_){}requestAnimationFrame(syncMoveProxies)},{capture:true,passive:false});
 function syncMoveProxies(){
   const root=ROOT();if(!root||!editor()||!window.canvasState)return;root.querySelectorAll('.v126VectorDragProxy,.v129ShapeProxy,.v131MoveProxy').forEach(x=>x.remove());
-  for(const o of canvasState.objects||[]){if(o.editing)continue;const p=document.createElement('div'),table=o.kind==='table';p.className='v131MoveProxy '+(table?'tableGrip ':'')+(o.locked?'locked':'');p.dataset.kind='object';p.dataset.id=o.id;p.style.left=o.x+'px';p.style.top=(table?o.y-33:o.y)+'px';p.style.width=(table?78:Math.max(16,o.w-(canvasState.selectedId===o.id?12:0)))+'px';p.style.height=(table?27:Math.max(16,o.h-(canvasState.selectedId===o.id?12:0)))+'px';p.style.zIndex=String(30000+(o.z||0));if(o.rotation&&!table){p.style.transform=`rotate(${o.rotation}deg)`;p.style.transformOrigin='50% 50%'}p.addEventListener('pointerdown',e=>proxyDown(e,'object',o.id),{passive:false});root.appendChild(p)}
+  for(const o of canvasState.objects||[]){if(o.editing||(innerWidth>=900&&['text','block','task','merke','file','table'].includes(o.kind)))continue;const p=document.createElement('div'),table=o.kind==='table';p.className='v131MoveProxy '+(table?'tableGrip ':'')+(o.locked?'locked':'');p.dataset.kind='object';p.dataset.id=o.id;p.style.left=o.x+'px';p.style.top=(table?o.y-33:o.y)+'px';p.style.width=(table?78:Math.max(16,o.w-(canvasState.selectedId===o.id?12:0)))+'px';p.style.height=(table?27:Math.max(16,o.h-(canvasState.selectedId===o.id?12:0)))+'px';p.style.zIndex=String(30000+(o.z||0));if(o.rotation&&!table){p.style.transform=`rotate(${o.rotation}deg)`;p.style.transformOrigin='50% 50%'}p.addEventListener('pointerdown',e=>proxyDown(e,'object',o.id),{passive:false});root.appendChild(p)}
   for(const v of canvasState.vectors||[]){const b=bounds(v),pad=Math.max(7,Number(v.strokeWidth||2)*2),p=document.createElement('div');p.className='v131MoveProxy '+(v.locked?'locked':'');p.dataset.kind='vector';p.dataset.id=v.id;p.style.left=(b.x-pad)+'px';p.style.top=(b.y-pad)+'px';p.style.width=Math.max(18,b.w+pad*2)+'px';p.style.height=Math.max(18,b.h+pad*2)+'px';p.style.zIndex=String(30000+(v.z||0));if(v.rotation){p.style.transform=`rotate(${v.rotation}deg)`;p.style.transformOrigin=((b.cx-(b.x-pad))/(b.w+pad*2)*100)+'% '+((b.cy-(b.y-pad))/(b.h+pad*2)*100)+'%'}p.addEventListener('pointerdown',e=>proxyDown(e,'vector',v.id),{passive:false});root.appendChild(p)}
 }
 
@@ -15510,7 +15510,7 @@ function toggleOne(kind,id){canvasState.multiMode=true;const set=kind==='object'
 
 function ensureLayer(){const st=stage();if(!st)return null;let layer=document.getElementById('v132InteractionLayer');if(!layer){layer=document.createElement('div');layer.id='v132InteractionLayer';layer.className='v132InteractionLayer';st.appendChild(layer)}return layer}
 function hit(kind,id,box,z,locked,grip=false,rotation=0){const d=document.createElement('div');d.className='v132Hit '+(selected(kind,id)?'selected ':'')+(locked?'locked ':'')+(grip?'grip ':'');d.dataset.kind=kind;d.dataset.id=id;d.style.left=box.x+'px';d.style.top=box.y+'px';d.style.width=Math.max(18,box.w)+'px';d.style.height=Math.max(18,box.h)+'px';d.style.zIndex=String(1000+(z||0));if(rotation){d.style.transform=`rotate(${rotation}deg)`;d.style.transformOrigin='50% 50%'}return d}
-function syncHits(){const layer=ensureLayer();if(innerWidth>=900&&window.__STUDIA_V180_DESKTOP__){layer?.replaceChildren();return}if(!layer||!editor()||!window.canvasState)return;layer.replaceChildren();for(const o of canvasState.objects||[]){if(o.editing)continue;const box={x:o.x,y:o.y,w:o.w,h:o.h};layer.appendChild(hit('object',o.id,box,o.z,o.locked,false,+o.rotation||0))}for(const v of canvasState.vectors||[]){const b=vectorBox(v);layer.appendChild(hit('vector',v.id,{x:b.x,y:b.y,w:b.w,h:b.h},v.z,v.locked,false,+v.rotation||0))}}
+function syncHits(){const layer=ensureLayer();if(innerWidth>=900&&window.__STUDIA_V180_DESKTOP__){layer?.replaceChildren();return}if(!layer||!editor()||!window.canvasState)return;layer.replaceChildren();for(const o of canvasState.objects||[]){if(o.editing||(innerWidth>=900&&['text','block','task','merke','file','table'].includes(o.kind)))continue;const box={x:o.x,y:o.y,w:o.w,h:o.h};layer.appendChild(hit('object',o.id,box,o.z,o.locked,false,+o.rotation||0))}for(const v of canvasState.vectors||[]){const b=vectorBox(v);layer.appendChild(hit('vector',v.id,{x:b.x,y:b.y,w:b.w,h:b.h},v.z,v.locked,false,+v.rotation||0))}}
 let hitsQueued=false;
 function queueHits(){if(hitsQueued)return;hitsQueued=true;requestAnimationFrame(()=>{hitsQueued=false;syncHits()})}
 window.v132SyncHits=syncHits;
@@ -16010,13 +16010,13 @@ function syncCell(td,push=false){const host=td.closest('.cobj'),o=obj(host?.data
 }
 
 function disableLegacyHitsFor(o){if(!o)return;const id=String(o.id);qa(`[data-id="${escSel(id)}"].v132Hit,[data-id="${escSel(id)}"].v131MoveProxy,[data-id="${escSel(id)}"].v129MoveProxy,[data-id="${escSel(id)}"].v126MoveProxy`).forEach(h=>h.dataset.v183Disabled='1')}
-function bindText(el,o){if(el.dataset.v183Text==='1')return;el.dataset.v183Text='1';el.contentEditable=o.locked?'false':'true';el.spellcheck=false;
+function bindText(el,o){if(window.__STUDIA_V184__)return;if(el.dataset.v183Text==='1')return;el.dataset.v183Text='1';el.contentEditable=o.locked?'false':'true';el.spellcheck=false;
   el.addEventListener('pointerdown',e=>{if(!desktop()||o.locked||e.button!==0)return;selectObj(el.dataset.id);requestAnimationFrame(()=>{try{el.focus({preventScroll:true})}catch(_){el.focus()}})},true);
   el.addEventListener('focusin',()=>{if(desktop())selectObj(el.dataset.id)});
   el.addEventListener('input',()=>syncText(el,false));
   el.addEventListener('blur',()=>syncText(el,true));
 }
-function bindTable(el,o){el.classList.add('tableObj');disableLegacyHitsFor(o);qa('td',el).forEach(td=>{td.contentEditable=o.locked?'false':'true';td.spellcheck=false;if(td.dataset.v183Cell==='1')return;td.dataset.v183Cell='1';td.addEventListener('pointerdown',e=>{if(!desktop()||o.locked||e.button!==0)return;e.stopPropagation();selectObj(el.dataset.id);const r=Number(td.dataset.r),c=Number(td.dataset.c);const x=obj(el.dataset.id);if(x&&Number.isFinite(r)&&Number.isFinite(c))x.activeCell={r,c}},true);td.addEventListener('input',()=>syncCell(td,false));td.addEventListener('blur',()=>syncCell(td,true))})}
+function bindTable(el,o){if(window.__STUDIA_V184__)return;el.classList.add('tableObj');disableLegacyHitsFor(o);qa('td',el).forEach(td=>{td.contentEditable=o.locked?'false':'true';td.spellcheck=false;if(td.dataset.v183Cell==='1')return;td.dataset.v183Cell='1';td.addEventListener('pointerdown',e=>{if(!desktop()||o.locked||e.button!==0)return;e.stopPropagation();selectObj(el.dataset.id);const r=Number(td.dataset.r),c=Number(td.dataset.c);const x=obj(el.dataset.id);if(x&&Number.isFinite(r)&&Number.isFinite(c))x.activeCell={r,c}},true);td.addEventListener('input',()=>syncCell(td,false));td.addEventListener('blur',()=>syncCell(td,true))})}
 function bindAll(){if(!desktop())return;const s=state();if(!s)return;for(const o of s.objects||[]){const el=q(`#canvasObjects .cobj[data-id="${escSel(o.id)}"]`);if(!el)continue;if(textKind(o)){disableLegacyHitsFor(o);bindText(el,o)}else if(o.kind==='table')bindTable(el,o)}paintFrame()}
 
 function ensureFrame(){const st=q('#canvasStage');if(!st)return null;if(!frame||!frame.isConnected){frame=document.createElement('div');frame.id='v183TextFrame';frame.className='hidden';frame.innerHTML='<i class="v183-edge n" data-move="1"></i><i class="v183-edge e" data-move="1"></i><i class="v183-edge s" data-move="1"></i><i class="v183-edge w" data-move="1"></i><i class="v183-resize nw" data-resize="nw"></i><i class="v183-resize ne" data-resize="ne"></i><i class="v183-resize sw" data-resize="sw"></i><i class="v183-resize se" data-resize="se"></i>';st.appendChild(frame);frame.addEventListener('pointerdown',frameDown,{capture:true,passive:false})}return frame}
@@ -16048,7 +16048,7 @@ window.v137ToggleViewMode=function(){if(innerWidth>=900)return window.v183OpenPr
 const oldViewSet=window.v137SetViewMode;window.v137SetViewMode=function(on){if(innerWidth>=900){if(on===false)closePreview();else window.v183OpenPreview();return}return oldViewSet?.apply(this,arguments)};
 window.v181OpenPreview=window.v183OpenPreview;
 
-window.printCanvasSheet=async function(){if(innerWidth<900&&window.v170PrintMobile)return window.v170PrintMobile();const clones=await cloneAllPages183();if(!clones.length)return alert('Keine Lernblatt-Seite gefunden.');const first=clones[0],W=+first.dataset.v183Width||794,H=+first.dataset.v183Height||1123,orientation=W>H?'landscape':'portrait';const styles=qa('style').map(x=>x.textContent).join('\n');const cssHref=new URL('editor.css?v=183',location.href).href;const w=window.open('about:blank','_blank');if(!w)return alert('Pop-up wurde blockiert. Bitte Pop-ups für Studia erlauben.');w.document.open();w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Studia Druck</title><link rel="stylesheet" href="${cssHref}"><style>${styles}</style><style>@page{margin:0;size:A4 ${orientation}}html,body{margin:0!important;padding:0!important;background:#fff!important}.v183PrintRoot{margin:0!important;padding:0!important}.v183PrintSheet{break-after:page;page-break-after:always;margin:0!important;position:relative!important;left:0!important;top:0!important;box-shadow:none!important;border:0!important;transform:none!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.v183PrintSheet:last-child{break-after:auto;page-break-after:auto}.v183PrintSheet,.v183PrintSheet *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.v183PrintToolbar{position:sticky;top:0;z-index:999999;display:flex;gap:8px;padding:10px;background:#fff;border-bottom:1px solid #ddd}@media print{.v183PrintToolbar{display:none!important}}</style></head><body><div class="v183PrintToolbar"><button onclick="print()">Drucken</button><button onclick="close()">Schließen</button></div><div class="v183PrintRoot">${clones.map(c=>{c.classList.add('v183PrintSheet');c.style.width=(+c.dataset.v183Width||W)+'px';c.style.height=(+c.dataset.v183Height||H)+'px';return c.outerHTML}).join('')}</div></body></html>`);w.document.close();setTimeout(()=>{try{w.focus();w.print()}catch(_){}},600)};
+window.printCanvasSheet=async function(){if(innerWidth<900&&window.v170PrintMobile)return window.v170PrintMobile();const clones=await cloneAllPages183();if(!clones.length)return alert('Keine Lernblatt-Seite gefunden.');const first=clones[0],W=+first.dataset.v183Width||794,H=+first.dataset.v183Height||1123,orientation=W>H?'landscape':'portrait';const styles=qa('style').map(x=>x.textContent).join('\n');const cssHref=new URL('editor.css?v=184',location.href).href;const w=window.open('about:blank','_blank');if(!w)return alert('Pop-up wurde blockiert. Bitte Pop-ups für Studia erlauben.');w.document.open();w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Studia Druck</title><link rel="stylesheet" href="${cssHref}"><style>${styles}</style><style>@page{margin:0;size:A4 ${orientation}}html,body{margin:0!important;padding:0!important;background:#fff!important}.v183PrintRoot{margin:0!important;padding:0!important}.v183PrintSheet{break-after:page;page-break-after:always;margin:0!important;position:relative!important;left:0!important;top:0!important;box-shadow:none!important;border:0!important;transform:none!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.v183PrintSheet:last-child{break-after:auto;page-break-after:auto}.v183PrintSheet,.v183PrintSheet *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.v183PrintToolbar{position:sticky;top:0;z-index:999999;display:flex;gap:8px;padding:10px;background:#fff;border-bottom:1px solid #ddd}@media print{.v183PrintToolbar{display:none!important}}</style></head><body><div class="v183PrintToolbar"><button onclick="print()">Drucken</button><button onclick="close()">Schließen</button></div><div class="v183PrintRoot">${clones.map(c=>{c.classList.add('v183PrintSheet');c.style.width=(+c.dataset.v183Width||W)+'px';c.style.height=(+c.dataset.v183Height||H)+'px';return c.outerHTML}).join('')}</div></body></html>`);w.document.close();setTimeout(()=>{try{w.focus();w.print()}catch(_){}},600)};
 try{printCanvasSheet=window.printCanvasSheet}catch(_){}
 
 /* Repair pass after every render. Old desktop overlays are left available for non-text objects only. */
@@ -16058,7 +16058,120 @@ const oldInspector=window.renderCanvasInspector;if(typeof oldInspector==='functi
 const mo=new MutationObserver(()=>queueBind());setTimeout(()=>{const root=q('#canvasObjects');if(root)mo.observe(root,{childList:true,subtree:true})},500);
 document.addEventListener('selectionchange',()=>{if(desktop())window.v152RememberRange?.()});
 window.addEventListener('resize',()=>setTimeout(()=>{bindAll();paintFrame()},60));
-setTimeout(()=>{const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 183';bindAll()},900);
+setTimeout(()=>{const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 184';bindAll()},900);
 setTimeout(bindAll,1800);
+})();
+</script>
+
+<style id="v184-laptop-native-edit-style">
+@media (min-width:900px){
+  /* V184: text/table interiors are native editing surfaces. Movement exists only on the outer frame. */
+  body.editorMode #canvasObjects .cobj[data-v184-native-text="1"]{
+    pointer-events:auto!important; user-select:text!important; -webkit-user-select:text!important;
+    cursor:text!important; touch-action:auto!important;
+  }
+  body.editorMode #canvasObjects .cobj[data-v184-native-text="1"] *,
+  body.editorMode #canvasObjects .tableObj td{
+    user-select:text!important; -webkit-user-select:text!important;
+  }
+  body.editorMode #canvasObjects .cobj[data-v184-native-text="1"] > .resizeHandle,
+  body.editorMode #canvasObjects .cobj[data-v184-native-text="1"] > .rotateHandle,
+  body.editorMode #canvasObjects .tableObj > .resizeHandle,
+  body.editorMode #canvasObjects .tableObj > .rotateHandle,
+  body.editorMode #canvasObjects .tableObj > .tableMoveHandle{
+    display:none!important; pointer-events:none!important;
+  }
+  body.editorMode #canvasObjects .tableObj,
+  body.editorMode #canvasObjects .tableObj table,
+  body.editorMode #canvasObjects .tableObj tbody,
+  body.editorMode #canvasObjects .tableObj tr,
+  body.editorMode #canvasObjects .tableObj td{pointer-events:auto!important}
+  body.editorMode #canvasObjects .tableObj td{cursor:text!important;outline:none!important;position:relative}
+  body.editorMode #canvasObjects .tableObj td.v184CellSelected{
+    box-shadow:inset 0 0 0 2px rgba(226,126,139,.78)!important;
+  }
+  body.editorMode #canvasObjects .tableObj td.v184CellActive{
+    box-shadow:inset 0 0 0 2.5px #d96979!important;
+  }
+  /* Illustrator-like: the move zone hugs the outline and does not cover the text area. */
+  #v183TextFrame .v183-edge.n{top:-4px!important;height:8px!important;left:8px!important;right:8px!important}
+  #v183TextFrame .v183-edge.s{bottom:-4px!important;height:8px!important;left:8px!important;right:8px!important}
+  #v183TextFrame .v183-edge.w{left:-4px!important;width:8px!important;top:8px!important;bottom:8px!important}
+  #v183TextFrame .v183-edge.e{right:-4px!important;width:8px!important;top:8px!important;bottom:8px!important}
+  /* Historical full-surface movers are invalid for native edit objects. */
+  body.editorMode .v131MoveProxy[data-v184-native-block="1"],
+  body.editorMode .v132Hit[data-v184-native-block="1"]{display:none!important;pointer-events:none!important}
+}
+</style>
+<script id="v184-laptop-native-edit-script">
+(()=>{
+'use strict';
+if(window.__STUDIA_V184__)return;window.__STUDIA_V184__=true;
+const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
+const desktop=()=>innerWidth>=900&&document.body.classList.contains('editorMode');
+const state=()=>{try{return canvasState}catch(_){return window.canvasState}};
+const nativeText=o=>!!o&&['text','block','task','merke','file'].includes(o.kind)&&!o.isChecklist;
+const byId=id=>(state()?.objects||[]).find(o=>String(o.id)===String(id));
+const esc=s=>CSS.escape(String(s));
+let queued=false;
+
+function selectObjectNative(id){
+ const s=state(),o=byId(id);if(!s||!o)return;
+ s.selectedType='object';s.selectedId=o.id;s.selectedIds=[o.id];s.selectedVectorIds=[];s.multiMode=false;
+ qa('#canvasObjects .cobj.selected').forEach(el=>el.classList.toggle('selected',String(el.dataset.id)===String(o.id)));
+ q(`#canvasObjects .cobj[data-id="${esc(o.id)}"]`)?.classList.add('selected');
+ try{window.renderCanvasInspector?.();window.renderLayerList?.();window.updateMultiSelectStatus?.()}catch(_){}
+ requestAnimationFrame(()=>{try{window.v183OpenPreview&&window.__noop}catch(_){}});
+}
+function cleanText(el){const c=el.cloneNode(true);c.querySelectorAll('.resizeHandle,.rotateHandle,.tableMoveHandle,.v135LinkBadge,.v135StrokeOverlay,.v138TransformHandle,.v108MoveHandle').forEach(n=>n.remove());return c.innerHTML}
+function saveText(el,push=false){const o=byId(el.dataset.id);if(!o||!nativeText(o))return;o.text=cleanText(el);try{window.markCanvasDirty?.()}catch(_){}if(push)try{window.pushHistory?.()}catch(_){}}
+function saveCell(td,push=false){const host=td.closest('.cobj'),o=byId(host?.dataset.id);if(!o||o.kind!=='table')return;const r=+td.dataset.r,c=+td.dataset.c;if(!Number.isInteger(r)||!Number.isInteger(c))return;o.cells||=[];o.cells[r]||=[];o.cells[r][c]=td.innerText;try{window.markCanvasDirty?.()}catch(_){}if(push)try{window.pushHistory?.()}catch(_){}}
+function cellKey(r,c){return `${r}:${c}`}
+function selectedCellKeys(o){if(!Array.isArray(o.v184SelectedCells)||!o.v184SelectedCells.length){const a=o.activeCell||{r:0,c:0};o.v184SelectedCells=[cellKey(+a.r||0,+a.c||0)]}return new Set(o.v184SelectedCells)}
+function paintCells(el,o){const set=selectedCellKeys(o),ar=+o.activeCell?.r||0,ac=+o.activeCell?.c||0;qa('td',el).forEach(td=>{const k=cellKey(+td.dataset.r,+td.dataset.c);td.classList.toggle('v184CellSelected',set.has(k));td.classList.toggle('v184CellActive',+td.dataset.r===ar&&+td.dataset.c===ac)})}
+function selectCell(td,shift){const el=td.closest('.tableObj'),o=byId(el?.dataset.id);if(!el||!o||o.kind!=='table')return;const r=+td.dataset.r,c=+td.dataset.c,k=cellKey(r,c);selectObjectNative(o.id);o.activeCell={r,c};let set=selectedCellKeys(o);if(shift){if(set.has(k)&&set.size>1)set.delete(k);else set.add(k)}else set=new Set([k]);o.v184SelectedCells=[...set];paintCells(el,o);try{window.renderCanvasInspector?.()}catch(_){} }
+function blockLegacy(id){
+ qa(`.v131MoveProxy[data-id="${esc(id)}"],#v132InteractionLayer .v132Hit[data-id="${esc(id)}"]`).forEach(n=>{n.dataset.v184NativeBlock='1';n.style.pointerEvents='none'});
+}
+function bindText(el,o){
+ el.dataset.v184NativeText='1';el.contentEditable=o.locked?'false':'true';el.spellcheck=false;blockLegacy(o.id);
+ if(el.dataset.v184Bound==='1')return;el.dataset.v184Bound='1';
+ /* Target-capture kills old bubble drag handlers but intentionally does NOT prevent the browser's caret/selection default action. */
+ el.addEventListener('pointerdown',e=>{if(!desktop()||o.locked||e.button!==0)return;e.stopImmediatePropagation();selectObjectNative(el.dataset.id)},true);
+ el.addEventListener('input',()=>saveText(el,false));el.addEventListener('blur',()=>saveText(el,true));
+}
+function bindTable(el,o){
+ el.dataset.v184NativeTable='1';blockLegacy(o.id);paintCells(el,o);
+ qa('td',el).forEach(td=>{td.contentEditable=o.locked?'false':'true';td.spellcheck=false;if(td.dataset.v184Bound==='1')return;td.dataset.v184Bound='1';
+  td.addEventListener('pointerdown',e=>{if(!desktop()||o.locked||e.button!==0)return;e.stopImmediatePropagation();selectCell(td,e.shiftKey);if(e.shiftKey)e.preventDefault()},true);
+  td.addEventListener('input',()=>saveCell(td,false));td.addEventListener('blur',()=>saveCell(td,true));
+ });
+}
+function repair(){if(!desktop())return;const s=state();if(!s)return;for(const o of s.objects||[]){const el=q(`#canvasObjects .cobj[data-id="${esc(o.id)}"]`);if(!el)continue;if(nativeText(o))bindText(el,o);else if(o.kind==='table')bindTable(el,o)}
+ /* Anything recreated by an old layer in the same render pass is disabled again before the next frame. */
+ qa('.v131MoveProxy,.v132Hit').forEach(n=>{const o=byId(n.dataset.id);if(o&&(nativeText(o)||o.kind==='table')){n.dataset.v184NativeBlock='1';n.style.pointerEvents='none'}});
+ try{q('#headerEyebrow').textContent='VERSION 184'}catch(_){}
+}
+function queue(){if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;repair()})}
+
+/* Active-cell color now means all Shift-selected cells; without Shift selection it remains exactly one active cell. */
+window.updateSelectedTableCellColor=function(value){
+ const s=state(),o=s?.selectedType==='object'?byId(s.selectedId):null;if(!o||o.kind!=='table')return;
+ o.cellColors||=Array.from({length:o.rows},()=>Array(o.cols).fill(''));while(o.cellColors.length<o.rows)o.cellColors.push(Array(o.cols).fill(''));for(const row of o.cellColors)while(row.length<o.cols)row.push('');
+ const set=selectedCellKeys(o);for(const k of set){const [r,c]=k.split(':').map(Number);if(r>=0&&r<o.rows&&c>=0&&c<o.cols)o.cellColors[r][c]=value}
+ try{window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.()}catch(_){};queue();
+};
+try{updateSelectedTableCellColor=window.updateSelectedTableCellColor}catch(_){}
+
+/* Keep selected-cell coordinates valid if rows/columns are removed. */
+function sanitizeSelection(){const s=state();for(const o of s?.objects||[]){if(o.kind!=='table')continue;const valid=(o.v184SelectedCells||[]).filter(k=>{const [r,c]=String(k).split(':').map(Number);return r>=0&&r<o.rows&&c>=0&&c<o.cols});o.v184SelectedCells=valid.length?valid:[cellKey(Math.max(0,Math.min(o.rows-1,+o.activeCell?.r||0)),Math.max(0,Math.min(o.cols-1,+o.activeCell?.c||0)))]}}
+
+const oldRender=window.renderCanvasObjects;if(typeof oldRender==='function')window.renderCanvasObjects=function(){const r=oldRender.apply(this,arguments);sanitizeSelection();queue();return r};try{renderCanvasObjects=window.renderCanvasObjects}catch(_){}
+const oldInspector=window.renderCanvasInspector;if(typeof oldInspector==='function')window.renderCanvasInspector=function(){const r=oldInspector.apply(this,arguments);if(desktop()){const s=state(),o=s?.selectedType==='object'?byId(s.selectedId):null;if(o?.kind==='table'){const n=(o.v184SelectedCells||[]).length;qa('#canvasInspector label').forEach(l=>{if(l.textContent.trim().startsWith('Aktive Zelle')){const input=l.querySelector('input');l.childNodes[0].nodeValue=n>1?`Ausgewählte Zellen (${n}) `:'Aktive Zelle '}})}}queue();return r};try{renderCanvasInspector=window.renderCanvasInspector}catch(_){}
+
+/* Observe both object DOM and historical interaction layers, because some old renderers rebuild them independently. */
+const mo=new MutationObserver(queue);setTimeout(()=>{const st=q('#canvasStage');if(st)mo.observe(st,{childList:true,subtree:true})},250);
+window.addEventListener('resize',()=>setTimeout(repair,50));
+setTimeout(repair,350);setTimeout(repair,1000);setTimeout(repair,2200);
 })();
 </script>
