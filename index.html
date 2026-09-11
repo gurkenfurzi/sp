@@ -3040,7 +3040,7 @@ html,body{background:#fff7f4;}
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 181</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 182</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -3964,7 +3964,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"Studia.";
- $("#headerEyebrow").textContent="VERSION 181";
+ $("#headerEyebrow").textContent="VERSION 182";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -7733,7 +7733,7 @@ button.primary,button.ghost,.iconbtn{
 }
 </style>
 
-</head><body><div class="page">${serializedCanvas()}</div><div id="buildVersionBadge" style="position:fixed;right:8px;bottom:8px;z-index:9999;font:800 9px Inter,sans-serif;color:#9b7d74;background:rgba(255,250,247,.88);border:1px solid #ead4cd;border-radius:999px;padding:5px 8px;pointer-events:none">V181</div>
+</head><body><div class="page">${serializedCanvas()}</div><div id="buildVersionBadge" style="position:fixed;right:8px;bottom:8px;z-index:9999;font:800 9px Inter,sans-serif;color:#9b7d74;background:rgba(255,250,247,.88);border:1px solid #ead4cd;border-radius:999px;padding:5px 8px;pointer-events:none">V182</div>
 </body></html>`;
  const blob=new Blob([html],{type:"text/html"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=title.replace(/[^\wäöüÄÖÜß-]+/g,"_")+".html";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
 }
@@ -11597,7 +11597,7 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
   window.addEventListener('resize',()=>{if(document.body.classList.contains('editorMode'))setTimeout(v102DesktopEditorInit,80)});
 
   /* refresh version + title */
-  const eyebrow=$('#headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 181';document.title='Studia';
+  const eyebrow=$('#headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 182';document.title='Studia';
 })();
 
 
@@ -11724,7 +11724,7 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
   openView=function(name,...args){const out=v103OpenViewBase(name,...args);try{sessionStorage.setItem('studia-last-view',name);sessionStorage.setItem('studia-last-subject',selectedSubjectId||'');sessionStorage.setItem('studia-last-topic',selectedTopicId||'');sessionStorage.setItem('studia-last-sheet',selectedSheetId||'')}catch(_){}return out};
   window.addEventListener('beforeunload',()=>{try{sessionStorage.setItem('studia-last-view',document.querySelector('.view.active')?.id?.replace('view-','')||'home');sessionStorage.setItem('studia-last-subject',selectedSubjectId||'');sessionStorage.setItem('studia-last-topic',selectedTopicId||'');sessionStorage.setItem('studia-last-sheet',selectedSheetId||'')}catch(_){}});
 
-  setTimeout(()=>{const e=$('#headerEyebrow');if(e)e.textContent='VERSION 181';document.title='Studia';if(document.body.classList.contains('editorMode')){v103Topbar();v96RenderPageStrip()}},60);
+  setTimeout(()=>{const e=$('#headerEyebrow');if(e)e.textContent='VERSION 182';document.title='Studia';if(document.body.classList.contains('editorMode')){v103Topbar();v96RenderPageStrip()}},60);
   /* Space shows a grab hand; middle mouse or Space+drag pans. */
   window.addEventListener('keydown',e=>{if(e.code==='Space'&&document.body.classList.contains('editorMode')&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName))$('#canvasViewport')?.classList.add('v103Hand')});
   window.addEventListener('keyup',e=>{if(e.code==='Space')$('#canvasViewport')?.classList.remove('v103Hand')});
@@ -11846,7 +11846,7 @@ setTimeout(()=>{if(!window.__schoolBloomBooted){document.documentElement.style.b
   if(drawer)new MutationObserver(()=>requestAnimationFrame(()=>{syncTextPanel();patchLayers()})).observe(drawer,{subtree:true,childList:true,attributes:true});
   document.addEventListener('click',()=>requestAnimationFrame(()=>{syncTextPanel();patchLayers()}),true);
   window.addEventListener('resize',()=>setTimeout(syncTextPanel,60));
-  setTimeout(()=>{cleanShapeHandles();patchLayers();syncTextPanel();const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 181';document.title='Studia'},260);
+  setTimeout(()=>{cleanShapeHandles();patchLayers();syncTextPanel();const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 182';document.title='Studia'},260);
 })();
 </script>
 <!-- ===== /Studia V117 ===== -->
@@ -12052,7 +12052,7 @@ body.editorMode.v122ShapeDragging{user-select:none!important;-webkit-user-select
   window.canvasZoomBy=d=>window.setCanvasZoom(scale()+Number(d||0));
   try{setCanvasZoom=window.setCanvasZoom;canvasZoomBy=window.canvasZoomBy}catch(_){ }
 
-  const eyebrow=document.getElementById('headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 181';
+  const eyebrow=document.getElementById('headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 182';
 })();
 
 }</script>
@@ -12141,7 +12141,7 @@ if(window.__STUDIA_V129_INPUT__)return;
   /* Remove the V122 blocker at runtime too, so stale/injected style order cannot win. */
   function enforce(){document.querySelectorAll('#canvasObjects .vectorTouchProxy,#canvasObjects .shapeHit').forEach(el=>{el.style.setProperty('pointer-events','all','important');el.style.setProperty('touch-action','none','important')})}
   const oldRV=window.renderVectors;if(typeof oldRV==='function')window.renderVectors=function(){const r=oldRV.apply(this,arguments);enforce();return r};
-  setTimeout(()=>{enforce();const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 181'},80);
+  setTimeout(()=>{enforce();const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 182'},80);
 })();
 </script>
 <!-- ===== /Studia V125 ===== -->
@@ -12170,7 +12170,7 @@ function move(e){if(!drag||e.pointerId!==drag.pid)return;const v=(window.canvasS
 function end(e){if(!drag||e.pointerId!==drag.pid)return;e.preventDefault();e.stopImmediatePropagation();const moved=drag.moved;drag=null;if(moved){try{pushHistory()}catch(_){}}try{renderCanvasInspector();renderLayerList()}catch(_){}installProxies()}
 window.addEventListener('pointermove',move,{capture:true,passive:false});window.addEventListener('pointerup',end,true);window.addEventListener('pointercancel',end,true);
 const oldRender=window.renderVectors||renderVectors;window.renderVectors=function(){const out=oldRender.apply(this,arguments);queueMicrotask(installProxies);return out};try{renderVectors=window.renderVectors}catch(_){}
-setTimeout(()=>{if(editor()){try{renderVectors()}catch(_){}installProxies()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 181'},350);
+setTimeout(()=>{if(editor()){try{renderVectors()}catch(_){}installProxies()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 182'},350);
 })();
 </script>
 <!-- ===== /Studia V126 ===== -->
@@ -12398,7 +12398,7 @@ html,body,button,input,select,textarea{font-family:ui-rounded,"SF Pro Rounded","
 
 
 <style id="v100-subjects-desktop-editor">
-/* ===== VERSION 181 — subjects reference + desktop editor reference ===== */
+/* ===== VERSION 182 — subjects reference + desktop editor reference ===== */
 @media (max-width:899px){
   body:has(#view-subjects.active)>.app>.header,
   body:has(#view-subject-detail.active)>.app>.header,
@@ -13485,7 +13485,7 @@ body.editorMode .cobj table{max-width:100%!important}
   window.renderCanvasInspector=function(){oldInspector();if(document.querySelector('#canvasQuickDrawer.open .mobileLayerList'))requestAnimationFrame(renderLayerList)};
 
   // Version marker.
-  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 181';document.title='Studia'},40);
+  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 182';document.title='Studia'},40);
 })();
 </script>
 
@@ -13831,7 +13831,7 @@ body.editorMode .cobj[contenteditable="true"],body.editorMode td[contenteditable
   window.renderLayerList=function(){baseLayers();const m=document.querySelector('#canvasQuickDrawer.open .mobileLayerList');if(m){m.querySelectorAll('button').forEach(b=>{b.style.minWidth='0';b.style.maxWidth='none'})}};
   try{renderLayerList=window.renderLayerList}catch(_){}
 
-  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 181';document.title='Studia'},40);
+  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 182';document.title='Studia'},40);
 })();
 </script>
 <!-- ===== /Studia V112 hard stabilization ===== -->
@@ -14126,7 +14126,7 @@ html,body{overflow-x:hidden!important}
   try{renderSheetEditor=window.renderSheetEditor}catch(_){ }
   window.addEventListener('resize',()=>setTimeout(()=>{topicLock();if(inEditor()){desktopInit();reconcileMobileChrome()}},100));
 
-  setTimeout(()=>{topicLock();if(inEditor()){desktopInit();reconcileMobileChrome()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 181';document.title='Studia'},120);
+  setTimeout(()=>{topicLock();if(inEditor()){desktopInit();reconcileMobileChrome()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 182';document.title='Studia'},120);
 })();
 </script>
 
@@ -14261,7 +14261,7 @@ html,body{max-width:100%!important;overflow-x:hidden!important}
   const oldRender=window.renderSheetEditor||renderSheetEditor;window.renderSheetEditor=function(){const r=oldRender.apply(this,arguments);setTimeout(()=>init(true),360);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){ }
   const mo=new MutationObserver(()=>requestAnimationFrame(syncDrawerState));setTimeout(()=>{const d=document.getElementById('canvasQuickDrawer');if(d)mo.observe(d,{attributes:true,childList:true,subtree:true});if(editor())init(true)},180);
   window.addEventListener('resize',()=>{if(!editor())return;setTimeout(()=>{bindViewport();mobile()?fitMobile(false):fitDesktop()},100)});
-  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 181';document.title='Studia'},80);
+  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 182';document.title='Studia'},80);
 })();
 </script>
 <!-- ===== /Studia V115 ===== -->
@@ -14413,7 +14413,7 @@ html,body{max-width:100%!important;overflow-x:hidden!important}
   window.addEventListener('resize',()=>setTimeout(sweep,40));
   setTimeout(()=>{
     sweep();
-    const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 181';
+    const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 182';
     document.title='Studia';
   },220);
 })();
@@ -14623,7 +14623,7 @@ if(window.__STUDIA_V129_INPUT__)return;
 
   function init(){if(!editor())return;document.body.classList.remove('layerDragging');ensureSurface();v121ApplyZoom(scaleNow(),false);renderCanvasObjects();renderVectors();renderLayerList();if(!mobile()){const mode=localStorage.getItem('studia-v113-desktop-panel')||'elements',btn=document.querySelector(`.canvasQuickNav [data-v113-mode="${mode}"]`)||document.querySelector('.canvasQuickNav button');if(btn)v113DesktopPanel(mode,btn)}}
   setTimeout(init,280);window.addEventListener('resize',()=>setTimeout(()=>{if(editor())v121ApplyZoom(scaleNow(),false)},70));
-  const eyebrow=document.getElementById('headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 181';
+  const eyebrow=document.getElementById('headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 182';
 })();
 </script>
 <!-- ===== /Studia V121 ===== -->
@@ -14774,7 +14774,7 @@ if(window.__STUDIA_V129_INPUT__)return;
  const oldOpenStudy=window.openStudySheetEditor;if(typeof oldOpenStudy==='function')window.openStudySheetEditor=function(){const r=oldOpenStudy.apply(this,arguments);setTimeout(sync,120);return r};
  window.addEventListener('resize',()=>setTimeout(()=>{if(isEditor()&&!isMobile())desktopNav()},100));
  setTimeout(sync,350);
- const eyebrow=document.getElementById('headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 181';
+ const eyebrow=document.getElementById('headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 182';
 })();
 </script>
 <!-- ===== /Studia V123 ===== -->
@@ -14848,7 +14848,7 @@ function onUp(e){
 document.addEventListener('pointerdown',onDown,true);
 window.addEventListener('pointermove',onMove,{capture:true,passive:false});
 window.addEventListener('pointerup',onUp,true);window.addEventListener('pointercancel',onUp,true);
-setTimeout(()=>{document.querySelectorAll('.v126VectorDragProxy').forEach(n=>n.remove());const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 181'},250);
+setTimeout(()=>{document.querySelectorAll('.v126VectorDragProxy').forEach(n=>n.remove());const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 182'},250);
 })();
 </script>
 
@@ -14904,7 +14904,7 @@ function installDesktopParity(){if(innerWidth<900||!isEditor())return;const nav=
 const oldRender=window.renderSheetEditor;window.renderSheetEditor=function(){const r=oldRender.apply(this,arguments);setTimeout(()=>{fit();installDesktopParity()},160);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){}
 const oldOpen=window.openStudySheetEditor;if(oldOpen)window.openStudySheetEditor=function(){const r=oldOpen.apply(this,arguments);setTimeout(()=>{fit();installDesktopParity()},200);return r};
 /* V178: retired V128 desktop parity watcher removed. */
-window.addEventListener('resize',()=>setTimeout(()=>{if(isEditor()){fit();installDesktopParity()}},120));setTimeout(()=>{if(isEditor()){fit();installDesktopParity()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 181'},400);
+window.addEventListener('resize',()=>setTimeout(()=>{if(isEditor()){fit();installDesktopParity()}},120));setTimeout(()=>{if(isEditor()){fit();installDesktopParity()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 182'},400);
 })();
 </script>
 <!-- ===== /Studia V128 ===== -->
@@ -14967,7 +14967,7 @@ const oldRO=window.renderCanvasObjects||renderCanvasObjects;window.renderCanvasO
 const oldOpen=window.editorOpenGroup;window.editorOpenGroup=function(){const r=oldOpen.apply(this,arguments);requestAnimationFrame(()=>{renderShapeProxies();if(innerWidth>=900)desktopParity()});return r};try{editorOpenGroup=window.editorOpenGroup}catch(_){}
 /* V178: retired V129 desktop parity observer removed. */
 window.addEventListener('resize',()=>setTimeout(()=>{if(editor()){fit129();desktopParity();renderShapeProxies()}},120));
-setTimeout(()=>{if(editor()){fit129();desktopParity();renderShapeProxies()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 181';document.title='Studia'},500);
+setTimeout(()=>{if(editor()){fit129();desktopParity();renderShapeProxies()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 182';document.title='Studia'},500);
 })();
 </script>
 <!-- ===== /Studia V129 ===== -->
@@ -15149,7 +15149,7 @@ window.editorOpenGroup=function(){if(innerWidth>=900)openEditorGroup=null;const 
 try{editorOpenGroup=window.editorOpenGroup}catch(_){}
 const observer=new MutationObserver(()=>requestAnimationFrame(()=>{if(innerWidth>=900&&window.__STUDIA_V180_DESKTOP__)return;if(!inEditor())return;addStarButton();addTransparentChoices(document);polishRoundedVectors()}));
 observer.observe(document.body,{subtree:true,childList:true});
-setTimeout(()=>{if(inEditor()){renderVectors();renderLayerList();enhanceInspector();addStarButton()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 181';document.title='Studia'},650);
+setTimeout(()=>{if(inEditor()){renderVectors();renderLayerList();enhanceInspector();addStarButton()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 182';document.title='Studia'},650);
 })();
 </script>
 <!-- ===== /Studia V130 ===== -->
@@ -15315,7 +15315,7 @@ window.renderLayerList=function(){const html=layerHTML(),a=document.getElementBy
 
 function quickStrip(){return '<div class="v131QuickStrip"><button onclick="undoCanvas()"><b>↶</b>Rückgängig</button><button onclick="redoCanvas()"><b>↷</b>Wiederholen</button><button onclick="fitCanvasStage()"><b>⊡</b>Einpassen</button><button onclick="canvasZoomBy(.1)"><b>＋</b>Zoom</button><button onclick="canvasZoomBy(-.1)"><b>−</b>Zoom</button><button onclick="duplicateSelected()"><b>⧉</b>Duplizieren</button></div>'}
 function decorateDrawer(){const d=document.getElementById('canvasQuickDrawer');if(!d||!d.classList.contains('open')||d.querySelector('.v131QuickStrip'))return;const head=d.querySelector('.mobileDrawerHead');if(head)head.insertAdjacentHTML('afterend',quickStrip());else d.insertAdjacentHTML('afterbegin',quickStrip())}
-function ensureChrome(){const top=document.querySelector('.canvasTopbar');if(top&&!top.querySelector('.v131VersionBadge')){const badge=document.createElement('span');badge.className='v131VersionBadge';badge.textContent='STUDIA · V181';const title=top.querySelector('.editorTitle');title?.after(badge)}const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 181'}
+function ensureChrome(){const top=document.querySelector('.canvasTopbar');if(top&&!top.querySelector('.v131VersionBadge')){const badge=document.createElement('span');badge.className='v131VersionBadge';badge.textContent='STUDIA · V181';const title=top.querySelector('.editorTitle');title?.after(badge)}const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 182'}
 const oldOpen=window.editorOpenGroup;window.editorOpenGroup=function(){openEditorGroup=null;const r=oldOpen.apply(this,arguments);requestAnimationFrame(()=>{decorateDrawer();if(arguments[0]==='layers')renderLayerList()});return r};try{editorOpenGroup=window.editorOpenGroup}catch(_){}
 const oldObjects=window.renderCanvasObjects;window.renderCanvasObjects=function(){const r=oldObjects.apply(this,arguments);requestAnimationFrame(syncMoveProxies);return r};try{renderCanvasObjects=window.renderCanvasObjects}catch(_){}
 const oldVectors=window.renderVectors;window.renderVectors=function(){const r=oldVectors.apply(this,arguments);requestAnimationFrame(syncMoveProxies);return r};try{renderVectors=window.renderVectors}catch(_){}
@@ -15570,7 +15570,7 @@ function polishChrome(){const topMap={Rückgängig:'undo',Wiederholen:'redo','Se
 function decorateGroup(group){document.querySelectorAll('.v131QuickStrip').forEach(x=>x.remove());if(group==='elements')replaceDrawerBody(elementGroupsHTML());if(group==='pages')decoratePages();if(group==='layers')renderLayerList();polishChrome()}
 window.v132Open=function(mode,btn){const map={text:'textLibrary',elements:'elements',templates:'templates',pages:'pages',layers:'layers'},group=mode==='text'&&typeof mobileSelectedText==='function'&&mobileSelectedText()?'textEdit':map[mode];try{openEditorGroup=null}catch(_){}editorOpenGroup(group,btn);requestAnimationFrame(()=>{const d=document.getElementById('canvasQuickDrawer');if(mode==='text'&&d&&innerWidth>=900&&!d.querySelector('.v132DesktopTextExtras')){const x=document.createElement('div');x.className='v129DesktopTextExtras v132DesktopTextExtras';x.innerHTML=`<button onclick="v91PickFont()">${ic('textformat')} Eigene Schrift</button><button onclick="createCustomStylePreset()">${ic('plus')} Textformat</button><button onclick="openTextFormatManager()">${ic('edit')} Textformate verwalten</button>`;d.prepend(x)}decorateGroup(group)})};
 function buildNav(){const nav=document.querySelector('.canvasQuickNav');if(!nav)return;if(!nav.querySelector('[data-v133]'))nav.innerHTML=navHTML();nav.querySelectorAll('[data-v133]').forEach(b=>b.onclick=()=>v132Open(b.dataset.v133,b))}
-function init(forceFit=true){if(!editor())return;if(canvasState.multiMode){multiObjects=new Set(canvasState.selectedIds||[]);multiVectors=new Set(canvasState.selectedVectorIds||[])}document.querySelectorAll('.v131VersionBadge,.v131QuickStrip').forEach(x=>x.remove());buildTop();buildNav();bindViewport();syncHits();polishChrome();if(document.getElementById('canvasQuickDrawer')?.classList.contains('open'))decorateGroup('elements');if(forceFit)setTimeout(()=>fit(true),80);const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 181'}
+function init(forceFit=true){if(!editor())return;if(canvasState.multiMode){multiObjects=new Set(canvasState.selectedIds||[]);multiVectors=new Set(canvasState.selectedVectorIds||[])}document.querySelectorAll('.v131VersionBadge,.v131QuickStrip').forEach(x=>x.remove());buildTop();buildNav();bindViewport();syncHits();polishChrome();if(document.getElementById('canvasQuickDrawer')?.classList.contains('open'))decorateGroup('elements');if(forceFit)setTimeout(()=>fit(true),80);const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 182'}
 const oldGroup=window.editorOpenGroup;window.editorOpenGroup=function(){const args=arguments,r=oldGroup.apply(this,args);requestAnimationFrame(()=>{buildNav();decorateGroup(args[0])});return r};try{editorOpenGroup=window.editorOpenGroup}catch(_){}
 const oldObjects=window.renderCanvasObjects;window.renderCanvasObjects=function(){const r=oldObjects.apply(this,arguments);queueHits();return r};try{renderCanvasObjects=window.renderCanvasObjects}catch(_){}
 const oldVectors=window.renderVectors;window.renderVectors=function(){const r=oldVectors.apply(this,arguments);queueHits();return r};try{renderVectors=window.renderVectors}catch(_){}
@@ -15579,7 +15579,7 @@ const oldSheet=window.renderSheetEditor;window.renderSheetEditor=function(){cons
 const oldOpenSheet=window.openStudySheetEditor;if(oldOpenSheet)window.openStudySheetEditor=function(){const r=oldOpenSheet.apply(this,arguments);setTimeout(()=>init(true),560);return r};
 window.addEventListener('resize',()=>setTimeout(()=>{if(editor()){buildNav();fit(false);syncHits();polishChrome()}},180));
 let v133WasEditor=editor();const v133Observer=new MutationObserver(()=>{const now=editor();if(now&&!v133WasEditor)requestAnimationFrame(()=>{buildNav();polishChrome()});v133WasEditor=now});v133Observer.observe(document.body,{attributes:true,attributeFilter:['class']});
-setTimeout(()=>{buildTop();if(editor())init(true);const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 181';document.title='Studia'},750);
+setTimeout(()=>{buildTop();if(editor())init(true);const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 182';document.title='Studia'},750);
 })();
 </script>
 <!-- ===== /Studia V133 ===== -->
@@ -15761,22 +15761,20 @@ setTimeout(reconcile,980);
 })();
 </script>
 <!-- ===== /Studia V134 ===== -->
-<link rel="stylesheet" href="editor.css?v=181">
-<script src="google-sync-config.js?v=181"></script>
-<script src="editor.js?v=181"></script>
+<link rel="stylesheet" href="editor.css?v=182">
+<script src="google-sync-config.js?v=182"></script>
+<script src="editor.js?v=182"></script>
 
 <style id="v181-desktop-stability-style">
 @media(min-width:900px){
   /* One desktop interaction surface only. Legacy transparent layers caused text drag/selection conflicts. */
-  body.editorMode #v132InteractionLayer,
   body.editorMode #v152TextHitLayer,
   body.editorMode #v168MobileTextLayer,
   body.editorMode .v129ShapeProxy,
   body.editorMode .v126VectorDragProxy,
   body.editorMode .v128DesktopParityBar,
   body.editorMode .v108MoveHandle,
-  body.editorMode .v108VectorMoveHandle,
-  body.editorMode .v138TransformHandle{display:none!important;pointer-events:none!important}
+  body.editorMode .v108VectorMoveHandle{display:none!important;pointer-events:none!important}
   body.editorMode #canvasObjects .cobj{touch-action:none}
   body.editorMode #canvasObjects .cobj.editing,
   body.editorMode #canvasObjects .cobj[contenteditable="true"]{cursor:text!important;user-select:text!important;-webkit-user-select:text!important;touch-action:auto!important;overflow:visible!important}
@@ -15824,7 +15822,7 @@ setTimeout(reconcile,980);
 <script id="v181-desktop-stability-script">
 (()=>{
 'use strict';
-const desktop=()=>innerWidth>=900&&document.body.classList.contains('editorMode')&&!!document.querySelector('#view-sheet-editor.active');
+const desktop=()=>false; /* V182: V181 experimental desktop input retired. */
 const isText=o=>!!o&&['text','block','task','merke','file'].includes(o.kind)&&!o.isChecklist;
 const qs=(s,r=document)=>r.querySelector(s), qsa=(s,r=document)=>[...r.querySelectorAll(s)];
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
@@ -15891,9 +15889,6 @@ function attach181(){if(!desktop())return;qsa('#canvasObjects .cobj').forEach(el
   if(o.kind==='table')el.querySelectorAll('td').forEach(td=>{td.contentEditable=o.locked?'false':'true';td.addEventListener('pointerdown',e=>{e.stopImmediatePropagation();selectObject(id);const x=canvasState.objects.find(z=>z.id===id);if(x)x.activeCell={r:+td.dataset.r||0,c:+td.dataset.c||0}}, {capture:true});td.addEventListener('input',()=>{const x=canvasState.objects.find(z=>z.id===id);if(x){x.cells[+td.dataset.r][+td.dataset.c]=td.innerText;try{markCanvasDirty?.()}catch(_){}}})})
  });
  qsa('#canvasObjects .shapeHit,#canvasObjects .vectorTouchProxy').forEach(h=>{if(h.dataset.v181Bound==='1')return;h.dataset.v181Bound='1';h.addEventListener('pointerdown',e=>{if(!desktop()||e.button!==0)return;const id=h.dataset.vid;if(!id)return;e.preventDefault();e.stopImmediatePropagation();selectVector181(id)}, {capture:true,passive:false})});paintOverlay()}
-window.attachCanvasObjectEvents=attach181;try{attachCanvasObjectEvents=attach181}catch(_){}
-const oldRO=window.renderCanvasObjects;window.renderCanvasObjects=function(){const r=oldRO.apply(this,arguments);requestAnimationFrame(attach181);return r};try{renderCanvasObjects=window.renderCanvasObjects}catch(_){}
-const oldRV=window.renderVectors;window.renderVectors=function(){const r=oldRV.apply(this,arguments);requestAnimationFrame(attach181);return r};try{renderVectors=window.renderVectors}catch(_){}
 
 /* Exit text edit only when clicking outside the currently edited text. Inside it, native caret/selection owns everything. */
 document.addEventListener('pointerdown',e=>{if(!desktop())return;const editing=qs('#canvasObjects .cobj.editing,[contenteditable="true"].cobj');if(editing&&editing.contains(e.target))return;if(e.target instanceof Element&&e.target.closest('#v181SelectionOverlay,.canvasTopbar,.desktopCommandBar,#canvasQuickDrawer,#desktopEditorSidebar,#v96PageStrip'))return;if(editing)exitEditing()}, {capture:true});
@@ -15906,14 +15901,33 @@ async function cloneAllPages181(){try{v96SyncPage?.()}catch(_){};canvasState.pag
 window.v181OpenPreview=async function(){let host=qs('#v181Preview');if(!host){host=document.createElement('div');host.id='v181Preview';host.innerHTML='<div class="v181PreviewBar"><b>Nur ansehen</b><button type="button">✕ Schließen</button></div><div class="v181PreviewPages"></div>';document.body.appendChild(host);host.querySelector('button').onclick=()=>host.classList.remove('open')}const pages=host.querySelector('.v181PreviewPages');pages.innerHTML='<div style="padding:40px">Seiten werden geladen …</div>';host.classList.add('open');const clones=await cloneAllPages181();pages.replaceChildren(...clones);const max=Math.min(1,(innerWidth-80)/Math.max(...clones.map(c=>parseFloat(c.style.width)||c.offsetWidth||794)));clones.forEach(c=>{c.style.zoom=String(max)})};
 
 /* Exact-ish multi-page print: clone the real rendered page rather than re-drawing a simplified model. */
-window.printCanvasSheet=async function(){if(innerWidth<900&&window.v170PrintMobile)return window.v170PrintMobile();const clones=await cloneAllPages181();if(!clones.length)return alert('Keine Lernblatt-Seite gefunden.');const styles=qsa('style').map(x=>x.textContent).join('\n');const cssHref=new URL('editor.css?v=181',location.href).href;const w=window.open('about:blank','_blank');if(!w)return alert('Pop-up wurde blockiert. Bitte Pop-ups für Studia erlauben.');const title='Studia Druck';w.document.open();w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${title}</title><link rel="stylesheet" href="${cssHref}"><style>${styles}</style><style>@page{margin:0;size:A4 portrait}html,body{margin:0!important;padding:0!important;background:#fff!important}.v181PrintRoot{margin:0!important;padding:0!important}.v181PrintSheet{break-after:page;page-break-after:always;margin:0!important;position:relative!important;box-shadow:none!important;border:0!important;transform:none!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.v181PrintSheet:last-child{break-after:auto;page-break-after:auto}.v181PrintSheet *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.v181PrintToolbar{position:sticky;top:0;z-index:9;display:flex;gap:8px;padding:10px;background:#fff;border-bottom:1px solid #ddd}@media print{.v181PrintToolbar{display:none!important}}</style></head><body class="editorMode"><div class="v181PrintToolbar"><button onclick="print()">Drucken</button><button onclick="close()">Schließen</button></div><div class="v181PrintRoot">${clones.map(c=>{c.classList.add('v181PrintSheet');return c.outerHTML}).join('')}</div></body></html>`);w.document.close();setTimeout(()=>{try{w.focus();w.print()}catch(_){}},700)};
+window.printCanvasSheet=async function(){if(innerWidth<900&&window.v170PrintMobile)return window.v170PrintMobile();const clones=await cloneAllPages181();if(!clones.length)return alert('Keine Lernblatt-Seite gefunden.');const styles=qsa('style').map(x=>x.textContent).join('\n');const cssHref=new URL('editor.css?v=182',location.href).href;const w=window.open('about:blank','_blank');if(!w)return alert('Pop-up wurde blockiert. Bitte Pop-ups für Studia erlauben.');const title='Studia Druck';w.document.open();w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${title}</title><link rel="stylesheet" href="${cssHref}"><style>${styles}</style><style>@page{margin:0;size:A4 portrait}html,body{margin:0!important;padding:0!important;background:#fff!important}.v181PrintRoot{margin:0!important;padding:0!important}.v181PrintSheet{break-after:page;page-break-after:always;margin:0!important;position:relative!important;box-shadow:none!important;border:0!important;transform:none!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.v181PrintSheet:last-child{break-after:auto;page-break-after:auto}.v181PrintSheet *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.v181PrintToolbar{position:sticky;top:0;z-index:9;display:flex;gap:8px;padding:10px;background:#fff;border-bottom:1px solid #ddd}@media print{.v181PrintToolbar{display:none!important}}</style></head><body class="editorMode"><div class="v181PrintToolbar"><button onclick="print()">Drucken</button><button onclick="close()">Schließen</button></div><div class="v181PrintRoot">${clones.map(c=>{c.classList.add('v181PrintSheet');return c.outerHTML}).join('')}</div></body></html>`);w.document.close();setTimeout(()=>{try{w.focus();w.print()}catch(_){}},700)};
 try{printCanvasSheet=window.printCanvasSheet}catch(_){}
 
-function install(){if(!desktop())return;window.__STUDIA_V180_DESKTOP__=true;const eye=qs('#headerEyebrow');if(eye)eye.textContent='VERSION 181';document.title='Studia';qsa('#v132InteractionLayer').forEach(x=>x.replaceChildren());try{renderCanvasObjects();renderVectors()}catch(_){}requestAnimationFrame(attach181)}
+function install(){window.__STUDIA_V180_DESKTOP__=false;const eye=qs('#headerEyebrow');if(eye)eye.textContent='VERSION 182';document.title='Studia';try{window.v132SyncHits?.();window.v138RefreshHandles?.()}catch(_){}}
 const oldSheet=window.renderSheetEditor;window.renderSheetEditor=function(){const r=oldSheet.apply(this,arguments);setTimeout(install,900);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){}
 const oldOpen=window.openStudySheetEditor;if(oldOpen)window.openStudySheetEditor=function(){const r=oldOpen.apply(this,arguments);setTimeout(install,1050);return r};
 window.addEventListener('resize',()=>{if(desktop())requestAnimationFrame(()=>{paintOverlay();attach181()})});
 setTimeout(install,1300);
+})();
+</script>
+
+<style id="v182-selection-recovery-style">
+@media(min-width:900px){
+ body.editorMode #v132InteractionLayer{display:block!important;visibility:visible!important;pointer-events:none!important}
+ body.editorMode #v132InteractionLayer .v132Hit{display:block!important;visibility:visible!important;pointer-events:auto!important}
+ body.editorMode .v138TransformHandle{display:block!important;visibility:visible!important;pointer-events:auto!important}
+ body.editorMode #v181SelectionOverlay{display:none!important;pointer-events:none!important}
+ body.editorMode #canvasObjects .cobj.editing,body.editorMode #canvasObjects .cobj[contenteditable="true"]{pointer-events:auto!important;user-select:text!important;-webkit-user-select:text!important;cursor:text!important}
+}
+</style>
+<script id="v182-selection-recovery-script">
+(()=>{
+ const active=()=>innerWidth>=900&&document.body.classList.contains('editorMode');
+ function revive(){if(!active())return;window.__STUDIA_V180_DESKTOP__=false;document.getElementById('v181SelectionOverlay')?.remove();try{window.v132SyncHits?.();window.v138RefreshHandles?.()}catch(_){}const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 182'}
+ const oldSheet=window.renderSheetEditor;if(typeof oldSheet==='function')window.renderSheetEditor=function(){const r=oldSheet.apply(this,arguments);requestAnimationFrame(()=>requestAnimationFrame(revive));return r};
+ const oldOpen=window.openStudySheetEditor;if(typeof oldOpen==='function')window.openStudySheetEditor=function(){const r=oldOpen.apply(this,arguments);setTimeout(revive,120);return r};
+ window.addEventListener('resize',()=>setTimeout(revive,60));setTimeout(revive,1000);
 })();
 </script>
 
