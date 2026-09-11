@@ -966,3 +966,84 @@ body.v166RightPan #canvasViewport{cursor:grabbing!important;user-select:none!imp
   body.editorMode .desktopCmdButtons button[title="Trennlinie"]{display:none!important}
 }
 /* ===== /Studia V178 ===== */
+
+
+/* ===== Studia V179 — single smooth desktop interaction engine ===== */
+@media (min-width:900px){
+  /* V132 is the only desktop hit/drag layer. Historical text/proxy layers stay inert. */
+  body.editorMode #v152TextHitLayer,
+  body.editorMode #v178DesktopTextLayer{display:none!important;pointer-events:none!important}
+  body.editorMode #canvasObjects .v126VectorDragProxy,
+  body.editorMode #canvasObjects .v129ShapeProxy,
+  body.editorMode #canvasObjects .v131MoveProxy{display:none!important;pointer-events:none!important}
+
+  body.editorMode #v132InteractionLayer{pointer-events:none!important;overflow:visible!important}
+  body.editorMode #v132InteractionLayer .v132Hit{pointer-events:auto!important;cursor:grab!important;background:transparent!important;outline:0!important;border:1px solid transparent!important;border-radius:2px!important;box-shadow:none!important;touch-action:none!important;transform-origin:50% 50%!important}
+  body.editorMode #v132InteractionLayer .v132Hit:hover{border-color:rgba(231,145,153,.28)!important}
+  body.editorMode #v132InteractionLayer .v132Hit.selected{border:1.5px solid #e58b95!important;box-shadow:0 0 0 .5px rgba(255,255,255,.9)!important;background:rgba(255,255,255,.001)!important}
+  body.editorMode #v132InteractionLayer .v132Hit.dragging{cursor:grabbing!important;border-color:#df7e89!important}
+
+  /* Illustrator/Word-like compact handles. */
+  body.editorMode .v138TransformHandle{width:15px!important;height:15px!important;min-width:15px!important;border:2px solid #fff!important;background:#fff!important;box-shadow:0 0 0 1.5px #dc7d88,0 1px 4px rgba(94,58,62,.15)!important;border-radius:3px!important;padding:0!important;z-index:2147483200!important}
+  body.editorMode .v138TransformHandle.v138Resize{right:-8px!important;bottom:-8px!important;border-radius:3px!important;cursor:nwse-resize!important;background:#fff!important}
+  body.editorMode .v138TransformHandle.v138Resize:before{content:''!important;position:absolute!important;inset:3px!important;border:0!important;background:#e58b95!important;border-radius:1px!important}
+  body.editorMode .v138TransformHandle.v138Rotate{width:17px!important;height:17px!important;min-width:17px!important;left:50%!important;top:-35px!important;transform:translateX(-50%)!important;border-radius:50%!important;background:#fff!important;cursor:grab!important}
+  body.editorMode .v138TransformHandle.v138Rotate:before{content:'';position:absolute;inset:4px;border:2px solid #df7e89;border-radius:50%;border-left-color:transparent}
+  body.editorMode .v138TransformHandle.v138Rotate:after{content:''!important;position:absolute!important;left:50%!important;top:16px!important;width:1.5px!important;height:18px!important;transform:translateX(-50%)!important;background:#df7e89!important}
+  body.editorMode .v138TransformHandle.v173StretchX,
+  body.editorMode .v138TransformHandle.v173StretchY{width:13px!important;height:13px!important;min-width:13px!important;border:2px solid #fff!important;background:#fff!important;box-shadow:0 0 0 1.5px #dc7d88!important}
+  body.editorMode .v138TransformHandle.v173StretchX{right:-7px!important;top:50%!important}
+  body.editorMode .v138TransformHandle.v173StretchY{bottom:-7px!important;left:50%!important}
+  body.editorMode .v138TransformHandle.v173StretchX:before,
+  body.editorMode .v138TransformHandle.v173StretchX:after,
+  body.editorMode .v138TransformHandle.v173StretchY:before,
+  body.editorMode .v138TransformHandle.v173StretchY:after{display:none!important}
+
+  /* Native text editing: no drag proxy above the caret/selection. */
+  body.editorMode #canvasObjects .cobj[contenteditable="true"]{pointer-events:auto!important;cursor:text!important;user-select:text!important;-webkit-user-select:text!important;-webkit-touch-callout:default!important;touch-action:auto!important;z-index:2147483100!important;overflow:visible!important}
+  body.editorMode #canvasObjects .cobj[contenteditable="true"] *{user-select:text!important;-webkit-user-select:text!important}
+  body.editorMode:has(#canvasObjects .cobj[contenteditable="true"]) #v132InteractionLayer .v132Hit{pointer-events:auto!important}
+  body.editorMode:has(#canvasObjects .cobj[contenteditable="true"]) #v132InteractionLayer .v132Hit[data-kind="object"]{ }
+
+  /* No old object handles underneath the unified frame. */
+  body.editorMode #canvasObjects .cobj>.resizeHandle,
+  body.editorMode #canvasObjects .cobj>.rotateHandle,
+  body.editorMode #canvasObjects .vectorResizeHandle,
+  body.editorMode #canvasObjects .vectorRotateHandle,
+  body.editorMode #canvasObjects .vectorRotateLine{display:none!important;pointer-events:none!important}
+
+  body.v138Transforming #canvasObjects,
+  body.v132Dragging #canvasObjects{will-change:transform}
+}
+/* ===== /Studia V179 ===== */
+
+/* ===== Studia V179.1 — stable Word/Illustrator-like desktop text frame ===== */
+@media (min-width:900px){
+  body.editorMode #canvasObjects .cobj.v152EditingText[contenteditable="true"],
+  body.editorMode #canvasObjects .cobj.editing[contenteditable="true"]{
+    pointer-events:auto!important;
+    cursor:text!important;
+    user-select:text!important;
+    -webkit-user-select:text!important;
+    -webkit-touch-callout:default!important;
+    touch-action:auto!important;
+    overflow:visible!important;
+    z-index:2147483300!important;
+    outline:1px dashed rgba(229,139,149,.32)!important;
+    outline-offset:2px!important;
+  }
+  body.editorMode #canvasObjects .cobj.v152EditingText[contenteditable="true"] *,
+  body.editorMode #canvasObjects .cobj.editing[contenteditable="true"] *{
+    user-select:text!important;
+    -webkit-user-select:text!important;
+    pointer-events:auto!important;
+  }
+  body.editorMode.v132Dragging #canvasObjects .cobj.selected,
+  body.editorMode.v138Transforming #canvasObjects .cobj.selected{
+    will-change:left,top,width,height,transform!important;
+  }
+  body.editorMode #v132InteractionLayer .v132Hit.selected{
+    cursor:move!important;
+  }
+}
+/* ===== /Studia V179.1 ===== */
