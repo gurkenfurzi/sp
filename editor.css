@@ -1047,3 +1047,7 @@ body.v166RightPan #canvasViewport{cursor:grabbing!important;user-select:none!imp
   }
 }
 /* ===== /Studia V179.1 ===== */
+
+/* Desktop stability repair — print colors / read-only preview scroll */
+#v181Preview{overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important}
+.v181PrintSheet,.v181PrintSheet *,.v181PreviewPage,.v181PreviewPage *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;forced-color-adjust:none!important}
