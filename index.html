@@ -15901,7 +15901,10 @@ async function cloneAllPages181(){try{v96SyncPage?.()}catch(_){};canvasState.pag
 window.v181OpenPreview=async function(){let host=qs('#v181Preview');if(!host){host=document.createElement('div');host.id='v181Preview';host.innerHTML='<div class="v181PreviewBar"><b>Nur ansehen</b><button type="button">✕ Schließen</button></div><div class="v181PreviewPages"></div>';document.body.appendChild(host);host.querySelector('button').onclick=()=>host.classList.remove('open')}const pages=host.querySelector('.v181PreviewPages');pages.innerHTML='<div style="padding:40px">Seiten werden geladen …</div>';host.classList.add('open');const clones=await cloneAllPages181();pages.replaceChildren(...clones);const max=Math.min(1,(innerWidth-80)/Math.max(...clones.map(c=>parseFloat(c.style.width)||c.offsetWidth||794)));clones.forEach(c=>{c.style.zoom=String(max)})};
 
 /* Exact-ish multi-page print: clone the real rendered page rather than re-drawing a simplified model. */
-window.printCanvasSheet=async function(){if(innerWidth<900&&window.v170PrintMobile)return window.v170PrintMobile();const clones=await cloneAllPages181();if(!clones.length)return alert('Keine Lernblatt-Seite gefunden.');const styles=qsa('style').map(x=>x.textContent).join('\n');const cssHref=new URL('editor.css?v=182',location.href).href;const w=window.open('about:blank','_blank');if(!w)return alert('Pop-up wurde blockiert. Bitte Pop-ups für Studia erlauben.');const title='Studia Druck';w.document.open();w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${title}</title><link rel="stylesheet" href="${cssHref}"><style>${styles}</style><style>@page{margin:0;size:A4 portrait}html,body{margin:0!important;padding:0!important;background:#fff!important}.v181PrintRoot{margin:0!important;padding:0!important}.v181PrintSheet{break-after:page;page-break-after:always;margin:0!important;position:relative!important;box-shadow:none!important;border:0!important;transform:none!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.v181PrintSheet:last-child{break-after:auto;page-break-after:auto}.v181PrintSheet *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.v181PrintToolbar{position:sticky;top:0;z-index:9;display:flex;gap:8px;padding:10px;background:#fff;border-bottom:1px solid #ddd}@media print{.v181PrintToolbar{display:none!important}}</style></head><body class="editorMode"><div class="v181PrintToolbar"><button onclick="print()">Drucken</button><button onclick="close()">Schließen</button></div><div class="v181PrintRoot">${clones.map(c=>{c.classList.add('v181PrintSheet');return c.outerHTML}).join('')}</div></body></html>`);w.document.close();setTimeout(()=>{try{w.focus();w.print()}catch(_){}},700)};
+window.printCanvasSheet=async function(){if(innerWidth<900&&window.v170PrintMobile)return window.v170PrintMobile();const clones=await cloneAllPages181();if(!clones.length)return alert('Keine Lernblatt-Seite gefunden.');const styles=qsa('style').map(x=>x.textContent).join('\n');const cssHref=new URL('editor.css?v=182',location.href).href;const w=window.open('about:blank','_blank');if(!w)return alert('Pop-up wurde blockiert. Bitte Pop-ups für Studia erlauben.');const title='Studia Druck';w.document.open();w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${title}</title><link rel="stylesheet" href="${cssHref}"><style>${styles}</style><style>@page{margin:0;size:A4 portrait}html,body{margin:0!important;padding:0!important;background:#fff!important}.v181PrintRoot{margin:0!important;padding:0!important}.v181PrintSheet{break-after:page;page-break-after:always;margin:0!important;position:relative!important;box-shadow:none!important;border:0!important;transform:none!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.v181PrintSheet:last-child{break-after:auto;page-break-after:auto}.v181PrintSheet *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.v181PrintToolbar{position:sticky;top:0;z-index:9;display:flex;gap:8px;padding:10px;background:#fff;border-bottom:1px solid #ddd}@media print{.v181PrintToolbar{display:none!important}}</style></head><body class="editorMode"><div class="v181PrintToolbar"><button onclick="print()">Drucken</button><button onclick="close()">Schließen</button></div><div class="v181PrintRoot">${clones.map(c=>{c.classList.add('v181PrintSheet');return c.outerHTML}).join('')}</div>
+
+
+</body></html>`);w.document.close();setTimeout(()=>{try{w.focus();w.print()}catch(_){}},700)};
 try{printCanvasSheet=window.printCanvasSheet}catch(_){}
 
 function install(){window.__STUDIA_V180_DESKTOP__=false;const eye=qs('#headerEyebrow');if(eye)eye.textContent='VERSION 182';document.title='Studia';try{window.v132SyncHits?.();window.v138RefreshHandles?.()}catch(_){}}
@@ -16115,5 +16118,183 @@ const prevSheet=window.renderSheetEditor;if(prevSheet)window.renderSheetEditor=f
 const prevOpen=window.openStudySheetEditor;if(prevOpen)window.openStudySheetEditor=function(){const r=prevOpen.apply(this,arguments);setTimeout(install,120);return r};
 window.addEventListener('resize',()=>setTimeout(()=>{if(desktop()){disableLegacy();bindObjects();bindVectors();paintFrame()}},80));
 setTimeout(install,1100);setTimeout(install,2600);
+})();
+</script>
+
+<!-- Studia V184 — precise rich-text selection + table column selection + generous edge hit area -->
+<style id="v184-editor-selection-repair-style">
+@media (min-width:900px){
+  /* Much easier to grab, but keep most of the hit area OUTSIDE the content so text stays selectable. */
+  body.editorMode #v183DesktopFrame .v183MoveEdge.n{left:14px;right:14px;top:-13px;height:20px}
+  body.editorMode #v183DesktopFrame .v183MoveEdge.s{left:14px;right:14px;bottom:-13px;height:20px}
+  body.editorMode #v183DesktopFrame .v183MoveEdge.w{top:14px;bottom:14px;left:-13px;width:20px}
+  body.editorMode #v183DesktopFrame .v183MoveEdge.e{top:14px;bottom:14px;right:-13px;width:20px}
+  body.editorMode #v183DesktopFrame .v183Handle{width:13px;height:13px}
+  body.editorMode #v183DesktopFrame .v183Handle.nw{left:-7px;top:-7px}
+  body.editorMode #v183DesktopFrame .v183Handle.n{top:-7px}
+  body.editorMode #v183DesktopFrame .v183Handle.ne{right:-7px;top:-7px}
+  body.editorMode #v183DesktopFrame .v183Handle.e{right:-7px}
+  body.editorMode #v183DesktopFrame .v183Handle.se{right:-7px;bottom:-7px}
+  body.editorMode #v183DesktopFrame .v183Handle.s{bottom:-7px}
+  body.editorMode #v183DesktopFrame .v183Handle.sw{left:-7px;bottom:-7px}
+  body.editorMode #v183DesktopFrame .v183Handle.w{left:-7px}
+
+  /* Selected table column controls live in a stage overlay, never inside the editable cells. */
+  #v184TableOverlay{position:absolute;z-index:2147483600;pointer-events:none;box-sizing:border-box;transform-origin:50% 50%}
+  #v184TableOverlay.hidden{display:none!important}
+  #v184TableOverlay .v184ColBar{position:absolute;left:0;right:0;top:-32px;height:24px;display:grid;pointer-events:auto;gap:2px}
+  #v184TableOverlay .v184ColBtn{min-width:0;height:24px;padding:0;border:1px solid #ead1d0;border-radius:7px;background:rgba(255,252,250,.98);color:#80645f;font:850 9px/1 Inter,Arial,sans-serif;cursor:pointer;box-shadow:0 3px 9px rgba(92,61,55,.08);user-select:none}
+  #v184TableOverlay .v184ColBtn:hover{background:#fff0ef;border-color:#e6b8bb;color:#a35e66}
+  #v184TableOverlay .v184ColBtn.selected{background:#eaa0a8;border-color:#dc858f;color:white;box-shadow:0 3px 10px rgba(190,104,115,.18)}
+  body.editorMode #canvasObjects .tableObj td.v184ColSelected{box-shadow:inset 0 0 0 2px rgba(218,118,132,.48)!important}
+  body.editorMode #canvasObjects .tableObj td.v184ColSelected:focus{box-shadow:inset 0 0 0 2px rgba(207,89,107,.72)!important}
+  .v184ColumnInspector{margin-top:9px;padding:10px;border:1px solid #ecdeda;border-radius:11px;background:#fffaf8;display:grid;gap:8px}
+  .v184ColumnInspectorHead{display:flex;align-items:center;justify-content:space-between;gap:8px;color:#65544e;font-size:10px;font-weight:850}
+  .v184ColumnInspectorHead small{color:#9b8580;font-size:8px;font-weight:700}
+  .v184ColumnInspectorRow{display:grid;grid-template-columns:minmax(0,1fr) 48px;align-items:center;gap:8px;color:#786761;font-size:9px}
+  .v184ColumnInspectorRow input[type=color]{width:48px;height:32px;padding:2px;border:1px solid #e8d8d4;border-radius:9px;background:#fff;cursor:pointer}
+}
+#v181Preview #v184TableOverlay,.v181PreviewPage #v184TableOverlay{display:none!important}
+@media print{#v184TableOverlay{display:none!important}}
+</style>
+<script id="v184-editor-selection-repair-script">
+(()=>{
+'use strict';
+if(window.__STUDIA_V184_SELECTION_REPAIR__)return;window.__STUDIA_V184_SELECTION_REPAIR__=true;
+const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
+const desktop=()=>innerWidth>=900&&document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
+const st=()=>{try{return canvasState}catch(_){return window.canvasState}};
+const textKinds=new Set(['text','block','task','merke','file']);
+let liveTextRange=false,liveTextId=null,wholeObjectId=null,tableOverlay=null;
+
+function obj(id){return (st()?.objects||[]).find(x=>String(x.id)===String(id))||null}
+function selectedObj(){const s=st();return s?.selectedType==='object'?obj(s.selectedId):null}
+function editableRoot(node){const el=node?.nodeType===1?node:node?.parentElement;return el?.closest?.('#canvasObjects .cobj.v183EditableText[contenteditable="true"]')||null}
+function captureRange184(){
+ const sel=getSelection?.();if(!sel||!sel.rangeCount||sel.isCollapsed)return false;const r=sel.getRangeAt(0),root=editableRoot(r.commonAncestorContainer);
+ if(!root||!root.contains(r.startContainer)||!root.contains(r.endContainer))return false;
+ liveTextRange=true;liveTextId=String(root.dataset.id);try{window.v152RememberRange?.()}catch(_){}return true
+}
+function clearLiveForCaret(id){liveTextRange=false;liveTextId=id?String(id):null;wholeObjectId=null}
+function hasRangeFor(o){return !!(o&&liveTextRange&&String(liveTextId)===String(o.id))}
+function persistObjectStyle(o){try{window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.()}catch(_){} }
+function applyWholeTextProp(o,prop,value){
+ if(!o||!textKinds.has(o.kind))return false;o.style||={};
+ if(prop==='fontSize')o.style.fontSize=Math.max(6,Math.min(180,Number(value)||16));
+ else if(prop==='fontFamily')o.style.fontFamily=String(value||'Arial');
+ else if(prop==='color')o.style.color=String(value||'#333333');
+ else if(prop==='fontWeight')o.style.fontWeight=String(Number(value)>=600?700:400);
+ else if(prop==='fontStyle')o.style.fontStyle=String(value)==='italic'?'italic':'normal';
+ else if(prop==='textDecoration')o.style.textDecoration=String(value||'none');
+ else if(prop==='textAlign')o.style.textAlign=String(value||'left');
+ else return false;
+ persistObjectStyle(o);return true
+}
+function toggleWholeText(o,cmd){
+ if(!o||!textKinds.has(o.kind))return false;o.style||={};
+ if(cmd==='bold')o.style.fontWeight=String(o.style.fontWeight)==='700'?'400':'700';
+ else if(cmd==='italic')o.style.fontStyle=o.style.fontStyle==='italic'?'normal':'italic';
+ else if(cmd==='underline'){const td=String(o.style.textDecoration||'none');o.style.textDecoration=td.includes('underline')?'none':'underline'}
+ else if(cmd==='strikeThrough'){const td=String(o.style.textDecoration||'none');o.style.textDecoration=td.includes('line-through')?'none':'line-through'}
+ else return false;
+ persistObjectStyle(o);return true
+}
+
+/* Native text selection owns the interior. A fresh caret click invalidates any old saved range. */
+document.addEventListener('pointerdown',e=>{if(!desktop())return;const root=editableRoot(e.target);if(root){clearLiveForCaret(root.dataset.id);return}const frame=e.target instanceof Element?e.target.closest('#v183DesktopFrame'):null;if(frame){const o=selectedObj();if(o){wholeObjectId=String(o.id);liveTextRange=false;liveTextId=null}}},true);
+document.addEventListener('pointerup',e=>{if(!desktop())return;if(editableRoot(e.target))setTimeout(()=>{const ok=captureRange184();if(!ok){const root=editableRoot(e.target);liveTextRange=false;liveTextId=root?.dataset.id?String(root.dataset.id):null}},0)},true);
+document.addEventListener('dblclick',e=>{if(!desktop())return;const root=editableRoot(e.target);if(!root)return;wholeObjectId=null;setTimeout(()=>{captureRange184();try{window.v152RememberRange?.()}catch(_){}},0)},true);
+document.addEventListener('keyup',e=>{if(!desktop())return;const root=editableRoot(e.target);if(!root)return;setTimeout(()=>{const sel=getSelection?.();if(sel&&!sel.isCollapsed)captureRange184();else{liveTextRange=false;liveTextId=String(root.dataset.id)}},0)},true);
+document.addEventListener('selectionchange',()=>{if(!desktop())return;const sel=getSelection?.();if(sel&&sel.rangeCount&&!sel.isCollapsed)captureRange184()});
+
+/* Toolbar actions: highlighted text => ONLY that range. No range / frame click => whole text object. */
+const prevApply=window.applyTextProperty;
+window.applyTextProperty=function(prop,value){
+ if(desktop()){
+  const o=selectedObj();
+  if(o&&textKinds.has(o.kind)){
+   if(hasRangeFor(o)){try{window.v152RestoreRange?.()}catch(_){};return prevApply?.apply(this,arguments)}
+   return applyWholeTextProp(o,prop,value);
+  }
+ }
+ return prevApply?.apply(this,arguments)
+};try{applyTextProperty=window.applyTextProperty}catch(_){}
+const prevFmt=window.formatSelectedText;
+window.formatSelectedText=function(cmd){
+ if(desktop()){
+  const o=selectedObj();
+  if(o&&textKinds.has(o.kind)){
+   if(hasRangeFor(o)){try{window.v152RestoreRange?.()}catch(_){};return prevFmt?.apply(this,arguments)}
+   return toggleWholeText(o,cmd);
+  }
+ }
+ return prevFmt?.apply(this,arguments)
+};try{formatSelectedText=window.formatSelectedText}catch(_){}
+/* Older desktop toolbar funnels through this function. */
+const prevToggle=window.v134ToggleText;
+window.v134ToggleText=function(prop){
+ if(desktop()){
+  const o=selectedObj();if(o&&textKinds.has(o.kind)){
+   const cmd=prop==='fontWeight'?'bold':prop==='fontStyle'?'italic':prop==='textDecoration'?'underline':null;
+   if(cmd)return window.formatSelectedText(cmd)
+  }
+ }
+ return prevToggle?.apply(this,arguments)
+};
+
+function ensureColors(o){
+ o.cellColors ||= Array.from({length:o.rows||o.cells?.length||1},()=>Array.from({length:o.cols||o.cells?.[0]?.length||1},()=>''));
+ while(o.cellColors.length<o.rows)o.cellColors.push(Array.from({length:o.cols},()=>''));
+ o.cellColors=o.cellColors.slice(0,o.rows);for(const row of o.cellColors){while(row.length<o.cols)row.push('');row.length=o.cols}
+}
+function sanitizeColumns(o){
+ const max=Math.max(0,(o.cols||0)-1),a=[...new Set((o.selectedColumns||[]).map(Number).filter(c=>Number.isInteger(c)&&c>=0&&c<=max))];o.selectedColumns=a;return a
+}
+function colName(i){let n=i+1,s='';while(n){n--;s=String.fromCharCode(65+n%26)+s;n=Math.floor(n/26)}return s}
+function ensureTableOverlay(){
+ const stage=q('#canvasStage');if(!stage)return null;
+ if(tableOverlay?.isConnected)return tableOverlay;tableOverlay=document.createElement('div');tableOverlay.id='v184TableOverlay';tableOverlay.className='hidden';tableOverlay.innerHTML='<div class="v184ColBar"></div>';stage.appendChild(tableOverlay);
+ tableOverlay.addEventListener('pointerdown',e=>{const b=e.target.closest?.('.v184ColBtn');if(!b)return;e.preventDefault();e.stopImmediatePropagation();selectColumn(+b.dataset.col,!!e.shiftKey)},true);return tableOverlay
+}
+function selectColumn(c,shift){
+ const o=selectedObj();if(!o||o.kind!=='table'||c<0||c>=o.cols)return;let cols=sanitizeColumns(o);
+ if(shift){const set=new Set(cols);set.has(c)?set.delete(c):set.add(c);cols=[...set].sort((a,b)=>a-b);if(!cols.length)cols=[c]}
+ else cols=[c];o.selectedColumns=cols;o.columnAnchor=c;o.activeCell={r:Math.max(0,Math.min(o.rows-1,o.activeCell?.r||0)),c};
+ decorateTable184();try{window.renderCanvasInspector?.()}catch(_){}
+}
+function paintTableOverlay(o){
+ const ov=ensureTableOverlay();if(!ov)return;if(!desktop()||!o||o.kind!=='table'){ov.classList.add('hidden');return}const cols=sanitizeColumns(o),bar=ov.querySelector('.v184ColBar');
+ ov.classList.remove('hidden');Object.assign(ov.style,{left:(+o.x||0)+'px',top:(+o.y||0)+'px',width:Math.max(1,+o.w||1)+'px',height:Math.max(1,+o.h||1)+'px',transform:`rotate(${+o.rotation||0}deg)`});bar.style.gridTemplateColumns=`repeat(${Math.max(1,o.cols)},minmax(0,1fr))`;
+ bar.innerHTML=Array.from({length:o.cols},(_,i)=>`<button type="button" class="v184ColBtn${cols.includes(i)?' selected':''}" data-col="${i}" title="Spalte ${colName(i)}${i?' · Shift+Klick für Mehrfachauswahl':''}">${colName(i)}</button>`).join('')
+}
+function decorateTable184(){
+ if(!desktop())return;const o=selectedObj();qa('#canvasObjects .tableObj td.v184ColSelected').forEach(td=>td.classList.remove('v184ColSelected'));
+ if(!o||o.kind!=='table'){paintTableOverlay(null);return}const cols=sanitizeColumns(o),el=q(`#canvasObjects .tableObj[data-id="${CSS.escape(String(o.id))}"]`);
+ if(el)for(const td of qa('td',el))td.classList.toggle('v184ColSelected',cols.includes(+td.dataset.c));paintTableOverlay(o)
+}
+window.v184SetSelectedColumnColor=function(value){
+ const o=selectedObj();if(!o||o.kind!=='table')return;const cols=sanitizeColumns(o);if(!cols.length)return;ensureColors(o);for(let r=0;r<o.rows;r++)for(const c of cols)o.cellColors[r][c]=value;
+ try{window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.()}catch(_){};requestAnimationFrame(decorateTable184)
+};
+function injectTableInspector(){
+ if(!desktop())return;const o=selectedObj(),host=q('#canvasInspector .tableInspector');if(!host||!o||o.kind!=='table')return;const old=host.querySelector('.v184ColumnInspector');old?.remove();const cols=sanitizeColumns(o);if(!cols.length)return;ensureColors(o);
+ const vals=[];for(const c of cols)for(let r=0;r<o.rows;r++)vals.push(o.cellColors?.[r]?.[c]||o.cellBackground||'#ffffff');const first=vals[0]||o.cellBackground||'#ffffff',same=vals.every(v=>v===first),names=cols.map(colName).join(', ');
+ const box=document.createElement('div');box.className='v184ColumnInspector';box.innerHTML=`<div class="v184ColumnInspectorHead"><span>${cols.length===1?'Spalte '+names:'Spalten '+names+' ausgewählt'}</span><small>Shift+Klick = mehrere</small></div><label class="v184ColumnInspectorRow"><span>Füllfarbe für ${cols.length===1?'diese Spalte':'alle ausgewählten Spalten'}</span><input type="color" value="${same?first:(o.cellBackground||'#ffffff')}" onchange="v184SetSelectedColumnColor(this.value)"></label>`;host.querySelector('.objectPanelGrid')?.after(box)
+}
+
+/* Clicking a cell is still normal text editing. It only clears a previous column batch selection on a plain click. */
+document.addEventListener('pointerdown',e=>{if(!desktop())return;const td=e.target instanceof Element?e.target.closest('#canvasObjects .tableObj td'):null;if(!td)return;const table=td.closest('.tableObj'),o=obj(table?.dataset.id);if(!o)return;if(!e.shiftKey&&o.selectedColumns?.length){o.selectedColumns=[];requestAnimationFrame(()=>{decorateTable184();window.renderCanvasInspector?.()})}},true);
+
+/* Keep the column UI synced with every normal re-render / inspector refresh. */
+const prevRender=window.renderCanvasObjects;if(prevRender)window.renderCanvasObjects=function(){const r=prevRender.apply(this,arguments);if(desktop())requestAnimationFrame(decorateTable184);return r};try{renderCanvasObjects=window.renderCanvasObjects}catch(_){}
+const prevInspector=window.renderCanvasInspector;if(prevInspector)window.renderCanvasInspector=function(){const r=prevInspector.apply(this,arguments);if(desktop())requestAnimationFrame(()=>{injectTableInspector();decorateTable184()});return r};try{renderCanvasInspector=window.renderCanvasInspector}catch(_){}
+const prevAdd=window.tableAddCol;if(prevAdd)window.tableAddCol=function(){const r=prevAdd.apply(this,arguments);const o=selectedObj();if(o?.kind==='table')sanitizeColumns(o);requestAnimationFrame(decorateTable184);return r};
+const prevRemove=window.tableRemoveCol;if(prevRemove)window.tableRemoveCol=function(){const r=prevRemove.apply(this,arguments);const o=selectedObj();if(o?.kind==='table')sanitizeColumns(o);requestAnimationFrame(decorateTable184);return r};
+
+/* Preview/print clones must never contain editor-only column controls. */
+const prevFreeze=window.v183FreezePrintStyles;window.v183FreezePrintStyles=function(source,copy){const r=prevFreeze?.apply(this,arguments);copy.querySelectorAll?.('#v184TableOverlay,.v184ColumnInspector').forEach(x=>x.remove());return r};
+
+function install(){if(!desktop())return;ensureTableOverlay();decorateTable184();injectTableInspector()}
+window.addEventListener('resize',()=>setTimeout(install,60));setTimeout(install,500);setTimeout(install,1600);
 })();
 </script>
