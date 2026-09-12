@@ -16166,3 +16166,61 @@ window.addEventListener('resize',()=>setTimeout(()=>{if(desktop()){disableLegacy
 setTimeout(install,1100);setTimeout(install,2600);
 })();
 </script>
+
+<!-- ===== Studia V185 — Schriftvorschau auf Handy + Laptop (nur UI-Erweiterung) ===== -->
+<style id="v185-font-preview-style">
+.v185FontPreviewBackdrop{position:fixed;inset:0;z-index:2147483500;background:rgba(55,44,40,.24);backdrop-filter:blur(2px);display:grid;place-items:center;padding:18px;box-sizing:border-box}
+.v185FontPreviewPanel{width:min(430px,calc(100vw - 28px));max-height:min(690px,calc(100dvh - 36px));overflow:hidden;background:#fffdfa;border:1px solid #ead8d1;border-radius:20px;box-shadow:0 22px 70px rgba(67,48,42,.24);display:grid;grid-template-rows:auto minmax(0,1fr)}
+.v185FontPreviewHead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 15px 11px;border-bottom:1px solid #f0e3de}
+.v185FontPreviewHead>div{display:grid;gap:2px;min-width:0}.v185FontPreviewHead b{font-size:14px;color:#6f5951}.v185FontPreviewHead small{font-size:10px;color:#a1877d}
+.v185FontPreviewClose{width:34px;height:34px;border:1px solid #eadbd6;border-radius:11px;background:#fff;color:#765f56;font-size:21px;line-height:1;cursor:pointer}
+.v185FontPreviewList{overflow:auto;padding:10px;display:grid;gap:7px;-webkit-overflow-scrolling:touch}
+.v185FontPreviewRow{width:100%;min-height:66px;border:1px solid #eadbd6;background:#fff;border-radius:14px;padding:8px 10px;display:grid;grid-template-columns:minmax(112px,1fr) minmax(110px,.9fr) 20px;gap:9px;align-items:center;text-align:left;color:#715a52;cursor:pointer;box-sizing:border-box}
+.v185FontPreviewRow:hover{background:#fff8f5}.v185FontPreviewRow.active{background:#fff0ef;border-color:#e9aaa8}
+.v185FontPreviewSample{font-size:22px;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v185FontPreviewMeta{display:grid;gap:3px;min-width:0}.v185FontPreviewMeta b{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v185FontPreviewMeta small{font-size:8px;color:#aa8f85}.v185FontPreviewCheck{font-style:normal;font-weight:900;color:#c57e7e;text-align:center}
+body.editorMode select.v185FontPreviewSelect{cursor:pointer!important}
+@media(max-width:899px){
+ .v185FontPreviewBackdrop{place-items:end center;padding:0;background:rgba(55,44,40,.20)}
+ .v185FontPreviewPanel{width:100%;max-height:72dvh;border-radius:20px 20px 0 0;border-bottom:0}
+ .v185FontPreviewHead{padding:13px 14px 10px}
+ .v185FontPreviewList{padding:9px 10px calc(12px + env(safe-area-inset-bottom))}
+ .v185FontPreviewRow{min-height:62px;grid-template-columns:minmax(105px,1fr) minmax(100px,.9fr) 18px;padding:7px 9px}
+ .v185FontPreviewSample{font-size:20px}
+}
+</style>
+<script id="v185-font-preview-script">
+(()=>{
+'use strict';
+if(window.__STUDIA_V185_FONT_PREVIEW__)return;window.__STUDIA_V185_FONT_PREVIEW__=true;
+const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const defaults=['Inter','Arial','Lato','Playfair Display','Georgia','Trebuchet MS','Verdana','Times New Roman','Courier New'];
+function storedFonts(){try{return JSON.parse(localStorage.getItem('schoolbloom-v91-custom-fonts')||'[]').filter(x=>x?.name)}catch(_){return []}}
+function installStored(){try{window.v91LoadFonts?.()}catch(_){}for(const f of storedFonts()){if(!f.data)continue;const id='v185-font-'+String(f.name).replace(/[^a-z0-9_-]/gi,'-');if(document.getElementById(id))continue;const st=document.createElement('style');st.id=id;st.textContent='@font-face{font-family:'+JSON.stringify(f.name)+';src:url('+JSON.stringify(String(f.data))+');font-display:swap}';document.head.appendChild(st)}}
+function isFontSelect(el){if(!(el instanceof HTMLSelectElement))return false;const label=el.closest('label')?.textContent||'';const meta=[el.id,el.className,el.title,el.getAttribute('aria-label'),label].filter(Boolean).join(' ');return /(?:^|\s|[-_])(font|schrift)|schriftart|fontfamily/i.test(meta)}
+function optionFonts(sel){return [...sel?.options||[]].map(o=>({name:(o.textContent||o.value||'').trim(),value:o.value||o.textContent||''})).filter(x=>x.name)}
+function allFonts(sel){installStored();const custom=storedFonts();const map=new Map();const add=(name,value=name,customFlag=false)=>{name=String(name||'').trim();value=String(value||name).trim();if(!name)return;const key=name.toLowerCase();if(!map.has(key))map.set(key,{name,value,custom:customFlag})};optionFonts(sel).forEach(x=>add(x.name,x.value));defaults.forEach(x=>add(x,x));custom.forEach(x=>add(x.name,x.name,true));return [...map.values()]}
+function setSelectFont(sel,value,name){if(!sel)return;let opt=[...sel.options].find(o=>o.value===value||o.textContent.trim()===name);if(!opt){opt=document.createElement('option');opt.value=value;opt.textContent=name;sel.appendChild(opt)}sel.value=opt.value;sel.style.fontFamily=value;sel.dispatchEvent(new Event('change',{bubbles:true}))}
+function currentFont(sel){return String(sel?.value||sel?.options?.[sel.selectedIndex]?.value||'Arial')}
+function close(){q('.v185FontPreviewBackdrop')?.remove()}
+function open(sel,apply){close();installStored();const current=sel?currentFont(sel):String((typeof mobileSelectedText==='function'&&mobileSelectedText()?.style?.fontFamily)||'Arial');const fonts=allFonts(sel);const root=document.createElement('div');root.className='v185FontPreviewBackdrop';root.innerHTML=`<div class="v185FontPreviewPanel" role="dialog" aria-modal="true" aria-label="Schriftart auswählen"><div class="v185FontPreviewHead"><div><b>Schriftart</b><small>Jede Schrift wird direkt als Vorschau angezeigt.</small></div><button class="v185FontPreviewClose" type="button" aria-label="Schließen">×</button></div><div class="v185FontPreviewList">${fonts.map(f=>{const active=String(current).replace(/["']/g,'').toLowerCase().includes(f.name.replace(/["']/g,'').toLowerCase());return `<button type="button" class="v185FontPreviewRow ${active?'active':''}" data-font-value="${esc(f.value)}" data-font-name="${esc(f.name)}" style="font-family:${esc(f.value)}"><span class="v185FontPreviewSample">Abc 123</span><span class="v185FontPreviewMeta"><b>${esc(f.name)}</b><small>${f.custom?'Eigene Schrift':'Schriftvorschau'}</small></span><i class="v185FontPreviewCheck">${active?'✓':'›'}</i></button>`}).join('')}</div></div>`;
+ document.body.appendChild(root);
+ root.querySelector('.v185FontPreviewClose').onclick=close;
+ root.addEventListener('pointerdown',e=>{if(e.target===root)close()});
+ root.querySelectorAll('.v185FontPreviewRow').forEach(btn=>btn.onclick=()=>{const value=btn.dataset.fontValue||btn.dataset.fontName||'Arial',name=btn.dataset.fontName||value;if(typeof apply==='function')apply(value,name);else setSelectFont(sel,value,name);close()});
+ const active=root.querySelector('.v185FontPreviewRow.active');if(active)setTimeout(()=>active.scrollIntoView({block:'nearest'}),0)
+}
+window.v185OpenFontPreview=open;
+function enhance(){qa('select').filter(isFontSelect).forEach(sel=>{sel.classList.add('v185FontPreviewSelect');const ff=currentFont(sel);if(ff)sel.style.fontFamily=ff;[...sel.options].forEach(o=>{const f=o.value||o.textContent||'Arial';o.style.fontFamily=f})})}
+/* Native <option>-Schriften sind auf iPhone/Android uneinheitlich. Deshalb öffnet jeder Schrift-Select dieselbe echte Vorschau-Liste. */
+document.addEventListener('pointerdown',e=>{const sel=e.target instanceof Element?e.target.closest('select'):null;if(!sel||!isFontSelect(sel)||!document.body.classList.contains('editorMode'))return;e.preventDefault();e.stopImmediatePropagation();try{window.v152RememberRange?.()}catch(_){}open(sel)},true);
+/* Die bestehende Handy-Schrift-Schaltfläche bekommt dieselbe zuverlässige Vorschau. */
+document.addEventListener('click',e=>{const btn=e.target instanceof Element?e.target.closest('.v96FontChooser'):null;if(!btn||!document.body.classList.contains('editorMode'))return;e.preventDefault();e.stopImmediatePropagation();try{window.v152RememberRange?.()}catch(_){}open(null,(value)=>{try{if(typeof window.applyTextProperty==='function')window.applyTextProperty('fontFamily',value);else if(typeof window.v137Text==='function')window.v137Text('fontFamily',value)}catch(_){}try{window.mobileRefreshTextMode?.()}catch(_){}})},true);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+const mo=new MutationObserver(()=>enhance());mo.observe(document.documentElement,{subtree:true,childList:true});
+window.addEventListener('storage',e=>{if(e.key==='schoolbloom-v91-custom-fonts')enhance()});
+setTimeout(enhance,0);setTimeout(enhance,900);
+})();
+</script>
+<!-- ===== /Studia V185 ===== -->
