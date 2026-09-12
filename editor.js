@@ -1,4 +1,5 @@
 /* v135.js consolidated */
+window.__STUDIA_EDITOR_BUILD__=183;
 /* Studia V135 - stable selection, Word/Canva tools, cloud-ready accounts and cute assets */
 (function(){
 'use strict';
@@ -1071,6 +1072,7 @@ const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>
 const desktop=()=>innerWidth>=900&&document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
 const mobile=()=>innerWidth<900&&document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
 const textKinds=new Set(['text','block','task','merke','file']);
+let savedRange=null,savedObjectId=null,selTimer=null;
 function st(){try{return typeof canvasState!=='undefined'?canvasState:window.canvasState}catch(_){return window.canvasState}}
 function textObj(id){return (st()?.objects||[]).find(o=>String(o.id)===String(id)&&textKinds.has(o.kind)&&!o.isChecklist)||null}
 function selectedText(){const s=st();return s?.selectedType==='object'?textObj(s.selectedId):null}
@@ -1415,7 +1417,7 @@ setTimeout(ensureToolbar,600);setTimeout(ensureToolbar,1500);setTimeout(()=>{con
 (function(){
 'use strict';
 if(window.__STUDIA_V165__)return;window.__STUDIA_V165__=true;
-const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
+const q=(s,r=document)=>r?.querySelector?.(s)||null,qa=(s,r=document)=>r?.querySelectorAll?[...r.querySelectorAll(s)]:[];
 const editor=()=>document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
 const textKinds=new Set(['text','block','task','merke','file']);
 const state=()=>{try{return canvasState}catch(_){return window.canvasState}};
