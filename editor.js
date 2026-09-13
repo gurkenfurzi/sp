@@ -585,7 +585,7 @@ const baseRender=window.renderCanvasObjects;window.renderCanvasObjects=function(
 const baseInspector=window.renderCanvasInspector;window.renderCanvasInspector=function(){const r=baseInspector.apply(this,arguments);refreshFrames();return r};try{renderCanvasInspector=window.renderCanvasInspector}catch(_){}
 
 /* A genuine paper click clears selection; empty drags remain marquee selection. */
-document.addEventListener('click',e=>{if(!editor()||document.body.classList.contains('v137ViewMode'))return;const t=e.target instanceof Element?e.target:null;if(!t||t.closest('.cobj,.vectorObj,.v132Hit,.v138TransformHandle,.pathNode,button,input,select,textarea,[contenteditable="true"]')||!t.closest('#canvasPage,#canvasStage,#canvasObjects,#v132InteractionLayer'))return;canvasState.multiMode=false;clearCanvasSelection?.();window.v132SyncHits?.();renderCanvasInspector?.()},true);
+document.addEventListener('click',e=>{if(!editor()||document.body.classList.contains('v137ViewMode'))return;const t=e.target instanceof Element?e.target:null;if(!t||t.closest('#v183DesktopFrame,.cobj,.vectorObj,.v132Hit,.v138TransformHandle,.pathNode,button,input,select,textarea,[contenteditable="true"]')||!t.closest('#canvasPage,#canvasStage,#canvasObjects,#v132InteractionLayer'))return;canvasState.multiMode=false;clearCanvasSelection?.();window.v132SyncHits?.();renderCanvasInspector?.()},true);
 
 const bodyWatch=new MutationObserver(()=>{if(innerWidth<900&&editor()){guardNav();setTimeout(enhanceDrawer,0)}});bodyWatch.observe(document.body,{attributes:true,attributeFilter:['class']});
 const navWatch=new MutationObserver(()=>{if(innerWidth<900&&editor()){rememberMode();forceNav()}});
