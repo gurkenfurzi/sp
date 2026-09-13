@@ -16166,3 +16166,165 @@ window.addEventListener('resize',()=>setTimeout(()=>{if(desktop()){disableLegacy
 setTimeout(install,1100);setTimeout(install,2600);
 })();
 </script>
+
+<!-- Requested fixes only: real font previews + reliable single-click selection/deselect -->
+<style id="studia-requested-font-preview-fix">
+/* The app's general button typography uses !important, so previews need their own explicit font. */
+#v144FontBrowser .v144FontCard > span:first-child,
+#mobileTextModeContent .v144FontCard > span:first-child,
+#v165FontMenu .v165FontAa{
+  font-synthesis:none!important;
+  font-variant:normal!important;
+  font-feature-settings:normal!important;
+  text-transform:none!important;
+}
+#v144FontBrowser [data-v172-font="Inter"]>span:first-child,#mobileTextModeContent [data-v172-font="Inter"]>span:first-child{font-family:Inter,Arial,sans-serif!important}
+#v144FontBrowser [data-v172-font="Arial"]>span:first-child,#mobileTextModeContent [data-v172-font="Arial"]>span:first-child{font-family:Arial,sans-serif!important}
+#v144FontBrowser [data-v172-font="Lato"]>span:first-child,#mobileTextModeContent [data-v172-font="Lato"]>span:first-child{font-family:Lato,Arial,sans-serif!important}
+#v144FontBrowser [data-v172-font="Playfair Display"]>span:first-child,#mobileTextModeContent [data-v172-font="Playfair Display"]>span:first-child{font-family:"Playfair Display",Georgia,serif!important}
+#v144FontBrowser [data-v172-font="Georgia"]>span:first-child,#mobileTextModeContent [data-v172-font="Georgia"]>span:first-child{font-family:Georgia,serif!important}
+#v144FontBrowser [data-v172-font="Verdana"]>span:first-child,#mobileTextModeContent [data-v172-font="Verdana"]>span:first-child{font-family:Verdana,sans-serif!important}
+#v144FontBrowser [data-v172-font="Trebuchet MS"]>span:first-child,#mobileTextModeContent [data-v172-font="Trebuchet MS"]>span:first-child{font-family:"Trebuchet MS",sans-serif!important}
+#v144FontBrowser [data-v172-font="Times New Roman"]>span:first-child,#mobileTextModeContent [data-v172-font="Times New Roman"]>span:first-child{font-family:"Times New Roman",serif!important}
+#v144FontBrowser [data-v172-font="Courier New"]>span:first-child,#mobileTextModeContent [data-v172-font="Courier New"]>span:first-child{font-family:"Courier New",monospace!important}
+</style>
+<script id="studia-requested-font-selection-fix">
+(()=>{
+'use strict';
+if(window.__STUDIA_REQUESTED_FONT_SELECTION_FINAL__)return;
+window.__STUDIA_REQUESTED_FONT_SELECTION_FINAL__=true;
+
+/* ---------- 1) Actual font preview on laptop + phone ---------- */
+const baseFamilies={
+  'Inter':'Inter, Arial, sans-serif',
+  'Arial':'Arial, sans-serif',
+  'Lato':'Lato, Arial, sans-serif',
+  'Playfair Display':'"Playfair Display", Georgia, serif',
+  'Georgia':'Georgia, serif',
+  'Verdana':'Verdana, sans-serif',
+  'Trebuchet MS':'"Trebuchet MS", sans-serif',
+  'Times New Roman':'"Times New Roman", serif',
+  'Courier New':'"Courier New", monospace'
+};
+function fontFamilyFor(name){
+  name=String(name||'').trim();
+  return baseFamilies[name]||('"'+name.replace(/"/g,'\\"')+'", sans-serif');
+}
+function cardFontName(card){
+  return String(card?.dataset?.v172Font||card?.dataset?.font||card?.querySelector?.('b,strong')?.textContent||'').trim();
+}
+function forcePreview(root=document){
+  try{window.v91LoadFonts?.()}catch(_){ }
+  const cards=[...root.querySelectorAll('.v144FontCard,[data-v172-font]')];
+  for(const card of cards){
+    const name=cardFontName(card);if(!name)continue;
+    const fam=fontFamilyFor(name);
+    const sample=card.querySelector(':scope > span:first-child')||[...card.querySelectorAll('span')].find(s=>/Abc|Aa\s*Bb|123|Aa/.test(s.textContent||''));
+    if(sample)sample.style.setProperty('font-family',fam,'important');
+  }
+  for(const row of root.querySelectorAll('#v165FontMenu [data-v172-font],#v165FontMenu [data-font]')){
+    const name=String(row.dataset.v172Font||row.dataset.font||'').trim();if(!name)continue;
+    row.querySelector('.v165FontAa')?.style.setProperty('font-family',fontFamilyFor(name),'important');
+  }
+  /* Covers the older mobile font-list markup too. */
+  for(const row of root.querySelectorAll('.v96FontRow,.v96FontItem,.fontOption')){
+    const name=String(row.dataset.font||row.dataset.family||row.querySelector('b,strong')?.textContent||'').trim();if(!name)continue;
+    const sample=row.querySelector('.v96FontSample,.fontPreviewAa,span');
+    sample?.style.setProperty('font-family',fontFamilyFor(name),'important');
+  }
+}
+function refreshPreviewSoon(root=document){
+  forcePreview(root);
+  requestAnimationFrame(()=>forcePreview(root));
+  setTimeout(()=>forcePreview(root),80);
+  if(document.fonts?.ready)document.fonts.ready.then(()=>forcePreview(root)).catch(()=>{});
+}
+function wrapAsync(name,after){
+  const old=window[name];if(typeof old!=='function'||old.__requestedPreviewWrapped)return;
+  const wrapped=async function(){const r=await old.apply(this,arguments);after();return r};
+  wrapped.__requestedPreviewWrapped=true;window[name]=wrapped;
+  try{globalThis[name]=wrapped}catch(_){ }
+}
+wrapAsync('v144OpenFontBrowser',()=>refreshPreviewSoon(document.querySelector('#v144FontBrowser')||document));
+wrapAsync('v96OpenFontPicker',()=>refreshPreviewSoon(document.querySelector('#mobileTextModeContent')||document));
+wrapAsync('v165ToggleFontMenu',()=>refreshPreviewSoon(document.querySelector('#v165FontMenu')||document));
+if(typeof window.v144HandleFontFile==='function'&&!window.v144HandleFontFile.__requestedPreviewWrapped){
+  const oldUpload=window.v144HandleFontFile;
+  const wrappedUpload=async function(){const r=await oldUpload.apply(this,arguments);setTimeout(()=>refreshPreviewSoon(document),40);return r};
+  wrappedUpload.__requestedPreviewWrapped=true;window.v144HandleFontFile=wrappedUpload;
+  try{globalThis.v144HandleFontFile=wrappedUpload}catch(_){ }
+}
+
+/* ---------- 2) One normal click selects; empty paper deselects ---------- */
+const editorActive=()=>document.body.classList.contains('editorMode')&&!!document.querySelector('#view-sheet-editor.active');
+const state=()=>{try{return canvasState}catch(_){return window.canvasState}};
+function canvasTarget(t){return t instanceof Element&&!!t.closest('#canvasPage,#canvasStage,#canvasObjects,#canvasSvg,#v132InteractionLayer')}
+function hitFromTarget(t){
+  if(!(t instanceof Element))return null;
+  let el=t.closest('#canvasObjects .cobj[data-id]');
+  if(el)return{kind:'object',id:el.dataset.id};
+  el=t.closest('#canvasObjects [data-vid]');
+  if(el?.dataset.vid)return{kind:'vector',id:el.dataset.vid};
+  el=t.closest('#canvasObjects .vectorObj[data-vector-wrap]');
+  if(el?.dataset.vectorWrap)return{kind:'vector',id:el.dataset.vectorWrap};
+  el=t.closest('#v132InteractionLayer .v132Hit[data-kind][data-id]');
+  if(el)return{kind:el.dataset.kind,id:el.dataset.id};
+  return null;
+}
+function hitAtPoint(e){
+  const stack=document.elementsFromPoint?.(e.clientX,e.clientY)||[];
+  for(const el of stack){const h=hitFromTarget(el);if(h)return h}
+  return null;
+}
+function setSingle(kind,id){
+  const s=state();if(!s||!id)return false;
+  const exists=kind==='object'?(s.objects||[]).some(o=>String(o.id)===String(id)):(s.vectors||[]).some(v=>String(v.id)===String(id));
+  if(!exists)return false;
+  const same=s.selectedType===kind&&String(s.selectedId)===String(id)&&!s.multiMode&&
+    (kind==='object'?(s.selectedIds||[]).length===1:(s.selectedVectorIds||[]).length===1);
+  if(same)return true;
+  s.multiMode=false;s.selectedType=kind;s.selectedId=id;
+  s.selectedIds=kind==='object'?[id]:[];s.selectedVectorIds=kind==='vector'?[id]:[];
+  if(kind==='object')for(const o of s.objects||[])if(String(o.id)!==String(id))o.editing=false;
+  document.querySelectorAll('#canvasObjects .cobj.selected').forEach(x=>x.classList.toggle('selected',kind==='object'&&String(x.dataset.id)===String(id)));
+  try{window.renderCanvasInspector?.();window.renderLayerList?.();window.updateMultiSelectStatus?.();window.updateMobileSelectionTools?.();window.v138RefreshHandles?.()}catch(_){ }
+  return true;
+}
+function clearSingleSelection(){
+  const s=state();if(!s)return;
+  const has=!!s.selectedId||(s.selectedIds||[]).length||(s.selectedVectorIds||[]).length;if(!has)return;
+  try{
+    const a=document.activeElement;if(a instanceof HTMLElement&&a.closest?.('#canvasObjects')&&a.isContentEditable)a.blur();
+    const sel=getSelection?.();if(sel&&!sel.isCollapsed)sel.removeAllRanges();
+  }catch(_){ }
+  s.multiMode=false;
+  try{window.clearCanvasSelection?.()}catch(_){
+    s.selectedType=null;s.selectedId=null;s.selectedIds=[];s.selectedVectorIds=[];
+    try{window.renderCanvasObjects?.();window.renderVectors?.();window.renderCanvasInspector?.();window.renderLayerList?.()}catch(__){ }
+  }
+  try{window.v132SyncHits?.();window.v138RefreshHandles?.()}catch(_){ }
+}
+function requestedPointer(e){
+  if(!editorActive()||document.body.classList.contains('v137ViewMode')||document.body.classList.contains('v184PreviewOpen'))return;
+  if(e.pointerType==='mouse'&&e.button!==0)return;
+  const t=e.target instanceof Element?e.target:null;if(!t||!canvasTarget(t))return;
+  if(t.closest('#v183DesktopFrame,.v138TransformHandle,.resizeHandle,.rotateHandle,.vectorHandle,.vectorRotateLine,.pathNode,.tableMoveHandle,.v168TextHandle'))return;
+  const s=state();if(!s)return;
+  if(e.shiftKey)return;
+  if(document.querySelector('#canvasSvg.drawing')||((s.vectorTool||'select')!=='select'&&s.vectorTool))return;
+  const hit=hitFromTarget(t)||hitAtPoint(e);
+  if(hit){setSingle(hit.kind,hit.id);return}
+  if(t.closest('#canvasPage,#canvasStage,#canvasObjects,#canvasSvg,#v132InteractionLayer'))clearSingleSelection();
+}
+document.addEventListener('pointerdown',requestedPointer,true);
+/* Fallback for elements whose older handlers suppress part of the pointer sequence. */
+document.addEventListener('click',e=>{
+  if(!editorActive())return;
+  const t=e.target instanceof Element?e.target:null;if(!t||!canvasTarget(t))return;
+  if(t.closest('#v183DesktopFrame,.v138TransformHandle,.resizeHandle,.rotateHandle,.vectorHandle,.vectorRotateLine,.pathNode,.tableMoveHandle,.v168TextHandle'))return;
+  const hit=hitFromTarget(t)||hitAtPoint(e);if(hit)setSingle(hit.kind,hit.id);
+  else if(!e.shiftKey)clearSingleSelection();
+},true);
+refreshPreviewSoon(document);
+})();
+</script>
