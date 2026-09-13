@@ -15766,7 +15766,7 @@ setTimeout(reconcile,980);
 <!-- ===== /Studia V134 ===== -->
 <link rel="stylesheet" href="editor.css?v=183">
 <script src="google-sync-config.js?v=182"></script>
-<script src="editor.js?v=183"></script>
+<script src="editor.js?v=187"></script>
 
 <style id="v181-desktop-stability-style">
 @media(min-width:900px){
@@ -16184,6 +16184,7 @@ setTimeout(install,1100);setTimeout(install,2600);
 </style>
 <script id="requested-selection-font-fix">
 (()=>{
+  if(true)return; // retired: V187 owns the one desktop font/selection surface
   'use strict';
   const qa=(s,r=document)=>[...r.querySelectorAll(s)];
 
@@ -16236,6 +16237,7 @@ setTimeout(install,1100);setTimeout(install,2600);
 (()=>{
 'use strict';
 if(window.__STUDIA_V185_INTERACTION_REPAIR__)return;window.__STUDIA_V185_INTERACTION_REPAIR__=true;
+return; // retired: V187 owns deselection, marquee and page actions
 const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
 const editor=()=>innerWidth>=900&&document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
 const state=()=>{try{return canvasState}catch(_){return window.canvasState}};
@@ -16327,6 +16329,7 @@ setTimeout(ensurePageActions,900);setTimeout(ensurePageActions,2200);
 (()=>{
 'use strict';
 if(window.__STUDIA_V186_STABILITY_ONLY__)return;window.__STUDIA_V186_STABILITY_ONLY__=true;
+return; // retired: V187 uses one deterministic desktop render path
 const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
 const laptop=()=>innerWidth>=900&&document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
 function canonicalChrome(){
@@ -16378,4 +16381,5 @@ setTimeout(()=>{canonicalChrome();syncMultiVisual()},1350);setTimeout(()=>{canon
 })();
 </script>
 <!-- ===== /Studia laptop final stabilization ===== -->
-
+<link rel="stylesheet" href="v187-laptop.css?v=195">
+<script src="v187-laptop.js?v=199"></script>
