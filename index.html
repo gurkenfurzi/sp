@@ -15904,7 +15904,9 @@ async function cloneAllPages181(){try{v96SyncPage?.()}catch(_){};canvasState.pag
 window.v181OpenPreview=async function(){let host=qs('#v181Preview');if(!host){host=document.createElement('div');host.id='v181Preview';host.innerHTML='<div class="v181PreviewBar"><b>Nur ansehen</b><button type="button">✕ Schließen</button></div><div class="v181PreviewPages"></div>';document.body.appendChild(host);host.querySelector('button').onclick=()=>host.classList.remove('open')}const pages=host.querySelector('.v181PreviewPages');pages.innerHTML='<div style="padding:40px">Seiten werden geladen …</div>';host.classList.add('open');const clones=await cloneAllPages181();pages.replaceChildren(...clones);const max=Math.min(1,(innerWidth-80)/Math.max(...clones.map(c=>parseFloat(c.style.width)||c.offsetWidth||794)));clones.forEach(c=>{c.style.zoom=String(max)})};
 
 /* Exact-ish multi-page print: clone the real rendered page rather than re-drawing a simplified model. */
-window.printCanvasSheet=async function(){if(innerWidth<900&&window.v170PrintMobile)return window.v170PrintMobile();const clones=await cloneAllPages181();if(!clones.length)return alert('Keine Lernblatt-Seite gefunden.');const styles=qsa('style').map(x=>x.textContent).join('\n');const cssHref=new URL('editor.css?v=183',location.href).href;const w=window.open('about:blank','_blank');if(!w)return alert('Pop-up wurde blockiert. Bitte Pop-ups für Studia erlauben.');const title='Studia Druck';w.document.open();w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${title}</title><link rel="stylesheet" href="${cssHref}"><style>${styles}</style><style>@page{margin:0;size:A4 portrait}html,body{margin:0!important;padding:0!important;background:#fff!important}.v181PrintRoot{margin:0!important;padding:0!important}.v181PrintSheet{break-after:page;page-break-after:always;margin:0!important;position:relative!important;box-shadow:none!important;border:0!important;transform:none!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.v181PrintSheet:last-child{break-after:auto;page-break-after:auto}.v181PrintSheet *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.v181PrintToolbar{position:sticky;top:0;z-index:9;display:flex;gap:8px;padding:10px;background:#fff;border-bottom:1px solid #ddd}@media print{.v181PrintToolbar{display:none!important}}</style></head><body class="editorMode"><div class="v181PrintToolbar"><button onclick="print()">Drucken</button><button onclick="close()">Schließen</button></div><div class="v181PrintRoot">${clones.map(c=>{c.classList.add('v181PrintSheet');return c.outerHTML}).join('')}</div></body></html>`);w.document.close();setTimeout(()=>{try{w.focus();w.print()}catch(_){}},700)};
+window.printCanvasSheet=async function(){if(innerWidth<900&&window.v170PrintMobile)return window.v170PrintMobile();const clones=await cloneAllPages181();if(!clones.length)return alert('Keine Lernblatt-Seite gefunden.');const styles=qsa('style').map(x=>x.textContent).join('\n');const cssHref=new URL('editor.css?v=183',location.href).href;const w=window.open('about:blank','_blank');if(!w)return alert('Pop-up wurde blockiert. Bitte Pop-ups für Studia erlauben.');const title='Studia Druck';w.document.open();w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${title}</title><link rel="stylesheet" href="${cssHref}"><style>${styles}</style><style>@page{margin:0;size:A4 portrait}html,body{margin:0!important;padding:0!important;background:#fff!important}.v181PrintRoot{margin:0!important;padding:0!important}.v181PrintSheet{break-after:page;page-break-after:always;margin:0!important;position:relative!important;box-shadow:none!important;border:0!important;transform:none!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.v181PrintSheet:last-child{break-after:auto;page-break-after:auto}.v181PrintSheet *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.v181PrintToolbar{position:sticky;top:0;z-index:9;display:flex;gap:8px;padding:10px;background:#fff;border-bottom:1px solid #ddd}@media print{.v181PrintToolbar{display:none!important}}</style></head><body class="editorMode"><div class="v181PrintToolbar"><button onclick="print()">Drucken</button><button onclick="close()">Schließen</button></div><div class="v181PrintRoot">${clones.map(c=>{c.classList.add('v181PrintSheet');return c.outerHTML}).join('')}</div>
+
+</body></html>`);w.document.close();setTimeout(()=>{try{w.focus();w.print()}catch(_){}},700)};
 try{printCanvasSheet=window.printCanvasSheet}catch(_){}
 
 function install(){window.__STUDIA_V180_DESKTOP__=false;const eye=qs('#headerEyebrow');if(eye)eye.textContent='VERSION 182';document.title='Studia';try{window.v132SyncHits?.();window.v138RefreshHandles?.()}catch(_){}}
@@ -16093,7 +16095,7 @@ function paintFrame(){if(!desktop())return;const f=ensureFrame(),sel=selected();
 function selectObject(id){const s=state(),o=(s?.objects||[]).find(x=>String(x.id)===String(id));if(!o)return null;const already=s.selectedType==='object'&&String(s.selectedId)===String(o.id)&&!s.multiMode&&s.selectedIds?.length===1;if(!already){s.multiMode=false;s.selectedType='object';s.selectedId=o.id;s.selectedIds=[o.id];s.selectedVectorIds=[];qa('#view-sheet-editor #canvasObjects .cobj.selected').forEach(x=>x.classList.toggle('selected',String(x.dataset.id)===String(o.id)));q(`#view-sheet-editor #canvasObjects .cobj[data-id="${CSS.escape(String(o.id))}"]`)?.classList.add('selected');try{renderCanvasInspector?.();renderLayerList?.();updateMultiSelectStatus?.();updateMobileSelectionTools?.()}catch(_){}}paintFrame();return o}
 function selectVector(id){const s=state(),v=(s?.vectors||[]).find(x=>String(x.id)===String(id));if(!v)return null;s.multiMode=false;s.selectedType='vector';s.selectedId=v.id;s.selectedIds=[];s.selectedVectorIds=[v.id];try{renderCanvasInspector?.();renderLayerList?.();updateMultiSelectStatus?.()}catch(_){}paintFrame();return v}
 
-function nearObjectEdge(el,e,pad=14){const r=el?.getBoundingClientRect();if(!r)return false;/* At fit-to-page zoom a 14px zone covered almost an entire one-line text box. Keep it generous on large objects but proportional on shallow text. */const p=Math.min(pad,Math.max(5,Math.min(r.width,r.height)*.16)),x=e.clientX-r.left,y=e.clientY-r.top;return x<=p||y<=p||r.width-x<=p||r.height-y<=p}
+function nearObjectEdge(el,e,pad=18){const r=el?.getBoundingClientRect();if(!r)return false;/* Reliable border target while always leaving the middle free for native text editing. */const shortest=Math.max(1,Math.min(r.width,r.height)),p=Math.min(pad,Math.max(4,shortest*.24),shortest/3),x=e.clientX-r.left,y=e.clientY-r.top;return x<=p||y<=p||r.width-x<=p||r.height-y<=p}
 function caretAtPoint(el,x,y,word=false){if(!el)return false;let r=null;try{if(document.caretRangeFromPoint)r=document.caretRangeFromPoint(x,y);if(!r&&document.caretPositionFromPoint){const p=document.caretPositionFromPoint(x,y);if(p){r=document.createRange();r.setStart(p.offsetNode,p.offset);r.collapse(true)}}}catch(_){}const inside=r&&(r.commonAncestorContainer===el||el.contains(r.commonAncestorContainer.nodeType===1?r.commonAncestorContainer:r.commonAncestorContainer.parentNode));if(!inside){let best=null,bestD=Infinity;const walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);while(walker.nextNode()){const node=walker.currentNode,text=node.data||'';for(let i=0;i<text.length;i++){const cr=document.createRange();cr.setStart(node,i);cr.setEnd(node,i+1);const b=cr.getBoundingClientRect();if(!b.width&&!b.height)continue;const dx=x< b.left?b.left-x:x>b.right?x-b.right:0,dy=y<b.top?b.top-y:y>b.bottom?y-b.bottom:0,d=Math.hypot(dx,dy);if(d<bestD){bestD=d;best={node,off:x>(b.left+b.right)/2?i+1:i}}}}if(!best)return false;r=document.createRange();r.setStart(best.node,best.off);r.collapse(true)}if(word){let node=r.startContainer,off=r.startOffset;if(node.nodeType!==Node.TEXT_NODE){const texts=[],walker=document.createTreeWalker(node,NodeFilter.SHOW_TEXT);while(walker.nextNode())texts.push(walker.currentNode);node=texts[Math.min(off,texts.length-1)]||texts[0];off=node?.data?.length?Math.min(node.data.length,off):0}if(node?.nodeType===Node.TEXT_NODE){const text=node.data||'',isWord=ch=>/[\p{L}\p{N}_]/u.test(ch||'');let a=Math.min(off,text.length),b=a;if(a===text.length||!isWord(text[a]))while(a>0&&!isWord(text[a]))a--;while(a>0&&isWord(text[a-1]))a--;b=Math.max(a,Math.min(off,text.length));while(b<text.length&&isWord(text[b]))b++;if(b>a){r.setStart(node,a);r.setEnd(node,b)}}}const s=getSelection();s.removeAllRanges();s.addRange(r);el.focus({preventScroll:true});try{window.v152RememberRange?.()}catch(_){}return true}
 
 function saveText(el,id){const o=(state()?.objects||[]).find(x=>String(x.id)===String(id));if(!o)return;o.text=el.innerHTML;try{markCanvasDirty?.(false)}catch(_){} }
@@ -16183,12 +16185,9 @@ setTimeout(install,1100);setTimeout(install,2600);
 <script id="requested-selection-font-fix">
 (()=>{
   'use strict';
-  const q=(s,r=document)=>r.querySelector(s);
   const qa=(s,r=document)=>[...r.querySelectorAll(s)];
-  const inEditor=()=>document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
-  const state=()=>{try{return canvasState}catch(_){return window.canvasState}};
 
-  /* Make the existing font menus show a real preview on both laptop and phone. */
+  /* Font previews only. Selection is owned by the editor's stable input layer. */
   function familyName(btn){
     return String(btn?.dataset?.v172Font||btn?.dataset?.font||'').trim();
   }
@@ -16216,48 +16215,82 @@ setTimeout(install,1100);setTimeout(install,2600);
   }
   ['v144OpenFontBrowser','v96OpenFontPicker','v165ToggleFontMenu'].forEach(wrapFontMenu);
   window.addEventListener('pageshow',()=>setTimeout(()=>forceFontPreviews(document),120));
-
-  function selectOne(kind,id){
-    const s=state();if(!s||!id)return;
-    s.multiMode=false;
-    if(kind==='object'){
-      const exists=(s.objects||[]).some(x=>String(x.id)===String(id));if(!exists)return;
-      s.selectedType='object';s.selectedId=id;s.selectedIds=[id];s.selectedVectorIds=[];
-      qa('#canvasObjects .cobj.selected').forEach(el=>el.classList.toggle('selected',String(el.dataset.id)===String(id)));
-      q(`#canvasObjects .cobj[data-id="${CSS.escape(String(id))}"]`)?.classList.add('selected');
-    }else{
-      const exists=(s.vectors||[]).some(x=>String(x.id)===String(id));if(!exists)return;
-      s.selectedType='vector';s.selectedId=id;s.selectedIds=[];s.selectedVectorIds=[id];
-      qa('#canvasObjects .cobj.selected').forEach(el=>el.classList.remove('selected'));
-    }
-    try{window.renderCanvasInspector?.();window.renderLayerList?.();window.updateMultiSelectStatus?.();window.updateMobileSelectionTools?.();window.v132SyncHits?.()}catch(_){}
-  }
-
-  function clearSelectionOnly(){
-    const s=state();if(!s)return;
-    s.multiMode=false;s.selectedType=null;s.selectedId=null;s.selectedIds=[];s.selectedVectorIds=[];
-    qa('#canvasObjects .cobj.selected,#canvasObjects .vectorObj.selected').forEach(el=>el.classList.remove('selected'));
-    q('#v183DesktopFrame')?.classList.add('hidden');
-    q('#v181SelectionOverlay')?.classList.add('hidden');
-    try{window.renderCanvasInspector?.();window.renderLayerList?.();window.updateMultiSelectStatus?.();window.updateMobileSelectionTools?.();window.v132SyncHits?.()}catch(_){}
-  }
-
-  /* One normal click/tap selects an item. Do not steal text editing or drag behavior. */
-  window.addEventListener('pointerdown',e=>{
-    if(!inEditor()||(e.pointerType==='mouse'&&e.button!==0))return;
-    const t=e.target instanceof Element?e.target:null;if(!t)return;
-    if(t.closest('#v183DesktopFrame,.v138TransformHandle,.resizeHandle,.rotateHandle,.pathNode'))return;
-
-    const obj=t.closest('#canvasObjects .cobj,.v132Hit[data-kind="object"]');
-    if(obj){const id=obj.dataset.id;if(id)selectOne('object',id);return}
-
-    const vec=t.closest('#canvasObjects [data-vector-wrap],#canvasObjects [data-vid],.v132Hit[data-kind="vector"]');
-    if(vec){const id=vec.dataset.vid||vec.dataset.vectorWrap||vec.dataset.id;if(id)selectOne('vector',id);return}
-
-    /* Clicking truly empty paper removes the current selection. Shift keeps it for marquee-add. */
-    if(e.shiftKey)return;
-    if(t.closest('button,input,select,textarea,a,[contenteditable="true"],#canvasQuickDrawer,#canvasInspector,.canvasTopbar,.desktopCommandBar,#v96PageStrip,.v144FontModal,#v165FontMenu'))return;
-    if(t.closest('#canvasPage,#canvasStage,#canvasObjects,#v132InteractionLayer'))clearSelectionOnly();
-  },{capture:true,passive:true});
 })();
 </script>
+
+<!-- Interaction repair: no visual redesign; only hit testing, deselection and page actions. -->
+<style id="v185-interaction-repair-style">
+@media (min-width:900px){
+  /* Full-page SVG wrappers must never block blank paper or normal objects. Only the real shape hit area is clickable. */
+  body.editorMode #canvasObjects .vectorObj{pointer-events:none!important}
+  body.editorMode #canvasObjects .vectorTouchProxy,
+  body.editorMode #canvasObjects .shapeHit{pointer-events:all!important;touch-action:none!important}
+
+  /* Keep the visible page panel's restored actions compact and in the existing visual language. */
+  body.editorMode #v102PagePanel .v185PageActions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:0 0 10px}
+  body.editorMode #v102PagePanel .v185PageActions button{min-height:34px;border:1px solid #eadbd6;border-radius:9px;background:#fff;color:#765e57;font-size:10px;font-weight:850;padding:7px 9px}
+  body.editorMode #v102PagePanel .v185PageActions button:last-child{background:#fff5f4;color:#a45f64;border-color:#efd0cd}
+}
+</style>
+<script id="v185-interaction-repair-script">
+(()=>{
+'use strict';
+if(window.__STUDIA_V185_INTERACTION_REPAIR__)return;window.__STUDIA_V185_INTERACTION_REPAIR__=true;
+const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
+const editor=()=>innerWidth>=900&&document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
+const state=()=>{try{return canvasState}catch(_){return window.canvasState}};
+
+function clearCanvasSelection(){
+  const s=state();if(!s)return;
+  s.multiMode=false;s.selectedType=null;s.selectedId=null;s.selectedIds=[];s.selectedVectorIds=[];
+  qa('#canvasObjects .cobj.selected,#canvasObjects .vectorObj.selected').forEach(el=>el.classList.remove('selected'));
+  q('#v183DesktopFrame')?.classList.add('hidden');
+  q('#v181SelectionOverlay')?.classList.add('hidden');
+  try{const a=document.activeElement;if(a?.closest?.('#canvasObjects [contenteditable="true"]'))a.blur()}catch(_){}
+  try{const sel=getSelection();if(sel?.rangeCount)sel.removeAllRanges()}catch(_){}
+  try{renderCanvasInspector?.();renderLayerList?.();updateMultiSelectStatus?.();updateMobileSelectionTools?.()}catch(_){}
+}
+window.v185ClearCanvasSelection=clearCanvasSelection;
+
+/* A click anywhere in genuinely empty workspace/paper clears selection.
+   Do not consume the event: drawing, panning and normal editor behavior remain intact. */
+window.addEventListener('pointerdown',e=>{
+  if(!editor()||(e.pointerType==='mouse'&&e.button!==0)||e.shiftKey)return;
+  const t=e.target instanceof Element?e.target:null;if(!t)return;
+  if(t.closest('#v183DesktopFrame,.resizeHandle,.rotateHandle,.pathNode,.vectorHandle,.tableMoveHandle'))return;
+  if(t.closest('.canvasTopbar,.desktopCommandBar,#canvasQuickDrawer,#desktopEditorSidebar,#v96PageStrip,#topViewMenu,.v144FontModal,#v165FontMenu,button,input,select,textarea,a'))return;
+  if(t.closest('#canvasObjects .cobj,#canvasObjects .shapeHit,#canvasObjects .vectorTouchProxy'))return;
+  if(t.closest('.canvasSvg.drawing'))return;
+  if(t.closest('#canvasViewport,#v96PanSurface,#canvasStage,#canvasPage,#canvasObjects'))clearCanvasSelection();
+},{capture:true,passive:true});
+
+function ensurePageActions(){
+  const panel=q('#v102PagePanel');if(!panel)return;
+  const head=q('.rowBetween',panel);if(!head||q('.v185PageActions',panel))return;
+  const actions=document.createElement('div');actions.className='v185PageActions';
+  const dup=document.createElement('button');dup.type='button';dup.textContent='⧉ Seite duplizieren';dup.onclick=()=>{window.v96DuplicatePage?.();setTimeout(()=>{try{window.v102RightTab?.('page')}catch(_){}},20)};
+  const del=document.createElement('button');del.type='button';del.textContent='⌫ Seite löschen';del.onclick=()=>{window.v96DeletePage?.();setTimeout(()=>{try{window.v102RightTab?.('page')}catch(_){}},20)};
+  actions.append(dup,del);head.insertAdjacentElement('afterend',actions);
+}
+
+/* The current laptop layout hides the old bottom page strip, so restore the two
+   existing page commands in the visible right-side Pages panel. */
+const oldRight=window.v102RightTab;
+if(typeof oldRight==='function'&&!oldRight.__v185){
+  const wrapped=function(){const r=oldRight.apply(this,arguments);requestAnimationFrame(ensurePageActions);return r};wrapped.__v185=true;window.v102RightTab=wrapped;
+  try{v102RightTab=window.v102RightTab}catch(_){}
+}
+['v96AddPage','v96DuplicatePage','v96DeletePage','v96SwitchPage'].forEach(name=>{
+  const old=window[name];if(typeof old!=='function'||old.__v185)return;
+  const wrapped=function(){const r=old.apply(this,arguments);setTimeout(ensurePageActions,30);return r};wrapped.__v185=true;window[name]=wrapped;
+});
+
+const oldRender=window.renderSheetEditor;
+if(typeof oldRender==='function'&&!oldRender.__v185PageActions){
+  const wrapped=function(){const r=oldRender.apply(this,arguments);setTimeout(ensurePageActions,120);return r};wrapped.__v185PageActions=true;window.renderSheetEditor=wrapped;
+  try{renderSheetEditor=window.renderSheetEditor}catch(_){}
+}
+setTimeout(ensurePageActions,900);setTimeout(ensurePageActions,2200);
+})();
+</script>
+
