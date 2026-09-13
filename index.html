@@ -16328,3 +16328,159 @@ document.addEventListener('click',e=>{
 refreshPreviewSoon(document);
 })();
 </script>
+<style id="studia-pretty-font-picker-v3">
+/* Only font-picker UI. Native font selects stay in the DOM for app state, but are replaced visually by this button. */
+.studiaPrettyFontNativeHidden{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;clip-path:inset(50%)!important;margin:0!important;padding:0!important;border:0!important}
+.studiaPrettyFontTrigger{height:34px;min-width:118px;max-width:164px;padding:0 10px!important;border:0!important;border-radius:7px!important;background:transparent!important;color:#514641!important;display:inline-flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;font-size:12px!important;font-weight:650!important;line-height:1!important;cursor:pointer!important;white-space:nowrap!important}
+.studiaPrettyFontTrigger:hover{background:#fff1f1!important}
+.studiaPrettyFontTrigger .studiaPrettyFontTriggerName{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.studiaPrettyFontTrigger .studiaPrettyFontChevron{font-family:Arial,sans-serif!important;font-size:15px!important;font-weight:400!important;opacity:.72;transform:translateY(-1px)}
+#desktopEditorSidebar .studiaPrettyFontTrigger{width:100%!important;max-width:none!important;height:40px!important;border:1px solid #eadbd6!important;border-radius:10px!important;background:#fff!important;padding:0 11px!important;color:#675751!important}
+#desktopEditorSidebar .studiaPrettyFontTrigger:hover{background:#fff7f5!important;border-color:#e8c8c7!important}
+
+#studiaPrettyFontOverlay{position:fixed;inset:0;z-index:2147483550;display:grid;place-items:center;padding:18px;background:rgba(75,65,61,.25);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+#studiaPrettyFontModal{width:min(470px,calc(100vw - 28px));max-height:min(760px,calc(100dvh - 28px));display:flex;flex-direction:column;overflow:hidden;border:1px solid #ead8d2;border-radius:22px;background:#fffdfb;color:#66554e;box-shadow:0 22px 70px rgba(72,51,45,.22);font-family:Inter,Arial,sans-serif!important}
+.studiaPrettyFontHead{flex:0 0 auto;display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:16px 16px 12px;border-bottom:1px solid #f0e3df;background:rgba(255,253,251,.98)}
+.studiaPrettyFontHeadText{display:grid;gap:3px;min-width:0}
+.studiaPrettyFontHeadText b{font-family:Inter,Arial,sans-serif!important;font-size:16px!important;line-height:1.15!important;color:#65544d!important}
+.studiaPrettyFontHeadText small{font-family:Inter,Arial,sans-serif!important;font-size:10px!important;line-height:1.3!important;color:#a2877e!important;font-weight:500!important}
+.studiaPrettyFontClose{width:38px!important;height:38px!important;min-width:38px!important;padding:0!important;display:grid!important;place-items:center!important;border:1px solid #eadbd6!important;border-radius:12px!important;background:#fff!important;color:#7a645c!important;font:400 22px/1 Arial,sans-serif!important;cursor:pointer!important}
+.studiaPrettyFontClose:hover{background:#fff2f0!important}
+.studiaPrettyFontList{min-height:0;overflow:auto;display:grid;gap:8px;padding:10px 12px 13px;scrollbar-width:thin;scrollbar-color:#b4aba7 transparent}
+.studiaPrettyFontRow{width:100%!important;min-height:68px!important;display:grid!important;grid-template-columns:minmax(0,1fr) 176px 18px!important;align-items:center!important;gap:10px!important;padding:8px 10px!important;border:1px solid #eadbd6!important;border-radius:15px!important;background:#fff!important;color:#67554e!important;text-align:left!important;cursor:pointer!important;box-shadow:none!important;transform:none!important}
+.studiaPrettyFontRow:hover{border-color:#e6bfc0!important;background:#fff8f6!important}
+.studiaPrettyFontRow.selected{border-color:#dfa1a6!important;background:#fff4f4!important;box-shadow:0 0 0 2px rgba(223,161,166,.10)!important}
+.studiaPrettyFontSample{display:block!important;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:25px!important;font-weight:400!important;font-style:normal!important;line-height:1.1!important;letter-spacing:0!important;text-transform:none!important;font-variant:normal!important;font-feature-settings:normal!important;font-synthesis:none!important;color:#755f56!important}
+.studiaPrettyFontMeta{min-width:0;display:grid;gap:3px;font-family:Inter,Arial,sans-serif!important}
+.studiaPrettyFontMeta b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:Inter,Arial,sans-serif!important;font-size:11px!important;line-height:1.15!important;font-weight:800!important;color:#6d5951!important}
+.studiaPrettyFontMeta small{font-family:Inter,Arial,sans-serif!important;font-size:8px!important;line-height:1.15!important;font-weight:500!important;color:#aa8e84!important}
+.studiaPrettyFontArrow{font-family:Arial,sans-serif!important;font-size:19px!important;font-weight:400!important;color:#d37c82!important;text-align:center!important}
+.studiaPrettyFontEmpty{padding:22px 12px;text-align:center;font:600 11px/1.4 Inter,Arial,sans-serif;color:#9b837a}
+@media(max-width:899px){
+ #studiaPrettyFontOverlay{padding:10px;align-items:center}
+ #studiaPrettyFontModal{width:min(94vw,470px);max-height:min(82dvh,720px);border-radius:20px}
+ .studiaPrettyFontHead{padding:14px 14px 11px}
+ .studiaPrettyFontList{padding:9px 10px 12px;gap:7px}
+ .studiaPrettyFontRow{grid-template-columns:minmax(0,1fr) minmax(105px,40%) 16px!important;min-height:64px!important;padding:8px 9px!important;gap:8px!important}
+ .studiaPrettyFontSample{font-size:23px!important}
+ .studiaPrettyFontMeta b{font-size:10px!important}
+ .studiaPrettyFontTrigger{min-width:92px;max-width:135px}
+}
+</style>
+<script id="studia-pretty-font-picker-v3-script">
+(()=>{
+'use strict';
+if(window.__STUDIA_PRETTY_FONT_PICKER_V3__)return;
+window.__STUDIA_PRETTY_FONT_PICKER_V3__=true;
+
+const BASE_FONTS=[
+ {name:'Inter',css:'Inter, Arial, sans-serif'},
+ {name:'Arial',css:'Arial, sans-serif'},
+ {name:'Georgia',css:'Georgia, serif'},
+ {name:'Trebuchet MS',css:'"Trebuchet MS", sans-serif'},
+ {name:'Verdana',css:'Verdana, sans-serif'},
+ {name:'Times New Roman',css:'"Times New Roman", serif'},
+ {name:'Lato',css:'Lato, Arial, sans-serif'},
+ {name:'Playfair Display',css:'"Playfair Display", Georgia, serif'},
+ {name:'Courier New',css:'"Courier New", monospace'}
+];
+const FONT_DB='studia-fonts-v144',FONT_STORE='fonts';
+const LS_KEYS=['schoolbloom-v91-custom-fonts','schoolbloom-custom-fonts'];
+const installed=new Map();
+let webFontPromise=null;
+
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function cleanFamily(v){return String(v||'').trim().split(',')[0].replace(/^['"]|['"]$/g,'').replace(/["']/g,'').trim()||'Inter'}
+function familyCss(name){const base=BASE_FONTS.find(f=>f.name===name);return base?base.css:`"${String(name).replace(/"/g,'\\"')}", sans-serif`}
+function getState(){try{return typeof canvasState!=='undefined'?canvasState:window.canvasState}catch(_){return window.canvasState}}
+function selectedObject(){const s=getState();return (s?.objects||[]).find(o=>String(o.id)===String(s?.selectedId))||null}
+function currentFamily(){
+ try{const sel=getSelection?.();if(sel?.rangeCount&&!sel.isCollapsed){const n=sel.getRangeAt(0).startContainer,el=n.nodeType===1?n:n.parentElement;if(el)return cleanFamily(getComputedStyle(el).fontFamily)}}catch(_){ }
+ const o=selectedObject();if(o?.style?.fontFamily)return cleanFamily(o.style.fontFamily);
+ const visible=[...document.querySelectorAll('select.fontSelect,.v137Font,.v134FormatTools select.font')].find(s=>s.value);return cleanFamily(visible?.value||'Inter');
+}
+function ensureGoogleFonts(){
+ if(webFontPromise)return webFontPromise;
+ webFontPromise=new Promise(resolve=>{
+   if(document.querySelector('link[data-studia-preview-fonts]'))return resolve();
+   const pre1=document.createElement('link');pre1.rel='preconnect';pre1.href='https://fonts.googleapis.com';document.head.appendChild(pre1);
+   const pre2=document.createElement('link');pre2.rel='preconnect';pre2.href='https://fonts.gstatic.com';pre2.crossOrigin='anonymous';document.head.appendChild(pre2);
+   const link=document.createElement('link');link.rel='stylesheet';link.dataset.studiaPreviewFonts='1';link.href='https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Lato:wght@400;700&family=Playfair+Display:wght@400;600;700&display=swap';
+   let done=false;const finish=()=>{if(done)return;done=true;resolve()};link.onload=finish;link.onerror=finish;document.head.appendChild(link);setTimeout(finish,1800);
+ });
+ return webFontPromise;
+}
+function readLocalFonts(){
+ const map=new Map();
+ for(const key of LS_KEYS){try{for(const f of JSON.parse(localStorage.getItem(key)||'[]')){const name=String(f?.name||f?.css||'').trim(),data=String(f?.data||f?.src||'');if(name&&data)map.set(name,{name,data,custom:true})}}catch(_){ }}
+ return map;
+}
+function readDbFonts(){return new Promise(resolve=>{try{const req=indexedDB.open(FONT_DB,1);req.onupgradeneeded=()=>{try{if(!req.result.objectStoreNames.contains(FONT_STORE))req.result.createObjectStore(FONT_STORE,{keyPath:'name'})}catch(_){}};req.onerror=()=>resolve([]);req.onsuccess=()=>{try{const tx=req.result.transaction(FONT_STORE,'readonly'),r=tx.objectStore(FONT_STORE).getAll();r.onsuccess=()=>resolve(r.result||[]);r.onerror=()=>resolve([])}catch(_){resolve([])}}}catch(_){resolve([])}})}
+async function installCustom(font){
+ if(!font?.name||!font?.data||installed.get(font.name)===font.data)return;
+ try{if('FontFace'in window&&document.fonts){const face=new FontFace(font.name,`url(${JSON.stringify(font.data)})`);await face.load();document.fonts.add(face);installed.set(font.name,font.data);return}}catch(_){ }
+ try{const id='studia-pretty-font-'+font.name.replace(/[^a-z0-9_-]/gi,'-');let st=document.getElementById(id);if(!st){st=document.createElement('style');st.id=id;document.head.appendChild(st)}st.textContent=`@font-face{font-family:${JSON.stringify(font.name)};src:url(${JSON.stringify(font.data)});font-display:swap}`;installed.set(font.name,font.data)}catch(_){ }
+}
+async function allFonts(){
+ ensureGoogleFonts();
+ try{window.v91LoadFonts?.()}catch(_){ }
+ const map=readLocalFonts();
+ for(const f of await readDbFonts()){const name=String(f?.name||f?.css||'').trim(),data=String(f?.data||f?.src||'');if(name&&data)map.set(name,{name,data,custom:true})}
+ const custom=[...map.values()].sort((a,b)=>a.name.localeCompare(b.name,'de'));
+ for(const f of custom)await installCustom(f);
+ return [...BASE_FONTS,...custom.map(f=>({name:f.name,css:familyCss(f.name),custom:true}))];
+}
+function closePicker(){document.getElementById('studiaPrettyFontOverlay')?.remove()}
+async function applyFont(name){
+ try{window.v152RestoreRange?.()}catch(_){ }
+ try{window.applyTextProperty?.('fontFamily',name)}catch(_){ }
+ syncTriggers(name);
+ setTimeout(()=>syncTriggers(),30);
+}
+function forceSampleFonts(root){
+ for(const row of root.querySelectorAll('.studiaPrettyFontRow')){
+   const name=row.dataset.fontName;const sample=row.querySelector('.studiaPrettyFontSample');
+   if(sample)sample.style.setProperty('font-family',familyCss(name),'important');
+ }
+}
+async function openPicker(){
+ try{window.v152RememberRange?.()}catch(_){ }
+ closePicker();
+ const fonts=await allFonts(),current=currentFamily();
+ const overlay=document.createElement('div');overlay.id='studiaPrettyFontOverlay';overlay.innerHTML=`<div id="studiaPrettyFontModal" role="dialog" aria-modal="true" aria-label="Schriftart"><div class="studiaPrettyFontHead"><div class="studiaPrettyFontHeadText"><b>Schriftart</b><small>Jede Schrift wird direkt als Vorschau angezeigt.</small></div><button type="button" class="studiaPrettyFontClose" aria-label="Schließen">×</button></div><div class="studiaPrettyFontList">${fonts.length?fonts.map(f=>`<button type="button" class="studiaPrettyFontRow ${f.name===current?'selected':''}" data-font-name="${esc(f.name)}"><span class="studiaPrettyFontSample">Abc 123</span><span class="studiaPrettyFontMeta"><b>${esc(f.name)}</b><small>${f.custom?'Eigene Schrift':'Schriftvorschau'}</small></span><span class="studiaPrettyFontArrow">›</span></button>`).join(''):'<div class="studiaPrettyFontEmpty">Keine Schriften gefunden.</div>'}</div></div>`;
+ document.body.appendChild(overlay);forceSampleFonts(overlay);
+ overlay.querySelector('.studiaPrettyFontClose')?.addEventListener('click',closePicker);
+ overlay.addEventListener('pointerdown',e=>{if(e.target===overlay)closePicker()});
+ overlay.addEventListener('click',async e=>{const row=e.target.closest?.('.studiaPrettyFontRow');if(!row)return;e.preventDefault();e.stopPropagation();await applyFont(row.dataset.fontName);closePicker()});
+ document.addEventListener('keydown',function escClose(e){if(e.key==='Escape'&&document.getElementById('studiaPrettyFontOverlay')){closePicker();document.removeEventListener('keydown',escClose)}},{capture:true});
+ Promise.resolve(document.fonts?.ready).then(()=>forceSampleFonts(overlay)).catch(()=>{});
+ setTimeout(()=>forceSampleFonts(overlay),120);
+}
+window.studiaOpenPrettyFontPicker=openPicker;
+window.v144OpenFontBrowser=openPicker;
+window.v96OpenFontPicker=openPicker;
+window.v165ToggleFontMenu=function(){openPicker()};
+
+function makeTrigger(sel){
+ if(!(sel instanceof HTMLSelectElement)||sel.dataset.studiaPrettyFont==='1')return;
+ sel.dataset.studiaPrettyFont='1';sel.classList.add('studiaPrettyFontNativeHidden');
+ const btn=document.createElement('button');btn.type='button';btn.className='studiaPrettyFontTrigger';btn.dataset.forFontSelect='1';btn.innerHTML='<span class="studiaPrettyFontTriggerName"></span><span class="studiaPrettyFontChevron">⌄</span>';
+ btn.addEventListener('pointerdown',e=>{e.preventDefault();try{window.v152RememberRange?.()}catch(_){ }});
+ btn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openPicker()});
+ sel.insertAdjacentElement('afterend',btn);updateTrigger(sel,btn);
+}
+function updateTrigger(sel,btn=sel.nextElementSibling){if(!btn?.classList?.contains('studiaPrettyFontTrigger'))return;const name=cleanFamily(sel.value||currentFamily());const n=btn.querySelector('.studiaPrettyFontTriggerName');if(n){n.textContent=name;n.style.setProperty('font-family',familyCss(name),'important')}}
+function syncTriggers(forceName){
+ const sels=document.querySelectorAll('select.fontSelect,.v137Font,.v134FormatTools select.font');
+ for(const sel of sels){makeTrigger(sel);if(forceName&&[...sel.options].some(o=>cleanFamily(o.value)===forceName)){const opt=[...sel.options].find(o=>cleanFamily(o.value)===forceName);if(opt)sel.value=opt.value}updateTrigger(sel)}
+ const sm=document.querySelector('.v165FontSample');if(sm){const name=forceName||currentFamily();sm.textContent=name;sm.style.setProperty('font-family',familyCss(name),'important')}
+}
+const obs=new MutationObserver(()=>syncTriggers());
+if(document.documentElement)obs.observe(document.documentElement,{subtree:true,childList:true});
+document.addEventListener('change',e=>{if(e.target?.matches?.('select.fontSelect,.v137Font,.v134FormatTools select.font'))syncTriggers()},true);
+document.addEventListener('click',e=>{if(e.target instanceof Element&&e.target.closest('#canvasObjects,#canvasPage,#canvasStage,#desktopEditorSidebar'))setTimeout(()=>syncTriggers(),0)},true);
+ensureGoogleFonts();
+syncTriggers();
+setTimeout(syncTriggers,300);setTimeout(syncTriggers,900);
+})();
+</script>
