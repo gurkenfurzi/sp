@@ -159,7 +159,7 @@ function toolbarHTML(){return `<div class="v137FormatToolbar">
  </div>`}
 window.v137Text=function(prop,value){const s=selected(),targets=s.objects.filter(o=>['text','block','task','merke','file'].includes(o.kind));if(!targets.length)return window.cuteToast?.('Wähle zuerst einen Text ♡');targets.forEach(o=>{o.style||={};o.style[prop]=value});commit()};
 window.v137ToggleText=function(kind){const targets=selected().objects.filter(o=>['text','block','task','merke','file'].includes(o.kind));if(!targets.length)return window.cuteToast?.('Wähle zuerst einen Text ♡');targets.forEach(o=>{o.style||={};if(kind==='fontWeight')o.style.fontWeight=String(o.style.fontWeight)==='700'?'400':'700';else if(kind==='fontStyle')o.style.fontStyle=o.style.fontStyle==='italic'?'normal':'italic';else{const key=kind==='strike'?'line-through':'underline',set=new Set(String(o.style.textDecoration||'').split(/\s+/).filter(x=>x&&x!=='none'));set.has(key)?set.delete(key):set.add(key);o.style.textDecoration=[...set].join(' ')||'none'}});commit()};
-function organizeToolbar(){const host=q('.v134FormatTools');if(host&&host.dataset.v137!=='1'){host.dataset.v137='1';host.innerHTML=toolbarHTML()}qa('.v135MenuBar').forEach(x=>x.remove())}
+function organizeToolbar(){if(innerWidth>=900&&window.__STUDIA_DESKTOP_UI_OWNER)return;const host=q('.v134FormatTools');if(host&&host.dataset.v137!=='1'){host.dataset.v137='1';host.innerHTML=toolbarHTML()}qa('.v135MenuBar').forEach(x=>x.remove())}
 
 /* ---------- viewer ---------- */
 function viewerBar(){let bar=q('.v137ViewerBar');if(!bar){bar=document.createElement('div');bar.className='v137ViewerBar';bar.innerHTML=`<div class="v137ViewerTitle">${icons.note}<div><b id="v137ViewerName">Lernblatt</b><span>Nur ansehen · Links sind aktiv</span></div></div><button aria-label="Bearbeiten" title="Bearbeiten" onclick="v137SetViewMode(false)">${icons.close}<span>Bearbeiten</span></button>`;q('.canvasEditorShell')?.appendChild(bar)}return bar}
@@ -440,8 +440,8 @@ document.addEventListener('keydown',e=>{if(!editor())return;const typing=e.targe
 function correctLayerIcons(){for(const row of qa('[data-layer-kind][data-layer-id]')){const ref=row.dataset.layerKind==='object'?(canvasState.objects||[]).find(x=>x.id===row.dataset.layerId):(canvasState.vectors||[]).find(x=>x.id===row.dataset.layerId),b=row.querySelector('.v135LayerLock,.v130LayerTools button[title="Sperren"],.v130LayerTools button[title="Entsperren"]');if(!ref||!b)continue;b.innerHTML=window.v133Icon?.(ref.locked?'lock':'unlock')||'';b.title=ref.locked?'Entsperren':'Sperren';b.setAttribute('aria-label',b.title)}}
 
 /* Today gets the requested version and one visual icon system. */
-function polishToday(){const home=q('#view-home');if(!home)return;home.querySelector('.v138Version')?.remove();const eye=q('#headerEyebrow');if(eye&&eye.textContent!=='VERSION 191')eye.textContent='VERSION 191';const specs=[['Aufgabe','task'],['Test','test'],['Fächer','subjects'],['Lernen','learn']];qa('.homeMiniActions button',home).forEach((b,i)=>{const spec=specs[i];if(!spec||b.dataset.v138Today==='1')return;b.dataset.v138Today='1';b.classList.add('v138TodayAction');b.innerHTML=icons[spec[1]]+`<span>${spec[0]}</span>`})}
-function watchVersion(){const eye=q('#headerEyebrow');if(eye&&!editor()&&eye.textContent!=='VERSION 191')eye.textContent='VERSION 191'}
+function polishToday(){const home=q('#view-home');if(!home)return;home.querySelector('.v138Version')?.remove();const eye=q('#headerEyebrow');if(eye&&eye.textContent!=='VERSION 192')eye.textContent='VERSION 192';const specs=[['Aufgabe','task'],['Test','test'],['Fächer','subjects'],['Lernen','learn']];qa('.homeMiniActions button',home).forEach((b,i)=>{const spec=specs[i];if(!spec||b.dataset.v138Today==='1')return;b.dataset.v138Today='1';b.classList.add('v138TodayAction');b.innerHTML=icons[spec[1]]+`<span>${spec[0]}</span>`})}
+function watchVersion(){const eye=q('#headerEyebrow');if(eye&&!editor()&&eye.textContent!=='VERSION 192')eye.textContent='VERSION 192'}
 
 function cleanMobileDrawer(){qa('.v137MobileTextExtras,.v135MobileExtras').forEach(x=>x.remove())}
 function reconcile(){if(!editor()){polishToday();return}compactNav();enhanceSelectionBars();decorateInspector();correctLayerIcons();cleanMobileDrawer();decorateTransformHandles();if(q('#canvasQuickDrawer.open'))ensureElementTools()}
@@ -728,7 +728,7 @@ const textKinds=new Set(['text','block','task','merke']);
 const selectedText=()=>{try{const o=(canvasState?.objects||[]).find(x=>x.id===canvasState?.selectedId);return o&&textKinds.has(o.kind)?o:null}catch(_){return null}};
 
 /* ---------- version ---------- */
-function setVersion(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 191')e.textContent='VERSION 191';document.title='Studia'}
+function setVersion(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 192')e.textContent='VERSION 192';document.title='Studia'}
 setVersion();setTimeout(setVersion,250);setTimeout(setVersion,1800);
 
 /* ---------- custom fonts: visible input + IndexedDB + previews ---------- */
@@ -881,7 +881,7 @@ try{window.v113ForgetSync=()=>window.cuteToast?.('Geräte-Sync bleibt verbunden 
 function queueSync(delay){try{window.v150MarkDirty?.(delay)}catch(_){ }}
 
 /* Keep a single current version label after all historical startup scripts finish. */
-function version(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 191')e.textContent='VERSION 191';document.title='Studia'}
+function version(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 192')e.textContent='VERSION 192';document.title='Studia'}
 version();setTimeout(version,450);setTimeout(version,1900);
 })();
 /* ===== /Studia V149 ===== */
@@ -895,7 +895,7 @@ const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelecto
 const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const inEditor=()=>document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
 const desktop=()=>innerWidth>=900&&inEditor();
-function setVersion150(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 191')e.textContent='VERSION 191';document.documentElement.classList.add('v151Ready');document.title='Studia'}
+function setVersion150(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 192')e.textContent='VERSION 192';document.documentElement.classList.add('v151Ready');document.title='Studia'}
 setVersion150();setTimeout(setVersion150,300);setTimeout(setVersion150,1800);
 
 /* Disable the older key-based V145 transport. Its local save hooks may remain,
@@ -1207,7 +1207,7 @@ window.v152ApplyPresetToSelection=applyPreset;
 window.addEventListener('resize',()=>{setTimeout(syncTextHits,50);setTimeout(updateMobileBar,50)});
 
 /* Keep one current visible version. */
-function version(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 191')e.textContent='VERSION 191';document.documentElement.classList.add('v151Ready');document.title='Studia'}
+function version(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 192')e.textContent='VERSION 192';document.documentElement.classList.add('v151Ready');document.title='Studia'}
 setTimeout(version,0);setTimeout(version,100);setTimeout(version,800);setTimeout(version,2200);
 })();
 /* ===== /Studia V152 ===== */
@@ -1273,7 +1273,7 @@ function toolbarHTML(){return `<div class="v164FormatToolbar v165FormatToolbar">
 function populateFonts(){try{window.v165RefreshFontButton?.()}catch(_){}}
 function ensureToolbar(){
  if(!isEditor()||innerWidth<900)return;const host=q('.v134FormatTools');if(!host)return;
- if(host.dataset.v164!=='1'){host.dataset.v164='1';host.innerHTML=toolbarHTML()}
+ if(host.dataset.v164!=='1'||!host.querySelector('.v164FormatToolbar')){host.dataset.v164='1';host.innerHTML=toolbarHTML()}
  populateFonts();syncPainterButton();normalizeEditorIcons();
 }
 window.v164AddFont=function(){window.v91PickFont?.();setTimeout(populateFonts,700);setTimeout(populateFonts,1800)};
@@ -1408,7 +1408,7 @@ try{renderSheetEditor=window.renderSheetEditor}catch(_){ }
 const baseLayer=window.renderLayerList;if(baseLayer)window.renderLayerList=function(){const r=baseLayer.apply(this,arguments);requestAnimationFrame(normalizeEditorIcons);return r};
 try{renderLayerList=window.renderLayerList}catch(_){ }
 window.addEventListener('resize',()=>setTimeout(ensureToolbar,100));
-setTimeout(ensureToolbar,600);setTimeout(ensureToolbar,1500);setTimeout(()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 191'},2400);
+setTimeout(ensureToolbar,600);setTimeout(ensureToolbar,1500);setTimeout(()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 192'},2400);
 })();
 /* ===== /Studia V164 ===== */
 
@@ -1642,7 +1642,7 @@ function ensureModalX166(){const modal=q('#modalWrap.open #modal');if(!modal||mo
 const baseOpenModal166=window.openModal;if(baseOpenModal166)window.openModal=function(){const r=baseOpenModal166.apply(this,arguments);requestAnimationFrame(ensureModalX166);return r};try{openModal=window.openModal}catch(_){}
 
 /* initial polish — no MutationObserver, no boot changes */
-function init166(){if(editor()){decorateLayers166();syncGroupUI166();window.updateMobileSelectionTools?.()}const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 191'}
+function init166(){if(editor()){decorateLayers166();syncGroupUI166();window.updateMobileSelectionTools?.()}const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 192'}
 setTimeout(init166,150);setTimeout(init166,2800);
 })();
 /* ===== /Studia V166 ===== */
@@ -1745,7 +1745,7 @@ const printDesktop167=window.printCanvasSheet;
 window.printCanvasSheet=function(){if(!mobile())return printDesktop167?.apply(this,arguments);return window.v167OpenPrintPDF()};try{printCanvasSheet=window.printCanvasSheet}catch(_){}
 
 /* ---------- version + safe refresh ---------- */
-function init167(){if(!editor())return;ensureStableHits167();stickerButton167();const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 191'}
+function init167(){if(!editor())return;ensureStableHits167();stickerButton167();const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 192'}
 setTimeout(init167,900);setTimeout(init167,3200);
 })();
 /* ===== /Studia V167 ===== */
@@ -1845,7 +1845,7 @@ window.v168PrintMobile=async function(){
 const desktopPrint168=window.printCanvasSheet;
 window.printCanvasSheet=function(){if(mobile())return window.v168PrintMobile();return desktopPrint168?.apply(this,arguments)};try{printCanvasSheet=window.printCanvasSheet}catch(_){}
 
-function version168(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 191'}
+function version168(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 192'}
 setTimeout(version168,800);setTimeout(version168,3600);setTimeout(version168,5200);
 })();
 /* ===== /Studia V168 ===== */
@@ -1954,7 +1954,7 @@ window.v169PrintMobile=function(){
 const oldPrint169=window.printCanvasSheet;
 window.printCanvasSheet=function(){if(mobile())return window.v169PrintMobile();return oldPrint169?.apply(this,arguments)};try{printCanvasSheet=window.printCanvasSheet}catch(_){}
 
-function version169(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 191'}
+function version169(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 192'}
 setTimeout(version169,700);setTimeout(version169,2500);setTimeout(version169,5600);setTimeout(version169,8000);
 })();
 /* ===== /Studia V169 ===== */
@@ -2005,7 +2005,7 @@ const te170=new TextEncoder();function bytes170(s){return te170.encode(s)}functi
 function title170(){let t='Lernblatt';try{const d=typeof data!=='undefined'?data:window.data,sid=typeof selectedSheetId!=='undefined'?selectedSheetId:window.selectedSheetId;t=(d?.studySheets||[]).find(x=>x.id===sid)?.title||q('.editorTitle b')?.textContent||t}catch(_){}return String(t).replace(/[^a-z0-9äöüß _-]/gi,'_').slice(0,80)||'Lernblatt'}
 window.v170PrintMobile=async function(){if(!mobile())return false;scrubGuides170();const tab=window.open('about:blank','_blank');if(tab){try{tab.document.open();tab.document.write('<!doctype html><meta name="viewport" content="width=device-width"><title></title><body style="margin:0;background:#fff;font:800 15px system-ui;color:#725b56;display:grid;place-items:center;height:100vh">Lernblatt wird vorbereitet …</body>');tab.document.close()}catch(_){}}try{if(document.fonts?.ready)await Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,1000))]);const c=await pageCanvas170(),jpg=jpeg170(c.toDataURL('image/jpeg',.97)),pdf=pdf170(jpg,c.width,c.height,W()>H()),url=URL.createObjectURL(pdf);if(tab&&!tab.closed){tab.location.replace(url)}else{const a=document.createElement('a');a.href=url;a.target='_blank';a.download=title170()+'.pdf';document.body.appendChild(a);a.click();a.remove()}setTimeout(()=>URL.revokeObjectURL(url),180000);window.cuteToast?.('PDF bereit · ohne Website-Fußzeile ♡');return true}catch(err){console.error('[V170 PDF]',err);try{tab?.close()}catch(_){}alert('Das Druck-PDF konnte nicht erstellt werden: '+String(err?.message||err));return false}};
 const prev170=window.printCanvasSheet;window.printCanvasSheet=function(){if(mobile())return window.v170PrintMobile();return prev170?.apply(this,arguments)};try{printCanvasSheet=window.printCanvasSheet}catch(_){}
-function version170(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 191'}setTimeout(version170,700);setTimeout(version170,2600);setTimeout(version170,6000);
+function version170(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 192'}setTimeout(version170,700);setTimeout(version170,2600);setTimeout(version170,6000);
 })();
 /* ===== /Studia V170 ===== */
 
@@ -2115,7 +2115,7 @@ window.v165OpenStickerColors=async function(){const o=sticker171();if(!o)return 
 window.v171ResetStickerColors=async function(){const o=(st()?.objects||[]).find(x=>String(x.id)===String(stickerId171));if(!o)return;o.stickerExactMap171={};o.src=o.stickerExactOriginal171||o.stickerPaletteOriginal||o.src;delete o.tintColor;window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.();window.closeModal?.();window.cuteToast?.('Alle Originalfarben wiederhergestellt ♡')};
 
 /* cache-busting visible version only; never observe/mutate in a loop */
-function version171(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 191'}setTimeout(version171,6500);setTimeout(version171,8000);
+function version171(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 192'}setTimeout(version171,6500);setTimeout(version171,8000);
 })();
 /* ===== /Studia V171 ===== */
 
@@ -2289,12 +2289,12 @@ window.addEventListener('resize',()=>setTimeout(syncTextLayerHits176,80));
 setTimeout(syncTextLayerHits176,700);setTimeout(syncTextLayerHits176,2200);
 
 /* One-shot version label only — never MutationObserver. */
-setTimeout(()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 191'},900);
+setTimeout(()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 192'},900);
 })();
 /* ===== /Studia V176 ===== */
 
 /* ===== Studia V177 — desktop text + single sync + compact sticker palette ===== */
-[950,6900,8300].forEach(t=>setTimeout(()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 191'},t));
+[950,6900,8300].forEach(t=>setTimeout(()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 192'},t));
 /* ===== /Studia V177 ===== */
 
 /* ===== Studia V178 retired in V179: desktop now uses the single V132 interaction engine ===== */
