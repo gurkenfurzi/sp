@@ -561,7 +561,6 @@ body.v141PropertiesOpen{overflow:hidden!important}
   body.editorMode .v150DesktopRail .editorNavIcon{width:24px!important;height:24px!important;display:grid!important;place-items:center!important}
   body.editorMode .v150DesktopRail .editorNavIcon svg{width:22px!important;height:22px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
   body.editorMode .v150DesktopRail>button>span:last-child{font-size:9px!important;font-weight:850!important;line-height:1!important}
-  body.editorMode .v102DesktopLeft>#canvasQuickDrawer{overflow-y:auto!important;overflow-x:hidden!important;min-height:0!important;overscroll-behavior:contain!important;scrollbar-gutter:stable}
   .v150DesktopTextTools{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 12px;padding:0 0 12px;border-bottom:1px solid #eee0db}
   .v150DesktopTextTools>button,.v150FontUpload{
     position:relative;display:grid;grid-template-columns:38px minmax(0,1fr);align-items:center;gap:9px;
@@ -588,8 +587,6 @@ body.v141PropertiesOpen{overflow:hidden!important}
 @media(min-width:900px){
   /* Historical scripts may still rebuild this old nav. It is intentionally hidden;
      V151 owns the visible desktop rail in a separate DOM node. */
-  body.editorMode .v102DesktopLeft>.canvasQuickNav{display:none!important}
-  body.editorMode .v102DesktopLeft{grid-template-columns:92px minmax(0,1fr)!important;grid-template-rows:minmax(0,1fr)!important}
   body.editorMode #v151DesktopRail.v151DesktopRail{
     grid-column:1!important;grid-row:1!important;display:grid!important;grid-template-columns:1fr!important;grid-auto-rows:64px!important;
     align-content:start!important;gap:5px!important;width:92px!important;height:100%!important;min-height:0!important;padding:10px 8px!important;
@@ -605,7 +602,6 @@ body.v141PropertiesOpen{overflow:hidden!important}
   body.editorMode #v151DesktopRail .editorNavIcon{width:24px!important;height:24px!important;display:grid!important;place-items:center!important}
   body.editorMode #v151DesktopRail .editorNavIcon svg{width:22px!important;height:22px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
   body.editorMode #v151DesktopRail>button>span:last-child{font-size:9px!important;font-weight:850!important;line-height:1!important}
-  body.editorMode .v102DesktopLeft>#canvasQuickDrawer{grid-column:2!important;grid-row:1!important;overflow-y:auto!important;overflow-x:hidden!important;min-height:0!important;overscroll-behavior:contain!important}
   body.editorMode .v102DesktopLeft>#canvasQuickDrawer .v134Palette{height:100%!important;min-height:0!important;overflow:hidden!important}
   body.editorMode .v102DesktopLeft>#canvasQuickDrawer .v134PaletteScroll{overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important}
 }
@@ -704,7 +700,6 @@ body.editorMode .v135LayerGroupHead button .v164Icon,body.editorMode .v135SideCl
  .v165PainterBtn.active{background:#eaa0a5!important;color:white!important;box-shadow:0 0 0 3px rgba(234,160,165,.15)!important}
 
  /* left rail + drawer */
- body.editorMode .v102DesktopLeft{grid-template-columns:76px minmax(0,248px)!important;gap:8px!important;padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important;overflow:visible!important}
  body.editorMode #v151DesktopRail.v151DesktopRail{display:flex!important;flex-direction:column!important;gap:7px!important;width:76px!important;padding:8px!important;border:1px solid #eddad5!important;border-radius:20px!important;background:rgba(255,251,248,.97)!important;box-shadow:0 8px 24px rgba(106,76,69,.07)!important;overflow:visible!important}
  body.editorMode #v151DesktopRail>button[data-v151]{position:relative!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:6px!important;width:58px!important;min-height:58px!important;padding:6px 3px!important;border:1px solid transparent!important;border-radius:15px!important;background:transparent!important;color:#806c65!important;box-shadow:none!important;transition:.14s ease!important}
  body.editorMode #v151DesktopRail>button[data-v151]:hover{background:#fff2ef!important;border-color:#f2dcda!important;color:#a3676b!important;transform:translateY(-1px)!important}
@@ -713,7 +708,6 @@ body.editorMode .v135LayerGroupHead button .v164Icon,body.editorMode .v135SideCl
  body.editorMode #v151DesktopRail .editorNavIcon{width:24px!important;height:24px!important;color:currentColor!important}
  body.editorMode #v151DesktopRail .editorNavIcon svg{width:22px!important;height:22px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.75!important;stroke-linecap:round!important;stroke-linejoin:round!important}
  body.editorMode #v151DesktopRail>button>span:last-child{font-size:9px!important;font-weight:850!important;letter-spacing:.01em!important}
- body.editorMode .v102DesktopLeft>#canvasQuickDrawer{grid-column:2!important;border:1px solid #eddad5!important;border-radius:20px!important;background:rgba(255,252,249,.98)!important;box-shadow:0 8px 24px rgba(106,76,69,.065)!important;padding:0!important;overflow:hidden!important}
  body.editorMode #canvasQuickDrawer .v152Panel{height:100%;background:transparent!important}
  body.editorMode #canvasQuickDrawer .v152PanelHead{padding:15px 15px 10px!important;border-bottom:1px solid #f2e3de!important;background:linear-gradient(180deg,#fffaf7,rgba(255,250,247,.65))!important}
  body.editorMode #canvasQuickDrawer .v152PanelHead span{font-size:8px!important;letter-spacing:.13em!important;color:#bd8b89!important}

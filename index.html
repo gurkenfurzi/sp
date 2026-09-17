@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="de">
 <head>
+<script id="v190-reference-owner-flag">window.__STUDIA_V134_REFERENCE_ONLY__=true;window.__STUDIA_DESKTOP_UI_OWNER=true;window.__STUDIA_V190_SELECTION_OWNER=true;window.__STUDIA_V190_ALT_ZOOM_OWNER=true;</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#fff8f5">
@@ -3043,7 +3044,7 @@ html,body{background:#fff7f4;}
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 182</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 191</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -3967,7 +3968,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"Studia.";
- $("#headerEyebrow").textContent="VERSION 182";
+ $("#headerEyebrow").textContent="VERSION 191";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -3976,7 +3977,7 @@ let modalScrollY=0;
 function openModal(html){
  modalScrollY=window.scrollY;
  $("#topViewMenu")?.classList.remove("open");
- const drawer=$("#canvasQuickDrawer");if(drawer){drawer.classList.remove("open");drawer.innerHTML="";openEditorGroup=null}
+ const drawer=$("#canvasQuickDrawer");if(drawer&&(innerWidth<900||!document.body.classList.contains("editorMode"))){drawer.classList.remove("open");drawer.innerHTML="";openEditorGroup=null}
  $$(".canvasQuickNav button").forEach(x=>x.classList.remove("active"));
  $("#modal").innerHTML=html;$("#modalWrap").classList.add("open");
  document.body.classList.add("modalOpen");document.body.style.top=`-${modalScrollY}px`;
@@ -6214,7 +6215,7 @@ window.performDeleteSelectedCanvasItem=function(){
 
 
 let marqueeSelectState=null;
-function startMarqueeSelection(e){
+function startMarqueeSelection(e){if(window.__STUDIA_V190_SELECTION_OWNER)return;
  if(window.innerWidth<900||e.button!==0||canvasState.vectorTool==="pen")return false;
  const stage=$("#canvasStage");if(!stage)return false;
  const start=canvasPoint(e);
@@ -11593,14 +11594,14 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
     }
     side.querySelectorAll('.v102RightTabs button').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));
   };
-  function v102DesktopEditorInit(){if(window.innerWidth<900||!document.body.classList.contains('editorMode'))return;const shell=$('.canvasEditorShell'),nav=$('.canvasQuickNav'),drawer=$('#canvasQuickDrawer'),vp=$('#canvasViewport'),side=$('#desktopEditorSidebar');if(!shell||!nav||!drawer||!vp||!side)return;let left=$('.v102DesktopLeft');if(!left){left=document.createElement('div');left.className='v102DesktopLeft';nav.parentNode.insertBefore(left,nav);left.append(nav,drawer)}nav.innerHTML=`<button class="active" onclick="document.getElementById('canvasQuickDrawer').innerHTML=v102PaletteHTML()">${v102Icon('rect')}<span>Elemente</span></button><button onclick="document.getElementById('canvasQuickDrawer').innerHTML=v102PaletteHTML()">${v102Icon('pencil')}<span>Text</span></button><button onclick="v102RightTab('page')">${v102Icon('pages')}<span>Seiten</span></button><button onclick="v102RightTab('layers')">${v102Icon('layers')}<span>Ebenen</span></button>`;drawer.classList.add('open');drawer.innerHTML=v102PaletteHTML();if(!side.querySelector('.v102RightTabs'))side.insertAdjacentHTML('afterbegin',`<div class="v102RightTabs"><button data-mode="design" onclick="v102RightTab('design')">Design</button><button data-mode="page" onclick="v102RightTab('page')">Seiten</button><button data-mode="layers" onclick="v102RightTab('layers')">Ebenen</button></div>`);v102RightTab(canvasState.selectedId?'design':'page');v102InstallDesktopPanZoom(vp);}
+  function v102DesktopEditorInit(){if(window.innerWidth<900||!document.body.classList.contains('editorMode'))return;const shell=$('.canvasEditorShell'),nav=$('.canvasQuickNav'),drawer=$('#canvasQuickDrawer'),vp=$('#canvasViewport'),side=$('#desktopEditorSidebar');if(!shell||!nav||!drawer||!vp||!side)return;let left=$('.v102DesktopLeft');if(!left){left=document.createElement('div');left.className='v102DesktopLeft';nav.parentNode.insertBefore(left,nav);left.append(nav,drawer)}if(!window.__STUDIA_V134_REFERENCE_ONLY__){nav.innerHTML=`<button class="active" onclick="document.getElementById('canvasQuickDrawer').innerHTML=v102PaletteHTML()">${v102Icon('rect')}<span>Elemente</span></button><button onclick="document.getElementById('canvasQuickDrawer').innerHTML=v102PaletteHTML()">${v102Icon('pencil')}<span>Text</span></button><button onclick="v102RightTab('page')">${v102Icon('pages')}<span>Seiten</span></button><button onclick="v102RightTab('layers')">${v102Icon('layers')}<span>Ebenen</span></button>`;drawer.classList.add('open');drawer.innerHTML=v102PaletteHTML();}if(!side.querySelector('.v102RightTabs'))side.insertAdjacentHTML('afterbegin',`<div class="v102RightTabs"><button data-mode="design" onclick="v102RightTab('design')">Design</button><button data-mode="page" onclick="v102RightTab('page')">Seiten</button><button data-mode="layers" onclick="v102RightTab('layers')">Ebenen</button></div>`);v102RightTab(canvasState.selectedId?'design':'page');v102InstallDesktopPanZoom(vp);}
   window.v102PaletteHTML=v102PaletteHTML;
-  function v102InstallDesktopPanZoom(vp){if(vp.dataset.v102PanZoom)return;vp.dataset.v102PanZoom='1';let space=false,pan=null;window.addEventListener('keydown',e=>{const a=document.activeElement;if(e.code==='Space'&&!/INPUT|TEXTAREA|SELECT/.test(a?.tagName)&&!a?.isContentEditable){space=true;if(document.body.classList.contains('editorMode'))e.preventDefault()}});window.addEventListener('keyup',e=>{if(e.code==='Space')space=false});vp.addEventListener('wheel',e=>{if(window.__STUDIA_V115_OWNS_GESTURES)return;if(!e.altKey)return;e.preventDefault();const rect=vp.getBoundingClientRect(),focus={x:e.clientX-rect.left,y:e.clientY-rect.top};v96ApplyZoom((canvasZoom||1)*(e.deltaY<0?1.08:.92),true,focus)},{passive:false});vp.addEventListener('pointerdown',e=>{if(window.__STUDIA_V115_OWNS_GESTURES)return;if(!(e.button===1||(e.button===0&&space)))return;e.preventDefault();vp.classList.add('v102Panning');pan={x:e.clientX,y:e.clientY,l:vp.scrollLeft,t:vp.scrollTop};vp.setPointerCapture?.(e.pointerId)});vp.addEventListener('pointermove',e=>{if(!pan)return;vp.scrollLeft=pan.l-(e.clientX-pan.x);vp.scrollTop=pan.t-(e.clientY-pan.y)});const end=()=>{pan=null;vp.classList.remove('v102Panning')};vp.addEventListener('pointerup',end);vp.addEventListener('pointercancel',end)}
+  function v102InstallDesktopPanZoom(vp){if(vp.dataset.v102PanZoom)return;vp.dataset.v102PanZoom='1';let space=false,pan=null;window.addEventListener('keydown',e=>{const a=e.target instanceof Element?e.target:document.activeElement,typing=/INPUT|TEXTAREA|SELECT/.test(a?.tagName)||a?.isContentEditable||!!a?.closest?.('[contenteditable="true"]');if(e.code==='Space'&&!typing){space=true;if(document.body.classList.contains('editorMode'))e.preventDefault()}});window.addEventListener('keyup',e=>{if(e.code==='Space')space=false});vp.addEventListener('wheel',e=>{if(window.__STUDIA_V115_OWNS_GESTURES)return;if(!e.altKey)return;e.preventDefault();const rect=vp.getBoundingClientRect(),focus={x:e.clientX-rect.left,y:e.clientY-rect.top};v96ApplyZoom((canvasZoom||1)*(e.deltaY<0?1.08:.92),true,focus)},{passive:false});vp.addEventListener('pointerdown',e=>{if(window.__STUDIA_V115_OWNS_GESTURES)return;if(!(e.button===1||(e.button===0&&space)))return;e.preventDefault();vp.classList.add('v102Panning');pan={x:e.clientX,y:e.clientY,l:vp.scrollLeft,t:vp.scrollTop};vp.setPointerCapture?.(e.pointerId)});vp.addEventListener('pointermove',e=>{if(!pan)return;vp.scrollLeft=pan.l-(e.clientX-pan.x);vp.scrollTop=pan.t-(e.clientY-pan.y)});const end=()=>{pan=null;vp.classList.remove('v102Panning')};vp.addEventListener('pointerup',end);vp.addEventListener('pointercancel',end)}
   const v102RenderSheet=renderSheetEditor;renderSheetEditor=function(){v102RenderSheet();setTimeout(v102DesktopEditorInit,100)};
   window.addEventListener('resize',()=>{if(document.body.classList.contains('editorMode'))setTimeout(v102DesktopEditorInit,80)});
 
   /* refresh version + title */
-  const eyebrow=$('#headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 182';document.title='Studia';
+  const eyebrow=$('#headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 191';document.title='Studia';
 })();
 
 
@@ -11727,9 +11728,9 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
   openView=function(name,...args){const out=v103OpenViewBase(name,...args);try{sessionStorage.setItem('studia-last-view',name);sessionStorage.setItem('studia-last-subject',selectedSubjectId||'');sessionStorage.setItem('studia-last-topic',selectedTopicId||'');sessionStorage.setItem('studia-last-sheet',selectedSheetId||'')}catch(_){}return out};
   window.addEventListener('beforeunload',()=>{try{sessionStorage.setItem('studia-last-view',document.querySelector('.view.active')?.id?.replace('view-','')||'home');sessionStorage.setItem('studia-last-subject',selectedSubjectId||'');sessionStorage.setItem('studia-last-topic',selectedTopicId||'');sessionStorage.setItem('studia-last-sheet',selectedSheetId||'')}catch(_){}});
 
-  setTimeout(()=>{const e=$('#headerEyebrow');if(e)e.textContent='VERSION 182';document.title='Studia';if(document.body.classList.contains('editorMode')){v103Topbar();v96RenderPageStrip()}},60);
+  setTimeout(()=>{const e=$('#headerEyebrow');if(e)e.textContent='VERSION 191';document.title='Studia';if(document.body.classList.contains('editorMode')){v103Topbar();v96RenderPageStrip()}},60);
   /* Space shows a grab hand; middle mouse or Space+drag pans. */
-  window.addEventListener('keydown',e=>{if(e.code==='Space'&&document.body.classList.contains('editorMode')&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName))$('#canvasViewport')?.classList.add('v103Hand')});
+  window.addEventListener('keydown',e=>{const a=e.target instanceof Element?e.target:document.activeElement,typing=/INPUT|TEXTAREA|SELECT/.test(a?.tagName)||a?.isContentEditable||!!a?.closest?.('[contenteditable="true"]');if(e.code==='Space'&&document.body.classList.contains('editorMode')&&!typing)$('#canvasViewport')?.classList.add('v103Hand')});
   window.addEventListener('keyup',e=>{if(e.code==='Space')$('#canvasViewport')?.classList.remove('v103Hand')});
   window.addEventListener('blur',()=>$('#canvasViewport')?.classList.remove('v103Hand'));
 
@@ -11849,7 +11850,7 @@ setTimeout(()=>{if(!window.__schoolBloomBooted){document.documentElement.style.b
   if(drawer)new MutationObserver(()=>requestAnimationFrame(()=>{syncTextPanel();patchLayers()})).observe(drawer,{subtree:true,childList:true,attributes:true});
   document.addEventListener('click',()=>requestAnimationFrame(()=>{syncTextPanel();patchLayers()}),true);
   window.addEventListener('resize',()=>setTimeout(syncTextPanel,60));
-  setTimeout(()=>{cleanShapeHandles();patchLayers();syncTextPanel();const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 182';document.title='Studia'},260);
+  setTimeout(()=>{cleanShapeHandles();patchLayers();syncTextPanel();const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 191';document.title='Studia'},260);
 })();
 </script>
 <!-- ===== /Studia V117 ===== -->
@@ -12055,7 +12056,7 @@ body.editorMode.v122ShapeDragging{user-select:none!important;-webkit-user-select
   window.canvasZoomBy=d=>window.setCanvasZoom(scale()+Number(d||0));
   try{setCanvasZoom=window.setCanvasZoom;canvasZoomBy=window.canvasZoomBy}catch(_){ }
 
-  const eyebrow=document.getElementById('headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 182';
+  const eyebrow=document.getElementById('headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 191';
 })();
 
 }</script>
@@ -12144,7 +12145,7 @@ if(window.__STUDIA_V129_INPUT__)return;
   /* Remove the V122 blocker at runtime too, so stale/injected style order cannot win. */
   function enforce(){document.querySelectorAll('#canvasObjects .vectorTouchProxy,#canvasObjects .shapeHit').forEach(el=>{el.style.setProperty('pointer-events','all','important');el.style.setProperty('touch-action','none','important')})}
   const oldRV=window.renderVectors;if(typeof oldRV==='function')window.renderVectors=function(){const r=oldRV.apply(this,arguments);enforce();return r};
-  setTimeout(()=>{enforce();const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 182'},80);
+  setTimeout(()=>{enforce();const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 191'},80);
 })();
 </script>
 <!-- ===== /Studia V125 ===== -->
@@ -12173,7 +12174,7 @@ function move(e){if(!drag||e.pointerId!==drag.pid)return;const v=(window.canvasS
 function end(e){if(!drag||e.pointerId!==drag.pid)return;e.preventDefault();e.stopImmediatePropagation();const moved=drag.moved;drag=null;if(moved){try{pushHistory()}catch(_){}}try{renderCanvasInspector();renderLayerList()}catch(_){}installProxies()}
 window.addEventListener('pointermove',move,{capture:true,passive:false});window.addEventListener('pointerup',end,true);window.addEventListener('pointercancel',end,true);
 const oldRender=window.renderVectors||renderVectors;window.renderVectors=function(){const out=oldRender.apply(this,arguments);queueMicrotask(installProxies);return out};try{renderVectors=window.renderVectors}catch(_){}
-setTimeout(()=>{if(editor()){try{renderVectors()}catch(_){}installProxies()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 182'},350);
+setTimeout(()=>{if(editor()){try{renderVectors()}catch(_){}installProxies()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 191'},350);
 })();
 </script>
 <!-- ===== /Studia V126 ===== -->
@@ -12401,7 +12402,7 @@ html,body,button,input,select,textarea{font-family:ui-rounded,"SF Pro Rounded","
 
 
 <style id="v100-subjects-desktop-editor">
-/* ===== VERSION 182 — subjects reference + desktop editor reference ===== */
+/* ===== VERSION 191 — subjects reference + desktop editor reference ===== */
 @media (max-width:899px){
   body:has(#view-subjects.active)>.app>.header,
   body:has(#view-subject-detail.active)>.app>.header,
@@ -12860,7 +12861,7 @@ body.editorMode #canvasViewport.v102Panning{cursor:grabbing!important;user-selec
 (function(){
   function inEditor(){ return document.body.classList.contains('editorMode') && document.querySelector('#view-sheet-editor.active'); }
   function vp(){ return document.getElementById('canvasViewport'); }
-  function fillDesktopDrawer(){
+  function fillDesktopDrawer(){if(window.__STUDIA_DESKTOP_UI_OWNER&&innerWidth>=900)return;
     if(window.innerWidth<900 || !inEditor()) return;
     const drawer=document.getElementById('canvasQuickDrawer');
     if(!drawer) return;
@@ -13488,7 +13489,7 @@ body.editorMode .cobj table{max-width:100%!important}
   window.renderCanvasInspector=function(){oldInspector();if(document.querySelector('#canvasQuickDrawer.open .mobileLayerList'))requestAnimationFrame(renderLayerList)};
 
   // Version marker.
-  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 182';document.title='Studia'},40);
+  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 191';document.title='Studia'},40);
 })();
 </script>
 
@@ -13834,7 +13835,7 @@ body.editorMode .cobj[contenteditable="true"],body.editorMode td[contenteditable
   window.renderLayerList=function(){baseLayers();const m=document.querySelector('#canvasQuickDrawer.open .mobileLayerList');if(m){m.querySelectorAll('button').forEach(b=>{b.style.minWidth='0';b.style.maxWidth='none'})}};
   try{renderLayerList=window.renderLayerList}catch(_){}
 
-  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 182';document.title='Studia'},40);
+  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 191';document.title='Studia'},40);
 })();
 </script>
 <!-- ===== /Studia V112 hard stabilization ===== -->
@@ -14110,6 +14111,7 @@ html,body{overflow-x:hidden!important}
     localStorage.setItem('studia-v113-desktop-panel',mode);
   };
   function desktopInit(){
+    if(window.__STUDIA_V134_REFERENCE_ONLY__&&!mobile())return;
     if(mobile()||!inEditor())return;const nav=document.querySelector('.v102DesktopLeft>.canvasQuickNav')||document.querySelector('.canvasQuickNav'),drawer=document.getElementById('canvasQuickDrawer');if(!nav||!drawer)return;
     nav.innerHTML=`<button data-v113-mode="elements" onclick="v113DesktopPanel('elements',this)"><span class="editorNavIcon">${PICON.rect}</span><span>Elemente</span></button><button data-v113-mode="text" onclick="v113DesktopPanel('text',this)"><span class="editorNavIcon">${PICON.text}</span><span>Text</span></button><button data-v113-mode="templates" onclick="v113DesktopPanel('templates',this)"><span class="editorNavIcon">${PICON.template}</span><span>Vorlagen</span></button><button data-v113-mode="pages" onclick="v113DesktopPanel('pages',this)"><span class="editorNavIcon">${PICON.page}</span><span>Seiten</span></button><button data-v113-mode="layers" onclick="v113DesktopPanel('layers',this)"><span class="editorNavIcon">${PICON.layers}</span><span>Ebenen</span></button>`;
     const mode=localStorage.getItem('studia-v113-desktop-panel')||'elements',button=nav.querySelector(`[data-v113-mode="${mode}"]`)||nav.querySelector('button');v113DesktopPanel(button?.dataset.v113Mode||'elements',button);bindDesktopNavigation();
@@ -14129,7 +14131,7 @@ html,body{overflow-x:hidden!important}
   try{renderSheetEditor=window.renderSheetEditor}catch(_){ }
   window.addEventListener('resize',()=>setTimeout(()=>{topicLock();if(inEditor()){desktopInit();reconcileMobileChrome()}},100));
 
-  setTimeout(()=>{topicLock();if(inEditor()){desktopInit();reconcileMobileChrome()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 182';document.title='Studia'},120);
+  setTimeout(()=>{topicLock();if(inEditor()){desktopInit();reconcileMobileChrome()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 191';document.title='Studia'},120);
 })();
 </script>
 
@@ -14264,7 +14266,7 @@ html,body{max-width:100%!important;overflow-x:hidden!important}
   const oldRender=window.renderSheetEditor||renderSheetEditor;window.renderSheetEditor=function(){const r=oldRender.apply(this,arguments);setTimeout(()=>init(true),360);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){ }
   const mo=new MutationObserver(()=>requestAnimationFrame(syncDrawerState));setTimeout(()=>{const d=document.getElementById('canvasQuickDrawer');if(d)mo.observe(d,{attributes:true,childList:true,subtree:true});if(editor())init(true)},180);
   window.addEventListener('resize',()=>{if(!editor())return;setTimeout(()=>{bindViewport();mobile()?fitMobile(false):fitDesktop()},100)});
-  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 182';document.title='Studia'},80);
+  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 191';document.title='Studia'},80);
 })();
 </script>
 <!-- ===== /Studia V115 ===== -->
@@ -14416,7 +14418,7 @@ html,body{max-width:100%!important;overflow-x:hidden!important}
   window.addEventListener('resize',()=>setTimeout(sweep,40));
   setTimeout(()=>{
     sweep();
-    const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 182';
+    const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 191';
     document.title='Studia';
   },220);
 })();
@@ -14626,7 +14628,7 @@ if(window.__STUDIA_V129_INPUT__)return;
 
   function init(){if(!editor())return;document.body.classList.remove('layerDragging');ensureSurface();v121ApplyZoom(scaleNow(),false);renderCanvasObjects();renderVectors();renderLayerList();if(!mobile()){const mode=localStorage.getItem('studia-v113-desktop-panel')||'elements',btn=document.querySelector(`.canvasQuickNav [data-v113-mode="${mode}"]`)||document.querySelector('.canvasQuickNav button');if(btn)v113DesktopPanel(mode,btn)}}
   setTimeout(init,280);window.addEventListener('resize',()=>setTimeout(()=>{if(editor())v121ApplyZoom(scaleNow(),false)},70));
-  const eyebrow=document.getElementById('headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 182';
+  const eyebrow=document.getElementById('headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 191';
 })();
 </script>
 <!-- ===== /Studia V121 ===== -->
@@ -14731,6 +14733,7 @@ if(window.__STUDIA_V129_INPUT__)return;
  /* ---------- DESKTOP: exact same five drawers as phone ---------- */
  const icon=(name)=>({text:'T',elements:'◇',templates:'▧',pages:'▤',layers:'☷'}[name]||'•');
  function desktopNav(){
+   if(window.__STUDIA_V134_REFERENCE_ONLY__&&!isMobile())return;
    if(isMobile()||!isEditor())return;
    const nav=document.querySelector('.canvasQuickNav');if(!nav)return;
    const defs=[['text','Text'],['elements','Elemente'],['templates','Vorlagen'],['pages','Seiten'],['layers','Ebenen']];
@@ -14777,7 +14780,7 @@ if(window.__STUDIA_V129_INPUT__)return;
  const oldOpenStudy=window.openStudySheetEditor;if(typeof oldOpenStudy==='function')window.openStudySheetEditor=function(){const r=oldOpenStudy.apply(this,arguments);setTimeout(sync,120);return r};
  window.addEventListener('resize',()=>setTimeout(()=>{if(isEditor()&&!isMobile())desktopNav()},100));
  setTimeout(sync,350);
- const eyebrow=document.getElementById('headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 182';
+ const eyebrow=document.getElementById('headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 191';
 })();
 </script>
 <!-- ===== /Studia V123 ===== -->
@@ -14851,7 +14854,7 @@ function onUp(e){
 document.addEventListener('pointerdown',onDown,true);
 window.addEventListener('pointermove',onMove,{capture:true,passive:false});
 window.addEventListener('pointerup',onUp,true);window.addEventListener('pointercancel',onUp,true);
-setTimeout(()=>{document.querySelectorAll('.v126VectorDragProxy').forEach(n=>n.remove());const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 182'},250);
+setTimeout(()=>{document.querySelectorAll('.v126VectorDragProxy').forEach(n=>n.remove());const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 191'},250);
 })();
 </script>
 
@@ -14902,12 +14905,12 @@ let pinch=null;
 window.addEventListener('touchstart',e=>{if(!isEditor()||e.touches.length!==2||!VP()?.contains(e.target))return;e.preventDefault();e.stopImmediatePropagation();drag=null;const a=e.touches[0],b=e.touches[1],cx=(a.clientX+b.clientX)/2,cy=(a.clientY+b.clientY)/2,d=Math.max(1,Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY)),vp=VP(),r=vp.getBoundingClientRect(),fx=cx-r.left,fy=cy-r.top;pinch={d,z:view.scale||1,wx:(fx-view.panX)/(view.scale||1),wy:(fy-view.panY)/(view.scale||1)}},{capture:true,passive:false});
 window.addEventListener('touchmove',e=>{if(!pinch||e.touches.length!==2)return;e.preventDefault();e.stopImmediatePropagation();const a=e.touches[0],b=e.touches[1],cx=(a.clientX+b.clientX)/2,cy=(a.clientY+b.clientY)/2,d=Math.max(1,Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY)),vp=VP(),r=vp.getBoundingClientRect(),fx=cx-r.left,fy=cy-r.top;view.scale=clamp(pinch.z*(d/pinch.d),.18,4);view.panX=fx-pinch.wx*view.scale;view.panY=fy-pinch.wy*view.scale;applyView()},{capture:true,passive:false});
 window.addEventListener('touchend',e=>{if(e.touches.length<2)pinch=null},{capture:true,passive:true});window.addEventListener('touchcancel',()=>pinch=null,{capture:true,passive:true});
-window.addEventListener('wheel',e=>{if(!isEditor()||!e.altKey||!VP()?.contains(e.target))return;e.preventDefault();e.stopImmediatePropagation();focusZoom((view.scale||1)*Math.exp(-e.deltaY*.0016),e.clientX,e.clientY)},{capture:true,passive:false});
-function installDesktopParity(){if(innerWidth<900||!isEditor())return;const nav=document.querySelector('.canvasQuickNav');if(!nav)return;nav.innerHTML='<button data-v128="text" onclick="v128Open(\'text\',this)"><b>Aa</b><span>Text</span></button><button data-v128="elements" onclick="v128Open(\'elements\',this)"><b>◇</b><span>Elemente</span></button><button data-v128="templates" onclick="v128Open(\'templates\',this)"><b>▦</b><span>Vorlagen</span></button><button data-v128="pages" onclick="v128Open(\'pages\',this)"><b>▯</b><span>Seiten</span></button><button data-v128="layers" onclick="v128Open(\'layers\',this)"><b>☷</b><span>Ebenen</span></button>';window.v128Open=function(mode,btn){const map={text:(typeof mobileSelectedText==='function'&&mobileSelectedText())?'textEdit':'textLibrary',elements:'elements',templates:'templates',pages:'pages',layers:'layers'};try{openEditorGroup=null}catch(_){}editorOpenGroup(map[mode],btn);requestAnimationFrame(()=>{const d=document.getElementById('canvasQuickDrawer');if(mode==='text'&&d&&!d.querySelector('.v128DesktopParityBar')){const bar=document.createElement('div');bar.className='v128DesktopParityBar';bar.innerHTML='<label>Aa＋ Schrift hinzufügen<input type="file" accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2" onchange="v128FontUpload(this)"></label><button onclick="createCustomStylePreset()">＋ Eigenes Textformat</button><button onclick="openTextFormatManager()">Textformate verwalten</button>';d.prepend(bar)}if(mode==='layers')renderLayerList()})};window.v128FontUpload=function(inp){const f=inp.files?.[0];if(!f)return;const r=new FileReader();r.onload=()=>{const name=(f.name||'Eigene Schrift').replace(/\.(ttf|otf|woff2?)$/i,'').trim()||'Eigene Schrift',key='schoolbloom-v91-custom-fonts';let arr=[];try{arr=JSON.parse(localStorage.getItem(key)||'[]')}catch(_){}arr=arr.filter(x=>x.name!==name);arr.push({name:name,data:String(r.result)});localStorage.setItem(key,JSON.stringify(arr));try{let oldFonts=JSON.parse(localStorage.getItem('schoolbloom-custom-fonts')||'[]');oldFonts=oldFonts.filter(x=>x.name!==name&&x.css!==name);oldFonts.push({name:name,css:name,data:String(r.result)});localStorage.setItem('schoolbloom-custom-fonts',JSON.stringify(oldFonts))}catch(_){}const st=document.createElement('style');st.textContent='@font-face{font-family:'+JSON.stringify(name)+';src:url('+JSON.stringify(String(r.result))+');font-display:swap}';document.head.appendChild(st);try{v91LoadFonts();renderCanvasInspector()}catch(_){}try{cuteToast('Schrift hinzugefügt ♡')}catch(_){}inp.value=''};r.readAsDataURL(f)};}
+window.addEventListener('wheel',e=>{if(window.__STUDIA_V190_ALT_ZOOM_OWNER)return;if(!isEditor()||!e.altKey||!VP()?.contains(e.target))return;e.preventDefault();e.stopImmediatePropagation();focusZoom((view.scale||1)*Math.exp(-e.deltaY*.0016),e.clientX,e.clientY)},{capture:true,passive:false});
+function installDesktopParity(){if(window.__STUDIA_V134_REFERENCE_ONLY__&&innerWidth>=900)return;if(innerWidth<900||!isEditor())return;const nav=document.querySelector('.canvasQuickNav');if(!nav)return;nav.innerHTML='<button data-v128="text" onclick="v128Open(\'text\',this)"><b>Aa</b><span>Text</span></button><button data-v128="elements" onclick="v128Open(\'elements\',this)"><b>◇</b><span>Elemente</span></button><button data-v128="templates" onclick="v128Open(\'templates\',this)"><b>▦</b><span>Vorlagen</span></button><button data-v128="pages" onclick="v128Open(\'pages\',this)"><b>▯</b><span>Seiten</span></button><button data-v128="layers" onclick="v128Open(\'layers\',this)"><b>☷</b><span>Ebenen</span></button>';window.v128Open=function(mode,btn){const map={text:(typeof mobileSelectedText==='function'&&mobileSelectedText())?'textEdit':'textLibrary',elements:'elements',templates:'templates',pages:'pages',layers:'layers'};try{openEditorGroup=null}catch(_){}editorOpenGroup(map[mode],btn);requestAnimationFrame(()=>{const d=document.getElementById('canvasQuickDrawer');if(mode==='text'&&d&&!d.querySelector('.v128DesktopParityBar')){const bar=document.createElement('div');bar.className='v128DesktopParityBar';bar.innerHTML='<label>Aa＋ Schrift hinzufügen<input type="file" accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2" onchange="v128FontUpload(this)"></label><button onclick="createCustomStylePreset()">＋ Eigenes Textformat</button><button onclick="openTextFormatManager()">Textformate verwalten</button>';d.prepend(bar)}if(mode==='layers')renderLayerList()})};window.v128FontUpload=function(inp){const f=inp.files?.[0];if(!f)return;const r=new FileReader();r.onload=()=>{const name=(f.name||'Eigene Schrift').replace(/\.(ttf|otf|woff2?)$/i,'').trim()||'Eigene Schrift',key='schoolbloom-v91-custom-fonts';let arr=[];try{arr=JSON.parse(localStorage.getItem(key)||'[]')}catch(_){}arr=arr.filter(x=>x.name!==name);arr.push({name:name,data:String(r.result)});localStorage.setItem(key,JSON.stringify(arr));try{let oldFonts=JSON.parse(localStorage.getItem('schoolbloom-custom-fonts')||'[]');oldFonts=oldFonts.filter(x=>x.name!==name&&x.css!==name);oldFonts.push({name:name,css:name,data:String(r.result)});localStorage.setItem('schoolbloom-custom-fonts',JSON.stringify(oldFonts))}catch(_){}const st=document.createElement('style');st.textContent='@font-face{font-family:'+JSON.stringify(name)+';src:url('+JSON.stringify(String(r.result))+');font-display:swap}';document.head.appendChild(st);try{v91LoadFonts();renderCanvasInspector()}catch(_){}try{cuteToast('Schrift hinzugefügt ♡')}catch(_){}inp.value=''};r.readAsDataURL(f)};}
 const oldRender=window.renderSheetEditor;window.renderSheetEditor=function(){const r=oldRender.apply(this,arguments);setTimeout(()=>{fit();installDesktopParity()},160);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){}
 const oldOpen=window.openStudySheetEditor;if(oldOpen)window.openStudySheetEditor=function(){const r=oldOpen.apply(this,arguments);setTimeout(()=>{fit();installDesktopParity()},200);return r};
 /* V178: retired V128 desktop parity watcher removed. */
-window.addEventListener('resize',()=>setTimeout(()=>{if(isEditor()){fit();installDesktopParity()}},120));setTimeout(()=>{if(isEditor()){fit();installDesktopParity()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 182'},400);
+window.addEventListener('resize',()=>setTimeout(()=>{if(isEditor()){fit();installDesktopParity()}},120));setTimeout(()=>{if(isEditor()){fit();installDesktopParity()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 191'},400);
 })();
 </script>
 <!-- ===== /Studia V128 ===== -->
@@ -14964,13 +14967,13 @@ window.addEventListener('touchstart',e=>{if(window.__STUDIA_V131_INPUT__||!edito
 window.addEventListener('touchmove',e=>{if(window.__STUDIA_V131_INPUT__||!pinch||e.touches.length!==2)return;e.preventDefault();e.stopImmediatePropagation();const q=pair(e),vp=VP(),vr=vp.getBoundingClientRect(),z=clamp(pinch.z*q.d/pinch.d,.18,4),left=(q.cx-vr.left)-pinch.wx*z,top=(q.cy-vr.top)-pinch.wy*z;setStage(z,left,top)},{capture:true,passive:false});
 window.addEventListener('touchend',e=>{if(e.touches.length<2)pinch=null},{capture:true,passive:true});window.addEventListener('touchcancel',()=>pinch=null,{capture:true,passive:true});
 window.addEventListener('wheel',e=>{if(window.__STUDIA_V131_INPUT__||!editor()||innerWidth<900||!e.altKey||!VP()?.contains(e.target))return;e.preventDefault();e.stopImmediatePropagation();focusZoom(scale()*Math.exp(-e.deltaY*.0018),e.clientX,e.clientY)},{capture:true,passive:false});
-function desktopParity(){if(!editor()||innerWidth<900)return;const nav=document.querySelector('.canvasQuickNav');if(!nav)return;nav.innerHTML='<button data-v129="text"><span class="editorNavIcon">Aa</span><span>Text</span></button><button data-v129="elements"><span class="editorNavIcon">◇</span><span>Elemente</span></button><button data-v129="templates"><span class="editorNavIcon">▦</span><span>Vorlagen</span></button><button data-v129="pages"><span class="editorNavIcon">▯</span><span>Seiten</span></button><button data-v129="layers"><span class="editorNavIcon">☷</span><span>Ebenen</span></button>';const map={text:'textLibrary',elements:'elements',templates:'templates',pages:'pages',layers:'layers'};nav.querySelectorAll('[data-v129]').forEach(b=>b.onclick=()=>{const mode=b.dataset.v129,group=mode==='text'&&typeof mobileSelectedText==='function'&&mobileSelectedText()?'textEdit':map[mode];try{openEditorGroup=null}catch(_){}editorOpenGroup(group,b);requestAnimationFrame(()=>{const d=document.getElementById('canvasQuickDrawer');if(mode==='text'&&d&&!d.querySelector('.v129DesktopTextExtras')){const x=document.createElement('div');x.className='v129DesktopTextExtras';x.innerHTML='<button onclick="v91PickFont()">Aa＋ Eigene Schrift hinzufügen</button><button onclick="createCustomStylePreset()">＋ Eigenes Textformat</button><button onclick="openTextFormatManager()">Textformate verwalten</button>';d.prepend(x)}if(mode==='layers')renderLayerList()})})}
+function desktopParity(){if(window.__STUDIA_V134_REFERENCE_ONLY__&&innerWidth>=900)return;if(!editor()||innerWidth<900)return;const nav=document.querySelector('.canvasQuickNav');if(!nav)return;nav.innerHTML='<button data-v129="text"><span class="editorNavIcon">Aa</span><span>Text</span></button><button data-v129="elements"><span class="editorNavIcon">◇</span><span>Elemente</span></button><button data-v129="templates"><span class="editorNavIcon">▦</span><span>Vorlagen</span></button><button data-v129="pages"><span class="editorNavIcon">▯</span><span>Seiten</span></button><button data-v129="layers"><span class="editorNavIcon">☷</span><span>Ebenen</span></button>';const map={text:'textLibrary',elements:'elements',templates:'templates',pages:'pages',layers:'layers'};nav.querySelectorAll('[data-v129]').forEach(b=>b.onclick=()=>{const mode=b.dataset.v129,group=mode==='text'&&typeof mobileSelectedText==='function'&&mobileSelectedText()?'textEdit':map[mode];try{openEditorGroup=null}catch(_){}editorOpenGroup(group,b);requestAnimationFrame(()=>{const d=document.getElementById('canvasQuickDrawer');if(mode==='text'&&d&&!d.querySelector('.v129DesktopTextExtras')){const x=document.createElement('div');x.className='v129DesktopTextExtras';x.innerHTML='<button onclick="v91PickFont()">Aa＋ Eigene Schrift hinzufügen</button><button onclick="createCustomStylePreset()">＋ Eigenes Textformat</button><button onclick="openTextFormatManager()">Textformate verwalten</button>';d.prepend(x)}if(mode==='layers')renderLayerList()})})}
 const oldRV=window.renderVectors||renderVectors;window.renderVectors=function(){const r=oldRV.apply(this,arguments);requestAnimationFrame(renderShapeProxies);return r};try{renderVectors=window.renderVectors}catch(_){}
 const oldRO=window.renderCanvasObjects||renderCanvasObjects;window.renderCanvasObjects=function(){const r=oldRO.apply(this,arguments);requestAnimationFrame(renderShapeProxies);return r};try{renderCanvasObjects=window.renderCanvasObjects}catch(_){}
 const oldOpen=window.editorOpenGroup;window.editorOpenGroup=function(){const r=oldOpen.apply(this,arguments);requestAnimationFrame(()=>{renderShapeProxies();if(innerWidth>=900)desktopParity()});return r};try{editorOpenGroup=window.editorOpenGroup}catch(_){}
 /* V178: retired V129 desktop parity observer removed. */
 window.addEventListener('resize',()=>setTimeout(()=>{if(editor()){fit129();desktopParity();renderShapeProxies()}},120));
-setTimeout(()=>{if(editor()){fit129();desktopParity();renderShapeProxies()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 182';document.title='Studia'},500);
+setTimeout(()=>{if(editor()){fit129();desktopParity();renderShapeProxies()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 191';document.title='Studia'},500);
 })();
 </script>
 <!-- ===== /Studia V129 ===== -->
@@ -15152,7 +15155,7 @@ window.editorOpenGroup=function(){if(innerWidth>=900)openEditorGroup=null;const 
 try{editorOpenGroup=window.editorOpenGroup}catch(_){}
 const observer=new MutationObserver(()=>requestAnimationFrame(()=>{if(innerWidth>=900&&window.__STUDIA_V180_DESKTOP__)return;if(!inEditor())return;addStarButton();addTransparentChoices(document);polishRoundedVectors()}));
 observer.observe(document.body,{subtree:true,childList:true});
-setTimeout(()=>{if(inEditor()){renderVectors();renderLayerList();enhanceInspector();addStarButton()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 182';document.title='Studia'},650);
+setTimeout(()=>{if(inEditor()){renderVectors();renderLayerList();enhanceInspector();addStarButton()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 191';document.title='Studia'},650);
 })();
 </script>
 <!-- ===== /Studia V130 ===== -->
@@ -15291,7 +15294,7 @@ function bindGestures(){const vp=VP();if(!vp||vp.dataset.v131Gestures)return;vp.
   window.addEventListener('mousemove',e=>{if(!pan)return;view.x=pan.vx+(e.clientX-pan.x);view.y=pan.vy+(e.clientY-pan.y);view.touched=true;applyView()},true);
   const panEnd=()=>{pan=null;document.body.classList.remove('v131Panning')};window.addEventListener('mouseup',panEnd,true);window.addEventListener('blur',panEnd);vp.addEventListener('auxclick',e=>{if(e.button===1)e.preventDefault()});
 }
-window.addEventListener('keydown',e=>{if(!editor())return;const typing=/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName)||document.activeElement?.isContentEditable;if(e.code==='Space'&&!typing){space=true;document.body.classList.add('v131Space');e.preventDefault();return}if(typing)return;if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='d'){e.preventDefault();duplicateSelected();return}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='g'){e.preventDefault();e.shiftKey?ungroupSelectedItems():groupSelectedItems();return}if(e.key==='Delete'||e.key==='Backspace'){e.preventDefault();deleteSelectedCanvasItem();return}if(/^Arrow/.test(e.key)){e.preventDefault();const dx=e.key==='ArrowLeft'?-1:e.key==='ArrowRight'?1:0,dy=e.key==='ArrowUp'?-1:e.key==='ArrowDown'?1:0,step=e.shiftKey?10:1;canvasState.objects.filter(o=>(canvasState.selectedIds||[]).includes(o.id)&&!o.locked).forEach(o=>{o.x=clamp(o.x+dx*step,0,canvasPageWidth()-o.w);o.y=clamp(o.y+dy*step,0,canvasPageHeight()-o.h)});canvasState.vectors.filter(v=>(canvasState.selectedVectorIds||[]).includes(v.id)&&!v.locked).forEach(v=>{const s=clone(v);moveVector(v,s,dx*step,dy*step)});renderCanvasObjects();renderVectors();markCanvasDirty(false)}});
+window.addEventListener('keydown',e=>{if(!editor())return;const a=e.target instanceof Element?e.target:document.activeElement,typing=/INPUT|TEXTAREA|SELECT/.test(a?.tagName)||a?.isContentEditable||!!a?.closest?.('[contenteditable="true"]');if(e.code==='Space'&&!typing){space=true;document.body.classList.add('v131Space');e.preventDefault();return}if(typing)return;if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='d'){e.preventDefault();duplicateSelected();return}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='g'){e.preventDefault();e.shiftKey?ungroupSelectedItems():groupSelectedItems();return}if(e.key==='Delete'||e.key==='Backspace'){e.preventDefault();deleteSelectedCanvasItem();return}if(/^Arrow/.test(e.key)){e.preventDefault();const dx=e.key==='ArrowLeft'?-1:e.key==='ArrowRight'?1:0,dy=e.key==='ArrowUp'?-1:e.key==='ArrowDown'?1:0,step=e.shiftKey?10:1;canvasState.objects.filter(o=>(canvasState.selectedIds||[]).includes(o.id)&&!o.locked).forEach(o=>{o.x=clamp(o.x+dx*step,0,canvasPageWidth()-o.w);o.y=clamp(o.y+dy*step,0,canvasPageHeight()-o.h)});canvasState.vectors.filter(v=>(canvasState.selectedVectorIds||[]).includes(v.id)&&!v.locked).forEach(v=>{const s=clone(v);moveVector(v,s,dx*step,dy*step)});renderCanvasObjects();renderVectors();markCanvasDirty(false)}});
 window.addEventListener('keyup',e=>{if(e.code==='Space'){space=false;document.body.classList.remove('v131Space')}});window.addEventListener('blur',()=>{space=false;document.body.classList.remove('v131Space')});
 
 window.v131TableRowColor=function(value){const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(!o||o.kind!=='table')return;const r=clamp(o.activeCell?.r||0,0,o.rows-1);o.cellColors||=Array.from({length:o.rows},()=>Array(o.cols).fill(''));while(o.cellColors.length<o.rows)o.cellColors.push(Array(o.cols).fill(''));o.cellColors[r]=Array(o.cols).fill(value);renderCanvasObjects();renderCanvasInspector();markCanvasDirty();pushHistory()};
@@ -15318,7 +15321,7 @@ window.renderLayerList=function(){const html=layerHTML(),a=document.getElementBy
 
 function quickStrip(){return '<div class="v131QuickStrip"><button onclick="undoCanvas()"><b>↶</b>Rückgängig</button><button onclick="redoCanvas()"><b>↷</b>Wiederholen</button><button onclick="fitCanvasStage()"><b>⊡</b>Einpassen</button><button onclick="canvasZoomBy(.1)"><b>＋</b>Zoom</button><button onclick="canvasZoomBy(-.1)"><b>−</b>Zoom</button><button onclick="duplicateSelected()"><b>⧉</b>Duplizieren</button></div>'}
 function decorateDrawer(){const d=document.getElementById('canvasQuickDrawer');if(!d||!d.classList.contains('open')||d.querySelector('.v131QuickStrip'))return;const head=d.querySelector('.mobileDrawerHead');if(head)head.insertAdjacentHTML('afterend',quickStrip());else d.insertAdjacentHTML('afterbegin',quickStrip())}
-function ensureChrome(){const top=document.querySelector('.canvasTopbar');if(top&&!top.querySelector('.v131VersionBadge')){const badge=document.createElement('span');badge.className='v131VersionBadge';badge.textContent='STUDIA · V181';const title=top.querySelector('.editorTitle');title?.after(badge)}const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 182'}
+function ensureChrome(){const top=document.querySelector('.canvasTopbar');if(top&&!top.querySelector('.v131VersionBadge')){const badge=document.createElement('span');badge.className='v131VersionBadge';badge.textContent='STUDIA · V181';const title=top.querySelector('.editorTitle');title?.after(badge)}const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 191'}
 const oldOpen=window.editorOpenGroup;window.editorOpenGroup=function(){openEditorGroup=null;const r=oldOpen.apply(this,arguments);requestAnimationFrame(()=>{decorateDrawer();if(arguments[0]==='layers')renderLayerList()});return r};try{editorOpenGroup=window.editorOpenGroup}catch(_){}
 const oldObjects=window.renderCanvasObjects;window.renderCanvasObjects=function(){const r=oldObjects.apply(this,arguments);requestAnimationFrame(syncMoveProxies);return r};try{renderCanvasObjects=window.renderCanvasObjects}catch(_){}
 const oldVectors=window.renderVectors;window.renderVectors=function(){const r=oldVectors.apply(this,arguments);requestAnimationFrame(syncMoveProxies);return r};try{renderVectors=window.renderVectors}catch(_){}
@@ -15549,7 +15552,7 @@ function zoomAt(z,cx,cy){const vp=viewport(),r=vp?.getBoundingClientRect();if(!v
 window.setCanvasZoom=z=>{const vp=viewport(),r=vp?.getBoundingClientRect();if(r)zoomAt(Number(z)||1,r.left+vp.clientWidth/2,r.top+vp.clientHeight/2)};window.canvasZoomBy=d=>window.setCanvasZoom(view.z+Number(d||0));window.fitCanvasStage=window.fitCanvasToScreen=()=>fit(true);try{setCanvasZoom=window.setCanvasZoom;fitCanvasStage=window.fitCanvasStage;fitCanvasToScreen=window.fitCanvasStage}catch(_){}
 function pair(e){const a=e.touches[0],b=e.touches[1];return{cx:(a.clientX+b.clientX)/2,cy:(a.clientY+b.clientY)/2,d:Math.max(1,Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY))}}
 function bindViewport(){const vp=viewport();if(!vp||vp.dataset.v132Bound)return;vp.dataset.v132Bound='1';vp.addEventListener('touchstart',e=>{if(e.touches.length!==2)return;const q=pair(e),r=vp.getBoundingClientRect(),fx=q.cx-r.left,fy=q.cy-r.top;e.preventDefault();e.stopImmediatePropagation();if(drag){drag.target?.classList.remove('dragging');document.body.classList.remove('v132Dragging')}drag=null;mouseDrag=null;pinch={d:q.d,z:view.z,wx:(fx-view.x)/view.z,wy:(fy-view.y)/view.z};document.body.classList.add('v132Panning')},{capture:true,passive:false});vp.addEventListener('touchmove',e=>{if(!pinch||e.touches.length!==2)return;const q=pair(e),r=vp.getBoundingClientRect(),fx=q.cx-r.left,fy=q.cy-r.top,z=clamp(pinch.z*q.d/pinch.d,.18,4);e.preventDefault();e.stopImmediatePropagation();view.z=z;view.x=fx-pinch.wx*z;view.y=fy-pinch.wy*z;view.touched=true;applyView()},{capture:true,passive:false});const pe=e=>{if(!e.touches||e.touches.length<2){pinch=null;document.body.classList.remove('v132Panning')}};vp.addEventListener('touchend',pe,{capture:true,passive:true});vp.addEventListener('touchcancel',pe,{capture:true,passive:true});vp.addEventListener('wheel',e=>{if(mobile()||!e.altKey)return;e.preventDefault();e.stopImmediatePropagation();zoomAt(view.z*Math.exp(-e.deltaY*.0018),e.clientX,e.clientY)},{capture:true,passive:false});vp.addEventListener('mousedown',e=>{if(mobile()||!(e.button===1||(e.button===0&&space)))return;e.preventDefault();e.stopImmediatePropagation();pan={sx:e.clientX,sy:e.clientY,x:view.x,y:view.y};document.body.classList.add('v132Panning')},{capture:true});window.addEventListener('mousemove',e=>{if(!pan)return;view.x=pan.x+(e.clientX-pan.sx);view.y=pan.y+(e.clientY-pan.sy);view.touched=true;applyView()},true);window.addEventListener('mouseup',()=>{pan=null;document.body.classList.remove('v132Panning')},true);vp.addEventListener('auxclick',e=>{if(e.button===1)e.preventDefault()})}
-window.addEventListener('keydown',e=>{if(!editor())return;const typing=/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName)||document.activeElement?.isContentEditable;if(e.code==='Space'&&!typing){space=true;document.body.classList.add('v132Space');e.preventDefault()}});window.addEventListener('keyup',e=>{if(e.code==='Space'){space=false;document.body.classList.remove('v132Space')}});
+window.addEventListener('keydown',e=>{if(!editor())return;const a=e.target instanceof Element?e.target:document.activeElement,typing=/INPUT|TEXTAREA|SELECT/.test(a?.tagName)||a?.isContentEditable||!!a?.closest?.('[contenteditable="true"]');if(e.code==='Space'&&!typing){space=true;document.body.classList.add('v132Space');e.preventDefault()}});window.addEventListener('keyup',e=>{if(e.code==='Space'){space=false;document.body.classList.remove('v132Space')}});
 
 const shapeUid=()=>crypto.randomUUID?.()||('v132-'+Date.now().toString(36)+Math.random().toString(36).slice(2));
 window.addVectorShape=function(type){if(!['rect','ellipse','triangle'].includes(type))return;const all=[...(canvasState.objects||[]),...(canvasState.vectors||[])],z=Math.max(0,...all.map(x=>Number(x.z)||0))+10,v={id:shapeUid(),z,type,fill:'#f7d2cf',stroke:'#8d7369',strokeWidth:2,dash:'solid',rotation:0,locked:false,cornerRadius:0};if(type==='rect')Object.assign(v,{x:267,y:330,w:260,h:150,rx:18,layerLabel:'Rechteck'});else if(type==='ellipse')Object.assign(v,{cx:397,cy:405,rx:120,ry:80,layerLabel:'Kreis'});else Object.assign(v,{points:[[397,310],[520,490],[274,490]],layerLabel:'Dreieck'});canvasState.vectors.push(v);canvasState.vectorTool='select';document.getElementById('canvasSvg')?.classList.remove('drawing');const hint=document.getElementById('pathDrawHint');if(hint)hint.style.display='none';selectOnly('vector',v.id);try{renderVectors();markCanvasDirty();pushHistory()}catch(_){}queueHits()};try{addVectorShape=window.addVectorShape}catch(_){}
@@ -15572,8 +15575,8 @@ function setButtonIcon(button,name,keepLabel=false){if(!button||button.dataset.v
 function polishChrome(){const topMap={Rückgängig:'undo',Wiederholen:'redo','Seite & Ansicht':'pages',Exportieren:'export','PDF / Drucken':'print',Speichern:'save'};for(const b of document.querySelectorAll('.canvasTopbar button[title]'))if(topMap[b.title])setButtonIcon(b,topMap[b.title],false);const cmdMap={'Hinzufügen':'plus','Textfeld':'text','Formel':'formula','Graph':'graph','Checkliste':'checklist','Trennlinie':'line','Duplizieren':'duplicate','Gruppieren':'group','Gruppierung lösen':'ungroup','Sperren':'lock','Nach vorne':'front','Nach hinten':'back','An Bildschirm':'fit','Seite & Ansicht':'pages','Tastenkürzel':'keyboard'};for(const b of document.querySelectorAll('.desktopCmdButtons button[title]'))if(cmdMap[b.title])setButtonIcon(b,cmdMap[b.title],true);for(const b of document.querySelectorAll('body.editorMode button[title="Sperren"],body.editorMode button[title="Entsperren"],body.editorMode button[title="Sperren/Entsperren"]')){if(b.closest('.desktopCmdButtons'))continue;setButtonIcon(b,b.title==='Entsperren'?'unlock':'lock',false)}for(const b of document.querySelectorAll('#mobileSelectionTools button[title]')){const m={Duplizieren:'duplicate',Sperren:'lock',Entsperren:'unlock',Löschen:'trash'}[b.title];if(m)setButtonIcon(b,m,false)}}
 function decorateGroup(group){document.querySelectorAll('.v131QuickStrip').forEach(x=>x.remove());if(group==='elements')replaceDrawerBody(elementGroupsHTML());if(group==='pages')decoratePages();if(group==='layers')renderLayerList();polishChrome()}
 window.v132Open=function(mode,btn){const map={text:'textLibrary',elements:'elements',templates:'templates',pages:'pages',layers:'layers'},group=mode==='text'&&typeof mobileSelectedText==='function'&&mobileSelectedText()?'textEdit':map[mode];try{openEditorGroup=null}catch(_){}editorOpenGroup(group,btn);requestAnimationFrame(()=>{const d=document.getElementById('canvasQuickDrawer');if(mode==='text'&&d&&innerWidth>=900&&!d.querySelector('.v132DesktopTextExtras')){const x=document.createElement('div');x.className='v129DesktopTextExtras v132DesktopTextExtras';x.innerHTML=`<button onclick="v91PickFont()">${ic('textformat')} Eigene Schrift</button><button onclick="createCustomStylePreset()">${ic('plus')} Textformat</button><button onclick="openTextFormatManager()">${ic('edit')} Textformate verwalten</button>`;d.prepend(x)}decorateGroup(group)})};
-function buildNav(){const nav=document.querySelector('.canvasQuickNav');if(!nav)return;if(!nav.querySelector('[data-v133]'))nav.innerHTML=navHTML();nav.querySelectorAll('[data-v133]').forEach(b=>b.onclick=()=>v132Open(b.dataset.v133,b))}
-function init(forceFit=true){if(!editor())return;if(canvasState.multiMode){multiObjects=new Set(canvasState.selectedIds||[]);multiVectors=new Set(canvasState.selectedVectorIds||[])}document.querySelectorAll('.v131VersionBadge,.v131QuickStrip').forEach(x=>x.remove());buildTop();buildNav();bindViewport();syncHits();polishChrome();if(document.getElementById('canvasQuickDrawer')?.classList.contains('open'))decorateGroup('elements');if(forceFit)setTimeout(()=>fit(true),80);const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 182'}
+function buildNav(){if(window.__STUDIA_V134_REFERENCE_ONLY__&&innerWidth>=900)return;const nav=document.querySelector('.canvasQuickNav');if(!nav)return;if(!nav.querySelector('[data-v133]'))nav.innerHTML=navHTML();nav.querySelectorAll('[data-v133]').forEach(b=>b.onclick=()=>v132Open(b.dataset.v133,b))}
+function init(forceFit=true){if(!editor())return;if(canvasState.multiMode){multiObjects=new Set(canvasState.selectedIds||[]);multiVectors=new Set(canvasState.selectedVectorIds||[])}document.querySelectorAll('.v131VersionBadge,.v131QuickStrip').forEach(x=>x.remove());buildTop();buildNav();bindViewport();syncHits();polishChrome();if(!(window.__STUDIA_V134_REFERENCE_ONLY__&&innerWidth>=900)&&document.getElementById('canvasQuickDrawer')?.classList.contains('open'))decorateGroup('elements');if(forceFit)setTimeout(()=>fit(true),80);const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 191'}
 const oldGroup=window.editorOpenGroup;window.editorOpenGroup=function(){const args=arguments,r=oldGroup.apply(this,args);requestAnimationFrame(()=>{buildNav();decorateGroup(args[0])});return r};try{editorOpenGroup=window.editorOpenGroup}catch(_){}
 const oldObjects=window.renderCanvasObjects;window.renderCanvasObjects=function(){const r=oldObjects.apply(this,arguments);queueHits();return r};try{renderCanvasObjects=window.renderCanvasObjects}catch(_){}
 const oldVectors=window.renderVectors;window.renderVectors=function(){const r=oldVectors.apply(this,arguments);queueHits();return r};try{renderVectors=window.renderVectors}catch(_){}
@@ -15582,7 +15585,7 @@ const oldSheet=window.renderSheetEditor;window.renderSheetEditor=function(){cons
 const oldOpenSheet=window.openStudySheetEditor;if(oldOpenSheet)window.openStudySheetEditor=function(){const r=oldOpenSheet.apply(this,arguments);setTimeout(()=>init(true),560);return r};
 window.addEventListener('resize',()=>setTimeout(()=>{if(editor()){buildNav();fit(false);syncHits();polishChrome()}},180));
 let v133WasEditor=editor();const v133Observer=new MutationObserver(()=>{const now=editor();if(now&&!v133WasEditor)requestAnimationFrame(()=>{buildNav();polishChrome()});v133WasEditor=now});v133Observer.observe(document.body,{attributes:true,attributeFilter:['class']});
-setTimeout(()=>{buildTop();if(editor())init(true);const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 182';document.title='Studia'},750);
+setTimeout(()=>{buildTop();if(editor())init(true);const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 191';document.title='Studia'},750);
 })();
 </script>
 <!-- ===== /Studia V133 ===== -->
@@ -15705,7 +15708,7 @@ const bunny='<svg viewBox="0 0 32 32" aria-hidden="true"><rect x="6" y="4" width
 let currentDesktopMode='elements';
 function navButton(mode,label,icon){return `<button data-v134="${mode}" title="${esc134(label)}"><span class="editorNavIcon">${I(icon)}</span><span>${esc134(label)}</span></button>`}
 function navSentinel(){return '<i data-v129="v134" data-v133="v134" class="v134NavSentinel" hidden></i>'}
-function desktopNavHTML(){return navSentinel()+navButton('templates','Vorlagen','template')+navButton('elements','Elemente','elements')+navButton('text','Text','text')+navButton('images','Bilder','image')+navButton('shapes','Formen','rect')+navButton('stickers','Sticker','sticker')+navButton('charts','Diagramme','graph')+navButton('tables','Tabellen','table')+navButton('formulas','Formeln','formula')+navButton('files','Dateien','file')+navButton('audio','Audio','audio')}
+function desktopNavHTML(){return navSentinel()+navButton("text","Text","text")+navButton("elements","Elemente","elements")+navButton("templates","Vorlagen","template")}
 function mobileNavHTML(){return navSentinel()+navButton('text','Text','text')+navButton('elements','Elemente','elements')+navButton('templates','Vorlagen','template')+navButton('pages','Seiten','pages')+navButton('layers','Ebenen','layers')}
 function tile(label,icon,action,preview=''){return `<button class="v134PaletteTile" data-v134-label="${esc134(label.toLowerCase())}" onclick="${action}" title="${esc134(label)}">${preview||I(icon)}<span>${esc134(label)}</span></button>`}
 function section(title,items,cols=''){return `<section class="v134PaletteSection"><div class="v134PaletteTitle"><span>${esc134(title)}</span><small>Alle anzeigen</small></div><div class="v134PaletteGrid ${cols}">${items.join('')}</div></section>`}
@@ -15717,11 +15720,11 @@ function elementsPalette(){return searchShell(
  section('Formen',[
   tile('Rechteck','rect',"addVectorShape('rect')",'<i class="v134ShapePreview"></i>'),tile('Kreis','circle',"addVectorShape('ellipse')",'<i class="v134ShapePreview circle"></i>'),tile('Linie','line','addVectorLine()', '<i class="v134ShapePreview line"></i>'),tile('Dreieck','triangle',"addVectorShape('triangle')"),tile('Stern','star','addRoundedStar()'),tile('Kurve','curve','addVectorCurve()')
  ])+
- section('Sticker & Papier',[
-  tile('Sticker','sticker','toggleStickerPanel()'),tile('Klebeband','tape','addTapeSticker()'),tile('Kariert','papergrid',"addPaperSticker('grid')")
+ section('Sticker & Deko',[
+  tile('Sticker','sticker','toggleStickerPanel()'),tile('Klebeband','tape','addTapeSticker()'),tile('Kariertes Papier','papergrid',"addPaperSticker('grid')"),tile('Liniertes Papier','paperline',"addPaperSticker('line')")
  ])+
  section('Diagramme',[
-  tile('Funktionsgraph','graph','openGraphDialog()'),tile('Freihandkurve','curve','addVectorCurve()'),tile('Trennlinie','line','addVectorLine()')
+  tile('Diagramm','graph','openChartDialog()'),tile('Funktionsgraph','graph','openGraphDialog()'),tile('Timeline','line','openTimelineDialog()','<b style="font-size:20px;letter-spacing:-2px">○—○—○</b>'),tile('Freihandkurve','curve','addVectorCurve()'),tile('Trennlinie','line','addVectorLine()')
  ])+
  section('Tabellen',[
   tile('Tabelle','table','openTableDialog()'),tile('Checkliste','checklist','addCanvasChecklist()'),tile('Liniertes Papier','paperline',"addPaperSticker('line')")
@@ -15734,7 +15737,7 @@ function customPalette(mode){
   images:section('Bilder & Medien',[tile('Bild / Foto','image','openCanvasMediaPicker()'),tile('Bilddatei','image',"document.getElementById('canvasImageInput').click()"),tile('Kamera','image',"document.getElementById('canvasCameraInput').click()")]),
   shapes:section('Formen & Linien',[tile('Rechteck','rect',"addVectorShape('rect')"),tile('Kreis','circle',"addVectorShape('ellipse')"),tile('Dreieck','triangle',"addVectorShape('triangle')"),tile('Stern','star','addRoundedStar()'),tile('Linie','line','addVectorLine()'),tile('Kurve','curve','addVectorCurve()'),tile('Freihand','pen',"setVectorTool('pen')")]),
   stickers:section('Sticker & Deko',[tile('Sticker öffnen','sticker','toggleStickerPanel()'),tile('Klebeband','tape','addTapeSticker()'),tile('Kariertes Papier','papergrid',"addPaperSticker('grid')"),tile('Liniertes Papier','paperline',"addPaperSticker('line')")]),
-  charts:section('Diagramme',[tile('Funktionsgraph','graph','openGraphDialog()'),tile('Kurve','curve','addVectorCurve()'),tile('Achsen / Linie','line','addVectorLine()')]),
+  charts:section('Diagramme',[tile('Diagramm','graph','openChartDialog()'),tile('Funktionsgraph','graph','openGraphDialog()'),tile('Timeline','line','openTimelineDialog()','<b style="font-size:20px;letter-spacing:-2px">○—○—○</b>'),tile('Kurve','curve','addVectorCurve()'),tile('Achsen / Linie','line','addVectorLine()')]),
   tables:section('Tabellen',[tile('Tabelle einfügen','table','openTableDialog()'),tile('Checkliste','checklist','addCanvasChecklist()')]),
   formulas:section('Formeln',[tile('Formel einfügen','formula','openFormulaDialog()'),tile('Pythagoras','formula','openFormulaDialog()','<b class="v134FormulaPreview">a²+b²=c²</b>'),tile('Bruch','formula','openFormulaDialog()','<b class="v134FormulaPreview">a⁄b</b>'),tile('Wurzel','formula','openFormulaDialog()','<b class="v134FormulaPreview">√x</b>')]),
   files:section('Dateien',[tile('Datei hochladen','file',"document.getElementById('canvasAnyFileInput').click()"),tile('Bilddatei','image',"document.getElementById('canvasImageInput').click()")]),
@@ -15744,8 +15747,8 @@ function customPalette(mode){
 }
 function setDrawerHTML(html,mode=currentDesktopMode){const d=document.getElementById('canvasQuickDrawer');if(!d)return;d.classList.add('open');d.dataset.v134Mode=mode;d.innerHTML=html}
 window.v134FilterPalette=function(q){const term=String(q||'').trim().toLowerCase(),buttons=[...document.querySelectorAll('#canvasQuickDrawer .v134PaletteTile')];let shown=0;buttons.forEach(b=>{const show=!term||(b.dataset.v134Label||'').includes(term);b.hidden=!show;if(show)shown++});document.querySelector('#canvasQuickDrawer .v134PaletteEmpty')?.style.setProperty('display',shown?'none':'block')};
-window.v134Open=function(mode,btn){if(!desktop())return window.v132Open?.(mode,btn);currentDesktopMode=mode;document.querySelectorAll('.canvasQuickNav button').forEach(b=>b.classList.toggle('active',b===btn));if(['templates','text'].includes(mode)){window.v132Open?.(mode,btn);return}if(mode==='elements'){setDrawerHTML(elementsPalette(),mode);return}setDrawerHTML(customPalette(mode),mode)};
-function buildDesktopNav(){const nav=document.querySelector('.canvasQuickNav');if(!nav)return;if(!nav.querySelector('[data-v134]'))nav.innerHTML=desktopNavHTML();nav.querySelectorAll('[data-v134]').forEach(b=>{b.onclick=()=>v134Open(b.dataset.v134,b);b.classList.toggle('active',b.dataset.v134===currentDesktopMode)})}
+window.v134Open=function(mode,btn){if(!desktop())return window.v132Open?.(mode,btn);currentDesktopMode=mode;document.querySelectorAll('.canvasQuickNav button').forEach(b=>b.classList.toggle('active',b===btn));if(['templates','text'].includes(mode)){const d=document.getElementById('canvasQuickDrawer');if(d){d.dataset.v134Mode=mode;d.dataset.v137Mode=mode;d.dataset.v152Mode=mode}window.v152OpenPanel?.(mode);return}if(mode==='elements'){setDrawerHTML(elementsPalette(),mode);return}setDrawerHTML(customPalette(mode),mode)};
+function buildDesktopNav(){const nav=document.querySelector('.canvasQuickNav');if(!nav)return;if(!nav.querySelector('button[data-v134="text"]')||nav.querySelectorAll('button[data-v134]').length!==3)nav.innerHTML=desktopNavHTML();nav.querySelectorAll('[data-v134]').forEach(b=>{b.onclick=()=>v134Open(b.dataset.v134,b);b.classList.toggle('active',b.dataset.v134===currentDesktopMode)})}
 function buildMobileNav(){const nav=document.querySelector('.canvasQuickNav');if(!nav)return;nav.innerHTML=mobileNavHTML();nav.querySelectorAll('[data-v134]').forEach(b=>b.onclick=()=>window.v132Open?.(b.dataset.v134,b))}
 function formatTools(){return `<div class="v134FormatTools"><select class="zoom" title="Zoom" onchange="setCanvasZoom(+this.value)"><option value=".5">50%</option><option value=".75">75%</option><option value="1" selected>100%</option><option value="1.25">125%</option><option value="1.5">150%</option></select><span class="sep"></span><select class="font" title="Schriftart" onchange="applyTextProperty('fontFamily',this.value)"><option>Inter</option><option>Arial</option><option>Georgia</option><option>Trebuchet MS</option><option>Verdana</option><option>Times New Roman</option></select><input class="size" title="Schriftgröße" type="number" min="6" max="180" value="16" onchange="applyTextProperty('fontSize',+this.value)"><button title="Fett" onclick="v134ToggleText('fontWeight')">B</button><button title="Kursiv" onclick="v134ToggleText('fontStyle')"><i>I</i></button><button title="Unterstrichen" onclick="v134ToggleText('textDecoration')"><u>U</u></button><label title="Textfarbe" style="width:31px;height:31px;display:grid;place-items:center;font-weight:900;cursor:pointer">A<input type="color" value="#333333" onchange="applyTextProperty('color',this.value)" style="position:absolute;opacity:0;width:1px;height:1px"></label><span class="sep"></span><button title="Links" onclick="applyTextProperty('textAlign','left')">≡</button><button title="Zentriert" onclick="applyTextProperty('textAlign','center')">≣</button><button title="Rechts" onclick="applyTextProperty('textAlign','right')">≡</button><span class="sep"></span><button title="Formel" onclick="openFormulaDialog()">${I('formula')}</button><button title="Graph" onclick="openGraphDialog()">${I('graph')}</button><button title="Tabelle" onclick="openTableDialog()">${I('table')}</button></div>`}
 window.v134ToggleText=function(prop){if(canvasState?.selectedType!=='object'||!canvasState.selectedId)return cuteToast?.('Wähle zuerst einen Text ♡');const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(!o||!['text','block','task','merke'].includes(o.kind))return cuteToast?.('Wähle zuerst einen Text ♡');o.style||={};if(prop==='fontWeight')o.style.fontWeight=String(o.style.fontWeight)==='700'?'400':'700';if(prop==='fontStyle')o.style.fontStyle=o.style.fontStyle==='italic'?'normal':'italic';if(prop==='textDecoration')o.style.textDecoration=o.style.textDecoration==='underline'?'none':'underline';renderCanvasObjects();renderCanvasInspector();markCanvasDirty();pushHistory()};
@@ -15753,9 +15756,9 @@ function labelHeaderButtons(){const map={'Seite & Ansicht':['pages','Ansicht'],E
 function ensureBottom(shell){let bar=shell.querySelector('.v134BottomBar');if(!bar){bar=document.createElement('div');bar.className='v134BottomBar';bar.innerHTML=`<button class="notes" onclick="cuteToast('Notizen kannst du als Textfeld einfügen ♡')">▤ Notizen</button><span class="spacer"></span><button class="icon" onclick="canvasZoomBy(-.1)">−</button><input type="range" min=".25" max="2" step=".05" value="1" oninput="setCanvasZoom(+this.value);this.nextElementSibling.value=Math.round(this.value*100)+'%'"><output>100%</output><button class="icon" onclick="canvasZoomBy(.1)">＋</button><button class="icon" title="Einpassen" onclick="fitCanvasStage()">${I('fit')}</button>`;shell.appendChild(bar)}return bar}
 function polishRightPanel(){const add=document.querySelector('#v102PagePanel .rowBetween .miniIcon');if(add)add.innerHTML='+ Seite hinzufügen'}
 function makeSelectionBar(){const bar=document.createElement('div');bar.className='v132SelectionBar';bar.setAttribute('aria-label','Auswahlwerkzeuge');bar.innerHTML=`<button class="v132SelectTool active" title="Auswahlwerkzeug" aria-label="Auswahlwerkzeug" onclick="v132ToggleSelection()">${I('select')}<span>Auswahl</span></button><button class="v132MultiTool" title="Mehrere auswählen" aria-label="Mehrfachauswahl" onclick="v132ToggleMulti()">${I('multi')}</button><button title="Gruppieren" aria-label="Gruppieren" onclick="groupSelectedItems();requestAnimationFrame(v132SyncHits)">${I('group')}</button><button title="Duplizieren" aria-label="Duplizieren" onclick="duplicateSelected();requestAnimationFrame(v132SyncHits)">${I('duplicate')}</button><button title="Textformat erstellen" aria-label="Textformat erstellen" onclick="v132TextFormat()">${I('textformat')}</button>`;return bar}
-function ensureDesktop(){if(!desktop())return;const shell=document.querySelector('.canvasEditorShell'),top=document.querySelector('.canvasTopbar'),command=document.querySelector('.desktopCommandBar'),nav=document.querySelector('.canvasQuickNav'),drawer=document.getElementById('canvasQuickDrawer');if(!shell||!top||!command||!nav||!drawer)return;command.querySelectorAll('.desktopCmdGroup').forEach(x=>x.remove());let brand=top.querySelector('.v134Brand');if(!brand){brand=document.createElement('div');brand.className='v134Brand';brand.innerHTML=`<span class="v134BrandMark">${bunny}</span><b>Studia</b>`;top.prepend(brand)}const history=top.querySelector('.historyBar')||document.querySelector('.desktopCommandBar .historyBar');let selection=top.querySelector('.v132SelectionBar')||document.querySelector('.desktopCommandBar .v132SelectionBar');if(!selection)selection=makeSelectionBar();if(history&&history.parentElement!==command)command.prepend(history);if(selection.parentElement!==command){if(history)history.after(selection);else command.prepend(selection)}if(!command.querySelector('.v134FormatTools'))command.insertAdjacentHTML('beforeend',formatTools());labelHeaderButtons();buildDesktopNav();ensureBottom(shell);const any=document.getElementById('canvasAnyFileInput');if(any)any.accept='image/*,audio/*,.mp3,.wav,.m4a,.ogg,.pdf,.doc,.docx,.ppt,.pptx,.txt';const custom=['elements','images','shapes','stickers','charts','tables','formulas','files','audio'];if(custom.includes(currentDesktopMode)&&drawer.dataset.v134Mode!==currentDesktopMode)setDrawerHTML(currentDesktopMode==='elements'?elementsPalette():customPalette(currentDesktopMode),currentDesktopMode);if(!drawer.querySelector('.v134Palette')&&!drawer.querySelector('.mobileTextLibrary,.mobileTemplateGrid'))setDrawerHTML(elementsPalette(),'elements');if(!shell.dataset.v134PageOpened){shell.dataset.v134PageOpened='1';try{v102RightTab('page')}catch(_){}}polishRightPanel();document.body.classList.add('v134Desktop')}
+function ensureDesktop(){if(!desktop())return;const shell=document.querySelector('.canvasEditorShell'),top=document.querySelector('.canvasTopbar'),command=document.querySelector('.desktopCommandBar'),nav=document.querySelector('.canvasQuickNav'),drawer=document.getElementById('canvasQuickDrawer'),actions=top?.querySelector('.editorActions');if(!shell||!top||!command||!nav||!drawer||!actions)return;command.querySelectorAll('.desktopCmdGroup').forEach(x=>x.remove());let brand=top.querySelector('.v134Brand');if(!brand){brand=document.createElement('div');brand.className='v134Brand';brand.innerHTML=`<span class="v134BrandMark">${bunny}</span><b>Studia</b>`;top.prepend(brand)}const history=top.querySelector('.historyBar')||document.querySelector('.desktopCommandBar .historyBar');let selection=top.querySelector('.v132SelectionBar')||document.querySelector('.desktopCommandBar .v132SelectionBar');if(!selection)selection=makeSelectionBar();if(history&&history.parentElement!==actions)actions.prepend(history);if(selection.parentElement!==command)command.prepend(selection);if(!command.querySelector('.v134FormatTools'))command.insertAdjacentHTML('beforeend',formatTools());labelHeaderButtons();buildDesktopNav();ensureBottom(shell);const any=document.getElementById('canvasAnyFileInput');if(any)any.accept='image/*,audio/*,.mp3,.wav,.m4a,.ogg,.pdf,.doc,.docx,.ppt,.pptx,.txt';const custom=['elements','images','shapes','stickers','charts','tables','formulas','files','audio'];if(custom.includes(currentDesktopMode)&&drawer.dataset.v134Mode!==currentDesktopMode)setDrawerHTML(currentDesktopMode==='elements'?elementsPalette():customPalette(currentDesktopMode),currentDesktopMode);if(!drawer.querySelector('.v134Palette')&&!drawer.querySelector('.mobileTextLibrary,.mobileTemplateGrid,.v152Panel'))setDrawerHTML(elementsPalette(),'elements');if(!shell.dataset.v134PageOpened){shell.dataset.v134PageOpened='1';try{v102RightTab('page')}catch(_){}}polishRightPanel();document.body.classList.add('v134Desktop')}
 function restoreMobile(){document.body.classList.remove('v134Desktop');const top=document.querySelector('.canvasTopbar'),actions=top?.querySelector('.editorActions'),history=document.querySelector('.desktopCommandBar .historyBar'),selection=document.querySelector('.desktopCommandBar .v132SelectionBar');top?.querySelector('.v134Brand')?.remove();if(selection&&top)top.insertBefore(selection,history&&history.parentElement===top?history:actions);if(history&&top)top.insertBefore(history,actions);document.querySelector('.v134BottomBar')?.remove();const nav=document.querySelector('.canvasQuickNav');if(nav?.querySelector('[data-v134="audio"]'))buildMobileNav()}
-function reconcile(){if(innerWidth>=900&&window.__STUDIA_V180_DESKTOP__)return;desktop()?ensureDesktop():restoreMobile()}
+function reconcile(){desktop()?ensureDesktop():restoreMobile()}
 const oldRender=window.renderSheetEditor;window.renderSheetEditor=function(){const r=oldRender.apply(this,arguments);setTimeout(reconcile,820);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){}
 const oldOpen=window.openStudySheetEditor;if(oldOpen)window.openStudySheetEditor=function(){const r=oldOpen.apply(this,arguments);setTimeout(reconcile,900);return r};
 let v134WasEditor=document.body.classList.contains('editorMode');const observer=new MutationObserver(()=>{const now=document.body.classList.contains('editorMode');if(now&&!v134WasEditor)requestAnimationFrame(reconcile);v134WasEditor=now});observer.observe(document.body,{attributes:true,attributeFilter:['class']});
@@ -15764,9 +15767,9 @@ setTimeout(reconcile,980);
 })();
 </script>
 <!-- ===== /Studia V134 ===== -->
-<link rel="stylesheet" href="editor.css?v=183">
-<script src="google-sync-config.js?v=182"></script>
-<script src="editor.js?v=183"></script>
+<link rel="stylesheet" href="editor.css?v=191">
+<script src="google-sync-config.js?v=191"></script>
+<script src="editor.js?v=191"></script>
 
 <style id="v181-desktop-stability-style">
 @media(min-width:900px){
@@ -15857,7 +15860,7 @@ window.addEventListener('pointerup',endGesture,true);window.addEventListener('po
 let v181Tap={id:null,time:0,x:0,y:0};
 /* Window-capture owns desktop hit testing before all historical document handlers. */
 window.addEventListener('pointerdown',e=>{
- if(!desktop()||e.pointerType==='touch'||e.button!==0)return;
+ if(window.__STUDIA_V190_SELECTION_OWNER||!desktop()||e.pointerType==='touch'||e.button!==0)return;
  const t=e.target instanceof Element?e.target:null;if(!t)return;
  if(t.closest('#v181SelectionOverlay,.canvasTopbar,.desktopCommandBar,#canvasQuickDrawer,#desktopEditorSidebar,#v96PageStrip,#topViewMenu'))return;
  const editing=t.closest('#canvasObjects .cobj.editing,#canvasObjects .cobj[contenteditable="true"]');
@@ -15885,7 +15888,7 @@ window.addEventListener('pointerdown',e=>{
  if(hit){const id=hit.dataset.vid||hit.dataset.vectorWrap;if(id){e.preventDefault();e.stopImmediatePropagation();selectVector181(id);return}}
 }, {capture:true,passive:false});
 
-function attach181(){if(!desktop())return;qsa('#canvasObjects .cobj').forEach(el=>{if(el.dataset.v181Bound==='1')return;el.dataset.v181Bound='1';const id=el.dataset.id;const o=canvasState.objects.find(x=>x.id===id);if(!o)return;
+function attach181(){if(window.__STUDIA_V190_SELECTION_OWNER||!desktop())return;qsa('#canvasObjects .cobj').forEach(el=>{if(el.dataset.v181Bound==='1')return;el.dataset.v181Bound='1';const id=el.dataset.id;const o=canvasState.objects.find(x=>x.id===id);if(!o)return;
   el.addEventListener('pointerdown',e=>{if(!desktop())return;const cur=canvasState.objects.find(x=>x.id===id);if(!cur)return;if(cur.editing){return}if(e.target.closest('td,input,textarea,select,button,a'))return;if(e.button!==0)return;e.preventDefault();e.stopImmediatePropagation();if(e.shiftKey){try{toggleObjectInMultiSelection?.(id)}catch(_){};return}selectObject(id)}, {capture:true,passive:false});
   if(isText(o))el.addEventListener('dblclick',e=>{if(!desktop())return;e.preventDefault();e.stopImmediatePropagation();enterText(id,e.clientX,e.clientY)}, {capture:true});
   if(el.isContentEditable||o.editing)el.addEventListener('input',()=>{const x=canvasState.objects.find(z=>z.id===id);if(x){const c=el.cloneNode(true);c.querySelectorAll('.resizeHandle,.rotateHandle,.v135LinkBadge').forEach(n=>n.remove());x.text=c.innerHTML;try{markCanvasDirty?.()}catch(_){}}});
@@ -15904,12 +15907,13 @@ async function cloneAllPages181(){try{v96SyncPage?.()}catch(_){};canvasState.pag
 window.v181OpenPreview=async function(){let host=qs('#v181Preview');if(!host){host=document.createElement('div');host.id='v181Preview';host.innerHTML='<div class="v181PreviewBar"><b>Nur ansehen</b><button type="button">✕ Schließen</button></div><div class="v181PreviewPages"></div>';document.body.appendChild(host);host.querySelector('button').onclick=()=>host.classList.remove('open')}const pages=host.querySelector('.v181PreviewPages');pages.innerHTML='<div style="padding:40px">Seiten werden geladen …</div>';host.classList.add('open');const clones=await cloneAllPages181();pages.replaceChildren(...clones);const max=Math.min(1,(innerWidth-80)/Math.max(...clones.map(c=>parseFloat(c.style.width)||c.offsetWidth||794)));clones.forEach(c=>{c.style.zoom=String(max)})};
 
 /* Exact-ish multi-page print: clone the real rendered page rather than re-drawing a simplified model. */
-window.printCanvasSheet=async function(){if(innerWidth<900&&window.v170PrintMobile)return window.v170PrintMobile();const clones=await cloneAllPages181();if(!clones.length)return alert('Keine Lernblatt-Seite gefunden.');const styles=qsa('style').map(x=>x.textContent).join('\n');const cssHref=new URL('editor.css?v=183',location.href).href;const w=window.open('about:blank','_blank');if(!w)return alert('Pop-up wurde blockiert. Bitte Pop-ups für Studia erlauben.');const title='Studia Druck';w.document.open();w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${title}</title><link rel="stylesheet" href="${cssHref}"><style>${styles}</style><style>@page{margin:0;size:A4 portrait}html,body{margin:0!important;padding:0!important;background:#fff!important}.v181PrintRoot{margin:0!important;padding:0!important}.v181PrintSheet{break-after:page;page-break-after:always;margin:0!important;position:relative!important;box-shadow:none!important;border:0!important;transform:none!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.v181PrintSheet:last-child{break-after:auto;page-break-after:auto}.v181PrintSheet *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.v181PrintToolbar{position:sticky;top:0;z-index:9;display:flex;gap:8px;padding:10px;background:#fff;border-bottom:1px solid #ddd}@media print{.v181PrintToolbar{display:none!important}}</style></head><body class="editorMode"><div class="v181PrintToolbar"><button onclick="print()">Drucken</button><button onclick="close()">Schließen</button></div><div class="v181PrintRoot">${clones.map(c=>{c.classList.add('v181PrintSheet');return c.outerHTML}).join('')}</div>
+window.printCanvasSheet=async function(){if(innerWidth<900&&window.v170PrintMobile)return window.v170PrintMobile();const clones=await cloneAllPages181();if(!clones.length)return alert('Keine Lernblatt-Seite gefunden.');const styles=qsa('style').map(x=>x.textContent).join('\n');const cssHref=new URL('editor.css?v=191',location.href).href;const w=window.open('about:blank','_blank');if(!w)return alert('Pop-up wurde blockiert. Bitte Pop-ups für Studia erlauben.');const title='Studia Druck';w.document.open();w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${title}</title><link rel="stylesheet" href="${cssHref}"><style>${styles}</style><style>@page{margin:0;size:A4 portrait}html,body{margin:0!important;padding:0!important;background:#fff!important}.v181PrintRoot{margin:0!important;padding:0!important}.v181PrintSheet{break-after:page;page-break-after:always;margin:0!important;position:relative!important;box-shadow:none!important;border:0!important;transform:none!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.v181PrintSheet:last-child{break-after:auto;page-break-after:auto}.v181PrintSheet *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.v181PrintToolbar{position:sticky;top:0;z-index:9;display:flex;gap:8px;padding:10px;background:#fff;border-bottom:1px solid #ddd}@media print{.v181PrintToolbar{display:none!important}}</style></head><body class="editorMode"><div class="v181PrintToolbar"><button onclick="print()">Drucken</button><button onclick="close()">Schließen</button></div><div class="v181PrintRoot">${clones.map(c=>{c.classList.add('v181PrintSheet');return c.outerHTML}).join('')}</div>
+
 
 </body></html>`);w.document.close();setTimeout(()=>{try{w.focus();w.print()}catch(_){}},700)};
 try{printCanvasSheet=window.printCanvasSheet}catch(_){}
 
-function install(){window.__STUDIA_V180_DESKTOP__=false;const eye=qs('#headerEyebrow');if(eye)eye.textContent='VERSION 182';document.title='Studia';try{window.v132SyncHits?.();window.v138RefreshHandles?.()}catch(_){}}
+function install(){window.__STUDIA_V180_DESKTOP__=innerWidth>=900;const eye=qs('#headerEyebrow');if(eye)eye.textContent='VERSION 191';document.title='Studia';try{window.v132SyncHits?.();window.v138RefreshHandles?.()}catch(_){}}
 const oldSheet=window.renderSheetEditor;window.renderSheetEditor=function(){const r=oldSheet.apply(this,arguments);setTimeout(install,900);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){}
 const oldOpen=window.openStudySheetEditor;if(oldOpen)window.openStudySheetEditor=function(){const r=oldOpen.apply(this,arguments);setTimeout(install,1050);return r};
 window.addEventListener('resize',()=>{if(desktop())requestAnimationFrame(()=>{paintOverlay();attach181()})});
@@ -15929,7 +15933,7 @@ setTimeout(install,1300);
 <script id="v182-selection-recovery-script">
 (()=>{
  const active=()=>false; /* V183 desktop repair owns laptop interaction; disable V182 recovery layer. */
- function revive(){if(!active())return;window.__STUDIA_V180_DESKTOP__=false;document.getElementById('v181SelectionOverlay')?.remove();try{window.v132SyncHits?.();window.v138RefreshHandles?.()}catch(_){}const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 182'}
+ function revive(){if(!active())return;window.__STUDIA_V180_DESKTOP__=innerWidth>=900;document.getElementById('v181SelectionOverlay')?.remove();try{window.v132SyncHits?.();window.v138RefreshHandles?.()}catch(_){}const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 191'}
  const oldSheet=window.renderSheetEditor;if(typeof oldSheet==='function')window.renderSheetEditor=function(){const r=oldSheet.apply(this,arguments);requestAnimationFrame(()=>requestAnimationFrame(revive));return r};
  const oldOpen=window.openStudySheetEditor;if(typeof oldOpen==='function')window.openStudySheetEditor=function(){const r=oldOpen.apply(this,arguments);setTimeout(revive,120);return r};
  window.addEventListener('resize',()=>setTimeout(revive,60));setTimeout(revive,1000);
@@ -16095,7 +16099,8 @@ function paintFrame(){if(!desktop())return;const f=ensureFrame(),sel=selected();
 function selectObject(id){const s=state(),o=(s?.objects||[]).find(x=>String(x.id)===String(id));if(!o)return null;const already=s.selectedType==='object'&&String(s.selectedId)===String(o.id)&&!s.multiMode&&s.selectedIds?.length===1;if(!already){s.multiMode=false;s.selectedType='object';s.selectedId=o.id;s.selectedIds=[o.id];s.selectedVectorIds=[];qa('#view-sheet-editor #canvasObjects .cobj.selected').forEach(x=>x.classList.toggle('selected',String(x.dataset.id)===String(o.id)));q(`#view-sheet-editor #canvasObjects .cobj[data-id="${CSS.escape(String(o.id))}"]`)?.classList.add('selected');try{renderCanvasInspector?.();renderLayerList?.();updateMultiSelectStatus?.();updateMobileSelectionTools?.()}catch(_){}}paintFrame();return o}
 function selectVector(id){const s=state(),v=(s?.vectors||[]).find(x=>String(x.id)===String(id));if(!v)return null;s.multiMode=false;s.selectedType='vector';s.selectedId=v.id;s.selectedIds=[];s.selectedVectorIds=[v.id];try{renderCanvasInspector?.();renderLayerList?.();updateMultiSelectStatus?.()}catch(_){}paintFrame();return v}
 
-function nearObjectEdge(el,e,pad=18){const r=el?.getBoundingClientRect();if(!r)return false;/* Reliable border target while always leaving the middle free for native text editing. */const shortest=Math.max(1,Math.min(r.width,r.height)),p=Math.min(pad,Math.max(4,shortest*.24),shortest/3),x=e.clientX-r.left,y=e.clientY-r.top;return x<=p||y<=p||r.width-x<=p||r.height-y<=p}
+function nearObjectEdge(el,e,pad=18){const r=el?.getBoundingClientRect();if(!r)return false;try{const caret=document.caretRangeFromPoint?.(e.clientX,e.clientY),node=caret?.startContainer;if(node?.nodeType===Node.TEXT_NODE&&el.contains(node)&&node.data.length){const off=Math.min(caret.startOffset,node.data.length-1),char=document.createRange();char.setStart(node,off);char.setEnd(node,off+1);const b=char.getBoundingClientRect();if(e.clientX>=b.left-2&&e.clientX<=b.right+2&&e.clientY>=b.top-2&&e.clientY<=b.bottom+2)return false}}catch(_){}/* Reliable border target while always leaving the middle free for native text editing. */const shortest=Math.max(1,Math.min(r.width,r.height)),p=Math.min(pad,Math.max(4,shortest*.24),shortest/3),x=e.clientX-r.left,y=e.clientY-r.top;return x<=p||y<=p||r.width-x<=p||r.height-y<=p}
+window.studiaDesktopNearEdge=nearObjectEdge;
 function caretAtPoint(el,x,y,word=false){if(!el)return false;let r=null;try{if(document.caretRangeFromPoint)r=document.caretRangeFromPoint(x,y);if(!r&&document.caretPositionFromPoint){const p=document.caretPositionFromPoint(x,y);if(p){r=document.createRange();r.setStart(p.offsetNode,p.offset);r.collapse(true)}}}catch(_){}const inside=r&&(r.commonAncestorContainer===el||el.contains(r.commonAncestorContainer.nodeType===1?r.commonAncestorContainer:r.commonAncestorContainer.parentNode));if(!inside){let best=null,bestD=Infinity;const walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);while(walker.nextNode()){const node=walker.currentNode,text=node.data||'';for(let i=0;i<text.length;i++){const cr=document.createRange();cr.setStart(node,i);cr.setEnd(node,i+1);const b=cr.getBoundingClientRect();if(!b.width&&!b.height)continue;const dx=x< b.left?b.left-x:x>b.right?x-b.right:0,dy=y<b.top?b.top-y:y>b.bottom?y-b.bottom:0,d=Math.hypot(dx,dy);if(d<bestD){bestD=d;best={node,off:x>(b.left+b.right)/2?i+1:i}}}}if(!best)return false;r=document.createRange();r.setStart(best.node,best.off);r.collapse(true)}if(word){let node=r.startContainer,off=r.startOffset;if(node.nodeType!==Node.TEXT_NODE){const texts=[],walker=document.createTreeWalker(node,NodeFilter.SHOW_TEXT);while(walker.nextNode())texts.push(walker.currentNode);node=texts[Math.min(off,texts.length-1)]||texts[0];off=node?.data?.length?Math.min(node.data.length,off):0}if(node?.nodeType===Node.TEXT_NODE){const text=node.data||'',isWord=ch=>/[\p{L}\p{N}_]/u.test(ch||'');let a=Math.min(off,text.length),b=a;if(a===text.length||!isWord(text[a]))while(a>0&&!isWord(text[a]))a--;while(a>0&&isWord(text[a-1]))a--;b=Math.max(a,Math.min(off,text.length));while(b<text.length&&isWord(text[b]))b++;if(b>a){r.setStart(node,a);r.setEnd(node,b)}}}const s=getSelection();s.removeAllRanges();s.addRange(r);el.focus({preventScroll:true});try{window.v152RememberRange?.()}catch(_){}return true}
 
 function saveText(el,id){const o=(state()?.objects||[]).find(x=>String(x.id)===String(id));if(!o)return;o.text=el.innerHTML;try{markCanvasDirty?.(false)}catch(_){} }
@@ -16112,7 +16117,7 @@ function bindObjects(){if(!desktop())return;disableLegacy();for(const el of qa('
  }
  paintFrame();
 }
-function bindVectors(){if(!desktop())return;disableLegacy();qa('#view-sheet-editor #canvasObjects .shapeHit,#view-sheet-editor #canvasObjects .vectorTouchProxy').forEach(el=>{if(el.dataset.v183Bound==='1')return;el.dataset.v183Bound='1';el.addEventListener('pointerdown',e=>{if(!desktop()||e.button!==0)return;const id=el.dataset.vid;if(id)selectVector(id)},{passive:true})});paintFrame()}
+function bindVectors(){if(!desktop())return;disableLegacy();qa('#view-sheet-editor #canvasObjects .shapeHit,#view-sheet-editor #canvasObjects .vectorTouchProxy').forEach(el=>{if(el.dataset.v183Bound==='1')return;el.dataset.v183Bound='1';el.addEventListener('pointerdown',e=>{if(!desktop()||e.button!==0)return;const id=el.dataset.vid;if(id){const v=selectVector(id);if(v&&!v.locked)beginGesture('move',e)}},{capture:true,passive:false})});paintFrame()}
 
 /* Replace the object/vector binders that used to drag from the whole element body. */
 window.attachCanvasObjectEvents=bindObjects;try{attachCanvasObjectEvents=window.attachCanvasObjectEvents}catch(_){}
@@ -16162,7 +16167,7 @@ const oldPreview=window.v181OpenPreview;window.v181OpenPreview=async function(){
  const close=host.querySelector('.v181PreviewBar button');if(close){close.onclick=()=>{host.classList.remove('open');document.body.classList.remove('v184PreviewOpen','v137ViewMode');if(editor){editor.inert=false;editor.removeAttribute('aria-hidden')}host.scrollTop=0;q('.canvasQuickNav')?.style.removeProperty('display');q('#canvasQuickDrawer')?.style.removeProperty('display');requestAnimationFrame(()=>{bindObjects();bindVectors();paintFrame()})}}
 };
 
-function install(){if(!desktop())return;disableLegacy();document.body.classList.remove('v137ViewMode');q('.v137ViewerBar')?.remove();/* recreate object DOM once so old body-drag listeners disappear */try{renderCanvasObjects?.();renderVectors?.()}catch(_){}bindObjects();bindVectors();paintFrame();const view=q('.v137ViewButton');if(view){view.title='Lernblatt nur ansehen';view.onclick=()=>window.v181OpenPreview?.();const label=view.querySelector('span');if(label)label.textContent='Ansicht'}const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 182'}
+function install(){if(!desktop())return;disableLegacy();document.body.classList.remove('v137ViewMode');q('.v137ViewerBar')?.remove();/* recreate object DOM once so old body-drag listeners disappear */try{renderCanvasObjects?.();renderVectors?.()}catch(_){}bindObjects();bindVectors();paintFrame();const view=q('.v137ViewButton');if(view){view.title='Lernblatt nur ansehen';view.onclick=()=>window.v181OpenPreview?.();const label=view.querySelector('span');if(label)label.textContent='Ansicht'}const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 191'}
 const prevSheet=window.renderSheetEditor;if(prevSheet)window.renderSheetEditor=function(){const r=prevSheet.apply(this,arguments);setTimeout(install,90);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){}
 const prevOpen=window.openStudySheetEditor;if(prevOpen)window.openStudySheetEditor=function(){const r=prevOpen.apply(this,arguments);setTimeout(install,120);return r};
 document.addEventListener('click',e=>{const view=e.target.closest?.('.v137ViewButton');if(!view||!desktop())return;e.preventDefault();e.stopImmediatePropagation();window.v181OpenPreview?.()},true);
@@ -16232,65 +16237,267 @@ setTimeout(install,1100);setTimeout(install,2600);
   body.editorMode #v102PagePanel .v185PageActions button:last-child{background:#fff5f4;color:#a45f64;border-color:#efd0cd}
 }
 </style>
-<script id="v185-interaction-repair-script">
+<!-- ===== Studia laptop final stabilization: keep the V134 reference design, no duplicate chrome ===== -->
+<style id="v186-laptop-stability-only">
+@media (min-width:900px){
+  body.editorMode .canvasTopbar .editorActions>.historyBar{display:flex!important;align-items:center!important;gap:4px!important;flex:0 0 auto!important;margin:0 1px 0 0!important}
+  body.editorMode .canvasTopbar .editorActions>.historyBar .historyBtn{width:38px!important;min-width:38px!important;height:38px!important;padding:0!important;border:1px solid var(--v134-line,#eee6e2)!important;border-radius:11px!important;background:#fff!important;color:#4e4642!important;display:grid!important;place-items:center!important;font-size:18px!important}
+  body.editorMode .canvasTopbar .editorActions>.historyBar .historyBtn:hover{background:#fff7f5!important}
+  body.editorMode .desktopCommandBar>.historyBar{display:none!important}
+  #v165FontMenu{z-index:2147483600!important;width:274px!important;max-height:min(430px,calc(100dvh - 24px))!important;border:1px solid #ead8d3!important;border-radius:16px!important;background:#fffdfb!important;box-shadow:0 16px 42px rgba(89,61,55,.16)!important;overflow:hidden!important}
+  #v165FontMenu .v165FontMenuHead{padding:10px 12px!important;border-bottom:1px solid #f0e2de!important;background:#fffaf8!important}
+  #v165FontMenu .v165FontMenuList{max-height:360px!important;overflow-y:auto!important;padding:6px!important}
+  #v165FontMenu .v165FontMenuList button{width:100%!important;min-height:48px!important;display:grid!important;grid-template-columns:44px minmax(0,1fr) auto!important;align-items:center!important;gap:8px!important;padding:5px 8px!important;border:0!important;border-radius:10px!important;background:transparent!important;text-align:left!important;color:#5d504b!important}
+  #v165FontMenu .v165FontMenuList button:hover{background:#fbe9e8!important}
+  #v165FontMenu .v165FontAa{display:grid!important;place-items:center!important;width:40px!important;height:36px!important;border-radius:9px!important;background:#fff5f2!important;font-size:21px!important}
+  body.editorMode.v186MultiSelection #v183DesktopFrame{display:none!important}
+  body.editorMode #canvasObjects .cobj[contenteditable="true"],body.editorMode #canvasObjects .cobj[contenteditable="true"] *{white-space:pre-wrap!important}
+}
+@media (min-width:900px) and (max-width:1040px){
+  body.editorMode .canvasEditorShell{grid-template-columns:250px minmax(300px,1fr) 225px!important}
+  body.editorMode .v102DesktopLeft{grid-template-columns:70px minmax(0,1fr)!important}
+  body.editorMode .v102DesktopLeft>.canvasQuickNav{width:70px!important;padding-inline:4px!important}
+  body.editorMode .canvasQuickNav button{width:61px!important}
+  body.editorMode .v134PaletteGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  body.editorMode .v134Brand{flex-basis:116px!important;padding-right:9px!important}
+  body.editorMode .v134Brand b{font-size:17px!important}
+  body.editorMode .canvasTopbar .editorTitle{min-width:105px!important;max-width:155px!important}
+  body.editorMode .canvasTopbar .editorActions{gap:4px!important}
+  body.editorMode .canvasTopbar .editorActions button{padding-inline:8px!important}
+  body.editorMode .canvasTopbar .editorActions button span{display:none!important}
+}
+</style>
+<!-- ===== /Studia laptop final stabilization ===== -->
+<!-- ===== Studia V187 — laptop interaction/formatting stabilization only ===== -->
+<style id="v187-laptop-fixes">
+@media (min-width:900px){
+  body.editorMode.v187Multi #v183DesktopFrame{display:none!important}
+  body.editorMode .v187Marquee{position:absolute;z-index:2147483490;pointer-events:none;border:1.5px solid #dc7f89;background:rgba(244,177,183,.11);border-radius:3px;box-sizing:border-box}
+  body.editorMode .v187ArrangePanel{margin:0 0 12px;padding:12px;border:1px solid #eee2de;border-radius:13px;background:#fffdfa;box-shadow:0 3px 12px rgba(98,70,61,.035)}
+  body.editorMode .v187ArrangeHead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px}
+  body.editorMode .v187ArrangeHead b{font-size:12px;color:#554b47}.v187ArrangeHead select{height:30px;min-width:94px;padding:0 8px;border:1px solid #eadbd6;border-radius:9px;background:#fff;color:#6f5b54;font-size:9px;font-weight:800}
+  body.editorMode .v187ArrangeGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+  body.editorMode .v187ArrangeGrid button,body.editorMode .v187ArrangeExtra button{min-height:34px;border:1px solid #eadbd6;border-radius:9px;background:#fff;color:#6e5952;font-size:9px;font-weight:850;padding:6px 5px}
+  body.editorMode .v187ArrangeGrid button:hover,body.editorMode .v187ArrangeExtra button:hover{background:#fff4f2;border-color:#efcfca}
+  body.editorMode .v187ArrangeExtra{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:6px}
+  body.editorMode .v187NoneBtn{display:inline-flex;align-items:center;justify-content:center;min-height:24px!important;margin-top:5px!important;align-self:flex-end;padding:4px 8px!important;border:1px solid #eadbd6!important;border-radius:8px!important;background:linear-gradient(135deg,#fff 45%,#dfa0a4 46%,#dfa0a4 54%,#fff 55%)!important;color:#725d56!important;font-size:8px!important;font-weight:900!important}
+  body.editorMode .v187TopFontButton{width:128px!important;min-width:128px!important;height:31px!important;border:1px solid transparent!important;border-radius:8px!important;background:transparent!important;color:#403a37!important;padding:0 8px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:7px!important;font-size:11px!important}
+  body.editorMode .v187TopFontButton:hover{border-color:var(--v134-line,#eee6e2)!important;background:#fff!important}
+  body.editorMode .v134FormatTools button.active{background:#fde7e7!important;border-color:#efc8c4!important;color:#985d61!important}
+  body.editorMode .v187TopFontButton .v165FontSample{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+  #v165FontMenu .v165FontMenuList button>span:nth-child(2){font-family:inherit!important;font-size:13px!important}
+  #v165FontMenu .v165FontAa{font-family:inherit!important}
+  body.editorMode .v187PaletteTimeline{min-height:68px}
+  body.editorMode .v187WholeTextBadge{position:absolute;right:8px;top:8px;z-index:3;padding:3px 6px;border-radius:999px;background:#fff5f3;border:1px solid #edcfca;color:#9a6668;font-size:8px;font-weight:850;pointer-events:none}
+}
+</style>
+<script id="v187-laptop-fixes-script">
 (()=>{
 'use strict';
-if(window.__STUDIA_V185_INTERACTION_REPAIR__)return;window.__STUDIA_V185_INTERACTION_REPAIR__=true;
+if(window.__STUDIA_V187_LAPTOP_FIXES__)return;window.__STUDIA_V187_LAPTOP_FIXES__=true;
 const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
-const editor=()=>innerWidth>=900&&document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
+const desktop=()=>innerWidth>=900&&document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
 const state=()=>{try{return canvasState}catch(_){return window.canvasState}};
+const textKinds=new Set(['text','block','task','merke','file']);
+const clone=x=>JSON.parse(JSON.stringify(x));
+const escId=x=>CSS.escape(String(x));
+let wholeTextId=null,savedRange=null,marquee=null,groupDrag=null;
 
-function clearCanvasSelection(){
-  const s=state();if(!s)return;
-  s.multiMode=false;s.selectedType=null;s.selectedId=null;s.selectedIds=[];s.selectedVectorIds=[];
-  qa('#canvasObjects .cobj.selected,#canvasObjects .vectorObj.selected').forEach(el=>el.classList.remove('selected'));
-  q('#v183DesktopFrame')?.classList.add('hidden');
-  q('#v181SelectionOverlay')?.classList.add('hidden');
-  try{const a=document.activeElement;if(a?.closest?.('#canvasObjects [contenteditable="true"]'))a.blur()}catch(_){}
-  try{const sel=getSelection();if(sel?.rangeCount)sel.removeAllRanges()}catch(_){}
-  try{renderCanvasInspector?.();renderLayerList?.();updateMultiSelectStatus?.();updateMobileSelectionTools?.()}catch(_){}
-}
-window.v185ClearCanvasSelection=clearCanvasSelection;
+function objById(id){return (state()?.objects||[]).find(o=>String(o.id)===String(id))||null}
+function vecById(id){return (state()?.vectors||[]).find(v=>String(v.id)===String(id))||null}
+function isTextObj(o){return !!o&&textKinds.has(o.kind)&&!o.isChecklist}
+function textEl(id){return q(`#canvasObjects .cobj[data-id="${escId(id)}"]`)}
+function selectedText(){const s=state();if(!s||s.selectedType!=='object')return null;const o=objById(s.selectedId);return isTextObj(o)?o:null}
+function pageW(){try{return canvasPageWidth()}catch(_){return 794}}
+function pageH(){try{return canvasPageHeight()}catch(_){return 1123}}
+function scale(){const st=q('#canvasStage'),r=st?.getBoundingClientRect();return r?Math.max(.01,r.width/pageW()):1}
+function point(e){const r=q('#canvasStage')?.getBoundingClientRect(),sc=scale();return r?{x:(e.clientX-r.left)/sc,y:(e.clientY-r.top)/sc}:{x:0,y:0}}
+function nearEdge(el,e,pad=18){return window.studiaDesktopNearEdge?.(el,e,pad)||false}
+function vectorBox(v){try{return vectorBounds(v)}catch(_){if(v.type==='rect')return{x:v.x,y:v.y,w:v.w,h:v.h};if(v.type==='ellipse')return{x:v.cx-v.rx,y:v.cy-v.ry,w:v.rx*2,h:v.ry*2};const p=v.points||[];if(!p.length)return{x:0,y:0,w:1,h:1};const xs=p.map(a=>a[0]),ys=p.map(a=>a[1]);return{x:Math.min(...xs),y:Math.min(...ys),w:Math.max(1,Math.max(...xs)-Math.min(...xs)),h:Math.max(1,Math.max(...ys)-Math.min(...ys))}}}
+function moveVector(v,dx,dy){if(v.type==='rect'){v.x+=dx;v.y+=dy}else if(v.type==='ellipse'){v.cx+=dx;v.cy+=dy}else if(Array.isArray(v.points))v.points=v.points.map(p=>[p[0]+dx,p[1]+dy])}
+function hitFromTarget(t){if(!(t instanceof Element))return null;const o=t.closest('#canvasObjects .cobj[data-id]');if(o)return{kind:'object',id:o.dataset.id};const ve=t.closest('#canvasObjects .shapeHit,#canvasObjects .vectorTouchProxy');if(ve?.dataset?.vid)return{kind:'vector',id:ve.dataset.vid};return null}
+function selectionIds(){const s=state();if(!s)return{objects:[],vectors:[]};let os=[...(s.selectedIds||[])],vs=[...(s.selectedVectorIds||[])];if(!os.length&&!vs.length&&s.selectedId){if(s.selectedType==='object')os=[s.selectedId];else if(s.selectedType==='vector')vs=[s.selectedId]}return{objects:os,vectors:vs}}
+function selectionCount(){const a=selectionIds();return a.objects.length+a.vectors.length}
+function renderSelection(){const s=state();if(!s)return;const a=selectionIds(),multi=a.objects.length+a.vectors.length>1;s.multiMode=multi;document.body.classList.toggle('v187Multi',multi);try{renderCanvasObjects?.();renderVectors?.();renderCanvasInspector?.();renderLayerList?.();updateMultiSelectStatus?.();updateMobileSelectionTools?.()}catch(_){}requestAnimationFrame(()=>{document.body.classList.toggle('v187Multi',selectionCount()>1);if(selectionCount()>1)q('#v183DesktopFrame')?.classList.add('hidden');enhanceInspector();syncToolbar()})}
+function setSelection(os,vs,lastKind=null,lastId=null){const s=state();if(!s)return;s.selectedIds=[...new Set(os)];s.selectedVectorIds=[...new Set(vs)];const count=s.selectedIds.length+s.selectedVectorIds.length;s.multiMode=count>1;if(lastId&&(lastKind==='object'?s.selectedIds:s.selectedVectorIds).includes(lastId)){s.selectedType=lastKind;s.selectedId=lastId}else if(s.selectedIds.length){s.selectedType='object';s.selectedId=s.selectedIds.at(-1)}else if(s.selectedVectorIds.length){s.selectedType='vector';s.selectedId=s.selectedVectorIds.at(-1)}else{s.selectedType=null;s.selectedId=null}s.objects?.forEach(o=>o.editing=false);renderSelection()}
+function clearSelection(){wholeTextId=null;savedRange=null;try{getSelection()?.removeAllRanges()}catch(_){}setSelection([],[])}
+function toggleSelection(kind,id){const a=selectionIds(),os=[...a.objects],vs=[...a.vectors],arr=kind==='object'?os:vs,idx=arr.findIndex(x=>String(x)===String(id));if(idx>=0)arr.splice(idx,1);else arr.push(id);wholeTextId=null;savedRange=null;setSelection(os,vs,kind,id)}
 
-/* A click anywhere in genuinely empty workspace/paper clears selection.
-   Do not consume the event: drawing, panning and normal editor behavior remain intact. */
-window.addEventListener('pointerdown',e=>{
-  if(!editor()||(e.pointerType==='mouse'&&e.button!==0)||e.shiftKey)return;
-  const t=e.target instanceof Element?e.target:null;if(!t)return;
-  if(t.closest('#v183DesktopFrame,.resizeHandle,.rotateHandle,.pathNode,.vectorHandle,.tableMoveHandle'))return;
-  if(t.closest('.canvasTopbar,.desktopCommandBar,#canvasQuickDrawer,#desktopEditorSidebar,#v96PageStrip,#topViewMenu,.v144FontModal,#v165FontMenu,button,input,select,textarea,a'))return;
-  if(t.closest('#canvasObjects .cobj,#canvasObjects .shapeHit,#canvasObjects .vectorTouchProxy'))return;
-  if(t.closest('.canvasSvg.drawing'))return;
-  if(t.closest('#canvasViewport,#v96PanSurface,#canvasStage,#canvasPage,#canvasObjects'))clearCanvasSelection();
-},{capture:true,passive:true});
+/* ---------- text range vs whole-text selection ---------- */
+function clearTextRange(){savedRange=null;try{getSelection()?.removeAllRanges()}catch(_){}}
+function rememberRange(){if(!desktop()||wholeTextId)return false;const o=selectedText(),el=o&&textEl(o.id),sel=getSelection();if(!o||!el||!sel?.rangeCount||sel.isCollapsed)return false;const r=sel.getRangeAt(0),node=r.commonAncestorContainer.nodeType===1?r.commonAncestorContainer:r.commonAncestorContainer.parentNode;if(!node||!(node===el||el.contains(node)))return false;savedRange={id:String(o.id),range:r.cloneRange()};return true}
+function validRange(id){if(wholeTextId&&String(wholeTextId)===String(id))return null;const el=textEl(id),sel=getSelection();if(el&&sel?.rangeCount&&!sel.isCollapsed){const r=sel.getRangeAt(0),n=r.commonAncestorContainer.nodeType===1?r.commonAncestorContainer:r.commonAncestorContainer.parentNode;if(n&&(n===el||el.contains(n)))return r.cloneRange()}if(savedRange&&String(savedRange.id)===String(id)&&el){try{const n=savedRange.range.commonAncestorContainer.nodeType===1?savedRange.range.commonAncestorContainer:savedRange.range.commonAncestorContainer.parentNode;if(n&&(n===el||el.contains(n)))return savedRange.range.cloneRange()}catch(_){}}return null}
+function restoreRange(id){const r=validRange(id),el=textEl(id);if(!r||!el)return false;try{el.focus({preventScroll:true});const s=getSelection();s.removeAllRanges();s.addRange(r);return true}catch(_){return false}}
+function unwrap(root,selector){qa(selector,root).forEach(n=>{const p=n.parentNode;if(!p)return;while(n.firstChild)p.insertBefore(n.firstChild,n);n.remove()})}
+function cleanInline(o,prop){const d=document.createElement('div');d.innerHTML=o.text||'';const all=qa('*',d);if(prop==='fontWeight'){unwrap(d,'b,strong');all.forEach(n=>n.style?.removeProperty('font-weight'))}if(prop==='fontStyle'){unwrap(d,'i,em');all.forEach(n=>n.style?.removeProperty('font-style'))}if(prop==='textDecoration'){unwrap(d,'u');all.forEach(n=>n.style?.removeProperty('text-decoration'))}if(prop==='fontSize'){all.forEach(n=>{n.style?.removeProperty('font-size');if(n.tagName==='FONT')n.removeAttribute('size')})}if(prop==='fontFamily'){all.forEach(n=>{n.style?.removeProperty('font-family');if(n.tagName==='FONT')n.removeAttribute('face')})}if(prop==='color'){all.forEach(n=>{n.style?.removeProperty('color');if(n.tagName==='FONT')n.removeAttribute('color')})}if(prop==='textAlign')all.forEach(n=>n.style?.removeProperty('text-align'));o.text=d.innerHTML}
+function commitTextDOM(o,el){if(o&&el)o.text=el.innerHTML;try{markCanvasDirty?.();pushHistory?.()}catch(_){}savedRange=null;requestAnimationFrame(()=>{syncToolbar();enhanceInspector()})}
+function execOnRange(o,cmd,value=null){const el=textEl(o.id);if(!el||!restoreRange(o.id))return false;try{document.execCommand('styleWithCSS',false,cmd==='fontSize'?false:true)}catch(_){}try{if(cmd==='fontSize')document.execCommand('fontSize',false,'7');else document.execCommand(cmd,false,value)}catch(_){return false}if(cmd==='fontSize'){const px=Math.max(6,Math.min(180,parseFloat(value)||16));qa('font[size="7"]',el).forEach(n=>{n.removeAttribute('size');n.style.fontSize=px+'px'});try{document.execCommand('styleWithCSS',false,true)}catch(_){}}o.text=el.innerHTML;rememberRange();try{markCanvasDirty?.();pushHistory?.()}catch(_){}return true}
+function wholeProp(o,prop,value){o.style||={};cleanInline(o,prop);o.style[prop]=value;wholeTextId=o.id;clearTextRange();try{renderCanvasObjects?.();renderCanvasInspector?.();markCanvasDirty?.();pushHistory?.()}catch(_){}syncToolbar();enhanceInspector();return true}
+window.applyTextProperty=function(prop,value){const o=selectedText();if(!o)return false;if(prop==='textAlign')return wholeProp(o,prop,value);const r=validRange(o.id);if(r){if(prop==='fontSize')return execOnRange(o,'fontSize',Number(value)||16);if(prop==='fontFamily')return execOnRange(o,'fontName',value);if(prop==='color')return execOnRange(o,'foreColor',value);if(prop==='fontWeight'){const want=String(value)!=='400';restoreRange(o.id);let on=false;try{on=document.queryCommandState('bold')}catch(_){}if(on!==want)return execOnRange(o,'bold');return true}}
+ return wholeProp(o,prop,value)};
+try{applyTextProperty=window.applyTextProperty}catch(_){}
+window.formatSelectedText=function(cmd){const o=selectedText();if(!o)return false;const r=validRange(o.id);if(r)return execOnRange(o,cmd);if(cmd==='bold')return wholeProp(o,'fontWeight',String(o.style?.fontWeight)==='700'||String(o.style?.fontWeight)==='900'?'400':'700');if(cmd==='italic')return wholeProp(o,'fontStyle',o.style?.fontStyle==='italic'?'normal':'italic');if(cmd==='underline')return wholeProp(o,'textDecoration',String(o.style?.textDecoration||'').includes('underline')?'none':'underline');if(['insertUnorderedList','insertOrderedList','strikeThrough'].includes(cmd)){const el=textEl(o.id);if(!el)return false;try{el.focus({preventScroll:true});const s=getSelection(),rg=document.createRange();rg.selectNodeContents(el);s.removeAllRanges();s.addRange(rg);document.execCommand(cmd,false,null);o.text=el.innerHTML;wholeTextId=o.id;clearTextRange();markCanvasDirty?.();pushHistory?.();return true}catch(_){return false}}return false};
+window.v134ToggleText=function(prop){const o=selectedText();if(!o)return cuteToast?.('Wähle zuerst einen Text ♡');if(validRange(o.id)){if(prop==='fontWeight')return window.formatSelectedText('bold');if(prop==='fontStyle')return window.formatSelectedText('italic');if(prop==='textDecoration')return window.formatSelectedText('underline')}if(prop==='fontWeight')return wholeProp(o,'fontWeight',String(o.style?.fontWeight)==='700'||String(o.style?.fontWeight)==='900'?'400':'700');if(prop==='fontStyle')return wholeProp(o,'fontStyle',o.style?.fontStyle==='italic'?'normal':'italic');if(prop==='textDecoration')return wholeProp(o,'textDecoration',String(o.style?.textDecoration||'').includes('underline')?'none':'underline')};
 
-function ensurePageActions(){
-  const panel=q('#v102PagePanel');if(!panel)return;
-  const head=q('.rowBetween',panel);if(!head||q('.v185PageActions',panel))return;
-  const actions=document.createElement('div');actions.className='v185PageActions';
-  const dup=document.createElement('button');dup.type='button';dup.textContent='⧉ Seite duplizieren';dup.onclick=()=>{window.v96DuplicatePage?.();setTimeout(()=>{try{window.v102RightTab?.('page')}catch(_){}},20)};
-  const del=document.createElement('button');del.type='button';del.textContent='⌫ Seite löschen';del.onclick=()=>{window.v96DeletePage?.();setTimeout(()=>{try{window.v102RightTab?.('page')}catch(_){}},20)};
-  actions.append(dup,del);head.insertAdjacentElement('afterend',actions);
-}
+/* Remember a highlighted range only while the user is truly working inside text. */
+document.addEventListener('selectionchange',()=>{if(desktop())rememberRange()});
+document.addEventListener('pointerup',e=>{if(!desktop())return;const el=e.target instanceof Element?e.target.closest('#canvasObjects .cobj.v183EditableText'):null;if(el&&!nearEdge(el,e)){wholeTextId=null;setTimeout(rememberRange,0)}},true);
+document.addEventListener('pointerdown',e=>{if(!desktop()||e.button!==0)return;const t=e.target instanceof Element?e.target:null;if(!t)return;const fmt=t.closest('.v134FormatTools,#v165FontMenu,.v165FontMenuBtn,#canvasInspector,.inlineFormatBar,.v144FontModal');if(fmt){rememberRange();return}const frame=t.closest('#v183DesktopFrame');if(frame){const o=selectedText();if(o){wholeTextId=o.id;clearTextRange()}return}const el=t.closest('#canvasObjects .cobj.v183EditableText');if(!el)return;if(e.shiftKey)return;if(nearEdge(el,e)){wholeTextId=el.dataset.id;clearTextRange()}else{wholeTextId=null}},true);
 
-/* The current laptop layout hides the old bottom page strip, so restore the two
-   existing page commands in the visible right-side Pages panel. */
-const oldRight=window.v102RightTab;
-if(typeof oldRight==='function'&&!oldRight.__v185){
-  const wrapped=function(){const r=oldRight.apply(this,arguments);requestAnimationFrame(ensurePageActions);return r};wrapped.__v185=true;window.v102RightTab=wrapped;
-  try{v102RightTab=window.v102RightTab}catch(_){}
-}
-['v96AddPage','v96DuplicatePage','v96DeletePage','v96SwitchPage'].forEach(name=>{
-  const old=window[name];if(typeof old!=='function'||old.__v185)return;
-  const wrapped=function(){const r=old.apply(this,arguments);setTimeout(ensurePageActions,30);return r};wrapped.__v185=true;window[name]=wrapped;
-});
+/* ---------- reliable Shift-click + drag marquee + group drag ---------- */
+function startGroupDrag(e,hit){const a=selectionIds();if(a.objects.length+a.vectors.length<2)return false;const selected=(hit.kind==='object'?a.objects:a.vectors).some(x=>String(x)===String(hit.id));if(!selected)return false;const p=point(e),os=a.objects.map(id=>objById(id)).filter(o=>o&&!o.locked).map(o=>({o,x:o.x,y:o.y})),vs=a.vectors.map(id=>vecById(id)).filter(v=>v&&!v.locked).map(v=>({v,s:clone(v)}));if(!os.length&&!vs.length)return false;e.preventDefault();e.stopImmediatePropagation();groupDrag={pid:e.pointerId,p,os,vs,moved:false};try{e.target.setPointerCapture?.(e.pointerId)}catch(_){}return true}
+function groupMove(e){if(!groupDrag||e.pointerId!==groupDrag.pid)return;const cur=point(e),dx=cur.x-groupDrag.p.x,dy=cur.y-groupDrag.p.y;if(!groupDrag.moved&&Math.hypot(dx,dy)<.5)return;groupDrag.moved=true;e.preventDefault();e.stopImmediatePropagation();for(const x of groupDrag.os){x.o.x=x.x+dx;x.o.y=x.y+dy;const el=textEl(x.o.id)||q(`#canvasObjects .cobj[data-id="${escId(x.o.id)}"]`);if(el){el.style.left=x.o.x+'px';el.style.top=x.o.y+'px'}}for(const x of groupDrag.vs){const v=x.v,s=x.s;if(v.type==='rect'){v.x=s.x+dx;v.y=s.y+dy}else if(v.type==='ellipse'){v.cx=s.cx+dx;v.cy=s.cy+dy}else if(v.points)v.points=s.points.map(p=>[p[0]+dx,p[1]+dy])}try{renderVectors?.();markCanvasDirty?.(false)}catch(_){}}
+function groupEnd(e){if(!groupDrag||e.pointerId!==groupDrag.pid)return;const moved=groupDrag.moved;groupDrag=null;if(moved){try{markCanvasDirty?.();pushHistory?.();renderCanvasInspector?.();renderLayerList?.()}catch(_){}}requestAnimationFrame(()=>{document.body.classList.toggle('v187Multi',selectionCount()>1);enhanceInspector()})}
+function startMarquee(e){const st=q('#canvasStage');if(!st)return;e.preventDefault();e.stopImmediatePropagation();const p=point(e),box=document.createElement('div');box.className='v187Marquee';st.appendChild(box);marquee={pid:e.pointerId,p,box,add:e.shiftKey,moved:false,base:selectionIds()};try{e.target.setPointerCapture?.(e.pointerId)}catch(_){} }
+function marqueeMove(e){if(!marquee||e.pointerId!==marquee.pid)return;const c=point(e),x=Math.min(c.x,marquee.p.x),y=Math.min(c.y,marquee.p.y),w=Math.abs(c.x-marquee.p.x),h=Math.abs(c.y-marquee.p.y);if(w>3||h>3)marquee.moved=true;Object.assign(marquee.box.style,{left:x+'px',top:y+'px',width:w+'px',height:h+'px'});e.preventDefault();e.stopImmediatePropagation()}
+function marqueeEnd(e){if(!marquee||e.pointerId!==marquee.pid)return;const m=marquee;marquee=null;m.box.remove();const c=point(e),rx=Math.min(c.x,m.p.x),ry=Math.min(c.y,m.p.y),rw=Math.abs(c.x-m.p.x),rh=Math.abs(c.y-m.p.y);if(!m.moved||rw<4&&rh<4){if(!m.add)clearSelection();return}const hit=(x,y,w,h)=>x<rx+rw&&x+w>rx&&y<ry+rh&&y+h>ry;const s=state(),os=(s.objects||[]).filter(o=>hit(o.x,o.y,o.w,o.h)).map(o=>o.id),vs=(s.vectors||[]).filter(v=>{const b=vectorBox(v);return hit(b.x,b.y,b.w,b.h)}).map(v=>v.id);setSelection(m.add?[...m.base.objects,...os]:os,m.add?[...m.base.vectors,...vs]:vs);e.preventDefault();e.stopImmediatePropagation()}
+window.addEventListener('pointerdown',e=>{if(window.__STUDIA_V190_SELECTION_OWNER)return;if(!desktop()||e.pointerType==='touch'||e.button!==0)return;const t=e.target instanceof Element?e.target:null;if(!t)return;if(t.closest('.canvasTopbar,.desktopCommandBar,#canvasQuickDrawer,#desktopEditorSidebar,#v165FontMenu,.v144FontModal,#topViewMenu,button,input,select,textarea,a'))return;const frame=t.closest('#v183DesktopFrame');if(frame&&e.shiftKey){const s=state();if(s?.selectedId){e.preventDefault();e.stopImmediatePropagation();toggleSelection(s.selectedType,s.selectedId)}return}if(frame)return;const hit=hitFromTarget(t);if(e.shiftKey&&hit){e.preventDefault();e.stopImmediatePropagation();toggleSelection(hit.kind,hit.id);return}if(hit&&selectionCount()>1&&startGroupDrag(e,hit))return;if(hit)return;if(t.closest('#canvasStage,#canvasPage,#canvasObjects'))startMarquee(e)}, {capture:true,passive:false});
+window.addEventListener('pointermove',e=>{if(window.__STUDIA_V190_SELECTION_OWNER)return;if(groupDrag)groupMove(e);else if(marquee)marqueeMove(e)}, {capture:true,passive:false});
+window.addEventListener('pointerup',e=>{if(window.__STUDIA_V190_SELECTION_OWNER)return;if(groupDrag)groupEnd(e);if(marquee)marqueeEnd(e)}, {capture:true,passive:false});
+window.addEventListener('pointercancel',e=>{if(window.__STUDIA_V190_SELECTION_OWNER)return;if(groupDrag)groupEnd(e);if(marquee){marquee.box.remove();marquee=null}},true);
 
-const oldRender=window.renderSheetEditor;
-if(typeof oldRender==='function'&&!oldRender.__v185PageActions){
-  const wrapped=function(){const r=oldRender.apply(this,arguments);setTimeout(ensurePageActions,120);return r};wrapped.__v185PageActions=true;window.renderSheetEditor=wrapped;
-  try{renderSheetEditor=window.renderSheetEditor}catch(_){}
-}
-setTimeout(ensurePageActions,900);setTimeout(ensurePageActions,2200);
+/* ---------- consistent arrangement panel ---------- */
+function chosen(){const a=selectionIds();return{objects:a.objects.map(objById).filter(Boolean),vectors:a.vectors.map(vecById).filter(Boolean)}}
+function itemBox(x){return x.kind==='object'?{x:x.ref.x,y:x.ref.y,w:x.ref.w,h:x.ref.h}:vectorBox(x.ref)}
+function items(){const c=chosen();return[...c.objects.map(ref=>({kind:'object',ref})),...c.vectors.map(ref=>({kind:'vector',ref}))]}
+function shiftItem(x,dx,dy){if(x.kind==='object'){x.ref.x+=dx;x.ref.y+=dy}else moveVector(x.ref,dx,dy)}
+window.v187Arrange=function(mode){const its=items();if(!its.length)return;const multi=its.length>1,sel=q('#v187ArrangeTarget'),target=sel?.value||(multi?'selection':'page'),boxes=its.map(itemBox),m=Math.max(0,Number(state()?.pageStyle?.margin)||0),group={x:Math.min(...boxes.map(b=>b.x)),y:Math.min(...boxes.map(b=>b.y))};group.w=Math.max(...boxes.map(b=>b.x+b.w))-group.x;group.h=Math.max(...boxes.map(b=>b.y+b.h))-group.y;if(target==='page'&&multi){const page={x:m,y:m,w:Math.max(1,pageW()-2*m),h:Math.max(1,pageH()-2*m)};let dx=0,dy=0;if(mode==='left')dx=page.x-group.x;if(mode==='centerX')dx=page.x+page.w/2-(group.x+group.w/2);if(mode==='right')dx=page.x+page.w-(group.x+group.w);if(mode==='top')dy=page.y-group.y;if(mode==='centerY')dy=page.y+page.h/2-(group.y+group.h/2);if(mode==='bottom')dy=page.y+page.h-(group.y+group.h);its.forEach(it=>shiftItem(it,dx,dy))}else{const bounds=target==='page'?{x:m,y:m,w:Math.max(1,pageW()-2*m),h:Math.max(1,pageH()-2*m)}:group;its.forEach((it,i)=>{const b=boxes[i];let dx=0,dy=0;if(mode==='left')dx=bounds.x-b.x;if(mode==='centerX')dx=bounds.x+bounds.w/2-(b.x+b.w/2);if(mode==='right')dx=bounds.x+bounds.w-(b.x+b.w);if(mode==='top')dy=bounds.y-b.y;if(mode==='centerY')dy=bounds.y+bounds.h/2-(b.y+b.h/2);if(mode==='bottom')dy=bounds.y+bounds.h-(b.y+b.h);shiftItem(it,dx,dy)})}try{renderCanvasObjects?.();renderVectors?.();renderCanvasInspector?.();markCanvasDirty?.();pushHistory?.()}catch(_){}document.body.classList.toggle('v187Multi',selectionCount()>1)};
+window.v187Distribute=function(axis){const its=items();if(its.length<3)return;const arr=its.map(x=>({x,b:itemBox(x)})).sort((a,b)=>axis==='x'?a.b.x-b.b.x:a.b.y-b.b.y);if(axis==='x'){const start=arr[0].b.x,end=arr.at(-1).b.x+arr.at(-1).b.w,total=arr.reduce((n,z)=>n+z.b.w,0),gap=(end-start-total)/(arr.length-1);let cur=start;arr.forEach(z=>{shiftItem(z.x,cur-z.b.x,0);cur+=z.b.w+gap})}else{const start=arr[0].b.y,end=arr.at(-1).b.y+arr.at(-1).b.h,total=arr.reduce((n,z)=>n+z.b.h,0),gap=(end-start-total)/(arr.length-1);let cur=start;arr.forEach(z=>{shiftItem(z.x,0,cur-z.b.y);cur+=z.b.h+gap})}try{renderCanvasObjects?.();renderVectors?.();renderCanvasInspector?.();markCanvasDirty?.();pushHistory?.()}catch(_){}};
+window.v187SetNone=function(which){window.v137Appearance?.(which==='fill'?'fill':'stroke','transparent')};
+function addNoneButtons(host){if(!host)return;qa('label',host).forEach(l=>{const txt=(l.textContent||'').trim().toLowerCase();const wrap=q('input[type="color"]',l)?l:l.parentElement;if(!wrap||q('.v187NoneBtn',wrap)||q('.v141TransparentIcon',wrap))return;if(/füll|hintergrund/.test(txt)&&q('input[type="color"]',wrap)){const b=document.createElement('button');b.type='button';b.className='v187NoneBtn';b.title='Keine Füllung';b.setAttribute('aria-label',b.title);b.innerHTML='<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8"/><path d="m6 6 12 12"/></svg>';b.onclick=()=>v187SetNone('fill');wrap.appendChild(b)}else if(/kontur|linienfarbe/.test(txt)&&q('input[type="color"]',wrap)){const b=document.createElement('button');b.type='button';b.className='v187NoneBtn';b.title='Keine Kontur';b.setAttribute('aria-label',b.title);b.innerHTML='<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8"/><path d="m6 6 12 12"/></svg>';b.onclick=()=>v187SetNone('stroke');wrap.appendChild(b)}})}
+function enhanceInspector(){if(!desktop())return;const host=q('#canvasInspector');if(!host)return;qa('.v131ArrangePanel',host).forEach(x=>x.remove());const key=JSON.stringify(selectionIds());const existing=q('.v187ArrangePanel',host);if(existing?.dataset.selection===key){addNoneButtons(host);ensureInspectorFontButton();return}existing?.remove();const count=selectionCount();if(!count){addNoneButtons(host);ensureInspectorFontButton();return}const panel=document.createElement('div');panel.className='v187ArrangePanel';panel.dataset.selection=key;panel.innerHTML=`<div class="v187ArrangeHead"><b>Anordnen</b><select id="v187ArrangeTarget" title="Ausrichten an"><option value="${count>1?'selection':'page'}">${count>1?'Auswahl':'Blatt'}</option>${count>1?'<option value="page">Blatt</option>':''}</select></div><div class="v187ArrangeGrid"><button onclick="v187Arrange('left')">⇤ Links</button><button onclick="v187Arrange('centerX')">↔ Mitte</button><button onclick="v187Arrange('right')">Rechts ⇥</button><button onclick="v187Arrange('top')">⇡ Oben</button><button onclick="v187Arrange('centerY')">↕ Mitte</button><button onclick="v187Arrange('bottom')">Unten ⇣</button></div><div class="v187ArrangeExtra">${count>=3?'<button onclick="v187Distribute(\'x\')">Horizontal verteilen</button><button onclick="v187Distribute(\'y\')">Vertikal verteilen</button>':''}<button onclick="moveSelectedLayer(1)">↑ Nach vorn</button><button onclick="moveSelectedLayer(-1)">↓ Nach hinten</button></div>`;host.prepend(panel);addNoneButtons(host);ensureInspectorFontButton()}
+const oldInspector=window.renderCanvasInspector;if(typeof oldInspector==='function'){window.renderCanvasInspector=function(){const r=oldInspector.apply(this,arguments);requestAnimationFrame(enhanceInspector);return r};try{renderCanvasInspector=window.renderCanvasInspector}catch(_){}}
+
+/* ---------- one font chooser everywhere ---------- */
+function currentFont(){return String(selectedText()?.style?.fontFamily||'Inter').replace(/["']/g,'').split(',')[0].trim()||'Inter'}
+function forceFontPreviews(root=document){qa('#v165FontMenu [data-v172-font],#v165FontMenu [data-font],.v144FontCard[data-v172-font]',root).forEach(b=>{const f=b.dataset.v172Font||b.dataset.font;if(!f)return;const fam='"'+String(f).replace(/["\\]/g,'')+'",sans-serif';b.style.setProperty('font-family',fam,'important');qa('.v165FontAa,:scope>span,:scope>b',b).forEach(x=>x.style.setProperty('font-family',fam,'important'));try{document.fonts?.load?.('18px '+fam)}catch(_){}})}
+function ensureTopFontButton(){if(!desktop())return;const tools=q('.v134FormatTools');if(!tools)return;let b=q('.v187TopFontButton',tools);const old=q('select.font',tools);if(!b&&old){b=document.createElement('button');b.type='button';b.className='v165FontMenuBtn v187TopFontButton';b.title='Schriftart';b.innerHTML='<span class="v165FontSample"></span><span aria-hidden="true">⌄</span>';b.onclick=()=>window.v165ToggleFontMenu?.(b);old.replaceWith(b)}if(b){const s=q('.v165FontSample',b),f=currentFont();if(s){s.textContent=f;s.style.fontFamily='"'+f+'",sans-serif'}}}
+function ensureInspectorFontButton(){if(!desktop())return;const host=q('#canvasInspector');if(!host)return;const old=q('select.fontSelect',host);if(!old)return;const b=document.createElement('button');b.type='button';b.className='v165FontMenuBtn v187InspectorFontButton';b.style.cssText='width:100%;height:35px;border:1px solid #eadbd6;border-radius:9px;background:#fff;color:#5f514b;padding:0 9px;display:flex;align-items:center;justify-content:space-between;gap:8px';const f=currentFont();b.innerHTML='<span class="v165FontSample"></span><span aria-hidden="true">⌄</span>';const sp=q('.v165FontSample',b);sp.textContent=f;sp.style.fontFamily='"'+f+'",sans-serif';b.onclick=()=>window.v165ToggleFontMenu?.(b);old.replaceWith(b)}
+const oldFontMenu=window.v165ToggleFontMenu;if(typeof oldFontMenu==='function'){window.v165ToggleFontMenu=async function(btn){rememberRange();const r=await oldFontMenu.apply(this,arguments);requestAnimationFrame(()=>forceFontPreviews(document));setTimeout(()=>forceFontPreviews(document),80);return r}}
+/* Apply font menu choices through the same range/whole-text rules as the toolbar. */
+window.addEventListener('click',e=>{if(!desktop())return;const b=e.target instanceof Element?e.target.closest('#v165FontMenu [data-v172-font],#v165FontMenu [data-font]'):null;if(!b)return;e.preventDefault();e.stopImmediatePropagation();const f=b.dataset.v172Font||b.dataset.font;window.applyTextProperty('fontFamily',f);q('#v165FontMenu')?.remove();q('.v165FontMenuBtn.open')?.classList.remove('open');ensureTopFontButton()},true);
+/* Left Text → Schriften always opens the exact same preview menu. */
+document.addEventListener('click',e=>{if(!desktop())return;const b=e.target instanceof Element?e.target.closest('#canvasQuickDrawer button'):null;if(!b)return;const txt=(b.textContent||'').replace(/\s+/g,' ').trim();if(txt==='Schriften'||txt==='Schriftart'){e.preventDefault();e.stopImmediatePropagation();window.v165ToggleFontMenu?.(b)}},true);
+
+function syncToolbar(){if(!desktop())return;ensureTopFontButton();const o=selectedText(),tools=q('.v134FormatTools');if(!tools||!o)return;const s=o.style||{},size=q('input.size',tools);if(size&&document.activeElement!==size)size.value=String(s.fontSize||16);const btns=qa('button',tools);btns.forEach(b=>{const title=b.title||'';if(title==='Fett')b.classList.toggle('active',String(s.fontWeight)==='700'||String(s.fontWeight)==='900');if(title==='Kursiv')b.classList.toggle('active',s.fontStyle==='italic');if(title==='Unterstrichen')b.classList.toggle('active',String(s.textDecoration||'').includes('underline'))})}
+document.addEventListener('keydown',e=>{const inp=e.target instanceof Element?e.target.closest('.v134FormatTools input.size'):null;if(!inp||e.key!=='Enter')return;e.preventDefault();rememberRange();window.applyTextProperty('fontSize',Math.max(6,Math.min(180,+inp.value||16)));inp.blur()},true);
+
+/* ---------- stable Elements/Diagrams content + timeline ---------- */
+window.addCanvasTimeline=function(){const s=state();if(!s)return;const makeId=()=>typeof id==='function'?id():'v187-'+Math.random().toString(36).slice(2),z0=typeof nextCanvasZ==='function'?nextCanvasZ():100,gid='timeline-'+Date.now(),y=350,x0=155,x1=635,stroke='#a77b73',fill='#f6d3d0';const line={id:makeId(),z:z0,groupId:gid,type:'path',points:[[x0,y],[x1,y]],closed:false,fill:'none',stroke,strokeWidth:3,dash:'solid',rotation:0,locked:false};const dots=[0,.33,.66,1].map((p,i)=>({id:makeId(),z:z0+i+1,groupId:gid,type:'ellipse',cx:x0+(x1-x0)*p,cy:y,rx:8,ry:8,fill,stroke,strokeWidth:2,dash:'solid',rotation:0,locked:false}));const labels=dots.map((v,i)=>({id:makeId(),z:z0+10+i,groupId:gid,kind:'text',x:v.cx-58,y:y+(i%2?24:-54),w:116,h:34,text:'Punkt '+(i+1),rotation:0,locked:false,editing:false,style:{fontSize:14,fontWeight:'600',color:'#6d5952',fontFamily:'Inter',background:'transparent',borderColor:'transparent',borderWidth:0,borderRadius:0,padding:5,textAlign:'center'}}));s.vectors.push(line,...dots);s.objects.push(...labels);setSelection(labels.map(o=>o.id),[line.id,...dots.map(v=>v.id)],'object',labels.at(-1).id);try{markCanvasDirty?.();pushHistory?.();cuteToast?.('Zeitstrahl eingefügt ♡')}catch(_){}};
+function ensureStableDiagramNav(){if(!desktop())return;const nav=q('.canvasQuickNav');if(!nav||!nav.querySelector('[data-v134]')||nav.querySelector('[data-v134="charts"]'))return;const b=document.createElement('button');b.dataset.v134='charts';b.title='Diagramme';b.innerHTML='<span class="editorNavIcon">'+(window.v133Icon?.('graph')||'⌁')+'</span><span>Diagramme</span>';b.onclick=()=>window.v134Open?.('charts',b);const before=nav.querySelector('[data-v134="tables"]');nav.insertBefore(b,before||null)}
+function addStablePaletteItems(){if(!desktop())return;const d=q('#canvasQuickDrawer'),mode=d?.dataset?.v134Mode;if(!d)return;const scroll=q('.v134PaletteScroll',d);if(!scroll)return;const labels=qa('.v134PaletteTile',scroll).map(b=>(b.dataset.v134Label||b.textContent||'').toLowerCase());if((mode==='elements'||mode==='charts')&&!labels.some(x=>x.includes('zeitstrahl'))){let sec=qa('.v134PaletteSection',scroll).find(x=>/diagramm/i.test(q('.v134PaletteTitle',x)?.textContent||''));if(!sec){sec=document.createElement('section');sec.className='v134PaletteSection';sec.innerHTML='<div class="v134PaletteTitle"><span>Diagramme</span><small>Alle anzeigen</small></div><div class="v134PaletteGrid"></div>';scroll.insertBefore(sec,q('.v134PaletteEmpty',scroll))}const grid=q('.v134PaletteGrid',sec),b=document.createElement('button');b.className='v134PaletteTile v187PaletteTimeline';b.dataset.v134Label='zeitstrahl timeline';b.title='Zeitstrahl';b.innerHTML='<span style="font-size:22px;letter-spacing:-2px">○—○—○</span><span>Zeitstrahl</span>';b.onclick=()=>addCanvasTimeline();grid?.appendChild(b)} }
+const oldV134Open=window.v134Open;if(typeof oldV134Open==='function'){window.v134Open=function(){const r=oldV134Open.apply(this,arguments);setTimeout(()=>{ensureStableDiagramNav();addStablePaletteItems();ensureTopFontButton()},0);return r}}
+
+/* ---------- final deterministic chrome repair (never creates a second design) ---------- */
+function stabilize(){if(!desktop())return;const root=q('#view-sheet-editor');if(!root)return;/* keep exactly one of the existing reference bars */qa('.historyBar',root).slice(1).forEach(x=>x.remove());qa('.v132SelectionBar',root).slice(1).forEach(x=>x.remove());qa('.v134FormatTools',root).slice(1).forEach(x=>x.remove());qa('.v134Brand',root).slice(1).forEach(x=>x.remove());qa('.v134BottomBar',root).slice(1).forEach(x=>x.remove());q('.v102DesktopLeft')?.classList.remove('v122DesktopDrawer','v121DesktopParity');ensureTopFontButton();forceFontPreviews(document);enhanceInspector();ensureInspectorFontButton();syncToolbar();document.body.classList.toggle('v187Multi',selectionCount()>1)}
+const oldObjects=window.renderCanvasObjects;if(typeof oldObjects==='function'){window.renderCanvasObjects=function(){const r=oldObjects.apply(this,arguments);requestAnimationFrame(()=>{stabilize();document.body.classList.toggle('v187Multi',selectionCount()>1)});return r};try{renderCanvasObjects=window.renderCanvasObjects}catch(_){}}
+const oldSheet=window.renderSheetEditor;if(typeof oldSheet==='function'){window.renderSheetEditor=function(){const r=oldSheet.apply(this,arguments);setTimeout(stabilize,100);setTimeout(stabilize,900);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){}}
+const oldOpen=window.openStudySheetEditor;if(typeof oldOpen==='function'){window.openStudySheetEditor=function(){const r=oldOpen.apply(this,arguments);setTimeout(stabilize,130);setTimeout(stabilize,1200);return r}}
+document.addEventListener('click',e=>{if(!desktop())return;const t=e.target instanceof Element?e.target:null;if(t?.closest('.canvasQuickNav,.canvasTopbar,.desktopCommandBar,#desktopEditorSidebar,#canvasQuickDrawer'))setTimeout(stabilize,90)},true);
+window.addEventListener('resize',()=>setTimeout(stabilize,180));window.addEventListener('pageshow',()=>setTimeout(stabilize,250));setTimeout(stabilize,700);setTimeout(stabilize,1600);setTimeout(stabilize,3000);setTimeout(stabilize,4800);
 })();
 </script>
+<!-- ===== /Studia V187 ===== -->
 
+
+
+<!-- ===== Studia V190 — V134 recovery, single-owner interactions (NO redesign) ===== -->
+<style id="v190-recovery-style">
+@media (min-width:900px){
+  /* V183 is the only visible single-selection transform frame. */
+  body.editorMode #v181SelectionOverlay,
+  body.editorMode #v132InteractionLayer,
+  body.editorMode .v138TransformHandle,
+  body.editorMode #canvasObjects>.cobj>.resizeHandle,
+  body.editorMode #canvasObjects>.cobj>.rotateHandle,
+  body.editorMode #canvasObjects>.cobj>.tableMoveHandle,
+  body.editorMode #canvasObjects .vectorSelectBox,
+  body.editorMode #canvasObjects .vectorHandle,
+  body.editorMode #canvasObjects .vectorRotateLine,
+  body.editorMode #canvasObjects .v108MoveHandle,
+  body.editorMode #canvasObjects .v108VectorMoveHandle{display:none!important;pointer-events:none!important}
+  body.editorMode.v190Multi #v183DesktopFrame{display:none!important}
+  body.editorMode .v190Marquee{position:fixed;z-index:2147483605;pointer-events:none;border:1.5px solid #dc7f89;background:rgba(244,177,183,.12);border-radius:4px;box-sizing:border-box}
+
+  /* Inserted formulas are presentation-only: no editable slot boxes on the sheet. */
+  body.editorMode #canvasObjects .formulaObj .vfEditable,
+  body.editorMode #canvasObjects .formulaObj .vfExponentSlot,
+  body.editorMode #canvasObjects .formulaObj [contenteditable="true"],
+  body.editorMode #canvasObjects .formulaObj sup,
+  body.editorMode #canvasObjects .formulaObj sub{background:transparent!important;border:0!important;outline:0!important;box-shadow:none!important;border-radius:0!important;padding:0!important;min-width:0!important}
+  body.editorMode #canvasObjects .formulaObj .vfSlotGhost{display:none!important}
+
+  /* The V134 bottom view/zoom bar is part of chrome, never the paper transform. */
+  body.editorMode .canvasEditorShell>.v134BottomBar{display:flex!important;visibility:visible!important;opacity:1!important}
+}
+</style>
+<script id="v190-recovery-script">
+(()=>{
+'use strict';
+if(window.__STUDIA_V190_RECOVERY__)return;window.__STUDIA_V190_RECOVERY__=true;
+window.__STUDIA_V190_SELECTION_OWNER=true;
+window.__STUDIA_V190_ALT_ZOOM_OWNER=true;
+const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
+const laptop=()=>innerWidth>=900&&document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
+const S=()=>{try{return canvasState}catch(_){return window.canvasState}};
+const esc=x=>CSS.escape(String(x));
+const clone=x=>JSON.parse(JSON.stringify(x));
+const NAV=[["text","Text","text"],["elements","Elemente","elements"],["templates","Vorlagen","template"]];
+function icon(n){return window.v133Icon?.(n)||''}
+function navHTML(){return '<i data-v129="v134" data-v133="v134" class="v134NavSentinel" hidden></i>'+NAV.map(([m,l,i])=>`<button data-v134="${m}" title="${l}"><span class="editorNavIcon">${icon(i)}</span><span>${l}</span></button>`).join('')}
+function bindReferenceNav(){if(!laptop())return;const nav=q('.canvasQuickNav');if(!nav)return;if(!q('button[data-v134="text"]',nav)||qa('button[data-v134]',nav).length!==3)nav.innerHTML=navHTML();qa('[data-v134]',nav).forEach(b=>{b.onclick=()=>window.v134Open?.(b.dataset.v134,b)})}
+
+function zoomValue(){const z=Number(window.canvasZoom);if(Number.isFinite(z)&&z>0)return z;const st=q('#canvasStage'),p=q('#canvasPage');if(st&&p&&p.offsetWidth)return Math.max(.1,st.getBoundingClientRect().width/p.offsetWidth);return 1}
+function syncViewBar(){const bar=q('.canvasEditorShell>.v134BottomBar');if(!bar)return;const z=zoomValue(),range=q('input[type="range"]',bar),out=q('output',bar);if(range&&document.activeElement!==range)range.value=String(Math.max(.25,Math.min(2,z)));const text=Math.round(z*100)+'%';if(out&&out.value!==text)out.value=text}
+function ensureViewBar(){if(!laptop())return;const shell=q('.canvasEditorShell');if(!shell)return;let bars=qa(':scope>.v134BottomBar',shell);let bar=bars[0];bars.slice(1).forEach(x=>x.remove());if(!bar){bar=document.createElement('div');bar.className='v134BottomBar';bar.innerHTML=`<button class="notes" onclick="cuteToast('Notizen kannst du als Textfeld einfügen ♡')">▤ Notizen</button><span class="spacer"></span><button class="icon" data-v190-minus>−</button><input type="range" min=".25" max="2" step=".05"><output>100%</output><button class="icon" data-v190-plus>＋</button><button class="icon" title="Einpassen" data-v190-fit>${icon('fit')}</button>`;shell.appendChild(bar)}
+ const r=q('input[type="range"]',bar);if(r&&!r.dataset.v190){r.dataset.v190='1';r.addEventListener('input',()=>{window.setCanvasZoom?.(+r.value);setTimeout(syncViewBar,0)})}
+ for(const [sel,fn] of [['[data-v190-minus]',()=>window.canvasZoomBy?.(-.1)],['[data-v190-plus]',()=>window.canvasZoomBy?.(.1)],['[data-v190-fit]',()=>window.fitCanvasStage?.()]]){const b=q(sel,bar);if(b&&!b.dataset.v190){b.dataset.v190='1';b.onclick=()=>{fn();setTimeout(syncViewBar,30)}}}
+ syncViewBar();
+}
+function singleChrome(){if(!laptop())return;const root=q('#view-sheet-editor');if(!root)return;bindReferenceNav();qa('.historyBar',root).slice(1).forEach(x=>x.remove());qa('.v132SelectionBar',root).slice(1).forEach(x=>x.remove());qa('.v134FormatTools',root).slice(1).forEach(x=>x.remove());qa('.v134Brand',root).slice(1).forEach(x=>x.remove());qa('.v134BottomBar',root).slice(1).forEach(x=>x.remove());ensureViewBar();}
+
+/* Elements click is captured before legacy drawer renderers. It always uses V134. */
+window.addEventListener('click',e=>{if(!laptop())return;const b=e.target instanceof Element?e.target.closest('.canvasQuickNav [data-v134="elements"]'):null;if(!b)return;e.preventDefault();e.stopImmediatePropagation();window.v134Open?.('elements',b);setTimeout(singleChrome,0)},true);
+
+/* One Alt+wheel owner. It only reacts inside the sheet viewport; chrome/menus never scale. */
+window.addEventListener('wheel',e=>{if(!laptop()||!e.altKey)return;const vp=q('#canvasViewport');if(!vp||!(e.target instanceof Node)||!vp.contains(e.target))return;e.preventDefault();e.stopImmediatePropagation();const z=zoomValue(),factor=e.deltaY<0?1.1:.9;window.setCanvasZoom?.(Math.max(.25,Math.min(2.5,z*factor)));setTimeout(syncViewBar,0)},{capture:true,passive:false});
+
+/* -------- reliable multi-selection using screen rectangles (zoom-independent) -------- */
+let drag=null,group=null;
+let suppressClickUntil=0;
+window.addEventListener("click",e=>{if(laptop()&&performance.now()<suppressClickUntil&&e.target.closest?.("#canvasViewport")){e.preventDefault();e.stopImmediatePropagation()}},{capture:true});
+function hitTarget(t){if(!(t instanceof Element))return null;const o=t.closest('#canvasObjects .cobj[data-id]');if(o)return['object',o.dataset.id];const v=t.closest('#canvasObjects [data-vid],#canvasObjects .vectorObj[data-vector-wrap]');if(v){const id=v.dataset.vid||v.dataset.vectorWrap;if(id)return['vector',id]}return null}
+function ids(){const s=S();if(!s)return{os:[],vs:[]};let os=[...(s.selectedIds||[])],vs=[...(s.selectedVectorIds||[])];if(!os.length&&!vs.length&&s.selectedId){(s.selectedType==='vector'?vs:os).push(s.selectedId)}return{os,vs}}
+function setIds(os,vs,last=null){const s=S();if(!s)return;const uniq=a=>[...new Map((a||[]).map(x=>[String(x),x])).values()];s.selectedIds=uniq(os);s.selectedVectorIds=uniq(vs);const n=s.selectedIds.length+s.selectedVectorIds.length;s.multiMode=n>1;document.body.classList.toggle('v190Multi',n>1);document.body.classList.toggle('v187Multi',n>1);if(last?.[0]==='vector'&&s.selectedVectorIds.some(x=>String(x)===String(last[1]))){s.selectedType='vector';s.selectedId=last[1]}else if(last?.[0]==='object'&&s.selectedIds.some(x=>String(x)===String(last[1]))){s.selectedType='object';s.selectedId=last[1]}else if(s.selectedIds.length){s.selectedType='object';s.selectedId=s.selectedIds.at(-1)}else if(s.selectedVectorIds.length){s.selectedType='vector';s.selectedId=s.selectedVectorIds.at(-1)}else{s.selectedType=null;s.selectedId=null}
+ try{renderCanvasObjects?.();renderVectors?.();renderCanvasInspector?.();renderLayerList?.();updateMultiSelectStatus?.()}catch(_){}requestAnimationFrame(()=>{document.body.classList.toggle('v190Multi',(S()?.selectedIds?.length||0)+(S()?.selectedVectorIds?.length||0)>1);if(n>1)q('#v183DesktopFrame')?.classList.add('hidden')})}
+function toggle(hit){const a=ids(),arr=hit[0]==='vector'?a.vs:a.os,i=arr.findIndex(x=>String(x)===String(hit[1]));if(i>=0)arr.splice(i,1);else arr.push(hit[1]);setIds(a.os,a.vs,hit)}
+function selectedHit(hit){const a=ids(),arr=hit?.[0]==='vector'?a.vs:a.os;return !!hit&&arr.some(x=>String(x)===String(hit[1]))}
+function vecSnapshot(v){return clone(v)}
+function moveVec(v,o,dx,dy){if(o.type==='rect'){v.x=(+o.x||0)+dx;v.y=(+o.y||0)+dy}else if(o.type==='ellipse'){v.cx=(+o.cx||0)+dx;v.cy=(+o.cy||0)+dy}else if(Array.isArray(o.points))v.points=o.points.map(p=>[(+p[0]||0)+dx,(+p[1]||0)+dy])}
+function stageScale(){const st=q('#canvasStage');if(!st)return 1;let pw=794;try{pw=canvasPageWidth()}catch(_){}return Math.max(.01,st.getBoundingClientRect().width/pw)}
+function beginGroup(e,hit){const a=ids(),n=a.os.length+a.vs.length;if(n<2||!selectedHit(hit))return false;const s=S(),sc=stageScale();group={pid:e.pointerId,sx:e.clientX,sy:e.clientY,sc,objects:(s.objects||[]).filter(o=>!o.locked&&a.os.some(id=>String(id)===String(o.id))).map(o=>({o,x:+o.x||0,y:+o.y||0})),vectors:(s.vectors||[]).filter(v=>!v.locked&&a.vs.some(id=>String(id)===String(v.id))).map(v=>({v,s:vecSnapshot(v)})),moved:false};e.preventDefault();e.stopImmediatePropagation();return true}
+function objectRect(id){return q(`#canvasObjects .cobj[data-id="${esc(id)}"]`)?.getBoundingClientRect()||null}
+function vectorRect(id){const els=qa(`#canvasObjects [data-vid="${esc(id)}"],#canvasObjects .vectorObj[data-vector-wrap="${esc(id)}"]`);for(const el of els){const r=el.getBoundingClientRect();if(r.width||r.height)return r}return null}
+function intersects(a,b){return a.left<b.right&&a.right>b.left&&a.top<b.bottom&&a.bottom>b.top}
+window.addEventListener('pointerdown',e=>{if(!laptop()||q('#v181Preview.open')||document.body.classList.contains('v137ViewMode')||S()?.vectorTool==='pen'||e.pointerType==='touch'||e.button!==0)return;const t=e.target instanceof Element?e.target:null;if(!t)return;if(t.closest('.canvasTopbar,.desktopCommandBar,#canvasQuickDrawer,#desktopEditorSidebar,.v134BottomBar,#v165FontMenu,.v144FontModal,#topViewMenu,button,input,select,textarea,a'))return;if(t.closest('#v183DesktopFrame')){if(e.shiftKey&&S()?.selectedId){e.preventDefault();e.stopImmediatePropagation();toggle([S().selectedType,S().selectedId])}return}const hit=hitTarget(t);if(e.shiftKey&&hit){e.preventDefault();e.stopImmediatePropagation();toggle(hit);return}if(hit&&beginGroup(e,hit))return;if(hit)return;if(!t.closest('#canvasStage,#canvasPage,#canvasObjects,#canvasViewport'))return;e.preventDefault();e.stopImmediatePropagation();const box=document.createElement('div');box.className='v190Marquee';document.body.appendChild(box);drag={pid:e.pointerId,sx:e.clientX,sy:e.clientY,box,add:e.shiftKey,base:ids(),moved:false};try{q('#canvasViewport').setPointerCapture(e.pointerId)}catch(_){}}, {capture:true,passive:false});
+window.addEventListener('pointermove',e=>{if(group&&e.pointerId===group.pid){const dx=(e.clientX-group.sx)/group.sc,dy=(e.clientY-group.sy)/group.sc;if(!group.moved&&Math.hypot(dx,dy)>1)group.moved=true;group.objects.forEach(x=>{x.o.x=x.x+dx;x.o.y=x.y+dy;const el=q(`#canvasObjects .cobj[data-id="${esc(x.o.id)}"]`);if(el){el.style.left=x.o.x+'px';el.style.top=x.o.y+'px'}});group.vectors.forEach(x=>moveVec(x.v,x.s,dx,dy));if(group.vectors.length)try{renderVectors?.()}catch(_){}e.preventDefault();e.stopImmediatePropagation();return}if(!drag||e.pointerId!==drag.pid)return;const l=Math.min(drag.sx,e.clientX),t=Math.min(drag.sy,e.clientY),w=Math.abs(e.clientX-drag.sx),h=Math.abs(e.clientY-drag.sy);if(w>3||h>3)drag.moved=true;Object.assign(drag.box.style,{left:l+'px',top:t+'px',width:w+'px',height:h+'px'});e.preventDefault();e.stopImmediatePropagation()},{capture:true,passive:false});
+function finish(e){if(group&&e.pointerId===group.pid){const g=group;group=null;if(g.moved)suppressClickUntil=performance.now()+300;if(g.moved){try{renderCanvasObjects?.();renderVectors?.();renderCanvasInspector?.();renderLayerList?.();markCanvasDirty?.();pushHistory?.()}catch(_){}}e.preventDefault();e.stopImmediatePropagation();return}if(!drag||e.pointerId!==drag.pid)return;const d=drag;drag=null;suppressClickUntil=performance.now()+300;d.box.remove();if(!d.moved){if(!d.add)setIds([],[]);return}const r={left:Math.min(d.sx,e.clientX),right:Math.max(d.sx,e.clientX),top:Math.min(d.sy,e.clientY),bottom:Math.max(d.sy,e.clientY)},s=S(),os=[],vs=[];(s.objects||[]).forEach(o=>{const b=objectRect(o.id);if(!o.locked&&b&&intersects(r,b))os.push(o.id)});(s.vectors||[]).forEach(v=>{const b=vectorRect(v.id);if(!v.locked&&b&&intersects(r,b))vs.push(v.id)});setIds(d.add?[...d.base.os,...os]:os,d.add?[...d.base.vs,...vs]:vs);e.preventDefault();e.stopImmediatePropagation()}
+window.addEventListener('pointerup',finish,{capture:true,passive:false});window.addEventListener('pointercancel',e=>{if(group&&e.pointerId===group.pid)group=null;if(drag&&e.pointerId===drag.pid){drag.box.remove();drag=null}},true);
+
+/* -------- Format kopieren: shapes now copy real visual properties too. -------- */
+let copied=null;
+function source(){const s=S();if(!s?.selectedId)return null;if(s.selectedType==='vector'){const v=(s.vectors||[]).find(x=>String(x.id)===String(s.selectedId));return v&&{kind:'vector',ref:v}}const o=(s.objects||[]).find(x=>String(x.id)===String(s.selectedId));return o&&{kind:'object',ref:o}}
+window.copySelectedCanvasFormat=function(){const x=source();if(!x)return cuteToast?.('Wähle zuerst ein Element ♡');if(x.kind==='vector'){const v=x.ref;copied={kind:'vector',props:{fill:v.fill,stroke:v.stroke,strokeWidth:v.strokeWidth,dash:v.dash,opacity:v.opacity,rx:v.rx,cornerRadius:v.cornerRadius}}}else if(['text','block','task','merke','file'].includes(x.ref.kind)){copied={kind:'text',props:clone(x.ref.style||{})}}else if(x.ref.kind==='table'){copied={kind:'table',props:{borderColor:x.ref.borderColor,borderWidth:x.ref.borderWidth,borderStyle:x.ref.borderStyle,cellBackground:x.ref.cellBackground,fontSize:x.ref.fontSize,borderRadius:x.ref.borderRadius}}}else{copied={kind:'object',props:{style:clone(x.ref.style||{}),color:x.ref.color,opacity:x.ref.opacity}}}cuteToast?.('Format kopiert ✦')};
+window.pasteSelectedCanvasFormat=function(){if(!copied)return cuteToast?.('Kopiere zuerst ein Format ♡');const s=S();if(!s)return;let changed=0;if(copied.kind==='vector'){let ids=[...(s.selectedVectorIds||[])];if(!ids.length&&s.selectedType==='vector'&&s.selectedId)ids=[s.selectedId];(s.vectors||[]).filter(v=>ids.some(id=>String(id)===String(v.id))).forEach(v=>{for(const [k,val] of Object.entries(copied.props)){if(val!==undefined){if(k==='rx'&&v.type!=='rect')continue;if(k==='cornerRadius'&&v.type!=='triangle')continue;v[k]=clone(val)}}changed++})}else{let ids=[...(s.selectedIds||[])];if(!ids.length&&s.selectedType==='object'&&s.selectedId)ids=[s.selectedId];(s.objects||[]).filter(o=>ids.some(id=>String(id)===String(o.id))).forEach(o=>{if(copied.kind==='text'&&['text','block','task','merke','file'].includes(o.kind)){o.style={...(o.style||{}),...clone(copied.props)};changed++}else if(copied.kind==='table'&&o.kind==='table'){Object.assign(o,clone(copied.props));changed++}else if(copied.kind==='object'){if(copied.props.style)o.style={...(o.style||{}),...clone(copied.props.style)};if(copied.props.color!==undefined)o.color=copied.props.color;if(copied.props.opacity!==undefined)o.opacity=copied.props.opacity;changed++}})}if(!changed)return cuteToast?.('Format passt nicht zu dieser Auswahl ♡');try{renderCanvasObjects?.();renderVectors?.();renderCanvasInspector?.();markCanvasDirty?.();pushHistory?.()}catch(_){}cuteToast?.('Format eingefügt ✦')};
+
+/* Keep font previews correct even after a drawer/toolbar rerender. */
+function fontPreviews(){qa('#v165FontMenu [data-v172-font],#v165FontMenu [data-font],.v144FontCard[data-v172-font]').forEach(b=>{const f=b.dataset.v172Font||b.dataset.font;if(!f)return;const fam='"'+String(f).replace(/["\\]/g,'')+'",sans-serif';b.style.setProperty('font-family',fam,'important');qa('.v165FontAa,span,b',b).forEach(x=>x.style.setProperty('font-family',fam,'important'))})}
+let scheduled=false;function reconcile(){if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;if(!laptop())return;singleChrome();fontPreviews();syncViewBar()})}
+const obs=new MutationObserver(reconcile);obs.observe(document.documentElement,{subtree:true,childList:true});
+window.addEventListener('resize',()=>setTimeout(reconcile,80));window.addEventListener('pageshow',()=>setTimeout(reconcile,120));document.addEventListener('click',()=>setTimeout(reconcile,0),true);
+const oldSheet=window.renderSheetEditor;if(typeof oldSheet==='function'){window.renderSheetEditor=function(){const r=oldSheet.apply(this,arguments);setTimeout(reconcile,80);setTimeout(reconcile,900);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){}}
+const oldOpen=window.openStudySheetEditor;if(typeof oldOpen==='function'){window.openStudySheetEditor=function(){const r=oldOpen.apply(this,arguments);setTimeout(reconcile,120);setTimeout(reconcile,1000);return r}}
+setTimeout(reconcile,700);setTimeout(reconcile,1600);
+})();
+</script>
+<!-- ===== /Studia V190 ===== -->
