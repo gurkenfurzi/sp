@@ -9199,10 +9199,13 @@ function stableTimetableDay(list){
  return out.sort((a,b)=>a.start.localeCompare(b.start)||a.end.localeCompare(b.end));
 }
 function renderPlan(){
+ const basisSavedText=data.timetable?.basisSavedAt
+   ? ` · gespeichert ${new Date(data.timetable.basisSavedAt).toLocaleDateString("de-DE")}`
+   : "";
  $("#planStatus").textContent=data.timetable.isPlaceholder
    ? "Automatischer Stundenplan wird vorbereitet."
    : timetableViewMode==="basis"
-     ? `Basisplan · regulärer Normalplan${isHeatScheduleActive()?" · ☀️ Hitzestunden":""}.`
+     ? `Basisplan · regulärer Normalplan${basisSavedText}${isHeatScheduleActive()?" · ☀️ Hitzestunden":""}.`
      : `Aktueller Plan & Änderungen${data.timetable.sourceLabel?" · "+data.timetable.sourceLabel:""}${isHeatScheduleActive()?" · ☀️ Hitzestunden aktiv":""}.`;
 
  $("#placeholderBanner").style.display=data.timetable.isPlaceholder?"block":"none";
@@ -10811,12 +10814,14 @@ function addBasisCancellations(current,basis,rowMaps,heat){
 async function parsePdfDocument(pdf){
  const currentPages=[],basisPages=[],allText=[],rowMaps=[];
  let heat=null;
+ let nextPageIsBasis=false;
+ let sawReliableBasis=false;
 
  for(let p=1;p<=pdf.numPages;p++){
    const page=await pdf.getPage(p);
    const content=await page.getTextContent();
    const raster=await renderPdfRaster(page);
-   const pageText=content.items.map(x=>(x.str||"").trim()).filter(Boolean).join(" ");
+   const pageText=content.items.map(x=>(x.str||"").trim()).filter(Boolean).join(" ").replace(/\s+/g," ").trim();
    allText.push(pageText);
 
    if(!heat){
@@ -10824,20 +10829,31 @@ async function parsePdfDocument(pdf){
      if(detectedHeat)heat=detectedHeat;
    }
 
+   // PHS-Sonderfall:
+   // Häufig steht auf Seite N nur "Nächste Seite: Neuer BASISPLAN".
+   // Die eigentliche Folgeseite enthält dann den Stundenplan, ohne das Wort
+   // BASISPLAN noch einmal zuverlässig im extrahierten PDF-Text zu tragen.
+   const announcesNextBasis=/\bN(?:Ä|AE)CHSTE\s+SEITE\s*:?\s*(?:NEUER\s+)?BASISPLAN\b/i.test(pageText);
+
+   // Referenzen auf den Basisplan dürfen die AKTUELLE Seite nicht selbst zum
+   // Basisplan machen. Erst nach Entfernen solcher Hinweise prüfen wir, ob
+   // diese Seite tatsächlich als Basisplan überschrieben ist.
+   const pageWithoutBasisReferences=pageText
+     .replace(/\bN(?:Ä|AE)CHSTE\s+SEITE\s*:?\s*(?:NEUER\s+)?BASISPLAN\b/ig," ")
+     .replace(/\bBASISPLAN\s+AB\b[^.]{0,120}\b(?:SIEHE\s+)?SEITE\s+\d+\b/ig," ");
+   const pageDeclaresBasis=/\b1\.\s*BASISPLAN\b|\bBASISPLAN\s+UW\b|\bNEUER\s+BASISPLAN\b|\bBASISPLAN\b/i.test(pageWithoutBasisReferences);
+   const pageIsBasis=nextPageIsBasis||pageDeclaresBasis;
+   if(pageIsBasis)sawReliableBasis=true;
+
    const parsed=parsePageItems(content.items,raster);
+
+   // Wichtig: auch wenn eine Hinweisseite selbst nicht parsebar ist, muss
+   // die "nächste Seite = Basisplan"-Information erhalten bleiben.
+   nextPageIsBasis=announcesNextBasis;
+
    if(!parsed)continue;
    rowMaps.push(parsed.rows||[]);
-
-   // "Basisplan ab ... siehe Seite 2" can occur on page 1, therefore
-   // classify only a page that itself is headed as the basis plan.
-   const isBasis=/\b1\.\s*BASISPLAN\b|\bBASISPLAN\s+UW\b/i.test(pageText);
-   (isBasis?basisPages:currentPages).push(parsed);
- }
-
- // If a PDF only contains one timetable page, it is the current plan.
- // If classification failed but there are multiple parsed pages, first page wins as current.
- if(!currentPages.length && basisPages.length){
-   currentPages.push(basisPages.shift());
+   (pageIsBasis?basisPages:currentPages).push(parsed);
  }
 
  const mergePages=pages=>{
@@ -10855,22 +10871,53 @@ async function parsePdfDocument(pdf){
    return combined;
  };
 
+ const hasSchedule=schedules=>Object.values(schedules||{}).some(list=>Array.isArray(list)&&list.length);
+ const cloneSchedules=schedules=>{
+   const out={};
+   for(const [k,list] of Object.entries(schedules||{}))out[k]=(list||[]).map(x=>({...x}));
+   return out;
+ };
+
  let current=mergePages(currentPages);
- const basis=mergePages(basisPages);
+ const parsedBasis=mergePages(basisPages);
+ const previousBasis=cloneSchedules(data.timetable?.basisSchedules||{});
+ const parsedBasisValid=hasSchedule(parsedBasis);
+ const previousBasisValid=hasSchedule(previousBasis);
+
+ // Wenn die Schul-PDF gerade NUR den Basisplan veröffentlicht, ist dieser
+ // gleichzeitig der aktuelle Plan. Wir kopieren ihn deshalb in "Aktuell",
+ // behalten ihn aber AUCH dauerhaft als Basisplan.
+ if(!hasSchedule(current) && parsedBasisValid){
+   current=cloneSchedules(parsedBasis);
+ }
+
+ // Der wichtigste Speicher-Fix:
+ // Ein einmal sicher erkannter Basisplan wird NICHT gelöscht, nur weil eine
+ // spätere PDF lediglich Vertretungen/Entfall enthält. Er wird erst ersetzt,
+ // wenn erneut ein echter Basisplan in der PDF erkannt wurde.
+ const effectiveBasis=parsedBasisValid
+   ? cloneSchedules(parsedBasis)
+   : previousBasisValid
+     ? previousBasis
+     : {};
+
+ const basisUpdatedNow=parsedBasisValid&&sawReliableBasis;
+ const previousBasisSavedAt=Number(data.timetable?.basisSavedAt||0)||0;
+ const now=Date.now();
 
  // Keep the original row structure/times in storage.
  // Heat times are applied dynamically so Auto/An/Aus can switch instantly.
- const heatBasis=basis;
-
- const keys=[...new Set([...Object.keys(current),...Object.keys(heatBasis)])]
+ const keys=[...new Set([...Object.keys(current),...Object.keys(effectiveBasis)])]
    .sort((a,b)=>a.localeCompare(b,"de",{numeric:true,sensitivity:"base"}));
  if(!keys.length)throw new Error("Keine Klassen im PHS-Plan erkannt");
 
  const finalSchedules={};
  for(const className of keys){
    const cur=current[className]||[];
-   const base=heatBasis[className]||[];
-   finalSchedules[className]=addBasisCancellations(cur,base,rowMaps,null);
+   const base=effectiveBasis[className]||[];
+   finalSchedules[className]=base.length
+     ? addBasisCancellations(cur,base,rowMaps,null)
+     : cur.map(x=>({...x}));
  }
 
  const wanted=(data.timetable.selectedClass||data.settings.className||"M U1").replace(/\s+/g," ").toUpperCase();
@@ -10879,23 +10926,30 @@ async function parsePdfDocument(pdf){
 
  const txt=allText.join(" ");
  const dm=txt.match(/(?:ab\s+)?(\d{1,2}\.\s*(?:Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)\s+20\d{2})/i);
+ const sourceLabel=dm?dm[1]:"";
 
  data.timetable={
    isPlaceholder:false,
    classes:keys,
    schedules:finalSchedules,
    currentSchedules:current,
-   basisSchedules:heatBasis,
+   basisSchedules:effectiveBasis,
    selectedClass:chosen,
    lessons:finalSchedules[chosen]||[],
-   sourceLabel:dm?dm[1]:"",
-   fetchedAt:Date.now(),
-   parserVersion:42,
+   sourceLabel,
+   fetchedAt:now,
+   parserVersion:43,
    heatSchedule:!!heat?.active,
    activePauses:heat?.active?heat.pauses:pauses,
    currentPageCount:currentPages.length,
    basisPageCount:basisPages.length,
-   rowMaps:rowMaps
+   rowMaps:rowMaps,
+
+   // Basisplan-Metadaten werden mit dem normalen Studia-Account gespeichert.
+   basisSavedAt:basisUpdatedNow?now:previousBasisSavedAt,
+   basisSourceLabel:basisUpdatedNow?sourceLabel:(data.timetable?.basisSourceLabel||""),
+   basisFreshFromPdf:basisUpdatedNow,
+   basisRetainedFromAccount:!basisUpdatedNow&&previousBasisValid
  };
  data.settings.className=chosen;
  save();
@@ -10951,7 +11005,7 @@ window.loadRemotePlan=async function(manual=false){
      data.timetable.lastLiveCheck=Date.now();
      save();
 
-     if(status)status.textContent=`Aktueller PHS-Plan geladen${data.timetable.sourceLabel?" · "+data.timetable.sourceLabel:""}.`;
+     if(status)status.textContent=`Aktueller PHS-Plan geladen${data.timetable.sourceLabel?" · "+data.timetable.sourceLabel:""}${data.timetable.basisFreshFromPdf?" · Basisplan gespeichert":""}.`;
      if(live){
        live.textContent=`✓ ${candidate.name} · exakt aus PDF gelesen · ${time} Uhr`;
        live.className="liveRefreshStatus ok";
