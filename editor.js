@@ -981,7 +981,9 @@ function scriptUrl(){const saved=String(localStorage.getItem(URL_KEY)||'').trim(
 function urlValid(u=scriptUrl()){return /^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec(?:\?.*)?$/.test(String(u||''))}
 function accountConfigured(){return urlValid()&&!!token()}
 function deviceId(){let d=localStorage.getItem(DEVICE_KEY);if(!d){d=crypto.randomUUID?.()||'dev-'+Date.now().toString(36)+Math.random().toString(36).slice(2);localStorage.setItem(DEVICE_KEY,d)}return d}
-function accountStatus(text,bad=false){const el=q('#v150AccountStatus');if(el){el.textContent=text;el.classList.toggle('error',bad)}}
+function accountStatus(text,bad=false){const el=accountField150('v150AccountStatus')||q('#v150AccountStatus');if(el){el.textContent=text;el.classList.toggle('error',bad)}}
+/* V196: account inputs exist both in Settings and in the account modal. Always read the field the user can actually see; otherwise a hidden/autofilled duplicate can make a correct password look wrong. */
+function accountField150(id){const all=[...document.querySelectorAll('[id="'+String(id).replace(/"/g,'\\"')+'"]')];return all.find(el=>el.closest?.('#modalWrap.open'))||all.find(el=>{try{return el.offsetParent!==null}catch(_){return false}})||all[0]||null}
 function actionFor(path,method='GET'){const m=String(method).toUpperCase(),map={'/api/me':'me','/api/state':'state','/api/state/meta':'state_meta','/api/auth/register':'register','/api/auth/login':'login','/api/auth/google':'google_login','/api/auth/recover':'recover'};if(path==='/api/state'&&m!=='GET')return'state_put';return map[path]||''}
 async function request(path,options={}){
  const base=scriptUrl();if(!urlValid(base))throw new Error('Apps-Script-Web-App-URL fehlt oder ist keine /exec-URL.');
@@ -1038,9 +1040,9 @@ window.v150Push=v150Push;window.v150Pull=()=>v150Pull(true);
 function startAccountPolling(){if(v150Poll)clearInterval(v150Poll);if(!accountConfigured())return;v150Poll=setInterval(()=>{const busyEditor=document.body.classList.contains('v132Dragging')||document.body.classList.contains('v138Transforming')||!!document.querySelector('#canvasObjects .cobj[contenteditable="true"]');if(document.visibilityState==='visible'&&!busyEditor)v150Pull(false)},30000);setTimeout(()=>v150Pull(true),250)}
 
 async function initAccount(){if(!accountConfigured())return;try{/* V194: pending is an explicit flag, not a server/client timestamp comparison. */if(localStorage.getItem(PENDING_KEY)==='1')v150DirtyAt=Number(localStorage.getItem(LAST_LOCAL)||Date.now())||Date.now();const me=await request('/api/me');v150User=me.user;localStorage.setItem(USER_KEY,v150User?.username||username());if(v150DirtyAt)await v150Push();startAccountPolling()}catch(err){console.warn('[V150] account init',err);if(err.status===401){localStorage.removeItem(TOKEN_KEY);v150User=null}}}
-window.v150RememberUrl=function(){const field=q('#v150ScriptUrl'),u=String(field?.value||scriptUrl()||'').trim().replace(/\/$/,'');if(field&&u)localStorage.setItem(URL_KEY,u);accountStatus(urlValid(u)?'Web-App verbunden ✓':'Bitte eine gültige /exec-URL eintragen.',!urlValid(u));return urlValid(u)};
-window.v150Login=async function(){const u=String(q('#v150Username')?.value||'').trim(),p=String(q('#v150Password')?.value||'');v150RememberUrl();if(!u||p.length<8)return accountStatus('Benutzername und Passwort (mind. 8 Zeichen) eingeben.',true);try{accountStatus('Anmelden …');const r=await request('/api/auth/login',{method:'POST',body:{username:u,password:p}});localStorage.setItem(TOKEN_KEY,r.token);localStorage.setItem(USER_KEY,r.user?.username||u);v150User=r.user;const hasPending=localStorage.getItem(PENDING_KEY)==='1';if(hasPending){accountStatus('Angemeldet · lokale Änderungen werden im Konto gespeichert …');v150DirtyAt=Number(localStorage.getItem(LAST_LOCAL)||Date.now())||Date.now();await v150Push()}else{accountStatus('Angemeldet · lade deine Studia-Daten …');const state=await request('/api/state');if(state.data)await applyEnvelope(state.data,Number(state.updatedAt||Date.now()));else{v150MarkDirty(0);await v150Push()}}startAccountPolling();window.closeModal?.();window.cuteToast?.('Dauerhaft angemeldet ♡')}catch(err){accountStatus(String(err.message||err),true)}};
-window.v150Register=async function(){const u=String(q('#v150Username')?.value||'').trim(),p=String(q('#v150Password')?.value||'');v150RememberUrl();if(u.length<3||p.length<8)return accountStatus('Benutzername mind. 3 Zeichen, Passwort mind. 8 Zeichen.',true);try{accountStatus('Konto wird erstellt …');const r=await request('/api/auth/register',{method:'POST',body:{username:u,password:p}});localStorage.setItem(TOKEN_KEY,r.token);localStorage.setItem(USER_KEY,r.user?.username||u);v150User=r.user;v150MarkDirty(0);await v150Push();startAccountPolling();window.openModal?.(`<div class="v135Modal v150AccountModal"><div class="v135ModalHead"><div><span class="eyebrow">KONTO ERSTELLT</span><h2>Wiederherstellungscode</h2></div><button onclick="closeModal()">×</button></div><p>Diesen Code sicher speichern. Damit kannst du dein Passwort zurücksetzen, falls du es vergisst.</p><div class="v150AccountState" style="font-size:14px;letter-spacing:.08em;text-align:center">${esc(r.recoveryCode||'')}</div><div class="v150PermanentNote"><b>✓ Dauerhaft</b><span>Du bleibst auf diesem Gerät angemeldet und Studia synchronisiert automatisch.</span></div></div>`)}catch(err){accountStatus(String(err.message||err),true)}};
+window.v150RememberUrl=function(){const field=accountField150('v150ScriptUrl'),u=String(field?.value||scriptUrl()||'').trim().replace(/\/$/,'');if(field&&u)localStorage.setItem(URL_KEY,u);accountStatus(urlValid(u)?'Web-App verbunden ✓':'Bitte eine gültige /exec-URL eintragen.',!urlValid(u));return urlValid(u)};
+window.v150Login=async function(){const userField=accountField150('v150Username'),passField=accountField150('v150Password'),u=String(userField?.value||'').trim(),p=String(passField?.value||'');v150RememberUrl();if(!u||p.length<8)return accountStatus('Benutzername und Passwort (mind. 8 Zeichen) eingeben.',true);try{accountStatus('Anmelden …');const r=await request('/api/auth/login',{method:'POST',body:{username:u,password:p}});localStorage.setItem(TOKEN_KEY,r.token);localStorage.setItem(USER_KEY,r.user?.username||u);v150User=r.user;const hasPending=localStorage.getItem(PENDING_KEY)==='1';if(hasPending){accountStatus('Angemeldet · lokale Änderungen werden im Konto gespeichert …');v150DirtyAt=Number(localStorage.getItem(LAST_LOCAL)||Date.now())||Date.now();await v150Push()}else{accountStatus('Angemeldet · lade deine Studia-Daten …');const state=await request('/api/state');if(state.data)await applyEnvelope(state.data,Number(state.updatedAt||Date.now()));else{v150MarkDirty(0);await v150Push()}}startAccountPolling();window.closeModal?.();window.cuteToast?.('Dauerhaft angemeldet ♡')}catch(err){accountStatus(String(err.message||err),true)}};
+window.v150Register=async function(){const userField=accountField150('v150Username'),passField=accountField150('v150Password'),u=String(userField?.value||'').trim(),p=String(passField?.value||'');v150RememberUrl();if(u.length<3||p.length<8)return accountStatus('Benutzername mind. 3 Zeichen, Passwort mind. 8 Zeichen.',true);try{accountStatus('Konto wird erstellt …');const r=await request('/api/auth/register',{method:'POST',body:{username:u,password:p}});localStorage.setItem(TOKEN_KEY,r.token);localStorage.setItem(USER_KEY,r.user?.username||u);v150User=r.user;v150MarkDirty(0);await v150Push();startAccountPolling();window.openModal?.(`<div class="v135Modal v150AccountModal"><div class="v135ModalHead"><div><span class="eyebrow">KONTO ERSTELLT</span><h2>Wiederherstellungscode</h2></div><button onclick="closeModal()">×</button></div><p>Diesen Code sicher speichern. Damit kannst du dein Passwort zurücksetzen, falls du es vergisst.</p><div class="v150AccountState" style="font-size:14px;letter-spacing:.08em;text-align:center">${esc(r.recoveryCode||'')}</div><div class="v150PermanentNote"><b>✓ Dauerhaft</b><span>Du bleibst auf diesem Gerät angemeldet und Studia synchronisiert automatisch.</span></div></div>`)}catch(err){accountStatus(String(err.message||err),true)}};
 window.openAccountDialog=function(){const logged=!!token(),name=v150User?.username||username(),url=scriptUrl();window.openModal?.(`<div class="v135Modal v150AccountModal"><div class="v135ModalHead"><div><span class="eyebrow">KONTO & SYNC</span><h2>Studia-Konto</h2></div><button onclick="closeModal()">×</button></div>${logged?`<div class="v150AccountHero"><span class="v150AccountAvatar">S</span><div><b>${esc(name||'Studia')}</b><small>dauerhaft angemeldet</small></div></div><div class="v150PermanentNote"><b>✓ Immer Sync</b><span>Fächer, Themen, Lernblätter, Hausaufgaben, Editor-Texte, Karteikarten, Quizze, Tests, Einstellungen, Schriften und Dateien werden automatisch auf allen Geräten gleich gehalten.</span></div><div id="v150AccountStatus" class="v150AccountState">✓ Automatisch synchronisiert</div>`:`<div class="v150AccountForm"><label>Benutzername<input id="v150Username" autocomplete="username" minlength="3" maxlength="32" value="${esc(name)}" placeholder="z. B. Stella"></label><label>Passwort<input id="v150Password" type="password" autocomplete="current-password" minlength="8" placeholder="mindestens 8 Zeichen"></label></div><div id="v150AccountStatus" class="v150AccountState">Mit demselben Konto auf Handy und Laptop anmelden.</div><div class="v150AccountActions"><button class="primary" onclick="v150Login()">Anmelden</button><button onclick="v150Register()">Konto erstellen</button></div>`}${urlValid(String(window.STUDIA_SYNC_CONFIG?.scriptUrl||''))?'':`<details class="v150AccountSetup" ${urlValid(url)?'':'open'}><summary>Einmalige Google-Sync-Einrichtung</summary><div class="v150AccountForm"><label>Apps-Script-Web-App-URL<input id="v150ScriptUrl" type="url" value="${esc(url)}" placeholder="https://script.google.com/macros/s/…/exec" oninput="v150RememberUrl()"></label><small>Wenn du die URL einmal in google-sync-config.js einträgst, brauchst du sie auf keinem Gerät mehr einzugeben.</small></div></details>`}</div>`)};
 
 /* Automatic save hooks. The old V145 functions remain local-only because its key
@@ -2126,7 +2128,7 @@ window.v165OpenStickerColors=async function(){const o=sticker171();if(!o)return 
 window.v171ResetStickerColors=async function(){const o=(st()?.objects||[]).find(x=>String(x.id)===String(stickerId171));if(!o)return;o.stickerExactMap171={};o.src=o.stickerExactOriginal171||o.stickerPaletteOriginal||o.src;delete o.tintColor;window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.();window.closeModal?.();window.cuteToast?.('Alle Originalfarben wiederhergestellt ♡')};
 
 /* cache-busting visible version only; never observe/mutate in a loop */
-function version171(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 195'}setTimeout(version171,6500);setTimeout(version171,8000);
+function version171(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 197'}setTimeout(version171,6500);setTimeout(version171,8000);
 })();
 /* ===== /Studia V171 ===== */
 
@@ -2140,7 +2142,8 @@ const URL_KEY='studia-gas-url',USER_KEY='studia-account-username-v150',TOKEN_KEY
 
 /* ---------- Cloud: do not hide errors, normalize URL, start sync immediately ---------- */
 function cloudBox172(){return q('.v171CloudSettings')}
-function cloudStatus172(text,bad=false){const x=q('#v150AccountStatus',cloudBox172()||document);if(!x)return;x.textContent=text;x.classList.toggle('error',!!bad);x.classList.toggle('ok',!bad&&/✓|verbunden|aktuell/i.test(text||''))}
+function field172(id){const all=qa('[id="'+String(id).replace(/"/g,'\\"')+'"]');return all.find(el=>el.closest?.('#modalWrap.open'))||all.find(el=>{try{return el.offsetParent!==null}catch(_){return false}})||all[0]||null}
+function cloudStatus172(text,bad=false){const x=field172('v150AccountStatus')||q('#v150AccountStatus',cloudBox172()||document);if(!x)return;x.textContent=text;x.classList.toggle('error',!!bad);x.classList.toggle('ok',!bad&&/✓|verbunden|aktuell/i.test(text||''))}
 function normGas172(raw){
  let s=String(raw||'').trim();if(!s)return'';
  if(!/^https?:\/\//i.test(s))s='https://'+s.replace(/^\/+/, '');
@@ -2148,13 +2151,13 @@ function normGas172(raw){
 }
 function validGas172(s){return /^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec$/.test(String(s||''))}
 function fields172(){
- const url=q('#v150ScriptUrl'),user=q('#v150Username');
+ const url=field172('v150ScriptUrl'),user=field172('v150Username');
  if(url){if(!url.value)url.value=localStorage.getItem(URL_KEY)||(!String(window.STUDIA_SYNC_CONFIG?.scriptUrl||'').startsWith('DEINE_')?window.STUDIA_SYNC_CONFIG?.scriptUrl:'')||'';const n=normGas172(url.value);if(n&&n!==url.value)url.value=n}
  if(user&&!user.value)user.value=localStorage.getItem(USER_KEY)||'';
 }
 async function health172(base){
  const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),12000);try{const u=new URL(base);u.searchParams.set('action','health');u.searchParams.set('_',Date.now());const r=await fetch(u.toString(),{method:'GET',cache:'no-store',redirect:'follow',signal:ctl.signal});const raw=await r.text();let data;try{data=JSON.parse(raw)}catch(_){throw new Error('Der Server antwortet nicht als Studia-Sync. Prüfe die Web-App-Bereitstellung.')}if(data?.ok===false)throw new Error(data.error||'Server ist nicht eingerichtet.');return data}finally{clearTimeout(t)}}
-function currentInputs172(){fields172();const urlEl=q('#v150ScriptUrl'),userEl=q('#v150Username'),passEl=q('#v150Password'),url=normGas172(urlEl?.value||''),user=String(userEl?.value||'').trim(),pass=String(passEl?.value||'');if(urlEl)urlEl.value=url;return{url,user,pass,urlEl,userEl,passEl}}
+function currentInputs172(){fields172();const urlEl=field172('v150ScriptUrl'),userEl=field172('v150Username'),passEl=field172('v150Password'),url=normGas172(urlEl?.value||''),user=String(userEl?.value||'').trim(),pass=String(passEl?.value||'');if(urlEl)urlEl.value=url;return{url,user,pass,urlEl,userEl,passEl}}
 function busy172(on,label){for(const b of qa('.v171CloudActions button')){b.disabled=!!on;if(b.classList.contains('primary')){if(on){b.dataset.oldLabel=b.textContent;b.textContent=label||'Bitte warten …'}else if(b.dataset.oldLabel){b.textContent=b.dataset.oldLabel;delete b.dataset.oldLabel}}}}
 async function login172(register=false){
  const f=currentInputs172();
@@ -2188,7 +2191,7 @@ window.v171CloudLogin=()=>login172(false);
 window.v171CloudRegister=()=>login172(true);
 window.v171CloudNow=async function(){if(!localStorage.getItem(TOKEN_KEY))return cloudStatus172('Bitte zuerst anmelden.',true);busy172(true,'Synchronisieren …');try{cloudStatus172('Geräte werden abgeglichen …');await window.v150Push?.();await window.v150Pull?.();cloudStatus172('Alle Geräte sind aktuell ✓')}catch(err){cloudStatus172(String(err?.message||err),true)}finally{busy172(false)}};
 /* Keep old helper compatible, but accept a pasted URL without /exec and normalize it. */
-window.v150RememberUrl=function(){const el=q('#v150ScriptUrl'),u=normGas172(el?.value||localStorage.getItem(URL_KEY)||'');if(el)el.value=u;if(validGas172(u)){localStorage.setItem(URL_KEY,u);cloudStatus172('Server-URL gespeichert ✓');return true}cloudStatus172('Bitte eine gültige Google-Apps-Script-/exec-URL eintragen.',true);return false};
+window.v150RememberUrl=function(){const el=field172('v150ScriptUrl'),u=normGas172(el?.value||localStorage.getItem(URL_KEY)||'');if(el)el.value=u;if(validGas172(u)){localStorage.setItem(URL_KEY,u);cloudStatus172('Server-URL gespeichert ✓');return true}cloudStatus172('Bitte eine gültige Google-Apps-Script-/exec-URL eintragen.',true);return false};
 let poll172=null;function startPoll172(){/* V177: V150 owns the single foreground polling timer. */}
 /* V178: V150 owns visibility/online sync triggers. */
 setTimeout(()=>{fields172();if(localStorage.getItem(TOKEN_KEY)){cloudStatus172(`Verbunden${localStorage.getItem(USER_KEY)?' als '+localStorage.getItem(USER_KEY):''} · Auto-Sync aktiv ✓`);startPoll172()}},700);
@@ -2313,3 +2316,129 @@ setTimeout(()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 194'},90
 /* ===== /Studia V177 ===== */
 
 /* ===== Studia V178 retired in V179: desktop now uses the single V132 interaction engine ===== */
+
+/* ===== Studia V197 — recover existing account connection from local backups ===== */
+(()=>{
+'use strict';
+if(window.__STUDIA_V197_ACCOUNT_RECOVERY__)return;window.__STUDIA_V197_ACCOUNT_RECOVERY__=true;
+const URL_KEY='studia-gas-url';
+const TOKEN_KEY='studia-account-token-v150';
+const USER_KEY='studia-account-username-v150';
+const BDB='studia-local-backups-v1', SNAP='snapshots';
+const validUrl=u=>/^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec(?:\?.*)?$/.test(String(u||'').trim());
+const q=s=>document.querySelector(s);
+function visibleField(id){
+ const all=[...document.querySelectorAll('[id="'+String(id).replace(/"/g,'\\"')+'"]')];
+ return all.find(el=>{try{return el.offsetParent!==null}catch(_){return false}})||all[0]||null;
+}
+function status(text,bad=false){
+ const all=[...document.querySelectorAll('#v150AccountStatus')];
+ const el=all.find(x=>{try{return x.offsetParent!==null}catch(_){return false}})||all[0];
+ if(el){el.textContent=text;el.classList.toggle('error',!!bad);el.classList.toggle('ok',!bad)}
+}
+function openBackupDb(){return new Promise((res,rej)=>{const r=indexedDB.open(BDB,1);r.onupgradeneeded=()=>{const db=r.result;if(!db.objectStoreNames.contains(SNAP))db.createObjectStore(SNAP,{keyPath:'id'})};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+async function backupCandidates(){
+ try{
+  const db=await openBackupDb();
+  const rows=await new Promise((res,rej)=>{const r=db.transaction(SNAP).objectStore(SNAP).getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>rej(r.error)});
+  const out=[],seen=new Set();
+  for(const s of rows.sort((a,b)=>(b.ts||0)-(a.ts||0))){
+   const ls=s?.localStorage||{},url=String(ls[URL_KEY]||'').trim().replace(/\/$/,''),token=String(ls[TOKEN_KEY]||''),user=String(ls[USER_KEY]||'');
+   if(!validUrl(url))continue;
+   const key=url+'|'+token;if(seen.has(key))continue;seen.add(key);out.push({url,token,user,ts:Number(s.ts||0)});
+  }
+  return out;
+ }catch(err){console.warn('[V197] backup scan failed',err);return[]}
+}
+async function testToken(url,token){
+ if(!validUrl(url)||!token)return null;
+ const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),9000);
+ try{
+  const u=new URL(url);u.searchParams.set('action','me');u.searchParams.set('token',token);u.searchParams.set('_',Date.now());
+  const r=await fetch(u.toString(),{method:'GET',redirect:'follow',cache:'no-store',signal:ctl.signal});
+  const raw=await r.text();let d;try{d=JSON.parse(raw)}catch{return null}
+  return d?.ok===true&&d?.user?d:null;
+ }catch(_){return null}finally{clearTimeout(t)}
+}
+async function directLogin(url,username,password){
+ if(!validUrl(url)||!username||String(password).length<8)return null;
+ const variants=[
+  {kind:'json-query'},
+  {kind:'json'},
+  {kind:'form'}
+ ];
+ for(const v of variants){
+  const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),10000);
+  try{
+   let target=url,opts={method:'POST',redirect:'follow',cache:'no-store',signal:ctl.signal};
+   if(v.kind==='json-query'){
+    const u=new URL(url);u.searchParams.set('action','login');u.searchParams.set('_',Date.now());target=u.toString();
+    opts.headers={'Content-Type':'text/plain;charset=utf-8'};opts.body=JSON.stringify({action:'login',username,password});
+   }else if(v.kind==='json'){
+    opts.headers={'Content-Type':'text/plain;charset=utf-8'};opts.body=JSON.stringify({action:'login',username,password});
+   }else{
+    const form=new FormData();form.set('action','login');form.set('username',username);form.set('password',password);opts.body=form;
+   }
+   const r=await fetch(target,opts),raw=await r.text();let d;try{d=JSON.parse(raw)}catch{continue}
+   if(d?.ok===true&&d?.token)return d;
+   if(d?.ok===false&&Number(d.status||0)!==401&&!/Benutzername oder Passwort falsch/i.test(String(d.error||'')))return {error:String(d.error||'Login fehlgeschlagen.'),status:Number(d.status||400)};
+  }catch(_){}finally{clearTimeout(t)}
+ }
+ return null;
+}
+async function restoreCandidate(c){
+ const me=await testToken(c.url,c.token);if(!me)return false;
+ localStorage.setItem(URL_KEY,c.url);localStorage.setItem(TOKEN_KEY,c.token);localStorage.setItem(USER_KEY,me.user?.username||c.user||'');
+ return true;
+}
+async function recoverConnection({tryPassword=false,username='',password=''}={}){
+ const currentUrl=String(localStorage.getItem(URL_KEY)||'').trim().replace(/\/$/,''),currentToken=String(localStorage.getItem(TOKEN_KEY)||'');
+ if(currentToken&&validUrl(currentUrl)){
+  const me=await testToken(currentUrl,currentToken);if(me)return {ok:true,url:currentUrl,user:me.user?.username||'',source:'current'};
+ }
+ const candidates=await backupCandidates();
+ for(const c of candidates){
+  if(await restoreCandidate(c))return {ok:true,url:c.url,user:localStorage.getItem(USER_KEY)||c.user||'',source:'backup-token'};
+ }
+ if(tryPassword&&username&&String(password).length>=8){
+  const urls=[...new Set(candidates.map(c=>c.url).filter(validUrl))];
+  if(validUrl(currentUrl)&&!urls.includes(currentUrl))urls.unshift(currentUrl);
+  for(const url of urls){
+   const r=await directLogin(url,username,password);
+   if(r?.token){localStorage.setItem(URL_KEY,url);localStorage.setItem(TOKEN_KEY,r.token);localStorage.setItem(USER_KEY,r.user?.username||username);return{ok:true,url,user:r.user?.username||username,source:'backup-url-login'}}
+  }
+ }
+ const oldUrl=candidates[0]?.url||'';
+ if(oldUrl&&oldUrl!==currentUrl){localStorage.setItem(URL_KEY,oldUrl);const f=visibleField('v150ScriptUrl');if(f)f.value=oldUrl;return{ok:false,urlRecovered:true,url:oldUrl}}
+ return{ok:false};
+}
+window.v197RecoverAccountConnection=recoverConnection;
+
+/* Wrap the proven V150 login: if the server rejects it, recover the old permanent
+   session / account URL from Studia's own local backup snapshots and retry safely. */
+const baseLogin=window.v150Login;
+if(typeof baseLogin==='function')window.v150Login=async function(){
+ const uf=visibleField('v150Username'),pf=visibleField('v150Password');
+ const username=String(uf?.value||'').trim(),password=String(pf?.value||'');
+ await baseLogin.apply(this,arguments);
+ if(localStorage.getItem(TOKEN_KEY))return true;
+ status('Alte Konto-Verbindung wird gesucht …');
+ const rec=await recoverConnection({tryPassword:true,username,password});
+ if(rec.ok){status('Bestehendes Konto wiederhergestellt ✓');try{window.cuteToast?.('Studia-Konto wiederhergestellt ♡')}catch(_){}setTimeout(()=>location.reload(),500);return true}
+ if(rec.urlRecovered){status('Frühere Konto-Server-URL wiederhergestellt. Bitte noch einmal auf „Anmelden“ drücken.',true);return false}
+ status('Der Kontoserver lehnt die Anmeldung ab. Deine lokalen Studia-Daten wurden nicht verändert.',true);return false;
+};
+try{v150Login=window.v150Login}catch(_){}
+
+/* Also recover silently on startup when a previous permanent session still exists
+   in a local snapshot. This only performs GET /me and changes the three account keys. */
+setTimeout(async()=>{
+ if(localStorage.getItem(TOKEN_KEY))return;
+ const rec=await recoverConnection();
+ if(rec.ok){try{window.cuteToast?.('Bestehendes Studia-Konto wieder verbunden ♡')}catch(_){}setTimeout(()=>location.reload(),450)}
+},1400);
+
+function version197(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 197'}
+setTimeout(version197,1800);setTimeout(version197,7200);setTimeout(version197,9000);
+})();
+/* ===== /Studia V197 ===== */
