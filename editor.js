@@ -972,6 +972,7 @@ const LAST_REMOTE='studia-account-last-remote-v150';
 const LAST_LOCAL='studia-account-last-local-v150';
 /* V194: a real pending flag avoids comparing client and server clocks. */
 const PENDING_KEY='studia-account-pending-v194';
+const SAFE_KEY='studia-sync-source-confirmed-v198';
 const TECH_PREFIXES=['studia-account-','studia-auto-','studia-sync-','studia-local-backup-','studia-daily-backup-'];
 let v150User=null,v150Busy=false,v150Applying=false,v150DirtyAt=0,v150PushTimer=null,v150Poll=null,v150LastCheck=0;
 let v150FileCache=null,v150FilesDirty=true,v150FontCache=null,v150FontCacheDirty=true;
@@ -980,6 +981,7 @@ const username=()=>String(localStorage.getItem(USER_KEY)||'');
 function scriptUrl(){const saved=String(localStorage.getItem(URL_KEY)||'').trim(),file=String(window.STUDIA_SYNC_CONFIG?.scriptUrl||'').trim();return (saved||file).replace(/\/$/,'')}
 function urlValid(u=scriptUrl()){return /^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec(?:\?.*)?$/.test(String(u||''))}
 function accountConfigured(){return urlValid()&&!!token()}
+function safeReady198(){return localStorage.getItem(SAFE_KEY)==='1'}
 function deviceId(){let d=localStorage.getItem(DEVICE_KEY);if(!d){d=crypto.randomUUID?.()||'dev-'+Date.now().toString(36)+Math.random().toString(36).slice(2);localStorage.setItem(DEVICE_KEY,d)}return d}
 function accountStatus(text,bad=false){const el=accountField150('v150AccountStatus')||q('#v150AccountStatus');if(el){el.textContent=text;el.classList.toggle('error',bad)}}
 /* V196: account inputs exist both in Settings and in the account modal. Always read the field the user can actually see; otherwise a hidden/autofilled duplicate can make a correct password look wrong. */
@@ -1032,17 +1034,81 @@ async function envelope(){
 async function clearAndRestoreFiles(files){try{const db=await dbOpen();await new Promise((res,rej)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).clear();tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error)});for(const f of files||[])await dbPut({id:f.id,name:f.name||'',type:f.type||'',blob:dataToBlob(f.data||'')});v150FileCache=files||[];v150FilesDirty=false}catch(err){console.warn('[V150] restore files',err)}}
 async function clearAndRestoreFonts(fonts){try{const db=await fontDB150();await new Promise((res,rej)=>{const tx=db.transaction('fonts','readwrite');const st=tx.objectStore('fonts');st.clear();for(const f of fonts||[])if(f?.name&&f?.data)st.put(f);tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error)});v150FontCache=fonts||[];v150FontCacheDirty=false;for(const f of fonts||[]){if(!f?.name||!f?.data)continue;try{if('FontFace'in window&&document.fonts){const face=new FontFace(f.name,`url(${JSON.stringify(f.data)})`);await face.load();document.fonts.add(face)}}catch(_){const sid='v150-font-'+f.name.replace(/[^a-z0-9_-]/gi,'-');if(!q('#'+CSS.escape(sid))){const st=document.createElement('style');st.id=sid;st.textContent=`@font-face{font-family:${JSON.stringify(f.name)};src:url(${JSON.stringify(f.data)});font-display:swap}`;document.head.appendChild(st)}}}try{window.v91LoadFonts?.()}catch(_){ }}catch(err){console.warn('[V150] restore fonts',err)}}
 async function applyEnvelope(env,serverUpdated){if(!env?.state?.localStorage&&!env?.state?.appData)throw new Error('Cloud-Stand ist ungültig.');v150Applying=true;try{const remote=env.state.localStorage||{};for(let i=localStorage.length-1;i>=0;i--){const k=localStorage.key(i);if(k&&syncKey(k)&&!(k in remote))localStorage.removeItem(k)}for(const[k,v]of Object.entries(remote))if(syncKey(k))localStorage.setItem(k,String(v));let parsed=env.state.appData||null;if(!parsed&&remote['schoolhub-v1']){try{parsed=JSON.parse(remote['schoolhub-v1'])}catch(err){console.warn('[V150] data parse',err)}}if(parsed){const target=window.data||data;Object.keys(target).forEach(k=>delete target[k]);Object.assign(target,parsed);localStorage.setItem('schoolhub-v1',JSON.stringify(parsed))}await clearAndRestoreFiles(env.state.files||[]);await clearAndRestoreFonts(env.state.fonts||[]);const stamp=String(Number(serverUpdated||env.updatedAt||Date.now()));localStorage.setItem(LAST_REMOTE,stamp);localStorage.setItem(LAST_LOCAL,stamp);localStorage.removeItem(PENDING_KEY);v150DirtyAt=0;window.renderAll?.();if(inEditor()&&typeof selectedSheetId!=='undefined'&&selectedSheetId&&(window.data||data)?.studySheets?.some(x=>x.id===selectedSheetId))setTimeout(()=>window.openStudySheetEditor?.(selectedSheetId),80);return true}finally{v150Applying=false}}
-function v150MarkDirty(delay=300){if(v150Applying)return;v150DirtyAt=Date.now();try{localStorage.setItem(LAST_LOCAL,String(v150DirtyAt));localStorage.setItem(PENDING_KEY,'1')}catch(_){ }clearTimeout(v150PushTimer);if(accountConfigured())v150PushTimer=setTimeout(v150Push,delay)}
+function v150MarkDirty(delay=300){if(v150Applying)return;v150DirtyAt=Date.now();try{localStorage.setItem(LAST_LOCAL,String(v150DirtyAt));localStorage.setItem(PENDING_KEY,'1')}catch(_){ }clearTimeout(v150PushTimer);if(accountConfigured()&&safeReady198())v150PushTimer=setTimeout(v150Push,delay)}
 window.v150MarkDirty=v150MarkDirty;
-async function v150Push(){if(v150Busy||v150Applying||!v150DirtyAt||!accountConfigured()||navigator.onLine===false)return false;v150Busy=true;try{accountStatus('Speichert im Konto …');/* V194: never discard a dirty local edit because server/client clocks differ. A local save must reach the account first. */const env=await envelope(),r=await request('/api/state',{method:'PUT',body:{data:env}});const stamp=String(Number(r.updatedAt||Date.now()));localStorage.setItem(LAST_REMOTE,stamp);localStorage.setItem(LAST_LOCAL,stamp);localStorage.removeItem(PENDING_KEY);v150DirtyAt=0;accountStatus('✓ Im Konto gespeichert');return true}catch(err){console.warn('[V150] push',err);accountStatus(navigator.onLine===false?'Offline – wird gespeichert, sobald Internet da ist':'Sync-Fehler – versucht es automatisch erneut',true);return false}finally{v150Busy=false}}
-async function v150Pull(force=false){if(v150Busy||v150Applying||!accountConfigured()||navigator.onLine===false)return false;if(localStorage.getItem(PENDING_KEY)==='1'&&!v150DirtyAt)v150DirtyAt=Number(localStorage.getItem(LAST_LOCAL)||Date.now())||Date.now();if(v150DirtyAt){v150MarkDirty(180);return false}const now=Date.now();if(!force&&now-v150LastCheck<3500)return false;v150LastCheck=now;v150Busy=true;try{if(force)accountStatus('Prüfe Änderungen …');const meta=await request('/api/state/meta');const remoteAt=Number(meta.updatedAt||0),last=Number(localStorage.getItem(LAST_REMOTE)||0);if(!force&&remoteAt<=last){accountStatus('✓ Automatisch synchronisiert');return false}const r=await request('/api/state');if(!r.data){v150DirtyAt=Date.now();setTimeout(v150Push,0);return false}await applyEnvelope(r.data,Number(r.updatedAt||remoteAt||Date.now()));accountStatus('✓ Automatisch synchronisiert');window.cuteToast?.('Alle Geräte sind aktuell ♡');return true}catch(err){console.warn('[V150] pull',err);if(err.status===401){localStorage.removeItem(TOKEN_KEY);v150User=null;accountStatus('Anmeldung muss erneuert werden.',true)}else accountStatus(navigator.onLine===false?'Offline – wird später synchronisiert':'Sync-Fehler – versucht es automatisch erneut',true);return false}finally{v150Busy=false}}
+async function v150Push(){if(v150Busy||v150Applying||!v150DirtyAt||!accountConfigured()||!safeReady198()||navigator.onLine===false)return false;v150Busy=true;try{accountStatus('Speichert im Konto …');/* V194: never discard a dirty local edit because server/client clocks differ. A local save must reach the account first. */const env=await envelope(),r=await request('/api/state',{method:'PUT',body:{data:env}});const stamp=String(Number(r.updatedAt||Date.now()));localStorage.setItem(LAST_REMOTE,stamp);localStorage.setItem(LAST_LOCAL,stamp);localStorage.removeItem(PENDING_KEY);v150DirtyAt=0;accountStatus('✓ Im Konto gespeichert');return true}catch(err){console.warn('[V150] push',err);accountStatus(navigator.onLine===false?'Offline – wird gespeichert, sobald Internet da ist':'Sync-Fehler – versucht es automatisch erneut',true);return false}finally{v150Busy=false}}
+async function v150Pull(force=false){if(v150Busy||v150Applying||!accountConfigured()||!safeReady198()||navigator.onLine===false)return false;if(localStorage.getItem(PENDING_KEY)==='1'&&!v150DirtyAt)v150DirtyAt=Number(localStorage.getItem(LAST_LOCAL)||Date.now())||Date.now();if(v150DirtyAt){v150MarkDirty(180);return false}const now=Date.now();if(!force&&now-v150LastCheck<3500)return false;v150LastCheck=now;v150Busy=true;try{if(force)accountStatus('Prüfe Änderungen …');const meta=await request('/api/state/meta');const remoteAt=Number(meta.updatedAt||0),last=Number(localStorage.getItem(LAST_REMOTE)||0);if(!force&&remoteAt<=last){accountStatus('✓ Automatisch synchronisiert');return false}const r=await request('/api/state');if(!r.data){v150DirtyAt=Date.now();setTimeout(v150Push,0);return false}await applyEnvelope(r.data,Number(r.updatedAt||remoteAt||Date.now()));accountStatus('✓ Automatisch synchronisiert');window.cuteToast?.('Alle Geräte sind aktuell ♡');return true}catch(err){console.warn('[V150] pull',err);if(err.status===401){localStorage.removeItem(TOKEN_KEY);v150User=null;accountStatus('Anmeldung muss erneuert werden.',true)}else accountStatus(navigator.onLine===false?'Offline – wird später synchronisiert':'Sync-Fehler – versucht es automatisch erneut',true);return false}finally{v150Busy=false}}
 window.v150Push=v150Push;window.v150Pull=()=>v150Pull(true);
-function startAccountPolling(){if(v150Poll)clearInterval(v150Poll);if(!accountConfigured())return;v150Poll=setInterval(()=>{const busyEditor=document.body.classList.contains('v132Dragging')||document.body.classList.contains('v138Transforming')||!!document.querySelector('#canvasObjects .cobj[contenteditable="true"]');if(document.visibilityState==='visible'&&!busyEditor)v150Pull(false)},30000);setTimeout(()=>v150Pull(true),250)}
 
-async function initAccount(){if(!accountConfigured())return;try{/* V194: pending is an explicit flag, not a server/client timestamp comparison. */if(localStorage.getItem(PENDING_KEY)==='1')v150DirtyAt=Number(localStorage.getItem(LAST_LOCAL)||Date.now())||Date.now();const me=await request('/api/me');v150User=me.user;localStorage.setItem(USER_KEY,v150User?.username||username());if(v150DirtyAt)await v150Push();startAccountPolling()}catch(err){console.warn('[V150] account init',err);if(err.status===401){localStorage.removeItem(TOKEN_KEY);v150User=null}}}
+/* V198 recovery: no device is allowed to overwrite another one until the user
+   explicitly chooses which existing data set is the source of truth. */
+window.v198SyncNeedsChoice=()=>accountConfigured()&&!safeReady198();
+window.v198UseThisDevice=async function(){
+ if(!accountConfigured())return accountStatus('Bitte zuerst anmelden.',true);
+ if(!confirm('Sind DIE DATEN AUF DIESEM GERÄT die richtigen? Sie werden ins Studia-Konto gespeichert und danach auf die anderen Geräte übernommen.'))return false;
+ try{
+  if(v150Poll){clearInterval(v150Poll);v150Poll=null}
+  accountStatus('Sichere Daten dieses Geräts im Konto …');
+  const env=await envelope();
+  const r=await request('/api/state',{method:'PUT',body:{data:env}});
+  const stamp=String(Number(r.updatedAt||Date.now()));
+  localStorage.setItem(LAST_REMOTE,stamp);localStorage.setItem(LAST_LOCAL,stamp);localStorage.removeItem(PENDING_KEY);v150DirtyAt=0;
+  localStorage.setItem(SAFE_KEY,'1');
+  accountStatus('✓ Dieses Gerät ist jetzt der Hauptstand. Auto-Sync aktiv.');
+  startAccountPolling();window.cuteToast?.('Gerätedaten sicher ins Konto übernommen ♡');
+  setTimeout(()=>window.openAccountDialog?.(),120);return true;
+ }catch(err){localStorage.removeItem(SAFE_KEY);accountStatus('Fehler: '+String(err?.message||err),true);return false}
+};
+window.v198UseAccount=async function(){
+ if(!accountConfigured())return accountStatus('Bitte zuerst anmelden.',true);
+ if(!confirm('Soll der aktuell im STUDIA-KONTO gespeicherte Stand dieses Gerät ersetzen? Lokale Daten auf diesem Gerät werden dabei überschrieben.'))return false;
+ try{
+  if(v150Poll){clearInterval(v150Poll);v150Poll=null}
+  accountStatus('Lade Kontostand auf dieses Gerät …');
+  const r=await request('/api/state');
+  if(!r.data)throw new Error('Im Konto ist noch kein Datenstand gespeichert.');
+  await applyEnvelope(r.data,Number(r.updatedAt||Date.now()));
+  localStorage.setItem(SAFE_KEY,'1');
+  accountStatus('✓ Kontostand geladen. Auto-Sync aktiv.');
+  startAccountPolling();window.cuteToast?.('Kontodaten auf dieses Gerät geladen ♡');
+  setTimeout(()=>location.reload(),350);return true;
+ }catch(err){localStorage.removeItem(SAFE_KEY);accountStatus('Fehler: '+String(err?.message||err),true);return false}
+};
+window.v198PauseSync=function(){localStorage.removeItem(SAFE_KEY);if(v150Poll){clearInterval(v150Poll);v150Poll=null}accountStatus('⚠ Sync pausiert – Datenstand wählen.',true);window.openAccountDialog?.()};
+function startAccountPolling(){if(v150Poll)clearInterval(v150Poll);if(!accountConfigured()||!safeReady198())return;v150Poll=setInterval(()=>{const busyEditor=document.body.classList.contains('v132Dragging')||document.body.classList.contains('v138Transforming')||!!document.querySelector('#canvasObjects .cobj[contenteditable="true"]');if(document.visibilityState==='visible'&&!busyEditor)v150Pull(false)},30000);setTimeout(()=>v150Pull(true),250)}
+
+async function initAccount(){
+ if(!accountConfigured())return;
+ try{
+  const me=await request('/api/me');
+  v150User=me.user;localStorage.setItem(USER_KEY,v150User?.username||username());
+  if(!safeReady198()){
+   if(v150Poll){clearInterval(v150Poll);v150Poll=null}
+   accountStatus('⚠ Sync pausiert – zuerst richtigen Datenstand wählen.',true);
+   return;
+  }
+  if(localStorage.getItem(PENDING_KEY)==='1')v150DirtyAt=Number(localStorage.getItem(LAST_LOCAL)||Date.now())||Date.now();
+  if(v150DirtyAt)await v150Push();
+  startAccountPolling();
+ }catch(err){console.warn('[V198] account init',err);if(err.status===401){localStorage.removeItem(TOKEN_KEY);v150User=null}}
+}
+
 window.v150RememberUrl=function(){const field=accountField150('v150ScriptUrl'),u=String(field?.value||scriptUrl()||'').trim().replace(/\/$/,'');if(field&&u)localStorage.setItem(URL_KEY,u);accountStatus(urlValid(u)?'Web-App verbunden ✓':'Bitte eine gültige /exec-URL eintragen.',!urlValid(u));return urlValid(u)};
-window.v150Login=async function(){const userField=accountField150('v150Username'),passField=accountField150('v150Password'),u=String(userField?.value||'').trim(),p=String(passField?.value||'');v150RememberUrl();if(!u||p.length<8)return accountStatus('Benutzername und Passwort (mind. 8 Zeichen) eingeben.',true);try{accountStatus('Anmelden …');const r=await request('/api/auth/login',{method:'POST',body:{username:u,password:p}});localStorage.setItem(TOKEN_KEY,r.token);localStorage.setItem(USER_KEY,r.user?.username||u);v150User=r.user;const hasPending=localStorage.getItem(PENDING_KEY)==='1';if(hasPending){accountStatus('Angemeldet · lokale Änderungen werden im Konto gespeichert …');v150DirtyAt=Number(localStorage.getItem(LAST_LOCAL)||Date.now())||Date.now();await v150Push()}else{accountStatus('Angemeldet · lade deine Studia-Daten …');const state=await request('/api/state');if(state.data)await applyEnvelope(state.data,Number(state.updatedAt||Date.now()));else{v150MarkDirty(0);await v150Push()}}startAccountPolling();window.closeModal?.();window.cuteToast?.('Dauerhaft angemeldet ♡')}catch(err){accountStatus(String(err.message||err),true)}};
-window.v150Register=async function(){const userField=accountField150('v150Username'),passField=accountField150('v150Password'),u=String(userField?.value||'').trim(),p=String(passField?.value||'');v150RememberUrl();if(u.length<3||p.length<8)return accountStatus('Benutzername mind. 3 Zeichen, Passwort mind. 8 Zeichen.',true);try{accountStatus('Konto wird erstellt …');const r=await request('/api/auth/register',{method:'POST',body:{username:u,password:p}});localStorage.setItem(TOKEN_KEY,r.token);localStorage.setItem(USER_KEY,r.user?.username||u);v150User=r.user;v150MarkDirty(0);await v150Push();startAccountPolling();window.openModal?.(`<div class="v135Modal v150AccountModal"><div class="v135ModalHead"><div><span class="eyebrow">KONTO ERSTELLT</span><h2>Wiederherstellungscode</h2></div><button onclick="closeModal()">×</button></div><p>Diesen Code sicher speichern. Damit kannst du dein Passwort zurücksetzen, falls du es vergisst.</p><div class="v150AccountState" style="font-size:14px;letter-spacing:.08em;text-align:center">${esc(r.recoveryCode||'')}</div><div class="v150PermanentNote"><b>✓ Dauerhaft</b><span>Du bleibst auf diesem Gerät angemeldet und Studia synchronisiert automatisch.</span></div></div>`)}catch(err){accountStatus(String(err.message||err),true)}};
+window.v150Login=async function(){
+ const userField=accountField150('v150Username'),passField=accountField150('v150Password'),u=String(userField?.value||'').trim(),p=String(passField?.value||'');
+ v150RememberUrl();if(!u||p.length<8)return accountStatus('Benutzername und Passwort (mind. 8 Zeichen) eingeben.',true);
+ try{
+  accountStatus('Anmelden …');
+  const r=await request('/api/auth/login',{method:'POST',body:{username:u,password:p}});
+  localStorage.setItem(TOKEN_KEY,r.token);localStorage.setItem(USER_KEY,r.user?.username||u);v150User=r.user;
+  localStorage.removeItem(SAFE_KEY);
+  if(v150Poll){clearInterval(v150Poll);v150Poll=null}
+  accountStatus('✓ Angemeldet · Sync pausiert. Jetzt richtigen Datenstand wählen.');
+  setTimeout(()=>window.openAccountDialog?.(),80);
+ }catch(err){accountStatus(String(err.message||err),true)}
+};
+
+window.v150Register=async function(){const userField=accountField150('v150Username'),passField=accountField150('v150Password'),u=String(userField?.value||'').trim(),p=String(passField?.value||'');v150RememberUrl();if(u.length<3||p.length<8)return accountStatus('Benutzername mind. 3 Zeichen, Passwort mind. 8 Zeichen.',true);try{accountStatus('Konto wird erstellt …');const r=await request('/api/auth/register',{method:'POST',body:{username:u,password:p}});localStorage.setItem(TOKEN_KEY,r.token);localStorage.setItem(USER_KEY,r.user?.username||u);v150User=r.user;localStorage.setItem(SAFE_KEY,'1');v150MarkDirty(0);await v150Push();startAccountPolling();window.openModal?.(`<div class="v135Modal v150AccountModal"><div class="v135ModalHead"><div><span class="eyebrow">KONTO ERSTELLT</span><h2>Wiederherstellungscode</h2></div><button onclick="closeModal()">×</button></div><p>Diesen Code sicher speichern. Damit kannst du dein Passwort zurücksetzen, falls du es vergisst.</p><div class="v150AccountState" style="font-size:14px;letter-spacing:.08em;text-align:center">${esc(r.recoveryCode||'')}</div><div class="v150PermanentNote"><b>✓ Dauerhaft</b><span>Du bleibst auf diesem Gerät angemeldet und Studia synchronisiert automatisch.</span></div></div>`)}catch(err){accountStatus(String(err.message||err),true)}};
 window.openAccountDialog=function(){const logged=!!token(),name=v150User?.username||username(),url=scriptUrl();window.openModal?.(`<div class="v135Modal v150AccountModal"><div class="v135ModalHead"><div><span class="eyebrow">KONTO & SYNC</span><h2>Studia-Konto</h2></div><button onclick="closeModal()">×</button></div>${logged?`<div class="v150AccountHero"><span class="v150AccountAvatar">S</span><div><b>${esc(name||'Studia')}</b><small>dauerhaft angemeldet</small></div></div><div class="v150PermanentNote"><b>✓ Immer Sync</b><span>Fächer, Themen, Lernblätter, Hausaufgaben, Editor-Texte, Karteikarten, Quizze, Tests, Einstellungen, Schriften und Dateien werden automatisch auf allen Geräten gleich gehalten.</span></div><div id="v150AccountStatus" class="v150AccountState">✓ Automatisch synchronisiert</div>`:`<div class="v150AccountForm"><label>Benutzername<input id="v150Username" autocomplete="username" minlength="3" maxlength="32" value="${esc(name)}" placeholder="z. B. Stella"></label><label>Passwort<input id="v150Password" type="password" autocomplete="current-password" minlength="8" placeholder="mindestens 8 Zeichen"></label></div><div id="v150AccountStatus" class="v150AccountState">Mit demselben Konto auf Handy und Laptop anmelden.</div><div class="v150AccountActions"><button class="primary" onclick="v150Login()">Anmelden</button><button onclick="v150Register()">Konto erstellen</button></div>`}${urlValid(String(window.STUDIA_SYNC_CONFIG?.scriptUrl||''))?'':`<details class="v150AccountSetup" ${urlValid(url)?'':'open'}><summary>Einmalige Google-Sync-Einrichtung</summary><div class="v150AccountForm"><label>Apps-Script-Web-App-URL<input id="v150ScriptUrl" type="url" value="${esc(url)}" placeholder="https://script.google.com/macros/s/…/exec" oninput="v150RememberUrl()"></label><small>Wenn du die URL einmal in google-sync-config.js einträgst, brauchst du sie auf keinem Gerät mehr einzugeben.</small></div></details>`}</div>`)};
 
 /* Automatic save hooks. The old V145 functions remain local-only because its key
@@ -2128,7 +2194,7 @@ window.v165OpenStickerColors=async function(){const o=sticker171();if(!o)return 
 window.v171ResetStickerColors=async function(){const o=(st()?.objects||[]).find(x=>String(x.id)===String(stickerId171));if(!o)return;o.stickerExactMap171={};o.src=o.stickerExactOriginal171||o.stickerPaletteOriginal||o.src;delete o.tintColor;window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.();window.closeModal?.();window.cuteToast?.('Alle Originalfarben wiederhergestellt ♡')};
 
 /* cache-busting visible version only; never observe/mutate in a loop */
-function version171(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 197'}setTimeout(version171,6500);setTimeout(version171,8000);
+function version171(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 198'}setTimeout(version171,6500);setTimeout(version171,8000);
 })();
 /* ===== /Studia V171 ===== */
 
@@ -2442,3 +2508,27 @@ function version197(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 19
 setTimeout(version197,1800);setTimeout(version197,7200);setTimeout(version197,9000);
 })();
 /* ===== /Studia V197 ===== */
+
+
+/* ===== Studia V198 — safe two-device sync recovery ===== */
+(()=>{
+'use strict';
+const e=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const TOKEN='studia-account-token-v150',USER='studia-account-username-v150',SAFE='studia-sync-source-confirmed-v198';
+const oldOpen=window.openAccountDialog;
+window.openAccountDialog=function(){
+ const logged=!!localStorage.getItem(TOKEN),name=localStorage.getItem(USER)||'',ready=localStorage.getItem(SAFE)==='1';
+ if(!logged)return oldOpen?.apply(this,arguments);
+ window.openModal?.(`<div class="v135Modal v150AccountModal v166AccountModal"><div class="v135ModalHead"><div><span class="eyebrow">STUDIA KONTO · V198</span><h2>${ready?'Synchronisierung':'Welcher Datenstand ist richtig?'}</h2></div><button class="iconbtn" onclick="closeModal()" aria-label="Schließen">×</button></div>
+ <div class="v150AccountHero"><span class="v150AccountAvatar">S</span><div><b>${e(name||'Studia')}</b><small>dauerhaft angemeldet</small></div></div>
+ ${ready?`<div class="v166SyncPromise"><b>✓ Automatischer Voll-Sync aktiv</b><span>Änderungen werden nach dem Speichern und beim Öffnen zwischen deinen Geräten abgeglichen.</span></div><div id="v150AccountStatus" class="v150AccountState">✓ Automatisch synchronisiert</div><div class="v166AccountActions"><button class="primary" onclick="v150Pull()">Jetzt abgleichen</button><button onclick="v198PauseSync()">Datenquelle neu wählen</button><button onclick="v166Logout()">Abmelden</button></div>`:
+ `<div class="v166SyncPromise" style="border-color:#eab7aa;background:#fff7f3"><b>⚠ Sync absichtlich pausiert</b><span>Damit nicht der falsche Laptop-Stand deine richtigen Handy-Daten überschreibt, synchronisiert V198 noch nichts automatisch.</span></div>
+ <div id="v150AccountStatus" class="v150AccountState error">Wähle jetzt nur auf dem Gerät mit den richtigen Daten.</div>
+ <div class="v166AccountActions" style="display:grid;gap:10px"><button class="primary" onclick="v198UseThisDevice()">DIESES GERÄT ist richtig → ins Konto speichern</button><button onclick="v198UseAccount()">KONTO ist richtig → auf dieses Gerät laden</button><button onclick="v166Logout()">Abmelden</button></div>
+ <p style="margin-top:12px;font-size:12px;line-height:1.45;opacity:.8"><b>Für deinen aktuellen Fall:</b> Auf dem Handy zuerst „DIESES GERÄT ist richtig“. Danach auf dem Laptop „KONTO ist richtig“.</p>`}
+ </div>`);
+};
+function v198Label(){const x=document.querySelector('#headerEyebrow');if(x)x.textContent='VERSION 198'}
+v198Label();setTimeout(v198Label,600);setTimeout(v198Label,2500);setTimeout(v198Label,8000);
+})();
+/* ===== /Studia V198 ===== */

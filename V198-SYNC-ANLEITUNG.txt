@@ -1,0 +1,29 @@
+STUDIA V198 – SICHERER HANDY/LAPTOP-SYNC
+
+WARUM:
+Der alte Sync konnte bei vorhandenen lokalen Änderungen zuerst dieses Gerät in die Cloud hochladen.
+Dadurch konnte ein älterer Laptop-Stand den richtigen Handy-Stand ersetzen.
+
+SO MACHST DU ES JETZT:
+
+1. Die Dateien aus dieser ZIP auf deiner Studia-Website ersetzen.
+2. WICHTIG: Danach ZUERST Studia auf dem HANDY öffnen, auf dem die richtigen Daten noch sichtbar sind.
+3. Konto öffnen.
+4. Dort drücken:
+   "DIESES GERÄT ist richtig → ins Konto speichern"
+5. Warten, bis "Auto-Sync aktiv" angezeigt wird.
+6. Erst DANACH Studia auf dem LAPTOP öffnen.
+7. Konto öffnen.
+8. Dort drücken:
+   "KONTO ist richtig → auf dieses Gerät laden"
+9. Danach haben Handy, Konto und Laptop denselben Stand.
+10. Ab dann läuft der automatische Sync wieder normal.
+
+V198 überschreibt beim ersten Start NICHT automatisch den Server und lädt auch NICHT automatisch
+einen möglicherweise falschen Serverstand auf das Gerät. Erst deine Auswahl entscheidet die Richtung.
+
+Für den aktuellen Fall:
+HANDY = Quelle
+LAPTOP = Ziel
+
+Apps Script muss für V198 nicht noch einmal verändert werden.
