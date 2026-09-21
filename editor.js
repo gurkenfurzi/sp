@@ -2126,7 +2126,7 @@ window.v165OpenStickerColors=async function(){const o=sticker171();if(!o)return 
 window.v171ResetStickerColors=async function(){const o=(st()?.objects||[]).find(x=>String(x.id)===String(stickerId171));if(!o)return;o.stickerExactMap171={};o.src=o.stickerExactOriginal171||o.stickerPaletteOriginal||o.src;delete o.tintColor;window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.();window.closeModal?.();window.cuteToast?.('Alle Originalfarben wiederhergestellt ♡')};
 
 /* cache-busting visible version only; never observe/mutate in a loop */
-function version171(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 194'}setTimeout(version171,6500);setTimeout(version171,8000);
+function version171(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 195'}setTimeout(version171,6500);setTimeout(version171,8000);
 })();
 /* ===== /Studia V171 ===== */
 
@@ -2165,7 +2165,11 @@ async function login172(register=false){
  busy172(true,register?'Konto wird erstellt …':'Anmelden …');
  try{
   cloudStatus172('Server wird geprüft …');
-  try{const info=await health172(f.url);if(info?.service&&info.service!=='studia-google-account-sync')throw new Error('Diese URL gehört nicht zum Studia-Konto-Sync.');if(Number(info?.version||0)&&Number(info.version)<178)throw new Error('Server-Code ist veraltet (V'+info.version+'). Bitte Code.gs aus V178 bereitstellen.')}catch(probeErr){console.warn('[V178 cloud probe]',probeErr);throw probeErr}
+  /* V195: The health endpoint is only an optional diagnostic. Older/previous Studia
+     deployments can return a different service/version marker while the actual
+     login API is fully compatible. Never block a correct /exec URL here; the real
+     login request below is the authoritative connection test. */
+  try{await health172(f.url)}catch(probeErr){console.warn('[V195 optional cloud probe]',probeErr)}
   cloudStatus172(register?'Konto wird erstellt …':'Anmelden …');
   /* Use the proven V150 request path; unlike V171 we NEVER overwrite its server error afterwards. */
   if(register)await window.v150Register?.();else await window.v150Login?.();
