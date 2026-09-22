@@ -1,5 +1,5 @@
 /* v135.js consolidated */
-window.__STUDIA_EDITOR_BUILD__=183;
+window.__STUDIA_EDITOR_BUILD__=200;
 /* Studia V135 - stable selection, Word/Canva tools, cloud-ready accounts and cute assets */
 (function(){
 'use strict';
@@ -1038,7 +1038,7 @@ function v150MarkDirty(delay=300){if(v150Applying)return;v150DirtyAt=Date.now();
 window.v150MarkDirty=v150MarkDirty;
 async function v150Push(){if(v150Busy||v150Applying||!v150DirtyAt||!accountConfigured()||!safeReady198()||navigator.onLine===false)return false;v150Busy=true;try{accountStatus('Speichert im Konto …');/* V194: never discard a dirty local edit because server/client clocks differ. A local save must reach the account first. */const env=await envelope(),r=await request('/api/state',{method:'PUT',body:{data:env}});const stamp=String(Number(r.updatedAt||Date.now()));localStorage.setItem(LAST_REMOTE,stamp);localStorage.setItem(LAST_LOCAL,stamp);localStorage.removeItem(PENDING_KEY);v150DirtyAt=0;accountStatus('✓ Im Konto gespeichert');return true}catch(err){console.warn('[V150] push',err);accountStatus(navigator.onLine===false?'Offline – wird gespeichert, sobald Internet da ist':'Sync-Fehler – versucht es automatisch erneut',true);return false}finally{v150Busy=false}}
 async function v150Pull(force=false){if(v150Busy||v150Applying||!accountConfigured()||!safeReady198()||navigator.onLine===false)return false;if(localStorage.getItem(PENDING_KEY)==='1'&&!v150DirtyAt)v150DirtyAt=Number(localStorage.getItem(LAST_LOCAL)||Date.now())||Date.now();if(v150DirtyAt){v150MarkDirty(180);return false}const now=Date.now();if(!force&&now-v150LastCheck<3500)return false;v150LastCheck=now;v150Busy=true;try{if(force)accountStatus('Prüfe Änderungen …');const meta=await request('/api/state/meta');const remoteAt=Number(meta.updatedAt||0),last=Number(localStorage.getItem(LAST_REMOTE)||0);if(!force&&remoteAt<=last){accountStatus('✓ Automatisch synchronisiert');return false}const r=await request('/api/state');if(!r.data){v150DirtyAt=Date.now();setTimeout(v150Push,0);return false}await applyEnvelope(r.data,Number(r.updatedAt||remoteAt||Date.now()));accountStatus('✓ Automatisch synchronisiert');window.cuteToast?.('Alle Geräte sind aktuell ♡');return true}catch(err){console.warn('[V150] pull',err);if(err.status===401){localStorage.removeItem(TOKEN_KEY);v150User=null;accountStatus('Anmeldung muss erneuert werden.',true)}else accountStatus(navigator.onLine===false?'Offline – wird später synchronisiert':'Sync-Fehler – versucht es automatisch erneut',true);return false}finally{v150Busy=false}}
-window.v150Push=v150Push;window.v150Pull=()=>v150Pull(true);
+window.v150Push=v150Push;window.v150Pull=(force=true)=>v150Pull(force);
 
 /* V198 recovery: no device is allowed to overwrite another one until the user
    explicitly chooses which existing data set is the source of truth. */
@@ -1075,7 +1075,23 @@ window.v198UseAccount=async function(){
  }catch(err){localStorage.removeItem(SAFE_KEY);accountStatus('Fehler: '+String(err?.message||err),true);return false}
 };
 window.v198PauseSync=function(){localStorage.removeItem(SAFE_KEY);if(v150Poll){clearInterval(v150Poll);v150Poll=null}accountStatus('⚠ Sync pausiert – Datenstand wählen.',true);window.openAccountDialog?.()};
-function startAccountPolling(){if(v150Poll)clearInterval(v150Poll);if(!accountConfigured()||!safeReady198())return;v150Poll=setInterval(()=>{const busyEditor=document.body.classList.contains('v132Dragging')||document.body.classList.contains('v138Transforming')||!!document.querySelector('#canvasObjects .cobj[contenteditable="true"]');if(document.visibilityState==='visible'&&!busyEditor)v150Pull(false)},30000);setTimeout(()=>v150Pull(true),250)}
+function startAccountPolling(){
+ if(v150Poll)clearInterval(v150Poll);
+ if(!accountConfigured()||!safeReady198())return;
+ /* V200: permanent auto-sync heartbeat. Pending local edits are retried first;
+    otherwise we cheaply check the remote meta timestamp. This keeps devices
+    close to real time without downloading the full account state every tick. */
+ const tick=()=>{
+  const busyEditor=document.body.classList.contains('v132Dragging')||document.body.classList.contains('v138Transforming')||!!document.querySelector('#canvasObjects .cobj[contenteditable="true"]');
+  if(document.visibilityState!=='visible'||busyEditor||navigator.onLine===false)return;
+  if(localStorage.getItem(PENDING_KEY)==='1'){
+   if(!v150DirtyAt)v150DirtyAt=Number(localStorage.getItem(LAST_LOCAL)||Date.now())||Date.now();
+   v150Push();
+  }else v150Pull(false);
+ };
+ v150Poll=setInterval(tick,8000);
+ setTimeout(()=>{if(localStorage.getItem(PENDING_KEY)==='1'){if(!v150DirtyAt)v150DirtyAt=Number(localStorage.getItem(LAST_LOCAL)||Date.now())||Date.now();v150Push()}else v150Pull(true)},180)
+}
 
 async function initAccount(){
  if(!accountConfigured())return;
@@ -1113,14 +1129,28 @@ window.openAccountDialog=function(){const logged=!!token(),name=v150User?.userna
 
 /* Automatic save hooks. The old V145 functions remain local-only because its key
    was disabled above. */
-try{const prev=window.save||save;window.save=function(){const r=prev.apply(this,arguments);v150MarkDirty(180);return r};try{save=window.save}catch(_){ }}catch(_){ }
-try{const prevSet=Storage.prototype.setItem,prevRemove=Storage.prototype.removeItem;Storage.prototype.setItem=function(k,v){const r=prevSet.call(this,k,v);if(this===localStorage&&!v150Applying&&syncKey(k))v150MarkDirty(750);return r};Storage.prototype.removeItem=function(k){const r=prevRemove.call(this,k);if(this===localStorage&&!v150Applying&&syncKey(k))v150MarkDirty(750);return r}}catch(_){ }
-try{const prevPut=window.dbPut||dbPut,prevDelete=window.dbDelete||dbDelete;window.dbPut=async function(){const r=await prevPut.apply(this,arguments);if(!v150Applying){v150FilesDirty=true;v150MarkDirty(650)}return r};window.dbDelete=async function(){const r=await prevDelete.apply(this,arguments);if(!v150Applying){v150FilesDirty=true;v150MarkDirty(650)}return r};try{dbPut=window.dbPut;dbDelete=window.dbDelete}catch(_){ }}catch(_){ }
-if(typeof window.v144HandleFontFile==='function'){const prevFont=window.v144HandleFontFile;window.v144HandleFontFile=async function(){const r=await prevFont.apply(this,arguments);v150FontCacheDirty=true;v150MarkDirty(450);return r}}
-document.addEventListener('input',e=>{if(e.target?.closest?.('#v150Username,#v150Password,#v150ScriptUrl'))return;v150MarkDirty(900)},true);
-document.addEventListener('change',e=>{if(e.target?.closest?.('#v150Username,#v150Password,#v150ScriptUrl'))return;v150MarkDirty(450)},true);
-document.addEventListener('pointerup',e=>{if(inEditor()&&e.target?.closest?.('#canvasViewport'))v150MarkDirty(650)},true);
-window.addEventListener('online',()=>{if(v150DirtyAt)setTimeout(v150Push,350);else v150Pull(true)});window.addEventListener('focus',()=>v150Pull(false));window.addEventListener('pageshow',()=>setTimeout(()=>v150Pull(false),250));document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')v150Pull(false)});
+try{const prev=window.save||save;window.save=function(){const r=prev.apply(this,arguments);v150MarkDirty(120);return r};try{save=window.save}catch(_){ }}catch(_){ }
+try{const prevSet=Storage.prototype.setItem,prevRemove=Storage.prototype.removeItem;Storage.prototype.setItem=function(k,v){const r=prevSet.call(this,k,v);if(this===localStorage&&!v150Applying&&syncKey(k))v150MarkDirty(400);return r};Storage.prototype.removeItem=function(k){const r=prevRemove.call(this,k);if(this===localStorage&&!v150Applying&&syncKey(k))v150MarkDirty(400);return r}}catch(_){ }
+try{const prevPut=window.dbPut||dbPut,prevDelete=window.dbDelete||dbDelete;window.dbPut=async function(){const r=await prevPut.apply(this,arguments);if(!v150Applying){v150FilesDirty=true;v150MarkDirty(250)}return r};window.dbDelete=async function(){const r=await prevDelete.apply(this,arguments);if(!v150Applying){v150FilesDirty=true;v150MarkDirty(250)}return r};try{dbPut=window.dbPut;dbDelete=window.dbDelete}catch(_){ }}catch(_){ }
+if(typeof window.v144HandleFontFile==='function'){const prevFont=window.v144HandleFontFile;window.v144HandleFontFile=async function(){const r=await prevFont.apply(this,arguments);v150FontCacheDirty=true;v150MarkDirty(250);return r}}
+document.addEventListener('input',e=>{if(e.target?.closest?.('#v150Username,#v150Password,#v150ScriptUrl'))return;v150MarkDirty(500)},true);
+document.addEventListener('change',e=>{if(e.target?.closest?.('#v150Username,#v150Password,#v150ScriptUrl'))return;v150MarkDirty(180)},true);
+document.addEventListener('pointerup',e=>{if(inEditor()&&e.target?.closest?.('#canvasViewport'))v150MarkDirty(300)},true);
+/* V200: flush an open Lernblatt before Studia goes into the background so a
+   last edit is not left only inside canvasState waiting for the normal autosave. */
+function flushBeforeBackgroundSync150(){
+ if(!accountConfigured()||!safeReady198())return;
+ try{if(inEditor()&&typeof window.saveCanvasSheet==='function')window.saveCanvasSheet()}catch(err){console.warn('[V200] editor flush',err)}
+ if(localStorage.getItem(PENDING_KEY)==='1'){
+  if(!v150DirtyAt)v150DirtyAt=Number(localStorage.getItem(LAST_LOCAL)||Date.now())||Date.now();
+  setTimeout(v150Push,0);
+ }
+}
+window.addEventListener('online',()=>{if(localStorage.getItem(PENDING_KEY)==='1'||v150DirtyAt){if(!v150DirtyAt)v150DirtyAt=Number(localStorage.getItem(LAST_LOCAL)||Date.now())||Date.now();setTimeout(v150Push,120)}else v150Pull(true)});
+window.addEventListener('focus',()=>{if(localStorage.getItem(PENDING_KEY)==='1'){if(!v150DirtyAt)v150DirtyAt=Number(localStorage.getItem(LAST_LOCAL)||Date.now())||Date.now();v150Push()}else v150Pull(false)});
+window.addEventListener('pageshow',()=>setTimeout(()=>{if(localStorage.getItem(PENDING_KEY)==='1'){if(!v150DirtyAt)v150DirtyAt=Number(localStorage.getItem(LAST_LOCAL)||Date.now())||Date.now();v150Push()}else v150Pull(false)},180));
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){if(localStorage.getItem(PENDING_KEY)==='1'){if(!v150DirtyAt)v150DirtyAt=Number(localStorage.getItem(LAST_LOCAL)||Date.now())||Date.now();v150Push()}else v150Pull(false)}else flushBeforeBackgroundSync150()});
+window.addEventListener('pagehide',flushBeforeBackgroundSync150);
 
 /* pull down outside editor -> immediately check the account cloud */
 let pull150=null;function scrollTop150(){return Math.max(0,document.scrollingElement?.scrollTop||document.documentElement.scrollTop||0)}
@@ -2194,7 +2224,7 @@ window.v165OpenStickerColors=async function(){const o=sticker171();if(!o)return 
 window.v171ResetStickerColors=async function(){const o=(st()?.objects||[]).find(x=>String(x.id)===String(stickerId171));if(!o)return;o.stickerExactMap171={};o.src=o.stickerExactOriginal171||o.stickerPaletteOriginal||o.src;delete o.tintColor;window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.();window.closeModal?.();window.cuteToast?.('Alle Originalfarben wiederhergestellt ♡')};
 
 /* cache-busting visible version only; never observe/mutate in a loop */
-function version171(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 198'}setTimeout(version171,6500);setTimeout(version171,8000);
+function version171(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 200'}setTimeout(version171,6500);setTimeout(version171,8000);
 })();
 /* ===== /Studia V171 ===== */
 
@@ -2519,7 +2549,7 @@ const oldOpen=window.openAccountDialog;
 window.openAccountDialog=function(){
  const logged=!!localStorage.getItem(TOKEN),name=localStorage.getItem(USER)||'',ready=localStorage.getItem(SAFE)==='1';
  if(!logged)return oldOpen?.apply(this,arguments);
- window.openModal?.(`<div class="v135Modal v150AccountModal v166AccountModal"><div class="v135ModalHead"><div><span class="eyebrow">STUDIA KONTO · V198</span><h2>${ready?'Synchronisierung':'Welcher Datenstand ist richtig?'}</h2></div><button class="iconbtn" onclick="closeModal()" aria-label="Schließen">×</button></div>
+ window.openModal?.(`<div class="v135Modal v150AccountModal v166AccountModal"><div class="v135ModalHead"><div><span class="eyebrow">STUDIA KONTO · V200</span><h2>${ready?'Synchronisierung':'Welcher Datenstand ist richtig?'}</h2></div><button class="iconbtn" onclick="closeModal()" aria-label="Schließen">×</button></div>
  <div class="v150AccountHero"><span class="v150AccountAvatar">S</span><div><b>${e(name||'Studia')}</b><small>dauerhaft angemeldet</small></div></div>
  ${ready?`<div class="v166SyncPromise"><b>✓ Automatischer Voll-Sync aktiv</b><span>Änderungen werden nach dem Speichern und beim Öffnen zwischen deinen Geräten abgeglichen.</span></div><div id="v150AccountStatus" class="v150AccountState">✓ Automatisch synchronisiert</div><div class="v166AccountActions"><button class="primary" onclick="v150Pull()">Jetzt abgleichen</button><button onclick="v198PauseSync()">Datenquelle neu wählen</button><button onclick="v166Logout()">Abmelden</button></div>`:
  `<div class="v166SyncPromise" style="border-color:#eab7aa;background:#fff7f3"><b>⚠ Sync absichtlich pausiert</b><span>Damit nicht der falsche Laptop-Stand deine richtigen Handy-Daten überschreibt, synchronisiert V198 noch nichts automatisch.</span></div>
@@ -2528,7 +2558,7 @@ window.openAccountDialog=function(){
  <p style="margin-top:12px;font-size:12px;line-height:1.45;opacity:.8"><b>Für deinen aktuellen Fall:</b> Auf dem Handy zuerst „DIESES GERÄT ist richtig“. Danach auf dem Laptop „KONTO ist richtig“.</p>`}
  </div>`);
 };
-function v198Label(){const x=document.querySelector('#headerEyebrow');if(x)x.textContent='VERSION 198'}
+function v198Label(){const x=document.querySelector('#headerEyebrow');if(x)x.textContent='VERSION 200'}
 v198Label();setTimeout(v198Label,600);setTimeout(v198Label,2500);setTimeout(v198Label,8000);
 })();
 /* ===== /Studia V198 ===== */
