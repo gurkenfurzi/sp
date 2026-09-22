@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Studia">
-<link rel="manifest" href="./manifest.webmanifest?v=202">
+<link rel="manifest" href="./manifest.webmanifest?v=180">
 <link rel="icon" type="image/png" sizes="64x64" href="./favicon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
@@ -3044,7 +3044,7 @@ html,body{background:#fff7f4;}
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 202</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 194</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -3938,14 +3938,10 @@ function mergeLessons(ls){
      const separatedByBreak=breakBetween(last.end,item.start);
 
      if(!separatedByBreak && last.end===item.start){
-       const qTeacher=String(q.teacherCode||q.meta||"").trim().toUpperCase();
-       const pTeacher=String(p.teacherCode||p.meta||"").trim().toUpperCase();
-       const qRoom=String(q.room||"").trim().toUpperCase();
-       const pRoom=String(p.room||"").trim().toUpperCase();
-       const sameSubject=String(q.subject||"").trim().toUpperCase()===String(p.subject||"").trim().toUpperCase();
-       const teacherCompatible=!qTeacher||!pTeacher||qTeacher===pTeacher;
-       const roomCompatible=!qRoom||!pRoom||qRoom===pRoom;
-       if(!p.special&&!q.special && sameSubject && teacherCompatible && roomCompatible){
+       if(!p.special&&!q.special &&
+          q.subject===p.subject &&
+          q.room===p.room &&
+          (q.teacherCode||q.meta)===(p.teacherCode||p.meta)){
          last.end=item.end;
          last.blocks=(last.blocks||1)+(item.blocks||1);
          last.isDouble=last.blocks>=2;
@@ -4044,7 +4040,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"Studia.";
- $("#headerEyebrow").textContent="VERSION 202";
+ $("#headerEyebrow").textContent="VERSION 194";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -9182,14 +9178,6 @@ function renderHome(){
  ].sort((a,b)=>a.date.localeCompare(b.date)).slice(0,5);
  $("#homeOpen").innerHTML=items.length?items.map(x=>`<div class="card rowBetween"><div><b>${esc(x.subject)} · ${esc(x.text)}</b><div class="small">${fmtDate(x.date)}${x.kind==="test"?` · ${daysUntilLabel(x.date)}`:""}</div></div><span class="badge ${x.kind==="test"?"warn":""}">${x.kind==="test"?"Test":"Aufgabe"}</span></div>`).join(""):'<div class="empty">Alles erledigt 🎉</div>';
 }
-function isLessonCurrentNow(l){
- if(!l||l.specialOnly||l.cancelledFromBasis)return false;
- const dc=dayCode(new Date());
- if(!dc||l.day!==dc)return false;
- const toMin=t=>{const [h,m]=String(t||"00:00").split(":").map(Number);return h*60+m};
- const now=new Date(),m=now.getHours()*60+now.getMinutes();
- return toMin(l.start)<=m && m<toMin(l.end);
-}
 function lessonHtml(l){
  const rawText=String(l.raw||"").replace(/\s+/g," ").trim();
 
@@ -9238,7 +9226,7 @@ function lessonHtml(l){
    </div>`;
  }
 
- return `<div class="lesson lessonClickable ${double?"doubleLesson":""} ${l.changedFromBasis?"changedLesson":""} ${isLessonCurrentNow(l)?"currentLesson":""}" style="--subject:${hashColor(p.subject)}" onclick='openLessonDetails(${JSON.stringify(JSON.stringify(l))})'>
+ return `<div class="lesson lessonClickable ${double?"doubleLesson":""} ${l.changedFromBasis?"changedLesson":""}" style="--subject:${hashColor(p.subject)}" onclick='openLessonDetails(${JSON.stringify(JSON.stringify(l))})'>
    <div class="time">${l.start}<br>${l.end}</div>
    <div>
      ${l.changedFromBasis?`<div class="changeTag">geändert</div>`:""}<div class="subject">${esc(prettySubject(p.subject))}</div>
@@ -9282,26 +9270,6 @@ function stableTimetableDay(list){
  }
  return out.sort((a,b)=>a.start.localeCompare(b.start)||a.end.localeCompare(b.end));
 }
-function renderDesktopWeekPlan(){
- const selectedClass=data.timetable.selectedClass||data.settings.className||"M U1";
- const viewLessons=timetableViewMode==="basis"?basisScheduleForClass(selectedClass):currentScheduleForClass(selectedClass);
- const today=dayCode(new Date());
- const dayHtml=d=>{
-   const rawDay=stableTimetableDay(applyEffectiveDisplayTimes((viewLessons||[]).filter(x=>x.day===d)));
-   const specialOnly=rawDay.filter(x=>x.specialOnly),normal=rawDay.filter(x=>!x.specialOnly);
-   if(specialOnly.length&&!normal.length){
-     return specialOnly.map(x=>{
-       const raw=cleanPdfCellText(x.raw),tm=raw.match(/^(\d{1,2}(?::\d{2})?\s*Uhr)\s*(.*)$/i),time=tm?tm[1]:"";
-       let txt=tm?tm[2]:raw;
-       txt=txt.replace(/Klassenleitungs-\s*stunden/ig,"Klassenleitungsstunden").replace(/Klassenleitungs\s+stunden/ig,"Klassenleitungsstunden");
-       return `<div class="specialOnlyDay"><div class="specialOnlyCard">${time?`<div class="specialTime">${esc(time)}</div>`:""}<div class="specialText">${esc(txt)}</div></div></div>`;
-     }).join("");
-   }
-   const ls=mergeLessons(rawDay.filter(x=>timetableViewMode==="basis"?!x.cancelledFromBasis:true));
-   return ls.length?renderLessonsWithPauses(ls):'<div class="empty">Kein Unterricht.</div>';
- };
- return `<div class="desktopWeekGrid">${dayOrder.map(d=>`<section class="desktopWeekDay ${d===today?"today":""}"><div class="desktopWeekHead"><div><b>${dayNames[d]}</b><small>${d===today?"Heute":""}</small></div><span>${d}</span></div><div class="desktopWeekBody">${dayHtml(d)}</div></section>`).join("")}</div>`;
-}
 function renderPlan(){
  const basisSavedText=data.timetable?.basisSavedAt
    ? ` · gespeichert ${new Date(data.timetable.basisSavedAt).toLocaleDateString("de-DE")}`
@@ -9329,11 +9297,6 @@ function renderPlan(){
  updateHeatModeUI();
  const hint=$("#planModeHint");
  if(hint)hint.dataset.mode=timetableViewMode;
-
- if(window.innerWidth>=980){
-   $("#planLessons").innerHTML=renderDesktopWeekPlan();
-   return;
- }
 
  const selectedClass=data.timetable.selectedClass||data.settings.className||"M U1";
  const viewLessons=timetableViewMode==="basis"
@@ -11768,7 +11731,7 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
   window.addEventListener('resize',()=>{if(document.body.classList.contains('editorMode'))setTimeout(v102DesktopEditorInit,80)});
 
   /* refresh version + title */
-  const eyebrow=$('#headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 202';document.title='Studia';
+  const eyebrow=$('#headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 195';document.title='Studia';
 })();
 
 
@@ -11895,7 +11858,7 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
   openView=function(name,...args){const out=v103OpenViewBase(name,...args);try{sessionStorage.setItem('studia-last-view',name);sessionStorage.setItem('studia-last-subject',selectedSubjectId||'');sessionStorage.setItem('studia-last-topic',selectedTopicId||'');sessionStorage.setItem('studia-last-sheet',selectedSheetId||'')}catch(_){}return out};
   window.addEventListener('beforeunload',()=>{try{sessionStorage.setItem('studia-last-view',document.querySelector('.view.active')?.id?.replace('view-','')||'home');sessionStorage.setItem('studia-last-subject',selectedSubjectId||'');sessionStorage.setItem('studia-last-topic',selectedTopicId||'');sessionStorage.setItem('studia-last-sheet',selectedSheetId||'')}catch(_){}});
 
-  setTimeout(()=>{const e=$('#headerEyebrow');if(e)e.textContent='VERSION 202';document.title='Studia';if(document.body.classList.contains('editorMode')){v103Topbar();v96RenderPageStrip()}},60);
+  setTimeout(()=>{const e=$('#headerEyebrow');if(e)e.textContent='VERSION 195';document.title='Studia';if(document.body.classList.contains('editorMode')){v103Topbar();v96RenderPageStrip()}},60);
   /* Space shows a grab hand; middle mouse or Space+drag pans. */
   window.addEventListener('keydown',e=>{const a=e.target instanceof Element?e.target:document.activeElement,typing=/INPUT|TEXTAREA|SELECT/.test(a?.tagName)||a?.isContentEditable||!!a?.closest?.('[contenteditable="true"]');if(e.code==='Space'&&document.body.classList.contains('editorMode')&&!typing)$('#canvasViewport')?.classList.add('v103Hand')});
   window.addEventListener('keyup',e=>{if(e.code==='Space')$('#canvasViewport')?.classList.remove('v103Hand')});
@@ -12017,7 +11980,7 @@ setTimeout(()=>{if(!window.__schoolBloomBooted){document.documentElement.style.b
   if(drawer)new MutationObserver(()=>requestAnimationFrame(()=>{syncTextPanel();patchLayers()})).observe(drawer,{subtree:true,childList:true,attributes:true});
   document.addEventListener('click',()=>requestAnimationFrame(()=>{syncTextPanel();patchLayers()}),true);
   window.addEventListener('resize',()=>setTimeout(syncTextPanel,60));
-  setTimeout(()=>{cleanShapeHandles();patchLayers();syncTextPanel();const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 202';document.title='Studia'},260);
+  setTimeout(()=>{cleanShapeHandles();patchLayers();syncTextPanel();const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 195';document.title='Studia'},260);
 })();
 </script>
 <!-- ===== /Studia V117 ===== -->
@@ -12223,7 +12186,7 @@ body.editorMode.v122ShapeDragging{user-select:none!important;-webkit-user-select
   window.canvasZoomBy=d=>window.setCanvasZoom(scale()+Number(d||0));
   try{setCanvasZoom=window.setCanvasZoom;canvasZoomBy=window.canvasZoomBy}catch(_){ }
 
-  const eyebrow=document.getElementById('headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 202';
+  const eyebrow=document.getElementById('headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 195';
 })();
 
 }</script>
@@ -12312,7 +12275,7 @@ if(window.__STUDIA_V129_INPUT__)return;
   /* Remove the V122 blocker at runtime too, so stale/injected style order cannot win. */
   function enforce(){document.querySelectorAll('#canvasObjects .vectorTouchProxy,#canvasObjects .shapeHit').forEach(el=>{el.style.setProperty('pointer-events','all','important');el.style.setProperty('touch-action','none','important')})}
   const oldRV=window.renderVectors;if(typeof oldRV==='function')window.renderVectors=function(){const r=oldRV.apply(this,arguments);enforce();return r};
-  setTimeout(()=>{enforce();const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 202'},80);
+  setTimeout(()=>{enforce();const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 195'},80);
 })();
 </script>
 <!-- ===== /Studia V125 ===== -->
@@ -12341,43 +12304,10 @@ function move(e){if(!drag||e.pointerId!==drag.pid)return;const v=(window.canvasS
 function end(e){if(!drag||e.pointerId!==drag.pid)return;e.preventDefault();e.stopImmediatePropagation();const moved=drag.moved;drag=null;if(moved){try{pushHistory()}catch(_){}}try{renderCanvasInspector();renderLayerList()}catch(_){}installProxies()}
 window.addEventListener('pointermove',move,{capture:true,passive:false});window.addEventListener('pointerup',end,true);window.addEventListener('pointercancel',end,true);
 const oldRender=window.renderVectors||renderVectors;window.renderVectors=function(){const out=oldRender.apply(this,arguments);queueMicrotask(installProxies);return out};try{renderVectors=window.renderVectors}catch(_){}
-setTimeout(()=>{if(editor()){try{renderVectors()}catch(_){}installProxies()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 202'},350);
+setTimeout(()=>{if(editor()){try{renderVectors()}catch(_){}installProxies()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 195'},350);
 })();
 </script>
 <!-- ===== /Studia V126 ===== -->
-
-<style id="v202-plan-fixes">
-/* V202 — requested timetable fixes only */
-#view-plan .classPickerWrap{margin-top:9px!important;display:flex!important;align-items:center!important;gap:8px!important}
-#view-plan .classPickerWrap label{margin:0!important;font-size:9px!important;white-space:nowrap!important}
-#view-plan .classPicker{width:auto!important;max-width:145px!important;min-width:108px!important;padding:7px 30px 7px 10px!important;font-size:12px!important;border-radius:11px!important}
-#view-plan .rowBetween .ghost{min-height:36px!important;padding:7px 11px!important;font-size:11px!important;line-height:1.15!important;border-radius:11px!important;white-space:nowrap!important}
-.lesson.currentLesson{border:2px solid #e9a7a4!important;box-shadow:0 0 0 4px rgba(233,167,164,.18),0 10px 24px rgba(160,110,100,.10)!important;background:linear-gradient(135deg,#fffdfb,#fff4f3)!important}
-.lesson.currentLesson:after{content:"JETZT";position:absolute;right:11px;top:9px;padding:4px 8px;border-radius:999px;background:#fff0ef;border:1px solid #efc8c1;color:#ad6c6f;font-size:8px;font-weight:950;letter-spacing:.08em;z-index:3}
-@media(min-width:980px){
-  body:not(.editorMode) .app{max-width:min(1440px,96vw)!important;padding-left:22px!important;padding-right:22px!important}
-  #view-plan .panel:first-child{padding:14px 16px!important}
-  #view-plan .panel:first-child>.rowBetween{align-items:center!important}
-  #view-plan .panel:first-child h2{font-size:22px!important}
-  #view-plan .planModeSwitch{max-width:520px!important;margin:10px 0 7px!important}
-  #view-plan .heatPlanControl{max-width:520px!important}
-  #view-plan #planModeHint,#view-plan #dayTabs{display:none!important}
-  #view-plan #planLessons{display:block!important;margin-top:10px!important}
-  .desktopWeekGrid{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:12px!important;align-items:start!important}
-  .desktopWeekDay{min-width:0;border:1px solid #ead7d0;border-radius:20px;background:rgba(255,253,249,.92);overflow:hidden;box-shadow:0 8px 20px rgba(104,77,68,.05)}
-  .desktopWeekDay.today{border-color:#e9b7b6;box-shadow:0 0 0 2px rgba(239,169,169,.12),0 8px 20px rgba(104,77,68,.05)}
-  .desktopWeekHead{display:flex;align-items:center;justify-content:space-between;padding:11px 12px;border-bottom:1px solid #f1e3de;background:#fffaf7;color:#745f57}
-  .desktopWeekHead b{font-size:14px}.desktopWeekHead small{font-size:9px;color:#aa8d84;font-weight:850}.desktopWeekDay.today .desktopWeekHead{background:#fff3f3}
-  .desktopWeekBody{display:grid;gap:8px;padding:10px}
-  .desktopWeekBody .lesson{grid-template-columns:56px minmax(0,1fr) auto!important;gap:8px!important;padding:11px 9px 11px 13px!important;border-radius:15px!important;min-height:0!important}
-  .desktopWeekBody .time{font-size:10px!important}.desktopWeekBody .subject{font-size:14px!important}.desktopWeekBody .small{font-size:9px!important}.desktopWeekBody .room{font-size:9px!important;padding:5px 7px!important}
-  .desktopWeekBody .doubleBadge,.desktopWeekBody .lessonExtraDot,.desktopWeekBody .changeTag{font-size:7px!important}
-  .desktopWeekBody .pauseCard{padding:9px 10px!important;border-radius:14px!important;font-size:10px!important}.desktopWeekBody .pauseCard .cup{font-size:15px!important}
-  .desktopWeekBody .empty{padding:16px 8px!important;font-size:11px!important}
-}
-@media(min-width:980px) and (max-width:1180px){.desktopWeekGrid{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
-</style>
-
 </body>
 </html><style id="v93-bottom-nav-stability">
 @media (max-width:899px){
@@ -12602,7 +12532,7 @@ html,body,button,input,select,textarea{font-family:ui-rounded,"SF Pro Rounded","
 
 
 <style id="v100-subjects-desktop-editor">
-/* ===== VERSION 202 — subjects reference + desktop editor reference ===== */
+/* ===== VERSION 194 — subjects reference + desktop editor reference ===== */
 @media (max-width:899px){
   body:has(#view-subjects.active)>.app>.header,
   body:has(#view-subject-detail.active)>.app>.header,
@@ -13689,7 +13619,7 @@ body.editorMode .cobj table{max-width:100%!important}
   window.renderCanvasInspector=function(){oldInspector();if(document.querySelector('#canvasQuickDrawer.open .mobileLayerList'))requestAnimationFrame(renderLayerList)};
 
   // Version marker.
-  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 202';document.title='Studia'},40);
+  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 195';document.title='Studia'},40);
 })();
 </script>
 
@@ -14035,7 +13965,7 @@ body.editorMode .cobj[contenteditable="true"],body.editorMode td[contenteditable
   window.renderLayerList=function(){baseLayers();const m=document.querySelector('#canvasQuickDrawer.open .mobileLayerList');if(m){m.querySelectorAll('button').forEach(b=>{b.style.minWidth='0';b.style.maxWidth='none'})}};
   try{renderLayerList=window.renderLayerList}catch(_){}
 
-  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 202';document.title='Studia'},40);
+  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 195';document.title='Studia'},40);
 })();
 </script>
 <!-- ===== /Studia V112 hard stabilization ===== -->
@@ -14331,7 +14261,7 @@ html,body{overflow-x:hidden!important}
   try{renderSheetEditor=window.renderSheetEditor}catch(_){ }
   window.addEventListener('resize',()=>setTimeout(()=>{topicLock();if(inEditor()){desktopInit();reconcileMobileChrome()}},100));
 
-  setTimeout(()=>{topicLock();if(inEditor()){desktopInit();reconcileMobileChrome()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 202';document.title='Studia'},120);
+  setTimeout(()=>{topicLock();if(inEditor()){desktopInit();reconcileMobileChrome()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 195';document.title='Studia'},120);
 })();
 </script>
 
@@ -14466,7 +14396,7 @@ html,body{max-width:100%!important;overflow-x:hidden!important}
   const oldRender=window.renderSheetEditor||renderSheetEditor;window.renderSheetEditor=function(){const r=oldRender.apply(this,arguments);setTimeout(()=>init(true),360);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){ }
   const mo=new MutationObserver(()=>requestAnimationFrame(syncDrawerState));setTimeout(()=>{const d=document.getElementById('canvasQuickDrawer');if(d)mo.observe(d,{attributes:true,childList:true,subtree:true});if(editor())init(true)},180);
   window.addEventListener('resize',()=>{if(!editor())return;setTimeout(()=>{bindViewport();mobile()?fitMobile(false):fitDesktop()},100)});
-  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 202';document.title='Studia'},80);
+  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 195';document.title='Studia'},80);
 })();
 </script>
 <!-- ===== /Studia V115 ===== -->
@@ -14618,7 +14548,7 @@ html,body{max-width:100%!important;overflow-x:hidden!important}
   window.addEventListener('resize',()=>setTimeout(sweep,40));
   setTimeout(()=>{
     sweep();
-    const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 202';
+    const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 195';
     document.title='Studia';
   },220);
 })();
@@ -14828,7 +14758,7 @@ if(window.__STUDIA_V129_INPUT__)return;
 
   function init(){if(!editor())return;document.body.classList.remove('layerDragging');ensureSurface();v121ApplyZoom(scaleNow(),false);renderCanvasObjects();renderVectors();renderLayerList();if(!mobile()){const mode=localStorage.getItem('studia-v113-desktop-panel')||'elements',btn=document.querySelector(`.canvasQuickNav [data-v113-mode="${mode}"]`)||document.querySelector('.canvasQuickNav button');if(btn)v113DesktopPanel(mode,btn)}}
   setTimeout(init,280);window.addEventListener('resize',()=>setTimeout(()=>{if(editor())v121ApplyZoom(scaleNow(),false)},70));
-  const eyebrow=document.getElementById('headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 202';
+  const eyebrow=document.getElementById('headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 195';
 })();
 </script>
 <!-- ===== /Studia V121 ===== -->
@@ -14980,7 +14910,7 @@ if(window.__STUDIA_V129_INPUT__)return;
  const oldOpenStudy=window.openStudySheetEditor;if(typeof oldOpenStudy==='function')window.openStudySheetEditor=function(){const r=oldOpenStudy.apply(this,arguments);setTimeout(sync,120);return r};
  window.addEventListener('resize',()=>setTimeout(()=>{if(isEditor()&&!isMobile())desktopNav()},100));
  setTimeout(sync,350);
- const eyebrow=document.getElementById('headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 202';
+ const eyebrow=document.getElementById('headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 195';
 })();
 </script>
 <!-- ===== /Studia V123 ===== -->
@@ -15054,7 +14984,7 @@ function onUp(e){
 document.addEventListener('pointerdown',onDown,true);
 window.addEventListener('pointermove',onMove,{capture:true,passive:false});
 window.addEventListener('pointerup',onUp,true);window.addEventListener('pointercancel',onUp,true);
-setTimeout(()=>{document.querySelectorAll('.v126VectorDragProxy').forEach(n=>n.remove());const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 202'},250);
+setTimeout(()=>{document.querySelectorAll('.v126VectorDragProxy').forEach(n=>n.remove());const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 195'},250);
 })();
 </script>
 
@@ -15110,7 +15040,7 @@ function installDesktopParity(){if(window.__STUDIA_V134_REFERENCE_ONLY__&&innerW
 const oldRender=window.renderSheetEditor;window.renderSheetEditor=function(){const r=oldRender.apply(this,arguments);setTimeout(()=>{fit();installDesktopParity()},160);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){}
 const oldOpen=window.openStudySheetEditor;if(oldOpen)window.openStudySheetEditor=function(){const r=oldOpen.apply(this,arguments);setTimeout(()=>{fit();installDesktopParity()},200);return r};
 /* V178: retired V128 desktop parity watcher removed. */
-window.addEventListener('resize',()=>setTimeout(()=>{if(isEditor()){fit();installDesktopParity()}},120));setTimeout(()=>{if(isEditor()){fit();installDesktopParity()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 202'},400);
+window.addEventListener('resize',()=>setTimeout(()=>{if(isEditor()){fit();installDesktopParity()}},120));setTimeout(()=>{if(isEditor()){fit();installDesktopParity()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 195'},400);
 })();
 </script>
 <!-- ===== /Studia V128 ===== -->
@@ -15173,7 +15103,7 @@ const oldRO=window.renderCanvasObjects||renderCanvasObjects;window.renderCanvasO
 const oldOpen=window.editorOpenGroup;window.editorOpenGroup=function(){const r=oldOpen.apply(this,arguments);requestAnimationFrame(()=>{renderShapeProxies();if(innerWidth>=900)desktopParity()});return r};try{editorOpenGroup=window.editorOpenGroup}catch(_){}
 /* V178: retired V129 desktop parity observer removed. */
 window.addEventListener('resize',()=>setTimeout(()=>{if(editor()){fit129();desktopParity();renderShapeProxies()}},120));
-setTimeout(()=>{if(editor()){fit129();desktopParity();renderShapeProxies()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 202';document.title='Studia'},500);
+setTimeout(()=>{if(editor()){fit129();desktopParity();renderShapeProxies()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 195';document.title='Studia'},500);
 })();
 </script>
 <!-- ===== /Studia V129 ===== -->
@@ -15355,7 +15285,7 @@ window.editorOpenGroup=function(){if(innerWidth>=900)openEditorGroup=null;const 
 try{editorOpenGroup=window.editorOpenGroup}catch(_){}
 const observer=new MutationObserver(()=>requestAnimationFrame(()=>{if(innerWidth>=900&&window.__STUDIA_V180_DESKTOP__)return;if(!inEditor())return;addStarButton();addTransparentChoices(document);polishRoundedVectors()}));
 observer.observe(document.body,{subtree:true,childList:true});
-setTimeout(()=>{if(inEditor()){renderVectors();renderLayerList();enhanceInspector();addStarButton()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 202';document.title='Studia'},650);
+setTimeout(()=>{if(inEditor()){renderVectors();renderLayerList();enhanceInspector();addStarButton()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 195';document.title='Studia'},650);
 })();
 </script>
 <!-- ===== /Studia V130 ===== -->
@@ -15521,7 +15451,7 @@ window.renderLayerList=function(){const html=layerHTML(),a=document.getElementBy
 
 function quickStrip(){return '<div class="v131QuickStrip"><button onclick="undoCanvas()"><b>↶</b>Rückgängig</button><button onclick="redoCanvas()"><b>↷</b>Wiederholen</button><button onclick="fitCanvasStage()"><b>⊡</b>Einpassen</button><button onclick="canvasZoomBy(.1)"><b>＋</b>Zoom</button><button onclick="canvasZoomBy(-.1)"><b>−</b>Zoom</button><button onclick="duplicateSelected()"><b>⧉</b>Duplizieren</button></div>'}
 function decorateDrawer(){const d=document.getElementById('canvasQuickDrawer');if(!d||!d.classList.contains('open')||d.querySelector('.v131QuickStrip'))return;const head=d.querySelector('.mobileDrawerHead');if(head)head.insertAdjacentHTML('afterend',quickStrip());else d.insertAdjacentHTML('afterbegin',quickStrip())}
-function ensureChrome(){const top=document.querySelector('.canvasTopbar');if(top&&!top.querySelector('.v131VersionBadge')){const badge=document.createElement('span');badge.className='v131VersionBadge';badge.textContent='STUDIA · V181';const title=top.querySelector('.editorTitle');title?.after(badge)}const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 202'}
+function ensureChrome(){const top=document.querySelector('.canvasTopbar');if(top&&!top.querySelector('.v131VersionBadge')){const badge=document.createElement('span');badge.className='v131VersionBadge';badge.textContent='STUDIA · V181';const title=top.querySelector('.editorTitle');title?.after(badge)}const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 195'}
 const oldOpen=window.editorOpenGroup;window.editorOpenGroup=function(){openEditorGroup=null;const r=oldOpen.apply(this,arguments);requestAnimationFrame(()=>{decorateDrawer();if(arguments[0]==='layers')renderLayerList()});return r};try{editorOpenGroup=window.editorOpenGroup}catch(_){}
 const oldObjects=window.renderCanvasObjects;window.renderCanvasObjects=function(){const r=oldObjects.apply(this,arguments);requestAnimationFrame(syncMoveProxies);return r};try{renderCanvasObjects=window.renderCanvasObjects}catch(_){}
 const oldVectors=window.renderVectors;window.renderVectors=function(){const r=oldVectors.apply(this,arguments);requestAnimationFrame(syncMoveProxies);return r};try{renderVectors=window.renderVectors}catch(_){}
@@ -15776,7 +15706,7 @@ function polishChrome(){const topMap={Rückgängig:'undo',Wiederholen:'redo','Se
 function decorateGroup(group){document.querySelectorAll('.v131QuickStrip').forEach(x=>x.remove());if(group==='elements')replaceDrawerBody(elementGroupsHTML());if(group==='pages')decoratePages();if(group==='layers')renderLayerList();polishChrome()}
 window.v132Open=function(mode,btn){const map={text:'textLibrary',elements:'elements',templates:'templates',pages:'pages',layers:'layers'},group=mode==='text'&&typeof mobileSelectedText==='function'&&mobileSelectedText()?'textEdit':map[mode];try{openEditorGroup=null}catch(_){}editorOpenGroup(group,btn);requestAnimationFrame(()=>{const d=document.getElementById('canvasQuickDrawer');if(mode==='text'&&d&&innerWidth>=900&&!d.querySelector('.v132DesktopTextExtras')){const x=document.createElement('div');x.className='v129DesktopTextExtras v132DesktopTextExtras';x.innerHTML=`<button onclick="v91PickFont()">${ic('textformat')} Eigene Schrift</button><button onclick="createCustomStylePreset()">${ic('plus')} Textformat</button><button onclick="openTextFormatManager()">${ic('edit')} Textformate verwalten</button>`;d.prepend(x)}decorateGroup(group)})};
 function buildNav(){if(window.__STUDIA_V134_REFERENCE_ONLY__&&innerWidth>=900)return;const nav=document.querySelector('.canvasQuickNav');if(!nav)return;if(!nav.querySelector('[data-v133]'))nav.innerHTML=navHTML();nav.querySelectorAll('[data-v133]').forEach(b=>b.onclick=()=>v132Open(b.dataset.v133,b))}
-function init(forceFit=true){if(!editor())return;if(canvasState.multiMode){multiObjects=new Set(canvasState.selectedIds||[]);multiVectors=new Set(canvasState.selectedVectorIds||[])}document.querySelectorAll('.v131VersionBadge,.v131QuickStrip').forEach(x=>x.remove());buildTop();buildNav();bindViewport();syncHits();polishChrome();if(!(window.__STUDIA_V134_REFERENCE_ONLY__&&innerWidth>=900)&&document.getElementById('canvasQuickDrawer')?.classList.contains('open'))decorateGroup('elements');if(forceFit)setTimeout(()=>fit(true),80);const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 202'}
+function init(forceFit=true){if(!editor())return;if(canvasState.multiMode){multiObjects=new Set(canvasState.selectedIds||[]);multiVectors=new Set(canvasState.selectedVectorIds||[])}document.querySelectorAll('.v131VersionBadge,.v131QuickStrip').forEach(x=>x.remove());buildTop();buildNav();bindViewport();syncHits();polishChrome();if(!(window.__STUDIA_V134_REFERENCE_ONLY__&&innerWidth>=900)&&document.getElementById('canvasQuickDrawer')?.classList.contains('open'))decorateGroup('elements');if(forceFit)setTimeout(()=>fit(true),80);const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 195'}
 const oldGroup=window.editorOpenGroup;window.editorOpenGroup=function(){const args=arguments,r=oldGroup.apply(this,args);requestAnimationFrame(()=>{buildNav();decorateGroup(args[0])});return r};try{editorOpenGroup=window.editorOpenGroup}catch(_){}
 const oldObjects=window.renderCanvasObjects;window.renderCanvasObjects=function(){const r=oldObjects.apply(this,arguments);queueHits();return r};try{renderCanvasObjects=window.renderCanvasObjects}catch(_){}
 const oldVectors=window.renderVectors;window.renderVectors=function(){const r=oldVectors.apply(this,arguments);queueHits();return r};try{renderVectors=window.renderVectors}catch(_){}
@@ -15785,7 +15715,7 @@ const oldSheet=window.renderSheetEditor;window.renderSheetEditor=function(){cons
 const oldOpenSheet=window.openStudySheetEditor;if(oldOpenSheet)window.openStudySheetEditor=function(){const r=oldOpenSheet.apply(this,arguments);setTimeout(()=>init(true),560);return r};
 window.addEventListener('resize',()=>setTimeout(()=>{if(editor()){buildNav();fit(false);syncHits();polishChrome()}},180));
 let v133WasEditor=editor();const v133Observer=new MutationObserver(()=>{const now=editor();if(now&&!v133WasEditor)requestAnimationFrame(()=>{buildNav();polishChrome()});v133WasEditor=now});v133Observer.observe(document.body,{attributes:true,attributeFilter:['class']});
-setTimeout(()=>{buildTop();if(editor())init(true);const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 202';document.title='Studia'},750);
+setTimeout(()=>{buildTop();if(editor())init(true);const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 195';document.title='Studia'},750);
 })();
 </script>
 <!-- ===== /Studia V133 ===== -->
@@ -15967,9 +15897,9 @@ setTimeout(reconcile,980);
 })();
 </script>
 <!-- ===== /Studia V134 ===== -->
-<link rel="stylesheet" href="editor.css?v=202">
-<script src="google-sync-config.js?v=202"></script>
-<script src="editor.js?v=202"></script>
+<link rel="stylesheet" href="editor.css?v=194">
+<script src="google-sync-config.js?v=194"></script>
+<script src="editor.js?v=200"></script>
 
 <style id="v181-desktop-stability-style">
 @media(min-width:900px){
@@ -16145,7 +16075,7 @@ window.printCanvasSheet=async function(){
 };
 try{printCanvasSheet=window.printCanvasSheet}catch(_){}
 
-function install(){window.__STUDIA_V180_DESKTOP__=innerWidth>=900;const eye=qs('#headerEyebrow');if(eye)eye.textContent='VERSION 202';document.title='Studia';try{window.v132SyncHits?.();window.v138RefreshHandles?.()}catch(_){}}
+function install(){window.__STUDIA_V180_DESKTOP__=innerWidth>=900;const eye=qs('#headerEyebrow');if(eye)eye.textContent='VERSION 195';document.title='Studia';try{window.v132SyncHits?.();window.v138RefreshHandles?.()}catch(_){}}
 const oldSheet=window.renderSheetEditor;window.renderSheetEditor=function(){const r=oldSheet.apply(this,arguments);setTimeout(install,900);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){}
 const oldOpen=window.openStudySheetEditor;if(oldOpen)window.openStudySheetEditor=function(){const r=oldOpen.apply(this,arguments);setTimeout(install,1050);return r};
 window.addEventListener('resize',()=>{if(desktop())requestAnimationFrame(()=>{paintOverlay();attach181()})});
@@ -16165,7 +16095,7 @@ setTimeout(install,1300);
 <script id="v182-selection-recovery-script">
 (()=>{
  const active=()=>false; /* V183 desktop repair owns laptop interaction; disable V182 recovery layer. */
- function revive(){if(!active())return;window.__STUDIA_V180_DESKTOP__=innerWidth>=900;document.getElementById('v181SelectionOverlay')?.remove();try{window.v132SyncHits?.();window.v138RefreshHandles?.()}catch(_){}const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 202'}
+ function revive(){if(!active())return;window.__STUDIA_V180_DESKTOP__=innerWidth>=900;document.getElementById('v181SelectionOverlay')?.remove();try{window.v132SyncHits?.();window.v138RefreshHandles?.()}catch(_){}const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 195'}
  const oldSheet=window.renderSheetEditor;if(typeof oldSheet==='function')window.renderSheetEditor=function(){const r=oldSheet.apply(this,arguments);requestAnimationFrame(()=>requestAnimationFrame(revive));return r};
  const oldOpen=window.openStudySheetEditor;if(typeof oldOpen==='function')window.openStudySheetEditor=function(){const r=oldOpen.apply(this,arguments);setTimeout(revive,120);return r};
  window.addEventListener('resize',()=>setTimeout(revive,60));setTimeout(revive,1000);
@@ -16399,7 +16329,7 @@ const oldPreview=window.v181OpenPreview;window.v181OpenPreview=async function(){
  const close=host.querySelector('.v181PreviewBar button');if(close){close.onclick=()=>{host.classList.remove('open');document.body.classList.add('editorMode');document.body.classList.remove('v184PreviewOpen','v137ViewMode');if(editor){editor.inert=false;editor.removeAttribute('aria-hidden')}host.scrollTop=0;q('.canvasQuickNav')?.style.removeProperty('display');q('#canvasQuickDrawer')?.style.removeProperty('display');requestAnimationFrame(()=>{bindObjects();bindVectors();paintFrame()})}}
 };
 
-function install(){if(!desktop())return;disableLegacy();document.body.classList.remove('v137ViewMode');q('.v137ViewerBar')?.remove();/* recreate object DOM once so old body-drag listeners disappear */try{renderCanvasObjects?.();renderVectors?.()}catch(_){}bindObjects();bindVectors();paintFrame();const view=q('.v137ViewButton');if(view){view.title='Lernblatt nur ansehen';view.onclick=()=>window.v181OpenPreview?.();const label=view.querySelector('span');if(label)label.textContent='Ansicht'}const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 202'}
+function install(){if(!desktop())return;disableLegacy();document.body.classList.remove('v137ViewMode');q('.v137ViewerBar')?.remove();/* recreate object DOM once so old body-drag listeners disappear */try{renderCanvasObjects?.();renderVectors?.()}catch(_){}bindObjects();bindVectors();paintFrame();const view=q('.v137ViewButton');if(view){view.title='Lernblatt nur ansehen';view.onclick=()=>window.v181OpenPreview?.();const label=view.querySelector('span');if(label)label.textContent='Ansicht'}const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 195'}
 const prevSheet=window.renderSheetEditor;if(prevSheet)window.renderSheetEditor=function(){const r=prevSheet.apply(this,arguments);setTimeout(install,90);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){}
 const prevOpen=window.openStudySheetEditor;if(prevOpen)window.openStudySheetEditor=function(){const r=prevOpen.apply(this,arguments);setTimeout(install,120);return r};
 document.addEventListener('click',e=>{const view=e.target.closest?.('.v137ViewButton');if(!view||!desktop())return;e.preventDefault();e.stopImmediatePropagation();window.v181OpenPreview?.()},true);
@@ -16825,153 +16755,8 @@ try{insertSavedTextFormat=window.insertSavedTextFormat}catch(_){}
 const oldRender193=window.renderCanvasObjects;if(typeof oldRender193==='function')window.renderCanvasObjects=function(){const r=oldRender193.apply(this,arguments);requestAnimationFrame(window.v193PaintGroupFrame);return r};
 try{renderCanvasObjects=window.renderCanvasObjects}catch(_){}
 
-function reconcile193(){const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 202';if(!laptop())return;window.v193EnhanceHexColors();window.v193PaintGroupFrame()}
+function reconcile193(){const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 195';if(!laptop())return;window.v193EnhanceHexColors();window.v193PaintGroupFrame()}
 window.addEventListener('resize',()=>setTimeout(reconcile193,100));document.addEventListener('click',()=>setTimeout(reconcile193,0),true);[500,1800,9200].forEach(t=>setTimeout(reconcile193,t));
 })();
 /* ===== /Studia V193 ===== */
-</script>
-
-<style id="v203-plan-compact-fix">
-/* ===== V203 — compact, cute, no overlaps timetable layout ===== */
-@media (max-width:899px){
-  body.planViewActive .header{margin-bottom:10px!important}
-  body.planViewActive .header .eyebrow{font-size:10px!important;letter-spacing:.16em!important;margin-bottom:4px!important}
-  body.planViewActive .header h1{font-size:28px!important;line-height:1.02!important;margin:0!important}
-  body.planViewActive #view-plan>.panel:first-child{
-    padding:10px 12px!important;
-    display:grid!important;
-    grid-template-columns:minmax(0,1fr) auto!important;
-    gap:8px 10px!important;
-    align-items:center!important;
-  }
-  body.planViewActive #view-plan>.panel:first-child .rowBetween{display:contents!important}
-  body.planViewActive #view-plan>.panel:first-child .rowBetween>div{display:none!important}
-  body.planViewActive #view-plan>.panel:first-child #planStatus,
-  body.planViewActive #view-plan>.panel:first-child #liveRefreshStatus,
-  body.planViewActive #view-plan>.panel:first-child .eyebrow,
-  body.planViewActive #view-plan>.panel:first-child h2{display:none!important}
-  body.planViewActive #view-plan>.panel:first-child .ghost{
-    grid-column:2!important;grid-row:1 / span 2!important;align-self:stretch!important;
-    min-height:34px!important;padding:0 10px!important;font-size:11px!important;border-radius:12px!important;
-  }
-  body.planViewActive #view-plan>.panel:first-child .classPickerWrap{
-    grid-column:1!important;grid-row:1 / span 2!important;display:block!important;margin:0!important;
-  }
-  body.planViewActive #view-plan>.panel:first-child .classPickerWrap label{display:none!important}
-  body.planViewActive #view-plan>.panel:first-child .classPicker{
-    width:100%!important;max-width:none!important;min-width:0!important;
-    padding:9px 36px 9px 12px!important;font-size:13px!important;border-radius:13px!important;
-  }
-  body.planViewActive #view-plan .planModeSwitch{margin-top:8px!important;gap:8px!important}
-  body.planViewActive #view-plan .planModeSwitch button{padding:8px!important;border-radius:18px!important}
-  body.planViewActive #view-plan .planModeSwitch button b{font-size:11px!important}
-  body.planViewActive #view-plan .planModeSwitch button small{font-size:9px!important}
-  body.planViewActive #view-plan .heatPlanControl{padding:10px 12px!important;border-radius:18px!important}
-  body.planViewActive #view-plan .heatPlanInfo b{font-size:12px!important}
-  body.planViewActive #view-plan .heatPlanInfo small{font-size:10px!important}
-  body.planViewActive #view-plan #planModeHint{display:none!important}
-  body.planViewActive #view-plan .daytabs{margin:8px 0 8px!important;gap:8px!important}
-  body.planViewActive #view-plan .daytabs .tab{padding:10px 15px!important;border-radius:999px!important;font-size:12px!important}
-  body.planViewActive #view-plan #planLessons{margin-top:4px!important}
-  body.planViewActive #view-plan .lesson{padding:12px 12px 12px 16px!important;grid-template-columns:68px minmax(0,1fr) auto!important;gap:10px!important}
-  body.planViewActive #view-plan .lesson .subject{font-size:16px!important}
-  body.planViewActive #view-plan .lesson .small{font-size:11px!important}
-  body.planViewActive #view-plan .lesson .room{font-size:11px!important;padding:7px 8px!important}
-  body.planViewActive #view-plan .pauseCard{padding:12px 13px!important}
-}
-
-@media (min-width:900px){
-  body:not(.editorMode) .app{max-width:min(1360px,95vw)!important;padding:12px 18px 24px!important}
-  body.planViewActive .header{margin-bottom:10px!important}
-  body.planViewActive .header .eyebrow{font-size:11px!important;letter-spacing:.18em!important;margin-bottom:4px!important}
-  body.planViewActive .header h1{font-size:34px!important;line-height:1.02!important;margin:0!important}
-
-  body.planViewActive #view-plan>.panel:first-child{
-    padding:12px 14px!important;
-    display:grid!important;
-    grid-template-columns:minmax(220px,1fr) auto!important;
-    gap:10px 12px!important;
-    align-items:center!important;
-  }
-  body.planViewActive #view-plan>.panel:first-child .rowBetween{display:contents!important}
-  body.planViewActive #view-plan>.panel:first-child .rowBetween>div{display:none!important}
-  body.planViewActive #view-plan>.panel:first-child #planStatus,
-  body.planViewActive #view-plan>.panel:first-child #liveRefreshStatus{display:none!important}
-  body.planViewActive #view-plan>.panel:first-child .classPickerWrap{margin:0!important;display:grid!important;grid-template-columns:auto minmax(130px,180px)!important;gap:8px!important;align-items:center!important}
-  body.planViewActive #view-plan>.panel:first-child .classPickerWrap label{font-size:9px!important}
-  body.planViewActive #view-plan>.panel:first-child .classPicker{max-width:180px!important;min-width:130px!important;padding:8px 30px 8px 11px!important;font-size:12px!important}
-  body.planViewActive #view-plan>.panel:first-child .ghost{min-height:34px!important;padding:0 11px!important;font-size:11px!important;border-radius:12px!important}
-
-  body.planViewActive #view-plan .planModeSwitch,
-  body.planViewActive #view-plan .heatPlanControl{max-width:460px!important}
-  body.planViewActive #view-plan #planModeHint{display:none!important}
-  body.planViewActive #view-plan #planLessons{margin-top:8px!important}
-
-  body.planViewActive .desktopWeekGrid{
-    display:grid!important;
-    grid-template-columns:repeat(auto-fit,minmax(320px,1fr))!important;
-    gap:14px!important;align-items:start!important;
-  }
-  body.planViewActive .desktopWeekDay{border-radius:22px!important;overflow:hidden!important;background:rgba(255,253,249,.94)!important;border:1px solid #ead8d0!important;box-shadow:0 8px 20px rgba(104,77,68,.05)!important}
-  body.planViewActive .desktopWeekDay.today{border-color:#e9b3b1!important;box-shadow:0 0 0 2px rgba(239,169,169,.12),0 8px 20px rgba(104,77,68,.05)!important}
-  body.planViewActive .desktopWeekHead{padding:12px 14px!important;background:#fffaf7!important;border-bottom:1px solid #f1e3de!important}
-  body.planViewActive .desktopWeekHead b{font-size:15px!important}
-  body.planViewActive .desktopWeekHead small{font-size:10px!important}
-  body.planViewActive .desktopWeekHead span{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-width:34px!important;height:24px!important;padding:0 8px!important;border-radius:999px!important;background:#f7efea!important;color:#9b8075!important;font-size:10px!important;font-weight:900!important}
-  body.planViewActive .desktopWeekBody{padding:11px!important;display:grid!important;gap:9px!important}
-  body.planViewActive .desktopWeekBody .lesson{grid-template-columns:58px minmax(0,1fr) auto!important;gap:8px!important;padding:11px 10px 11px 14px!important;border-radius:16px!important;min-height:0!important}
-  body.planViewActive .desktopWeekBody .time{font-size:10px!important;line-height:1.35!important}
-  body.planViewActive .desktopWeekBody .subject{font-size:15px!important;line-height:1.15!important}
-  body.planViewActive .desktopWeekBody .small{font-size:10px!important;line-height:1.2!important}
-  body.planViewActive .desktopWeekBody .room{font-size:10px!important;padding:5px 8px!important}
-  body.planViewActive .desktopWeekBody .doubleBadge,
-  body.planViewActive .desktopWeekBody .lessonExtraDot,
-  body.planViewActive .desktopWeekBody .changeTag{font-size:8px!important;padding-top:4px!important;padding-bottom:4px!important}
-  body.planViewActive .desktopWeekBody .pauseCard{padding:10px 11px!important;border-radius:15px!important;font-size:10px!important}
-  body.planViewActive .desktopWeekBody .pauseCard .cup{font-size:16px!important}
-  body.planViewActive .desktopWeekBody .empty{padding:18px 10px!important;font-size:12px!important}
-
-  body:not(.editorMode) #nav{
-    position:relative!important;left:auto!important;right:auto!important;bottom:auto!important;transform:none!important;
-    margin:16px auto 0!important;width:min(760px,92vw)!important;max-width:760px!important;z-index:auto!important;
-  }
-}
-
-@media (min-width:900px) and (max-width:1240px){
-  body.planViewActive .desktopWeekGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
-}
-@media (min-width:1241px) and (max-width:1590px){
-  body.planViewActive .desktopWeekGrid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
-}
-@media (min-width:1591px) and (max-width:1850px){
-  body.planViewActive .desktopWeekGrid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
-}
-@media (min-width:1851px){
-  body.planViewActive .desktopWeekGrid{grid-template-columns:repeat(5,minmax(0,1fr))!important}
-}
-</style>
-<script id="v203-plan-compact-fix-script">
-(function(){
-  function markPlanView(){
-    var active=document.querySelector('#view-plan.active');
-    document.body.classList.toggle('planViewActive',!!active && !document.body.classList.contains('editorMode'));
-  }
-  function setVersion(){
-    var el=document.querySelector('#headerEyebrow');
-    if(el)el.textContent='VERSION 203';
-  }
-  var oldOpenView=window.openView;
-  if(typeof oldOpenView==='function'){
-    window.openView=function(){
-      var r=oldOpenView.apply(this,arguments);
-      setTimeout(markPlanView,0);
-      setTimeout(setVersion,0);
-      return r;
-    };
-    try{openView=window.openView}catch(_){ }
-  }
-  window.addEventListener('resize',function(){setTimeout(markPlanView,0)});
-  document.addEventListener('click',function(){setTimeout(markPlanView,0)},true);
-  [0,200,900,2200].forEach(function(t){setTimeout(function(){markPlanView();setVersion()},t)});
-})();
 </script>

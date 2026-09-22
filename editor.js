@@ -440,8 +440,8 @@ document.addEventListener('keydown',e=>{if(!editor())return;const typing=e.targe
 function correctLayerIcons(){for(const row of qa('[data-layer-kind][data-layer-id]')){const ref=row.dataset.layerKind==='object'?(canvasState.objects||[]).find(x=>x.id===row.dataset.layerId):(canvasState.vectors||[]).find(x=>x.id===row.dataset.layerId),b=row.querySelector('.v135LayerLock,.v130LayerTools button[title="Sperren"],.v130LayerTools button[title="Entsperren"]');if(!ref||!b)continue;b.innerHTML=window.v133Icon?.(ref.locked?'lock':'unlock')||'';b.title=ref.locked?'Entsperren':'Sperren';b.setAttribute('aria-label',b.title)}}
 
 /* Today gets the requested version and one visual icon system. */
-function polishToday(){const home=q('#view-home');if(!home)return;home.querySelector('.v138Version')?.remove();const eye=q('#headerEyebrow');if(eye&&eye.textContent!=='VERSION 194')eye.textContent='VERSION 194';const specs=[['Aufgabe','task'],['Test','test'],['Fächer','subjects'],['Lernen','learn']];qa('.homeMiniActions button',home).forEach((b,i)=>{const spec=specs[i];if(!spec||b.dataset.v138Today==='1')return;b.dataset.v138Today='1';b.classList.add('v138TodayAction');b.innerHTML=icons[spec[1]]+`<span>${spec[0]}</span>`})}
-function watchVersion(){const eye=q('#headerEyebrow');if(eye&&!editor()&&eye.textContent!=='VERSION 194')eye.textContent='VERSION 194'}
+function polishToday(){const home=q('#view-home');if(!home)return;home.querySelector('.v138Version')?.remove();const eye=q('#headerEyebrow');if(eye&&eye.textContent!=='VERSION 202')eye.textContent='VERSION 202';const specs=[['Aufgabe','task'],['Test','test'],['Fächer','subjects'],['Lernen','learn']];qa('.homeMiniActions button',home).forEach((b,i)=>{const spec=specs[i];if(!spec||b.dataset.v138Today==='1')return;b.dataset.v138Today='1';b.classList.add('v138TodayAction');b.innerHTML=icons[spec[1]]+`<span>${spec[0]}</span>`})}
+function watchVersion(){const eye=q('#headerEyebrow');if(eye&&!editor()&&eye.textContent!=='VERSION 202')eye.textContent='VERSION 202'}
 
 function cleanMobileDrawer(){qa('.v137MobileTextExtras,.v135MobileExtras').forEach(x=>x.remove())}
 function reconcile(){if(!editor()){polishToday();return}compactNav();enhanceSelectionBars();decorateInspector();correctLayerIcons();cleanMobileDrawer();decorateTransformHandles();if(q('#canvasQuickDrawer.open'))ensureElementTools()}
@@ -728,7 +728,7 @@ const textKinds=new Set(['text','block','task','merke']);
 const selectedText=()=>{try{const o=(canvasState?.objects||[]).find(x=>x.id===canvasState?.selectedId);return o&&textKinds.has(o.kind)?o:null}catch(_){return null}};
 
 /* ---------- version ---------- */
-function setVersion(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 194')e.textContent='VERSION 194';document.title='Studia'}
+function setVersion(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 202')e.textContent='VERSION 202';document.title='Studia'}
 setVersion();setTimeout(setVersion,250);setTimeout(setVersion,1800);
 
 /* ---------- custom fonts: visible input + IndexedDB + previews ---------- */
@@ -881,7 +881,7 @@ try{window.v113ForgetSync=()=>window.cuteToast?.('Geräte-Sync bleibt verbunden 
 function queueSync(delay){try{window.v150MarkDirty?.(delay)}catch(_){ }}
 
 /* Keep a single current version label after all historical startup scripts finish. */
-function version(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 194')e.textContent='VERSION 194';document.title='Studia'}
+function version(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 202')e.textContent='VERSION 202';document.title='Studia'}
 version();setTimeout(version,450);setTimeout(version,1900);
 })();
 /* ===== /Studia V149 ===== */
@@ -895,7 +895,7 @@ const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelecto
 const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const inEditor=()=>document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
 const desktop=()=>innerWidth>=900&&inEditor();
-function setVersion150(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 194')e.textContent='VERSION 194';document.documentElement.classList.add('v151Ready');document.title='Studia'}
+function setVersion150(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 202')e.textContent='VERSION 202';document.documentElement.classList.add('v151Ready');document.title='Studia'}
 setVersion150();setTimeout(setVersion150,300);setTimeout(setVersion150,1800);
 
 /* Disable the older key-based V145 transport. Its local save hooks may remain,
@@ -981,7 +981,7 @@ const username=()=>String(localStorage.getItem(USER_KEY)||'');
 function scriptUrl(){const saved=String(localStorage.getItem(URL_KEY)||'').trim(),file=String(window.STUDIA_SYNC_CONFIG?.scriptUrl||'').trim();return (saved||file).replace(/\/$/,'')}
 function urlValid(u=scriptUrl()){return /^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec(?:\?.*)?$/.test(String(u||''))}
 function accountConfigured(){return urlValid()&&!!token()}
-function safeReady198(){return localStorage.getItem(SAFE_KEY)==='1'}
+function safeReady198(){return accountConfigured()}
 function deviceId(){let d=localStorage.getItem(DEVICE_KEY);if(!d){d=crypto.randomUUID?.()||'dev-'+Date.now().toString(36)+Math.random().toString(36).slice(2);localStorage.setItem(DEVICE_KEY,d)}return d}
 function accountStatus(text,bad=false){const el=accountField150('v150AccountStatus')||q('#v150AccountStatus');if(el){el.textContent=text;el.classList.toggle('error',bad)}}
 /* V196: account inputs exist both in Settings and in the account modal. Always read the field the user can actually see; otherwise a hidden/autofilled duplicate can make a correct password look wrong. */
@@ -1089,7 +1089,7 @@ function startAccountPolling(){
    v150Push();
   }else v150Pull(false);
  };
- v150Poll=setInterval(tick,8000);
+ v150Poll=setInterval(tick,4000);
  setTimeout(()=>{if(localStorage.getItem(PENDING_KEY)==='1'){if(!v150DirtyAt)v150DirtyAt=Number(localStorage.getItem(LAST_LOCAL)||Date.now())||Date.now();v150Push()}else v150Pull(true)},180)
 }
 
@@ -1098,11 +1098,7 @@ async function initAccount(){
  try{
   const me=await request('/api/me');
   v150User=me.user;localStorage.setItem(USER_KEY,v150User?.username||username());
-  if(!safeReady198()){
-   if(v150Poll){clearInterval(v150Poll);v150Poll=null}
-   accountStatus('⚠ Sync pausiert – zuerst richtigen Datenstand wählen.',true);
-   return;
-  }
+  localStorage.setItem(SAFE_KEY,'1');
   if(localStorage.getItem(PENDING_KEY)==='1')v150DirtyAt=Number(localStorage.getItem(LAST_LOCAL)||Date.now())||Date.now();
   if(v150DirtyAt)await v150Push();
   startAccountPolling();
@@ -1117,10 +1113,13 @@ window.v150Login=async function(){
   accountStatus('Anmelden …');
   const r=await request('/api/auth/login',{method:'POST',body:{username:u,password:p}});
   localStorage.setItem(TOKEN_KEY,r.token);localStorage.setItem(USER_KEY,r.user?.username||u);v150User=r.user;
-  localStorage.removeItem(SAFE_KEY);
+  localStorage.setItem(SAFE_KEY,'1');
   if(v150Poll){clearInterval(v150Poll);v150Poll=null}
-  accountStatus('✓ Angemeldet · Sync pausiert. Jetzt richtigen Datenstand wählen.');
-  setTimeout(()=>window.openAccountDialog?.(),80);
+  accountStatus('Angemeldet · synchronisiere automatisch …');
+  if(localStorage.getItem(PENDING_KEY)==='1'){v150DirtyAt=Number(localStorage.getItem(LAST_LOCAL)||Date.now())||Date.now();await v150Push()}else await v150Pull(true);
+  startAccountPolling();
+  accountStatus('✓ Automatisch synchronisiert');
+  window.closeModal?.();
  }catch(err){accountStatus(String(err.message||err),true)}
 };
 
@@ -1315,7 +1314,7 @@ window.v152ApplyPresetToSelection=applyPreset;
 window.addEventListener('resize',()=>{setTimeout(syncTextHits,50);setTimeout(updateMobileBar,50)});
 
 /* Keep one current visible version. */
-function version(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 194')e.textContent='VERSION 194';document.documentElement.classList.add('v151Ready');document.title='Studia'}
+function version(){const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 202')e.textContent='VERSION 202';document.documentElement.classList.add('v151Ready');document.title='Studia'}
 setTimeout(version,0);setTimeout(version,100);setTimeout(version,800);setTimeout(version,2200);
 })();
 /* ===== /Studia V152 ===== */
@@ -1516,7 +1515,7 @@ try{renderSheetEditor=window.renderSheetEditor}catch(_){ }
 const baseLayer=window.renderLayerList;if(baseLayer)window.renderLayerList=function(){const r=baseLayer.apply(this,arguments);requestAnimationFrame(normalizeEditorIcons);return r};
 try{renderLayerList=window.renderLayerList}catch(_){ }
 window.addEventListener('resize',()=>setTimeout(ensureToolbar,100));
-setTimeout(ensureToolbar,600);setTimeout(ensureToolbar,1500);setTimeout(()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 194'},2400);
+setTimeout(ensureToolbar,600);setTimeout(ensureToolbar,1500);setTimeout(()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 202'},2400);
 })();
 /* ===== /Studia V164 ===== */
 
@@ -1751,7 +1750,7 @@ function ensureModalX166(){const modal=q('#modalWrap.open #modal');if(!modal||mo
 const baseOpenModal166=window.openModal;if(baseOpenModal166)window.openModal=function(){const r=baseOpenModal166.apply(this,arguments);requestAnimationFrame(ensureModalX166);return r};try{openModal=window.openModal}catch(_){}
 
 /* initial polish — no MutationObserver, no boot changes */
-function init166(){if(editor()){decorateLayers166();syncGroupUI166();window.updateMobileSelectionTools?.()}const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 194'}
+function init166(){if(editor()){decorateLayers166();syncGroupUI166();window.updateMobileSelectionTools?.()}const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 202'}
 setTimeout(init166,150);setTimeout(init166,2800);
 })();
 /* ===== /Studia V166 ===== */
@@ -1854,7 +1853,7 @@ const printDesktop167=window.printCanvasSheet;
 window.printCanvasSheet=function(){if(!mobile())return printDesktop167?.apply(this,arguments);return window.v167OpenPrintPDF()};try{printCanvasSheet=window.printCanvasSheet}catch(_){}
 
 /* ---------- version + safe refresh ---------- */
-function init167(){if(!editor())return;ensureStableHits167();stickerButton167();const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 194'}
+function init167(){if(!editor())return;ensureStableHits167();stickerButton167();const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 202'}
 setTimeout(init167,900);setTimeout(init167,3200);
 })();
 /* ===== /Studia V167 ===== */
@@ -1954,7 +1953,7 @@ window.v168PrintMobile=async function(){
 const desktopPrint168=window.printCanvasSheet;
 window.printCanvasSheet=function(){if(mobile())return window.v168PrintMobile();return desktopPrint168?.apply(this,arguments)};try{printCanvasSheet=window.printCanvasSheet}catch(_){}
 
-function version168(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 194'}
+function version168(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 202'}
 setTimeout(version168,800);setTimeout(version168,3600);setTimeout(version168,5200);
 })();
 /* ===== /Studia V168 ===== */
@@ -2063,7 +2062,7 @@ window.v169PrintMobile=function(){
 const oldPrint169=window.printCanvasSheet;
 window.printCanvasSheet=function(){if(mobile())return window.v169PrintMobile();return oldPrint169?.apply(this,arguments)};try{printCanvasSheet=window.printCanvasSheet}catch(_){}
 
-function version169(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 194'}
+function version169(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 202'}
 setTimeout(version169,700);setTimeout(version169,2500);setTimeout(version169,5600);setTimeout(version169,8000);
 })();
 /* ===== /Studia V169 ===== */
@@ -2114,7 +2113,7 @@ const te170=new TextEncoder();function bytes170(s){return te170.encode(s)}functi
 function title170(){let t='Lernblatt';try{const d=typeof data!=='undefined'?data:window.data,sid=typeof selectedSheetId!=='undefined'?selectedSheetId:window.selectedSheetId;t=(d?.studySheets||[]).find(x=>x.id===sid)?.title||q('.editorTitle b')?.textContent||t}catch(_){}return String(t).replace(/[^a-z0-9äöüß _-]/gi,'_').slice(0,80)||'Lernblatt'}
 window.v170PrintMobile=async function(){if(!mobile())return false;scrubGuides170();const tab=window.open('about:blank','_blank');if(tab){try{tab.document.open();tab.document.write('<!doctype html><meta name="viewport" content="width=device-width"><title></title><body style="margin:0;background:#fff;font:800 15px system-ui;color:#725b56;display:grid;place-items:center;height:100vh">Lernblatt wird vorbereitet …</body>');tab.document.close()}catch(_){}}try{if(document.fonts?.ready)await Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,1000))]);const c=await pageCanvas170(),jpg=jpeg170(c.toDataURL('image/jpeg',.97)),pdf=pdf170(jpg,c.width,c.height,W()>H()),url=URL.createObjectURL(pdf);if(tab&&!tab.closed){tab.location.replace(url)}else{const a=document.createElement('a');a.href=url;a.target='_blank';a.download=title170()+'.pdf';document.body.appendChild(a);a.click();a.remove()}setTimeout(()=>URL.revokeObjectURL(url),180000);window.cuteToast?.('PDF bereit · ohne Website-Fußzeile ♡');return true}catch(err){console.error('[V170 PDF]',err);try{tab?.close()}catch(_){}alert('Das Druck-PDF konnte nicht erstellt werden: '+String(err?.message||err));return false}};
 const prev170=window.printCanvasSheet;window.printCanvasSheet=function(){if(mobile())return window.v170PrintMobile();return prev170?.apply(this,arguments)};try{printCanvasSheet=window.printCanvasSheet}catch(_){}
-function version170(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 194'}setTimeout(version170,700);setTimeout(version170,2600);setTimeout(version170,6000);
+function version170(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 202'}setTimeout(version170,700);setTimeout(version170,2600);setTimeout(version170,6000);
 })();
 /* ===== /Studia V170 ===== */
 
@@ -2224,7 +2223,7 @@ window.v165OpenStickerColors=async function(){const o=sticker171();if(!o)return 
 window.v171ResetStickerColors=async function(){const o=(st()?.objects||[]).find(x=>String(x.id)===String(stickerId171));if(!o)return;o.stickerExactMap171={};o.src=o.stickerExactOriginal171||o.stickerPaletteOriginal||o.src;delete o.tintColor;window.renderCanvasObjects?.();window.renderCanvasInspector?.();window.markCanvasDirty?.();window.pushHistory?.();window.closeModal?.();window.cuteToast?.('Alle Originalfarben wiederhergestellt ♡')};
 
 /* cache-busting visible version only; never observe/mutate in a loop */
-function version171(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 200'}setTimeout(version171,6500);setTimeout(version171,8000);
+function version171(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 202'}setTimeout(version171,6500);setTimeout(version171,8000);
 })();
 /* ===== /Studia V171 ===== */
 
@@ -2403,12 +2402,12 @@ window.addEventListener('resize',()=>setTimeout(syncTextLayerHits176,80));
 setTimeout(syncTextLayerHits176,700);setTimeout(syncTextLayerHits176,2200);
 
 /* One-shot version label only — never MutationObserver. */
-setTimeout(()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 194'},900);
+setTimeout(()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 202'},900);
 })();
 /* ===== /Studia V176 ===== */
 
 /* ===== Studia V177 — desktop text + single sync + compact sticker palette ===== */
-[950,6900,8300].forEach(t=>setTimeout(()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 194'},t));
+[950,6900,8300].forEach(t=>setTimeout(()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 202'},t));
 /* ===== /Studia V177 ===== */
 
 /* ===== Studia V178 retired in V179: desktop now uses the single V132 interaction engine ===== */
@@ -2534,7 +2533,7 @@ setTimeout(async()=>{
  if(rec.ok){try{window.cuteToast?.('Bestehendes Studia-Konto wieder verbunden ♡')}catch(_){}setTimeout(()=>location.reload(),450)}
 },1400);
 
-function version197(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 197'}
+function version197(){const e=q('#headerEyebrow');if(e)e.textContent='VERSION 202'}
 setTimeout(version197,1800);setTimeout(version197,7200);setTimeout(version197,9000);
 })();
 /* ===== /Studia V197 ===== */
@@ -2547,7 +2546,7 @@ const e=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g
 const TOKEN='studia-account-token-v150',USER='studia-account-username-v150',SAFE='studia-sync-source-confirmed-v198';
 const oldOpen=window.openAccountDialog;
 window.openAccountDialog=function(){
- const logged=!!localStorage.getItem(TOKEN),name=localStorage.getItem(USER)||'',ready=localStorage.getItem(SAFE)==='1';
+ const logged=!!localStorage.getItem(TOKEN),name=localStorage.getItem(USER)||'',ready=logged;
  if(!logged)return oldOpen?.apply(this,arguments);
  window.openModal?.(`<div class="v135Modal v150AccountModal v166AccountModal"><div class="v135ModalHead"><div><span class="eyebrow">STUDIA KONTO · V200</span><h2>${ready?'Synchronisierung':'Welcher Datenstand ist richtig?'}</h2></div><button class="iconbtn" onclick="closeModal()" aria-label="Schließen">×</button></div>
  <div class="v150AccountHero"><span class="v150AccountAvatar">S</span><div><b>${e(name||'Studia')}</b><small>dauerhaft angemeldet</small></div></div>
@@ -2558,7 +2557,7 @@ window.openAccountDialog=function(){
  <p style="margin-top:12px;font-size:12px;line-height:1.45;opacity:.8"><b>Für deinen aktuellen Fall:</b> Auf dem Handy zuerst „DIESES GERÄT ist richtig“. Danach auf dem Laptop „KONTO ist richtig“.</p>`}
  </div>`);
 };
-function v198Label(){const x=document.querySelector('#headerEyebrow');if(x)x.textContent='VERSION 200'}
+function v198Label(){const x=document.querySelector('#headerEyebrow');if(x)x.textContent='VERSION 202'}
 v198Label();setTimeout(v198Label,600);setTimeout(v198Label,2500);setTimeout(v198Label,8000);
 })();
 /* ===== /Studia V198 ===== */
