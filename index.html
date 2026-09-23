@@ -17620,3 +17620,190 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
   [0,200,700,1500].forEach(t=>setTimeout(()=>{ensureSidebar();ensureHead();},t));
 })();
 </script>
+<style id="v209-reference-home-plan">
+@media (min-width:1100px){
+  body.v209Shell .header,
+  body.v209Shell #nav{display:none!important}
+  body.v209Shell{
+    background:linear-gradient(180deg,#f7eeeb,#fff7f5)!important;
+  }
+  body.v209Shell:before{
+    content:"";position:fixed;left:22px;top:17px;width:12px;height:12px;border-radius:50%;background:#ef8e87;
+    box-shadow:22px 0 0 #efc05f,44px 0 0 #86c96f;z-index:999;pointer-events:none
+  }
+  body.v209Shell .app{
+    width:min(1525px,99vw)!important;max-width:none!important;min-height:960px!important;margin:28px auto 18px!important;
+    padding:14px!important;display:grid!important;grid-template-columns:276px minmax(0,1fr)!important;gap:18px!important;
+    border:1px solid #ecdeda!important;border-radius:30px!important;background:rgba(255,248,246,.82)!important;
+    box-shadow:0 20px 60px rgba(183,151,145,.10)!important;backdrop-filter:blur(10px)!important;overflow:hidden!important
+  }
+  body.v209Shell .app:before,body.v209Shell .app:after{display:none!important}
+  body.v209Shell .view.active{grid-column:2!important;min-width:0!important}
+
+  #v208Sidebar{display:none!important}
+  #v209Sidebar{display:none!important}
+  body.v209Shell #v209Sidebar{
+    grid-column:1!important;display:flex!important;flex-direction:column!important;gap:18px!important;min-width:0!important;
+    border-radius:26px!important;background:linear-gradient(180deg,#fff8f6,#fffaf8)!important;padding:18px 16px!important;border:1px solid #f0e3df!important
+  }
+  #v209Sidebar .brand{display:flex!important;align-items:center!important;gap:13px!important;padding:8px 10px 6px!important;cursor:pointer!important}
+  #v209Sidebar .brandIcon{width:44px!important;height:44px!important;color:#d58d8b!important;display:grid!important;place-items:center!important}
+  #v209Sidebar .brandIcon svg,#v209Sidebar .navIcon svg,#v209Sidebar .quoteIcon svg,#v209Sidebar .quoteHeart svg,
+  #v209HomeHead svg,.v209TodayIcon svg,.v209OpenIcon svg{
+    width:100%!important;height:100%!important;stroke:currentColor!important;fill:none!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important
+  }
+  #v209Sidebar .brandText b{display:block!important;font-size:18px!important;line-height:1!important;letter-spacing:-.02em!important;color:#241f1f!important}
+  #v209Sidebar .brandText small{display:block!important;margin-top:5px!important;font-size:10px!important;font-weight:800!important;letter-spacing:.16em!important;color:#b29992!important}
+  #v209Sidebar .navList{display:grid!important;gap:6px!important}
+  #v209Sidebar .navItem{
+    appearance:none!important;border:1px solid transparent!important;background:transparent!important;border-radius:16px!important;min-height:58px!important;
+    padding:0 14px!important;display:grid!important;grid-template-columns:28px minmax(0,1fr) auto!important;align-items:center!important;gap:12px!important;
+    text-align:left!important;color:#9a847e!important;box-shadow:none!important
+  }
+  #v209Sidebar .navItem.active{background:#f8dfdf!important;border-color:#f1d1d2!important;color:#2e2726!important}
+  #v209Sidebar .navItem:not(.active):hover{background:#fff5f3!important;border-color:#f3e3de!important}
+  #v209Sidebar .navIcon{width:26px!important;height:26px!important;display:grid!important;place-items:center!important;color:#9c7f77!important}
+  #v209Sidebar .navItem.active .navIcon{color:#2e2726!important}
+  #v209Sidebar .navLabel{font-size:15px!important;font-weight:650!important;letter-spacing:-.01em!important}
+  #v209Sidebar .navBubble{min-width:26px!important;height:26px!important;padding:0 8px!important;border-radius:999px!important;display:none!important;place-items:center!important;background:#f7d9da!important;color:#b46e74!important;font-size:12px!important;font-weight:800!important}
+  #v209Sidebar .navItem.hasBubble .navBubble{display:grid!important}
+  #v209Sidebar .quoteBox{margin-top:auto!important;min-height:175px!important;padding:18px!important;border-radius:18px!important;border:1px solid #f0e2de!important;background:linear-gradient(180deg,#fffaf8,#fff7f5)!important;display:flex!important;flex-direction:column!important}
+  #v209Sidebar .quoteIcon{width:26px!important;height:26px!important;color:#a3b182!important;margin-bottom:12px!important}
+  #v209Sidebar .quoteText{font-size:18px!important;line-height:1.55!important;color:#8d7f79!important;font-weight:500!important}
+  #v209Sidebar .quoteHeart{width:24px!important;height:24px!important;color:#db9fa3!important;margin-left:auto!important;margin-top:auto!important}
+
+  /* Plan: use the reference screen as the source of truth. */
+  body.planViewActive #view-plan{padding:24px 24px 18px!important;border-radius:28px!important;border:1px solid #efe3de!important;background:linear-gradient(180deg,#fffdfc,#fffaf8)!important}
+  body.planViewActive #v208PlanHead .title{font-size:59px!important;color:#342d2c!important}
+  body.planViewActive #v208PlanHead .sub{font-size:16px!important;color:#a18a84!important}
+  body.planViewActive #v208PlanHead .modeWrap{border-radius:18px!important;background:#fff9f7!important}
+  body.planViewActive #v208PlanHead .modeBtn.active{background:#f6d7d7!important}
+  body.planViewActive .v208DayHead{border-radius:16px!important;background:#fffaf8!important}
+  body.planViewActive .v208DayHead.today{background:#f7dcdc!important}
+  body.planViewActive .v208Lesson{box-shadow:none!important}
+
+  /* HOME / HEUTE — same visual language as the reference timetable. */
+  #view-home{
+    padding:24px 24px 26px!important;border-radius:28px!important;border:1px solid #efe3de!important;background:linear-gradient(180deg,#fffdfc,#fffaf8)!important;
+    overflow:hidden!important
+  }
+  #view-home .homeMiniActions{display:none!important}
+  #v209HomeHead{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;grid-template-areas:"title actions" "sub date";gap:8px 16px!important;align-items:center!important;margin-bottom:20px!important}
+  #v209HomeHead .title{grid-area:title!important;font-size:59px!important;line-height:.93!important;letter-spacing:-.065em!important;font-weight:900!important;color:#342d2c!important}
+  #v209HomeHead .sub{grid-area:sub!important;font-size:16px!important;color:#a18a84!important;font-weight:600!important}
+  #v209HomeHead .actions{grid-area:actions!important;display:flex!important;gap:10px!important;justify-self:end!important}
+  #v209HomeHead .headBtn{width:44px!important;height:44px!important;border-radius:14px!important;border:1px solid #efddd8!important;background:#fffaf8!important;color:#9b837c!important;display:grid!important;place-items:center!important;padding:0!important}
+  #v209HomeHead .headBtn svg{width:22px!important;height:22px!important}
+  #v209HomeHead .dateCard{grid-area:date!important;justify-self:end!important;min-width:285px!important;height:56px!important;border-radius:16px!important;border:1px solid #efddd8!important;background:#fffaf8!important;display:grid!important;place-items:center!important;text-align:center!important;padding:8px 18px!important}
+  #v209HomeHead .dateCard b{display:block!important;font-size:14px!important;color:#312a29!important;font-weight:800!important;text-transform:capitalize!important}
+  #v209HomeHead .dateCard small{display:block!important;margin-top:3px!important;font-size:11px!important;color:#a08b85!important;font-weight:600!important}
+
+  #view-home #nextPanel{
+    margin:0!important;min-height:145px!important;padding:22px 24px!important;border:1px solid #efd9d6!important;border-radius:20px!important;
+    background:linear-gradient(135deg,#f9e6e6 0%,#fff8f5 67%)!important;box-shadow:none!important;overflow:hidden!important
+  }
+  #view-home #nextPanel:after{display:none!important}
+  #view-home #nextPanel:before{content:""!important;position:absolute!important;right:25px!important;top:24px!important;width:46px!important;height:46px!important;border-radius:16px!important;background:#fff7f5!important;border:1px solid #efd8d4!important}
+  #view-home #nextPanel .eyebrow{font-size:11px!important;color:#b17d7d!important;letter-spacing:.14em!important}
+  #view-home #nextPanel>div:nth-child(2){font-size:31px!important;color:#3d3331!important;letter-spacing:-.04em!important}
+  #view-home #nextPanel .muted{font-size:13px!important;color:#977e77!important}
+
+  #view-home>.section{margin-top:18px!important}
+  #view-home #homeKpis{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important}
+  #view-home #homeKpis .kpi{min-height:96px!important;border:1px solid #efe0db!important;border-radius:18px!important;background:#fffaf8!important;box-shadow:none!important;padding:17px 18px!important}
+  #view-home #homeKpis .kpi:nth-child(1){background:#f8e7e8!important}
+  #view-home #homeKpis .kpi:nth-child(2){background:#f7efdf!important}
+  #view-home #homeKpis .kpi:nth-child(3){background:#edf2e8!important}
+  #view-home #homeKpis .big{font-size:29px!important;color:#443936!important}
+  #view-home #homeKpis .small{font-size:11px!important;color:#8f7b74!important}
+
+  #view-home .sectionHead{align-items:center!important;margin:0 2px 10px!important}
+  #view-home .sectionHead .kawaiiSticker{display:none!important}
+  #view-home .sectionHead h2{font-size:21px!important;color:#3b3330!important;letter-spacing:-.035em!important}
+  #view-home .sectionHead>span{font-size:11px!important;color:#a18d86!important}
+  #view-home #todayLessons{display:grid!important;gap:8px!important}
+  #view-home #todayLessons .lesson,
+  #view-home #todayLessons .pauseCard{display:none!important}
+  #v209TodayTimeline{display:grid!important;gap:9px!important}
+  .v209TodayRow{display:grid!important;grid-template-columns:92px minmax(0,1fr)!important;gap:12px!important;align-items:stretch!important}
+  .v209TodayTime{padding:14px 2px!important;color:#9b8982!important;font-size:12px!important;font-weight:700!important;text-align:right!important;line-height:1.45!important}
+  .v209TodayCard{appearance:none!important;border:1px solid rgba(0,0,0,.03)!important;border-radius:17px!important;padding:14px 16px!important;display:grid!important;grid-template-columns:28px minmax(0,1fr) auto!important;gap:12px!important;align-items:center!important;text-align:left!important;box-shadow:none!important;min-height:82px!important}
+  .v209TodayCard.pink{background:#f8e6e7!important;color:#4a3534!important}.v209TodayCard.green{background:#edf2e6!important;color:#455041!important}.v209TodayCard.blue{background:#e8eef9!important;color:#394761!important}.v209TodayCard.gold{background:#f7efdd!important;color:#5b4930!important}.v209TodayCard.purple{background:#efe8fb!important;color:#564c67!important}.v209TodayCard.peach{background:#f8efe7!important;color:#5c4b40!important}
+  .v209TodayIcon{width:25px!important;height:25px!important;display:grid!important;place-items:center!important;color:inherit!important;opacity:.9!important}
+  .v209TodayTitle{font-size:16px!important;font-weight:800!important;color:#342e2c!important}.v209TodayMeta{display:block!important;margin-top:5px!important;font-size:12px!important;opacity:.76!important}.v209TodayRoom{font-size:11px!important;font-weight:700!important;opacity:.72!important;white-space:nowrap!important}
+  .v209PauseRow{display:grid!important;grid-template-columns:92px minmax(0,1fr)!important;gap:12px!important;align-items:center!important}.v209PauseTime{text-align:right!important;color:#aaa09a!important;font-size:10px!important}.v209PauseCard{height:34px!important;border-top:1px dashed #eaded9!important;border-bottom:1px dashed #eaded9!important;background:#faf7f2!important;border-radius:10px!important;display:flex!important;align-items:center!important;justify-content:center!important;color:#9f918a!important;font-size:10px!important;font-weight:700!important}
+
+  #view-home #homeOpen{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+  #view-home #homeOpen>.card{border:1px solid #efe0db!important;border-radius:17px!important;background:#fffaf8!important;box-shadow:none!important;min-height:76px!important;padding:13px 15px!important}
+  #view-home #homeOpen>.card:nth-child(3n+1){background:#fff4f3!important}
+  #view-home #homeOpen>.card:nth-child(3n+2){background:#f8f4e8!important}
+  #view-home #homeOpen .badge{background:rgba(255,255,255,.65)!important;color:#947972!important;border-color:#ead8d2!important}
+  #view-home #homeOpen .empty{grid-column:1/-1!important}
+}
+</style>
+<script id="v209-reference-home-plan-script">
+(function(){
+  const MIN=1100;
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+  function svg(name){const m={
+    bunny:`<svg viewBox="0 0 24 24"><path d="M8.5 8.5C6.8 5.2 7 2.6 8.2 2c1.4-.5 3 1.6 4 5.6"/><path d="M15.5 8.5c1.7-3.3 1.5-5.9.3-6.5-1.4-.5-3 1.6-4 5.6"/><path d="M5 13c0-4.4 3.1-7 7-7s7 2.6 7 7v2.3c0 4.3-2.8 6.7-7 6.7s-7-2.4-7-6.7V13Z"/><path d="M9.2 13.2h.01M14.8 13.2h.01"/><path d="M10.2 17c1.1.9 2.5.9 3.6 0"/></svg>`,
+    home:`<svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/><path d="M9.5 20v-6h5v6"/></svg>`,
+    cal:`<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 9h18"/></svg>`,
+    tasks:`<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="m7 12 3 3 7-8"/></svg>`,
+    learn:`<svg viewBox="0 0 24 24"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H20v16H7.5A3.5 3.5 0 0 0 4 21.5z"/><path d="M4 5.5v16"/></svg>`,
+    folder:`<svg viewBox="0 0 24 24"><path d="M3 6h7l2 2h9v11H3z"/></svg>`,
+    test:`<svg viewBox="0 0 24 24"><path d="M6 2h8l4 4v16H6z"/><path d="M14 2v5h5M9 12h6M9 16h6"/></svg>`,
+    notes:`<svg viewBox="0 0 24 24"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4z"/><path d="m14 6 4 4"/></svg>`,
+    sprout:`<svg viewBox="0 0 24 24"><path d="M12 21v-9"/><path d="M12 13c-5 0-8-3-8-7 5 0 8 3 8 7Z"/><path d="M12 16c5 0 8-3 8-7-5 0-8 3-8 7Z"/></svg>`,
+    heart:`<svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>`,
+    plus:`<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>`,
+    settings:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.5-2-3.4-2.4 1a7 7 0 0 0-1.8-1L14.4 3h-4.8l-.3 3.1a7 7 0 0 0-1.8 1l-2.4-1-2 3.4L5.1 11a7 7 0 0 0 0 2l-2 1.5 2 3.4 2.4-1a7 7 0 0 0 1.8 1l.3 3.1h4.8l.3-3.1a7 7 0 0 0 1.8-1l2.4 1 2-3.4-2-1.5c.1-.3.1-.7.1-1Z"/></svg>`,
+    math:`<svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2M14 11h2M8 15h2M14 15h2"/></svg>`,
+    bio:`<svg viewBox="0 0 24 24"><path d="M12 21v-9"/><path d="M12 13c-5 0-8-3-8-7 5 0 8 3 8 7Z"/><path d="M12 16c5 0 8-3 8-7-5 0-8 3-8 7Z"/></svg>`,
+    globe:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg>`,
+    hist:`<svg viewBox="0 0 24 24"><path d="m3 9 9-5 9 5"/><path d="M5 10h14M6 10v7M10 10v7M14 10v7M18 10v7M4 20h16"/></svg>`,
+    chem:`<svg viewBox="0 0 24 24"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3"/><path d="M8 15h8"/></svg>`,
+    book:`<svg viewBox="0 0 24 24"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H20v16H7.5A3.5 3.5 0 0 0 4 21.5z"/><path d="M4 5.5v16"/></svg>`,
+    atom:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.5"/><ellipse cx="12" cy="12" rx="9" ry="3.5"/><ellipse cx="12" cy="12" rx="3.5" ry="9" transform="rotate(45 12 12)"/><ellipse cx="12" cy="12" rx="3.5" ry="9" transform="rotate(-45 12 12)"/></svg>`
+  };return m[name]||m.cal;}
+  function subjectIcon(s){s=String(s||'').toLowerCase();if(s.includes('mathe'))return svg('math');if(s.includes('bio'))return svg('bio');if(s.includes('engl'))return svg('globe');if(s.includes('geschichte'))return svg('hist');if(s.includes('chem'))return svg('chem');if(s.includes('deutsch'))return svg('book');if(s.includes('phys'))return svg('atom');return svg('cal')}
+  function colorClass(s){s=String(s||'').toLowerCase();if(s.includes('bio'))return'green';if(s.includes('engl'))return'blue';if(s.includes('geschichte'))return'gold';if(s.includes('chem'))return'purple';if(s.includes('deutsch'))return'peach';return'pink'}
+  function currentView(){return document.querySelector('.view.active')?.id?.replace('view-','')||'home'}
+  function taskBubble(){const h=(data.homework||[]).filter(x=>!x.done).length;const t=(data.tests||[]).filter(x=>{try{const n=calendarDaysUntil(x.date);return n!=null&&n>=0}catch(_){return false}}).length;return h+t}
+  function side(label,icon,view,action,bubble){return `<button class="navItem ${currentView()===view?'active':''} ${bubble?'hasBubble':''}" onclick="${action}"><span class="navIcon">${svg(icon)}</span><span class="navLabel">${esc(label)}</span><span class="navBubble">${bubble||''}</span></button>`}
+  function shellActive(){return window.innerWidth>=MIN&&!document.body.classList.contains('editorMode')&&!!document.querySelector('#view-home.active,#view-plan.active')}
+  function ensureShell(){
+    document.body.classList.toggle('v209Shell',shellActive());
+    if(!shellActive())return;
+    const app=document.querySelector('.app');if(!app)return;
+    let s=document.getElementById('v209Sidebar');if(!s){s=document.createElement('aside');s.id='v209Sidebar';app.insertBefore(s,app.firstChild)}
+    const bubble=taskBubble();
+    s.innerHTML=`<div class="brand" onclick="openView('home')"><span class="brandIcon">${svg('bunny')}</span><span class="brandText"><b>Studia</b><small>PLAN · LERNEN · ERREICHEN</small></span></div><div class="navList">${side('Stundenplan','cal','plan',`openView('plan')`,'')}${side('Aufgaben','tasks','tasks',`openView('tasks')`,bubble?String(bubble):'')}${side('Lernen','learn','study',`openView('study')`,'')}${side('Fächer','folder','subjects',`openView('subjects')`,'')}${side('Tests','test','tasks',`openView('tasks')`,'')}${side('Notizen','notes','subjects',`openView('subjects')`,'')}</div><div class="quoteBox"><span class="quoteIcon">${svg('sprout')}</span><div class="quoteText">Better<br>than<br>yesterday.</div><span class="quoteHeart">${svg('heart')}</span></div>`;
+  }
+  function dateInfo(){const d=new Date();const weekday=d.toLocaleDateString('de-DE',{weekday:'long'});const full=d.toLocaleDateString('de-DE',{day:'2-digit',month:'long',year:'numeric'});return{weekday,full}}
+  function ensureHomeHead(){
+    if(!shellActive()||!document.querySelector('#view-home.active'))return;
+    const view=document.getElementById('view-home');let h=document.getElementById('v209HomeHead');if(!h){h=document.createElement('div');h.id='v209HomeHead';h.innerHTML=`<div class="title">Heute</div><div class="sub"></div><div class="actions"><button class="headBtn" onclick="openAddHomework()" title="Aufgabe hinzufügen">${svg('plus')}</button><button class="headBtn" onclick="openAddTest()" title="Test hinzufügen">${svg('test')}</button><button class="headBtn" onclick="openView('settings')" title="Einstellungen">${svg('settings')}</button></div><div class="dateCard"><b></b><small></small></div>`;view.insertBefore(h,view.firstChild)}
+    const d=dateInfo();h.querySelector('.sub').textContent=data.settings.school||'PHS Ludwigshafen';h.querySelector('.dateCard b').textContent=d.weekday;h.querySelector('.dateCard small').textContent=d.full;
+  }
+  function toMin(t){const[a,b]=String(t||'00:00').split(':').map(Number);return(a||0)*60+(b||0)}
+  function renderTodayTimeline(){
+    if(!shellActive()||!document.querySelector('#view-home.active'))return;
+    const host=document.getElementById('todayLessons');if(!host)return;
+    let custom=document.getElementById('v209TodayTimeline');if(!custom){custom=document.createElement('div');custom.id='v209TodayTimeline';host.parentNode.insertBefore(custom,host)}
+    const dc=dayCode(new Date());const all=expandLessonsForVisibleBreaks(mergeLessons(stableTimetableDay(applyEffectiveDisplayTimes((data.timetable.lessons||[]).filter(x=>x.day===dc))))).sort((a,b)=>a.start.localeCompare(b.start));
+    if(!all.length){custom.innerHTML='<div class="empty">Heute kein Unterricht.</div>';return}
+    const events=all.map(l=>({type:'lesson',sort:toMin(l.start),l}));
+    const first=Math.min(...all.map(x=>toMin(x.start))),last=Math.max(...all.map(x=>toMin(x.end)));
+    try{getActivePauses().forEach(p=>{if(first<toMin(p.end)&&last>toMin(p.start))events.push({type:'pause',sort:toMin(p.start),p})})}catch(_){ }
+    events.sort((a,b)=>a.sort-b.sort|| (a.type==='lesson'?-1:1));
+    custom.innerHTML=events.map(e=>{if(e.type==='pause')return `<div class="v209PauseRow"><div class="v209PauseTime">${esc(e.p.start)}–${esc(e.p.end)}</div><div class="v209PauseCard">${esc(e.p.label||'Pause')}</div></div>`;const l=e.l,raw=(Array.isArray(l.duplicates)&&l.duplicates.length?l.duplicates[0].raw:l.raw)||'',p=splitCell(raw),title=prettySubject(p.subject),meta=[p.room,p.teacher||p.meta].filter(Boolean).join(' · ');return `<div class="v209TodayRow"><div class="v209TodayTime">${esc(l.start)}<br>${esc(l.end)}</div><button class="v209TodayCard ${colorClass(title)}" onclick='openLessonDetails(${JSON.stringify(JSON.stringify(l))})'><span class="v209TodayIcon">${subjectIcon(title)}</span><span><span class="v209TodayTitle">${esc(title)}</span>${meta?`<span class="v209TodayMeta">${esc(meta)}</span>`:''}</span><span class="v209TodayRoom">${Number(l.blocks||1)>=2?'Doppelstunde':''}</span></button></div>`}).join('');
+  }
+  function cleanHomeEmpty(){const x=document.querySelector('#homeOpen .empty');if(x)x.textContent=x.textContent.replace(/🎉/g,'').trim()}
+  function reconcile(){ensureShell();ensureHomeHead();renderTodayTimeline();cleanHomeEmpty()}
+  const oldOpen=window.openView;if(typeof oldOpen==='function'&&!oldOpen.__v209){window.openView=function(){const r=oldOpen.apply(this,arguments);setTimeout(reconcile,0);return r};window.openView.__v209=true;try{openView=window.openView}catch(_){}}
+  const oldHome=window.renderHome;if(typeof oldHome==='function'&&!oldHome.__v209){window.renderHome=function(){const r=oldHome.apply(this,arguments);setTimeout(reconcile,0);return r};window.renderHome.__v209=true;try{renderHome=window.renderHome}catch(_){}}
+  const oldPlan=window.renderPlan;if(typeof oldPlan==='function'&&!oldPlan.__v209){window.renderPlan=function(){const r=oldPlan.apply(this,arguments);setTimeout(reconcile,0);return r};window.renderPlan.__v209=true;try{renderPlan=window.renderPlan}catch(_){}}
+  window.addEventListener('resize',()=>setTimeout(reconcile,50));document.addEventListener('click',()=>setTimeout(reconcile,0),true);[0,250,800,1800].forEach(t=>setTimeout(reconcile,t));
+})();
+</script>
