@@ -3076,15 +3076,32 @@ html,body{background:#fff7f4;}
   </section>
 
   <section class="view" id="view-plan">
-    <div class="panel">
-      <div class="rowBetween">
-        <div><div class="eyebrow">PHS Ludwigshafen</div><h2 style="margin-top:4px">Stundenplan</h2></div>
-        <button class="ghost" onclick="loadRemotePlan(true)">Jetzt aktualisieren</button>
-      </div>
-      <div id="planStatus" class="small" style="margin-top:12px">Plan wird geprüft …</div><div id="liveRefreshStatus" class="liveRefreshStatus"></div>
-      <div class="classPickerWrap">
-        <label for="planClassPicker">Klasse</label>
-        <select id="planClassPicker" class="classPicker" onchange="switchTimetableClass(this.value)"></select>
+    <div class="panel planTopPanel">
+      <div class="planPrimaryRow">
+        <div class="classPickerWrap">
+          <label for="planClassPicker">Klasse</label>
+          <select id="planClassPicker" class="classPicker" onchange="switchTimetableClass(this.value)"></select>
+        </div>
+        <details class="planTools" id="planTools">
+          <summary aria-label="Planoptionen" title="Planoptionen"><span>•••</span></summary>
+          <div class="planToolsMenu">
+            <div class="planToolsHead"><b>Planoptionen</b><small>läuft automatisch</small></div>
+            <button class="ghost planRefreshBtn" onclick="loadRemotePlan(true)">↻ Plan aktualisieren</button>
+            <div id="planStatus" class="small planToolStatus">Plan wird geprüft …</div>
+            <div id="liveRefreshStatus" class="liveRefreshStatus"></div>
+            <div class="heatPlanControl" id="heatPlanControl">
+              <div class="heatPlanInfo">
+                <span class="heatSun">☀️</span>
+                <div><b>Hitzestunden</b><small id="heatPlanState">Automatisch</small></div>
+              </div>
+              <div class="heatModeButtons">
+                <button data-heatmode="auto" onclick="setHeatMode('auto',this)">Auto</button>
+                <button data-heatmode="on" onclick="setHeatMode('on',this)">An</button>
+                <button data-heatmode="off" onclick="setHeatMode('off',this)">Aus</button>
+              </div>
+            </div>
+          </div>
+        </details>
       </div>
     </div>
     <div class="planModeSwitch" id="planModeSwitch">
@@ -3097,20 +3114,6 @@ html,body{background:#fff7f4;}
     </div>
     <div id="placeholderBanner" class="card warn" style="display:none;margin-top:12px">
       <b>↻ Automatischer Import</b><div class="small" style="margin-top:4px;color:inherit">Automatisch im Hintergrund · zusätzlich jederzeit live aktualisierbar.</div>
-    </div>
-    <div class="heatPlanControl" id="heatPlanControl">
-      <div class="heatPlanInfo">
-        <span class="heatSun">☀️</span>
-        <div>
-          <b>Hitzestunden</b>
-          <small id="heatPlanState">Automatisch</small>
-        </div>
-      </div>
-      <div class="heatModeButtons">
-        <button data-heatmode="auto" onclick="setHeatMode('auto',this)">Auto</button>
-        <button data-heatmode="on" onclick="setHeatMode('on',this)">An</button>
-        <button data-heatmode="off" onclick="setHeatMode('off',this)">Aus</button>
-      </div>
     </div>
     <div id="planModeHint" class="planModeHint">
       <span class="modeCurrentHint">✦ Zeigt den aktuellen Wochenplan, Verschiebungen und echte Entfälle.</span>
@@ -3907,10 +3910,15 @@ function renderLessonsWithPauses(ls){
    return a.type==="lesson"?-1:1;
  });
 
+ const planDay=merged.find(x=>x?.day)?.day||null;
+ const now=new Date();
+ const nowDay=dayCode(now);
+ const nowMin=now.getHours()*60+now.getMinutes();
  return events.map(e=>{
    if(e.type==="lesson")return lessonHtml(e.lesson);
    const p=e.pause;
-   return `<div class="pauseCard"><span class="cup">🍵</span><span>${p.start}–${p.end} · ${p.label}</span></div>`;
+   const active=planDay&&planDay===nowDay&&toMin(p.start)<=nowMin&&nowMin<toMin(p.end);
+   return `<div class="pauseCard ${active?"currentPause":""}"><span class="cup">🍵</span><span>${p.start}–${p.end} · ${p.label}</span>${active?`<b class="pauseNowBadge">JETZT</b>`:""}</div>`;
  }).join("");
 }
 function ensureSubjectShape(s){
@@ -3985,10 +3993,16 @@ function mergeLessons(ls){
        const pTeacher=String(p.teacherCode||p.meta||"").trim().toUpperCase();
        const qRoom=String(q.room||"").trim().toUpperCase();
        const pRoom=String(p.room||"").trim().toUpperCase();
-       const sameSubject=String(q.subject||"").trim().toUpperCase()===String(p.subject||"").trim().toUpperCase();
+       const qSubject=String(prettySubject(q.subject||"")).replace(/\s+/g," ").trim().toUpperCase();
+       const pSubject=String(prettySubject(p.subject||"")).replace(/\s+/g," ").trim().toUpperCase();
+       const sameSubject=qSubject===pSubject;
        const teacherCompatible=!qTeacher||!pTeacher||qTeacher===pTeacher;
        const roomCompatible=!qRoom||!pRoom||qRoom===pRoom;
-       if(!p.special&&!q.special && sameSubject && teacherCompatible && roomCompatible){
+       const lastEndRow=last.rowNum==null?null:Number(last.rowNum)+Math.max(1,Number(last.blocks||1))-1;
+       const sequentialRows=lastEndRow!=null&&item.rowNum!=null&&Number(item.rowNum)===lastEndRow+1;
+       // V205: contiguous rows with the same subject are a Doppel-/Mehrfachstunde
+       // even when PDF.js puts teacher/room fragments into only one of the rows.
+       if(!p.special&&!q.special && sameSubject && ((teacherCompatible&&roomCompatible)||sequentialRows)){
          last.end=item.end;
          last.blocks=(last.blocks||1)+(item.blocks||1);
          last.isDouble=last.blocks>=2;
@@ -10327,8 +10341,52 @@ function horizontalGridBorderStrength(raster,left,right,pdfY){
  return best;
 }
 function hasHorizontalGridBorder(raster,left,right,pdfY){
- // V204: a weak antialiased/colored edge is not enough to split a merged cell.
+ // A weak antialiased/colored edge is not enough to split a merged cell.
  return horizontalGridBorderStrength(raster,left,right,pdfY)>.34;
+}
+
+// V205: Untis colors a merged lesson cell continuously across its internal row
+// boundary. Sampling the fill above and below that boundary is much more robust
+// than relying on a single antialiased grid line (the old Physik false split).
+function timetableCellFillSample(raster,left,right,pdfY,pixelOffset){
+ if(!raster?.image)return null;
+ const {data,width,height}=raster.image;
+ const x1=Math.max(0,pdfToRasterX(raster,left+(right-left)*.17));
+ const x2=Math.min(width-1,pdfToRasterX(raster,right-(right-left)*.17));
+ const cy=pdfToRasterY(raster,pdfY)+pixelOffset;
+ const vals=[];
+ for(let dy=-2;dy<=2;dy+=2){
+   const y=Math.max(0,Math.min(height-1,cy+dy));
+   for(let x=x1;x<=x2;x+=5){
+     const k=(y*width+x)*4,r=data[k],g=data[k+1],b=data[k+2],a=data[k+3];
+     if(a<180)continue;
+     // Ignore dark grid/text pixels; we want the cell background.
+     if(Math.max(r,g,b)<155)continue;
+     vals.push([r,g,b]);
+   }
+ }
+ if(vals.length<5)return null;
+ const med=idx=>{const a=vals.map(v=>v[idx]).sort((a,b)=>a-b);return a[Math.floor(a.length/2)]};
+ const r=med(0),g=med(1),b=med(2);
+ const light=(r+g+b)/3,chroma=Math.max(r,g,b)-Math.min(r,g,b);
+ return {r,g,b,light,chroma,count:vals.length};
+}
+function timetableBoundaryFillEvidence(raster,left,right,pdfY){
+ if(!raster?.image)return {sameColoredFill:false,distance:999};
+ const px=Math.max(7,Math.round((raster.scale||1.65)*4.8));
+ const a=timetableCellFillSample(raster,left,right,pdfY,-px);
+ const b=timetableCellFillSample(raster,left,right,pdfY, px);
+ if(!a||!b)return {sameColoredFill:false,distance:999,a,b};
+ const distance=Math.hypot(a.r-b.r,a.g-b.g,a.b-b.b);
+ // Pastel Untis fills can be very light, so either a small departure from white
+ // or some chroma counts as a real colored cell background.
+ const coloredA=a.light<246||a.chroma>7;
+ const coloredB=b.light<246||b.chroma>7;
+ return {
+   a,b,distance,
+   sameColoredFill:coloredA&&coloredB&&distance<=30,
+   sameAnyFill:distance<=22
+ };
 }
 
 function cleanPdfCellText(raw){
@@ -10476,12 +10534,11 @@ function parsePageItems(items,raster){
          // The PDF border and independent text in the next row decide whether
          // it is one lesson or two different lessons.
          const boundary=(dayRows[j].y+dayRows[j+1].y)/2;
-         const border=hasHorizontalGridBorder(raster,bd.left,bd.right,boundary);
-         if(border)break;
+         const borderStrength=horizontalGridBorderStrength(raster,bd.left,bd.right,boundary);
+         const fillEvidence=timetableBoundaryFillEvidence(raster,bd.left,bd.right,boundary);
 
-         // V39: if BOTH neighboring rows contain their own meaningful text
-         // in this exact class column, they are separate lessons even if
-         // raster line detection missed the border.
+         // If BOTH neighboring rows contain their own meaningful text in this
+         // exact class column, they are separate lessons regardless of color.
          const currentHasText=rowHasIndependentLessonText(
            arr,bd,dayRows[j],dayRows,j,gap,headerGroup.y
          );
@@ -10489,6 +10546,11 @@ function parsePageItems(items,raster){
            arr,bd,dayRows[j+1],dayRows,j+1,gap,headerGroup.y
          );
          if(currentHasText && nextHasText)break;
+
+         // A printed line separates rows only when the cell fill also changes.
+         // Untis can draw an internal line inside a colored Doppelstunde; the
+         // continuous fill + missing independent text is the stronger signal.
+         if(borderStrength>.34&&!fillEvidence.sameColoredFill)break;
 
          const localGap=Math.abs(dayRows[j].y-dayRows[j+1].y);
          if(localGap>gap*1.85)break;
@@ -10581,9 +10643,14 @@ function parsePageItems(items,raster){
        if(Number(nextRow.num)!==Number(l.rowNum)+1)continue;
        const occupied=dayLessons.some(x=>x!==l&&lessonCoveredRows(x).includes(Number(nextRow.num)));
        if(occupied)continue;
-       const strength=Number(l.boundaryAfterStrength??1);
-       if(strength>.34)continue;
-       l.end=nextRow.end;l.blocks=2;l.isDouble=true;l.recoveredDouble=true;
+       const ci=classes.indexOf(className),bd=ci>=0?bounds[ci]:null;
+       const boundary=(dayRows[currentIndex].y+nextRow.y)/2;
+       const strength=Number(l.boundaryAfterStrength??(bd?horizontalGridBorderStrength(raster,bd.left,bd.right,boundary):1));
+       const fillEvidence=bd?timetableBoundaryFillEvidence(raster,bd.left,bd.right,boundary):{sameColoredFill:false};
+       // A visible border is allowed when the same colored Untis cell clearly
+       // continues into the otherwise empty next row.
+       if(strength>.34&&!fillEvidence.sameColoredFill)continue;
+       l.end=nextRow.end;l.blocks=2;l.isDouble=true;l.recoveredDouble=true;l.boundaryFillMatch=!!fillEvidence.sameColoredFill;
      }
    }
  }
@@ -11123,7 +11190,7 @@ async function parsePdfDocument(pdf){
    lessons:finalSchedules[chosen]||[],
    sourceLabel,
    fetchedAt:now,
-   parserVersion:43,
+   parserVersion:44,
    heatSchedule:!!heat?.active,
    activePauses:heat?.active?heat.pauses:pauses,
    currentPageCount:currentPages.length,
@@ -11147,7 +11214,7 @@ async function parsePdfBytes(bytes){
 
 window.loadRemotePlan=async function(manual=false){
  const status=$("#planStatus"),live=$("#liveRefreshStatus");
- const refreshBtn=[...document.querySelectorAll("button")].find(b=>(b.textContent||"").includes("Jetzt aktualisieren"));
+ const refreshBtn=document.querySelector(".planRefreshBtn")||[...document.querySelectorAll("button")].find(b=>(b.textContent||"").includes("aktualisieren"));
  if(refreshBtn)refreshBtn.disabled=true;
 
  if(status)status.textContent=manual?"Aktuelle PHS-PDF wird live neu geladen …":"Stundenplan wird geladen …";
@@ -17058,3 +17125,235 @@ window.addEventListener('resize',()=>setTimeout(reconcile193,100));document.addE
 <script id="v204-version">
 (function(){function v(){var e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 204'}[0,250,1200,4000].forEach(t=>setTimeout(v,t));})();
 </script>
+
+<!-- ===== Studia V205 — timetable recognition / compact laptop / automatic sync ===== -->
+<style id="v205-plan-sync-fixes">
+/* The timetable itself stays visually dominant. Secondary controls live behind •••. */
+#view-plan .planTopPanel{
+  overflow:visible!important;
+  padding:10px 12px!important;
+  margin-bottom:0!important;
+  position:relative!important;
+  z-index:35!important;
+}
+#view-plan .planPrimaryRow{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important}
+#view-plan .planTopPanel .classPickerWrap{margin:0!important;display:flex!important;align-items:center!important;gap:8px!important;min-width:0!important}
+#view-plan .planTopPanel .classPickerWrap label{font-size:9px!important;color:#9d8178!important;font-weight:900!important;letter-spacing:.08em!important;text-transform:uppercase!important}
+#view-plan .planTopPanel .classPicker{min-width:112px!important;max-width:170px!important;width:auto!important;padding:8px 31px 8px 11px!important;border-radius:13px!important;font-size:12px!important}
+#view-plan .planTools{position:relative!important;margin-left:auto!important}
+#view-plan .planTools>summary{
+  list-style:none!important;display:grid!important;place-items:center!important;width:38px!important;height:34px!important;
+  border:1px solid #ead8d1!important;border-radius:12px!important;background:#fffaf7!important;color:#94766e!important;
+  cursor:pointer!important;font-size:14px!important;font-weight:950!important;letter-spacing:2px!important;user-select:none!important;
+  box-shadow:0 3px 10px rgba(100,72,64,.04)!important
+}
+#view-plan .planTools>summary::-webkit-details-marker{display:none!important}
+#view-plan .planTools[open]>summary{background:#fff2f1!important;border-color:#efc9c3!important;color:#ad7070!important}
+#view-plan .planToolsMenu{
+  position:absolute!important;right:0!important;top:41px!important;z-index:500!important;width:min(330px,84vw)!important;
+  padding:12px!important;border:1px solid #ead8d1!important;border-radius:18px!important;background:rgba(255,253,250,.985)!important;
+  box-shadow:0 18px 45px rgba(83,58,52,.16)!important;display:grid!important;gap:9px!important
+}
+#view-plan .planToolsHead{display:flex!important;align-items:baseline!important;justify-content:space-between!important;gap:8px!important;color:#735e57!important}
+#view-plan .planToolsHead b{font-size:12px!important}.planToolsHead small{font-size:9px!important;color:#ae9289!important;font-weight:800!important}
+#view-plan .planRefreshBtn{min-height:36px!important;width:100%!important;padding:8px 10px!important;border-radius:12px!important;font-size:10px!important}
+#view-plan .planToolStatus,#view-plan .planToolsMenu .liveRefreshStatus{font-size:9px!important;line-height:1.35!important;margin:0!important;color:#a1847b!important}
+#view-plan .planToolsMenu .heatPlanControl{
+  margin:2px 0 0!important;max-width:none!important;width:100%!important;padding:9px 10px!important;border-radius:14px!important;gap:8px!important
+}
+#view-plan .planToolsMenu .heatPlanInfo b{font-size:10px!important}.planToolsMenu .heatPlanInfo small{font-size:8px!important}
+#view-plan .planToolsMenu .heatSun{font-size:15px!important}.planToolsMenu .heatModeButtons{gap:4px!important}
+#view-plan .planToolsMenu .heatModeButtons button{min-height:28px!important;padding:5px 8px!important;font-size:8px!important;border-radius:9px!important}
+
+/* Compact view switch: useful, but not louder than the timetable. */
+#view-plan .planModeSwitch{margin:8px 0 7px!important;max-width:420px!important;gap:6px!important;padding:3px!important;border-radius:16px!important}
+#view-plan .planModeSwitch button{padding:7px 9px!important;border-radius:13px!important;min-height:0!important}
+#view-plan .planModeSwitch button span{font-size:11px!important}.planModeSwitch button b{font-size:10px!important}.planModeSwitch button small{display:none!important}
+#view-plan #planModeHint{display:none!important}
+
+/* The current break is a first-class "now" event, just like a current subject. */
+.pauseCard{position:relative!important}
+.pauseCard.currentPause{
+  border:2px solid #e9a7a4!important;background:linear-gradient(135deg,#fffdfb,#fff2f2)!important;
+  box-shadow:0 0 0 4px rgba(233,167,164,.16),0 8px 20px rgba(160,110,100,.08)!important;color:#8d6562!important
+}
+.pauseCard.currentPause .cup{filter:saturate(1.12)!important}
+.pauseNowBadge{
+  margin-left:auto!important;flex:0 0 auto!important;padding:4px 7px!important;border-radius:999px!important;
+  background:#fff0ef!important;border:1px solid #efc8c1!important;color:#ad6c6f!important;font-size:7px!important;font-weight:950!important;letter-spacing:.08em!important
+}
+
+@media (min-width:900px){
+  body.planViewActive .app{max-width:min(1500px,98vw)!important;padding:10px 14px 22px!important}
+  body.planViewActive .header{margin-bottom:8px!important}
+  body.planViewActive .header h1{font-size:31px!important}
+
+  /* Undo older panel-grid rules; this is deliberately just one compact toolbar. */
+  body.planViewActive #view-plan>.planTopPanel{display:block!important;padding:8px 10px!important}
+  body.planViewActive #view-plan>.planTopPanel .classPickerWrap{display:flex!important;margin:0!important;grid-template-columns:none!important}
+  body.planViewActive #view-plan>.planTopPanel .classPickerWrap label{display:block!important;font-size:8px!important}
+  body.planViewActive #view-plan>.planTopPanel .classPicker{width:auto!important;max-width:150px!important;min-width:108px!important;padding:7px 29px 7px 10px!important;font-size:11px!important}
+  body.planViewActive #view-plan .planModeSwitch{max-width:360px!important;margin:7px 0 6px!important}
+  body.planViewActive #view-plan #dayTabs{display:none!important}
+  body.planViewActive #view-plan #planLessons{margin-top:6px!important}
+
+  body.planViewActive .desktopWeekGrid{gap:8px!important;align-items:start!important}
+  body.planViewActive .desktopWeekDay{border-radius:17px!important}
+  body.planViewActive .desktopWeekHead{padding:9px 10px!important}
+  body.planViewActive .desktopWeekHead b{font-size:13px!important}.desktopWeekHead small{font-size:8px!important}
+  body.planViewActive .desktopWeekHead span{min-width:28px!important;height:21px!important;padding:0 6px!important;font-size:8px!important}
+  body.planViewActive .desktopWeekBody{padding:7px!important;gap:6px!important}
+  body.planViewActive .desktopWeekBody .lesson{
+    grid-template-columns:44px minmax(0,1fr) auto!important;gap:6px!important;padding:9px 7px 9px 11px!important;border-radius:13px!important
+  }
+  body.planViewActive .desktopWeekBody .time{font-size:8px!important;line-height:1.25!important}
+  body.planViewActive .desktopWeekBody .subject{font-size:12px!important;line-height:1.12!important;overflow-wrap:anywhere!important}
+  body.planViewActive .desktopWeekBody .small{font-size:8px!important;line-height:1.15!important}
+  body.planViewActive .desktopWeekBody .room{font-size:8px!important;padding:4px 5px!important;max-width:48px!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  body.planViewActive .desktopWeekBody .doubleBadge,
+  body.planViewActive .desktopWeekBody .lessonExtraDot,
+  body.planViewActive .desktopWeekBody .changeTag{font-size:6.5px!important;padding:3px 5px!important;margin-top:4px!important}
+  body.planViewActive .desktopWeekBody .lesson.currentLesson:after{right:6px!important;top:5px!important;font-size:6px!important;padding:3px 5px!important}
+  body.planViewActive .desktopWeekBody .pauseCard{padding:8px 8px!important;border-radius:12px!important;font-size:8px!important;gap:6px!important}
+  body.planViewActive .desktopWeekBody .pauseCard .cup{font-size:13px!important}
+  body.planViewActive .desktopWeekBody .pauseNowBadge{font-size:6px!important;padding:3px 5px!important}
+}
+
+/* A normal laptop now shows the actual school week in one row. */
+@media (min-width:1180px){
+  body.planViewActive .desktopWeekGrid{grid-template-columns:repeat(5,minmax(0,1fr))!important}
+}
+@media (min-width:900px) and (max-width:1179px){
+  body.planViewActive .desktopWeekGrid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+}
+@media (max-width:899px){
+  #view-plan .planTopPanel{padding:8px 10px!important}
+  #view-plan .planPrimaryRow{gap:7px!important}
+  #view-plan .planTopPanel .classPickerWrap label{display:none!important}
+  #view-plan .planTopPanel .classPicker{min-width:105px!important;max-width:145px!important;padding:8px 30px 8px 10px!important}
+  #view-plan .planModeSwitch{margin-top:7px!important}
+  #view-plan .planModeSwitch button b{font-size:9px!important}
+}
+</style>
+<script id="v205-plan-sync-script">
+(function(){
+  'use strict';
+  var dirtyTimer=0,lastLocalMutation=0,lastCloudKick=0,lastPlanAttempt=0,planBusy=false;
+
+  function setVersion(){var e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 205'}
+  function markPlanView(){
+    var active=document.querySelector('#view-plan.active');
+    document.body.classList.toggle('planViewActive',!!active&&!document.body.classList.contains('editorMode'));
+  }
+  function markCloudDirty(){
+    lastLocalMutation=Date.now();
+    clearTimeout(dirtyTimer);
+    dirtyTimer=setTimeout(function(){
+      try{ if(typeof window.v150MarkDirty==='function')window.v150MarkDirty(25); }catch(_){ }
+    },65);
+  }
+
+  // Every normal Studia save now participates in account sync. This closes the
+  // gaps where localStorage changed but the cloud dirty flag was never set.
+  function wrapMutationFunction(name){
+    var fn=window[name];
+    if(typeof fn!=='function'||fn.__v205SyncWrapped)return false;
+    function wrapped(){
+      var out=fn.apply(this,arguments);
+      markCloudDirty();
+      return out;
+    }
+    wrapped.__v205SyncWrapped=true;wrapped.__v205Original=fn;
+    window[name]=wrapped;
+    try{ if(name==='save')save=wrapped; }catch(_){ }
+    try{ if(name==='saveCanvasSheetCore')saveCanvasSheetCore=wrapped; }catch(_){ }
+    return true;
+  }
+  function installSyncHooks(){
+    wrapMutationFunction('save');
+    wrapMutationFunction('saveCanvasSheetCore');
+  }
+
+  // Use the existing safe account-sync controller for pulls/reconciliation.
+  // It is throttled so opening/focusing the app is instant without hammering
+  // the Apps Script backend.
+  function cloudKick(force){
+    if(!navigator.onLine||document.visibilityState==='hidden')return;
+    var now=Date.now();
+    if(!force&&now-lastCloudKick<8000)return;
+    // Give a fresh local edit time to reach the dirty queue first.
+    if(now-lastLocalMutation<450)return;
+    lastCloudKick=now;
+    try{ if(typeof window.v171CloudNow==='function')window.v171CloudNow(); }catch(_){ }
+  }
+
+  function planNeedsRefresh(){
+    var tt=window.data&&window.data.timetable;
+    if(!tt)return false;
+    if(tt.isPlaceholder||!(tt.lessons||[]).length)return true;
+    var fetched=Number(tt.lastLiveCheck||tt.fetchedAt||0);
+    return !fetched||Date.now()-fetched>15*60*1000;
+  }
+  function maybeRefreshPlan(){
+    if(planBusy||!navigator.onLine||!document.querySelector('#view-plan.active'))return;
+    var now=Date.now();
+    if(now-lastPlanAttempt<5*60*1000||!planNeedsRefresh())return;
+    if(typeof window.loadRemotePlan!=='function')return;
+    lastPlanAttempt=now;planBusy=true;
+    Promise.resolve(window.loadRemotePlan(false)).catch(function(){}).finally(function(){planBusy=false});
+  }
+
+  var previousOpen=window.openView;
+  if(typeof previousOpen==='function'){
+    window.openView=function(name){
+      var out=previousOpen.apply(this,arguments);
+      setTimeout(function(){markPlanView();setVersion();installSyncHooks();if(name==='plan')maybeRefreshPlan()},0);
+      return out;
+    };
+    try{openView=window.openView}catch(_){ }
+  }
+
+  // Close the tiny options popover after clicking elsewhere.
+  document.addEventListener('click',function(ev){
+    var d=document.getElementById('planTools');
+    if(d&&d.open&&!d.contains(ev.target))d.open=false;
+  },true);
+
+  window.addEventListener('online',function(){setTimeout(function(){cloudKick(true);maybeRefreshPlan()},120)});
+  window.addEventListener('pageshow',function(){setTimeout(function(){installSyncHooks();cloudKick(true);maybeRefreshPlan()},220)});
+  window.addEventListener('focus',function(){setTimeout(function(){cloudKick(false);maybeRefreshPlan()},180)});
+  document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')setTimeout(function(){cloudKick(false);maybeRefreshPlan()},180)});
+  window.addEventListener('resize',function(){setTimeout(markPlanView,0)});
+
+  // Regular foreground reconciliation. Local edits are pushed immediately by
+  // v150MarkDirty; this interval mainly notices edits made on another device.
+  setInterval(function(){installSyncHooks();cloudKick(false)},8000);
+
+  [0,180,700,1800,4200].forEach(function(t){setTimeout(function(){installSyncHooks();markPlanView();setVersion()},t)});
+  setTimeout(function(){cloudKick(true)},950);
+})();
+</script>
+<!-- ===== /Studia V205 ===== -->
+<style id="v205-plan-legacy-override">
+/* Neutralize older V203 first-panel rules inside the new options popover. */
+body.planViewActive #view-plan>.planTopPanel .planToolsMenu .planRefreshBtn{
+  grid-column:auto!important;grid-row:auto!important;align-self:auto!important;display:block!important;
+  width:100%!important;min-height:36px!important;padding:8px 10px!important;font-size:10px!important;border-radius:12px!important
+}
+body.planViewActive #view-plan>.planTopPanel .planToolsMenu #planStatus,
+body.planViewActive #view-plan>.planTopPanel .planToolsMenu #liveRefreshStatus{
+  display:block!important;margin:0!important;font-size:9px!important;line-height:1.35!important
+}
+body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatPlanControl{
+  display:flex!important;width:100%!important;max-width:none!important;margin:2px 0 0!important;padding:9px 10px!important;border-radius:14px!important;gap:8px!important
+}
+body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatPlanInfo b{font-size:10px!important}
+body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatPlanInfo small{font-size:8px!important}
+body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons button{min-height:28px!important;padding:5px 8px!important;font-size:8px!important;border-radius:9px!important}
+@media(max-width:899px){
+  body.planViewActive #view-plan>.planTopPanel{display:block!important;grid-template-columns:none!important}
+  body.planViewActive #view-plan>.planTopPanel .classPickerWrap{display:block!important;grid-column:auto!important;grid-row:auto!important;margin:0!important}
+  body.planViewActive #view-plan>.planTopPanel .classPickerWrap label{display:none!important}
+  body.planViewActive #view-plan>.planTopPanel .classPicker{width:128px!important;max-width:145px!important;min-width:105px!important;padding:8px 30px 8px 10px!important;font-size:12px!important}
+}
+</style>
