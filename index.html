@@ -3645,7 +3645,7 @@ function load(){
    const saved=JSON.parse(localStorage.getItem(KEY)||"{}"), d=Object.assign(structuredClone(defaultData),saved);
    d.economy ||= {coins:0,owned:["base-room"],equipped:[]};
    d.customization ||= {theme:"blossom",compact:false};
-   d.lessonExtras ||= {}; d.reminders ||= []; d.flashDecks ||= []; d.quizzes ||= []; d.studySheets ||= []; d.canvasSheets ||= {};
+   d.lessonExtras ||= {}; d.reminders ||= []; d.flashDecks ||= []; d.quizzes ||= []; d.studySheets ||= []; d.canvasSheets ||= {}; d.timetableSubjectColors ||= {};
    for(const s of (d.subjects||[])){ensureSubjectShapeRaw(s)}
    if(!d.flashDecks.length && d.flashcards?.length){
      const by={};
@@ -3692,6 +3692,49 @@ function dayCode(d){return {1:"Mo",2:"Di",3:"Mi",4:"Do",5:"Fr"}[d.getDay()]||nul
 const dayNames={Mo:"Montag",Di:"Dienstag",Mi:"Mittwoch",Do:"Donnerstag",Fr:"Freitag"};
 const dayOrder=["Mo","Di","Mi","Do","Fr"];
 function hashColor(s){let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))%360;return `hsl(${h} 72% 68%)`}
+function timetableSubjectKey(subject){
+ const pretty=prettySubject(String(subject||""));
+ return pretty.replace(/\s+/g," " ).trim().toUpperCase();
+}
+function timetableSubjectColor(subject){
+ const key=timetableSubjectKey(subject);
+ data.timetableSubjectColors ||= {};
+ if(data.timetableSubjectColors[key])return data.timetableSubjectColors[key];
+ const raw=String(subject||"").replace(/\s+/g," " ).trim().toUpperCase();
+ const linked=(data.subjects||[]).find(s=>{
+   const name=String(s.name||"").replace(/\s+/g," " ).trim().toUpperCase();
+   const abbr=String(s.abbr||"").replace(/\s+/g," " ).trim().toUpperCase();
+   return name===key||abbr===raw||abbr===key;
+ });
+ return linked?.color||hashColor(key||raw||"Unterricht");
+}
+window.setTimetableSubjectColor=function(subject,color){
+ const key=timetableSubjectKey(subject);
+ if(!key||!/^[#][0-9a-f]{6}$/i.test(String(color||"")))return;
+ data.timetableSubjectColors ||= {};
+ data.timetableSubjectColors[key]=String(color).toLowerCase();
+ localStorage.setItem(KEY,JSON.stringify(data));
+ try{window.v150MarkDirty?.(80)}catch(_){}
+ renderPlan();renderHome();
+};
+window.resetTimetableSubjectColor=function(subject){
+ const key=timetableSubjectKey(subject);
+ data.timetableSubjectColors ||= {};
+ delete data.timetableSubjectColors[key];
+ localStorage.setItem(KEY,JSON.stringify(data));
+ try{window.v150MarkDirty?.(80)}catch(_){}
+ renderPlan();renderHome();
+ const input=document.querySelector('#lessonSubjectColor');
+ if(input)input.value=colorToHex(timetableSubjectColor(subject));
+};
+function colorToHex(color){
+ const c=String(color||"").trim();
+ if(/^#[0-9a-f]{6}$/i.test(c))return c;
+ const tmp=document.createElement('span');tmp.style.color=c;document.body.appendChild(tmp);
+ const rgb=getComputedStyle(tmp).color;tmp.remove();
+ const m=rgb.match(/\d+/g);if(!m||m.length<3)return '#e9a7a4';
+ return '#'+m.slice(0,3).map(n=>Math.max(0,Math.min(255,Number(n))).toString(16).padStart(2,'0')).join('');
+}
 
 function lessonKey(l){
  const p=splitCell(l.raw);
@@ -4103,8 +4146,14 @@ window.openLessonDetails=function(json){
  const ex=data.lessonExtras[key] ||= {notes:[],tasks:[],files:[]};
  const notes=ex.notes.map(n=>`<div class="card rowBetween"><div><b>📝 ${esc(n.text)}</b><div class="small">${fmtDate(n.date||todayISO())}</div></div><button class="dangerBtn" onclick="deleteLessonItem('${esc(key)}','notes','${n.id}')">×</button></div>`).join("")||'<div class="empty">Noch keine Notizen.</div>';
  const tasks=ex.tasks.map(n=>`<div class="card rowBetween"><div><b>✓ ${esc(n.text)}</b><div class="small">${fmtDate(n.due||todayISO())}</div></div><button class="dangerBtn" onclick="deleteLessonItem('${esc(key)}','tasks','${n.id}')">×</button></div>`).join("")||'<div class="empty">Noch keine Aufgaben.</div>';
+ const currentColor=colorToHex(timetableSubjectColor(p.subject));
  openModal(`<h2>${esc(prettySubject(p.subject))}</h2>
  <div class="small">${l.start}–${l.end}${p.teacher?" · "+esc(p.teacher):""}${p.room?" · "+esc(p.room):""}</div>
+ <div class="lessonColorEditor">
+   <div><b>Farbe im Stundenplan</b><small>Gilt für alle ${esc(prettySubject(p.subject))}-Stunden.</small></div>
+   <input id="lessonSubjectColor" type="color" value="${currentColor}" oninput="setTimetableSubjectColor(${JSON.stringify(p.subject)},this.value)">
+   <button type="button" class="ghost" onclick="resetTimetableSubjectColor(${JSON.stringify(p.subject)})">Zurücksetzen</button>
+ </div>
  <div class="section">
    <h3>Zu dieser Stunde hinzufügen</h3>
    <div class="formGrid" style="margin-top:10px">
@@ -9238,7 +9287,7 @@ function lessonHtml(l){
    </div>`;
  }
 
- return `<div class="lesson lessonClickable ${double?"doubleLesson":""} ${l.changedFromBasis?"changedLesson":""} ${isLessonCurrentNow(l)?"currentLesson":""}" style="--subject:${hashColor(p.subject)}" onclick='openLessonDetails(${JSON.stringify(JSON.stringify(l))})'>
+ return `<div class="lesson lessonClickable ${double?"doubleLesson":""} ${l.changedFromBasis?"changedLesson":""} ${isLessonCurrentNow(l)?"currentLesson":""}" style="--subject:${timetableSubjectColor(p.subject)}" onclick='openLessonDetails(${JSON.stringify(JSON.stringify(l))})'>
    <div class="time">${l.start}<br>${l.end}</div>
    <div>
      ${l.changedFromBasis?`<div class="changeTag">geändert</div>`:""}<div class="subject">${esc(prettySubject(p.subject))}</div>
@@ -10259,31 +10308,27 @@ function pdfToRasterY(raster,y){
  return Math.round((raster.pageHeight-(y-raster.yMin))*raster.scale);
 }
 
-function hasHorizontalGridBorder(raster,left,right,pdfY){
- if(!raster?.image)return true; // safe fallback: don't invent merges
+function horizontalGridBorderStrength(raster,left,right,pdfY){
+ if(!raster?.image)return 1;
  const {data,width,height}=raster.image;
  const x1=Math.max(0,pdfToRasterX(raster,left+(right-left)*.10));
  const x2=Math.min(width-1,pdfToRasterX(raster,right-(right-left)*.10));
  const cy=pdfToRasterY(raster,pdfY);
  let best=0;
-
- // A true table border is a near-black horizontal run across much of the class cell.
  for(let dy=-4;dy<=4;dy++){
-   const y=cy+dy;
-   if(y<0||y>=height)continue;
+   const y=cy+dy;if(y<0||y>=height)continue;
    let dark=0,total=0;
    for(let x=x1;x<=x2;x+=2){
-     const k=(y*width+x)*4;
-     const r=data[k],g=data[k+1],b=data[k+2],a=data[k+3];
-     if(a>180){
-       total++;
-       // Black/gray gridline. Colored lesson backgrounds normally fail this all-channel test.
-       if(r<105&&g<105&&b<105&&Math.max(r,g,b)-Math.min(r,g,b)<28)dark++;
-     }
+     const k=(y*width+x)*4,r=data[k],g=data[k+1],b=data[k+2],a=data[k+3];
+     if(a>180){total++;if(r<105&&g<105&&b<105&&Math.max(r,g,b)-Math.min(r,g,b)<28)dark++;}
    }
    if(total)best=Math.max(best,dark/total);
  }
- return best>.22;
+ return best;
+}
+function hasHorizontalGridBorder(raster,left,right,pdfY){
+ // V204: a weak antialiased/colored edge is not enough to split a merged cell.
+ return horizontalGridBorderStrength(raster,left,right,pdfY)>.34;
 }
 
 function cleanPdfCellText(raw){
@@ -10496,7 +10541,10 @@ function parsePageItems(items,raster){
          blocks:grp.to-grp.from+1,
          isDouble:(grp.to-grp.from+1)>=2,
          gridExact:true,
-         geometryConfidence
+         geometryConfidence,
+         boundaryAfterStrength:grp.to<dayRows.length-1
+           ? horizontalGridBorderStrength(raster,bd.left,bd.right,(dayRows[grp.to].y+dayRows[grp.to+1].y)/2)
+           : 1
        };
 
        // A class has exactly one printed cell per timetable row.
@@ -10515,7 +10563,31 @@ function parsePageItems(items,raster){
    }
  }
 
- 
+
+ // V204 recovery: if PDF.js gave us one lesson row followed by a completely
+ // empty timetable row and the separating border was only weak/ambiguous,
+ // treat both rows as one Doppelstunde. This fixes merged cells such as
+ // Physik 08:00–09:30 without merging over a clearly printed border.
+ for(const className of classes){
+   const list=schedule[className]||[];
+   for(const day of ["Mo","Di","Mi","Do","Fr"]){
+     const dayRows=rows.filter(r=>r.day===day).sort((a,b)=>a.num-b.num);
+     const dayLessons=list.filter(l=>l.day===day&&!l.specialOnly);
+     for(const l of dayLessons){
+       if(Number(l.blocks||1)!==1||l.rowNum==null)continue;
+       const currentIndex=dayRows.findIndex(r=>Number(r.num)===Number(l.rowNum));
+       if(currentIndex<0||currentIndex>=dayRows.length-1)continue;
+       const nextRow=dayRows[currentIndex+1];
+       if(Number(nextRow.num)!==Number(l.rowNum)+1)continue;
+       const occupied=dayLessons.some(x=>x!==l&&lessonCoveredRows(x).includes(Number(nextRow.num)));
+       if(occupied)continue;
+       const strength=Number(l.boundaryAfterStrength??1);
+       if(strength>.34)continue;
+       l.end=nextRow.end;l.blocks=2;l.isDouble=true;l.recoveredDouble=true;
+     }
+   }
+ }
+
  // Safety pass:
  // Mehr als 2 Blöcke nur dann zusammenführen, wenn der PDF-Text in den
  // direkt folgenden Feldern wirklich identisch ist.
@@ -16974,4 +17046,15 @@ window.addEventListener('resize',()=>setTimeout(reconcile193,100));document.addE
   document.addEventListener('click',function(){setTimeout(markPlanView,0)},true);
   [0,200,900,2200].forEach(function(t){setTimeout(function(){markPlanView();setVersion()},t)});
 })();
+</script>
+
+<style id="v204-subject-colors">
+.lessonColorEditor{display:grid;grid-template-columns:minmax(0,1fr) 48px auto;gap:9px;align-items:center;margin-top:14px;padding:11px 12px;border:1px solid #efd8d2;border-radius:16px;background:#fffaf7}
+.lessonColorEditor>div{display:grid;gap:2px;min-width:0}.lessonColorEditor b{font-size:12px;color:#745e57}.lessonColorEditor small{font-size:9px;color:#a78b82;white-space:normal}
+.lessonColorEditor input[type=color]{width:44px!important;height:38px!important;padding:3px!important;border-radius:11px!important;background:#fff!important;border:1px solid #ead6d0!important}
+.lessonColorEditor .ghost{min-height:38px!important;padding:7px 10px!important;font-size:10px!important}
+@media(max-width:520px){.lessonColorEditor{grid-template-columns:minmax(0,1fr) 44px}.lessonColorEditor .ghost{grid-column:1/-1;width:100%}}
+</style>
+<script id="v204-version">
+(function(){function v(){var e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 204'}[0,250,1200,4000].forEach(t=>setTimeout(v,t));})();
 </script>
