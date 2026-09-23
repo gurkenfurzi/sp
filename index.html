@@ -15660,7 +15660,7 @@ window.renderLayerList=function(){const html=layerHTML(),a=document.getElementBy
 
 function quickStrip(){return '<div class="v131QuickStrip"><button onclick="undoCanvas()"><b>↶</b>Rückgängig</button><button onclick="redoCanvas()"><b>↷</b>Wiederholen</button><button onclick="fitCanvasStage()"><b>⊡</b>Einpassen</button><button onclick="canvasZoomBy(.1)"><b>＋</b>Zoom</button><button onclick="canvasZoomBy(-.1)"><b>−</b>Zoom</button><button onclick="duplicateSelected()"><b>⧉</b>Duplizieren</button></div>'}
 function decorateDrawer(){const d=document.getElementById('canvasQuickDrawer');if(!d||!d.classList.contains('open')||d.querySelector('.v131QuickStrip'))return;const head=d.querySelector('.mobileDrawerHead');if(head)head.insertAdjacentHTML('afterend',quickStrip());else d.insertAdjacentHTML('afterbegin',quickStrip())}
-function ensureChrome(){const top=document.querySelector('.canvasTopbar');if(top&&!top.querySelector('.v131VersionBadge')){const badge=document.createElement('span');badge.className='v131VersionBadge';badge.textContent='STUDIA · V181';const title=top.querySelector('.editorTitle');title?.after(badge)}const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 207'}
+function ensureChrome(){const top=document.querySelector('.canvasTopbar');if(top&&!top.querySelector('.v131VersionBadge')){const badge=document.createElement('span');badge.className='v131VersionBadge';badge.textContent='STUDIA · V181';const title=top.querySelector('.editorTitle');title?.after(badge)}const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 202'}
 const oldOpen=window.editorOpenGroup;window.editorOpenGroup=function(){openEditorGroup=null;const r=oldOpen.apply(this,arguments);requestAnimationFrame(()=>{decorateDrawer();if(arguments[0]==='layers')renderLayerList()});return r};try{editorOpenGroup=window.editorOpenGroup}catch(_){}
 const oldObjects=window.renderCanvasObjects;window.renderCanvasObjects=function(){const r=oldObjects.apply(this,arguments);requestAnimationFrame(syncMoveProxies);return r};try{renderCanvasObjects=window.renderCanvasObjects}catch(_){}
 const oldVectors=window.renderVectors;window.renderVectors=function(){const r=oldVectors.apply(this,arguments);requestAnimationFrame(syncMoveProxies);return r};try{renderVectors=window.renderVectors}catch(_){}
@@ -15915,7 +15915,7 @@ function polishChrome(){const topMap={Rückgängig:'undo',Wiederholen:'redo','Se
 function decorateGroup(group){document.querySelectorAll('.v131QuickStrip').forEach(x=>x.remove());if(group==='elements')replaceDrawerBody(elementGroupsHTML());if(group==='pages')decoratePages();if(group==='layers')renderLayerList();polishChrome()}
 window.v132Open=function(mode,btn){const map={text:'textLibrary',elements:'elements',templates:'templates',pages:'pages',layers:'layers'},group=mode==='text'&&typeof mobileSelectedText==='function'&&mobileSelectedText()?'textEdit':map[mode];try{openEditorGroup=null}catch(_){}editorOpenGroup(group,btn);requestAnimationFrame(()=>{const d=document.getElementById('canvasQuickDrawer');if(mode==='text'&&d&&innerWidth>=900&&!d.querySelector('.v132DesktopTextExtras')){const x=document.createElement('div');x.className='v129DesktopTextExtras v132DesktopTextExtras';x.innerHTML=`<button onclick="v91PickFont()">${ic('textformat')} Eigene Schrift</button><button onclick="createCustomStylePreset()">${ic('plus')} Textformat</button><button onclick="openTextFormatManager()">${ic('edit')} Textformate verwalten</button>`;d.prepend(x)}decorateGroup(group)})};
 function buildNav(){if(window.__STUDIA_V134_REFERENCE_ONLY__&&innerWidth>=900)return;const nav=document.querySelector('.canvasQuickNav');if(!nav)return;if(!nav.querySelector('[data-v133]'))nav.innerHTML=navHTML();nav.querySelectorAll('[data-v133]').forEach(b=>b.onclick=()=>v132Open(b.dataset.v133,b))}
-function init(forceFit=true){if(!editor())return;if(canvasState.multiMode){multiObjects=new Set(canvasState.selectedIds||[]);multiVectors=new Set(canvasState.selectedVectorIds||[])}document.querySelectorAll('.v131VersionBadge,.v131QuickStrip').forEach(x=>x.remove());buildTop();buildNav();bindViewport();syncHits();polishChrome();if(!(window.__STUDIA_V134_REFERENCE_ONLY__&&innerWidth>=900)&&document.getElementById('canvasQuickDrawer')?.classList.contains('open'))decorateGroup('elements');if(forceFit)setTimeout(()=>fit(true),80);const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 207'}
+function init(forceFit=true){if(!editor())return;if(canvasState.multiMode){multiObjects=new Set(canvasState.selectedIds||[]);multiVectors=new Set(canvasState.selectedVectorIds||[])}document.querySelectorAll('.v131VersionBadge,.v131QuickStrip').forEach(x=>x.remove());buildTop();buildNav();bindViewport();syncHits();polishChrome();if(!(window.__STUDIA_V134_REFERENCE_ONLY__&&innerWidth>=900)&&document.getElementById('canvasQuickDrawer')?.classList.contains('open'))decorateGroup('elements');if(forceFit)setTimeout(()=>fit(true),80);const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 202'}
 const oldGroup=window.editorOpenGroup;window.editorOpenGroup=function(){const args=arguments,r=oldGroup.apply(this,args);requestAnimationFrame(()=>{buildNav();decorateGroup(args[0])});return r};try{editorOpenGroup=window.editorOpenGroup}catch(_){}
 const oldObjects=window.renderCanvasObjects;window.renderCanvasObjects=function(){const r=oldObjects.apply(this,arguments);queueHits();return r};try{renderCanvasObjects=window.renderCanvasObjects}catch(_){}
 const oldVectors=window.renderVectors;window.renderVectors=function(){const r=oldVectors.apply(this,arguments);queueHits();return r};try{renderVectors=window.renderVectors}catch(_){}
@@ -15924,7 +15924,7 @@ const oldSheet=window.renderSheetEditor;window.renderSheetEditor=function(){cons
 const oldOpenSheet=window.openStudySheetEditor;if(oldOpenSheet)window.openStudySheetEditor=function(){const r=oldOpenSheet.apply(this,arguments);setTimeout(()=>init(true),560);return r};
 window.addEventListener('resize',()=>setTimeout(()=>{if(editor()){buildNav();fit(false);syncHits();polishChrome()}},180));
 let v133WasEditor=editor();const v133Observer=new MutationObserver(()=>{const now=editor();if(now&&!v133WasEditor)requestAnimationFrame(()=>{buildNav();polishChrome()});v133WasEditor=now});v133Observer.observe(document.body,{attributes:true,attributeFilter:['class']});
-setTimeout(()=>{buildTop();if(editor())init(true);const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 207';document.title='Studia'},750);
+setTimeout(()=>{buildTop();if(editor())init(true);const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 202';document.title='Studia'},750);
 })();
 </script>
 <!-- ===== /Studia V133 ===== -->
@@ -16284,7 +16284,7 @@ window.printCanvasSheet=async function(){
 };
 try{printCanvasSheet=window.printCanvasSheet}catch(_){}
 
-function install(){window.__STUDIA_V180_DESKTOP__=innerWidth>=900;const eye=qs('#headerEyebrow');if(eye)eye.textContent='VERSION 207';document.title='Studia';try{window.v132SyncHits?.();window.v138RefreshHandles?.()}catch(_){}}
+function install(){window.__STUDIA_V180_DESKTOP__=innerWidth>=900;const eye=qs('#headerEyebrow');if(eye)eye.textContent='VERSION 202';document.title='Studia';try{window.v132SyncHits?.();window.v138RefreshHandles?.()}catch(_){}}
 const oldSheet=window.renderSheetEditor;window.renderSheetEditor=function(){const r=oldSheet.apply(this,arguments);setTimeout(install,900);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){}
 const oldOpen=window.openStudySheetEditor;if(oldOpen)window.openStudySheetEditor=function(){const r=oldOpen.apply(this,arguments);setTimeout(install,1050);return r};
 window.addEventListener('resize',()=>{if(desktop())requestAnimationFrame(()=>{paintOverlay();attach181()})});
@@ -16304,7 +16304,7 @@ setTimeout(install,1300);
 <script id="v182-selection-recovery-script">
 (()=>{
  const active=()=>false; /* V183 desktop repair owns laptop interaction; disable V182 recovery layer. */
- function revive(){if(!active())return;window.__STUDIA_V180_DESKTOP__=innerWidth>=900;document.getElementById('v181SelectionOverlay')?.remove();try{window.v132SyncHits?.();window.v138RefreshHandles?.()}catch(_){}const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 207'}
+ function revive(){if(!active())return;window.__STUDIA_V180_DESKTOP__=innerWidth>=900;document.getElementById('v181SelectionOverlay')?.remove();try{window.v132SyncHits?.();window.v138RefreshHandles?.()}catch(_){}const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 202'}
  const oldSheet=window.renderSheetEditor;if(typeof oldSheet==='function')window.renderSheetEditor=function(){const r=oldSheet.apply(this,arguments);requestAnimationFrame(()=>requestAnimationFrame(revive));return r};
  const oldOpen=window.openStudySheetEditor;if(typeof oldOpen==='function')window.openStudySheetEditor=function(){const r=oldOpen.apply(this,arguments);setTimeout(revive,120);return r};
  window.addEventListener('resize',()=>setTimeout(revive,60));setTimeout(revive,1000);
@@ -16538,7 +16538,7 @@ const oldPreview=window.v181OpenPreview;window.v181OpenPreview=async function(){
  const close=host.querySelector('.v181PreviewBar button');if(close){close.onclick=()=>{host.classList.remove('open');document.body.classList.add('editorMode');document.body.classList.remove('v184PreviewOpen','v137ViewMode');if(editor){editor.inert=false;editor.removeAttribute('aria-hidden')}host.scrollTop=0;q('.canvasQuickNav')?.style.removeProperty('display');q('#canvasQuickDrawer')?.style.removeProperty('display');requestAnimationFrame(()=>{bindObjects();bindVectors();paintFrame()})}}
 };
 
-function install(){if(!desktop())return;disableLegacy();document.body.classList.remove('v137ViewMode');q('.v137ViewerBar')?.remove();/* recreate object DOM once so old body-drag listeners disappear */try{renderCanvasObjects?.();renderVectors?.()}catch(_){}bindObjects();bindVectors();paintFrame();const view=q('.v137ViewButton');if(view){view.title='Lernblatt nur ansehen';view.onclick=()=>window.v181OpenPreview?.();const label=view.querySelector('span');if(label)label.textContent='Ansicht'}const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 207'}
+function install(){if(!desktop())return;disableLegacy();document.body.classList.remove('v137ViewMode');q('.v137ViewerBar')?.remove();/* recreate object DOM once so old body-drag listeners disappear */try{renderCanvasObjects?.();renderVectors?.()}catch(_){}bindObjects();bindVectors();paintFrame();const view=q('.v137ViewButton');if(view){view.title='Lernblatt nur ansehen';view.onclick=()=>window.v181OpenPreview?.();const label=view.querySelector('span');if(label)label.textContent='Ansicht'}const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 202'}
 const prevSheet=window.renderSheetEditor;if(prevSheet)window.renderSheetEditor=function(){const r=prevSheet.apply(this,arguments);setTimeout(install,90);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){}
 const prevOpen=window.openStudySheetEditor;if(prevOpen)window.openStudySheetEditor=function(){const r=prevOpen.apply(this,arguments);setTimeout(install,120);return r};
 document.addEventListener('click',e=>{const view=e.target.closest?.('.v137ViewButton');if(!view||!desktop())return;e.preventDefault();e.stopImmediatePropagation();window.v181OpenPreview?.()},true);
@@ -16964,7 +16964,7 @@ try{insertSavedTextFormat=window.insertSavedTextFormat}catch(_){}
 const oldRender193=window.renderCanvasObjects;if(typeof oldRender193==='function')window.renderCanvasObjects=function(){const r=oldRender193.apply(this,arguments);requestAnimationFrame(window.v193PaintGroupFrame);return r};
 try{renderCanvasObjects=window.renderCanvasObjects}catch(_){}
 
-function reconcile193(){const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 207';if(!laptop())return;window.v193EnhanceHexColors();window.v193PaintGroupFrame()}
+function reconcile193(){const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 202';if(!laptop())return;window.v193EnhanceHexColors();window.v193PaintGroupFrame()}
 window.addEventListener('resize',()=>setTimeout(reconcile193,100));document.addEventListener('click',()=>setTimeout(reconcile193,0),true);[500,1800,9200].forEach(t=>setTimeout(reconcile193,t));
 })();
 /* ===== /Studia V193 ===== */
@@ -17123,7 +17123,7 @@ window.addEventListener('resize',()=>setTimeout(reconcile193,100));document.addE
 @media(max-width:520px){.lessonColorEditor{grid-template-columns:minmax(0,1fr) 44px}.lessonColorEditor .ghost{grid-column:1/-1;width:100%}}
 </style>
 <script id="v204-version">
-(function(){function v(){var e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 207'}[0,250,1200,4000].forEach(t=>setTimeout(v,t));})();
+(function(){function v(){var e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 204'}[0,250,1200,4000].forEach(t=>setTimeout(v,t));})();
 </script>
 
 <!-- ===== Studia V205 — timetable recognition / compact laptop / automatic sync ===== -->
@@ -17240,7 +17240,7 @@ window.addEventListener('resize',()=>setTimeout(reconcile193,100));document.addE
   'use strict';
   var dirtyTimer=0,lastLocalMutation=0,lastCloudKick=0,lastPlanAttempt=0,planBusy=false;
 
-  function setVersion(){var e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 207'}
+  function setVersion(){var e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 205'}
   function markPlanView(){
     var active=document.querySelector('#view-plan.active');
     document.body.classList.toggle('planViewActive',!!active&&!document.body.classList.contains('editorMode'));
@@ -17360,148 +17360,263 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
 
 
 
-<style id="v207-unified-laptop-ui">
-@media (min-width:1100px){
-  html,body{background:#f8efec!important;color:#433b38!important}
-  body{background:radial-gradient(circle at 8% 3%,rgba(239,190,190,.30),transparent 28rem),radial-gradient(circle at 92% 9%,rgba(244,214,198,.28),transparent 30rem),linear-gradient(180deg,#f9f1ee,#fff8f5 58%,#faf1ee)!important}
-  body:not(.editorMode) .app{width:min(1540px,96vw)!important;max-width:none!important;min-height:900px!important;margin:20px auto!important;padding:12px!important;display:grid!important;grid-template-columns:248px minmax(0,1fr)!important;grid-template-rows:auto 1fr!important;column-gap:16px!important;row-gap:0!important;border:1px solid rgba(216,174,164,.32)!important;border-radius:34px!important;background:rgba(255,251,248,.78)!important;box-shadow:0 24px 70px rgba(151,105,96,.13)!important;backdrop-filter:blur(18px)!important;overflow:hidden!important}
-  body:not(.editorMode) .app:before,body:not(.editorMode) .app:after{display:none!important}
-  body:not(.editorMode) #nav{display:none!important}
-  body:not(.editorMode) #v207Sidebar{grid-column:1!important;grid-row:1 / span 2!important;min-height:876px!important;padding:18px 14px!important;display:flex!important;flex-direction:column!important;background:linear-gradient(180deg,#fff7f5,#fffaf7)!important;border:1px solid #efdcd6!important;border-radius:27px!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.92)!important;overflow:hidden!important}
-  #v207Sidebar .v207Brand{display:flex!important;align-items:center!important;gap:11px!important;padding:8px 9px 19px!important;border-bottom:1px solid rgba(230,205,198,.62)!important;margin-bottom:13px!important}
-  #v207Sidebar .v207BrandIcon{width:42px!important;height:42px!important;display:grid!important;place-items:center!important;color:#c98586!important;flex:0 0 auto!important}
-  #v207Sidebar .v207BrandIcon svg{width:38px!important;height:38px!important;stroke:currentColor!important;fill:none!important;stroke-width:1.65!important;stroke-linecap:round!important;stroke-linejoin:round!important}
-  #v207Sidebar .v207BrandText b{display:block!important;font-size:19px!important;line-height:1!important;letter-spacing:-.035em!important;color:#403735!important}
-  #v207Sidebar .v207BrandText small{display:block!important;margin-top:6px!important;font-size:8.5px!important;font-weight:800!important;letter-spacing:.19em!important;color:#b0938a!important;white-space:nowrap!important}
-  #v207Sidebar .v207SideNav{display:grid!important;gap:6px!important}
-  #v207Sidebar .v207SideNav button{appearance:none!important;width:100%!important;min-height:52px!important;border:1px solid transparent!important;border-radius:16px!important;background:transparent!important;padding:0 12px!important;display:grid!important;grid-template-columns:23px minmax(0,1fr) auto!important;align-items:center!important;gap:12px!important;color:#927b74!important;text-align:left!important;box-shadow:none!important;transition:.15s ease!important}
-  #v207Sidebar .v207SideNav button:hover{background:#fff3f1!important;border-color:#f0ded8!important;color:#6b5751!important}
-  #v207Sidebar .v207SideNav button.active{background:linear-gradient(180deg,#f8ddde,#f6d3d5)!important;border-color:#f0cbce!important;color:#433735!important;box-shadow:0 9px 20px rgba(211,147,149,.13)!important}
-  #v207Sidebar .v207SideNav .navIcon{width:23px!important;height:23px!important;display:grid!important;place-items:center!important;color:#a9857d!important}
-  #v207Sidebar .v207SideNav button.active .navIcon{color:#9f6669!important}
-  #v207Sidebar .v207SideNav .navIcon svg{width:21px!important;height:21px!important;stroke:currentColor!important;fill:none!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
-  #v207Sidebar .v207SideNav .navLabel{font-size:13px!important;font-weight:800!important;letter-spacing:-.01em!important}
-  #v207Sidebar .v207SideNav .navBadge{min-width:23px!important;height:23px!important;padding:0 7px!important;display:none!important;place-items:center!important;border-radius:999px!important;background:#f7d8da!important;border:1px solid #efc7c9!important;color:#b27174!important;font-size:10px!important;font-weight:900!important}
-  #v207Sidebar .v207SideNav button.hasBadge .navBadge{display:grid!important}
-  #v207Sidebar .v207Quote{margin-top:auto!important;border:1px solid #eed9d3!important;border-radius:20px!important;background:linear-gradient(180deg,#fffbf8,#fff6f3)!important;padding:16px 15px 14px!important;min-height:150px!important;display:flex!important;flex-direction:column!important;color:#947f77!important}
-  #v207Sidebar .v207Quote .quoteIcon{width:25px!important;height:25px!important;color:#9dac81!important;margin-bottom:12px!important}
-  #v207Sidebar .v207Quote .quoteIcon svg,#v207Sidebar .v207Quote .quoteHeart svg{width:100%!important;height:100%!important;stroke:currentColor!important;fill:none!important;stroke-width:1.75!important;stroke-linecap:round!important;stroke-linejoin:round!important}
-  #v207Sidebar .v207Quote p{margin:0!important;font:600 15px/1.55 "Playfair Display",Georgia,serif!important;color:#8e7a73!important}
-  #v207Sidebar .v207Quote .quoteHeart{width:23px!important;height:23px!important;color:#d99a9c!important;margin-top:auto!important;margin-left:auto!important}
-  body:not(.editorMode) .header{grid-column:2!important;grid-row:1!important;padding:18px 22px 12px!important;margin:0!important;min-width:0!important}
-  body:not(.editorMode) .header .eyebrow{color:#ad9188!important;font-size:10px!important;letter-spacing:.17em!important}
-  body:not(.editorMode) .header h1{color:#3f3633!important;font-size:42px!important;letter-spacing:-.055em!important;margin-top:6px!important}
-  body:not(.editorMode) .view.active{grid-column:2!important;grid-row:2!important;min-width:0!important}
-  body.planViewActive .header{display:none!important}
-  body.planViewActive #view-plan{position:relative!important;display:block!important;padding:25px 27px 28px!important;border:1px solid #eedbd5!important;border-radius:27px!important;background:linear-gradient(180deg,#fffdfb,#fffaf7)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.95)!important;min-width:0!important;overflow:hidden!important}
-  body.planViewActive #view-plan>.planTopPanel,body.planViewActive #view-plan>.planModeSwitch,body.planViewActive #view-plan>#placeholderBanner,body.planViewActive #view-plan>#planModeHint,body.planViewActive #view-plan>#dayTabs{display:none!important}
-  #v207PlanHeader{display:grid!important;grid-template-columns:minmax(240px,1fr) auto auto!important;grid-template-areas:"title mode actions" "sub controls week"!important;align-items:center!important;gap:13px 16px!important;margin-bottom:18px!important}
-  #v207PlanHeader .v207Title{grid-area:title!important;min-width:0!important}
-  #v207PlanHeader .v207Title h2{margin:0!important;color:#3b3431!important;font-size:46px!important;line-height:.97!important;letter-spacing:-.055em!important;font-weight:900!important}
-  #v207PlanHeader .v207Title p{margin:7px 0 0!important;color:#a08982!important;font-size:15px!important;font-weight:600!important}
-  #v207PlanHeader .v207Mode{grid-area:mode!important;display:flex!important;align-items:center!important;padding:4px!important;border:1px solid #efddd8!important;border-radius:18px!important;background:#fff8f6!important}
-  #v207PlanHeader .v207Mode button{min-width:110px!important;min-height:39px!important;padding:7px 15px!important;border:0!important;border-radius:14px!important;background:transparent!important;color:#8d7770!important;font-size:12px!important;font-weight:850!important;box-shadow:none!important}
-  #v207PlanHeader .v207Mode button.active{background:linear-gradient(180deg,#f7d7d9,#f3cfd2)!important;color:#4e3d39!important}
-  #v207PlanHeader .v207Actions{grid-area:actions!important;display:flex!important;gap:9px!important}
-  #v207PlanHeader .v207IconBtn{width:44px!important;height:44px!important;padding:0!important;border:1px solid #efddd8!important;border-radius:14px!important;background:#fffaf8!important;color:#9a827b!important;display:grid!important;place-items:center!important;box-shadow:0 5px 15px rgba(164,116,106,.07)!important}
-  #v207PlanHeader .v207IconBtn:hover{background:#fff2f0!important;color:#795f58!important}
-  #v207PlanHeader .v207IconBtn svg{width:20px!important;height:20px!important;stroke:currentColor!important;fill:none!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
-  #v207PlanHeader .v207Controls{grid-area:controls!important;display:flex!important;align-items:center!important;gap:9px!important}
-  #v207PlanHeader .v207SelectWrap{height:42px!important;display:flex!important;align-items:center!important;gap:9px!important;padding:0 12px!important;border:1px solid #efddd8!important;border-radius:14px!important;background:#fffaf8!important;margin:0!important}
-  #v207PlanHeader .v207SelectWrap>span{font-size:10px!important;font-weight:900!important;text-transform:uppercase!important;letter-spacing:.12em!important;color:#aa8d84!important}
-  #v207PlanHeader .v207SelectWrap select{width:auto!important;min-width:78px!important;border:0!important;background:transparent!important;padding:0 20px 0 0!important;font-size:12px!important;font-weight:850!important;color:#51443f!important;box-shadow:none!important}
-  #v207PlanHeader .v207Week{grid-area:week!important;justify-self:end!important;min-width:245px!important;border:1px solid #efddd8!important;border-radius:16px!important;background:#fffaf8!important;padding:8px 15px!important;text-align:center!important}
-  #v207PlanHeader .v207Week b{display:block!important;color:#4b403c!important;font-size:14px!important;font-weight:900!important}
-  #v207PlanHeader .v207Week small{display:block!important;margin-top:2px!important;color:#a18b83!important;font-size:10px!important;font-weight:750!important}
-  #v207PlanHeader .v207SyncDot{width:7px!important;height:7px!important;border-radius:50%!important;background:#a8bd88!important;display:inline-block!important;margin-right:6px!important;box-shadow:0 0 0 4px rgba(168,189,136,.14)!important;vertical-align:1px!important}
-  body.planViewActive #view-plan #planLessons{margin:0!important;display:block!important}
-  .v207WeekBoard{display:grid!important;grid-template-columns:62px repeat(5,minmax(0,1fr))!important;grid-template-rows:62px auto!important;column-gap:10px!important;row-gap:0!important;min-width:0!important}
-  .v207WeekCorner{height:62px!important}
-  .v207DayHead{height:62px!important;display:grid!important;place-items:center!important;align-content:center!important;border:1px solid #efdfda!important;border-radius:16px!important;background:#fffaf8!important;color:#423937!important;box-shadow:0 6px 15px rgba(164,116,106,.045)!important}
-  .v207DayHead.today{background:linear-gradient(180deg,#f8dcde,#f7e8e7)!important;border-color:#efcfd1!important}
-  .v207DayHead b{font-size:14px!important;line-height:1!important;font-weight:900!important}
-  .v207DayHead span{margin-top:6px!important;font-size:10.5px!important;color:#a08a83!important;font-weight:700!important}
-  .v207TimeRail{position:relative!important}
-  .v207Time{position:absolute!important;left:1px!important;transform:translateY(-50%)!important;color:#a4948e!important;font-size:11px!important;font-weight:750!important;white-space:nowrap!important}
-  .v207DayBody{position:relative!important;overflow:hidden!important;border-left:1px solid #f2e5e1!important;border-right:1px solid #f2e5e1!important;border-bottom:1px solid #f2e5e1!important;border-radius:0 0 17px 17px!important;background:linear-gradient(180deg,rgba(255,253,252,.96),rgba(255,250,248,.92))!important}
-  .v207Guide{position:absolute!important;left:0!important;right:0!important;height:1px!important;background:#f3e8e4!important;z-index:0!important}
-  .v207Lesson{appearance:none!important;position:absolute!important;left:7px!important;right:7px!important;border:1px solid color-mix(in srgb,var(--tone) 28%,#fff)!important;border-radius:15px!important;background:linear-gradient(180deg,color-mix(in srgb,var(--tone) 15%,#fff),color-mix(in srgb,var(--tone) 24%,#fff))!important;color:#453c39!important;padding:11px!important;display:grid!important;grid-template-columns:25px minmax(0,1fr)!important;gap:9px!important;align-content:start!important;text-align:left!important;overflow:hidden!important;box-shadow:0 7px 18px rgba(150,108,99,.065)!important;z-index:2!important}
-  .v207Lesson:hover{transform:translateY(-1px)!important;box-shadow:0 10px 22px rgba(150,108,99,.10)!important}
-  .v207Lesson.current{border:2px solid #e2a0a2!important;box-shadow:0 0 0 4px rgba(226,160,162,.13),0 9px 20px rgba(150,108,99,.09)!important}
-  .v207Lesson.compact{padding-top:8px!important;padding-bottom:8px!important;grid-template-columns:22px minmax(0,1fr)!important;gap:7px!important}
-  .v207LessonIcon{width:24px!important;height:24px!important;color:color-mix(in srgb,var(--tone) 70%,#5c4b46)!important;display:grid!important;place-items:center!important}
-  .v207Lesson.compact .v207LessonIcon{width:21px!important;height:21px!important}
-  .v207LessonIcon svg{width:100%!important;height:100%!important;stroke:currentColor!important;fill:none!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
-  .v207LessonTitle{display:block!important;font-size:13px!important;line-height:1.12!important;font-weight:900!important;color:#332d2b!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
-  .v207LessonTime{display:block!important;margin-top:4px!important;color:#826f68!important;font-size:10.5px!important;font-weight:700!important;white-space:nowrap!important}
-  .v207LessonMeta{display:block!important;margin-top:4px!important;color:#94817a!important;font-size:10px!important;font-weight:650!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
-  .v207Lesson.compact .v207LessonMeta{display:none!important}
-  .v207LessonBadges{display:flex!important;gap:5px!important;flex-wrap:wrap!important;margin-top:6px!important}
-  .v207Lesson.compact .v207LessonBadges{display:none!important}
-  .v207LessonBadge{padding:3px 6px!important;border-radius:999px!important;background:rgba(255,255,255,.56)!important;border:1px solid rgba(255,255,255,.72)!important;color:#876b65!important;font-size:8px!important;font-weight:900!important}
-  .v207NowBadge{position:absolute!important;right:8px!important;top:7px!important;padding:3px 6px!important;border-radius:999px!important;background:#fff1f1!important;border:1px solid #efc9ca!important;color:#b06d71!important;font-size:7px!important;font-weight:950!important;letter-spacing:.08em!important}
-  .v207Break{position:absolute!important;left:7px!important;right:7px!important;border-top:1px dashed #e9ddd8!important;border-bottom:1px dashed #e9ddd8!important;background:rgba(247,244,237,.72)!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:5px!important;color:#9d9086!important;font-size:8.5px!important;font-weight:800!important;z-index:1!important}
-  .v207Break svg{width:12px!important;height:12px!important;stroke:currentColor!important;fill:none!important;stroke-width:1.7!important;stroke-linecap:round!important;stroke-linejoin:round!important}
-  .v207Break.current{background:#fff0f0!important;border-color:#ecc5c6!important;color:#b57578!important;box-shadow:0 0 0 3px rgba(229,154,158,.08)!important}
-  .v207CurrentLine{position:absolute!important;left:4px!important;right:4px!important;height:1.5px!important;background:#db9295!important;border-radius:999px!important;z-index:4!important;pointer-events:none!important}
-  .v207CurrentLine:before{content:""!important;position:absolute!important;left:-1px!important;top:50%!important;transform:translateY(-50%)!important;width:7px!important;height:7px!important;border-radius:50%!important;background:#db9295!important}
-  .v207Empty{position:absolute!important;left:9px!important;right:9px!important;top:12px!important;padding:15px 8px!important;border:1px dashed #eaded9!important;border-radius:14px!important;background:#fffaf8!important;text-align:center!important;color:#a08d86!important;font-size:10px!important;font-weight:750!important}
-  .v207Special{position:absolute!important;left:8px!important;right:8px!important;top:12px!important;padding:13px!important;border:1px dashed #e7d4c6!important;border-radius:14px!important;background:#fff9ee!important;color:#887565!important;z-index:2!important}
-  .v207Special b{display:block!important;font-size:10px!important;color:#65564f!important;margin-bottom:4px!important}
-  .v207Special span{display:block!important;font-size:9px!important;line-height:1.4!important}
-}
-@media (min-width:1100px) and (max-width:1280px){body:not(.editorMode) .app{grid-template-columns:220px minmax(0,1fr)!important}#v207PlanHeader .v207Title h2{font-size:39px!important}#v207PlanHeader{grid-template-columns:minmax(200px,1fr) auto!important;grid-template-areas:"title actions" "mode mode" "controls week"!important}#v207PlanHeader .v207Mode{justify-self:start!important}.v207WeekBoard{grid-template-columns:55px repeat(5,minmax(0,1fr))!important;column-gap:7px!important}}
-@media(max-width:1099px){#v207Sidebar,#v207PlanHeader{display:none!important}}
-</style>
 
-<script id="v207-unified-laptop-ui-script">
+<style id="v208-reference-plan-desktop">
+@media (min-width:1100px){
+  body.planViewActive{
+    background:linear-gradient(180deg,#f7eeeb 0%,#fff7f5 100%)!important;
+  }
+  body.planViewActive:before{
+    content:"";position:fixed;left:22px;top:17px;width:12px;height:12px;border-radius:50%;background:#ef8e87;
+    box-shadow:22px 0 0 #efc05f,44px 0 0 #86c96f;z-index:5;pointer-events:none;
+  }
+  body.planViewActive .header,
+  body.planViewActive #nav{display:none!important}
+  body.planViewActive .app{
+    width:min(1525px,99vw)!important;max-width:none!important;min-height:960px!important;margin:28px auto 18px!important;
+    padding:14px!important;display:grid!important;grid-template-columns:276px minmax(0,1fr)!important;gap:18px!important;
+    border:1px solid #ecdeda!important;border-radius:30px!important;background:rgba(255,248,246,.78)!important;
+    box-shadow:0 20px 60px rgba(183,151,145,.10)!important;backdrop-filter:blur(10px)!important;overflow:hidden!important;
+  }
+  body.planViewActive .app:before, body.planViewActive .app:after{display:none!important}
+
+  body.planViewActive #v208Sidebar{
+    display:flex!important;flex-direction:column!important;gap:18px!important;min-width:0!important;
+    border-radius:26px!important;background:linear-gradient(180deg,#fff8f6,#fffaf8)!important;
+    padding:18px 16px!important;border:1px solid #f0e3df!important;
+  }
+  body.planViewActive #v208Sidebar .v208Brand{display:flex!important;align-items:center!important;gap:13px!important;padding:8px 10px 6px!important}
+  body.planViewActive #v208Sidebar .v208BrandIcon{width:44px!important;height:44px!important;color:#d58d8b!important;display:grid!important;place-items:center!important}
+  body.planViewActive #v208Sidebar .v208BrandIcon svg,
+  body.planViewActive #v208Sidebar .navIcon svg,
+  body.planViewActive #v208Sidebar .quoteSprout svg,
+  body.planViewActive #v208Sidebar .quoteHeart svg,
+  #v208PlanHead .headBtn svg,
+  .v208LessonIcon svg{
+    width:100%!important;height:100%!important;stroke:currentColor!important;fill:none!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important;
+  }
+  body.planViewActive #v208Sidebar .v208BrandText b{display:block!important;font-size:18px!important;line-height:1!important;letter-spacing:-.02em!important;color:#241f1f!important}
+  body.planViewActive #v208Sidebar .v208BrandText small{display:block!important;margin-top:5px!important;font-size:10px!important;font-weight:800!important;letter-spacing:.16em!important;color:#b29992!important}
+  body.planViewActive #v208Sidebar .navList{display:grid!important;gap:6px!important}
+  body.planViewActive #v208Sidebar .navItem{
+    appearance:none!important;border:1px solid transparent!important;background:transparent!important;border-radius:16px!important;
+    min-height:58px!important;padding:0 14px!important;display:grid!important;grid-template-columns:28px minmax(0,1fr) auto!important;
+    align-items:center!important;gap:12px!important;text-align:left!important;color:#9a847e!important;box-shadow:none!important
+  }
+  body.planViewActive #v208Sidebar .navItem.active{background:#f8dfdf!important;border-color:#f1d1d2!important;color:#2e2726!important}
+  body.planViewActive #v208Sidebar .navItem:not(.active):hover{background:#fff5f3!important;border-color:#f3e3de!important}
+  body.planViewActive #v208Sidebar .navIcon{width:26px!important;height:26px!important;display:grid!important;place-items:center!important;color:#9c7f77!important}
+  body.planViewActive #v208Sidebar .navItem.active .navIcon{color:#2e2726!important}
+  body.planViewActive #v208Sidebar .navLabel{font-size:15px!important;font-weight:650!important;letter-spacing:-.01em!important}
+  body.planViewActive #v208Sidebar .navBubble{min-width:26px!important;height:26px!important;padding:0 8px!important;border-radius:999px!important;display:none!important;place-items:center!important;background:#f7d9da!important;color:#b46e74!important;font-size:12px!important;font-weight:800!important}
+  body.planViewActive #v208Sidebar .navItem.hasBubble .navBubble{display:grid!important}
+  body.planViewActive #v208Sidebar .quoteBox{
+    margin-top:auto!important;min-height:175px!important;padding:18px 18px 16px!important;border-radius:18px!important;
+    border:1px solid #f0e2de!important;background:linear-gradient(180deg,#fffaf8,#fff7f5)!important;display:flex!important;flex-direction:column!important
+  }
+  body.planViewActive #v208Sidebar .quoteSprout{width:26px!important;height:26px!important;color:#a3b182!important;margin-bottom:12px!important}
+  body.planViewActive #v208Sidebar .quoteText{font-size:18px!important;line-height:1.55!important;color:#8d7f79!important;font-weight:500!important}
+  body.planViewActive #v208Sidebar .quoteHeart{width:24px!important;height:24px!important;color:#db9fa3!important;margin-left:auto!important;margin-top:auto!important}
+
+  body.planViewActive #view-plan{
+    display:block!important;min-width:0!important;padding:24px 24px 18px!important;border-radius:28px!important;
+    border:1px solid #efe3de!important;background:linear-gradient(180deg,#fffdfc,#fffaf8)!important;
+  }
+  body.planViewActive #view-plan .planTopPanel,
+  body.planViewActive #view-plan .planModeSwitch,
+  body.planViewActive #view-plan #placeholderBanner,
+  body.planViewActive #view-plan #planModeHint,
+  body.planViewActive #view-plan #dayTabs{display:none!important}
+  body.planViewActive #view-plan #planLessons{margin-top:0!important}
+
+  body.planViewActive #v208PlanHead{display:grid!important;grid-template-columns:minmax(0,1fr) auto auto!important;grid-template-areas:"title mode actions" "sub . week";gap:10px 16px!important;align-items:center!important;margin-bottom:16px!important}
+  body.planViewActive #v208PlanHead .title{grid-area:title!important;font-size:59px!important;line-height:.93!important;letter-spacing:-.065em!important;font-weight:900!important;color:#342d2c!important}
+  body.planViewActive #v208PlanHead .sub{grid-area:sub!important;font-size:16px!important;color:#a18a84!important;font-weight:600!important;margin-top:-4px!important}
+  body.planViewActive #v208PlanHead .modeWrap{grid-area:mode!important;justify-self:center!important;display:flex!important;align-items:center!important;padding:4px!important;border:1px solid #efddd8!important;background:#fff9f7!important;border-radius:18px!important}
+  body.planViewActive #v208PlanHead .modeBtn{appearance:none!important;border:0!important;background:transparent!important;min-width:125px!important;height:42px!important;border-radius:14px!important;color:#8f7871!important;font-size:15px!important;font-weight:700!important;box-shadow:none!important}
+  body.planViewActive #v208PlanHead .modeBtn.active{background:#f6d7d7!important;color:#342d2c!important}
+  body.planViewActive #v208PlanHead .actionRow{grid-area:actions!important;display:flex!important;gap:10px!important}
+  body.planViewActive #v208PlanHead .headBtn{width:44px!important;height:44px!important;border-radius:14px!important;border:1px solid #efddd8!important;background:#fffaf8!important;color:#9b837c!important;display:grid!important;place-items:center!important;padding:0!important}
+  body.planViewActive #v208PlanHead .headBtn:hover{background:#fff3f1!important}
+  body.planViewActive #v208PlanHead .headBtn svg{width:22px!important;height:22px!important}
+  body.planViewActive #v208PlanHead .weekNav{grid-area:week!important;justify-self:end!important;display:flex!important;align-items:center!important;gap:10px!important}
+  body.planViewActive #v208PlanHead .weekBtn{width:58px!important;height:56px!important;border-radius:16px!important;border:1px solid #efddd8!important;background:#fffaf8!important;color:#8f7770!important;font-size:28px!important;font-weight:400!important;display:grid!important;place-items:center!important;padding:0!important}
+  body.planViewActive #v208PlanHead .weekInfo{min-width:275px!important;height:56px!important;border-radius:16px!important;border:1px solid #efddd8!important;background:#fffaf8!important;display:grid!important;place-items:center!important;padding:8px 18px!important;text-align:center!important}
+  body.planViewActive #v208PlanHead .weekInfo b{display:block!important;font-size:14px!important;color:#312a29!important;font-weight:800!important}
+  body.planViewActive #v208PlanHead .weekInfo small{display:block!important;margin-top:3px!important;font-size:11px!important;color:#a08b85!important;font-weight:600!important}
+
+  body.planViewActive .v208WeekBoard{display:grid!important;grid-template-columns:56px repeat(5,minmax(0,1fr))!important;gap:0 8px!important;align-items:start!important}
+  body.planViewActive .v208Corner{height:58px!important}
+  body.planViewActive .v208DayHead{height:64px!important;border:1px solid #efe0db!important;border-radius:16px!important;background:#fffaf8!important;display:grid!important;place-items:center!important;align-content:center!important}
+  body.planViewActive .v208DayHead.today{background:#f7dcdc!important;border-color:#f0d2d2!important}
+  body.planViewActive .v208DayHead b{font-size:15px!important;color:#2e2726!important;font-weight:800!important;line-height:1!important}
+  body.planViewActive .v208DayHead span{margin-top:5px!important;font-size:10px!important;color:#9e8b84!important;font-weight:600!important}
+  body.planViewActive .v208TimeRail{position:relative!important}
+  body.planViewActive .v208TimeLabel{position:absolute!important;left:0!important;transform:translateY(-50%)!important;font-size:13px!important;color:#9f908a!important;font-weight:600!important}
+  body.planViewActive .v208DayBody{position:relative!important;overflow:hidden!important;border-left:1px solid #f0e5e1!important;border-right:1px solid #f0e5e1!important;border-bottom:1px solid #f0e5e1!important;border-radius:0 0 16px 16px!important;background:linear-gradient(180deg,#fffdfc,#fffaf8)!important}
+  body.planViewActive .v208GridLine{position:absolute!important;left:0!important;right:0!important;height:1px!important;background:#f0e5e1!important}
+  body.planViewActive .v208Lesson{appearance:none!important;position:absolute!important;left:7px!important;right:7px!important;border-radius:16px!important;border:1px solid rgba(0,0,0,.03)!important;text-align:left!important;padding:12px 12px 10px 14px!important;display:grid!important;grid-template-columns:28px minmax(0,1fr)!important;gap:11px!important;box-shadow:none!important;overflow:hidden!important}
+  body.planViewActive .v208Lesson.pink{background:#f8e6e7!important;color:#4a3534!important}
+  body.planViewActive .v208Lesson.green{background:#edf2e6!important;color:#455041!important}
+  body.planViewActive .v208Lesson.blue{background:#e8eef9!important;color:#394761!important}
+  body.planViewActive .v208Lesson.gold{background:#f7efdd!important;color:#5b4930!important}
+  body.planViewActive .v208Lesson.purple{background:#efe8fb!important;color:#564c67!important}
+  body.planViewActive .v208Lesson.peach{background:#f8efe7!important;color:#5c4b40!important}
+  body.planViewActive .v208LessonIcon{width:25px!important;height:25px!important;display:grid!important;place-items:center!important;color:inherit!important;opacity:.9!important}
+  body.planViewActive .v208LessonTitle{font-size:17px!important;font-weight:800!important;line-height:1.15!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  body.planViewActive .v208LessonTime{display:block!important;margin-top:4px!important;font-size:14px!important;font-weight:500!important;opacity:.82!important}
+  body.planViewActive .v208LessonMeta{display:block!important;margin-top:4px!important;font-size:13px!important;font-weight:500!important;opacity:.78!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  body.planViewActive .v208Lesson.compact{padding-top:10px!important;padding-bottom:8px!important}
+  body.planViewActive .v208Lesson.compact .v208LessonTitle{font-size:15px!important}
+  body.planViewActive .v208Lesson.compact .v208LessonTime{font-size:13px!important}
+  body.planViewActive .v208Lesson.compact .v208LessonMeta{font-size:12px!important}
+  body.planViewActive .v208Empty{position:absolute!important;left:7px!important;right:7px!important;top:12px!important;padding:14px 10px!important;border:1px dashed #eee0db!important;border-radius:14px!important;background:#fffaf8!important;text-align:center!important;color:#b0a09a!important;font-size:12px!important}
+  body.planViewActive .v208Special{position:absolute!important;left:7px!important;right:7px!important;top:12px!important;padding:14px!important;border:1px dashed #e8d8cd!important;border-radius:14px!important;background:#fff9ef!important;color:#8f7d70!important;font-size:12px!important;line-height:1.45!important}
+  body.planViewActive .v208Special b{display:block!important;margin-bottom:5px!important;color:#5f524b!important}
+}
+</style>
+<script id="v208-reference-plan-desktop-script">
 (function(){
-'use strict';
-const desktopMin=1100;
-const E=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-const M=t=>{const a=String(t||'00:00').split(':').map(Number);return(a[0]||0)*60+(a[1]||0)};
-const ICONS={
- bunny:`<svg viewBox="0 0 32 32"><path d="M11 11c-2-4-1-8 1-9 2 0 4 4 4 8"/><path d="M21 11c2-4 1-8-1-9-2 0-4 4-4 8"/><path d="M8 16c0-4 3-7 8-7s8 3 8 7v5c0 5-3 8-8 8s-8-3-8-8v-5Z"/><path d="M12 17h.01M20 17h.01"/><path d="M14 22c1 1 3 1 4 0"/><path d="m16 19-1 1h2l-1-1Z"/></svg>`,
- calendar:`<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 9h18"/></svg>`,
- check:`<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="m7.5 12 3 3 6-7"/></svg>`,
- book:`<svg viewBox="0 0 24 24"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H20v16H7.5A3.5 3.5 0 0 0 4 21.5z"/><path d="M4 5.5v16"/></svg>`,
- folder:`<svg viewBox="0 0 24 24"><path d="M3 6h7l2 2h9v11H3z"/></svg>`,
- file:`<svg viewBox="0 0 24 24"><path d="M6 2h8l4 4v16H6z"/><path d="M14 2v5h5M9 12h6M9 16h6"/></svg>`,
- pencil:`<svg viewBox="0 0 24 24"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4z"/><path d="m14 6 4 4"/></svg>`,
- sprout:`<svg viewBox="0 0 24 24"><path d="M12 21v-9"/><path d="M12 13c-5 0-8-3-8-7 5 0 8 3 8 7Z"/><path d="M12 16c5 0 8-3 8-7-5 0-8 3-8 7Z"/></svg>`,
- heart:`<svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>`,
- refresh:`<svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0 2.2 5.6"/><path d="M20 4v7h-7"/></svg>`,
- settings:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.5-2-3.4-2.4 1a7 7 0 0 0-1.8-1L14.4 3h-4.8l-.3 3.1a7 7 0 0 0-1.8 1l-2.4-1-2 3.4L5.1 11a7 7 0 0 0 0 2l-2 1.5 2 3.4 2.4-1a7 7 0 0 0 1.8 1l.3 3.1h4.8l.3-3.1a7 7 0 0 0 1.8-1l2.4 1 2-3.4-2-1.5c.1-.3.1-.7.1-1Z"/></svg>`,
- calculator:`<svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><rect x="8" y="5" width="8" height="4" rx="1"/><path d="M8 13h.01M12 13h.01M16 13h.01M8 17h.01M12 17h.01M16 17h.01"/></svg>`,
- globe:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg>`,
- flask:`<svg viewBox="0 0 24 24"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3"/><path d="M8 15h8"/></svg>`,
- landmark:`<svg viewBox="0 0 24 24"><path d="m3 9 9-5 9 5"/><path d="M5 10h14M6 10v7M10 10v7M14 10v7M18 10v7M4 20h16"/></svg>`,
- atom:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.5"/><ellipse cx="12" cy="12" rx="9" ry="3.5"/><ellipse cx="12" cy="12" rx="3.5" ry="9" transform="rotate(45 12 12)"/><ellipse cx="12" cy="12" rx="3.5" ry="9" transform="rotate(-45 12 12)"/></svg>`,
- laptop:`<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="12" rx="2"/><path d="M2 20h20M9 20v-1h6v1"/></svg>`,
- palette:`<svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18h2a2 2 0 0 0 0-4h-1a2 2 0 0 1 0-4h5a3 3 0 0 0 3-3 7 7 0 0 0-9-7Z"/><path d="M8 8h.01M12 6h.01M6 12h.01"/></svg>`,
- music:`<svg viewBox="0 0 24 24"><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg>`,
- activity:`<svg viewBox="0 0 24 24"><path d="M3 12h4l2-6 4 12 2-6h6"/></svg>`,
- scale:`<svg viewBox="0 0 24 24"><path d="M12 3v18M5 6h14M7 6 3 13h8L7 6ZM17 6l-4 7h8l-4-7ZM8 21h8"/></svg>`,
- star:`<svg viewBox="0 0 24 24"><path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z"/></svg>`,
- cup:`<svg viewBox="0 0 24 24"><path d="M5 8h12v5a5 5 0 0 1-5 5H10a5 5 0 0 1-5-5V8Z"/><path d="M17 10h2a2 2 0 0 1 0 4h-2M8 4v2M12 4v2"/></svg>`
-};
-const I=n=>ICONS[n]||ICONS.star;
-function subjectIcon(s){s=String(s||'').toLowerCase();if(s.includes('mathe'))return I('calculator');if(s.includes('deutsch'))return I('book');if(s.includes('engl'))return I('globe');if(s.includes('bio'))return I('sprout');if(s.includes('chem'))return I('flask');if(s.includes('geschichte')||s.includes('wiso'))return I('landmark');if(s.includes('phys'))return I('atom');if(s.includes('informat'))return I('laptop');if(s.includes('kunst'))return I('palette');if(s.includes('musik'))return I('music');if(s.includes('sport'))return I('activity');if(s.includes('ethik')||s.includes('relig'))return I('scale');return I('star')}
-function weekInfo(){const now=new Date(),mon=new Date(now);mon.setDate(now.getDate()-((now.getDay()+6)%7));mon.setHours(12,0,0,0);const ds=[];for(let i=0;i<5;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);ds.push(d)}const m=['Jan.','Feb.','März','Apr.','Mai','Juni','Juli','Aug.','Sep.','Okt.','Nov.','Dez.'];const d=new Date(Date.UTC(now.getFullYear(),now.getMonth(),now.getDate()));const dow=d.getUTCDay()||7;d.setUTCDate(d.getUTCDate()+4-dow);const y=new Date(Date.UTC(d.getUTCFullYear(),0,1));const wk=Math.ceil((((d-y)/86400000)+1)/7);return{week:`KW ${wk}`,range:`${ds[0].getDate()}. – ${ds[4].getDate()}. ${m[ds[4].getMonth()]} ${ds[4].getFullYear()}`,dates:ds,short:x=>`${x.getDate()}. ${m[x.getMonth()]}`}}
-function activeView(){return document.querySelector('.view.active')?.id?.replace('view-','')||'home'}
-function taskCount(){const h=(data?.homework||[]).filter(x=>!x.done).length;let t=0;for(const x of (data?.tests||[])){try{const n=calendarDaysUntil(x.date);if(n!=null&&n>=0)t++}catch(_){}}return h+t}
-function item(label,icon,view,action,badge=''){return `<button type="button" class="${activeView()===view?'active':''} ${badge?'hasBadge':''}" onclick="${action}"><span class="navIcon">${I(icon)}</span><span class="navLabel">${E(label)}</span><span class="navBadge">${badge}</span></button>`}
-function sidebar(){if(innerWidth<desktopMin||document.body.classList.contains('editorMode'))return;const app=document.querySelector('.app');if(!app)return;let s=document.getElementById('v207Sidebar');if(!s){s=document.createElement('aside');s.id='v207Sidebar';app.insertBefore(s,app.firstChild)}const n=taskCount();s.innerHTML=`<div class="v207Brand"><span class="v207BrandIcon">${I('bunny')}</span><span class="v207BrandText"><b>Studia</b><small>PLAN · LERNEN · ERREICHEN</small></span></div><div class="v207SideNav">${item('Stundenplan','calendar','plan',`openView('plan')`)}${item('Aufgaben','check','tasks',`openView('tasks')`,n?String(n):'')}${item('Lernen','book','study',`openView('study')`)}${item('Fächer','folder','subjects',`openView('subjects')`)}${item('Tests','file','__tests',`openView('tasks')`)}${item('Notizen','pencil','__notes',`openView('subjects')`)}</div><div class="v207Quote"><span class="quoteIcon">${I('sprout')}</span><p>Better<br>than<br>yesterday.</p><span class="quoteHeart">${I('heart')}</span></div>`}
-function syncHeader(){const h=document.getElementById('v207PlanHeader');if(!h)return;const w=weekInfo();h.querySelector('.v207Week').innerHTML=`<b><span class="v207SyncDot"></span>${E(w.week)}</b><small>${E(w.range)}</small>`;const sel=h.querySelector('#v207ClassSelect'),cs=data?.timetable?.classes||[],cur=data?.timetable?.selectedClass||data?.settings?.className||'M U1';if(sel)sel.innerHTML=(cs.length?cs:[cur]).map(c=>`<option value="${E(c)}" ${c===cur?'selected':''}>${E(c)}</option>`).join('');h.querySelectorAll('[data-v207mode]').forEach(b=>b.classList.toggle('active',b.dataset.v207mode===timetableViewMode));const school=h.querySelector('.v207School');if(school)school.textContent=data?.settings?.school||'PHS Ludwigshafen'}
-function header(){if(innerWidth<desktopMin||!document.querySelector('#view-plan.active'))return;const v=document.getElementById('view-plan');let h=document.getElementById('v207PlanHeader');if(!h){h=document.createElement('div');h.id='v207PlanHeader';h.innerHTML=`<div class="v207Title"><h2>Stundenplan</h2><p class="v207School"></p></div><div class="v207Mode"><button type="button" data-v207mode="current" onclick="setTimetableViewMode('current')">Aktuell</button><button type="button" data-v207mode="basis" onclick="setTimetableViewMode('basis')">Basisplan</button></div><div class="v207Actions"><button type="button" class="v207IconBtn" title="Plan aktualisieren" onclick="loadRemotePlan(true)">${I('refresh')}</button><button type="button" class="v207IconBtn" title="Aufgaben" onclick="openView('tasks')">${I('calendar')}</button><button type="button" class="v207IconBtn" title="Einstellungen" onclick="openView('settings')">${I('settings')}</button></div><div class="v207Controls"><label class="v207SelectWrap"><span>Klasse</span><select id="v207ClassSelect" onchange="switchTimetableClass(this.value)"></select></label></div><div class="v207Week"></div>`;v.insertBefore(h,v.firstChild)}syncHeader()}
-function timeline(ls){let max=8;for(const l of (ls||[]))if(l.rowNum!=null)max=Math.max(max,Number(l.rowNum)+Math.max(1,Number(l.blocks||1))-1);const rows=[];for(let i=1;i<=max;i++){let t=null;try{t=effectiveTimeForRow(i)}catch(_){ }if(t?.start&&t?.end)rows.push(t)}if(!rows.length)return{first:M('07:30'),last:M('15:45'),labels:['07:30','08:00','08:45','09:30','09:45','10:30','11:15','11:30','12:15','13:00','13:30','14:15','15:00','15:45']};const set=new Set();rows.forEach(r=>{set.add(r.start);set.add(r.end)});try{getActivePauses().forEach(p=>{set.add(p.start);set.add(p.end)})}catch(_){ }set.add('07:30');set.add('15:45');return{first:Math.min(M(rows[0].start),M('07:30')),last:Math.max(M(rows[rows.length-1].end),M('15:45')),labels:[...set].sort((a,b)=>M(a)-M(b))}}
-function lesson(l,first,scale){const raw=(Array.isArray(l.duplicates)&&l.duplicates.length?l.duplicates[0].raw:l.raw)||'',p=splitCell(raw),title=prettySubject(p.subject),teacher=p.teacher||p.meta||'',room=p.room||'',color=typeof timetableSubjectColor==='function'?timetableSubjectColor(p.subject):'#e7b8bb',dur=M(l.end)-M(l.start),top=Math.round((M(l.start)-first)*scale)+6,height=Math.max(dur<=50?54:70,Math.round(dur*scale)-6),compact=height<78,meta=[room,teacher].filter(Boolean).join(' · '),badges=[];if(l.changedFromBasis)badges.push('geändert');if(Number(l.blocks||1)>=2)badges.push(Number(l.blocks||1)===2?'Doppelstunde':`${l.blocks} Stunden`);let current=false;try{current=isLessonCurrentNow(l)}catch(_){ }return `<button class="v207Lesson ${compact?'compact':''} ${current?'current':''}" style="--tone:${E(color)};top:${top}px;height:${height}px" onclick='openLessonDetails(${JSON.stringify(JSON.stringify(l))})'><span class="v207LessonIcon">${subjectIcon(title)}</span><span><span class="v207LessonTitle">${E(title)}</span><span class="v207LessonTime">${E(l.start)} – ${E(l.end)}</span>${meta?`<span class="v207LessonMeta">${E(meta)}</span>`:''}${badges.length?`<span class="v207LessonBadges">${badges.map(x=>`<span class="v207LessonBadge">${E(x)}</span>`).join('')}</span>`:''}</span>${current?'<span class="v207NowBadge">JETZT</span>':''}</button>`}
-function special(x){const raw=cleanPdfCellText(x.raw||''),tm=raw.match(/^(\d{1,2}(?::\d{2})?\s*Uhr)\s*(.*)$/i);return `<div class="v207Special"><b>${tm?E(tm[1]):'Hinweis'}</b><span>${E(tm?tm[2]:raw)}</span></div>`}
-function weekRender(){const selected=data?.timetable?.selectedClass||data?.settings?.className||'M U1',list=timetableViewMode==='basis'?basisScheduleForClass(selected):currentScheduleForClass(selected),tl=timeline(list||[]),scale=1.22,height=Math.max(620,Math.round((tl.last-tl.first)*scale)),wk=weekInfo(),today=dayCode(new Date()),now=new Date(),nowMin=now.getHours()*60+now.getMinutes(),times=tl.labels.map(t=>`<span class="v207Time" style="top:${Math.round((M(t)-tl.first)*scale)}px">${E(t)}</span>`).join(''),heads=dayOrder.map((d,i)=>`<div class="v207DayHead ${d===today?'today':''}"><b>${E(d)}</b><span>${E(wk.short(wk.dates[i]))}</span></div>`).join(''),bodies=dayOrder.map(d=>{const rawDay=stableTimetableDay(applyEffectiveDisplayTimes((list||[]).filter(x=>x.day===d))),sp=rawDay.filter(x=>x.specialOnly),norm=rawDay.filter(x=>!x.specialOnly),guides=tl.labels.map(t=>`<i class="v207Guide" style="top:${Math.round((M(t)-tl.first)*scale)}px"></i>`).join('');let inner='';if(sp.length&&!norm.length)inner=sp.map(special).join('');else{const ls=mergeLessons(rawDay.filter(x=>timetableViewMode==='basis'?!x.cancelledFromBasis:true));inner=ls.length?ls.map(l=>lesson(l,tl.first,scale)).join(''):'<div class="v207Empty">Kein Unterricht</div>'}let br='';try{br=getActivePauses().map(p=>{const st=M(p.start),en=M(p.end);if(en<=tl.first||st>=tl.last)return'';const top=Math.max(0,Math.round((st-tl.first)*scale)),h=Math.max(12,Math.round((en-st)*scale)),active=d===today&&st<=nowMin&&nowMin<en;return `<div class="v207Break ${active?'current':''}" style="top:${top}px;height:${h}px">${I('cup')}<span>${E(p.label||'Pause')}</span></div>`}).join('')}catch(_){ }const line=d===today&&nowMin>=tl.first&&nowMin<=tl.last?`<div class="v207CurrentLine" style="top:${Math.round((nowMin-tl.first)*scale)}px"></div>`:'';return `<div class="v207DayBody" style="height:${height}px">${guides}${br}${line}${inner}</div>`}).join('');return `<div class="v207WeekBoard"><div class="v207WeekCorner"></div>${heads}<div class="v207TimeRail" style="height:${height}px">${times}</div>${bodies}</div>`}
-window.renderDesktopWeekPlan=weekRender;try{renderDesktopWeekPlan=window.renderDesktopWeekPlan}catch(_){ }
-function reconcile(){if(innerWidth>=desktopMin&&!document.body.classList.contains('editorMode')){sidebar();header()}}
-const oldOpen=window.openView;if(typeof oldOpen==='function'&&!oldOpen.__v207){window.openView=function(){const r=oldOpen.apply(this,arguments);setTimeout(reconcile,0);setTimeout(sidebar,30);return r};window.openView.__v207=true;try{openView=window.openView}catch(_){ }}
-const oldPlan=window.renderPlan;if(typeof oldPlan==='function'&&!oldPlan.__v207){window.renderPlan=function(){const r=oldPlan.apply(this,arguments);setTimeout(()=>{header();syncHeader()},0);return r};window.renderPlan.__v207=true;try{renderPlan=window.renderPlan}catch(_){ }}
-addEventListener('resize',()=>setTimeout(reconcile,60));document.addEventListener('click',()=>setTimeout(()=>{sidebar();syncHeader()},0),true);[0,200,700,1800,4200].forEach(t=>setTimeout(reconcile,t));
+  const DESKTOP_MIN=1100;
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+  function svg(name){
+    const m={
+      bunny:`<svg viewBox="0 0 24 24"><path d="M8.5 8.5C6.8 5.2 7 2.6 8.2 2c1.4-.5 3 1.6 4 5.6"/><path d="M15.5 8.5c1.7-3.3 1.5-5.9.3-6.5-1.4-.5-3 1.6-4 5.6"/><path d="M5 13c0-4.4 3.1-7 7-7s7 2.6 7 7v2.3c0 4.3-2.8 6.7-7 6.7s-7-2.4-7-6.7V13Z"/><path d="M9.2 13.2h.01M14.8 13.2h.01"/><path d="M10.2 17c1.1.9 2.5.9 3.6 0"/></svg>`,
+      cal:`<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 9h18"/></svg>`,
+      tasks:`<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="m7 12 3 3 7-8"/></svg>`,
+      learn:`<svg viewBox="0 0 24 24"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H20v16H7.5A3.5 3.5 0 0 0 4 21.5z"/><path d="M4 5.5v16"/></svg>`,
+      folder:`<svg viewBox="0 0 24 24"><path d="M3 6h7l2 2h9v11H3z"/></svg>`,
+      test:`<svg viewBox="0 0 24 24"><path d="M6 2h8l4 4v16H6z"/><path d="M14 2v5h5M9 12h6M9 16h6"/></svg>`,
+      notes:`<svg viewBox="0 0 24 24"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4z"/><path d="m14 6 4 4"/></svg>`,
+      sprout:`<svg viewBox="0 0 24 24"><path d="M12 21v-9"/><path d="M12 13c-5 0-8-3-8-7 5 0 8 3 8 7Z"/><path d="M12 16c5 0 8-3 8-7-5 0-8 3-8 7Z"/></svg>`,
+      heart:`<svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>`,
+      refresh:`<svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0 2.2 5.6"/><path d="M20 4v7h-7"/></svg>`,
+      calendar2:`<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>`,
+      settings:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.5-2-3.4-2.4 1a7 7 0 0 0-1.8-1L14.4 3h-4.8l-.3 3.1a7 7 0 0 0-1.8 1l-2.4-1-2 3.4L5.1 11a7 7 0 0 0 0 2l-2 1.5 2 3.4 2.4-1a7 7 0 0 0 1.8 1l.3 3.1h4.8l.3-3.1a7 7 0 0 0 1.8-1l2.4 1 2-3.4-2-1.5c.1-.3.1-.7.1-1Z"/></svg>`,
+      math:`<svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2M14 11h2M8 15h2M14 15h2"/></svg>`,
+      bio:`<svg viewBox="0 0 24 24"><path d="M12 21v-9"/><path d="M12 13c-5 0-8-3-8-7 5 0 8 3 8 7Z"/><path d="M12 16c5 0 8-3 8-7-5 0-8 3-8 7Z"/></svg>`,
+      globe:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg>`,
+      hist:`<svg viewBox="0 0 24 24"><path d="m3 9 9-5 9 5"/><path d="M5 10h14M6 10v7M10 10v7M14 10v7M18 10v7M4 20h16"/></svg>`,
+      chem:`<svg viewBox="0 0 24 24"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3"/><path d="M8 15h8"/></svg>`,
+      deutsch:`<svg viewBox="0 0 24 24"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H20v16H7.5A3.5 3.5 0 0 0 4 21.5z"/><path d="M4 5.5v16"/></svg>`,
+      phys:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.5"/><ellipse cx="12" cy="12" rx="9" ry="3.5"/><ellipse cx="12" cy="12" rx="3.5" ry="9" transform="rotate(45 12 12)"/><ellipse cx="12" cy="12" rx="3.5" ry="9" transform="rotate(-45 12 12)"/></svg>`
+    }; return m[name]||m.cal;
+  }
+  function lessonIcon(subject){
+    const s=String(subject||'').toLowerCase();
+    if(s.includes('mathe'))return svg('math');
+    if(s.includes('bio'))return svg('bio');
+    if(s.includes('engl'))return svg('globe');
+    if(s.includes('geschichte'))return svg('hist');
+    if(s.includes('chem'))return svg('chem');
+    if(s.includes('deutsch'))return svg('deutsch');
+    if(s.includes('phys'))return svg('phys');
+    return svg('cal');
+  }
+  function weekInfo(){
+    const now=new Date();
+    const monday=new Date(now); monday.setDate(now.getDate()-((now.getDay()+6)%7)); monday.setHours(12,0,0,0);
+    const dates=[]; for(let i=0;i<5;i++){const d=new Date(monday); d.setDate(monday.getDate()+i); dates.push(d);}
+    const months=['Jan.','Feb.','März','Apr.','Mai','Juni','Juli','Aug.','Sep.','Okt.','Nov.','Dez.'];
+    const iso=(d)=>{const x=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())); const day=x.getUTCDay()||7; x.setUTCDate(x.getUTCDate()+4-day); const ys=new Date(Date.UTC(x.getUTCFullYear(),0,1)); return Math.ceil((((x-ys)/86400000)+1)/7)};
+    return {week:`KW ${iso(now)}`, range:`${dates[0].getDate()}. – ${dates[4].getDate()}. ${months[dates[4].getMonth()]} ${dates[4].getFullYear()}`, short:(d)=>`${d.getDate()}. ${months[d.getMonth()]}`, dates};
+  }
+  function currentView(){return document.querySelector('.view.active')?.id?.replace('view-','')||'plan'}
+  function taskBubble(){
+    const h=(data.homework||[]).filter(x=>!x.done).length; const t=(data.tests||[]).filter(x=>{try{const n=calendarDaysUntil(x.date);return n!=null&&n>=0}catch(_){return false}}).length; return h+t;
+  }
+  function sidebarButton(label, icon, active, action, bubble){
+    return `<button class="navItem ${active?'active':''} ${bubble?'hasBubble':''}" onclick="${action}"><span class="navIcon">${svg(icon)}</span><span class="navLabel">${esc(label)}</span><span class="navBubble">${bubble||''}</span></button>`;
+  }
+  function ensureSidebar(){
+    if(window.innerWidth<DESKTOP_MIN||!document.body.classList.contains('planViewActive'))return;
+    const app=document.querySelector('.app'); if(!app) return;
+    let s=document.getElementById('v208Sidebar'); if(!s){s=document.createElement('aside'); s.id='v208Sidebar'; app.insertBefore(s, app.firstChild);}    
+    const view=currentView(), bubble=taskBubble();
+    s.innerHTML=`<div class="v208Brand"><span class="v208BrandIcon">${svg('bunny')}</span><span class="v208BrandText"><b>Studia</b><small>PLAN · LERNEN · ERREICHEN</small></span></div>
+      <div class="navList">
+        ${sidebarButton('Stundenplan','cal',true,`openView('plan')`,'')}
+        ${sidebarButton('Aufgaben','tasks',view==='tasks',`openView('tasks')`,bubble?String(bubble):'')}
+        ${sidebarButton('Lernen','learn',view==='study',`openView('study')`,'')}
+        ${sidebarButton('Fächer','folder',view==='subjects',`openView('subjects')`,'')}
+        ${sidebarButton('Tests','test',false,`openView('tasks')`,'')}
+        ${sidebarButton('Notizen','notes',false,`openView('subjects')`,'')}
+      </div>
+      <div class="quoteBox"><span class="quoteSprout">${svg('sprout')}</span><div class="quoteText">Better<br>than<br>yesterday.</div><span class="quoteHeart">${svg('heart')}</span></div>`;
+  }
+  function ensureHead(){
+    if(window.innerWidth<DESKTOP_MIN||!document.body.classList.contains('planViewActive'))return;
+    const view=document.getElementById('view-plan'); if(!view) return;
+    let h=document.getElementById('v208PlanHead');
+    if(!h){
+      h=document.createElement('div'); h.id='v208PlanHead';
+      h.innerHTML=`<div class="title">Stundenplan</div><div class="sub">${esc(data.settings.school||'PHS Ludwigshafen')}</div>
+      <div class="modeWrap"><button class="modeBtn">Tag</button><button class="modeBtn active">Woche</button></div>
+      <div class="actionRow"><button class="headBtn" onclick="loadRemotePlan(true)" title="Aktualisieren">${svg('refresh')}</button><button class="headBtn" onclick="openView('tasks')" title="Kalender">${svg('calendar2')}</button><button class="headBtn" onclick="openView('settings')" title="Einstellungen">${svg('settings')}</button></div>
+      <div class="weekNav"><button class="weekBtn" type="button">‹</button><div class="weekInfo"><b></b><small></small></div><button class="weekBtn" type="button">›</button></div>`;
+      view.insertBefore(h, view.firstChild);
+    }
+    const wk=weekInfo();
+    h.querySelector('.sub').textContent=data.settings.school||'PHS Ludwigshafen';
+    h.querySelector('.weekInfo b').textContent=wk.week;
+    h.querySelector('.weekInfo small').textContent=wk.range;
+  }
+  function colorClass(subject){
+    const s=String(subject||'').toLowerCase();
+    if(s.includes('bio'))return 'green';
+    if(s.includes('engl'))return 'blue';
+    if(s.includes('geschichte'))return 'gold';
+    if(s.includes('chem'))return 'purple';
+    if(s.includes('deutsch'))return 'peach';
+    return 'pink';
+  }
+  function timeLines(viewLessons){
+    let labels=new Set(['08:00']);
+    const list=(viewLessons||[]).flatMap(l=>[l.start,l.end]);
+    list.forEach(t=>{ if(t&&m(t)>=480) labels.add(t); });
+    const pauses=(typeof getActivePauses==='function'?getActivePauses():[]);
+    pauses.forEach(p=>{ if(m(p.start)>=480) labels.add(p.start); if(m(p.end)>=480) labels.add(p.end); });
+    const arr=[...labels].sort((a,b)=>m(a)-m(b));
+    let last=Math.max(945, ...arr.map(m));
+    return {start:480, labels:arr, end:last};
+    function m(t){const [hh,mm]=String(t||'00:00').split(':').map(Number); return hh*60+mm;}
+  }
+  function renderReferenceWeek(){
+    const selectedClass=data.timetable.selectedClass||data.settings.className||'M U1';
+    const viewLessons=timetableViewMode==='basis'?basisScheduleForClass(selectedClass):currentScheduleForClass(selectedClass);
+    const wk=weekInfo();
+    const timeline=timeLines(viewLessons||[]);
+    const px=1.35; const bodyHeight=Math.max(690, Math.round((timeline.end-timeline.start)*px));
+    const timePos=t=>Math.round((toMin(t)-timeline.start)*px);
+    const today=dayCode(new Date());
+
+    function toMin(t){const [hh,mm]=String(t||'00:00').split(':').map(Number); return hh*60+mm;}
+    function dayContent(day){
+      const rawDay=stableTimetableDay(applyEffectiveDisplayTimes((viewLessons||[]).filter(x=>x.day===day))).filter(x=>toMin(x.end)>timeline.start);
+      const specialOnly=rawDay.filter(x=>x.specialOnly), normal=rawDay.filter(x=>!x.specialOnly);
+      const guides=timeline.labels.map(t=>`<div class="v208GridLine" style="top:${timePos(t)}px"></div>`).join('');
+      if(specialOnly.length&&!normal.length){
+        const card=specialOnly.map(x=>{const raw=cleanPdfCellText(x.raw||''); const tm=raw.match(/^(\d{1,2}(?::\d{2})?\s*Uhr)\s*(.*)$/i); return `<div class="v208Special"><b>${esc(tm?tm[1]:'Info')}</b>${esc(tm?tm[2]:raw)}</div>`;}).join('');
+        return `<div class="v208DayBody" style="height:${bodyHeight}px">${guides}${card}</div>`;
+      }
+      const merged=expandLessonsForVisibleBreaks(mergeLessons(rawDay.filter(x=>timetableViewMode==='basis'?!x.cancelledFromBasis:true)));
+      const lessons=merged.map(l=>{
+        const raw=(Array.isArray(l.duplicates)&&l.duplicates.length?l.duplicates[0].raw:l.raw)||''; const p=splitCell(raw); const title=prettySubject(p.subject); const meta=[p.room,p.teacher||p.meta].filter(Boolean).join(' · ');
+        const top=Math.max(0,timePos(l.start))+6; const height=Math.max(72, Math.round((toMin(l.end)-toMin(l.start))*px)-8); const compact=height<86;
+        return `<button class="v208Lesson ${colorClass(title)} ${compact?'compact':''}" style="top:${top}px;height:${height}px" onclick='openLessonDetails(${JSON.stringify(JSON.stringify(l))})'><span class="v208LessonIcon">${lessonIcon(title)}</span><span><span class="v208LessonTitle">${esc(title)}</span><span class="v208LessonTime">${esc(l.start)} – ${esc(l.end)}</span>${meta?`<span class="v208LessonMeta">${esc(meta)}</span>`:''}</span></button>`;
+      }).join('');
+      return `<div class="v208DayBody" style="height:${bodyHeight}px">${guides}${lessons||'<div class="v208Empty">Kein Unterricht</div>'}</div>`;
+    }
+
+    return `<div class="v208WeekBoard"><div class="v208Corner"></div>${dayOrder.map((d,i)=>`<div class="v208DayHead ${d===today?'today':''}"><b>${esc(d)}</b><span>${esc(wk.short(wk.dates[i]))}</span></div>`).join('')}<div class="v208TimeRail" style="height:${bodyHeight}px">${timeline.labels.map(t=>`<div class="v208TimeLabel" style="top:${timePos(t)}px">${esc(t)}</div>`).join('')}</div>${dayOrder.map(d=>dayContent(d)).join('')}</div>`;
+  }
+  window.renderDesktopWeekPlan=renderReferenceWeek; try{renderDesktopWeekPlan=window.renderDesktopWeekPlan}catch(_){ }
+  const prevOpen=window.openView;
+  if(typeof prevOpen==='function'&&!prevOpen.__v208wrap){window.openView=function(){const r=prevOpen.apply(this,arguments); setTimeout(()=>{ensureSidebar();ensureHead();},0); return r;}; window.openView.__v208wrap=true; try{openView=window.openView}catch(_){ }}
+  const prevRender=window.renderPlan;
+  if(typeof prevRender==='function'&&!prevRender.__v208wrap){window.renderPlan=function(){const r=prevRender.apply(this,arguments); setTimeout(()=>{ensureSidebar();ensureHead();},0); return r;}; window.renderPlan.__v208wrap=true; try{renderPlan=window.renderPlan}catch(_){ }}
+  window.addEventListener('resize',()=>setTimeout(()=>{ensureSidebar();ensureHead();},20));
+  document.addEventListener('click',()=>setTimeout(()=>{ensureSidebar();ensureHead();},0),true);
+  [0,200,700,1500].forEach(t=>setTimeout(()=>{ensureSidebar();ensureHead();},t));
 })();
 </script>
