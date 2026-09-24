@@ -19701,4 +19701,75 @@ body:not(.v214LearningReadOnly) #view-deck-detail #addCardToDeckBtn{display:inli
   const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 217';
 })();
 </script>
+
+
+<!-- ===== Studia V218 · Lernblatt echte Vollansicht ===== -->
+<style id="studia-v218-editor-fullscreen">
+/* Beim Lernblatt verschwindet die normale Studia-Navigation vollständig.
+   Die Editor-eigenen Werkzeugleisten bleiben erhalten. */
+body.editorMode #v210Sidebar,
+body.editorMode > #nav,
+body.editorMode .app > .header{
+  display:none!important;
+}
+
+@media (min-width:900px){
+  html:has(body.editorMode),
+  body.editorMode{
+    width:100%!important;
+    height:100%!important;
+    min-height:100%!important;
+    margin:0!important;
+    padding:0!important;
+    overflow:hidden!important;
+  }
+
+  body.editorMode .app,
+  body.editorMode.v210Desktop .app{
+    display:block!important;
+    grid-template-columns:none!important;
+    grid-template-rows:none!important;
+    width:100vw!important;
+    max-width:none!important;
+    height:100dvh!important;
+    min-height:100dvh!important;
+    margin:0!important;
+    padding:0!important;
+    border:0!important;
+    border-radius:0!important;
+    box-shadow:none!important;
+    background:transparent!important;
+    overflow:hidden!important;
+  }
+
+  body.editorMode #view-sheet-editor,
+  body.editorMode #view-sheet-editor.active,
+  body.editorMode.v210Desktop #view-sheet-editor.active{
+    display:block!important;
+    grid-column:1/-1!important;
+    grid-row:1/-1!important;
+    width:100vw!important;
+    max-width:none!important;
+    height:100dvh!important;
+    min-height:100dvh!important;
+    margin:0!important;
+    padding:0!important;
+    border:0!important;
+    border-radius:0!important;
+    box-shadow:none!important;
+    overflow:hidden!important;
+  }
+
+  body.editorMode #view-sheet-editor > .canvasEditorShell,
+  body.editorMode .canvasEditorShell{
+    width:100vw!important;
+    max-width:none!important;
+    height:100dvh!important;
+    min-height:100dvh!important;
+    margin:0!important;
+  }
+}
+</style>
+<!-- ===== /Studia V218 ===== -->
+
 <!-- ===== /Studia V217 ===== -->
