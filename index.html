@@ -17822,19 +17822,13 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
   body.v210Desktop{
     background:linear-gradient(180deg,#f8efec 0%,#fff8f6 100%)!important;
     color:#4b403d!important;
-    font-family:ui-rounded,"SF Pro Rounded","Avenir Next Rounded","Arial Rounded MT Bold",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
-  }
-  body.v210Desktop button,body.v210Desktop input,body.v210Desktop select,body.v210Desktop textarea{
-    font-family:ui-rounded,"SF Pro Rounded","Avenir Next Rounded","Arial Rounded MT Bold",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
   }
   body.v210Desktop:before{
     content:"";position:fixed;left:22px;top:16px;width:12px;height:12px;border-radius:50%;background:#ef8e87;
     box-shadow:22px 0 0 #efc05f,44px 0 0 #86c96f;z-index:9999;pointer-events:none
   }
   body.v210Desktop .header,body.v210Desktop #nav,
-  body.v210Desktop #v208Sidebar,body.v210Desktop #v209Sidebar,
-  body:not(.editorMode) #v208Sidebar,body:not(.editorMode) #v209Sidebar{display:none!important}
-  body.v210Desktop #v210Sidebar{display:flex!important}
+  body.v210Desktop #v208Sidebar,body.v210Desktop #v209Sidebar{display:none!important}
   body.v210Desktop .app{
     width:min(1530px,calc(100vw - 26px))!important;max-width:none!important;
     min-height:calc(100vh - 42px)!important;margin:28px auto 14px!important;padding:13px!important;
@@ -17886,7 +17880,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
 
   /* Reference header */
   body.v210Desktop #v208PlanHead{display:none!important}
-  #v210PlanHead{display:grid!important;grid-template-columns:minmax(300px,1fr) auto auto!important;grid-template-areas:"title mode actions" "sub planmode week"!important;gap:10px 16px!important;align-items:center!important;margin:0 0 16px!important}
+  #v210PlanHead{display:grid!important;grid-template-columns:minmax(300px,1fr) auto auto!important;grid-template-areas:"title mode actions" "sub . week"!important;gap:10px 16px!important;align-items:center!important;margin:0 0 16px!important}
   #v210PlanHead .title{grid-area:title!important;font-size:46px!important;line-height:.95!important;letter-spacing:-.055em!important;font-weight:900!important;color:#342d2b!important}
   #v210PlanHead .sub{grid-area:sub!important;margin-top:-4px!important;font-size:15px!important;font-weight:600!important;color:#a18b84!important}
   #v210PlanHead .modeWrap{grid-area:mode!important;display:flex!important;justify-self:center!important;padding:4px!important;border:1px solid #efddd8!important;border-radius:18px!important;background:#fff9f7!important}
@@ -17895,14 +17889,6 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
   #v210PlanHead .actionRow{grid-area:actions!important;display:flex!important;gap:9px!important;justify-self:end!important}
   #v210PlanHead .headBtn{width:43px!important;height:43px!important;border-radius:14px!important;border:1px solid #efddd8!important;background:#fffaf8!important;color:#967f78!important;display:grid!important;place-items:center!important;padding:10px!important;box-shadow:0 3px 10px rgba(110,82,75,.035)!important}
   #v210PlanHead .headBtn:hover{background:#fff2f0!important}
-  #v210PlanHead .headBtn.refreshAction{width:auto!important;min-width:122px!important;grid-template-columns:19px auto!important;gap:7px!important;padding:0 13px!important;font-size:10px!important;font-weight:850!important}
-  #v210PlanHead .headBtn.refreshAction svg{width:19px!important;height:19px!important}
-  #v210PlanHead .headBtn.isLoading svg{animation:v211spin .8s linear infinite!important}
-  @keyframes v211spin{to{transform:rotate(360deg)}}
-  #v210PlanHead .planTypeWrap{grid-area:planmode!important;display:flex!important;justify-self:center!important;padding:3px!important;border:1px solid #efddd8!important;border-radius:14px!important;background:#fffaf8!important}
-  #v210PlanHead .planTypeBtn{appearance:none!important;border:0!important;background:transparent!important;box-shadow:none!important;min-width:108px!important;height:32px!important;border-radius:11px!important;padding:0 11px!important;color:#99827b!important;font-size:10px!important;font-weight:820!important;white-space:nowrap!important}
-  #v210PlanHead .planTypeBtn.active{background:#f7e1e1!important;color:#4e3b38!important}
-  #v210PlanHead .planTypeBtn .miniStar{margin-right:4px!important;color:#cf8e91!important}
   #v210PlanHead .weekNav{grid-area:week!important;justify-self:end!important;display:grid!important;grid-template-columns:50px minmax(205px,1fr) 50px!important;align-items:stretch!important;border:1px solid #efddd8!important;border-radius:16px!important;overflow:hidden!important;background:#fffaf8!important}
   #v210PlanHead .weekBtn{appearance:none!important;border:0!important;background:transparent!important;color:#8e7770!important;font-size:26px!important;line-height:1!important;box-shadow:none!important}
   #v210PlanHead .weekBtn:first-child{border-right:1px solid #f0e0dc!important}.v210WeekBtnRight{border-left:1px solid #f0e0dc!important}
@@ -17929,7 +17915,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
   .v210GridLine{position:absolute!important;left:0!important;right:0!important;height:1px!important;background:#f1e7e3!important;pointer-events:none!important;z-index:0!important}
   .v210PauseBand{position:absolute!important;left:0!important;right:0!important;background:rgba(248,245,239,.82)!important;border-top:1px dashed #ecdfda!important;border-bottom:1px dashed #ecdfda!important;z-index:1!important;display:flex!important;align-items:center!important;justify-content:center!important;color:#aa9a93!important;font-size:8px!important;font-weight:750!important;letter-spacing:.02em!important;pointer-events:none!important}
   .v210PauseBand.current{background:#fff0ef!important;border-color:#e7b8b6!important;color:#ad6d6e!important;box-shadow:inset 0 0 0 1px rgba(232,168,166,.08)!important}
-  .v210Lesson{appearance:none!important;position:absolute!important;left:7px!important;right:7px!important;z-index:3!important;border:1px solid color-mix(in srgb,var(--lesson-color,#dca2a8) 24%,#eaded9)!important;border-radius:16px!important;background:color-mix(in srgb,var(--lesson-color,#dca2a8) 28%,#fffaf8)!important;color:#514440!important;display:grid!important;grid-template-columns:25px minmax(0,1fr)!important;gap:10px!important;align-items:center!important;padding:10px 11px!important;text-align:left!important;box-shadow:0 4px 12px rgba(103,75,68,.025)!important;overflow:hidden!important}
+  .v210Lesson{appearance:none!important;position:absolute!important;left:7px!important;right:7px!important;z-index:3!important;border:1px solid color-mix(in srgb,var(--lesson-color,#e9a7a4) 22%,#eaded9)!important;border-radius:14px!important;background:color-mix(in srgb,var(--lesson-color,#e9a7a4) 25%,#fffaf8)!important;color:#514440!important;display:grid!important;grid-template-columns:25px minmax(0,1fr)!important;gap:10px!important;align-items:center!important;padding:10px 11px!important;text-align:left!important;box-shadow:0 3px 10px rgba(103,75,68,.025)!important;overflow:hidden!important}
   .v210Lesson:hover{filter:saturate(1.03)!important;box-shadow:0 5px 14px rgba(103,75,68,.05)!important}
   .v210Lesson.current{border:2px solid #dda4a3!important;box-shadow:0 0 0 3px rgba(232,169,167,.14),0 5px 15px rgba(103,75,68,.05)!important;z-index:5!important}
   .v210Lesson.cancelled{background:#f5f1ef!important;color:#8f817c!important;border-style:dashed!important;border-color:#dbcac5!important}
@@ -17953,9 +17939,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
   #v210TimetableSettings .v210SettingsGrid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;margin-top:12px!important}
   #v210TimetableSettings .v210SettingCard{border:1px solid #efe2dd!important;border-radius:16px!important;background:#fffdfb!important;padding:13px!important}.v210SettingCard b{display:block!important;color:#4c403c!important;font-size:13px!important}.v210SettingCard small{display:block!important;margin-top:4px!important;color:#9b857e!important;font-size:10px!important;line-height:1.4!important}
   #v210TimetableSettings .heatModeButtons{display:flex!important;gap:5px!important;margin-top:10px!important}.v210SettingCard .heatModeButtons button{min-height:31px!important;border:1px solid #ead8d1!important;background:#fff9f7!important;color:#8f7770!important;border-radius:10px!important;padding:5px 9px!important;font-size:9px!important;font-weight:850!important}.v210SettingCard .heatModeButtons button.active{background:#f5dada!important;color:#654a47!important;border-color:#e9c3c2!important}
-  #v210SubjectColors{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important;margin-top:10px!important}.v210ColorRow{display:grid!important;grid-template-columns:minmax(0,1fr) 42px!important;align-items:center!important;gap:8px!important;border:1px solid #f0e4df!important;border-radius:13px!important;background:color-mix(in srgb,var(--preview,#f2dddd) 12%,#fff)!important;padding:8px 9px!important}.v210ColorRow span{font-size:10px!important;font-weight:800!important;color:#725f59!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}.v210ColorRow input{width:42px!important;height:32px!important;border:1px solid #ead8d2!important;border-radius:10px!important;padding:2px!important;background:#fff!important;cursor:pointer!important}.v210ColorRow input::-webkit-color-swatch-wrapper{padding:2px!important}.v210ColorRow input::-webkit-color-swatch{border:0!important;border-radius:7px!important}
-  #v210TimetableSettings.v210SettingsFocus{box-shadow:0 0 0 4px rgba(237,185,185,.16)!important;border-color:#e8c8c7!important}
-  .v211RefColorsBtn{margin-top:9px!important;min-height:32px!important;border:1px solid #ead8d2!important;border-radius:10px!important;background:#fff8f6!important;color:#806a63!important;padding:6px 10px!important;font-size:9px!important;font-weight:850!important}
+  #v210SubjectColors{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important;margin-top:10px!important}.v210ColorRow{display:grid!important;grid-template-columns:minmax(0,1fr) 38px!important;align-items:center!important;gap:8px!important;border:1px solid #f0e4df!important;border-radius:12px!important;background:#fff!important;padding:7px 8px!important}.v210ColorRow span{font-size:10px!important;font-weight:700!important;color:#725f59!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}.v210ColorRow input{width:38px!important;height:30px!important;border-radius:9px!important;padding:2px!important}
 
   #view-absence>.v210PageHead + .sectionHead h2,#view-missed-hours>.v210PageHead + .sectionHead h2{display:none!important}
   #view-absence>.v210PageHead + .sectionHead,#view-missed-hours>.v210PageHead + .sectionHead{justify-content:flex-end!important;margin-top:-8px!important}
@@ -18037,21 +18021,6 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
   window.v210ShiftWeek=function(n){weekOffset+=Number(n)||0;localStorage.setItem('studia-v210-week-offset',String(weekOffset));ensurePlanHead();if(document.getElementById('view-plan')?.classList.contains('active'))renderPlan()};
   window.v210SetPlanMode=function(mode){desktopMode=mode==='day'?'day':'week';localStorage.setItem('studia-v210-plan-mode',desktopMode);ensurePlanHead();renderPlan()};
   window.v210SetPlanDay=function(day){if(!['Mo','Di','Mi','Do','Fr'].includes(day))return;desktopDay=day;localStorage.setItem('studia-v210-plan-day',day);renderPlan()};
-  window.v210SetTimetableMode=function(mode){
-    const m=mode==='basis'?'basis':'current';
-    if(typeof window.setTimetableViewMode==='function')window.setTimetableViewMode(m);
-    else{try{timetableViewMode=m}catch(_){ }try{renderPlan()}catch(_){ }}
-    setTimeout(()=>{ensurePlanHead();ensureSidebar()},0);
-  };
-  window.v210RefreshPlan=async function(btn){
-    const b=btn instanceof Element?btn:null;if(b){b.classList.add('isLoading');b.disabled=true}
-    try{if(typeof window.loadRemotePlan==='function')await window.loadRemotePlan(true)}catch(_){ }
-    finally{if(b){b.classList.remove('isLoading');b.disabled=false}setTimeout(()=>{ensurePlanHead();try{renderPlan()}catch(_){ }},0)}
-  };
-  window.v210OpenTimetableSettings=function(){
-    openView('settings');
-    setTimeout(()=>{ensureTimetableSettings();ensureSidebar();const box=document.getElementById('v210TimetableSettings');if(box){box.classList.add('v210SettingsFocus');box.scrollIntoView({block:'start',behavior:'smooth'});setTimeout(()=>box.classList.remove('v210SettingsFocus'),1300)}},80);
-  };
 
   function ensurePlanHead(){
     if(!desktop()||!document.getElementById('view-plan')?.classList.contains('active'))return;
@@ -18059,8 +18028,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
     const wk=weekInfo();
     h.innerHTML=`<div class="title">Stundenplan</div><div class="sub">${esc2(data.settings.school||'PHS Ludwigshafen')}</div>
       <div class="modeWrap"><button class="modeBtn ${desktopMode==='day'?'active':''}" onclick="v210SetPlanMode('day')">Tag</button><button class="modeBtn ${desktopMode==='week'?'active':''}" onclick="v210SetPlanMode('week')">Woche</button></div>
-      <div class="actionRow"><button class="headBtn refreshAction" onclick="v210RefreshPlan(this)" title="Stundenplan aktualisieren">${svg('refresh')}<span>Aktualisieren</span></button><button class="headBtn" onclick="openView('tasks')" title="Kalender">${svg('calendar2')}</button><button class="headBtn" onclick="v210OpenTimetableSettings()" title="Stundenplan-Einstellungen">${svg('settings')}</button></div>
-      <div class="planTypeWrap"><button class="planTypeBtn ${timetableViewMode==='current'?'active':''}" onclick="v210SetTimetableMode('current')"><span class="miniStar">✦</span>Aktuell & Änderungen</button><button class="planTypeBtn ${timetableViewMode==='basis'?'active':''}" onclick="v210SetTimetableMode('basis')">▦ Basisplan</button></div>
+      <div class="actionRow"><button class="headBtn" onclick="loadRemotePlan(true)" title="Aktualisieren">${svg('refresh')}</button><button class="headBtn" onclick="openView('tasks')" title="Kalender">${svg('calendar2')}</button><button class="headBtn" onclick="openView('settings')" title="Einstellungen">${svg('settings')}</button></div>
       <div class="weekNav"><button class="weekBtn" onclick="v210ShiftWeek(-1)" aria-label="Vorherige Woche">‹</button><button class="weekInfo" onclick="${weekOffset?`v210ShiftWeek(${-weekOffset})`:`void 0`}" title="${weekOffset?'Zur aktuellen Woche':'Aktuelle Woche'}"><b>${esc2(wk.week)}</b><small>${esc2(wk.range)}</small></button><button class="weekBtn v210WeekBtnRight" onclick="v210ShiftWeek(1)" aria-label="Nächste Woche">›</button></div>`;
   }
 
@@ -18080,34 +18048,12 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
     return'GEÄNDERT'
   }
   function desktopPretty(subject){const p=prettySubject(subject),u=String(p||'').trim().toUpperCase();const map={PH:'Physik',PHY:'Physik',PHYS:'Physik',BIO:'Biologie',BI:'Biologie',GES:'Geschichte',GE:'Geschichte',G:'Geschichte',CH:'Chemie',CHE:'Chemie'};return map[u]||p}
-  function referenceSubjectColor(title){
-    const s=String(title||'').toLowerCase();
-    if(s.includes('mathe'))return'#dca0a7';
-    if(s.includes('bio'))return'#a6b978';
-    if(s.includes('engl'))return'#83a4d0';
-    if(s.includes('geschichte')||s==='ges')return'#d6b16b';
-    if(s.includes('chem'))return'#aa83c2';
-    if(s.includes('deutsch'))return'#d3a17a';
-    if(s.includes('phys'))return'#a48abb';
-    if(s.includes('sport'))return'#86b7a4';
-    if(s.includes('kunst'))return'#d899ad';
-    if(s.includes('musik'))return'#9da7cf';
-    return'#c3a6b8';
-  }
-  function subjectColor(title){
-    try{
-      const key=typeof timetableSubjectKey==='function'?timetableSubjectKey(title):String(title||'').trim().toUpperCase();
-      const custom=data.timetableSubjectColors&&data.timetableSubjectColors[key];
-      return custom||referenceSubjectColor(title);
-    }catch(_){return referenceSubjectColor(title)}
-  }
+  function subjectColor(title){try{return timetableSubjectColor(title)||'#e9a7a4'}catch(_){return'#e9a7a4'}}
 
   function renderV210Plan(){
     const selectedClass=data.timetable.selectedClass||data.settings.className||'M U1';
-    /* Keep the existing business logic: users can switch between current/effective plan and saved basis plan. */
-    const viewLessons=(timetableViewMode==='basis'
-      ? (typeof basisScheduleForClass==='function'?basisScheduleForClass(selectedClass):[])
-      : (typeof currentScheduleForClass==='function'?currentScheduleForClass(selectedClass):(data.timetable.lessons||[])))||[];
+    /* Desktop always shows the effective/current plan. Basis data is still retained and used to mark changes/cancellations. */
+    const viewLessons=(typeof currentScheduleForClass==='function'?currentScheduleForClass(selectedClass):(data.timetable.lessons||[]))||[];
     const tl=timeline(viewLessons),px=1.32,bodyHeight=Math.round((tl.end-tl.start)*px),pos=t=>Math.round((toMin(t)-tl.start)*px),wk=weekInfo(),today=dayCode(new Date());
     const days=desktopMode==='day'?[desktopDay]:dayOrder;
     const dayIndex=d=>dayOrder.indexOf(d);
@@ -18119,7 +18065,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
       if(special.length&&!normal.length){const cards=special.map(x=>{const raw=cleanPdfCellText(x.raw||'');const tm=raw.match(/^(\d{1,2}(?::\d{2})?\s*Uhr)\s*(.*)$/i);return `<div class="v210Special"><b>${esc2(tm?tm[1]:'Info')}</b>${esc2(tm?tm[2]:raw)}</div>`}).join('');return `<div class="v210DayBody" style="height:${bodyHeight}px">${lines}${pauses}${cards}</div>`}
       const merged=expandLessonsForVisibleBreaks(mergeLessons(rawDay));
       const cards=merged.map(l=>{
-        const raw=(Array.isArray(l.duplicates)&&l.duplicates.length?l.duplicates[0].raw:l.raw)||'';const p=splitCell(raw),title=desktopPretty(p.subject||raw),badge=timetableViewMode==='basis'?'':changeLabel(l,p),cancelled=badge==='ENTFÄLLT';
+        const raw=(Array.isArray(l.duplicates)&&l.duplicates.length?l.duplicates[0].raw:l.raw)||'';const p=splitCell(raw),title=desktopPretty(p.subject||raw),badge=changeLabel(l,p),cancelled=badge==='ENTFÄLLT';
         const top=Math.max(0,pos(l.start))+4,height=Math.max(44,Math.round((toMin(l.end)-toMin(l.start))*px)-7),compact=height<70,current=!cancelled&&typeof isLessonCurrentNow==='function'&&isLessonCurrentNow(l);
         const meta=[p.room,p.teacher||p.meta].filter(Boolean).join(' · ');const color=subjectColor(title);
         return `<button class="v210Lesson ${compact?'compact':''} ${current?'current':''} ${cancelled?'cancelled':''} ${badge?'hasBadge':''}" style="top:${top}px;height:${height}px;--lesson-color:${esc2(color)}" onclick='openLessonDetails(${JSON.stringify(JSON.stringify(l))})'>${badge?`<span class="v210Badge">${esc2(badge)}</span>`:''}<span class="v210LessonIcon">${lessonIcon(title)}</span><span><span class="v210LessonTitle">${esc2(title)}</span><span class="v210LessonTime">${esc2(l.start)} – ${esc2(l.end)}</span>${meta&&!cancelled?`<span class="v210LessonMeta">${esc2(meta)}</span>`:''}</span></button>`
@@ -18152,39 +18098,464 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
   function renderMissedHours(){ensureMissedHoursView();data.missedHours ||= [];const sum=document.getElementById('missedHoursSummary'),list=document.getElementById('missedHoursList');if(!sum||!list)return;const total=data.missedHours.length,open=data.missedHours.filter(x=>x.status!=='Entschuldigt').length;sum.innerHTML=`<div class="kpi"><div class="big">${total}</div><div class="small">Fehlstunden eingetragen</div></div><div class="kpi"><div class="big">${open}</div><div class="small">Entschuldigungen offen</div></div>`;list.innerHTML=total?data.missedHours.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date))).map(x=>`<div class="card rowBetween"><div><b>${esc2(x.subject)}</b><div class="small">${esc2(fmtDate(x.date))}${x.start?` · ${esc2(x.start)}${x.end?'–'+esc2(x.end):''}`:''}${x.reason?' · '+esc2(x.reason):''}${x.note?' · '+esc2(x.note):''}</div></div><div class="row"><button class="badge ${x.status==='Entschuldigt'?'good':'warn'}" onclick="toggleMissedHour('${esc2(x.id)}')">${esc2(x.status)}</button><button class="dangerBtn" onclick="deleteMissedHour('${esc2(x.id)}')">×</button></div></div>`).join(''):'<div class="empty">Keine Fehlstunden eingetragen.</div>'}
   window.renderMissedHours=renderMissedHours;
 
-  function uniquePlanSubjects(){const cls=data.timetable.selectedClass||data.settings.className||'M U1',ls=(typeof currentScheduleForClass==='function'?currentScheduleForClass(cls):(data.timetable.lessons||[]))||[],set=new Map();for(const l of ls){if(l.specialOnly||l.cancelledFromBasis)continue;try{const p=splitCell(l.raw||'');const t=desktopPretty(p.subject);if(t&&!set.has(t))set.set(t,subjectColor(t))}catch(_){ }}return[...set.entries()].slice(0,18)}
+  function uniquePlanSubjects(){const cls=data.timetable.selectedClass||data.settings.className||'M U1',ls=(typeof currentScheduleForClass==='function'?currentScheduleForClass(cls):(data.timetable.lessons||[]))||[],set=new Map();for(const l of ls){if(l.specialOnly||l.cancelledFromBasis)continue;try{const p=splitCell(l.raw||'');const t=desktopPretty(p.subject);if(t&&!set.has(t))set.set(t,timetableSubjectColor(t))}catch(_){ }}return[...set.entries()].slice(0,18)}
   function ensureTimetableSettings(){
     if(!desktop())return;const view=document.getElementById('view-settings');if(!view)return;let box=document.getElementById('v210TimetableSettings');if(!box){box=document.createElement('div');box.id='v210TimetableSettings';box.className='panel';view.insertBefore(box,view.firstChild)}
-    const subs=uniquePlanSubjects();const heatAuto=(()=>{try{return data.timetable?.heatSchedule?'Auto erkannt · Hitzestunden aktiv':'Auto-Erkennung bereit · aktuell keine Hitzestunden erkannt'}catch(_){return'Auto-Erkennung aktiv'}})();box.innerHTML=`<div class="rowBetween"><div><div class="eyebrow">STUNDENPLAN</div><h2>Stundenplan</h2></div><span class="badge">Desktop</span></div><div class="v210SettingsGrid"><div class="v210SettingCard"><b>Hitzestunden & Auto-Erkennung</b><small id="v210HeatState">${esc2(heatModeOverride==='on'?'Manuell aktiviert':heatModeOverride==='off'?'Manuell deaktiviert':heatAuto)}</small><div class="heatModeButtons"><button class="${heatModeOverride==='auto'?'active':''}" onclick="setHeatMode('auto',this);setTimeout(v210RefreshDesktopSettings,0)">Auto</button><button class="${heatModeOverride==='on'?'active':''}" onclick="setHeatMode('on',this);setTimeout(v210RefreshDesktopSettings,0)">An</button><button class="${heatModeOverride==='off'?'active':''}" onclick="setHeatMode('off',this);setTimeout(v210RefreshDesktopSettings,0)">Aus</button></div></div><div class="v210SettingCard"><b>Automatische Aktualisierung</b><small>Der Plan wird beim Öffnen und im Vordergrund automatisch geprüft. Die bestehende Auto-Sync-Logik bleibt aktiv.</small><button class="ghost" style="margin-top:9px;min-height:32px;padding:6px 9px;font-size:9px" onclick="v210RefreshPlan(this)">Jetzt aktualisieren</button></div><div class="v210SettingCard full" style="grid-column:1/-1"><b>Fachfarben</b><small>Standardmäßig werden die sanften Pastellfarben aus dem Referenzbild genutzt. Du kannst jede Fachfarbe hier ändern.</small><button class="v211RefColorsBtn" onclick="v210UseReferenceColors()">Referenzfarben verwenden</button><div id="v210SubjectColors">${subs.length?subs.map(([name,color])=>`<label class="v210ColorRow" style="--preview:${esc2(colorToHex(color))}"><span>${esc2(name)}</span><input type="color" value="${esc2(colorToHex(color))}" oninput="this.closest('.v210ColorRow').style.setProperty('--preview',this.value)" onchange='v210SaveSubjectColor(${JSON.stringify(name)},this.value)'></label>`).join(''):'<span class="small">Noch keine Fächer im Plan erkannt.</span>'}</div></div></div>`
+    const subs=uniquePlanSubjects();box.innerHTML=`<div class="rowBetween"><div><div class="eyebrow">STUNDENPLAN</div><h2>Stundenplan</h2></div><span class="badge">Desktop</span></div><div class="v210SettingsGrid"><div class="v210SettingCard"><b>Hitzestunden</b><small id="v210HeatState">${esc2(typeof effectiveHeatModeLabel==='function'?effectiveHeatModeLabel():'Automatisch')}</small><div class="heatModeButtons"><button class="${heatModeOverride==='auto'?'active':''}" onclick="setHeatMode('auto',this);setTimeout(v210RefreshDesktopSettings,0)">Auto</button><button class="${heatModeOverride==='on'?'active':''}" onclick="setHeatMode('on',this);setTimeout(v210RefreshDesktopSettings,0)">An</button><button class="${heatModeOverride==='off'?'active':''}" onclick="setHeatMode('off',this);setTimeout(v210RefreshDesktopSettings,0)">Aus</button></div></div><div class="v210SettingCard"><b>Automatische Aktualisierung</b><small>Der Plan wird beim Öffnen und im Vordergrund automatisch geprüft. Die bestehende Auto-Sync-Logik bleibt aktiv.</small><button class="ghost" style="margin-top:9px;min-height:32px;padding:6px 9px;font-size:9px" onclick="loadRemotePlan(true)">Jetzt aktualisieren</button></div><div class="v210SettingCard full" style="grid-column:1/-1"><b>Fachfarben</b><small>Die bereits gespeicherten Fachfarben werden direkt im Desktop-Stundenplan verwendet.</small><div id="v210SubjectColors">${subs.length?subs.map(([name,color])=>`<label class="v210ColorRow"><span>${esc2(name)}</span><input type="color" value="${esc2(colorToHex(color))}" onchange="setTimetableSubjectColor(${JSON.stringify(name)},this.value);setTimeout(v210RefreshDesktopSettings,0)"></label>`).join(''):'<span class="small">Noch keine Fächer im Plan erkannt.</span>'}</div></div></div>`
   }
   window.v210RefreshDesktopSettings=function(){ensureTimetableSettings();ensureSidebar();if(document.getElementById('view-plan')?.classList.contains('active')){ensurePlanHead();renderPlan()}};
-  window.v210SaveSubjectColor=function(subject,color){
-    if(!/^#[0-9a-f]{6}$/i.test(String(color||'')))return;
-    const key=typeof timetableSubjectKey==='function'?timetableSubjectKey(subject):String(subject||'').trim().toUpperCase();
-    data.timetableSubjectColors ||= {};data.timetableSubjectColors[key]=String(color).toLowerCase();
-    try{localStorage.setItem(KEY,JSON.stringify(data))}catch(_){ }
-    try{window.v150MarkDirty?.(80)}catch(_){ }
-    try{renderPlan();renderHome()}catch(_){ }
-    setTimeout(()=>{ensureTimetableSettings();ensureSidebar()},30);
-  };
-  window.v210UseReferenceColors=function(){
-    data.timetableSubjectColors ||= {};for(const [name] of uniquePlanSubjects()){try{delete data.timetableSubjectColors[timetableSubjectKey(name)]}catch(_){ }}
-    try{localStorage.setItem(KEY,JSON.stringify(data))}catch(_){ }
-    try{window.v150MarkDirty?.(80)}catch(_){ }
-    try{renderPlan();renderHome()}catch(_){ }
-    setTimeout(()=>{ensureTimetableSettings();ensureSidebar()},30);
-  };
 
   function ensurePageHead(){if(!desktop())return;const v=currentView();const labels={absence:['Fehltage','Ganze versäumte Schultage & Entschuldigungen'],'missed-hours':['Fehlstunden','Einzelne versäumte Unterrichtsstunden']};const view=document.getElementById('view-'+v);if(!view||!labels[v])return;let h=view.querySelector(':scope > .v210PageHead');if(!h){h=document.createElement('div');h.className='v210PageHead';view.insertBefore(h,view.firstChild)}h.innerHTML=`<div><h1>${labels[v][0]}</h1><p>${labels[v][1]}</p></div>`}
 
   function reconcile(){ensureMissedHoursView();ensureSidebar();if(!desktop())return;ensurePlanHead();ensureTimetableSettings();renderMissedHours();ensurePageHead()}
-  const oldOpen=window.openView;if(typeof oldOpen==='function'&&!oldOpen.__v210){window.openView=function(){if(!specialNavInFlight)navFocus='';if(innerWidth>=MIN&&!document.body.classList.contains('editorMode'))document.body.classList.add('v210Desktop');ensureSidebar();const r=oldOpen.apply(this,arguments);requestAnimationFrame(()=>{if(innerWidth>=MIN&&!document.body.classList.contains('editorMode'))document.body.classList.add('v210Desktop');reconcile()});setTimeout(reconcile,80);return r};window.openView.__v210=true;try{openView=window.openView}catch(_){ }}
+  const oldOpen=window.openView;if(typeof oldOpen==='function'&&!oldOpen.__v210){window.openView=function(){if(!specialNavInFlight)navFocus='';const r=oldOpen.apply(this,arguments);setTimeout(reconcile,0);return r};window.openView.__v210=true;try{openView=window.openView}catch(_){ }}
   const oldPlan=window.renderPlan;if(typeof oldPlan==='function'&&!oldPlan.__v210){window.renderPlan=function(){const r=oldPlan.apply(this,arguments);setTimeout(()=>{ensureSidebar();ensurePlanHead()},0);return r};window.renderPlan.__v210=true;try{renderPlan=window.renderPlan}catch(_){ }}
-  window.addEventListener('resize',()=>setTimeout(reconcile,60));document.addEventListener('click',()=>setTimeout(()=>{if(desktop())ensureSidebar()},0),true);
-  const v210Observer=new MutationObserver(()=>{if(innerWidth>=MIN&&!document.body.classList.contains('editorMode')){document.body.classList.add('v210Desktop');if(!document.getElementById('v210Sidebar'))ensureSidebar()}});
-  try{v210Observer.observe(document.querySelector('.app')||document.body,{subtree:true,attributes:true,attributeFilter:['class'],childList:true})}catch(_){ }
-  [0,180,600,1500].forEach(t=>setTimeout(reconcile,t));
+  window.addEventListener('resize',()=>setTimeout(reconcile,60));document.addEventListener('click',()=>setTimeout(()=>{if(desktop())ensureSidebar()},0),true);[0,180,600,1500].forEach(t=>setTimeout(reconcile,t));
 })();
 </script>
 <!-- ===== /Studia V210 ===== -->
-<!-- Studia V211 fixes: persistent desktop sidebar, reference palette + editable colors, rounded type, timetable settings shortcut, refresh control, current/basis switch. -->
+
+<!-- ===== Studia V212 — subject colors, subject folders/reorder, basis double repair, compact day range ===== -->
+<style id="v212-subject-folder-plan-fixes">
+/* Shared Fachfarben on HEUTE. */
+#view-home #todayLessons .lesson.lessonClickable{
+  background:color-mix(in srgb,var(--subject,#e9a7a4) 22%,#fffaf8)!important;
+  border-color:color-mix(in srgb,var(--subject,#e9a7a4) 24%,#eaded9)!important;
+}
+#view-home #nextPanel.v212SubjectPanel{
+  background:linear-gradient(135deg,color-mix(in srgb,var(--v212-home-color,#e9a7a4) 28%,#fffaf8),#fffaf8 72%)!important;
+  border-color:color-mix(in srgb,var(--v212-home-color,#e9a7a4) 28%,#eaded9)!important;
+}
+
+/* Fächer use exactly the same stored timetable color. */
+.v102Notebook[data-v212-subject="1"]{
+  --v212-card:#e9a7a4;
+  background:linear-gradient(160deg,color-mix(in srgb,var(--v212-card) 24%,#fffdfb),#fffaf8 78%)!important;
+  border-color:color-mix(in srgb,var(--v212-card) 31%,#eaded9)!important;
+  cursor:grab!important;
+  user-select:none;
+  transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease!important;
+}
+.v102Notebook[data-v212-subject="1"] .v102NotebookIcon{
+  background:color-mix(in srgb,var(--v212-card) 24%,#fffaf8)!important;
+  color:color-mix(in srgb,var(--v212-card) 74%,#5d4944)!important;
+}
+.v102Notebook[data-v212-subject="1"] .v102NotebookPin{background:var(--v212-card)!important}
+.v102Notebook[data-v212-subject="1"]:active{cursor:grabbing!important}
+.v102Notebook[data-v212-subject="1"].v212Dragging{opacity:.42!important;transform:scale(.97)!important}
+.v102Notebook[data-v212-subject="1"].v212DropBefore{box-shadow:-6px 0 0 color-mix(in srgb,var(--v212-card) 68%,#ba7f7e)!important}
+.v102Notebook[data-v212-subject="1"].v212DropAfter{box-shadow:6px 0 0 color-mix(in srgb,var(--v212-card) 68%,#ba7f7e)!important}
+.v102Notebook[data-v212-subject="1"] .v212DragHint{
+  position:absolute;right:12px;top:11px;font-size:11px;font-weight:900;letter-spacing:-2px;color:#aa938c;opacity:.58;pointer-events:none
+}
+
+@media (min-width:1100px){
+  /* Notizen is intentionally removed from the DESKTOP sidebar only. */
+  #v210Sidebar .navItem.v212NotesGone{display:none!important}
+
+  /* Today cards use the same editable subject color instead of hard-coded color classes. */
+  .v209TodayCard{
+    background:color-mix(in srgb,var(--lesson-color,#e9a7a4) 26%,#fffaf8)!important;
+    border-color:color-mix(in srgb,var(--lesson-color,#e9a7a4) 27%,#eaded9)!important;
+    color:#514440!important;
+  }
+  .v209TodayCard .v209TodayIcon{color:color-mix(in srgb,var(--lesson-color,#e9a7a4) 74%,#5d4944)!important}
+
+  /* Current/Basis switch under the main plan controls. */
+  #v212PlanSourceSwitch{
+    display:flex;align-items:center;gap:4px;width:max-content;margin:-7px 0 13px 0;padding:4px;border:1px solid #efddd8;border-radius:15px;background:#fff9f7
+  }
+  #v212PlanSourceSwitch button{
+    border:0;background:transparent;box-shadow:none;border-radius:11px;padding:8px 13px;font-size:11px;font-weight:800;color:#957d76;cursor:pointer
+  }
+  #v212PlanSourceSwitch button.active{background:#f6dada;color:#3e3330}
+  #v212PlanSourceSwitch .v212SourceHint{padding:0 8px 0 5px;font-size:9px;font-weight:700;color:#b09a93}
+
+  /* Refresh is visible as a real button, not an easy-to-miss icon. */
+  #v210PlanHead .headBtn.v212RefreshBtn{width:auto!important;min-width:116px!important;display:flex!important;gap:7px!important;padding:0 12px!important;font-size:10px!important;font-weight:800!important}
+  #v210PlanHead .headBtn.v212RefreshBtn svg{width:18px!important;height:18px!important}
+
+  /* Compact timeline: 08:00–15:00 by default, extension only when needed. */
+  .v212TimeEndNote{font-size:9px;color:#ad9992;text-align:right;margin-top:5px}
+}
+</style>
+<script id="v212-subject-folder-plan-script">
+(function(){
+  const DESKTOP_MIN=1100;
+  const dayOrderV212=['Mo','Di','Mi','Do','Fr'];
+  const aliasMap={
+    PH:'Physik',PHY:'Physik',PHYS:'Physik',PHYSIK:'Physik',
+    BIO:'Biologie',BI:'Biologie',BIOLOGIE:'Biologie',
+    GES:'Geschichte',GE:'Geschichte',G:'Geschichte',GESCHICHTE:'Geschichte',
+    CH:'Chemie',CHE:'Chemie',CHEMIE:'Chemie',
+    D:'Deutsch',DE:'Deutsch',DEUTSCH:'Deutsch',
+    E:'Englisch',ENG:'Englisch',ENGLISCH:'Englisch',
+    M:'Mathematik',MATHE:'Mathematik',MATHEMATIK:'Mathematik',
+    ET:'Ethik',ETHIK:'Ethik',SP:'Sport',SPO:'Sport',SPORT:'Sport',
+    INF:'Informatik',INFORMATIK:'Informatik'
+  };
+  const referenceColors={
+    'MATHEMATIK':'#e9a7a4','DEUTSCH':'#e7c5a5','ENGLISCH':'#9fb8e3','BIOLOGIE':'#b6c99c',
+    'GESCHICHTE':'#e4c38a','CHEMIE':'#bea4d9','PHYSIK':'#aeb9df','ETHIK':'#d5aec6',
+    'SPORT':'#9dcdbd','INFORMATIK':'#a9bddb','WIRTSCHAFT & SOZIALKUNDE':'#d8b995'
+  };
+  const autoPalette=['#e9a7a4','#9fb8e3','#b6c99c','#e4c38a','#bea4d9','#e7c5a5','#aeb9df','#9dcdbd','#d5aec6'];
+  let dragSubjectId='';
+
+  function desktop(){return innerWidth>=DESKTOP_MIN&&!document.body.classList.contains('editorMode')}
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+  function toMin(t){const [h,m]=String(t||'00:00').split(':').map(Number);return (h||0)*60+(m||0)}
+  function canonical(raw){
+    let x='';
+    try{x=prettySubject(String(raw||''))}catch(_){x=String(raw||'')}
+    x=String(x||'').replace(/\s+/g,' ').trim();
+    const up=x.toUpperCase();
+    return aliasMap[up]||x;
+  }
+  function key(raw){return canonical(raw).replace(/\s+/g,' ').trim().toUpperCase()}
+  function subjectFromLesson(l){
+    if(!l||l.specialOnly||l.cancelledFromBasis)return'';
+    try{const p=splitCell(l.raw||'');return canonical(p.subject||'')}catch(_){return''}
+  }
+  function referenceColor(name){
+    const k=key(name);if(referenceColors[k])return referenceColors[k];
+    if(/^LF\s*\d+$/i.test(name)){const n=Number(String(name).match(/\d+/)?.[0]||0);return autoPalette[n%autoPalette.length]}
+    let h=0;for(const c of k)h=(h*31+c.charCodeAt(0))>>>0;return autoPalette[h%autoPalette.length]
+  }
+  function getColor(name){
+    const k0=key(name);data.timetableSubjectColors ||= {};
+    if(data.timetableSubjectColors[k0])return data.timetableSubjectColors[k0];
+    const linked=(data.subjects||[]).find(s=>key(s.name)===k0||key(s.abbr)===k0);
+    if(linked?.color)return linked.color;
+    return referenceColor(name);
+  }
+  function hexColor(c){try{return colorToHex(c)}catch(_){return /^#[0-9a-f]{6}$/i.test(String(c||''))?c:'#e9a7a4'}}
+  function mixWhite(c,ratio=.72){
+    const h=hexColor(c).replace('#','');const r=parseInt(h.slice(0,2),16),g=parseInt(h.slice(2,4),16),b=parseInt(h.slice(4,6),16);
+    const f=v=>Math.round(v+(255-v)*ratio).toString(16).padStart(2,'0');return '#'+f(r)+f(g)+f(b)
+  }
+  function iconKey(name){const k=key(name);if(k==='MATHEMATIK')return'calculator';if(k==='DEUTSCH')return'pencil';if(k==='ENGLISCH')return'chat';if(k==='BIOLOGIE'||k==='PHYSIK'||k==='CHEMIE')return'atom';return'book'}
+
+  /* ---------- one automatic Fachordner for every real timetable subject ---------- */
+  function scheduleLists(){
+    const cls=data.timetable?.selectedClass||data.settings?.className||'M U1';const all=[];
+    try{all.push(...(currentScheduleForClass(cls)||[]))}catch(_){all.push(...(data.timetable?.lessons||[]))}
+    try{all.push(...(originalBasisScheduleForClass?originalBasisScheduleForClass(cls):[]))}catch(_){ }
+    return all;
+  }
+  function ensureAutomaticSubjectFolders(){
+    data.subjects=Array.isArray(data.subjects)?data.subjects:[];data.timetableSubjectColors ||= {};
+    const names=[];const seen=new Set();
+    for(const l of scheduleLists()){
+      const n=subjectFromLesson(l);const k0=key(n);
+      if(!n||!k0||k0==='UNTERRICHT'||seen.has(k0))continue;seen.add(k0);names.push(n)
+    }
+    let changed=false;
+    for(const n of names){
+      const k0=key(n);const exists=data.subjects.some(s=>key(s.name)===k0||key(s.abbr)===k0);
+      if(exists)continue;
+      const color=referenceColor(n);if(!data.timetableSubjectColors[k0])data.timetableSubjectColors[k0]=color;
+      let abbr='';try{abbr=defaultSubjectAbbr(n)}catch(_){abbr=n.replace(/[^A-Za-zÄÖÜäöü0-9]/g,'').slice(0,5).toUpperCase()||'FACH'}
+      data.subjects.push({id:(typeof id==='function'?id():'subject-'+Date.now()+'-'+Math.random().toString(36).slice(2)),name:n,abbr,color,cover:mixWhite(color,.62),iconKey:iconKey(n),emoji:'📚',notes:[],topics:[],files:[],autoFromTimetable:true});changed=true
+    }
+    if(changed){try{save()}catch(_){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(__){}}}
+    return changed
+  }
+
+  /* ---------- same Fachfarbe on the Fächer page + desktop drag/drop ordering ---------- */
+  function subjectByCard(card){const sid=card?.dataset?.subjectId;if(sid)return (data.subjects||[]).find(s=>s.id===sid);const n=card?.querySelector('strong')?.textContent||'';return(data.subjects||[]).find(s=>key(s.name)===key(n))}
+  function clearDropMarks(){document.querySelectorAll('.v102Notebook.v212DropBefore,.v102Notebook.v212DropAfter').forEach(x=>x.classList.remove('v212DropBefore','v212DropAfter'))}
+  function moveSubject(fromId,toId,after){
+    if(!fromId||!toId||fromId===toId)return;const arr=data.subjects||[];const from=arr.findIndex(s=>s.id===fromId);if(from<0)return;const [moved]=arr.splice(from,1);let to=arr.findIndex(s=>s.id===toId);if(to<0){arr.push(moved)}else{if(after)to++;arr.splice(to,0,moved)}
+    try{save()}catch(_){};setTimeout(()=>{try{renderSubjects()}catch(_){};setTimeout(decorateSubjectCards,0)},0)
+  }
+  function decorateSubjectCards(){
+    const root=document.querySelector('#view-subjects #subjectList');if(!root)return;ensureAutomaticSubjectFolders();
+    const cards=[...root.querySelectorAll('.v102Notebook[data-search]')];
+    for(const card of cards){
+      const s=subjectByCard(card);if(!s)continue;const color=getColor(s.name);card.dataset.subjectId=s.id;card.dataset.v212Subject='1';card.draggable=desktop();card.style.setProperty('--v212-card',color);card.style.setProperty('--ring',color);card.style.setProperty('--pin',color);card.title=desktop()?'Ziehen, um die Fächer frei zu sortieren':'';
+      if(!card.querySelector('.v212DragHint'))card.insertAdjacentHTML('beforeend','<span class="v212DragHint" aria-hidden="true">•••</span>');
+      card.ondragstart=e=>{if(!desktop()){e.preventDefault();return}dragSubjectId=s.id;card.classList.add('v212Dragging');try{e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',s.id)}catch(_){}};
+      card.ondragover=e=>{if(!dragSubjectId||dragSubjectId===s.id)return;e.preventDefault();clearDropMarks();const r=card.getBoundingClientRect(),after=e.clientX>r.left+r.width/2;card.classList.add(after?'v212DropAfter':'v212DropBefore');card.dataset.dropAfter=after?'1':'0'};
+      card.ondrop=e=>{e.preventDefault();const from=dragSubjectId||(()=>{try{return e.dataTransfer.getData('text/plain')}catch(_){return''}})();const after=card.dataset.dropAfter==='1';clearDropMarks();moveSubject(from,s.id,after);dragSubjectId=''};
+      card.ondragend=()=>{dragSubjectId='';card.classList.remove('v212Dragging');clearDropMarks()}
+    }
+  }
+
+  /* Re-render Fächer whenever a timetable color is changed. */
+  const oldSetColor=window.setTimetableSubjectColor;
+  if(typeof oldSetColor==='function'&&!oldSetColor.__v212){
+    window.setTimetableSubjectColor=function(subject,color){
+      const r=oldSetColor.apply(this,arguments);const k0=key(subject),s=(data.subjects||[]).find(x=>key(x.name)===k0||key(x.abbr)===k0);if(s){s.color=String(color).toLowerCase();s.cover=mixWhite(color,.62);try{save()}catch(_){}}
+      setTimeout(()=>{if(document.querySelector('#view-subjects.active')){try{renderSubjects()}catch(_){};setTimeout(decorateSubjectCards,0)}paintTodayColors()},0);return r
+    };window.setTimetableSubjectColor.__v212=true;try{setTimetableSubjectColor=window.setTimetableSubjectColor}catch(_){}
+  }
+
+  /* ---------- HEUTE: paint timeline and top current/next card with the same editable colors ---------- */
+  function paintTodayColors(){
+    document.querySelectorAll('#v209TodayTimeline .v209TodayCard').forEach(card=>{const title=card.querySelector('.v209TodayTitle')?.textContent||'';card.style.setProperty('--lesson-color',getColor(title))});
+    const panel=document.getElementById('nextPanel');if(panel){let txt=panel.children?.[1]?.textContent||'';txt=txt.replace(/^Nächste Stunde:\s*/i,'').trim();if(txt&&!/Noch\s+\d|Kein weiterer Unterricht/i.test(txt)){panel.classList.add('v212SubjectPanel');panel.style.setProperty('--v212-home-color',getColor(txt))}else{panel.classList.remove('v212SubjectPanel');panel.style.removeProperty('--v212-home-color')}}
+  }
+
+  /* ---------- known PHS basis repair: Physik Wednesday, rows 1+2 ---------- */
+  const originalBasisScheduleForClass=window.basisScheduleForClass||((typeof basisScheduleForClass==='function')?basisScheduleForClass:null);
+  function rowTime(rowNum){try{const x=normalTimeForRow(rowNum)||effectiveTimeForRow(rowNum);if(x)return x}catch(_){};const slots={1:{start:'08:00',end:'08:45'},2:{start:'08:45',end:'09:30'}};return slots[rowNum]||null}
+  function repairBasisPhysics(list){
+    const out=(list||[]).map(x=>({...x}));const wed=out.filter(x=>x.day==='Mi'&&!x.specialOnly);
+    const first=wed.find(x=>Number(x.rowNum)===1)||wed.find(x=>x.start==='08:00');if(!first)return out;
+    let p='';try{p=canonical(splitCell(first.raw||'').subject)}catch(_){p=''};if(key(p)!=='PHYSIK'||Number(first.blocks||1)>1)return out;
+    const second=wed.find(x=>x!==first&&(Number(x.rowNum)===2||x.start==='08:45'));
+    if(second){let p2='';try{p2=canonical(splitCell(second.raw||'').subject)}catch(_){p2=''};if(key(p2)!=='PHYSIK')return out;first.end=second.end||'09:30';first.blocks=2;first.isDouble=true;first.recoveredBasisDouble=true;const i=out.indexOf(second);if(i>=0)out.splice(i,1);return out}
+    const t=rowTime(2);if(t){first.end=t.end;first.blocks=2;first.isDouble=true;first.recoveredBasisDouble=true}return out
+  }
+  if(typeof originalBasisScheduleForClass==='function'){
+    window.basisScheduleForClass=function(name){return repairBasisPhysics(originalBasisScheduleForClass.call(this,name)||[])};try{basisScheduleForClass=window.basisScheduleForClass}catch(_){}
+  }
+
+  /* ---------- Desktop plan: 08:00–15:00, only extend when a lesson really runs later ---------- */
+  const previousDesktopRenderer=window.renderDesktopWeekPlan;
+  function planWeekDates(){const now=new Date(),d=new Date(now.getFullYear(),now.getMonth(),now.getDate(),12);const off=Number(localStorage.getItem('studia-v210-week-offset')||0)||0;d.setDate(d.getDate()-((d.getDay()+6)%7)+(off*7));return dayOrderV212.map((_,i)=>{const x=new Date(d);x.setDate(d.getDate()+i);return x})}
+  function planTitle(subject){const x=canonical(subject),u=key(x);return aliasMap[u]||x}
+  function lessonSvg(subject){const s=key(subject);if(s==='MATHEMATIK')return'∑';if(s==='BIOLOGIE')return'♧';if(s==='ENGLISCH')return'◎';if(s==='GESCHICHTE')return'⌂';if(s==='CHEMIE')return'△';if(s==='PHYSIK')return'⚛';if(s==='DEUTSCH')return'▤';return'○'}
+  function changeBadge(l,p){if(l.cancelledFromBasis)return'ENTFÄLLT';const raw=String(l.raw||'');if(/\b(entfall|entfällt|ausfall|fällt\s+aus)\b/i.test(raw))return'ENTFÄLLT';if(!l.changedFromBasis)return'';try{const old=splitCell(l.changedFromRaw||'');if(old.subject&&canonical(old.subject)===canonical(p.subject)){if(old.teacher&&p.teacher&&old.teacher!==p.teacher)return'VERTRETUNG';if(old.room&&p.room&&old.room!==p.room)return'RAUMÄNDERUNG'}}catch(_){}return'GEÄNDERT'}
+  function timelineFor(list){
+    const start=480;let end=900;for(const l of list||[]){if(l.specialOnly)continue;end=Math.max(end,toMin(l.end))}end=Math.ceil(end/15)*15;
+    const labels=new Set(['08:00','15:00']);
+    try{for(let i=1;i<=20;i++){const t=effectiveTimeForRow(i);if(!t)continue;if(toMin(t.start)>=start&&toMin(t.start)<=end)labels.add(t.start);if(toMin(t.end)>=start&&toMin(t.end)<=end)labels.add(t.end)}}catch(_){}
+    for(const l of list||[]){if(toMin(l.start)>=start&&toMin(l.start)<=end)labels.add(l.start);if(toMin(l.end)>=start&&toMin(l.end)<=end)labels.add(l.end)}
+    try{for(const p of getActivePauses()){if(toMin(p.start)>=start&&toMin(p.start)<=end)labels.add(p.start);if(toMin(p.end)>=start&&toMin(p.end)<=end)labels.add(p.end)}}catch(_){}
+    return{start,end,labels:[...labels].filter(t=>toMin(t)>=start&&toMin(t)<=end).sort((a,b)=>toMin(a)-toMin(b))}
+  }
+  function renderV212Plan(){
+    const cls=data.timetable?.selectedClass||data.settings?.className||'M U1';let source=[];
+    try{source=timetableViewMode==='basis'?basisScheduleForClass(cls):currentScheduleForClass(cls)}catch(_){source=data.timetable?.lessons||[]}
+    source=source||[];const tl=timelineFor(source),px=1.32,bodyHeight=Math.round((tl.end-tl.start)*px),pos=t=>Math.round((toMin(t)-tl.start)*px),today=(typeof dayCode==='function'?dayCode(new Date()):''),dates=planWeekDates();
+    const mode=localStorage.getItem('studia-v210-plan-mode')==='day'?'day':'week';
+    const selectedDay=['Mo','Di','Mi','Do','Fr'].includes(localStorage.getItem('studia-v210-plan-day'))?localStorage.getItem('studia-v210-plan-day'):(today||'Mo');
+    const days=mode==='day'?[selectedDay]:dayOrderV212;
+    function body(day){
+      const rawDay=stableTimetableDay(applyEffectiveDisplayTimes(source.filter(x=>x.day===day))).filter(x=>toMin(x.end)>tl.start&&toMin(x.start)<tl.end);const special=rawDay.filter(x=>x.specialOnly),normal=rawDay.filter(x=>!x.specialOnly);const lines=tl.labels.map(t=>`<div class="v210GridLine" style="top:${pos(t)}px"></div>`).join('');
+      const pauses=(typeof getActivePauses==='function'?getActivePauses():[]).filter(p=>toMin(p.end)>tl.start&&toMin(p.start)<tl.end).map(p=>{const n=new Date(),now=n.getHours()*60+n.getMinutes(),active=day===today&&toMin(p.start)<=now&&now<toMin(p.end);return `<div class="v210PauseBand ${active?'current':''}" style="top:${Math.max(0,pos(p.start))}px;height:${Math.max(10,pos(p.end)-pos(p.start))}px">${active?'JETZT · ':''}${esc(p.label||'Pause')}</div>`}).join('');
+      if(special.length&&!normal.length){const info=special.map(x=>`<div class="v210Special"><b>Info</b>${esc(cleanPdfCellText(x.raw||''))}</div>`).join('');return `<div class="v210DayBody" style="height:${bodyHeight}px">${lines}${pauses}${info}</div>`}
+      const merged=expandLessonsForVisibleBreaks(mergeLessons(rawDay.filter(x=>timetableViewMode==='basis'?!x.cancelledFromBasis:true)));const cards=merged.map(l=>{const p=splitCell(l.raw||''),title=planTitle(p.subject||l.raw||''),badge=changeBadge(l,p),cancelled=badge==='ENTFÄLLT',top=Math.max(0,pos(l.start))+4,height=Math.max(44,Math.round((toMin(l.end)-toMin(l.start))*px)-7),compact=height<70,current=!cancelled&&typeof isLessonCurrentNow==='function'&&isLessonCurrentNow(l),meta=[p.room,p.teacher||p.meta].filter(Boolean).join(' · '),color=getColor(title);return `<button class="v210Lesson ${compact?'compact':''} ${current?'current':''} ${cancelled?'cancelled':''} ${badge?'hasBadge':''}" style="top:${top}px;height:${height}px;--lesson-color:${esc(color)}" onclick='openLessonDetails(${JSON.stringify(JSON.stringify(l))})'>${badge?`<span class="v210Badge">${esc(badge)}</span>`:''}<span class="v210LessonIcon" style="font-size:17px">${esc(lessonSvg(title))}</span><span><span class="v210LessonTitle">${esc(title)}</span><span class="v210LessonTime">${esc(l.start)} – ${esc(l.end)}</span>${meta&&!cancelled?`<span class="v210LessonMeta">${esc(meta)}</span>`:''}${Number(l.blocks||1)>=2?`<span class="v210LessonMeta">Doppelstunde</span>`:''}</span></button>`}).join('');return `<div class="v210DayBody" style="height:${bodyHeight}px">${lines}${pauses}${cards||'<div class="v210Empty">Kein Unterricht</div>'}</div>`
+    }
+    const heads=days.map(d=>{const i=dayOrderV212.indexOf(d);return `<div class="v210DayHead ${d===today?'today':''}"><b>${esc(d)}</b><span>${esc(dates[i].toLocaleDateString('de-DE',{day:'2-digit',month:'short'}).replace(/\.$/,''))}</span></div>`}).join('');
+    const tabs=mode==='day'?`<div class="v210DayTabs">${dayOrderV212.map((d,i)=>`<button class="v210DayTab ${d===selectedDay?'active':''}" onclick="v210SetPlanDay('${d}')">${d} · ${esc(dates[i].toLocaleDateString('de-DE',{day:'2-digit',month:'short'}).replace(/\.$/,''))}</button>`).join('')}</div>`:'';
+    return `${tabs}<div class="v210WeekBoard ${mode==='day'?'dayMode':''}"><div class="v210Corner"></div>${heads}<div class="v210TimeRail" style="height:${bodyHeight}px">${tl.labels.map(t=>`<div class="v210TimeLabel" style="top:${pos(t)}px">${esc(t)}</div>`).join('')}</div>${days.map(body).join('')}</div>${tl.end>900?`<div class="v212TimeEndNote">Automatisch bis ${String(Math.floor(tl.end/60)).padStart(2,'0')}:${String(tl.end%60).padStart(2,'0')} verlängert.</div>`:''}`
+  }
+  window.renderDesktopWeekPlan=function(){if(desktop())return renderV212Plan();return typeof previousDesktopRenderer==='function'?previousDesktopRenderer.apply(this,arguments):''};try{renderDesktopWeekPlan=window.renderDesktopWeekPlan}catch(_){}
+
+  /* ---------- Visible current/basis switch + timetable settings shortcut ---------- */
+  window.v212SetSource=function(mode){try{setTimetableViewMode(mode)}catch(_){timetableViewMode=mode==='basis'?'basis':'current';try{renderPlan()}catch(__){}};setTimeout(reconcile,0)};
+  window.v212OpenTimetableSettings=function(){openView('settings');setTimeout(()=>{const box=document.getElementById('v210TimetableSettings');box?.scrollIntoView({behavior:'smooth',block:'start'});box?.classList.add('v212SettingsFlash');setTimeout(()=>box?.classList.remove('v212SettingsFlash'),900)},80)};
+  function planControls(){
+    if(!desktop())return;const head=document.getElementById('v210PlanHead');if(!head)return;const view=document.getElementById('view-plan');if(!view?.classList.contains('active'))return;
+    const actions=head.querySelector('.actionRow');if(actions){const refresh=actions.querySelector('button[title="Aktualisieren"]')||actions.children[0];if(refresh&&!refresh.classList.contains('v212RefreshBtn')){refresh.classList.add('v212RefreshBtn');refresh.insertAdjacentHTML('beforeend','<span>Aktualisieren</span>')}const gear=actions.querySelector('button[title="Einstellungen"]');if(gear)gear.setAttribute('onclick','v212OpenTimetableSettings()')}
+    let sw=document.getElementById('v212PlanSourceSwitch');if(!sw){sw=document.createElement('div');sw.id='v212PlanSourceSwitch';head.insertAdjacentElement('afterend',sw)}sw.innerHTML=`<button class="${timetableViewMode==='current'?'active':''}" onclick="v212SetSource('current')">Aktuell & Änderungen</button><button class="${timetableViewMode==='basis'?'active':''}" onclick="v212SetSource('basis')">Basisplan</button><span class="v212SourceHint">${timetableViewMode==='basis'?'Normalplan':'gültiger Plan'}</span>`
+  }
+
+  /* ---------- remove Notizen from desktop sidebar (and keep it removed when V210 rebuilds it) ---------- */
+  function trimSidebar(){const s=document.getElementById('v210Sidebar');if(!s)return;for(const b of s.querySelectorAll('.navItem'))if((b.querySelector('.navLabel')?.textContent||'').trim()==='Notizen')b.remove()}
+
+  /* ---------- integrate after all existing renderers without rewriting their business logic ---------- */
+  function reconcile(){ensureAutomaticSubjectFolders();trimSidebar();planControls();decorateSubjectCards();paintTodayColors()}
+  const oldOpen=window.openView;if(typeof oldOpen==='function'&&!oldOpen.__v212){window.openView=function(){const r=oldOpen.apply(this,arguments);setTimeout(reconcile,0);return r};window.openView.__v212=true;try{openView=window.openView}catch(_){}}
+  const oldHome=window.renderHome;if(typeof oldHome==='function'&&!oldHome.__v212){window.renderHome=function(){const r=oldHome.apply(this,arguments);setTimeout(()=>{paintTodayColors();decorateSubjectCards()},0);return r};window.renderHome.__v212=true;try{renderHome=window.renderHome}catch(_){}}
+  const oldPlan=window.renderPlan;if(typeof oldPlan==='function'&&!oldPlan.__v212){window.renderPlan=function(){const r=oldPlan.apply(this,arguments);setTimeout(()=>{planControls();paintTodayColors()},0);return r};window.renderPlan.__v212=true;try{renderPlan=window.renderPlan}catch(_){}}
+  const oldLoad=window.loadRemotePlan;if(typeof oldLoad==='function'&&!oldLoad.__v212){window.loadRemotePlan=async function(){const r=await oldLoad.apply(this,arguments);ensureAutomaticSubjectFolders();setTimeout(reconcile,0);return r};window.loadRemotePlan.__v212=true;try{loadRemotePlan=window.loadRemotePlan}catch(_){}}
+  const oldSwitchClass=window.switchTimetableClass;if(typeof oldSwitchClass==='function'&&!oldSwitchClass.__v212){window.switchTimetableClass=function(){const r=oldSwitchClass.apply(this,arguments);ensureAutomaticSubjectFolders();setTimeout(reconcile,0);return r};window.switchTimetableClass.__v212=true;try{switchTimetableClass=window.switchTimetableClass}catch(_){}}
+
+  const sidebarObserver=new MutationObserver(()=>{if(desktop())trimSidebar()});
+  const attachObserver=()=>{const s=document.getElementById('v210Sidebar');if(s&&!s.dataset.v212Observed){s.dataset.v212Observed='1';sidebarObserver.observe(s,{childList:true,subtree:true})}};
+  window.addEventListener('resize',()=>setTimeout(()=>{attachObserver();reconcile()},80));document.addEventListener('click',()=>setTimeout(()=>{attachObserver();reconcile()},0),true);
+  [0,120,450,1100,2200].forEach(t=>setTimeout(()=>{attachObserver();reconcile()},t));
+})();
+</script>
+<!-- ===== /Studia V212 ===== -->
+
+<!-- ===== Studia V213 — mobile editing + StudyPet panda + learning interactions ===== -->
+<style id="v213-learning-mobile-fixes">
+/* Uploaded Panda.ai rendered as a transparent StudyPet asset. */
+#petRoomMini .v213PandaPet{
+  position:absolute;left:50%;bottom:28px;transform:translateX(-50%);
+  width:auto;height:150px;max-width:46%;object-fit:contain;z-index:5;
+  pointer-events:none;user-select:none;-webkit-user-drag:none;
+  filter:drop-shadow(0 7px 7px rgba(92,70,65,.08));
+}
+#petRoomMini .v213PandaWrap{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);width:118px;height:150px;z-index:5;pointer-events:none}
+#petRoomMini .v213PandaWrap .v213PandaPet{position:absolute;inset:0 auto auto 50%;bottom:auto;transform:translateX(-50%);height:150px;max-width:none}
+#petRoomMini .v213PandaWrap .petBow{position:absolute;right:-8px;top:4px;z-index:7;pointer-events:none}
+
+/* Karteikarten: icon-only self rating. */
+.v102MemoryButtons.v213IconRatings{
+  display:grid!important;grid-template-columns:repeat(3,54px)!important;justify-content:center!important;
+  gap:14px!important;margin-top:14px!important
+}
+.v102MemoryButtons.v213IconRatings button{
+  width:54px!important;height:54px!important;min-width:54px!important;min-height:54px!important;
+  padding:0!important;border-radius:50%!important;display:grid!important;place-items:center!important;
+  box-shadow:0 4px 12px rgba(102,75,67,.05)!important;touch-action:manipulation!important;cursor:pointer!important;
+  font-size:0!important
+}
+.v102MemoryButtons.v213IconRatings button svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.v102MemoryButtons.v213IconRatings button:nth-child(1){background:#edf4df!important;color:#6f8b58!important;border-color:#d7e4c4!important}
+.v102MemoryButtons.v213IconRatings button:nth-child(2){background:#fff1d2!important;color:#ae8544!important;border-color:#f0deb3!important}
+.v102MemoryButtons.v213IconRatings button:nth-child(3){background:#fde4e7!important;color:#b66f78!important;border-color:#efcbd0!important}
+
+/* Quiz answers must always be real tappable controls. */
+#quizPlayerRoot .choiceList{position:relative;z-index:2}
+#quizPlayerRoot .choiceBtn,
+#quizPlayerRoot .quizQuestion button{
+  pointer-events:auto!important;touch-action:manipulation!important;cursor:pointer!important;position:relative;z-index:2
+}
+#quizPlayerRoot .choiceBtn:active{transform:scale(.985)}
+
+@media(max-width:899px){
+  /* iOS/Android: while a text object is actively edited, native text gestures own the element. */
+  body.editorMode #canvasObjects .cobj[contenteditable="true"],
+  body.editorMode #canvasObjects .cobj[contenteditable="true"] *{
+    pointer-events:auto!important;user-select:text!important;-webkit-user-select:text!important;
+    -webkit-touch-callout:default!important;touch-action:manipulation!important
+  }
+}
+</style>
+<script id="v213-learning-mobile-fixes-script">
+(function(){
+  'use strict';
+  if(window.__STUDIA_V213_LEARNING_FIXES__)return;
+  window.__STUDIA_V213_LEARNING_FIXES__=true;
+  const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
+  const mobileEditor=()=>innerWidth<900&&document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active');
+
+  /* 1) Mobile text editing: do not let the normal global rerender replace the
+     contenteditable while the phone keyboard / IME is still editing it. */
+  let composing=false;
+  const mobileTypingTarget=()=>{
+    const a=document.activeElement;
+    return !!(innerWidth<900&&a&&(
+      a.matches?.('input,textarea,select')||a.isContentEditable||a.closest?.('[contenteditable="true"]')
+    ));
+  };
+  try{
+    const baseRenderAll=window.renderAll||renderAll;
+    if(typeof baseRenderAll==='function'&&!baseRenderAll.__v213MobileGuard){
+      const guarded=function(){
+        if(innerWidth<900&&(composing||mobileTypingTarget()))return;
+        return baseRenderAll.apply(this,arguments);
+      };
+      guarded.__v213MobileGuard=true;guarded.__v213Original=baseRenderAll;
+      window.renderAll=guarded;try{renderAll=guarded}catch(_){}
+    }
+  }catch(_){}
+
+  function cleanObjectHTML(el){
+    const clone=el.cloneNode(true);
+    clone.querySelectorAll('.resizeHandle,.rotateHandle,.v135LinkBadge,.v116ShapeMoveHandle,.v108VectorMoveHandle').forEach(n=>n.remove());
+    return clone.innerHTML;
+  }
+  function commitMobileText(el){
+    if(!mobileEditor()||!el)return;
+    const box=el.closest?.('#canvasObjects .cobj[contenteditable="true"]');if(!box)return;
+    const idv=box.dataset.id;let st=null;try{st=canvasState}catch(_){st=window.canvasState}const o=(st?.objects||[]).find(x=>String(x.id)===String(idv));if(!o)return;
+    o.text=cleanObjectHTML(box);
+    try{markCanvasDirty?.()}catch(_){}
+  }
+  document.addEventListener('compositionstart',e=>{if(innerWidth<900&&(e.target?.matches?.('input,textarea')||e.target?.isContentEditable||e.target?.closest?.('[contenteditable="true"]')))composing=true},true);
+  document.addEventListener('compositionend',e=>{if(innerWidth<900)composing=false;if(mobileEditor())commitMobileText(e.target)},true);
+  document.addEventListener('input',e=>{
+    if(!mobileEditor()||!e.target?.closest?.('#canvasObjects .cobj[contenteditable="true"]'))return;
+    /* Run after the historical anonymous input handler so clean text wins and
+       resize/rotate handles can never be saved into the text itself. */
+    queueMicrotask(()=>commitMobileText(e.target));
+  },true);
+  document.addEventListener('blur',e=>{if(mobileEditor())commitMobileText(e.target)},true);
+
+  /* 2) Use the exact uploaded panda artwork for StudyPet. */
+  function putPanda(){
+    const room=q('#petRoomMini');if(!room)return;
+    const old=room.querySelector('.petAvatarCute');
+    if(old){
+      const wrap=document.createElement('div');wrap.className='v213PandaWrap';
+      const img=document.createElement('img');img.className='v213PandaPet';img.src='panda-study.png';img.alt='StudyPet Panda';img.draggable=false;
+      wrap.appendChild(img);
+      const bow=old.querySelector('.petBow');if(bow)wrap.appendChild(bow.cloneNode(true));
+      old.replaceWith(wrap);
+    }else if(!room.querySelector('.v213PandaPet')){
+      const img=document.createElement('img');img.className='v213PandaPet';img.src='panda-study.png';img.alt='StudyPet Panda';img.draggable=false;room.appendChild(img);
+    }
+  }
+  try{
+    const basePet=window.renderPetRoom||renderPetRoom;
+    if(typeof basePet==='function'&&!basePet.__v213Panda){
+      const wrapped=function(){const out=basePet.apply(this,arguments);putPanda();return out};
+      wrapped.__v213Panda=true;window.renderPetRoom=wrapped;try{renderPetRoom=wrapped}catch(_){}
+    }
+  }catch(_){}
+
+  /* 3) Karteikarten: reveal rating controls after flipping and make the three
+     choices icon-only: known / medium / not known. */
+  const ratingIcons={
+    known:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7"/></svg>',
+    meh:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12h12"/></svg>',
+    no:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"/></svg>'
+  };
+  function decorateRatings(){
+    const box=q('#deckDetail .v102MemoryButtons');if(!box)return;
+    box.classList.add('v213IconRatings');
+    const defs=[['known','Gewusst'],['meh','Mittel'],['no','Nicht gewusst']];
+    qa('button',box).slice(0,3).forEach((b,i)=>{
+      const [key,label]=defs[i];
+      if(b.dataset.v213RatingIcon!==key){b.innerHTML=ratingIcons[key];b.dataset.v213RatingIcon=key}
+      b.title=label;b.setAttribute('aria-label',label);b.type='button';
+    });
+  }
+  try{
+    const baseDeck=window.renderDeckDetail||renderDeckDetail;
+    if(typeof baseDeck==='function'&&!baseDeck.__v213Ratings){
+      const wrapped=function(){const out=baseDeck.apply(this,arguments);decorateRatings();return out};
+      wrapped.__v213Ratings=true;window.renderDeckDetail=wrapped;try{renderDeckDetail=wrapped}catch(_){}
+    }
+    const flip=function(){
+      try{flashFlipped=!flashFlipped}catch(_){return}
+      try{renderDeckDetail()}catch(_){}
+    };
+    window.flipDeckCard=flip;try{flipDeckCard=flip}catch(_){}
+  }catch(_){}
+
+  /* 4) Quiz: older markup put JSON strings with double quotes directly inside
+     an onclick attribute. Browsers truncate that handler. Keep the existing quiz
+     logic, but replace those broken inline handlers with real DOM click handlers. */
+  function repairQuizButtons(){
+    const root=q('#quizPlayerRoot');if(!root||!quizSession)return;
+    const quiz=(data.quizzes||[]).find(x=>x.id===selectedQuizId);if(!quiz)return;
+    const item=quiz.questions?.[quizSession.index];if(!item)return;
+    const opts=item.options||[];
+    qa('.choiceBtn',root).forEach((b,i)=>{
+      b.type='button';b.removeAttribute('onclick');
+      b.onclick=e=>{e.preventDefault();e.stopPropagation();if(quizSession.submitted)return;quizSession.selected=opts[i]??b.textContent.trim();renderQuizPlayer()};
+    });
+    qa('button',root).forEach(b=>{
+      const txt=(b.textContent||'').trim();
+      if(txt==='Antwort prüfen'){b.type='button';b.onclick=e=>{e.preventDefault();e.stopPropagation();submitQuizAnswer()}}
+      else if(txt==='Weiter'){b.type='button';b.onclick=e=>{e.preventDefault();e.stopPropagation();nextQuizQuestion()}}
+    });
+  }
+  try{
+    const baseQuiz=window.renderQuizPlayer||renderQuizPlayer;
+    if(typeof baseQuiz==='function'&&!baseQuiz.__v213Clicks){
+      const wrapped=function(){const out=baseQuiz.apply(this,arguments);repairQuizButtons();return out};
+      wrapped.__v213Clicks=true;window.renderQuizPlayer=wrapped;try{renderQuizPlayer=wrapped}catch(_){}
+    }
+  }catch(_){}
+
+  /* Keep fixes applied after normal app rerenders without changing other views. */
+  const obs=new MutationObserver(()=>{
+    if(q('#view-study.active'))putPanda();
+    if(q('#view-deck-detail.active'))decorateRatings();
+    if(q('#view-quiz-player.active'))repairQuizButtons();
+  });
+  obs.observe(document.body,{childList:true,subtree:true});
+  [0,120,500,1200].forEach(t=>setTimeout(()=>{putPanda();decorateRatings();repairQuizButtons()},t));
+})();
+</script>
+<!-- ===== /Studia V213 ===== -->
