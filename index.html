@@ -17616,7 +17616,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
       }
       const merged=expandLessonsForVisibleBreaks(mergeLessons(rawDay.filter(x=>timetableViewMode==='basis'?!x.cancelledFromBasis:true)));
       const lessons=merged.map(l=>{
-        const raw=(Array.isArray(l.duplicates)&&l.duplicates.length?l.duplicates[0].raw:l.raw)||''; const p=splitCell(raw); const title=prettySubject(p.subject); const meta=[p.room,p.teacher||p.meta].filter(Boolean).join(' · ');
+        const raw=(Array.isArray(l.duplicates)&&l.duplicates.length?l.duplicates[0].raw:l.raw)||''; const p=splitCell(raw); const title=prettySubject(p.subject); const meta=[p.room?('Raum '+p.room):'',p.teacher||p.meta].filter(Boolean).join(' · ');
         const top=Math.max(0,timePos(l.start))+6; const height=Math.max(72, Math.round((toMin(l.end)-toMin(l.start))*px)-8); const compact=height<86;
         return `<button class="v208Lesson ${colorClass(title)} ${compact?'compact':''}" style="top:${top}px;height:${height}px" onclick='openLessonDetails(${JSON.stringify(JSON.stringify(l))})'><span class="v208LessonIcon">${lessonIcon(title)}</span><span><span class="v208LessonTitle">${esc(title)}</span><span class="v208LessonTime">${esc(l.start)} – ${esc(l.end)}</span>${meta?`<span class="v208LessonMeta">${esc(meta)}</span>`:''}</span></button>`;
       }).join('');
@@ -17812,7 +17812,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
     const first=Math.min(...all.map(x=>toMin(x.start))),last=Math.max(...all.map(x=>toMin(x.end)));
     try{getActivePauses().forEach(p=>{if(first<toMin(p.end)&&last>toMin(p.start))events.push({type:'pause',sort:toMin(p.start),p})})}catch(_){ }
     events.sort((a,b)=>a.sort-b.sort|| (a.type==='lesson'?-1:1));
-    custom.innerHTML=events.map(e=>{if(e.type==='pause')return `<div class="v209PauseRow"><div class="v209PauseTime">${esc(e.p.start)}–${esc(e.p.end)}</div><div class="v209PauseCard">${esc(e.p.label||'Pause')}</div></div>`;const l=e.l,raw=(Array.isArray(l.duplicates)&&l.duplicates.length?l.duplicates[0].raw:l.raw)||'',p=splitCell(raw),title=prettySubject(p.subject),meta=[p.room,p.teacher||p.meta].filter(Boolean).join(' · ');return `<div class="v209TodayRow"><div class="v209TodayTime">${esc(l.start)}<br>${esc(l.end)}</div><button class="v209TodayCard ${colorClass(title)}" onclick='openLessonDetails(${JSON.stringify(JSON.stringify(l))})'><span class="v209TodayIcon">${subjectIcon(title)}</span><span><span class="v209TodayTitle">${esc(title)}</span>${meta?`<span class="v209TodayMeta">${esc(meta)}</span>`:''}</span><span class="v209TodayRoom">${Number(l.blocks||1)>=2?'Doppelstunde':''}</span></button></div>`}).join('');
+    custom.innerHTML=events.map(e=>{if(e.type==='pause')return `<div class="v209PauseRow"><div class="v209PauseTime">${esc(e.p.start)}–${esc(e.p.end)}</div><div class="v209PauseCard">${esc(e.p.label||'Pause')}</div></div>`;const l=e.l,raw=(Array.isArray(l.duplicates)&&l.duplicates.length?l.duplicates[0].raw:l.raw)||'',p=splitCell(raw),title=prettySubject(p.subject),meta=[p.room?('Raum '+p.room):'',p.teacher||p.meta].filter(Boolean).join(' · ');return `<div class="v209TodayRow"><div class="v209TodayTime">${esc(l.start)}<br>${esc(l.end)}</div><button class="v209TodayCard ${colorClass(title)}" onclick='openLessonDetails(${JSON.stringify(JSON.stringify(l))})'><span class="v209TodayIcon">${subjectIcon(title)}</span><span><span class="v209TodayTitle">${esc(title)}</span>${meta?`<span class="v209TodayMeta">${esc(meta)}</span>`:''}</span><span class="v209TodayRoom">${Number(l.blocks||1)>=2?'Doppelstunde':''}</span></button></div>`}).join('');
   }
   function cleanHomeEmpty(){const x=document.querySelector('#homeOpen .empty');if(x)x.textContent=x.textContent.replace(/🎉/g,'').trim()}
   function reconcile(){ensureShell();ensureHomeHead();renderTodayTimeline();cleanHomeEmpty()}
@@ -18082,7 +18082,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
       const cards=merged.map(l=>{
         const raw=(Array.isArray(l.duplicates)&&l.duplicates.length?l.duplicates[0].raw:l.raw)||'';const p=splitCell(raw),title=desktopPretty(p.subject||raw),badge=changeLabel(l,p),cancelled=badge==='ENTFÄLLT';
         const top=Math.max(0,pos(l.start))+4,height=Math.max(44,Math.round((toMin(l.end)-toMin(l.start))*px)-7),compact=height<70,current=!cancelled&&typeof isLessonCurrentNow==='function'&&isLessonCurrentNow(l);
-        const meta=[p.room,p.teacher||p.meta].filter(Boolean).join(' · ');const color=subjectColor(title);
+        const meta=[p.room?('Raum '+p.room):'',p.teacher||p.meta].filter(Boolean).join(' · ');const color=subjectColor(title);
         return `<button class="v210Lesson ${compact?'compact':''} ${current?'current':''} ${cancelled?'cancelled':''} ${badge?'hasBadge':''}" style="top:${top}px;height:${height}px;--lesson-color:${esc2(color)}" onclick='openLessonDetails(${JSON.stringify(JSON.stringify(l))})'>${badge?`<span class="v210Badge">${esc2(badge)}</span>`:''}<span class="v210LessonIcon">${lessonIcon(title)}</span><span><span class="v210LessonTitle">${esc2(title)}</span><span class="v210LessonTime">${esc2(l.start)} – ${esc2(l.end)}</span>${meta&&!cancelled?`<span class="v210LessonMeta">${esc2(meta)}</span>`:''}</span></button>`
       }).join('');
       return `<div class="v210DayBody" style="height:${bodyHeight}px">${lines}${pauses}${cards||'<div class="v210Empty">Kein Unterricht</div>'}</div>`
@@ -18352,7 +18352,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
       const rawDay=stableTimetableDay(applyEffectiveDisplayTimes(source.filter(x=>x.day===day))).filter(x=>toMin(x.end)>tl.start&&toMin(x.start)<tl.end);const special=rawDay.filter(x=>x.specialOnly),normal=rawDay.filter(x=>!x.specialOnly);const lines=tl.labels.map(t=>`<div class="v210GridLine" style="top:${pos(t)}px"></div>`).join('');
       const pauses=(typeof getActivePauses==='function'?getActivePauses():[]).filter(p=>toMin(p.end)>tl.start&&toMin(p.start)<tl.end).map(p=>{const n=new Date(),now=n.getHours()*60+n.getMinutes(),active=day===today&&toMin(p.start)<=now&&now<toMin(p.end);return `<div class="v210PauseBand ${active?'current':''}" style="top:${Math.max(0,pos(p.start))}px;height:${Math.max(10,pos(p.end)-pos(p.start))}px">${active?'JETZT · ':''}${esc(p.label||'Pause')}</div>`}).join('');
       if(special.length&&!normal.length){const info=special.map(x=>`<div class="v210Special"><b>Info</b>${esc(cleanPdfCellText(x.raw||''))}</div>`).join('');return `<div class="v210DayBody" style="height:${bodyHeight}px">${lines}${pauses}${info}</div>`}
-      const merged=expandLessonsForVisibleBreaks(mergeLessons(rawDay.filter(x=>timetableViewMode==='basis'?!x.cancelledFromBasis:true)));const cards=merged.map(l=>{const p=splitCell(l.raw||''),title=planTitle(p.subject||l.raw||''),badge=changeBadge(l,p),cancelled=badge==='ENTFÄLLT',top=Math.max(0,pos(l.start))+4,height=Math.max(44,Math.round((toMin(l.end)-toMin(l.start))*px)-7),compact=height<70,current=!cancelled&&typeof isLessonCurrentNow==='function'&&isLessonCurrentNow(l),meta=[p.room,p.teacher||p.meta].filter(Boolean).join(' · '),color=getColor(title);return `<button class="v210Lesson ${compact?'compact':''} ${current?'current':''} ${cancelled?'cancelled':''} ${badge?'hasBadge':''}" style="top:${top}px;height:${height}px;--lesson-color:${esc(color)}" onclick='openLessonDetails(${JSON.stringify(JSON.stringify(l))})'>${badge?`<span class="v210Badge">${esc(badge)}</span>`:''}<span class="v210LessonIcon" style="font-size:17px">${esc(lessonSvg(title))}</span><span><span class="v210LessonTitle">${esc(title)}</span><span class="v210LessonTime">${esc(l.start)} – ${esc(l.end)}</span>${meta&&!cancelled?`<span class="v210LessonMeta">${esc(meta)}</span>`:''}${Number(l.blocks||1)>=2?`<span class="v210LessonMeta">Doppelstunde</span>`:''}</span></button>`}).join('');return `<div class="v210DayBody" style="height:${bodyHeight}px">${lines}${pauses}${cards||'<div class="v210Empty">Kein Unterricht</div>'}</div>`
+      const merged=expandLessonsForVisibleBreaks(mergeLessons(rawDay.filter(x=>timetableViewMode==='basis'?!x.cancelledFromBasis:true)));const cards=merged.map(l=>{const p=splitCell(l.raw||''),title=planTitle(p.subject||l.raw||''),badge=changeBadge(l,p),cancelled=badge==='ENTFÄLLT',top=Math.max(0,pos(l.start))+4,height=Math.max(44,Math.round((toMin(l.end)-toMin(l.start))*px)-7),compact=height<70,current=!cancelled&&typeof isLessonCurrentNow==='function'&&isLessonCurrentNow(l),meta=[p.room?('Raum '+p.room):'',p.teacher||p.meta].filter(Boolean).join(' · '),color=getColor(title);return `<button class="v210Lesson ${compact?'compact':''} ${current?'current':''} ${cancelled?'cancelled':''} ${badge?'hasBadge':''}" style="top:${top}px;height:${height}px;--lesson-color:${esc(color)}" onclick='openLessonDetails(${JSON.stringify(JSON.stringify(l))})'>${badge?`<span class="v210Badge">${esc(badge)}</span>`:''}<span class="v210LessonIcon" style="font-size:17px">${esc(lessonSvg(title))}</span><span><span class="v210LessonTitle">${esc(title)}</span><span class="v210LessonTime">${esc(l.start)} – ${esc(l.end)}</span>${meta&&!cancelled?`<span class="v210LessonMeta">${esc(meta)}</span>`:''}${Number(l.blocks||1)>=2?`<span class="v210LessonMeta">Doppelstunde</span>`:''}</span></button>`}).join('');return `<div class="v210DayBody" style="height:${bodyHeight}px">${lines}${pauses}${cards||'<div class="v210Empty">Kein Unterricht</div>'}</div>`
     }
     const heads=days.map(d=>{const i=dayOrderV212.indexOf(d);return `<div class="v210DayHead ${d===today?'today':''}"><b>${esc(d)}</b><span>${esc(dates[i].toLocaleDateString('de-DE',{day:'2-digit',month:'short'}).replace(/\.$/,''))}</span></div>`}).join('');
     const tabs=mode==='day'?`<div class="v210DayTabs">${dayOrderV212.map((d,i)=>`<button class="v210DayTab ${d===selectedDay?'active':''}" onclick="v210SetPlanDay('${d}')">${d} · ${esc(dates[i].toLocaleDateString('de-DE',{day:'2-digit',month:'short'}).replace(/\.$/,''))}</button>`).join('')}</div>`:'';
@@ -21988,3 +21988,295 @@ const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 231'};
 })();
 </script>
 <!-- ===== /Studia V230 ===== -->
+
+
+<!-- ===== Studia V232 · SAFE MERGE SYNC + PULL TO SYNC + DESKTOP POLISH ===== -->
+<style id="studia-v232-safe-sync-style">
+@media (min-width:900px){
+  html,body,button,input,select,textarea,
+  #v210Sidebar,#v208Sidebar,#view-plan,.v210Lesson,.v210DayHead,.v210TimeRail,
+  .panel,.card,.section,.modal,.canvasTopbar,.canvasQuickNav,.canvasQuickDrawer,#desktopEditorSidebar{
+    font-family:ui-rounded,"SF Pro Rounded","Arial Rounded MT Bold","Avenir Next Rounded","Trebuchet MS",system-ui,sans-serif!important;
+  }
+  #v232DesktopSync{
+    position:fixed;right:20px;bottom:20px;z-index:10050;display:flex;align-items:center;gap:9px;
+    min-height:42px;padding:8px 13px;border-radius:15px;border:1px solid #ead7d1;background:rgba(255,252,249,.96);
+    color:#775f58;box-shadow:0 10px 28px rgba(91,67,59,.12);backdrop-filter:blur(14px);font-size:10px;font-weight:900;cursor:pointer
+  }
+  #v232DesktopSync:hover{background:#fff7f5;border-color:#e4c5c1;transform:translateY(-1px)}
+  #v232DesktopSync .spin{font-size:17px;line-height:1;transition:transform .25s ease}
+  #v232DesktopSync.syncing .spin{animation:v232Spin .8s linear infinite}
+  #v232DesktopSync small{display:block;font-size:7px;font-weight:750;color:#a58d85;margin-top:1px;max-width:170px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  @keyframes v232Spin{to{transform:rotate(360deg)}}
+}
+@media(max-width:899px){#v232DesktopSync{display:none!important}}
+#v232PullSync{
+  position:fixed;left:50%;top:8px;transform:translate(-50%,-125%);z-index:10080;pointer-events:none;
+  min-width:170px;max-width:80vw;padding:9px 14px;border-radius:999px;border:1px solid #ead8d2;background:rgba(255,252,249,.97);
+  box-shadow:0 8px 25px rgba(91,67,59,.12);color:#826961;font:850 10px/1.2 ui-rounded,"SF Pro Rounded","Trebuchet MS",sans-serif;text-align:center;
+  transition:transform .18s ease,opacity .18s ease;opacity:0
+}
+#v232PullSync.show{opacity:1}
+#v232PullSync.ready{background:#fff2f1;border-color:#e7c6c4;color:#ad6f72}
+#v232PullSync.syncing{background:#f5f9ef;border-color:#dbe5c8;color:#75845b}
+.v232SizeGroup{display:inline-flex!important;align-items:center!important;gap:3px!important;height:32px!important;padding:2px!important;border:1px solid #ead8d2!important;border-radius:10px!important;background:#fff!important}
+.v232SizeGroup>button{width:25px!important;height:26px!important;min-width:25px!important;padding:0!important;border:0!important;border-radius:7px!important;background:transparent!important;font-size:15px!important;font-weight:900!important;color:#795f57!important;display:grid!important;place-items:center!important}
+.v232SizeGroup>button:hover{background:#fff0ef!important}
+.v232SizeGroup>input.size{width:44px!important;height:26px!important;min-height:26px!important;border:0!important;background:transparent!important;padding:0 2px!important;text-align:center!important;font-size:11px!important;font-weight:900!important;outline:none!important}
+#v232SyncStatusInline{font-size:8px;color:#9c837a;font-weight:800;margin-top:6px}
+.v210LessonMeta .v232RoomLabel{font-weight:900}
+</style>
+<script id="studia-v232-safe-sync-script">
+(()=>{
+'use strict';
+if(window.__STUDIA_V232__)return;window.__STUDIA_V232__=true;
+const q=(s,r=document)=>r?.querySelector?.(s)||null;
+const qa=(s,r=document)=>r?.querySelectorAll?[...r.querySelectorAll(s)]:[];
+const clone=x=>{try{return structuredClone(x)}catch(_){try{return JSON.parse(JSON.stringify(x))}catch(__){return x}}};
+const now=()=>Date.now();
+const META='_syncMeta',UPDATED='_updatedAt';
+const TRACKED=['homework','tests','grades','flashcards','subjects','absences','studySessions','reminders','flashDecks','quizzes','studySheets'];
+let v232SyncBusy=false,v232Installing=false,v232LastStatus='Lokal gespeichert';
+
+function cleanForCompare(v){
+  if(Array.isArray(v))return v.map(cleanForCompare);
+  if(v&&typeof v==='object'){
+    const out={};for(const [k,val] of Object.entries(v)){if(k===UPDATED||k===META)continue;out[k]=cleanForCompare(val)}return out;
+  }
+  return v;
+}
+function same(a,b){try{return JSON.stringify(cleanForCompare(a))===JSON.stringify(cleanForCompare(b))}catch(_){return false}}
+function ensureMeta(d){
+  if(!d||typeof d!=='object')return {fields:{},tombstones:{}};
+  d[META] ||= {version:1,fields:{},tombstones:{}};
+  d[META].fields ||= {};d[META].tombstones ||= {};d[META].version=1;return d[META];
+}
+function objectId(x){return x&&typeof x==='object'&&x.id!=null?String(x.id):''}
+function stampChanges(cur,old){
+  if(!cur||typeof cur!=='object')return;
+  const ts=now(),meta=ensureMeta(cur),oldMeta=old?.[META]||{};
+  for(const key of TRACKED){
+    const a=Array.isArray(cur[key])?cur[key]:[],b=Array.isArray(old?.[key])?old[key]:[];
+    const bm=new Map(b.map(x=>[objectId(x),x]).filter(x=>x[0]));
+    const am=new Map(a.map(x=>[objectId(x),x]).filter(x=>x[0]));
+    meta.tombstones[key] ||= {};
+    for(const item of a){
+      const id=objectId(item);if(!id)continue;const prev=bm.get(id);
+      if(!prev)item[UPDATED]=Number(item[UPDATED])||ts;
+      else if(!same(item,prev))item[UPDATED]=ts;
+      else if(!Number(item[UPDATED]))item[UPDATED]=Number(prev?.[UPDATED])||1;
+      const dead=Number(meta.tombstones[key][id]||0);if(dead&&Number(item[UPDATED]||0)>dead)delete meta.tombstones[key][id];
+    }
+    for(const prev of b){const id=objectId(prev);if(id&&!am.has(id))meta.tombstones[key][id]=Math.max(Number(meta.tombstones[key][id]||0),ts)}
+  }
+  const fields=Object.keys(cur).filter(k=>k!==META&&!TRACKED.includes(k));
+  for(const key of fields){
+    if(!same(cur[key],old?.[key]))meta.fields[key]=ts;
+    else if(!meta.fields[key]&&oldMeta?.fields?.[key])meta.fields[key]=oldMeta.fields[key];
+  }
+}
+function mergedMeta(a,b){
+  const A=a||{},B=b||{},out={version:1,fields:{},tombstones:{}};
+  for(const k of new Set([...Object.keys(A.fields||{}),...Object.keys(B.fields||{})]))out.fields[k]=Math.max(Number(A.fields?.[k]||0),Number(B.fields?.[k]||0));
+  for(const col of new Set([...Object.keys(A.tombstones||{}),...Object.keys(B.tombstones||{})])){
+    out.tombstones[col]={};const aa=A.tombstones?.[col]||{},bb=B.tombstones?.[col]||{};
+    for(const id of new Set([...Object.keys(aa),...Object.keys(bb)]))out.tombstones[col][id]=Math.max(Number(aa[id]||0),Number(bb[id]||0));
+  }
+  return out;
+}
+function mergePlain(remote,local){
+  if(local==null)return clone(remote);if(remote==null)return clone(local);
+  if(Array.isArray(local)||Array.isArray(remote))return clone(local);
+  if(typeof local==='object'&&typeof remote==='object'){
+    const out={...clone(remote)};for(const [k,v] of Object.entries(local))out[k]=clone(v);return out;
+  }
+  return clone(local);
+}
+function mergeCollection(name,localArr,remoteArr,meta){
+  const la=Array.isArray(localArr)?localArr:[],ra=Array.isArray(remoteArr)?remoteArr:[];
+  const lmap=new Map(la.map(x=>[objectId(x),x]).filter(x=>x[0])),rmap=new Map(ra.map(x=>[objectId(x),x]).filter(x=>x[0]));
+  const order=[...la.map(objectId),...ra.map(objectId)].filter(Boolean),ids=[...new Set(order)],out=[];
+  for(const id of ids){
+    const l=lmap.get(id),r=rmap.get(id);let item;
+    if(l&&r){
+      const lt=Number(l[UPDATED]||0),rt=Number(r[UPDATED]||0);
+      if(rt>lt)item=clone(r);else if(lt>rt)item=clone(l);else item=mergePlain(r,l);
+      item[UPDATED]=Math.max(lt,rt,Number(item[UPDATED]||0));
+    }else item=clone(l||r);
+    const dead=Number(meta?.tombstones?.[name]?.[id]||0),it=Number(item?.[UPDATED]||0);
+    if(dead&&dead>=it)continue;
+    if(item)out.push(item);
+  }
+  /* objects without IDs: keep both without duplicates instead of dropping data */
+  const seen=new Set(out.map(x=>{try{return JSON.stringify(cleanForCompare(x))}catch(_){return String(x)}}));
+  for(const x of [...la,...ra]){if(objectId(x))continue;let k='';try{k=JSON.stringify(cleanForCompare(x))}catch(_){k=String(x)}if(!seen.has(k)){seen.add(k);out.push(clone(x))}}
+  return out;
+}
+function mergeState(local,remote){
+  local=local&&typeof local==='object'?local:{};remote=remote&&typeof remote==='object'?remote:{};
+  const meta=mergedMeta(local[META],remote[META]),out={};
+  const keys=new Set([...Object.keys(remote),...Object.keys(local)]);keys.delete(META);
+  for(const key of keys){
+    if(TRACKED.includes(key)){out[key]=mergeCollection(key,local[key],remote[key],meta);continue}
+    const lt=Number(local[META]?.fields?.[key]||0),rt=Number(remote[META]?.fields?.[key]||0);
+    if(rt>lt)out[key]=clone(remote[key]);
+    else if(lt>rt)out[key]=clone(local[key]);
+    else out[key]=mergePlain(remote[key],local[key]);
+  }
+  out[META]=meta;return out;
+}
+function readStored(){try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(_){return {}}}
+function persistLocal(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){console.warn('[Studia V232] local save failed',e)}}
+function editorActive(){return document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active')}
+function commitEditor(){
+  if(!editorActive())return;
+  try{if(typeof saveCanvasSheetCore==='function')saveCanvasSheetCore(true)}catch(e){console.warn('[Studia V232] editor commit',e)}
+  try{persistLocal()}catch(_){ }
+}
+function setStatus(text,state='ok'){
+  v232LastStatus=text;const b=q('#v232DesktopSync'),m=q('#v232PullSync'),inline=q('#v232SyncStatusInline');
+  if(b){b.classList.toggle('syncing',state==='syncing');const s=b.querySelector('small');if(s)s.textContent=text}
+  if(m&&state==='syncing'){m.textContent=text;m.classList.add('show','syncing')}
+  if(inline)inline.textContent=text;
+}
+window.v232SetSyncStatus=setStatus;
+
+/* Local-first: stamp changed records BEFORE any cloud dirty/push layer sees them. */
+function installSave(){
+  const fn=window.save||(()=>{});if(typeof fn!=='function'||fn.__v232LocalFirst)return;
+  function wrappedSave(){
+    const old=readStored();if(!v232SyncBusy)stampChanges(data,old);persistLocal();setStatus('Lokal gespeichert ✓');
+    const r=fn.apply(this,arguments);persistLocal();return r;
+  }
+  wrappedSave.__v232LocalFirst=true;wrappedSave.__v232Original=fn;window.save=wrappedSave;try{save=wrappedSave}catch(_){ }
+}
+
+async function preSyncSafety(){
+  commitEditor();const old=readStored();stampChanges(data,old);persistLocal();
+  try{if(typeof window.v111CreateBackupNow==='function')await window.v111CreateBackupNow(false)}catch(_){ }
+}
+function installCloudMerge(){
+  if(v232Installing)return;v232Installing=true;
+  try{
+    const fn=window.v171CloudNow;if(typeof fn!=='function'||fn.__v232MergeSafe)return;
+    async function safeSync(){
+      if(v232SyncBusy)return {busy:true};
+      if(editorActive()){
+        commitEditor();persistLocal();setStatus('Lokal sicher · Sync nach Editor');
+        try{window.v150MarkDirty?.(0)}catch(_){ }
+        return {deferred:true};
+      }
+      v232SyncBusy=true;setStatus('Geräte werden zusammengeführt …','syncing');
+      let localBefore=null,result=null,error=null;
+      try{
+        await preSyncSafety();localBefore=clone(data);
+        result=await Promise.resolve(fn.apply(this,arguments));
+        const remoteAfter=clone(data),merged=mergeState(localBefore,remoteAfter);
+        data=merged;persistLocal();
+        try{renderAll?.()}catch(_){ }
+        try{if(q('#view-plan.active'))renderPlan?.()}catch(_){ }
+        setStatus('Auf diesem Gerät zusammengeführt ✓');
+        /* The merged state becomes the next outgoing state instead of letting a stale pull win. */
+        try{window.v150MarkDirty?.(120)}catch(_){ }
+      }catch(e){error=e;console.error('[Studia V232] sync',e);if(localBefore){data=localBefore;persistLocal();try{renderAll?.()}catch(_){ }}setStatus('Cloud fehlgeschlagen · lokal sicher');}
+      finally{v232SyncBusy=false;setTimeout(()=>{const m=q('#v232PullSync');m?.classList.remove('show','ready','syncing')},900)}
+      if(error)throw error;return result;
+    }
+    safeSync.__v232MergeSafe=true;safeSync.__v219Guarded=true;safeSync.__v232Original=fn;window.v171CloudNow=safeSync;
+  }finally{v232Installing=false}
+}
+window.studiaSyncNow=async function(){installSave();installCloudMerge();const fn=window.v171CloudNow;if(typeof fn!=='function'){setStatus('Sync noch nicht verbunden');return}try{return await fn()}catch(_){ }};
+
+/* Desktop sync control. */
+function ensureDesktopSyncButton(){
+  if(q('#v232DesktopSync'))return;const b=document.createElement('button');b.id='v232DesktopSync';b.type='button';b.innerHTML='<span class="spin">↻</span><span>Geräte synchronisieren<small>Lokal gespeichert</small></span>';b.onclick=()=>window.studiaSyncNow();document.body.appendChild(b);
+}
+
+/* Mobile pull-to-sync: drag down from the top. */
+let pullStart=null,pullY=0,pullReady=false;
+function ensurePull(){if(q('#v232PullSync'))return;const e=document.createElement('div');e.id='v232PullSync';e.textContent='Zum Synchronisieren ziehen';document.body.appendChild(e)}
+document.addEventListener('touchstart',e=>{
+  if(innerWidth>=900||editorActive()||document.body.classList.contains('modalOpen'))return;
+  const sc=document.scrollingElement||document.documentElement;if((sc.scrollTop||window.scrollY)>3)return;
+  const t=e.touches?.[0];if(!t)return;pullStart=t.clientY;pullY=0;pullReady=false;ensurePull();
+},{passive:true});
+document.addEventListener('touchmove',e=>{
+  if(pullStart==null)return;const t=e.touches?.[0];if(!t)return;pullY=Math.max(0,t.clientY-pullStart);const el=q('#v232PullSync');if(!el)return;
+  if(pullY>8){el.classList.add('show');el.style.transform=`translate(-50%, ${Math.min(58,pullY*.42)-45}px)`}
+  pullReady=pullY>=85;el.classList.toggle('ready',pullReady);el.textContent=pullReady?'Loslassen zum Synchronisieren ↻':'Zum Synchronisieren ziehen';
+},{passive:true});
+document.addEventListener('touchend',()=>{
+  if(pullStart==null)return;const run=pullReady;pullStart=null;pullReady=false;const el=q('#v232PullSync');if(el)el.style.transform='';if(run)window.studiaSyncNow();else setTimeout(()=>el?.classList.remove('show','ready'),180);
+},{passive:true});
+
+/* ---------- Text size in the desktop top toolbar: own +/- and direct formatting ---------- */
+let sizeRange=null,sizeObjectId=null;
+function selectedTextObj(){
+  try{const ids=[canvasState?.selectedId,...(canvasState?.selectedIds||[])].filter(Boolean),o=(canvasState?.objects||[]).find(x=>ids.some(id=>String(id)===String(x.id)));return o&&['text','block','task','merke'].includes(o.kind)&&!o.isChecklist?o:null}catch(_){return null}
+}
+function textEl(o){return o?q(`#canvasObjects .cobj[data-id="${CSS.escape(String(o.id))}"]`):null}
+function rememberSizeSelection(){
+  const o=selectedTextObj();sizeObjectId=o?.id||null;sizeRange=null;const el=textEl(o),s=getSelection();if(!el||!s?.rangeCount)return;
+  const r=s.getRangeAt(0),n=r.commonAncestorContainer.nodeType===1?r.commonAncestorContainer:r.commonAncestorContainer.parentElement;
+  if(n&&(n===el||el.contains(n))&&!r.collapsed)try{sizeRange=r.cloneRange()}catch(_){ }
+}
+document.addEventListener('selectionchange',()=>{const s=getSelection(),o=selectedTextObj(),el=textEl(o);if(!s?.rangeCount||!el)return;const r=s.getRangeAt(0),n=r.commonAncestorContainer.nodeType===1?r.commonAncestorContainer:r.commonAncestorContainer.parentElement;if(n&&(n===el||el.contains(n))&&!r.collapsed){sizeObjectId=o.id;try{sizeRange=r.cloneRange()}catch(_){ }} });
+function applySizeDirect(px){
+  px=Math.max(6,Math.min(180,Math.round(Number(px)||16)));let o=selectedTextObj();if(!o&&sizeObjectId)try{o=(canvasState.objects||[]).find(x=>String(x.id)===String(sizeObjectId))}catch(_){ }
+  if(!o)return;
+  const el=textEl(o);let ranged=false;
+  if(sizeRange&&el){
+    try{const n=sizeRange.commonAncestorContainer.nodeType===1?sizeRange.commonAncestorContainer:sizeRange.commonAncestorContainer.parentElement;if(n&&(n===el||el.contains(n))){el.focus({preventScroll:true});const s=getSelection();s.removeAllRanges();s.addRange(sizeRange.cloneRange());document.execCommand('styleWithCSS',false,false);document.execCommand('fontSize',false,'7');qa('font[size="7"]',el).forEach(f=>{f.removeAttribute('size');f.style.fontSize=px+'px'});o.text=el.innerHTML;ranged=true;sizeRange=s.rangeCount?s.getRangeAt(0).cloneRange():sizeRange}}catch(_){ }
+  }
+  if(!ranged){o.style||={};o.style.fontSize=px;if(el)el.style.fontSize=px+'px'}
+  qa('.v134FormatTools input.size').forEach(i=>i.value=String(px));
+  try{markCanvasDirty?.(false)}catch(_){ }try{pushHistory?.()}catch(_){ }try{renderCanvasInspector?.()}catch(_){ }
+}
+window.v232FontStep=function(delta){rememberSizeSelection();const inp=q('.v134FormatTools input.size');const o=selectedTextObj();const cur=Number(inp?.value)||Number(o?.style?.fontSize)||16;applySizeDirect(cur+Number(delta||0))};
+function ensureSizeControls(){
+  const inp=q('.v134FormatTools input.size');if(!inp||inp.closest('.v232SizeGroup'))return;
+  inp.removeAttribute('onchange');const g=document.createElement('span');g.className='v232SizeGroup';const minus=document.createElement('button'),plus=document.createElement('button');minus.type=plus.type='button';minus.textContent='−';plus.textContent='+';minus.title='Text kleiner';plus.title='Text größer';inp.parentNode.insertBefore(g,inp);g.append(minus,inp,plus);
+  const keep=e=>{rememberSizeSelection();e.preventDefault()};minus.addEventListener('pointerdown',keep);plus.addEventListener('pointerdown',keep);inp.addEventListener('pointerdown',rememberSizeSelection,true);
+  minus.addEventListener('click',()=>window.v232FontStep(-1));plus.addEventListener('click',()=>window.v232FontStep(1));
+  inp.addEventListener('input',()=>applySizeDirect(inp.value));inp.addEventListener('change',()=>applySizeDirect(inp.value));inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();applySizeDirect(inp.value);inp.blur()}});
+}
+
+/* ---------- Timetable colors: one authoritative setter/resolver ---------- */
+function canonSubject(name){
+  let x=String(name||'').replace(/\s+/g,' ').trim();try{x=prettySubject(x)}catch(_){ }x=String(x||'').toUpperCase().replace(/\s+/g,' ').trim();
+  const a={M:'MATHEMATIK',MATHE:'MATHEMATIK',MATHEMATIK:'MATHEMATIK',D:'DEUTSCH',DE:'DEUTSCH',DEUTSCH:'DEUTSCH',E:'ENGLISCH',ENG:'ENGLISCH',ENGLISCH:'ENGLISCH',PH:'PHYSIK',PHY:'PHYSIK',PHYSIK:'PHYSIK',BIO:'BIOLOGIE',BI:'BIOLOGIE',BIOLOGIE:'BIOLOGIE',CH:'CHEMIE',CHE:'CHEMIE',CHEMIE:'CHEMIE',G:'GESCHICHTE',GE:'GESCHICHTE',GES:'GESCHICHTE',GESCHICHTE:'GESCHICHTE',ET:'ETHIK',ETHIK:'ETHIK',SP:'SPORT',SPORT:'SPORT',INF:'INFORMATIK',INFORMATIK:'INFORMATIK'};
+  return a[x]||x;
+}
+function subjectColor232(name){
+  data.timetableSubjectColors ||= {};const c=canonSubject(name);
+  for(const [k,v] of Object.entries(data.timetableSubjectColors)){if(canonSubject(k)===c&&/^#[0-9a-f]{6}$/i.test(String(v)))return String(v).toLowerCase()}
+  const rec=(data.subjects||[]).find(s=>canonSubject(s.name)===c||canonSubject(s.abbr)===c);if(rec?.color)return String(rec.color);
+  try{return hashColor(c)}catch(_){return '#e9a7a4'}
+}
+function setSubjectColor232(name,color){
+  color=String(color||'').toLowerCase();if(!/^#[0-9a-f]{6}$/.test(color))return;const c=canonSubject(name);if(!c)return;
+  data.timetableSubjectColors ||= {};data.timetableSubjectColors[c]=color;
+  try{const k=timetableSubjectKey(name);if(k)data.timetableSubjectColors[k]=color}catch(_){ }
+  for(const s of data.subjects||[]){if(canonSubject(s.name)===c||canonSubject(s.abbr)===c){s.color=color;if(s.autoFromTimetable)s.cover=color;s[UPDATED]=now()}}
+  ensureMeta(data).fields.timetableSubjectColors=now();
+  try{save()}catch(_){persistLocal()}
+  try{renderPlan?.();renderHome?.();if(q('#view-subjects.active'))renderSubjects?.()}catch(_){ }
+  setTimeout(()=>{try{renderPlan?.()}catch(_){ }},30);
+}
+window.setTimetableSubjectColor=setSubjectColor232;window.v216SetSubjectColor=setSubjectColor232;window.v232SetSubjectColor=setSubjectColor232;
+try{timetableSubjectColor=subjectColor232}catch(_){ }window.timetableSubjectColor=subjectColor232;
+document.addEventListener('change',e=>{const inp=e.target instanceof Element?e.target.closest('#v210SubjectColors input[type="color"]'):null;if(!inp)return;const name=inp.closest('.v210ColorRow')?.querySelector('span')?.textContent?.trim();if(name)setSubjectColor232(name,inp.value)},true);
+
+function ensureSyncInfoSettings(){
+  const card=q('.v171CloudSettings');if(!card||q('#v232SyncStatusInline',card))return;const e=document.createElement('div');e.id='v232SyncStatusInline';e.textContent=v232LastStatus;card.appendChild(e);
+  const btn=qa('button',card).find(b=>/Jetzt synchronisieren/i.test(b.textContent||''));if(btn){btn.removeAttribute('onclick');btn.onclick=()=>window.studiaSyncNow();btn.textContent='Jetzt zusammenführen & synchronisieren'}
+}
+function maintain(){installSave();installCloudMerge();ensureDesktopSyncButton();ensurePull();ensureSizeControls();ensureSyncInfoSettings()}
+const obs=new MutationObserver(()=>requestAnimationFrame(maintain));obs.observe(document.documentElement,{childList:true,subtree:true});
+[0,120,450,1200,2500].forEach(t=>setTimeout(maintain,t));
+window.addEventListener('online',()=>setTimeout(()=>window.studiaSyncNow(),350));
+
+const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 232'};[0,250,900,1800].forEach(t=>setTimeout(setVer,t));
+})();
+</script>
+<!-- ===== /Studia V232 ===== -->
