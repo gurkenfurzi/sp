@@ -7889,175 +7889,6 @@ button.primary,button.ghost,.iconbtn{
 </style>
 
 </head><body><div class="page">${serializedCanvas()}</div><div id="buildVersionBadge" style="position:fixed;right:8px;bottom:8px;z-index:9999;font:800 9px Inter,sans-serif;color:#9b7d74;background:rgba(255,250,247,.88);border:1px solid #ead4cd;border-radius:999px;padding:5px 8px;pointer-events:none">V182</div>
-
-<!-- ===== Studia V225 · Exponent an vorheriges Zeichen binden + Graph-Formel robust laden ===== -->
-<script id="studia-v225-exponent-graph-fix">
-(()=>{
-'use strict';
-if(window.__STUDIA_V225__)return;window.__STUDIA_V225__=true;
-const q=(s,r=document)=>r?.querySelector?.(s)||null;
-function escHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function v225TakeTrailingTokenFromTextNode(node, offset){
-  if(!node || node.nodeType!==Node.TEXT_NODE)return '';
-  const text=String(node.nodeValue||'');
-  const cut=(typeof offset==='number'?offset:text.length);
-  let before=text.slice(0,cut), after=text.slice(cut);
-  const m=before.match(/([A-Za-z]+|\d+(?:[.,]\d+)?|[π])\s*$/);
-  if(!m)return '';
-  const token=m[1];
-  const start=before.lastIndexOf(token);
-  node.nodeValue=before.slice(0,start)+after;
-  return escHtml(token);
-}
-function v225TakePrevAtom(ed){
-  const sel=window.getSelection?.();
-  if(!ed||!sel||!sel.rangeCount)return '';
-  const r=sel.getRangeAt(0);
-  if(!ed.contains(r.commonAncestorContainer) || !r.collapsed)return '';
-  let sc=r.startContainer, so=r.startOffset;
-
-  if(sc.nodeType===Node.TEXT_NODE){
-    const t=v225TakeTrailingTokenFromTextNode(sc,so);
-    if(t)return t;
-    const prev=sc.previousSibling;
-    if(prev?.nodeType===Node.ELEMENT_NODE){prev.remove(); return prev.outerHTML;}
-  }
-
-  if(sc.nodeType===Node.ELEMENT_NODE){
-    const kids=[...sc.childNodes];
-    const prev=kids[Math.max(0,so-1)];
-    if(prev){
-      if(prev.nodeType===Node.TEXT_NODE){
-        const t=v225TakeTrailingTokenFromTextNode(prev);
-        if(t)return t;
-      }
-      if(prev.nodeType===Node.ELEMENT_NODE && prev.tagName!=='BR'){
-        prev.remove();
-        return prev.outerHTML;
-      }
-    }
-    let walkerPrev=sc.previousSibling;
-    while(!walkerPrev && sc.parentNode && sc.parentNode!==ed){ sc=sc.parentNode; walkerPrev=sc.previousSibling; }
-    if(walkerPrev){
-      if(walkerPrev.nodeType===Node.TEXT_NODE){
-        const t=v225TakeTrailingTokenFromTextNode(walkerPrev);
-        if(t)return t;
-      }
-      if(walkerPrev.nodeType===Node.ELEMENT_NODE && walkerPrev.tagName!=='BR'){
-        walkerPrev.remove();
-        return walkerPrev.outerHTML;
-      }
-    }
-  }
-  return '';
-}
-
-/* Exponent-Button: bei leerer Auswahl die vorherige Zahl / Variable als Basis nehmen, kein automatisches x mehr. */
-try{
-  const prevInsert=window.insertVisualFormula;
-  window.insertVisualFormula=function(type){
-    if(type==='power'){
-      const ed=q('#formulaVisualEditor');
-      if(ed){
-        ed.focus();
-        let base=(typeof selectedFormulaHTML==='function'?selectedFormulaHTML():'')||'';
-        if(!String(base).trim()) base=v225TakePrevAtom(ed)||'';
-        const baseHTML=String(base).trim()||'<span class="vfEmptyBase" data-empty="1">&#8203;</span>';
-        if(typeof replaceSelectionWithHTML==='function'){
-          replaceSelectionWithHTML(`<span class="vfPower"><span class="vfPowerBase">${baseHTML}</span><sup class="vfEditable vfExponentSlot" contenteditable="true">n</sup></span>&nbsp;`,'sup.vfExponentSlot');
-          try{installFormulaSlotProtection?.(ed)}catch(_){ }
-          try{ed.dispatchEvent(new Event('input',{bubbles:true}))}catch(_){ }
-          return;
-        }
-      }
-    }
-    return prevInsert?.apply(this,arguments);
-  };
-  try{insertVisualFormula=window.insertVisualFormula}catch(_){ }
-}catch(_){ }
-
-/* Graph-Formeleditor: altes kaputtes formulaHTML ignorieren und aus expr neu aufbauen, falls es nicht sauber serialisiert. */
-function v225PickGraphVisual(curve){
-  const fromExpr=(typeof window.graphExprToVisual==='function'?window.graphExprToVisual(curve?.expr||''):(curve?.expr||''));
-  const candidate=String(curve?.formulaHTML||'').trim();
-  if(!candidate)return fromExpr;
-  try{
-    const tmp=document.createElement('div');
-    tmp.innerHTML=candidate;
-    const expr=window.v224FormulaToGraphExpr?window.v224FormulaToGraphExpr(tmp):'';
-    if(!expr)throw new Error('leer');
-    if(typeof window.normalizeGraphExpr==='function')window.normalizeGraphExpr(expr);
-    return candidate;
-  }catch(_){
-    return fromExpr;
-  }
-}
-try{
-  const prevSetup=window.v224SetupGraphFormulaEditor || window.__dummyNoop;
-  window.v224SetupGraphFormulaEditor=function(i){
-    const ed=q('#formulaVisualEditor');
-    const draft=(typeof graphDraft!=='undefined'?graphDraft:window.graphDraft);
-    const curve=draft?.curves?.[i];
-    if(curve && ed){
-      const visual=v225PickGraphVisual(curve);
-      curve.formulaHTML=visual;
-    }
-    return prevSetup?.apply(this,arguments);
-  };
-}catch(_){ }
-
-/* Falls v224SetupGraphFormulaEditor intern bereits an window gebunden war, sichere Neudefinition. */
-window.v225PickGraphVisual=v225PickGraphVisual;
-
-/* Überschreibe den Graph-Editor-Setup sicher komplett, damit wirklich derselbe Editor geladen wird. */
-window.v224SetupGraphFormulaEditor=function(i){
-  const ed=q('#formulaVisualEditor');if(!ed)return;
-  const draft=(typeof graphDraft!=='undefined'?graphDraft:window.graphDraft);
-  const curve=draft?.curves?.[i]; if(!curve)return;
-  const visual=v225PickGraphVisual(curve);
-  ed.innerHTML=String(visual||'').replace(/×/g,'⋅');
-  try{normalizeAllVisualRoots?.(ed)}catch(_){ }
-  try{installFormulaSlotProtection?.(ed)}catch(_){ }
-  try{formulaLocalHistory=[ed.innerHTML];formulaLocalIndex=0}catch(_){ }
-  const modal=ed.closest('.visualFormulaModal,.formulaModal');if(!modal)return;
-  const eyebrow=q('.presetModalHead .eyebrow',modal);if(eyebrow)eyebrow.textContent='FUNKTIONSGRAPH';
-  const title=q('.presetModalHead h2',modal);if(title)title.textContent=`Funktion ${i+1} bearbeiten`;
-  const hint=q('.formulaEasyHint',modal);if(hint)hint.innerHTML='<b>Exakt derselbe Formeleditor:</b> Exponenten werden direkt an die vorherige Zahl/Variable gebunden und beim Übernehmen sauber in den Funktionsgraphen übernommen.';
-  const close=q('.presetModalHead .miniIcon',modal); if(close){close.removeAttribute('onclick'); close.onclick=()=>window.v224ReturnToGraph?window.v224ReturnToGraph():window.openGraphDialog?.();}
-  const primary=[...modal.querySelectorAll('button.primary')].at(-1); if(primary){primary.textContent='Übernehmen'; primary.removeAttribute('onclick'); primary.onclick=()=>window.v224SaveGraphFormula(i)}
-  ed.focus(); try{placeCaretAtEnd?.(ed)}catch(_){ }
-  ed.dispatchEvent(new Event('input',{bubbles:true}));
-};
-try{v224SetupGraphFormulaEditor=window.v224SetupGraphFormulaEditor}catch(_){ }
-})();
-</script>
-<!-- ===== /Studia V225 ===== -->
-
-
-<script id="studia-v225b-open-graph-override">
-(()=>{
-'use strict';
-if(window.__STUDIA_V225B__)return;window.__STUDIA_V225B__=true;
-window.openGraphFunctionEditor=function(i){
-  i=Number(i);
-  try{window.v224GraphCurve=i}catch(_){ }
-  try{window.graphActiveCurve=i}catch(_){ }
-  if(typeof window.openFormulaDialog==='function'){
-    window.openFormulaDialog(`__graph_curve_${i}`);
-    [80,140,220].forEach(t=>setTimeout(()=>{ try{window.v224SetupGraphFormulaEditor?.(i)}catch(_){ } },t));
-  }
-};
-try{openGraphFunctionEditor=window.openGraphFunctionEditor}catch(_){ }
-/* Sicherheit: auch die Standard-Row-Buttons auf den neuen Editor leiten. */
-setTimeout(()=>{
-  try{
-    const prevRows=window.renderGraphCurveRows;
-    if(typeof prevRows==='function')window.renderGraphCurveRows=function(){const out=prevRows.apply(this,arguments);document.querySelectorAll('.graphCurveRow .curveFormulaBtn,.graphCurveRow .curveEditBtn,[data-graph-edit]').forEach(btn=>{btn.onclick=(e)=>{e?.preventDefault?.();const row=btn.closest('.graphCurveRow,[data-curve-index]');const idx=Number(btn.dataset.index??row?.dataset.index??row?.getAttribute?.('data-curve-index')??0);window.openGraphFunctionEditor(idx);};});return out};
-  }catch(_){ }
-},0);
-})();
-</script>
-
 </body></html>`;
  const blob=new Blob([html],{type:"text/html"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=title.replace(/[^\wäöüÄÖÜß-]+/g,"_")+".html";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
 }
@@ -8981,151 +8812,7 @@ button.primary,button.ghost,.iconbtn{
 }
 </style>
 
-</head><body><div class="page">${serializedCanvas()}</div>
-<!-- ===== Studia V225 · Exponent an vorheriges Zeichen binden + Graph-Formel robust laden ===== -->
-<script id="studia-v225-exponent-graph-fix">
-(()=>{
-'use strict';
-if(window.__STUDIA_V225__)return;window.__STUDIA_V225__=true;
-const q=(s,r=document)=>r?.querySelector?.(s)||null;
-function escHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function v225TakeTrailingTokenFromTextNode(node, offset){
-  if(!node || node.nodeType!==Node.TEXT_NODE)return '';
-  const text=String(node.nodeValue||'');
-  const cut=(typeof offset==='number'?offset:text.length);
-  let before=text.slice(0,cut), after=text.slice(cut);
-  const m=before.match(/([A-Za-z]+|\d+(?:[.,]\d+)?|[π])\s*$/);
-  if(!m)return '';
-  const token=m[1];
-  const start=before.lastIndexOf(token);
-  node.nodeValue=before.slice(0,start)+after;
-  return escHtml(token);
-}
-function v225TakePrevAtom(ed){
-  const sel=window.getSelection?.();
-  if(!ed||!sel||!sel.rangeCount)return '';
-  const r=sel.getRangeAt(0);
-  if(!ed.contains(r.commonAncestorContainer) || !r.collapsed)return '';
-  let sc=r.startContainer, so=r.startOffset;
-
-  if(sc.nodeType===Node.TEXT_NODE){
-    const t=v225TakeTrailingTokenFromTextNode(sc,so);
-    if(t)return t;
-    const prev=sc.previousSibling;
-    if(prev?.nodeType===Node.ELEMENT_NODE){prev.remove(); return prev.outerHTML;}
-  }
-
-  if(sc.nodeType===Node.ELEMENT_NODE){
-    const kids=[...sc.childNodes];
-    const prev=kids[Math.max(0,so-1)];
-    if(prev){
-      if(prev.nodeType===Node.TEXT_NODE){
-        const t=v225TakeTrailingTokenFromTextNode(prev);
-        if(t)return t;
-      }
-      if(prev.nodeType===Node.ELEMENT_NODE && prev.tagName!=='BR'){
-        prev.remove();
-        return prev.outerHTML;
-      }
-    }
-    let walkerPrev=sc.previousSibling;
-    while(!walkerPrev && sc.parentNode && sc.parentNode!==ed){ sc=sc.parentNode; walkerPrev=sc.previousSibling; }
-    if(walkerPrev){
-      if(walkerPrev.nodeType===Node.TEXT_NODE){
-        const t=v225TakeTrailingTokenFromTextNode(walkerPrev);
-        if(t)return t;
-      }
-      if(walkerPrev.nodeType===Node.ELEMENT_NODE && walkerPrev.tagName!=='BR'){
-        walkerPrev.remove();
-        return walkerPrev.outerHTML;
-      }
-    }
-  }
-  return '';
-}
-
-/* Exponent-Button: bei leerer Auswahl die vorherige Zahl / Variable als Basis nehmen, kein automatisches x mehr. */
-try{
-  const prevInsert=window.insertVisualFormula;
-  window.insertVisualFormula=function(type){
-    if(type==='power'){
-      const ed=q('#formulaVisualEditor');
-      if(ed){
-        ed.focus();
-        let base=(typeof selectedFormulaHTML==='function'?selectedFormulaHTML():'')||'';
-        if(!String(base).trim()) base=v225TakePrevAtom(ed)||'';
-        const baseHTML=String(base).trim()||'<span class="vfEmptyBase" data-empty="1">&#8203;</span>';
-        if(typeof replaceSelectionWithHTML==='function'){
-          replaceSelectionWithHTML(`<span class="vfPower"><span class="vfPowerBase">${baseHTML}</span><sup class="vfEditable vfExponentSlot" contenteditable="true">n</sup></span>&nbsp;`,'sup.vfExponentSlot');
-          try{installFormulaSlotProtection?.(ed)}catch(_){ }
-          try{ed.dispatchEvent(new Event('input',{bubbles:true}))}catch(_){ }
-          return;
-        }
-      }
-    }
-    return prevInsert?.apply(this,arguments);
-  };
-  try{insertVisualFormula=window.insertVisualFormula}catch(_){ }
-}catch(_){ }
-
-/* Graph-Formeleditor: altes kaputtes formulaHTML ignorieren und aus expr neu aufbauen, falls es nicht sauber serialisiert. */
-function v225PickGraphVisual(curve){
-  const fromExpr=(typeof window.graphExprToVisual==='function'?window.graphExprToVisual(curve?.expr||''):(curve?.expr||''));
-  const candidate=String(curve?.formulaHTML||'').trim();
-  if(!candidate)return fromExpr;
-  try{
-    const tmp=document.createElement('div');
-    tmp.innerHTML=candidate;
-    const expr=window.v224FormulaToGraphExpr?window.v224FormulaToGraphExpr(tmp):'';
-    if(!expr)throw new Error('leer');
-    if(typeof window.normalizeGraphExpr==='function')window.normalizeGraphExpr(expr);
-    return candidate;
-  }catch(_){
-    return fromExpr;
-  }
-}
-try{
-  const prevSetup=window.v224SetupGraphFormulaEditor || window.__dummyNoop;
-  window.v224SetupGraphFormulaEditor=function(i){
-    const ed=q('#formulaVisualEditor');
-    const draft=(typeof graphDraft!=='undefined'?graphDraft:window.graphDraft);
-    const curve=draft?.curves?.[i];
-    if(curve && ed){
-      const visual=v225PickGraphVisual(curve);
-      curve.formulaHTML=visual;
-    }
-    return prevSetup?.apply(this,arguments);
-  };
-}catch(_){ }
-
-/* Falls v224SetupGraphFormulaEditor intern bereits an window gebunden war, sichere Neudefinition. */
-window.v225PickGraphVisual=v225PickGraphVisual;
-
-/* Überschreibe den Graph-Editor-Setup sicher komplett, damit wirklich derselbe Editor geladen wird. */
-window.v224SetupGraphFormulaEditor=function(i){
-  const ed=q('#formulaVisualEditor');if(!ed)return;
-  const draft=(typeof graphDraft!=='undefined'?graphDraft:window.graphDraft);
-  const curve=draft?.curves?.[i]; if(!curve)return;
-  const visual=v225PickGraphVisual(curve);
-  ed.innerHTML=String(visual||'').replace(/×/g,'⋅');
-  try{normalizeAllVisualRoots?.(ed)}catch(_){ }
-  try{installFormulaSlotProtection?.(ed)}catch(_){ }
-  try{formulaLocalHistory=[ed.innerHTML];formulaLocalIndex=0}catch(_){ }
-  const modal=ed.closest('.visualFormulaModal,.formulaModal');if(!modal)return;
-  const eyebrow=q('.presetModalHead .eyebrow',modal);if(eyebrow)eyebrow.textContent='FUNKTIONSGRAPH';
-  const title=q('.presetModalHead h2',modal);if(title)title.textContent=`Funktion ${i+1} bearbeiten`;
-  const hint=q('.formulaEasyHint',modal);if(hint)hint.innerHTML='<b>Exakt derselbe Formeleditor:</b> Exponenten werden direkt an die vorherige Zahl/Variable gebunden und beim Übernehmen sauber in den Funktionsgraphen übernommen.';
-  const close=q('.presetModalHead .miniIcon',modal); if(close){close.removeAttribute('onclick'); close.onclick=()=>window.v224ReturnToGraph?window.v224ReturnToGraph():window.openGraphDialog?.();}
-  const primary=[...modal.querySelectorAll('button.primary')].at(-1); if(primary){primary.textContent='Übernehmen'; primary.removeAttribute('onclick'); primary.onclick=()=>window.v224SaveGraphFormula(i)}
-  ed.focus(); try{placeCaretAtEnd?.(ed)}catch(_){ }
-  ed.dispatchEvent(new Event('input',{bubbles:true}));
-};
-try{v224SetupGraphFormulaEditor=window.v224SetupGraphFormulaEditor}catch(_){ }
-})();
-</script>
-<!-- ===== /Studia V225 ===== -->
-
-</body></html>`);w.document.close();setTimeout(()=>w.print(),300)
+</head><body><div class="page">${serializedCanvas()}</div></body></html>`);w.document.close();setTimeout(()=>w.print(),300)
 }
 
 function customPageTemplates(){
@@ -12841,150 +12528,6 @@ setTimeout(()=>{if(editor()){try{renderVectors()}catch(_){}installProxies()}cons
 }
 @media(min-width:980px) and (max-width:1180px){.desktopWeekGrid{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
 </style>
-
-
-<!-- ===== Studia V225 · Exponent an vorheriges Zeichen binden + Graph-Formel robust laden ===== -->
-<script id="studia-v225-exponent-graph-fix">
-(()=>{
-'use strict';
-if(window.__STUDIA_V225__)return;window.__STUDIA_V225__=true;
-const q=(s,r=document)=>r?.querySelector?.(s)||null;
-function escHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function v225TakeTrailingTokenFromTextNode(node, offset){
-  if(!node || node.nodeType!==Node.TEXT_NODE)return '';
-  const text=String(node.nodeValue||'');
-  const cut=(typeof offset==='number'?offset:text.length);
-  let before=text.slice(0,cut), after=text.slice(cut);
-  const m=before.match(/([A-Za-z]+|\d+(?:[.,]\d+)?|[π])\s*$/);
-  if(!m)return '';
-  const token=m[1];
-  const start=before.lastIndexOf(token);
-  node.nodeValue=before.slice(0,start)+after;
-  return escHtml(token);
-}
-function v225TakePrevAtom(ed){
-  const sel=window.getSelection?.();
-  if(!ed||!sel||!sel.rangeCount)return '';
-  const r=sel.getRangeAt(0);
-  if(!ed.contains(r.commonAncestorContainer) || !r.collapsed)return '';
-  let sc=r.startContainer, so=r.startOffset;
-
-  if(sc.nodeType===Node.TEXT_NODE){
-    const t=v225TakeTrailingTokenFromTextNode(sc,so);
-    if(t)return t;
-    const prev=sc.previousSibling;
-    if(prev?.nodeType===Node.ELEMENT_NODE){prev.remove(); return prev.outerHTML;}
-  }
-
-  if(sc.nodeType===Node.ELEMENT_NODE){
-    const kids=[...sc.childNodes];
-    const prev=kids[Math.max(0,so-1)];
-    if(prev){
-      if(prev.nodeType===Node.TEXT_NODE){
-        const t=v225TakeTrailingTokenFromTextNode(prev);
-        if(t)return t;
-      }
-      if(prev.nodeType===Node.ELEMENT_NODE && prev.tagName!=='BR'){
-        prev.remove();
-        return prev.outerHTML;
-      }
-    }
-    let walkerPrev=sc.previousSibling;
-    while(!walkerPrev && sc.parentNode && sc.parentNode!==ed){ sc=sc.parentNode; walkerPrev=sc.previousSibling; }
-    if(walkerPrev){
-      if(walkerPrev.nodeType===Node.TEXT_NODE){
-        const t=v225TakeTrailingTokenFromTextNode(walkerPrev);
-        if(t)return t;
-      }
-      if(walkerPrev.nodeType===Node.ELEMENT_NODE && walkerPrev.tagName!=='BR'){
-        walkerPrev.remove();
-        return walkerPrev.outerHTML;
-      }
-    }
-  }
-  return '';
-}
-
-/* Exponent-Button: bei leerer Auswahl die vorherige Zahl / Variable als Basis nehmen, kein automatisches x mehr. */
-try{
-  const prevInsert=window.insertVisualFormula;
-  window.insertVisualFormula=function(type){
-    if(type==='power'){
-      const ed=q('#formulaVisualEditor');
-      if(ed){
-        ed.focus();
-        let base=(typeof selectedFormulaHTML==='function'?selectedFormulaHTML():'')||'';
-        if(!String(base).trim()) base=v225TakePrevAtom(ed)||'';
-        const baseHTML=String(base).trim()||'<span class="vfEmptyBase" data-empty="1">&#8203;</span>';
-        if(typeof replaceSelectionWithHTML==='function'){
-          replaceSelectionWithHTML(`<span class="vfPower"><span class="vfPowerBase">${baseHTML}</span><sup class="vfEditable vfExponentSlot" contenteditable="true">n</sup></span>&nbsp;`,'sup.vfExponentSlot');
-          try{installFormulaSlotProtection?.(ed)}catch(_){ }
-          try{ed.dispatchEvent(new Event('input',{bubbles:true}))}catch(_){ }
-          return;
-        }
-      }
-    }
-    return prevInsert?.apply(this,arguments);
-  };
-  try{insertVisualFormula=window.insertVisualFormula}catch(_){ }
-}catch(_){ }
-
-/* Graph-Formeleditor: altes kaputtes formulaHTML ignorieren und aus expr neu aufbauen, falls es nicht sauber serialisiert. */
-function v225PickGraphVisual(curve){
-  const fromExpr=(typeof window.graphExprToVisual==='function'?window.graphExprToVisual(curve?.expr||''):(curve?.expr||''));
-  const candidate=String(curve?.formulaHTML||'').trim();
-  if(!candidate)return fromExpr;
-  try{
-    const tmp=document.createElement('div');
-    tmp.innerHTML=candidate;
-    const expr=window.v224FormulaToGraphExpr?window.v224FormulaToGraphExpr(tmp):'';
-    if(!expr)throw new Error('leer');
-    if(typeof window.normalizeGraphExpr==='function')window.normalizeGraphExpr(expr);
-    return candidate;
-  }catch(_){
-    return fromExpr;
-  }
-}
-try{
-  const prevSetup=window.v224SetupGraphFormulaEditor || window.__dummyNoop;
-  window.v224SetupGraphFormulaEditor=function(i){
-    const ed=q('#formulaVisualEditor');
-    const draft=(typeof graphDraft!=='undefined'?graphDraft:window.graphDraft);
-    const curve=draft?.curves?.[i];
-    if(curve && ed){
-      const visual=v225PickGraphVisual(curve);
-      curve.formulaHTML=visual;
-    }
-    return prevSetup?.apply(this,arguments);
-  };
-}catch(_){ }
-
-/* Falls v224SetupGraphFormulaEditor intern bereits an window gebunden war, sichere Neudefinition. */
-window.v225PickGraphVisual=v225PickGraphVisual;
-
-/* Überschreibe den Graph-Editor-Setup sicher komplett, damit wirklich derselbe Editor geladen wird. */
-window.v224SetupGraphFormulaEditor=function(i){
-  const ed=q('#formulaVisualEditor');if(!ed)return;
-  const draft=(typeof graphDraft!=='undefined'?graphDraft:window.graphDraft);
-  const curve=draft?.curves?.[i]; if(!curve)return;
-  const visual=v225PickGraphVisual(curve);
-  ed.innerHTML=String(visual||'').replace(/×/g,'⋅');
-  try{normalizeAllVisualRoots?.(ed)}catch(_){ }
-  try{installFormulaSlotProtection?.(ed)}catch(_){ }
-  try{formulaLocalHistory=[ed.innerHTML];formulaLocalIndex=0}catch(_){ }
-  const modal=ed.closest('.visualFormulaModal,.formulaModal');if(!modal)return;
-  const eyebrow=q('.presetModalHead .eyebrow',modal);if(eyebrow)eyebrow.textContent='FUNKTIONSGRAPH';
-  const title=q('.presetModalHead h2',modal);if(title)title.textContent=`Funktion ${i+1} bearbeiten`;
-  const hint=q('.formulaEasyHint',modal);if(hint)hint.innerHTML='<b>Exakt derselbe Formeleditor:</b> Exponenten werden direkt an die vorherige Zahl/Variable gebunden und beim Übernehmen sauber in den Funktionsgraphen übernommen.';
-  const close=q('.presetModalHead .miniIcon',modal); if(close){close.removeAttribute('onclick'); close.onclick=()=>window.v224ReturnToGraph?window.v224ReturnToGraph():window.openGraphDialog?.();}
-  const primary=[...modal.querySelectorAll('button.primary')].at(-1); if(primary){primary.textContent='Übernehmen'; primary.removeAttribute('onclick'); primary.onclick=()=>window.v224SaveGraphFormula(i)}
-  ed.focus(); try{placeCaretAtEnd?.(ed)}catch(_){ }
-  ed.dispatchEvent(new Event('input',{bubbles:true}));
-};
-try{v224SetupGraphFormulaEditor=window.v224SetupGraphFormulaEditor}catch(_){ }
-})();
-</script>
-<!-- ===== /Studia V225 ===== -->
 
 </body>
 </html><style id="v93-bottom-nav-stability">
@@ -16747,151 +16290,7 @@ window.printCanvasSheet=async function(){
    '.printRoot{display:grid;justify-items:center;gap:24px;padding:24px;overflow:auto}.v181PreviewPage{flex:none;break-after:page;page-break-after:always}.v181PreviewPage:last-child{break-after:auto;page-break-after:auto}'+
    '.v181PreviewPage,.v181PreviewPage *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;forced-color-adjust:none!important}'+
    '@media print{html,body{background:#fff!important}.toolbar{display:none!important}.printRoot{display:block;margin:0;padding:0;overflow:visible;justify-items:start}.v181PreviewPage{justify-self:start!important}}'+
-   '</style></head><body><header class="toolbar"><b>Druckvorschau · nur das Lernblatt</b><button id="print">Drucken</button><button id="close">Schließen</button></header><main class="printRoot">'+clones.map(c=>c.outerHTML).join('')+'</main>
-<!-- ===== Studia V225 · Exponent an vorheriges Zeichen binden + Graph-Formel robust laden ===== -->
-<script id="studia-v225-exponent-graph-fix">
-(()=>{
-'use strict';
-if(window.__STUDIA_V225__)return;window.__STUDIA_V225__=true;
-const q=(s,r=document)=>r?.querySelector?.(s)||null;
-function escHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function v225TakeTrailingTokenFromTextNode(node, offset){
-  if(!node || node.nodeType!==Node.TEXT_NODE)return '';
-  const text=String(node.nodeValue||'');
-  const cut=(typeof offset==='number'?offset:text.length);
-  let before=text.slice(0,cut), after=text.slice(cut);
-  const m=before.match(/([A-Za-z]+|\d+(?:[.,]\d+)?|[π])\s*$/);
-  if(!m)return '';
-  const token=m[1];
-  const start=before.lastIndexOf(token);
-  node.nodeValue=before.slice(0,start)+after;
-  return escHtml(token);
-}
-function v225TakePrevAtom(ed){
-  const sel=window.getSelection?.();
-  if(!ed||!sel||!sel.rangeCount)return '';
-  const r=sel.getRangeAt(0);
-  if(!ed.contains(r.commonAncestorContainer) || !r.collapsed)return '';
-  let sc=r.startContainer, so=r.startOffset;
-
-  if(sc.nodeType===Node.TEXT_NODE){
-    const t=v225TakeTrailingTokenFromTextNode(sc,so);
-    if(t)return t;
-    const prev=sc.previousSibling;
-    if(prev?.nodeType===Node.ELEMENT_NODE){prev.remove(); return prev.outerHTML;}
-  }
-
-  if(sc.nodeType===Node.ELEMENT_NODE){
-    const kids=[...sc.childNodes];
-    const prev=kids[Math.max(0,so-1)];
-    if(prev){
-      if(prev.nodeType===Node.TEXT_NODE){
-        const t=v225TakeTrailingTokenFromTextNode(prev);
-        if(t)return t;
-      }
-      if(prev.nodeType===Node.ELEMENT_NODE && prev.tagName!=='BR'){
-        prev.remove();
-        return prev.outerHTML;
-      }
-    }
-    let walkerPrev=sc.previousSibling;
-    while(!walkerPrev && sc.parentNode && sc.parentNode!==ed){ sc=sc.parentNode; walkerPrev=sc.previousSibling; }
-    if(walkerPrev){
-      if(walkerPrev.nodeType===Node.TEXT_NODE){
-        const t=v225TakeTrailingTokenFromTextNode(walkerPrev);
-        if(t)return t;
-      }
-      if(walkerPrev.nodeType===Node.ELEMENT_NODE && walkerPrev.tagName!=='BR'){
-        walkerPrev.remove();
-        return walkerPrev.outerHTML;
-      }
-    }
-  }
-  return '';
-}
-
-/* Exponent-Button: bei leerer Auswahl die vorherige Zahl / Variable als Basis nehmen, kein automatisches x mehr. */
-try{
-  const prevInsert=window.insertVisualFormula;
-  window.insertVisualFormula=function(type){
-    if(type==='power'){
-      const ed=q('#formulaVisualEditor');
-      if(ed){
-        ed.focus();
-        let base=(typeof selectedFormulaHTML==='function'?selectedFormulaHTML():'')||'';
-        if(!String(base).trim()) base=v225TakePrevAtom(ed)||'';
-        const baseHTML=String(base).trim()||'<span class="vfEmptyBase" data-empty="1">&#8203;</span>';
-        if(typeof replaceSelectionWithHTML==='function'){
-          replaceSelectionWithHTML(`<span class="vfPower"><span class="vfPowerBase">${baseHTML}</span><sup class="vfEditable vfExponentSlot" contenteditable="true">n</sup></span>&nbsp;`,'sup.vfExponentSlot');
-          try{installFormulaSlotProtection?.(ed)}catch(_){ }
-          try{ed.dispatchEvent(new Event('input',{bubbles:true}))}catch(_){ }
-          return;
-        }
-      }
-    }
-    return prevInsert?.apply(this,arguments);
-  };
-  try{insertVisualFormula=window.insertVisualFormula}catch(_){ }
-}catch(_){ }
-
-/* Graph-Formeleditor: altes kaputtes formulaHTML ignorieren und aus expr neu aufbauen, falls es nicht sauber serialisiert. */
-function v225PickGraphVisual(curve){
-  const fromExpr=(typeof window.graphExprToVisual==='function'?window.graphExprToVisual(curve?.expr||''):(curve?.expr||''));
-  const candidate=String(curve?.formulaHTML||'').trim();
-  if(!candidate)return fromExpr;
-  try{
-    const tmp=document.createElement('div');
-    tmp.innerHTML=candidate;
-    const expr=window.v224FormulaToGraphExpr?window.v224FormulaToGraphExpr(tmp):'';
-    if(!expr)throw new Error('leer');
-    if(typeof window.normalizeGraphExpr==='function')window.normalizeGraphExpr(expr);
-    return candidate;
-  }catch(_){
-    return fromExpr;
-  }
-}
-try{
-  const prevSetup=window.v224SetupGraphFormulaEditor || window.__dummyNoop;
-  window.v224SetupGraphFormulaEditor=function(i){
-    const ed=q('#formulaVisualEditor');
-    const draft=(typeof graphDraft!=='undefined'?graphDraft:window.graphDraft);
-    const curve=draft?.curves?.[i];
-    if(curve && ed){
-      const visual=v225PickGraphVisual(curve);
-      curve.formulaHTML=visual;
-    }
-    return prevSetup?.apply(this,arguments);
-  };
-}catch(_){ }
-
-/* Falls v224SetupGraphFormulaEditor intern bereits an window gebunden war, sichere Neudefinition. */
-window.v225PickGraphVisual=v225PickGraphVisual;
-
-/* Überschreibe den Graph-Editor-Setup sicher komplett, damit wirklich derselbe Editor geladen wird. */
-window.v224SetupGraphFormulaEditor=function(i){
-  const ed=q('#formulaVisualEditor');if(!ed)return;
-  const draft=(typeof graphDraft!=='undefined'?graphDraft:window.graphDraft);
-  const curve=draft?.curves?.[i]; if(!curve)return;
-  const visual=v225PickGraphVisual(curve);
-  ed.innerHTML=String(visual||'').replace(/×/g,'⋅');
-  try{normalizeAllVisualRoots?.(ed)}catch(_){ }
-  try{installFormulaSlotProtection?.(ed)}catch(_){ }
-  try{formulaLocalHistory=[ed.innerHTML];formulaLocalIndex=0}catch(_){ }
-  const modal=ed.closest('.visualFormulaModal,.formulaModal');if(!modal)return;
-  const eyebrow=q('.presetModalHead .eyebrow',modal);if(eyebrow)eyebrow.textContent='FUNKTIONSGRAPH';
-  const title=q('.presetModalHead h2',modal);if(title)title.textContent=`Funktion ${i+1} bearbeiten`;
-  const hint=q('.formulaEasyHint',modal);if(hint)hint.innerHTML='<b>Exakt derselbe Formeleditor:</b> Exponenten werden direkt an die vorherige Zahl/Variable gebunden und beim Übernehmen sauber in den Funktionsgraphen übernommen.';
-  const close=q('.presetModalHead .miniIcon',modal); if(close){close.removeAttribute('onclick'); close.onclick=()=>window.v224ReturnToGraph?window.v224ReturnToGraph():window.openGraphDialog?.();}
-  const primary=[...modal.querySelectorAll('button.primary')].at(-1); if(primary){primary.textContent='Übernehmen'; primary.removeAttribute('onclick'); primary.onclick=()=>window.v224SaveGraphFormula(i)}
-  ed.focus(); try{placeCaretAtEnd?.(ed)}catch(_){ }
-  ed.dispatchEvent(new Event('input',{bubbles:true}));
-};
-try{v224SetupGraphFormulaEditor=window.v224SetupGraphFormulaEditor}catch(_){ }
-})();
-</script>
-<!-- ===== /Studia V225 ===== -->
-
-</body></html>');w.document.close();
+   '</style></head><body><header class="toolbar"><b>Druckvorschau · nur das Lernblatt</b><button id="print">Drucken</button><button id="close">Schließen</button></header><main class="printRoot">'+clones.map(c=>c.outerHTML).join('')+'</main></body></html>');w.document.close();
   w.document.querySelector('#close').onclick=()=>w.close();w.document.querySelector('#print').onclick=async()=>{await w.document.fonts.ready;await Promise.all([...w.document.images].map(img=>img.complete?Promise.resolve():new Promise(r=>{img.onload=r;img.onerror=r})));w.focus();w.print()};w.focus();
  }catch(e){w.close();console.error(e);alert('Die Druckvorschau konnte nicht erstellt werden. Bitte versuche es erneut.')}
 };
@@ -21704,3 +21103,146 @@ const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 224'};
 })();
 </script>
 <!-- ===== /Studia V224 ===== -->
+
+
+<!-- ===== Studia V225 · Reparatur nach kaputtem Patch + Graph-Exponent-Fix ===== -->
+<script id="studia-v225-safe-fix">
+(()=>{
+'use strict';
+if(window.__STUDIA_V225_SAFE__) return; window.__STUDIA_V225_SAFE__ = true;
+const q=(s,r=document)=>r?.querySelector?.(s)||null;
+const qa=(s,r=document)=>r?.querySelectorAll?[...r.querySelectorAll(s)]:[];
+const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+function v225TakeTrailingTokenFromTextNode(node, offset){
+  if(!node || node.nodeType!==Node.TEXT_NODE) return '';
+  const text=String(node.nodeValue||'');
+  const cut=typeof offset==='number' ? offset : text.length;
+  const before=text.slice(0,cut), after=text.slice(cut);
+  const m=before.match(/([A-Za-z]+|\d+(?:[.,]\d+)?|π)\s*$/);
+  if(!m) return '';
+  const token=m[1];
+  const start=before.lastIndexOf(token);
+  node.nodeValue = before.slice(0,start) + after;
+  return esc(token);
+}
+function v225TakePrevAtom(ed){
+  const sel=window.getSelection?.();
+  if(!ed || !sel || !sel.rangeCount) return '';
+  const r=sel.getRangeAt(0);
+  if(!ed.contains(r.commonAncestorContainer) || !r.collapsed) return '';
+  let sc=r.startContainer, so=r.startOffset;
+  if(sc.nodeType===Node.TEXT_NODE){
+    const token=v225TakeTrailingTokenFromTextNode(sc, so);
+    if(token) return token;
+    const prev=sc.previousSibling;
+    if(prev?.nodeType===Node.ELEMENT_NODE && prev.tagName!=='BR'){
+      prev.remove();
+      return prev.outerHTML;
+    }
+  }
+  if(sc.nodeType===Node.ELEMENT_NODE){
+    const prev=sc.childNodes[Math.max(0,so-1)];
+    if(prev){
+      if(prev.nodeType===Node.TEXT_NODE){
+        const token=v225TakeTrailingTokenFromTextNode(prev);
+        if(token) return token;
+      }
+      if(prev.nodeType===Node.ELEMENT_NODE && prev.tagName!=='BR'){
+        prev.remove();
+        return prev.outerHTML;
+      }
+    }
+  }
+  return '';
+}
+
+/* Exponent: bei leerer Auswahl die vorherige Zahl / Variable als Basis nehmen, kein automatisches x. */
+try{
+  const prevInsert=window.insertVisualFormula;
+  window.insertVisualFormula=function(type){
+    if(type==='power'){
+      const ed=q('#formulaVisualEditor');
+      if(ed && typeof replaceSelectionWithHTML==='function'){
+        ed.focus();
+        let base=(typeof selectedFormulaHTML==='function' ? selectedFormulaHTML() : '') || '';
+        if(!String(base).trim()) base=v225TakePrevAtom(ed) || '';
+        if(!String(base).trim()) base='x';
+        replaceSelectionWithHTML(`<span class="vfPower"><span class="vfPowerBase">${base}</span><sup class="vfEditable vfExponentSlot" contenteditable="true">n</sup></span>&nbsp;`, 'sup.vfExponentSlot');
+        try{ installFormulaSlotProtection?.(ed); }catch(_){ }
+        try{ ed.dispatchEvent(new Event('input',{bubbles:true})); }catch(_){ }
+        return;
+      }
+    }
+    return prevInsert?.apply(this, arguments);
+  };
+  try{ insertVisualFormula = window.insertVisualFormula; }catch(_){ }
+}catch(_){ }
+
+function v225PickGraphVisual(curve){
+  const exprVisual = (typeof window.graphExprToVisual==='function') ? window.graphExprToVisual(curve?.expr||'') : (curve?.expr||'');
+  const candidate = String(curve?.formulaHTML||'').trim();
+  if(!candidate) return exprVisual;
+  try{
+    const tmp=document.createElement('div');
+    tmp.innerHTML=candidate;
+    const expr=window.v224FormulaToGraphExpr ? window.v224FormulaToGraphExpr(tmp) : '';
+    if(!expr) throw new Error('leer');
+    if(typeof window.normalizeGraphExpr==='function') window.normalizeGraphExpr(expr);
+    return candidate;
+  }catch(_){
+    return exprVisual;
+  }
+}
+
+window.v224SetupGraphFormulaEditor=function(i){
+  const ed=q('#formulaVisualEditor'); if(!ed) return;
+  const draft=(typeof graphDraft!=='undefined' ? graphDraft : window.graphDraft);
+  const curve=draft?.curves?.[i]; if(!curve) return;
+  const visual=v225PickGraphVisual(curve);
+  curve.formulaHTML=visual;
+  ed.innerHTML=String(visual||'').replace(/×/g,'⋅');
+  try{ normalizeAllVisualRoots?.(ed); }catch(_){ }
+  try{ installFormulaSlotProtection?.(ed); }catch(_){ }
+  try{ formulaLocalHistory=[ed.innerHTML]; formulaLocalIndex=0; }catch(_){ }
+
+  const modal=ed.closest('.visualFormulaModal,.formulaModal'); if(!modal) return;
+  const eyebrow=q('.presetModalHead .eyebrow',modal); if(eyebrow) eyebrow.textContent='FUNKTIONSGRAPH';
+  const title=q('.presetModalHead h2',modal); if(title) title.textContent=`Funktion ${Number(i)+1} bearbeiten`;
+  const hint=q('.formulaEasyHint',modal); if(hint) hint.innerHTML='<b>Exakt derselbe Formeleditor:</b> Exponenten werden direkt an die vorherige Zahl/Variable gebunden und sauber in den Funktionsgraphen übernommen.';
+  const close=q('.presetModalHead .miniIcon',modal); if(close){ close.removeAttribute('onclick'); close.onclick=()=>window.v224ReturnToGraph?.(); }
+  const primary=qa('button.primary',modal).at(-1); if(primary){ primary.textContent='Übernehmen'; primary.removeAttribute('onclick'); primary.onclick=()=>window.v224SaveGraphFormula(Number(i)); }
+  ed.focus(); try{ placeCaretAtEnd?.(ed); }catch(_){ }
+  ed.dispatchEvent(new Event('input',{bubbles:true}));
+};
+try{ v224SetupGraphFormulaEditor = window.v224SetupGraphFormulaEditor; }catch(_){ }
+
+window.openGraphFunctionEditor=function(i){
+  i=Number(i);
+  try{ window.graphActiveCurve=i; }catch(_){ }
+  if(typeof window.openFormulaDialog==='function'){
+    window.openFormulaDialog(`__graph_curve_${i}`);
+    [80,140,220].forEach(t=>setTimeout(()=>{ try{ window.v224SetupGraphFormulaEditor(i); }catch(_){ } }, t));
+  }
+};
+try{ openGraphFunctionEditor = window.openGraphFunctionEditor; }catch(_){ }
+
+/* Auch die Graph-Zeilen sicher an den gemeinsamen Editor binden. */
+try{
+  const prevRows=window.renderGraphCurveRows;
+  window.renderGraphCurveRows=function(){
+    const out=prevRows?.apply(this, arguments);
+    qa('#graphCurveRows .graphExprButton').forEach((b,i)=>{
+      b.removeAttribute('onclick');
+      b.onclick=e=>{ e?.stopPropagation?.(); try{ graphActiveCurve=i; }catch(_){ } window.openGraphFunctionEditor(i); };
+    });
+    return out;
+  };
+  try{ renderGraphCurveRows = window.renderGraphCurveRows; }catch(_){ }
+}catch(_){ }
+
+const setVer=()=>{ const e=q('#headerEyebrow'); if(e) e.textContent='VERSION 225'; };
+[0,250,900,1800].forEach(t=>setTimeout(setVer,t));
+})();
+</script>
+<!-- ===== /Studia V225 ===== -->
