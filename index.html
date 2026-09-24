@@ -5108,20 +5108,22 @@ function graphSvg(settings,w=520,h=330){
  out+=`<g clip-path="url(#plotClip)">`;
  (g.curves||[]).filter(c=>c.visible!==false&&String(c.expr||"").trim()).forEach((c,ci)=>{
    const pts=[];let segment=[];
-   const steps=700;
+   const steps=1200;
    const rawExpr=String(c.expr||"").replace(/\s+/g,"");
-   // Exponential functions have y=0 as an asymptote. On a finite SVG the last
-   // pixels used to visually merge with the x-axis although the function never touches it.
    const zeroAsymptotic=/(?:exp\(|(?:\(*\s*(?:\d+(?:[.,]\d+)?|e)\s*\)*\s*\^\s*\(*\s*[+-]?x\)*))/i.test(rawExpr);
    const zeroScreen=(yMin<0&&yMax>0)?sy(0):null;
-   const minZeroGap=Math.max(12,(Number(g.lineWidth)||2.4)*3.2);
+   const lineWidth=Math.max(1.2,Number(g.lineWidth)||2.4);
+   const tinyVisualGap=Math.max(0.6,lineWidth*0.22);
    const flush=()=>{if(segment.length>1){pts.push(segment);segment=[]}};
    for(let i=0;i<=steps;i++){
      const x=xMin+(xMax-xMin)*i/steps,y=graphEval(c.expr,x);
      if(!Number.isFinite(y)||y<yMin-(yMax-yMin)*2||y>yMax+(yMax-yMin)*2){flush();continue}
      const px=sx(x);let py=sy(y);
-     if(zeroAsymptotic&&zeroScreen!==null&&Math.abs(y)>1e-12&&Math.abs(py-zeroScreen)<minZeroGap){
-       py=zeroScreen+(y>0?-minZeroGap:minZeroGap);
+     // For exponential tails, keep the real curve shape. Only prevent exact pixel-overlap
+     // with the x-axis by less than 1 px so it still visibly approaches 0 instead of
+     // becoming an artificial parallel line.
+     if(zeroAsymptotic&&zeroScreen!==null&&Math.abs(y)>1e-15&&Math.abs(py-zeroScreen)<tinyVisualGap){
+       py=zeroScreen+(y>0?-tinyVisualGap:tinyVisualGap);
      }
      if(segment.length){
        const prev=segment[segment.length-1];
@@ -21981,7 +21983,7 @@ function handleShortcut(e){
 }
 document.addEventListener('keydown',handleShortcut,true);
 
-const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 230'};
+const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 231'};
 [0,250,900,1800].forEach(t=>setTimeout(setVer,t));
 })();
 </script>
