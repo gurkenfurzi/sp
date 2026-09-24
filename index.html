@@ -5112,9 +5112,9 @@ function graphSvg(settings,w=520,h=330){
    const rawExpr=String(c.expr||"").replace(/\s+/g,"");
    // Exponential functions have y=0 as an asymptote. On a finite SVG the last
    // pixels used to visually merge with the x-axis although the function never touches it.
-   const zeroAsymptotic=/(?:exp\(|(?:\d+(?:[.,]\d+)?|e)\^\(?[+-]?x\)?)/i.test(rawExpr);
+   const zeroAsymptotic=/(?:exp\(|(?:\(*\s*(?:\d+(?:[.,]\d+)?|e)\s*\)*\s*\^\s*\(*\s*[+-]?x\)*))/i.test(rawExpr);
    const zeroScreen=(yMin<0&&yMax>0)?sy(0):null;
-   const minZeroGap=Math.max(2.2,(Number(g.lineWidth)||2.4)*.9);
+   const minZeroGap=Math.max(6,(Number(g.lineWidth)||2.4)*2.2);
    const flush=()=>{if(segment.length>1){pts.push(segment);segment=[]}};
    for(let i=0;i<=steps;i++){
      const x=xMin+(xMax-xMin)*i/steps,y=graphEval(c.expr,x);
@@ -20310,3 +20310,576 @@ const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 221'};
 })();
 </script>
 <!-- ===== /Studia V221 ===== -->
+
+
+<!-- ===== Studia V222 · Graph Interaktion + stabile Formeln ===== -->
+<style id="studia-v222-graph-interaction">
+.graphModal .graphRangeGrid{display:none!important}
+.graphPreviewWrap{position:relative;user-select:none}
+.graphPreview{cursor:grab;touch-action:none;outline:none}
+.graphPreview.v222Panning{cursor:grabbing}
+.v222GraphNav{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  margin:0 0 8px;padding:8px 10px;border:1px solid #ead8d1;border-radius:11px;
+  background:#fffaf7;color:#816b63;font-size:9px;font-weight:750
+}
+.v222GraphNav span{line-height:1.35}
+.v222GraphNav button{
+  flex:0 0 auto;border:1px solid #e2c9c2;background:#fff;border-radius:9px;
+  padding:7px 9px;color:#755f57;font-size:9px;font-weight:850;cursor:pointer
+}
+.graphCurveRow select{cursor:pointer;position:relative;z-index:2}
+.graphCurveRow select:focus{outline:2px solid rgba(229,143,152,.28);outline-offset:1px}
+.graphObj{cursor:move}
+@media(max-width:700px){.v222GraphNav{align-items:flex-start;flex-direction:column}.v222GraphNav button{width:100%}}
+</style>
+<script id="studia-v222-graph-interaction-script">
+(()=>{
+'use strict';
+if(window.__STUDIA_V222__)return;window.__STUDIA_V222__=true;
+const q=(s,r=document)=>r?.querySelector?.(s)||null;
+const qa=(s,r=document)=>r?.querySelectorAll?[...r.querySelectorAll(s)]:[];
+const clone=v=>JSON.parse(JSON.stringify(v));
+let v222GraphEditId='';
+let v222Pan=null;
+
+/* ---------- A. Graph-Ausdrücke: ein stabiler Parser statt mehrerer konkurrierender Wege ---------- */
+function v222NormalizeExpr(expr){
+  let s=String(expr??'').trim().toLowerCase();
+  s=s.replace(/\u200b/g,'').replace(/\u00a0/g,'').replace(/\s+/g,'');
+  s=s.replace(/^f\(x\)=/i,'').replace(/^y=/i,'');
+  s=s.replace(/[×⋅]/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/π/g,'pi');
+  s=s.replace(/(\d),(\d)/g,'$1.$2');
+  if(!s)return '';
+
+  /* Übliche Schulschreibweise ohne sichtbares Malzeichen akzeptieren: 2x, 3sin(x), 2(x+1), x(x+1). */
+  s=s.replace(/(\d|x|\)|pi|e)(?=(?:sin|cos|tan|sqrt|abs|exp|ln|log)\()/g,'$1*');
+  s=s.replace(/(\d|x|\))(?=(?:pi|e)\b)/g,'$1*');
+  s=s.replace(/(\b(?:pi|e)\b)(?=(?:x|\d|\())/g,'$1*');
+  s=s.replace(/(\d|x|\))(?=\()/g,'$1*');
+  s=s.replace(/\)(?=(?:\d|x|pi|e))/g,')*');
+  s=s.replace(/(\d)(?=x\b)/g,'$1*');
+  s=s.replace(/x(?=\d)/g,'x*');
+
+  if(!/^[0-9x+\-*/().,^a-z]+$/.test(s))throw new Error('Ungültige Zeichen in der Funktion');
+  const allowed=['sin','cos','tan','sqrt','abs','exp','ln','log','pi','e'];
+  const words=s.match(/[a-z]+/g)||[];
+  if(words.some(w=>w!=='x'&&!allowed.includes(w)))throw new Error('Unbekannte Funktion');
+
+  let code=s.replace(/\^/g,'**')
+    .replace(/\bpi\b/g,'Math.PI')
+    .replace(/\be\b/g,'Math.E')
+    .replace(/\bsin\(/g,'Math.sin(')
+    .replace(/\bcos\(/g,'Math.cos(')
+    .replace(/\btan\(/g,'Math.tan(')
+    .replace(/\bsqrt\(/g,'Math.sqrt(')
+    .replace(/\babs\(/g,'Math.abs(')
+    .replace(/\bexp\(/g,'Math.exp(')
+    .replace(/\bln\(/g,'Math.log(')
+    .replace(/\blog\(/g,'Math.log10(');
+  /* Schon beim Speichern kompilieren. So landet keine kaputte Formel im Graphen. */
+  new Function('x',`"use strict";return (${code})`);
+  return code;
+}
+window.normalizeGraphExpr=v222NormalizeExpr;
+try{normalizeGraphExpr=window.normalizeGraphExpr}catch(_){}
+
+function v222NodeExpr(node){
+  if(!node)return '';
+  if(node.nodeType===Node.TEXT_NODE){
+    return String(node.nodeValue||'').replace(/\u200b/g,'').replace(/\u00a0/g,' ')
+      .replace(/[×⋅]/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/π/g,'pi');
+  }
+  if(node.nodeType!==Node.ELEMENT_NODE)return '';
+  if(node.tagName==='BR')return '';
+  if(node.matches('.vfRoot')){
+    const inside=node.querySelector(':scope > span');return `sqrt(${v222ChildrenExpr(inside)})`;
+  }
+  if(node.matches('.vfFrac')){
+    const parts=[...node.children];return `((${v222ChildrenExpr(parts[0])})/(${v222ChildrenExpr(parts[1])}))`;
+  }
+  if(node.matches('.vfFunction')){
+    const first=(node.childNodes[0]?.nodeValue||'').trim();
+    const fn=(first.match(/(sin|cos|tan)/i)||[])[1]?.toLowerCase()||'sin';
+    const inside=node.querySelector(':scope > span');return `${fn}(${v222ChildrenExpr(inside)})`;
+  }
+  if(node.matches('.vfAbs')){
+    const inside=node.querySelector(':scope > span');return `abs(${v222ChildrenExpr(inside)})`;
+  }
+  if(node.matches('.vfPower')){
+    const base=node.querySelector(':scope > .vfPowerBase');const sup=node.querySelector(':scope > sup');
+    return `(${v222ChildrenExpr(base)})^(${v222ChildrenExpr(sup)})`;
+  }
+  if(node.matches('.vfExp')){
+    const sup=node.querySelector(':scope > sup');return `exp(${v222ChildrenExpr(sup)})`;
+  }
+  if(node.tagName==='SUP')return `^(${v222ChildrenExpr(node)})`;
+  if(node.tagName==='SUB')return v222ChildrenExpr(node);
+  return v222ChildrenExpr(node);
+}
+function v222ChildrenExpr(el){return el?[...el.childNodes].map(v222NodeExpr).join(''):''}
+function v222ReadVisualExpr(){
+  const ed=q('#graphFunctionVisual');if(!ed)return '';
+  let expr=v222ChildrenExpr(ed).replace(/\s+/g,'');
+  expr=expr.replace(/^f\(x\)=/i,'').replace(/^y=/i,'').replace(/(\d),(\d)/g,'$1.$2');
+  return expr;
+}
+
+/* Graph-Ausdruck zurück in eine verständliche visuelle Form bringen. */
+function v222ExprToVisual(expr){
+  let s=String(expr??'').trim().replace(/^f\(x\)\s*=\s*/i,'').replace(/^y\s*=\s*/i,'');
+  if(!s)return '';
+  const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  s=esc(s).replace(/(\d)\.(\d)/g,'$1,$2');
+  s=s.replace(/exp\(([^()]*)\)/gi,'<span class="vfExp">e<sup class="vfEditable" contenteditable="true">$1</sup></span>');
+  s=s.replace(/sqrt\(([^()]*)\)/gi,'<span class="vfRoot">√<span class="vfEditable" contenteditable="true">$1</span></span>');
+  s=s.replace(/sin\(([^()]*)\)/gi,'<span class="vfFunction">sin(<span class="vfEditable" contenteditable="true">$1</span>)</span>');
+  s=s.replace(/cos\(([^()]*)\)/gi,'<span class="vfFunction">cos(<span class="vfEditable" contenteditable="true">$1</span>)</span>');
+  s=s.replace(/tan\(([^()]*)\)/gi,'<span class="vfFunction">tan(<span class="vfEditable" contenteditable="true">$1</span>)</span>');
+  s=s.replace(/abs\(([^()]*)\)/gi,'<span class="vfAbs">|<span class="vfEditable" contenteditable="true">$1</span>|</span>');
+  s=s.replace(/(\d+(?:[.,]\d+)?|[a-zA-Z])\^\(([^()]*)\)/g,'<span class="vfPower"><span class="vfPowerBase">$1</span><sup class="vfEditable vfExponentSlot" contenteditable="true">$2</sup></span>');
+  s=s.replace(/(\d+(?:[.,]\d+)?|[a-zA-Z])\^([a-zA-Z0-9+\-]+)/g,'<span class="vfPower"><span class="vfPowerBase">$1</span><sup class="vfEditable vfExponentSlot" contenteditable="true">$2</sup></span>');
+  return s.replace(/\*/g,'⋅');
+}
+window.graphExprToVisual=v222ExprToVisual;
+try{graphExprToVisual=window.graphExprToVisual}catch(_){}
+
+/* ---------- B. Formel-Editor kehrt sauber zum Graph-Editor zurück ---------- */
+const baseOpenGraphDialog=window.openGraphDialog;
+function v222EnhanceGraphDialog(){
+  const modal=q('.graphModal');if(!modal)return;
+  const ranges=q('.graphRangeGrid',modal);if(ranges)ranges.style.display='none';
+  const note=q('.graphAutoRangeNote',modal);
+  if(note)note.textContent='Ansicht direkt mit der Maus einstellen – kein x min / y min nötig.';
+  const wrap=q('.graphPreviewWrap',modal);
+  if(wrap&&!q('.v222GraphNav',wrap)){
+    const nav=document.createElement('div');nav.className='v222GraphNav';
+    nav.innerHTML='<span>🖱️ Mausrad: rein/raus zoomen · Ziehen: Koordinatensystem verschieben</span><button type="button" onclick="v222ResetGraphView()">Ansicht zurücksetzen</button>';
+    wrap.insertBefore(nav,wrap.firstChild);
+  }
+  v222BindPreviewNavigation();
+}
+window.openGraphDialog=function(editId=''){
+  v222GraphEditId=String(editId||'');
+  const out=baseOpenGraphDialog.apply(this,arguments);
+  setTimeout(v222EnhanceGraphDialog,0);return out;
+};
+try{openGraphDialog=window.openGraphDialog}catch(_){}
+function v222ReopenGraphPreserve(){
+  const snap=clone(graphDraft);
+  baseOpenGraphDialog.call(window,v222GraphEditId);
+  graphDraft=snap;
+  setTimeout(()=>{try{renderGraphCurveRows();openGraphDialogRefreshFields();renderGraphPreview()}catch(_){}v222EnhanceGraphDialog()},0);
+}
+window.v222ReturnToGraphDialog=()=>v222ReopenGraphPreserve();
+
+const baseOpenGraphFunctionEditor=window.openGraphFunctionEditor;
+window.openGraphFunctionEditor=function(i){
+  graphActiveCurve=i;
+  const out=baseOpenGraphFunctionEditor.apply(this,arguments);
+  const modal=q('.v221GraphFormulaModal,.visualGraphFunctionModal');
+  if(modal){
+    const close=q('.presetModalHead .miniIcon',modal);if(close){close.removeAttribute('onclick');close.onclick=()=>v222ReturnToGraphDialog()}
+    const footer=q('.graphFnFooter',modal),buttons=qa('button',footer);
+    if(buttons[0]){buttons[0].removeAttribute('onclick');buttons[0].onclick=()=>v222ReturnToGraphDialog()}
+    const save=buttons.find(b=>b.classList.contains('primary'))||buttons.at(-1);
+    if(save){save.removeAttribute('onclick');save.onclick=()=>v222SaveGraphFunctionEditor(i)}
+  }
+  return out;
+};
+try{openGraphFunctionEditor=window.openGraphFunctionEditor}catch(_){}
+
+window.v222SaveGraphFunctionEditor=function(i){
+  const expr=v222ReadVisualExpr();
+  if(!expr){try{cuteToast('Funktion ist leer')}catch(_){}return}
+  try{v222NormalizeExpr(expr)}catch(err){try{cuteToast('Formel prüfen: '+(err?.message||'ungültige Funktion'))}catch(_){}return}
+  if(!graphDraft.curves[i])return;
+  graphDraft.curves[i].expr=expr.replace(/[×⋅]/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/(\d),(\d)/g,'$1.$2');
+  v222ReopenGraphPreserve();
+  try{cuteToast('Funktion übernommen ♡')}catch(_){}
+};
+window.saveGraphFunctionEditor=window.v222SaveGraphFunctionEditor;
+try{saveGraphFunctionEditor=window.saveGraphFunctionEditor}catch(_){}
+
+/* ---------- C. Linienart: keine Zeile mehr neu rendern, während ein Select geöffnet wird ---------- */
+window.v222ActivateGraphCurve=function(event,i,row){
+  if(event?.target?.closest?.('button,input,select'))return;
+  graphActiveCurve=i;qa('.graphCurveRow').forEach((r,n)=>r.classList.toggle('activeCurve',n===i));
+};
+window.renderGraphCurveRows=function(){
+  const root=q('#graphCurveRows');if(!root)return;
+  root.innerHTML=(graphDraft.curves||[]).map((c,i)=>`<div class="graphCurveRow ${i===graphActiveCurve?'activeCurve':''}" onclick="v222ActivateGraphCurve(event,${i},this)">
+    <span>f${i+1}(x)</span>
+    <button class="graphExprButton" data-curve="${i}" onpointerdown="event.stopPropagation()" onclick="event.stopPropagation();graphActiveCurve=${i};openGraphFunctionEditor(${i})"><span>${c.expr?v222ExprToVisual(c.expr):'Funktion eingeben'}</span><small>Bearbeiten</small></button>
+    <input class="graphColor" type="color" value="${c.color||'#e58f98'}" onpointerdown="event.stopPropagation()" onclick="event.stopPropagation()" onchange="event.stopPropagation();updateGraphCurve(${i},'color',this.value)">
+    <select onpointerdown="event.stopPropagation()" onclick="event.stopPropagation()" onchange="event.stopPropagation();updateGraphCurve(${i},'style',this.value)"><option value="solid" ${c.style==='solid'?'selected':''}>Linie</option><option value="dashed" ${c.style==='dashed'?'selected':''}>Gestrichelt</option><option value="dotted" ${c.style==='dotted'?'selected':''}>Gepunktet</option></select>
+    <button ${graphDraft.curves.length<=1?'disabled':''} onpointerdown="event.stopPropagation()" onclick="event.stopPropagation();removeGraphCurve(${i})">×</button>
+  </div>`).join('');
+};
+try{renderGraphCurveRows=window.renderGraphCurveRows}catch(_){}
+
+/* ---------- D. Graph-Ansicht ausschließlich mit Maus: Wheel-Zoom + Drag-Pan ---------- */
+function v222EffectiveBounds(g,w=520,h=330){
+  const pad=34,plotW=w-pad*2,plotH=h-pad*2;
+  let xMin=Number(g.xMin),xMax=Number(g.xMax),yMin=Number(g.yMin),yMax=Number(g.yMax);
+  if(!(xMax>xMin)){xMin=-10;xMax=10}if(!(yMax>yMin)){yMin=-10;yMax=10}
+  const dataAspect=(xMax-xMin)/(yMax-yMin),viewAspect=plotW/plotH;
+  if(Number.isFinite(dataAspect)&&dataAspect>0&&viewAspect>0){
+    if(viewAspect>dataAspect){const cx=(xMin+xMax)/2,newSpan=(yMax-yMin)*viewAspect;xMin=cx-newSpan/2;xMax=cx+newSpan/2}
+    else{const cy=(yMin+yMax)/2,newSpan=(xMax-xMin)/viewAspect;yMin=cy-newSpan/2;yMax=cy+newSpan/2}
+  }
+  return{xMin,xMax,yMin,yMax,pad,plotW,plotH,w,h};
+}
+function v222ApplyBounds(b){
+  graphDraft.xMin=b.xMin;graphDraft.xMax=b.xMax;graphDraft.yMin=b.yMin;graphDraft.yMax=b.yMax;
+  try{openGraphDialogRefreshFields()}catch(_){};renderGraphPreview();
+}
+window.v222ResetGraphView=function(){
+  graphDraft.xMin=-10;graphDraft.xMax=10;graphDraft.yMin=-10;graphDraft.yMax=10;
+  v222ApplyBounds(graphDraft);try{cuteToast('Ansicht zurückgesetzt ♡')}catch(_){}
+};
+function v222BindPreviewNavigation(){
+  const root=q('#graphPreview');if(!root||root.dataset.v222Nav==='1')return;root.dataset.v222Nav='1';
+  root.tabIndex=0;
+  root.addEventListener('wheel',e=>{
+    e.preventDefault();
+    const rect=root.getBoundingClientRect();if(!rect.width||!rect.height)return;
+    const b=v222EffectiveBounds(graphDraft),mx=(e.clientX-rect.left)/rect.width*b.w,my=(e.clientY-rect.top)/rect.height*b.h;
+    const tx=Math.max(0,Math.min(1,(mx-b.pad)/b.plotW)),ty=Math.max(0,Math.min(1,(my-b.pad)/b.plotH));
+    const cx=b.xMin+tx*(b.xMax-b.xMin),cy=b.yMax-ty*(b.yMax-b.yMin);
+    const factor=Math.exp(Math.max(-450,Math.min(450,e.deltaY))*0.0016);
+    const minSpan=.02,maxSpan=1e6;
+    let sx=Math.max(minSpan,Math.min(maxSpan,(b.xMax-b.xMin)*factor));
+    let sy=Math.max(minSpan,Math.min(maxSpan,(b.yMax-b.yMin)*factor));
+    const rx=(cx-b.xMin)/(b.xMax-b.xMin),ry=(cy-b.yMin)/(b.yMax-b.yMin);
+    v222ApplyBounds({xMin:cx-rx*sx,xMax:cx+(1-rx)*sx,yMin:cy-ry*sy,yMax:cy+(1-ry)*sy});
+  },{passive:false});
+  root.addEventListener('pointerdown',e=>{
+    if(e.button!==0)return;e.preventDefault();root.focus({preventScroll:true});
+    const b=v222EffectiveBounds(graphDraft);v222Pan={pid:e.pointerId,x:e.clientX,y:e.clientY,b,rect:root.getBoundingClientRect()};
+    root.classList.add('v222Panning');try{root.setPointerCapture(e.pointerId)}catch(_){}
+  },{passive:false});
+  root.addEventListener('pointermove',e=>{
+    if(!v222Pan||e.pointerId!==v222Pan.pid)return;e.preventDefault();
+    const d=v222Pan,dx=e.clientX-d.x,dy=e.clientY-d.y;
+    const dxSvg=dx/Math.max(1,d.rect.width)*d.b.w,dySvg=dy/Math.max(1,d.rect.height)*d.b.h;
+    const shiftX=-dxSvg/d.b.plotW*(d.b.xMax-d.b.xMin),shiftY=dySvg/d.b.plotH*(d.b.yMax-d.b.yMin);
+    v222ApplyBounds({xMin:d.b.xMin+shiftX,xMax:d.b.xMax+shiftX,yMin:d.b.yMin+shiftY,yMax:d.b.yMax+shiftY});
+  },{passive:false});
+  const end=e=>{if(!v222Pan||e.pointerId!==v222Pan.pid)return;v222Pan=null;root.classList.remove('v222Panning');try{root.releasePointerCapture(e.pointerId)}catch(_){}};
+  root.addEventListener('pointerup',end);root.addEventListener('pointercancel',end);
+}
+
+/* ---------- E. Eingefügten Funktionsgraphen auf dem Lernblatt wieder frei bewegen ---------- */
+function v222BindGraphObjectDragging(){
+  if(innerWidth<900)return;
+  qa('#view-sheet-editor #canvasObjects .graphObj').forEach(el=>{
+    if(el.dataset.v222Drag==='1')return;el.dataset.v222Drag='1';
+    el.addEventListener('pointerdown',e=>{
+      if(e.button!==0||e.shiftKey||e.target.closest('.resizeHandle,.rotateHandle,button,input,select,textarea,a'))return;
+      const id=el.dataset.id,o=canvasState.objects.find(x=>String(x.id)===String(id));if(!o||o.locked)return;
+      const total=(canvasState.selectedIds?.length||0)+(canvasState.selectedVectorIds?.length||0);if(total>1)return;
+      /* An den Kanten besitzt der Desktop-Rahmen bereits seine Move/Resize-Logik. Mitte = ganzer Graph bewegen. */
+      if(window.studiaDesktopNearEdge?.(el,e))return;
+      e.preventDefault();e.stopImmediatePropagation();
+      try{selectCanvasObject(id)}catch(_){};
+      try{startDragObject(e,id)}catch(_){}
+    },{capture:true,passive:false});
+  });
+}
+try{
+  const prevRender=window.renderCanvasObjects||renderCanvasObjects;
+  window.renderCanvasObjects=function(){const out=prevRender.apply(this,arguments);requestAnimationFrame(v222BindGraphObjectDragging);return out};
+  renderCanvasObjects=window.renderCanvasObjects;
+}catch(_){}
+const v222Obs=new MutationObserver(()=>requestAnimationFrame(v222BindGraphObjectDragging));
+const v222Canvas=q('#canvasObjects');if(v222Canvas)v222Obs.observe(v222Canvas,{childList:true,subtree:true});
+setTimeout(v222BindGraphObjectDragging,100);
+
+/* Graph-Dialog, wenn er schon offen ist, ebenfalls nachrüsten. */
+setTimeout(v222EnhanceGraphDialog,100);
+
+const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 222'};[0,250,900,1800].forEach(t=>setTimeout(setVer,t));
+})();
+</script>
+<!-- ===== /Studia V222 ===== -->
+
+<!-- ===== Studia V223 · Periodenzahl + stabile Exponenten + echte Brüche/Klammern ===== -->
+<style id="studia-v223-formula-polish">
+/* Exponenten/Indizes bleiben immer sauber an der Grundlinie verankert. */
+#formulaVisualEditor sup,#graphFunctionVisual sup,
+#canvasObjects .formulaObj .formulaContent sup,.v181PreviewPage .formulaObj .formulaContent sup{
+  display:inline-block!important;
+  font-size:.68em!important;
+  line-height:1!important;
+  vertical-align:.62em!important;
+  position:relative!important;
+  top:0!important;
+  margin:0 .02em!important;
+}
+#formulaVisualEditor sub,#graphFunctionVisual sub,
+#canvasObjects .formulaObj .formulaContent sub,.v181PreviewPage .formulaObj .formulaContent sub{
+  display:inline-block!important;
+  font-size:.68em!important;
+  line-height:1!important;
+  vertical-align:-.28em!important;
+  position:relative!important;
+  top:0!important;
+  margin:0 .02em!important;
+}
+
+/* Brüche: Linie immer sichtbar und so breit wie der längere Teil. */
+#formulaVisualEditor .vfFrac,#graphFunctionVisual .vfFrac,
+#canvasObjects .formulaObj .formulaContent :is(.vfFrac,.fracExpr),
+.v181PreviewPage .formulaObj .formulaContent :is(.vfFrac,.fracExpr){
+  display:inline-flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  justify-content:center!important;
+  vertical-align:middle!important;
+  width:max-content!important;
+  min-width:1.05em!important;
+  line-height:1.05!important;
+  margin:0 .14em!important;
+}
+#formulaVisualEditor .vfFrac>span:first-child,#graphFunctionVisual .vfFrac>span:first-child,
+#canvasObjects .formulaObj .formulaContent :is(.vfFrac,.fracExpr)>span:first-child,
+.v181PreviewPage .formulaObj .formulaContent :is(.vfFrac,.fracExpr)>span:first-child{
+  display:block!important;
+  width:100%!important;
+  box-sizing:border-box!important;
+  border:0!important;
+  border-bottom:2px solid currentColor!important;
+  padding:.04em .18em .09em!important;
+  text-align:center!important;
+}
+#formulaVisualEditor .vfFrac>span:last-child,#graphFunctionVisual .vfFrac>span:last-child,
+#canvasObjects .formulaObj .formulaContent :is(.vfFrac,.fracExpr)>span:last-child,
+.v181PreviewPage .formulaObj .formulaContent :is(.vfFrac,.fracExpr)>span:last-child{
+  display:block!important;
+  width:100%!important;
+  box-sizing:border-box!important;
+  border:0!important;
+  padding:.09em .18em .02em!important;
+  text-align:center!important;
+}
+
+/* Dynamisch wachsende Klammern. Die Skalierung wird aus der Inhaltshöhe berechnet. */
+.vfParen.v223Paren{
+  display:inline-flex!important;
+  align-items:center!important;
+  vertical-align:middle!important;
+  white-space:nowrap!important;
+  gap:.04em!important;
+}
+.vfParen.v223Paren>.vfParenBody{display:inline-flex;align-items:center;vertical-align:middle;min-width:.18em}
+.vfParen.v223Paren>.vfParenMark{
+  display:inline-block!important;
+  line-height:1!important;
+  transform:scaleY(var(--vf-paren-scale,1))!important;
+  transform-origin:center center!important;
+  margin:0 .01em!important;
+}
+
+/* Periodische Ziffer: Punkt exakt über jeder markierten Ziffer. */
+.vfPeriodDigit{
+  display:inline-block!important;
+  position:relative!important;
+  padding-top:.08em!important;
+  min-width:.42em;
+  text-align:center;
+}
+.vfPeriodDigit::before{
+  content:"•";
+  position:absolute;
+  left:50%;
+  top:-.52em;
+  transform:translateX(-50%);
+  font-size:.42em;
+  line-height:1;
+  font-weight:900;
+  pointer-events:none;
+}
+.v223PeriodBtn b{letter-spacing:.04em}
+</style>
+<script id="studia-v223-formula-polish-script">
+(()=>{
+'use strict';
+if(window.__STUDIA_V223__)return;window.__STUDIA_V223__=true;
+const q=(s,r=document)=>r?.querySelector?.(s)||null;
+const qa=(s,r=document)=>r?.querySelectorAll?[...r.querySelectorAll(s)]:[];
+
+function mathRootFrom(node){
+  const el=node instanceof Element?node:(node?.parentElement||null);
+  return el?.closest?.('#formulaVisualEditor,#graphFunctionVisual')||null;
+}
+function currentRangeIn(ed){
+  const s=getSelection();if(!ed||!s||!s.rangeCount)return null;
+  const r=s.getRangeAt(0);return ed.contains(r.commonAncestorContainer)?r:null;
+}
+function insertMathText(ed,text){
+  const s=getSelection();if(!ed||!s)return;
+  let r=currentRangeIn(ed);if(!r){r=document.createRange();r.selectNodeContents(ed);r.collapse(false)}
+  r.deleteContents();const n=document.createTextNode(text);r.insertNode(n);r.setStartAfter(n);r.collapse(true);s.removeAllRanges();s.addRange(r);
+  ed.dispatchEvent(new Event('input',{bubbles:true}));
+}
+
+/* * tippen bedeutet im visuellen Formeleditor immer mathematischen Malpunkt. */
+document.addEventListener('beforeinput',e=>{
+  if(e.inputType!=='insertText'||e.data!=='*')return;
+  const ed=mathRootFrom(e.target);if(!ed)return;
+  e.preventDefault();e.stopImmediatePropagation();insertMathText(ed,'⋅');
+},true);
+document.addEventListener('keydown',e=>{
+  if(e.key!=='*')return;const ed=mathRootFrom(e.target);if(!ed)return;
+  /* Chromium liefert normalerweise beforeinput; Fallback nur wenn dieses Event sonst native Eingabe auslösen würde. */
+  if(e.defaultPrevented)return;
+},true);
+
+/* Blockelemente/BRs innerhalb eines Exponenten sind der typische Grund fürs "Runterrutschen". */
+function normalizeExponentSlots(root){
+  if(!root)return;
+  qa('sup,sub',root).forEach(slot=>{
+    qa(':scope > div,:scope > p',slot).forEach(block=>{
+      const frag=document.createDocumentFragment();while(block.firstChild)frag.appendChild(block.firstChild);block.replaceWith(frag);
+    });
+    qa(':scope > br',slot).forEach(br=>br.remove());
+  });
+}
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Enter')return;
+  const ed=mathRootFrom(e.target);if(!ed)return;
+  const s=getSelection();if(!s||!s.rangeCount)return;let n=s.anchorNode?.nodeType===1?s.anchorNode:s.anchorNode?.parentElement;
+  const slot=n?.closest?.('sup,sub');if(!slot||!ed.contains(slot))return;
+  e.preventDefault();e.stopImmediatePropagation();
+  const r=document.createRange();r.setStartAfter(slot);r.collapse(true);s.removeAllRanges();s.addRange(r);ed.dispatchEvent(new Event('input',{bubbles:true}));
+},true);
+document.addEventListener('input',e=>{const ed=mathRootFrom(e.target);if(ed)normalizeExponentSlots(ed)},true);
+
+/* Alte und neue Klammern in ein skalierbares Format umwandeln. */
+function stripOneOuterParenText(p){
+  const nodes=[...p.childNodes];
+  const first=nodes.find(n=>n.nodeType===Node.TEXT_NODE&&String(n.nodeValue||'').trim()!==''),last=[...nodes].reverse().find(n=>n.nodeType===Node.TEXT_NODE&&String(n.nodeValue||'').trim()!=='');
+  if(first){const v=String(first.nodeValue||'');first.nodeValue=v.replace(/^\s*\(/,'')}
+  if(last){const v=String(last.nodeValue||'');last.nodeValue=v.replace(/\)\s*$/,'')}
+}
+function upgradeParen(p){
+  if(!p||p.classList.contains('v223Paren'))return p;
+  stripOneOuterParenText(p);
+  const body=document.createElement('span');body.className='vfParenBody';
+  while(p.firstChild)body.appendChild(p.firstChild);
+  const open=document.createElement('span');open.className='vfParenMark vfParenOpen';open.textContent='(';
+  const close=document.createElement('span');close.className='vfParenMark vfParenClose';close.textContent=')';
+  p.append(open,body,close);p.classList.add('v223Paren');return p;
+}
+function scaleParen(p){
+  p=upgradeParen(p);if(!p)return;
+  const body=q(':scope > .vfParenBody',p);if(!body)return;
+  const cs=getComputedStyle(p),fs=parseFloat(cs.fontSize)||28;
+  const h=Math.max(fs,body.getBoundingClientRect().height||fs);
+  const scale=Math.max(1,Math.min(3.2,h/(fs*1.02)));
+  p.style.setProperty('--vf-paren-scale',String(scale));
+}
+function refreshMathStructures(root=document){
+  qa('.vfParen',root).forEach(scaleParen);normalizeExponentSlots(root);
+}
+let raf=0;function scheduleMathRefresh(root=document){cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>refreshMathStructures(root))}
+
+/* Periodische Zahl aus der aktuellen Markierung erzeugen. */
+window.v223AddPeriodMark=function(){
+  const ed=q('#formulaVisualEditor');if(!ed)return;
+  const s=getSelection(),r=currentRangeIn(ed);if(!s||!r||r.collapsed){try{cuteToast('Markiere zuerst die periodische Zahl ♡')}catch(_){}return}
+  const txt=r.toString();if(!/[0-9]/.test(txt)){try{cuteToast('Markiere eine Zahl ♡')}catch(_){}return}
+  const frag=document.createDocumentFragment();
+  for(const ch of txt){
+    if(/[0-9]/.test(ch)){const span=document.createElement('span');span.className='vfPeriodDigit';span.textContent=ch;frag.appendChild(span)}
+    else frag.appendChild(document.createTextNode(ch));
+  }
+  r.deleteContents();const marker=document.createElement('span');marker.className='vfPeriod';marker.appendChild(frag);r.insertNode(marker);
+  const nr=document.createRange();nr.setStartAfter(marker);nr.collapse(true);s.removeAllRanges();s.addRange(nr);ed.dispatchEvent(new Event('input',{bubbles:true}));
+  try{cuteToast('Periodenzeichen gesetzt ♡')}catch(_){}
+};
+
+function injectPeriodButton(){
+  const ed=q('#formulaVisualEditor');if(!ed)return;
+  const modal=ed.closest('.visualFormulaModal,.formulaModal');if(!modal||q('.v223PeriodBtn',modal))return;
+  const grid=q('.formulaToolSection .formulaTemplateGrid.visualOnly',modal);if(!grid)return;
+  const b=document.createElement('button');b.type='button';b.className='v223PeriodBtn';b.innerHTML='<b>3̇</b><span>Periode</span>';b.onclick=()=>window.v223AddPeriodMark();grid.appendChild(b);
+}
+
+/* Neue Klammern gleich im robusten Format einsetzen. */
+try{
+  const prevInsert=window.insertVisualFormula;
+  window.insertVisualFormula=function(type){
+    if(type==='paren'){
+      const selected=typeof selectedFormulaHTML==='function'?selectedFormulaHTML():'';
+      if(typeof replaceSelectionWithHTML==='function'){
+        replaceSelectionWithHTML(`<span class="vfParen v223Paren"><span class="vfParenMark vfParenOpen">(</span><span class="vfParenBody"><span class="vfEditable" contenteditable="true">${selected||'x'}</span></span><span class="vfParenMark vfParenClose">)</span></span>&nbsp;`,'.vfEditable');
+        scheduleMathRefresh(q('#formulaVisualEditor'));return;
+      }
+    }
+    return prevInsert?.apply(this,arguments);
+  };
+  try{insertVisualFormula=window.insertVisualFormula}catch(_){}
+}catch(_){}
+
+/* Graph-Formeleditor bekommt dieselben stabilen Klammern, aber keinen Periodenknopf. */
+function v223GraphInsertHTML(html,focus=''){
+  const ed=q('#graphFunctionVisual');if(!ed)return;ed.focus();const s=getSelection();let r=currentRangeIn(ed);if(!r){r=document.createRange();r.selectNodeContents(ed);r.collapse(false)}
+  r.deleteContents();const t=document.createElement('div');t.innerHTML=html;const f=document.createDocumentFragment();let n,last;while((n=t.firstChild))last=f.appendChild(n);r.insertNode(f);
+  let target=null;if(focus){const root=last?.nodeType===1?last:last?.parentElement;target=(root?.matches?.(focus)?root:root?.querySelector?.(focus))||q(focus,ed)}
+  const nr=document.createRange();if(target)nr.selectNodeContents(target);else if(last){nr.setStartAfter(last);nr.collapse(true)}else{nr.selectNodeContents(ed);nr.collapse(false)}s.removeAllRanges();s.addRange(nr);ed.dispatchEvent(new Event('input',{bubbles:true}));
+}
+try{
+  const prevGraphInsert=window.v221GraphInsert;
+  window.v221GraphInsert=function(kind){
+    if(kind==='paren'){
+      const ed=q('#graphFunctionVisual');if(!ed)return;
+      let selected='';const s=getSelection(),r=currentRangeIn(ed);if(s&&r&&!r.collapsed){const d=document.createElement('div');d.appendChild(r.cloneContents());selected=d.innerHTML}
+      v223GraphInsertHTML(`<span class="vfParen v223Paren"><span class="vfParenMark vfParenOpen">(</span><span class="vfParenBody"><span class="vfEditable" contenteditable="true">${selected||'x'}</span></span><span class="vfParenMark vfParenClose">)</span></span>&nbsp;`,'.vfEditable');
+      scheduleMathRefresh(ed);return;
+    }
+    const out=prevGraphInsert?.apply(this,arguments);scheduleMathRefresh(q('#graphFunctionVisual'));return out;
+  };
+}catch(_){}
+
+/* Parser versteht die neuen Klammer-Hilfsspans unverändert als normale Klammern. */
+function graphParenText(node){
+  const body=q(':scope > .vfParenBody',node);if(!body)return null;
+  const walk=n=>{
+    if(!n)return'';if(n.nodeType===Node.TEXT_NODE)return String(n.nodeValue||'').replace(/[×⋅]/g,'*').replace(/÷/g,'/').replace(/−/g,'-');
+    if(n.nodeType!==Node.ELEMENT_NODE)return'';
+    if(n.classList?.contains('vfParenMark'))return'';
+    return [...n.childNodes].map(walk).join('');
+  };
+  return '('+walk(body)+')';
+}
+/* Existing V222 parser is closed over its helper, so before save we temporarily make marks text-neutral. */
+document.addEventListener('click',e=>{if(e.target?.closest?.('#graphFunctionVisual'))scheduleMathRefresh(q('#graphFunctionVisual'))},true);
+
+/* Nach Öffnen/Rendern vorhandene Formeln ebenfalls upgraden. */
+try{
+  const prevOpen=window.openFormulaDialog;
+  window.openFormulaDialog=function(){const out=prevOpen.apply(this,arguments);setTimeout(()=>{injectPeriodButton();refreshMathStructures(q('.visualFormulaModal')||document)},110);return out};
+  try{openFormulaDialog=window.openFormulaDialog}catch(_){}
+}catch(_){}
+try{
+  const prevGraphOpen=window.openGraphFunctionEditor;
+  window.openGraphFunctionEditor=function(){const out=prevGraphOpen.apply(this,arguments);setTimeout(()=>refreshMathStructures(q('.v221GraphFormulaModal')||document),80);return out};
+  try{openGraphFunctionEditor=window.openGraphFunctionEditor}catch(_){}
+}catch(_){}
+try{
+  const prevRender=window.renderCanvasObjects||renderCanvasObjects;
+  window.renderCanvasObjects=function(){const out=prevRender.apply(this,arguments);requestAnimationFrame(()=>refreshMathStructures(q('#canvasObjects')||document));return out};
+  try{renderCanvasObjects=window.renderCanvasObjects}catch(_){}
+}catch(_){}
+
+/* Live aktualisieren, auch wenn ein Bruch in einer Klammer größer/kleiner wird. */
+document.addEventListener('input',e=>{const ed=mathRootFrom(e.target);if(ed)scheduleMathRefresh(ed)},true);
+window.addEventListener('resize',()=>scheduleMathRefresh(document));
+[0,100,350,900].forEach(t=>setTimeout(()=>{injectPeriodButton();refreshMathStructures(document)},t));
+
+const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 223'};[0,250,900,1800].forEach(t=>setTimeout(setVer,t));
+})();
+</script>
+<!-- ===== /Studia V223 ===== -->
