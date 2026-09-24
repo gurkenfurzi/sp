@@ -22280,3 +22280,155 @@ const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 232'};
 })();
 </script>
 <!-- ===== /Studia V232 ===== -->
+
+
+<!-- ===== Studia V233 · two-phase cloud sync transport fix ===== -->
+<style id="studia-v233-sync-style">
+#v232DesktopSync.v233Error small,#v232SyncStatusInline.v233Error{color:#b55d61!important}
+#v232DesktopSync.v233Ok small,#v232SyncStatusInline.v233Ok{color:#71845f!important}
+</style>
+<script id="studia-v233-sync-script">
+(()=>{
+'use strict';
+if(window.__STUDIA_V233__)return;window.__STUDIA_V233__=true;
+const q=(s,r=document)=>r?.querySelector?.(s)||null;
+const clone=x=>{try{return structuredClone(x)}catch(_){try{return JSON.parse(JSON.stringify(x))}catch(__){return x}}};
+const TRACKED=['homework','tests','grades','flashcards','subjects','absences','studySessions','reminders','flashDecks','quizzes','studySheets'];
+const META='_syncMeta',UPDATED='_updatedAt';
+let busy=false;
+
+function status(t,state='ok'){
+  try{window.v232SetSyncStatus?.(t,state==='syncing'?'syncing':'ok')}catch(_){ }
+  const b=q('#v232DesktopSync'),i=q('#v232SyncStatusInline');
+  for(const el of [b,i]){if(!el)continue;el.classList.toggle('v233Error',state==='error');el.classList.toggle('v233Ok',state==='ok')}
+}
+function localPersist(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){console.warn('[V233] persist',e)}}
+function objectId(x){return x&&typeof x==='object'&&x.id!=null?String(x.id):''}
+function clean(v){
+  if(Array.isArray(v))return v.map(clean);
+  if(v&&typeof v==='object'){const o={};for(const [k,val] of Object.entries(v)){if(k===UPDATED||k===META)continue;o[k]=clean(val)}return o}
+  return v;
+}
+function same(a,b){try{return JSON.stringify(clean(a))===JSON.stringify(clean(b))}catch(_){return false}}
+function ensureMeta(d){
+  if(!d||typeof d!=='object')return {version:1,fields:{},tombstones:{}};
+  d[META] ||= {version:1,fields:{},tombstones:{}};d[META].fields ||= {};d[META].tombstones ||= {};return d[META];
+}
+function stampState(cur,old){
+  if(!cur||typeof cur!=='object')return;const ts=Date.now(),m=ensureMeta(cur),om=old?.[META]||{};
+  for(const key of TRACKED){
+    const a=Array.isArray(cur[key])?cur[key]:[],b=Array.isArray(old?.[key])?old[key]:[];
+    const bm=new Map(b.map(x=>[objectId(x),x]).filter(x=>x[0])),am=new Map(a.map(x=>[objectId(x),x]).filter(x=>x[0]));
+    m.tombstones[key] ||= {};
+    for(const item of a){const id=objectId(item);if(!id)continue;const prev=bm.get(id);if(!prev)item[UPDATED]=Number(item[UPDATED])||ts;else if(!same(item,prev))item[UPDATED]=ts;else if(!Number(item[UPDATED]))item[UPDATED]=Number(prev?.[UPDATED])||1;const dead=Number(m.tombstones[key][id]||0);if(dead&&Number(item[UPDATED]||0)>dead)delete m.tombstones[key][id]}
+    for(const prev of b){const id=objectId(prev);if(id&&!am.has(id))m.tombstones[key][id]=Math.max(Number(m.tombstones[key][id]||0),ts)}
+  }
+  for(const key of Object.keys(cur).filter(k=>k!==META&&!TRACKED.includes(k))){if(!same(cur[key],old?.[key]))m.fields[key]=ts;else if(!m.fields[key]&&om?.fields?.[key])m.fields[key]=om.fields[key]}
+}
+function combineMeta(a,b){
+  const A=a||{},B=b||{},o={version:1,fields:{},tombstones:{}};
+  for(const k of new Set([...Object.keys(A.fields||{}),...Object.keys(B.fields||{})]))o.fields[k]=Math.max(Number(A.fields?.[k]||0),Number(B.fields?.[k]||0));
+  for(const c of new Set([...Object.keys(A.tombstones||{}),...Object.keys(B.tombstones||{})])){o.tombstones[c]={};const aa=A.tombstones?.[c]||{},bb=B.tombstones?.[c]||{};for(const id of new Set([...Object.keys(aa),...Object.keys(bb)]))o.tombstones[c][id]=Math.max(Number(aa[id]||0),Number(bb[id]||0))}
+  return o;
+}
+function mergePlain(r,l){
+  if(l==null)return clone(r);if(r==null)return clone(l);
+  if(Array.isArray(l)||Array.isArray(r))return clone(l);
+  if(typeof l==='object'&&typeof r==='object')return {...clone(r),...clone(l)};
+  return clone(l);
+}
+function mergeCollection(name,larr,rarr,meta){
+  const la=Array.isArray(larr)?larr:[],ra=Array.isArray(rarr)?rarr:[];
+  const lm=new Map(la.map(x=>[objectId(x),x]).filter(x=>x[0])),rm=new Map(ra.map(x=>[objectId(x),x]).filter(x=>x[0]));
+  const ids=[...new Set([...la.map(objectId),...ra.map(objectId)].filter(Boolean))],out=[];
+  for(const id of ids){
+    const l=lm.get(id),r=rm.get(id);let v;
+    if(l&&r){const lt=Number(l[UPDATED]||0),rt=Number(r[UPDATED]||0);v=rt>lt?clone(r):lt>rt?clone(l):mergePlain(r,l);v[UPDATED]=Math.max(lt,rt,Number(v?.[UPDATED]||0))}else v=clone(l||r);
+    const dead=Number(meta?.tombstones?.[name]?.[id]||0),vt=Number(v?.[UPDATED]||0);if(dead&&dead>=vt)continue;if(v)out.push(v);
+  }
+  const seen=new Set(out.map(x=>{try{return JSON.stringify(clean(x))}catch(_){return String(x)}}));
+  for(const x of [...la,...ra]){if(objectId(x))continue;let k;try{k=JSON.stringify(clean(x))}catch(_){k=String(x)}if(!seen.has(k)){seen.add(k);out.push(clone(x))}}
+  return out;
+}
+function mergeState(local,remote){
+  local=local&&typeof local==='object'?local:{};remote=remote&&typeof remote==='object'?remote:{};
+  const meta=combineMeta(local[META],remote[META]),out={},keys=new Set([...Object.keys(local),...Object.keys(remote)]);keys.delete(META);
+  for(const k of keys){
+    if(TRACKED.includes(k)){out[k]=mergeCollection(k,local[k],remote[k],meta);continue}
+    const lt=Number(local[META]?.fields?.[k]||0),rt=Number(remote[META]?.fields?.[k]||0);
+    out[k]=rt>lt?clone(remote[k]):lt>rt?clone(local[k]):mergePlain(remote[k],local[k]);
+  }
+  out[META]=meta;return out;
+}
+function commitOpenEditor(){
+  try{if(document.body.classList.contains('editorMode')&&q('#view-sheet-editor.active')&&typeof saveCanvasSheetCore==='function')saveCanvasSheetCore(true)}catch(e){console.warn('[V233] editor commit',e)}
+  localPersist();
+}
+function getRawTransport(){
+  let fn=window.v171CloudNow,seen=new Set();
+  while(typeof fn==='function'&&!seen.has(fn)){
+    seen.add(fn);
+    const next=fn.__v232Original||fn.__v219Original||fn.__v205Original;
+    if(typeof next!=='function'||next===fn)break;
+    fn=next;
+  }
+  return typeof fn==='function'?fn:null;
+}
+const rawTransport=getRawTransport();
+
+async function rawCall(){
+  if(typeof rawTransport!=='function')throw new Error('Cloud-Sync-Modul fehlt (google-sync-config.js)');
+  return await Promise.resolve(rawTransport.call(window));
+}
+async function backup(){try{await window.v111CreateBackupNow?.(false)}catch(_){ }}
+function rerender(){try{renderAll?.()}catch(_){ }try{if(q('#view-plan.active'))renderPlan?.()}catch(_){ }try{if(q('#view-home.active'))renderHome?.()}catch(_){ }}
+
+window.studiaSyncNow=async function(){
+  if(busy)return {busy:true};
+  busy=true;status('Synchronisiere Geräte …','syncing');
+  try{
+    commitOpenEditor();await backup();
+    let before={};try{before=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(_){ }
+    stampState(data,before);localPersist();
+    const local1=clone(data);
+
+    /* Phase 1: existing server transport. It may pull, push, or do both. */
+    await rawCall();
+    const server1=clone(data);
+    data=mergeState(local1,server1);localPersist();rerender();
+
+    /* IMPORTANT: the merged state must actually be sent back to the server. */
+    try{window.v150MarkDirty?.(0)}catch(_){ }
+    try{window.save?.()}catch(_){ localPersist() }
+    await new Promise(r=>setTimeout(r,180));
+    await rawCall();
+
+    /* Phase 2 confirmation: merge whatever server returned with our outgoing merged state. */
+    const server2=clone(data),merged2=mergeState(mergeState(local1,server1),server2);
+    data=merged2;localPersist();rerender();
+    try{window.v150MarkDirty?.(20)}catch(_){ }
+    status('Auf allen Geräten synchronisiert ✓','ok');
+    return {ok:true};
+  }catch(e){
+    console.error('[Studia V233] Sync fehlgeschlagen',e);localPersist();status(String(e?.message||'Sync fehlgeschlagen')+' · lokale Daten bleiben gespeichert','error');
+    throw e;
+  }finally{busy=false;setTimeout(()=>q('#v232PullSync')?.classList.remove('show','ready','syncing'),900)}
+};
+
+/* All automatic old cloud kicks now use the same reliable two-phase path. */
+window.v171CloudNow=window.studiaSyncNow;
+try{v171CloudNow=window.v171CloudNow}catch(_){ }
+
+/* Rebind visible controls because older handlers may still point at wrappers. */
+function bindButtons(){
+  const d=q('#v232DesktopSync');if(d)d.onclick=()=>window.studiaSyncNow();
+  const card=q('.v171CloudSettings');if(card){const b=[...card.querySelectorAll('button')].find(x=>/synchronisieren|zusammenführen/i.test(x.textContent||''));if(b){b.removeAttribute('onclick');b.onclick=()=>window.studiaSyncNow()}}
+}
+[0,150,500,1500].forEach(t=>setTimeout(bindButtons,t));
+new MutationObserver(()=>requestAnimationFrame(bindButtons)).observe(document.documentElement,{childList:true,subtree:true});
+window.addEventListener('online',()=>setTimeout(()=>window.studiaSyncNow().catch(()=>{}),500));
+
+const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 233'};[0,250,900,1800].forEach(t=>setTimeout(setVer,t));
+})();
+</script>
+<!-- ===== /Studia V233 ===== -->
