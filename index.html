@@ -17778,7 +17778,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
     const app=document.querySelector('.app');if(!app)return;
     let s=document.getElementById('v209Sidebar');if(!s){s=document.createElement('aside');s.id='v209Sidebar';app.insertBefore(s,app.firstChild)}
     const bubble=taskBubble();
-    s.innerHTML=`<div class="brand" onclick="openView('home')"><span class="brandIcon">${svg('bunny')}</span><span class="brandText"><b>Studia</b><small>PLAN · LERNEN · ERREICHEN</small></span></div><div class="navList">${side('Stundenplan','cal','plan',`openView('plan')`,'')}${side('Aufgaben','tasks','tasks',`openView('tasks')`,bubble?String(bubble):'')}${side('Lernen','learn','study',`openView('study')`,'')}${side('Fächer','folder','subjects',`openView('subjects')`,'')}${side('Tests','test','tasks',`openView('tasks')`,'')}${side('Notizen','notes','subjects',`openView('subjects')`,'')}</div><div class="quoteBox"><span class="quoteIcon">${svg('sprout')}</span><div class="quoteText">Better<br>than<br>yesterday.</div><span class="quoteHeart">${svg('heart')}</span></div>`;
+    s.innerHTML=`<div class="brand" onclick="openView('home')"><span class="brandIcon">${svg('bunny')}</span><span class="brandText"><b>Studia</b><small>PLAN · LERNEN · ERREICHEN</small></span></div><div class="navList">${side('Stundenplan','cal','plan',`v210Nav('plan')`,'','plan')}${side('Aufgaben','tasks','tasks',`v210Nav('tasks')`,bubble?String(bubble):'','tasks')}${side('Lernen','learn','study',`openView('study')`,'')}${side('Fächer','folder','subjects',`openView('subjects')`,'')}${side('Tests','test','tasks',`openView('tasks')`,'')}${side('Notizen','notes','subjects',`openView('subjects')`,'')}</div><div class="quoteBox"><span class="quoteIcon">${svg('sprout')}</span><div class="quoteText">Better<br>than<br>yesterday.</div><span class="quoteHeart">${svg('heart')}</span></div>`;
   }
   function dateInfo(){const d=new Date();const weekday=d.toLocaleDateString('de-DE',{weekday:'long'});const full=d.toLocaleDateString('de-DE',{day:'2-digit',month:'long',year:'numeric'});return{weekday,full}}
   function ensureHomeHead(){
@@ -17807,3 +17807,384 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
   window.addEventListener('resize',()=>setTimeout(reconcile,50));document.addEventListener('click',()=>setTimeout(reconcile,0),true);[0,250,800,1800].forEach(t=>setTimeout(reconcile,t));
 })();
 </script>
+
+<!-- ===== Studia V210 — reference-accurate desktop shell, timetable + absences ===== -->
+<style id="v210-reference-desktop">
+/* Mobile stays as-is. The only mobile change in this build is moving the JETZT badge away from the room. */
+@media (max-width:899px){
+  body.planViewActive .lesson.currentLesson:after{
+    left:10px!important;right:auto!important;top:7px!important;
+  }
+  body.planViewActive .lesson.currentLesson>.time{padding-top:18px!important}
+}
+
+@media (min-width:1100px){
+  body.v210Desktop{
+    background:linear-gradient(180deg,#f8efec 0%,#fff8f6 100%)!important;
+    color:#4b403d!important;
+    font-family:ui-rounded,"SF Pro Rounded","Avenir Next Rounded","Arial Rounded MT Bold",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+  }
+  body.v210Desktop button,body.v210Desktop input,body.v210Desktop select,body.v210Desktop textarea{
+    font-family:ui-rounded,"SF Pro Rounded","Avenir Next Rounded","Arial Rounded MT Bold",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+  }
+  body.v210Desktop:before{
+    content:"";position:fixed;left:22px;top:16px;width:12px;height:12px;border-radius:50%;background:#ef8e87;
+    box-shadow:22px 0 0 #efc05f,44px 0 0 #86c96f;z-index:9999;pointer-events:none
+  }
+  body.v210Desktop .header,body.v210Desktop #nav,
+  body.v210Desktop #v208Sidebar,body.v210Desktop #v209Sidebar,
+  body:not(.editorMode) #v208Sidebar,body:not(.editorMode) #v209Sidebar{display:none!important}
+  body.v210Desktop #v210Sidebar{display:flex!important}
+  body.v210Desktop .app{
+    width:min(1530px,calc(100vw - 26px))!important;max-width:none!important;
+    min-height:calc(100vh - 42px)!important;margin:28px auto 14px!important;padding:13px!important;
+    display:grid!important;grid-template-columns:268px minmax(0,1fr)!important;align-items:stretch!important;gap:16px!important;
+    border:1px solid #eddfdb!important;border-radius:30px!important;
+    background:rgba(255,249,247,.82)!important;box-shadow:0 20px 60px rgba(161,126,118,.11)!important;
+    overflow:visible!important;backdrop-filter:blur(10px)!important
+  }
+  body.v210Desktop .app:before,body.v210Desktop .app:after{display:none!important}
+  body.v210Desktop .view.active{
+    grid-column:2!important;min-width:0!important;margin:0!important;
+    border:1px solid #efe3df!important;border-radius:27px!important;background:linear-gradient(180deg,#fffdfc 0%,#fffaf8 100%)!important;
+    padding:24px!important;box-shadow:none!important
+  }
+  body.v210Desktop #view-plan.active{padding:22px 22px 18px!important;overflow:hidden!important}
+
+  /* One permanent desktop sidebar for all normal Studia areas. */
+  #v210Sidebar{
+    grid-column:1!important;grid-row:1!important;min-width:0!important;
+    display:flex!important;flex-direction:column!important;gap:14px!important;
+    border:1px solid #f0e3df!important;border-radius:25px!important;padding:17px 15px!important;
+    background:linear-gradient(180deg,#fff8f6 0%,#fffaf8 100%)!important;
+    position:sticky!important;top:28px!important;height:calc(100vh - 56px)!important;max-height:960px!important
+  }
+  #v210Sidebar .brand{display:flex!important;align-items:center!important;gap:12px!important;padding:7px 9px 8px!important;cursor:pointer!important}
+  #v210Sidebar .brandIcon{width:42px!important;height:42px!important;display:grid!important;place-items:center!important;color:#d78f8e!important;flex:0 0 42px!important}
+  #v210Sidebar svg,#v210PlanHead svg,.v210Lesson svg{width:100%!important;height:100%!important;stroke:currentColor!important;fill:none!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+  #v210Sidebar .brandText b{display:block!important;font-size:20px!important;line-height:1!important;letter-spacing:-.03em!important;color:#2f2927!important}
+  #v210Sidebar .brandText small{display:block!important;margin-top:5px!important;font-size:8.5px!important;font-weight:800!important;letter-spacing:.16em!important;color:#b19992!important;white-space:nowrap!important}
+  #v210Sidebar .navList{display:grid!important;gap:4px!important;min-height:0!important}
+  #v210Sidebar .navItem{
+    appearance:none!important;border:1px solid transparent!important;background:transparent!important;color:#98827c!important;
+    min-height:48px!important;border-radius:15px!important;padding:0 12px!important;display:grid!important;
+    grid-template-columns:25px minmax(0,1fr) auto!important;align-items:center!important;gap:11px!important;text-align:left!important;box-shadow:none!important
+  }
+  #v210Sidebar .navItem:hover{background:#fff4f2!important;border-color:#f3e4df!important}
+  #v210Sidebar .navItem.active{background:#f8dfdf!important;border-color:#f0d1d1!important;color:#312a28!important}
+  #v210Sidebar .navIcon{width:23px!important;height:23px!important;display:grid!important;place-items:center!important;color:#9d8179!important}
+  #v210Sidebar .navItem.active .navIcon{color:#5c4440!important}
+  #v210Sidebar .navLabel{font-size:14px!important;font-weight:650!important;letter-spacing:-.01em!important;white-space:nowrap!important}
+  #v210Sidebar .navBubble{display:none!important;min-width:24px!important;height:24px!important;padding:0 7px!important;border-radius:999px!important;background:#f6d6d8!important;color:#b06c72!important;font-size:11px!important;font-weight:850!important;place-items:center!important}
+  #v210Sidebar .navItem.hasBubble .navBubble{display:grid!important}
+  #v210Sidebar .navDivider{height:1px!important;background:#f0e4e0!important;margin:4px 8px!important}
+  #v210Sidebar .sidebarBottom{margin-top:auto!important;display:grid!important;gap:4px!important}
+  #v210Sidebar .quoteBox{margin-top:8px!important;min-height:124px!important;border:1px solid #efe1dd!important;border-radius:18px!important;background:#fff9f7!important;padding:15px!important;display:grid!important;grid-template-columns:1fr auto!important;grid-template-rows:auto 1fr!important}
+  #v210Sidebar .quoteIcon{width:23px!important;height:23px!important;color:#a3b182!important}
+  #v210Sidebar .quoteText{grid-column:1!important;align-self:end!important;font-size:15px!important;line-height:1.48!important;color:#8d7e78!important}
+  #v210Sidebar .quoteHeart{grid-column:2!important;grid-row:2!important;align-self:end!important;width:21px!important;height:21px!important;color:#dc9fa4!important}
+
+  /* Reference header */
+  body.v210Desktop #v208PlanHead{display:none!important}
+  #v210PlanHead{display:grid!important;grid-template-columns:minmax(300px,1fr) auto auto!important;grid-template-areas:"title mode actions" "sub planmode week"!important;gap:10px 16px!important;align-items:center!important;margin:0 0 16px!important}
+  #v210PlanHead .title{grid-area:title!important;font-size:46px!important;line-height:.95!important;letter-spacing:-.055em!important;font-weight:900!important;color:#342d2b!important}
+  #v210PlanHead .sub{grid-area:sub!important;margin-top:-4px!important;font-size:15px!important;font-weight:600!important;color:#a18b84!important}
+  #v210PlanHead .modeWrap{grid-area:mode!important;display:flex!important;justify-self:center!important;padding:4px!important;border:1px solid #efddd8!important;border-radius:18px!important;background:#fff9f7!important}
+  #v210PlanHead .modeBtn{appearance:none!important;border:0!important;background:transparent!important;box-shadow:none!important;min-width:115px!important;height:40px!important;border-radius:14px!important;color:#8e7871!important;font-size:14px!important;font-weight:750!important;padding:0 18px!important}
+  #v210PlanHead .modeBtn.active{background:#f5d7d7!important;color:#342d2b!important}
+  #v210PlanHead .actionRow{grid-area:actions!important;display:flex!important;gap:9px!important;justify-self:end!important}
+  #v210PlanHead .headBtn{width:43px!important;height:43px!important;border-radius:14px!important;border:1px solid #efddd8!important;background:#fffaf8!important;color:#967f78!important;display:grid!important;place-items:center!important;padding:10px!important;box-shadow:0 3px 10px rgba(110,82,75,.035)!important}
+  #v210PlanHead .headBtn:hover{background:#fff2f0!important}
+  #v210PlanHead .headBtn.refreshAction{width:auto!important;min-width:122px!important;grid-template-columns:19px auto!important;gap:7px!important;padding:0 13px!important;font-size:10px!important;font-weight:850!important}
+  #v210PlanHead .headBtn.refreshAction svg{width:19px!important;height:19px!important}
+  #v210PlanHead .headBtn.isLoading svg{animation:v211spin .8s linear infinite!important}
+  @keyframes v211spin{to{transform:rotate(360deg)}}
+  #v210PlanHead .planTypeWrap{grid-area:planmode!important;display:flex!important;justify-self:center!important;padding:3px!important;border:1px solid #efddd8!important;border-radius:14px!important;background:#fffaf8!important}
+  #v210PlanHead .planTypeBtn{appearance:none!important;border:0!important;background:transparent!important;box-shadow:none!important;min-width:108px!important;height:32px!important;border-radius:11px!important;padding:0 11px!important;color:#99827b!important;font-size:10px!important;font-weight:820!important;white-space:nowrap!important}
+  #v210PlanHead .planTypeBtn.active{background:#f7e1e1!important;color:#4e3b38!important}
+  #v210PlanHead .planTypeBtn .miniStar{margin-right:4px!important;color:#cf8e91!important}
+  #v210PlanHead .weekNav{grid-area:week!important;justify-self:end!important;display:grid!important;grid-template-columns:50px minmax(205px,1fr) 50px!important;align-items:stretch!important;border:1px solid #efddd8!important;border-radius:16px!important;overflow:hidden!important;background:#fffaf8!important}
+  #v210PlanHead .weekBtn{appearance:none!important;border:0!important;background:transparent!important;color:#8e7770!important;font-size:26px!important;line-height:1!important;box-shadow:none!important}
+  #v210PlanHead .weekBtn:first-child{border-right:1px solid #f0e0dc!important}.v210WeekBtnRight{border-left:1px solid #f0e0dc!important}
+  #v210PlanHead .weekInfo{appearance:none!important;border:0!important;background:transparent!important;box-shadow:none!important;cursor:pointer!important;height:54px!important;display:grid!important;place-items:center!important;align-content:center!important;text-align:center!important;padding:6px 13px!important;color:inherit!important}
+  #v210PlanHead .weekInfo b{font-size:13px!important;color:#302a28!important}.weekInfo small{display:block!important;margin-top:3px!important;font-size:10px!important;color:#a18d86!important;font-weight:600!important}
+
+  body.v210Desktop #view-plan .planTopPanel,body.v210Desktop #view-plan .planModeSwitch,
+  body.v210Desktop #view-plan #placeholderBanner,body.v210Desktop #view-plan #planModeHint,
+  body.v210Desktop #view-plan #dayTabs{display:none!important}
+  body.v210Desktop #view-plan #planLessons{margin:0!important;display:block!important}
+
+  /* Main week board — positioned by real start/end time, beginning at 08:00. */
+  .v210DayTabs{display:flex!important;gap:7px!important;margin:-4px 0 10px 74px!important;overflow:auto!important;scrollbar-width:none!important}.v210DayTabs::-webkit-scrollbar{display:none!important}
+  .v210DayTab{border:1px solid #efdfda!important;background:#fffaf8!important;color:#9a837c!important;border-radius:999px!important;padding:7px 12px!important;font-size:11px!important;font-weight:800!important;white-space:nowrap!important;box-shadow:none!important}
+  .v210DayTab.active{background:#f6dcdc!important;color:#4c3b38!important;border-color:#efd0d0!important}
+  .v210WeekBoard{display:grid!important;grid-template-columns:72px repeat(5,minmax(0,1fr))!important;grid-template-rows:64px auto!important;border:1px solid #efe0dc!important;border-radius:19px!important;overflow:hidden!important;background:#fffdfb!important}
+  .v210WeekBoard.dayMode{grid-template-columns:72px minmax(0,1fr)!important;max-width:760px!important;margin:0 auto!important}
+  .v210Corner{grid-column:1!important;grid-row:1!important;background:#fffaf8!important;border-right:1px solid #f0e2de!important;border-bottom:1px solid #f0e2de!important}
+  .v210DayHead{height:64px!important;display:grid!important;place-items:center!important;align-content:center!important;gap:4px!important;background:#fffaf8!important;border-left:1px solid #f0e2de!important;border-bottom:1px solid #f0e2de!important;color:#3a3230!important}
+  .v210DayHead.today{background:#f7dddd!important}.v210DayHead b{font-size:14px!important;font-weight:850!important}.v210DayHead span{font-size:10px!important;font-weight:600!important;color:#9d8a83!important}
+  .v210TimeRail{grid-column:1!important;grid-row:2!important;position:relative!important;background:#fffdfb!important;border-right:1px solid #f0e2de!important}
+  .v210TimeLabel{position:absolute!important;right:12px!important;transform:translateY(-50%)!important;font-size:10px!important;font-weight:650!important;color:#a49892!important;white-space:nowrap!important}
+  .v210DayBody{grid-row:2!important;position:relative!important;min-width:0!important;background:linear-gradient(180deg,rgba(255,253,251,.72),rgba(255,251,248,.88))!important;border-left:1px solid #f2e6e2!important;overflow:hidden!important}
+  .v210GridLine{position:absolute!important;left:0!important;right:0!important;height:1px!important;background:#f1e7e3!important;pointer-events:none!important;z-index:0!important}
+  .v210PauseBand{position:absolute!important;left:0!important;right:0!important;background:rgba(248,245,239,.82)!important;border-top:1px dashed #ecdfda!important;border-bottom:1px dashed #ecdfda!important;z-index:1!important;display:flex!important;align-items:center!important;justify-content:center!important;color:#aa9a93!important;font-size:8px!important;font-weight:750!important;letter-spacing:.02em!important;pointer-events:none!important}
+  .v210PauseBand.current{background:#fff0ef!important;border-color:#e7b8b6!important;color:#ad6d6e!important;box-shadow:inset 0 0 0 1px rgba(232,168,166,.08)!important}
+  .v210Lesson{appearance:none!important;position:absolute!important;left:7px!important;right:7px!important;z-index:3!important;border:1px solid color-mix(in srgb,var(--lesson-color,#dca2a8) 24%,#eaded9)!important;border-radius:16px!important;background:color-mix(in srgb,var(--lesson-color,#dca2a8) 28%,#fffaf8)!important;color:#514440!important;display:grid!important;grid-template-columns:25px minmax(0,1fr)!important;gap:10px!important;align-items:center!important;padding:10px 11px!important;text-align:left!important;box-shadow:0 4px 12px rgba(103,75,68,.025)!important;overflow:hidden!important}
+  .v210Lesson:hover{filter:saturate(1.03)!important;box-shadow:0 5px 14px rgba(103,75,68,.05)!important}
+  .v210Lesson.current{border:2px solid #dda4a3!important;box-shadow:0 0 0 3px rgba(232,169,167,.14),0 5px 15px rgba(103,75,68,.05)!important;z-index:5!important}
+  .v210Lesson.cancelled{background:#f5f1ef!important;color:#8f817c!important;border-style:dashed!important;border-color:#dbcac5!important}
+  .v210LessonIcon{width:23px!important;height:23px!important;display:grid!important;place-items:center!important;color:color-mix(in srgb,var(--lesson-color,#d98c8c) 72%,#5b4540)!important;align-self:start!important;margin-top:1px!important}
+  .v210LessonTitle{display:block!important;font-size:14px!important;line-height:1.14!important;font-weight:850!important;color:#342d2b!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  .v210LessonTime{display:block!important;margin-top:3px!important;font-size:11px!important;line-height:1.15!important;font-weight:600!important;color:#8d7972!important}
+  .v210LessonMeta{display:block!important;margin-top:3px!important;font-size:10px!important;line-height:1.15!important;font-weight:550!important;color:#8e7b75!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  .v210Lesson.compact{padding-top:7px!important;padding-bottom:7px!important}.v210Lesson.compact .v210LessonMeta{display:none!important}.v210Lesson.compact .v210LessonTitle{font-size:12px!important}.v210Lesson.compact .v210LessonTime{font-size:9px!important}
+  .v210Badge{position:absolute!important;right:6px!important;top:5px!important;max-width:calc(100% - 12px)!important;border:1px solid rgba(179,125,125,.16)!important;border-radius:999px!important;background:rgba(255,251,249,.80)!important;color:#a36969!important;padding:3px 6px!important;font-size:6.5px!important;font-weight:900!important;letter-spacing:.055em!important;text-transform:uppercase!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  .v210Lesson.hasBadge .v210LessonTitle{padding-right:48px!important}.v210Lesson.current:after{content:"JETZT"!important;position:absolute!important;left:6px!important;bottom:5px!important;padding:3px 5px!important;border-radius:999px!important;background:#fff5f4!important;border:1px solid #e8c0be!important;color:#ad696b!important;font-size:6px!important;font-weight:950!important;letter-spacing:.07em!important}
+  .v210Empty,.v210Special{position:absolute!important;left:7px!important;right:7px!important;top:12px!important;padding:13px!important;border:1px dashed #eadfd9!important;border-radius:14px!important;background:#fffaf8!important;color:#a3948e!important;font-size:11px!important;text-align:center!important;z-index:2!important}.v210Special{text-align:left!important;background:#fff8ec!important;color:#8d796c!important}.v210Special b{display:block!important;color:#5d504a!important;margin-bottom:4px!important}
+
+  /* Other desktop pages keep all existing content, but use the same quiet shell. */
+  body.v210Desktop .view.active:not(#view-plan){overflow:visible!important}
+  body.v210Desktop .view.active:not(#view-plan)>.sectionHead:first-child h2,
+  body.v210Desktop .view.active:not(#view-plan)>.panel:first-child h2{color:#3b3330!important}
+  .v210PageHead{display:flex!important;align-items:end!important;justify-content:space-between!important;gap:16px!important;margin-bottom:18px!important;padding:2px 2px 10px!important;border-bottom:1px solid #f1e5e1!important}.v210PageHead h1{font-size:38px!important;line-height:1!important;margin:0!important;color:#352e2c!important}.v210PageHead p{margin:6px 0 0!important;color:#a08b84!important;font-size:13px!important}
+
+  /* Desktop-only timetable settings. Existing mobile plan controls are untouched. */
+  #v210TimetableSettings{display:block!important;margin:0 0 16px!important;border:1px solid #efe0db!important;background:#fffaf8!important;box-shadow:none!important}
+  #v210TimetableSettings .v210SettingsGrid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;margin-top:12px!important}
+  #v210TimetableSettings .v210SettingCard{border:1px solid #efe2dd!important;border-radius:16px!important;background:#fffdfb!important;padding:13px!important}.v210SettingCard b{display:block!important;color:#4c403c!important;font-size:13px!important}.v210SettingCard small{display:block!important;margin-top:4px!important;color:#9b857e!important;font-size:10px!important;line-height:1.4!important}
+  #v210TimetableSettings .heatModeButtons{display:flex!important;gap:5px!important;margin-top:10px!important}.v210SettingCard .heatModeButtons button{min-height:31px!important;border:1px solid #ead8d1!important;background:#fff9f7!important;color:#8f7770!important;border-radius:10px!important;padding:5px 9px!important;font-size:9px!important;font-weight:850!important}.v210SettingCard .heatModeButtons button.active{background:#f5dada!important;color:#654a47!important;border-color:#e9c3c2!important}
+  #v210SubjectColors{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important;margin-top:10px!important}.v210ColorRow{display:grid!important;grid-template-columns:minmax(0,1fr) 42px!important;align-items:center!important;gap:8px!important;border:1px solid #f0e4df!important;border-radius:13px!important;background:color-mix(in srgb,var(--preview,#f2dddd) 12%,#fff)!important;padding:8px 9px!important}.v210ColorRow span{font-size:10px!important;font-weight:800!important;color:#725f59!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}.v210ColorRow input{width:42px!important;height:32px!important;border:1px solid #ead8d2!important;border-radius:10px!important;padding:2px!important;background:#fff!important;cursor:pointer!important}.v210ColorRow input::-webkit-color-swatch-wrapper{padding:2px!important}.v210ColorRow input::-webkit-color-swatch{border:0!important;border-radius:7px!important}
+  #v210TimetableSettings.v210SettingsFocus{box-shadow:0 0 0 4px rgba(237,185,185,.16)!important;border-color:#e8c8c7!important}
+  .v211RefColorsBtn{margin-top:9px!important;min-height:32px!important;border:1px solid #ead8d2!important;border-radius:10px!important;background:#fff8f6!important;color:#806a63!important;padding:6px 10px!important;font-size:9px!important;font-weight:850!important}
+
+  #view-absence>.v210PageHead + .sectionHead h2,#view-missed-hours>.v210PageHead + .sectionHead h2{display:none!important}
+  #view-absence>.v210PageHead + .sectionHead,#view-missed-hours>.v210PageHead + .sectionHead{justify-content:flex-end!important;margin-top:-8px!important}
+  #view-missed-hours .v210MissingSummary{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;margin-bottom:14px!important}
+  #view-missed-hours .v210MissingList{display:grid!important;gap:9px!important}
+}
+</style>
+<script id="v210-reference-desktop-script">
+(function(){
+  'use strict';
+  const MIN=1100;
+  let weekOffset=Number(localStorage.getItem('studia-v210-week-offset')||0)||0;
+  let desktopMode=localStorage.getItem('studia-v210-plan-mode')==='day'?'day':'week';
+  let desktopDay=localStorage.getItem('studia-v210-plan-day')||((typeof dayCode==='function'&&dayCode(new Date()))||'Mo');
+  let navFocus='',specialNavInFlight=false;
+  if(!['Mo','Di','Mi','Do','Fr'].includes(desktopDay))desktopDay='Mo';
+
+  function esc2(s){return String(s==null?'':s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+  function svg(name){const m={
+    bunny:`<svg viewBox="0 0 24 24"><path d="M8.5 8.5C6.8 5.2 7 2.6 8.2 2c1.4-.5 3 1.6 4 5.6"/><path d="M15.5 8.5c1.7-3.3 1.5-5.9.3-6.5-1.4-.5-3 1.6-4 5.6"/><path d="M5 13c0-4.4 3.1-7 7-7s7 2.6 7 7v2.3c0 4.3-2.8 6.7-7 6.7s-7-2.4-7-6.7V13Z"/><path d="M9.2 13.2h.01M14.8 13.2h.01"/><path d="M10.2 17c1.1.9 2.5.9 3.6 0"/></svg>`,
+    cal:`<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 9h18"/></svg>`,
+    tasks:`<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="m7 12 3 3 7-8"/></svg>`,
+    learn:`<svg viewBox="0 0 24 24"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H20v16H7.5A3.5 3.5 0 0 0 4 21.5z"/><path d="M4 5.5v16"/></svg>`,
+    folder:`<svg viewBox="0 0 24 24"><path d="M3 6h7l2 2h9v11H3z"/></svg>`,
+    test:`<svg viewBox="0 0 24 24"><path d="M6 2h8l4 4v16H6z"/><path d="M14 2v5h5M9 12h6M9 16h6"/></svg>`,
+    notes:`<svg viewBox="0 0 24 24"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4z"/><path d="m14 6 4 4"/></svg>`,
+    dayoff:`<svg viewBox="0 0 24 24"><path d="M6 3v3M18 3v3M4 8h16v12H4z"/><path d="m8 13 2 2 5-5"/></svg>`,
+    clock:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`,
+    settings:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.5-2-3.4-2.4 1a7 7 0 0 0-1.8-1L14.4 3h-4.8l-.3 3.1a7 7 0 0 0-1.8 1l-2.4-1-2 3.4L5.1 11a7 7 0 0 0 0 2l-2 1.5 2 3.4 2.4-1a7 7 0 0 0 1.8 1l.3 3.1h4.8l.3-3.1a7 7 0 0 0 1.8-1l2.4 1 2-3.4-2-1.5c.1-.3.1-.7.1-1Z"/></svg>`,
+    refresh:`<svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0 2.2 5.6"/><path d="M20 4v7h-7"/></svg>`,
+    calendar2:`<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>`,
+    sprout:`<svg viewBox="0 0 24 24"><path d="M12 21v-9"/><path d="M12 13c-5 0-8-3-8-7 5 0 8 3 8 7Z"/><path d="M12 16c5 0 8-3 8-7-5 0-8 3-8 7Z"/></svg>`,
+    heart:`<svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>`,
+    math:`<svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2M14 11h2M8 15h2M14 15h2"/></svg>`,
+    bio:`<svg viewBox="0 0 24 24"><path d="M12 21v-9"/><path d="M12 13c-5 0-8-3-8-7 5 0 8 3 8 7Z"/><path d="M12 16c5 0 8-3 8-7-5 0-8 3-8 7Z"/></svg>`,
+    globe:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg>`,
+    hist:`<svg viewBox="0 0 24 24"><path d="m3 9 9-5 9 5"/><path d="M5 10h14M6 10v7M10 10v7M14 10v7M18 10v7M4 20h16"/></svg>`,
+    chem:`<svg viewBox="0 0 24 24"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3"/><path d="M8 15h8"/></svg>`,
+    book:`<svg viewBox="0 0 24 24"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H20v16H7.5A3.5 3.5 0 0 0 4 21.5z"/><path d="M4 5.5v16"/></svg>`,
+    atom:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.5"/><ellipse cx="12" cy="12" rx="9" ry="3.5"/><ellipse cx="12" cy="12" rx="3.5" ry="9" transform="rotate(45 12 12)"/><ellipse cx="12" cy="12" rx="3.5" ry="9" transform="rotate(-45 12 12)"/></svg>`
+  };return m[name]||m.cal}
+  function lessonIcon(subject){const s=String(subject||'').toLowerCase();if(s.includes('mathe'))return svg('math');if(s.includes('bio'))return svg('bio');if(s.includes('engl'))return svg('globe');if(s.includes('geschichte'))return svg('hist');if(s.includes('chem'))return svg('chem');if(s.includes('deutsch'))return svg('book');if(s.includes('phys'))return svg('atom');return svg('cal')}
+  function desktop(){return innerWidth>=MIN&&!document.body.classList.contains('editorMode')}
+  function currentView(){return document.querySelector('.view.active')?.id?.replace('view-','')||'home'}
+  function taskBubble(){const h=(data.homework||[]).filter(x=>!x.done).length;const t=(data.tests||[]).filter(x=>{try{const n=calendarDaysUntil(x.date);return n!=null&&n>=0}catch(_){return false}}).length;return h+t}
+  function side(label,icon,views,action,bubble,key=''){const matched=(Array.isArray(views)?views:[views]).includes(currentView());const active=navFocus?navFocus===key:matched;return `<button class="navItem ${active?'active':''} ${bubble?'hasBubble':''}" onclick="${action}"><span class="navIcon">${svg(icon)}</span><span class="navLabel">${esc2(label)}</span><span class="navBubble">${bubble||''}</span></button>`}
+
+  window.v210Nav=function(view){navFocus='';openView(view)};
+  window.v210OpenTests=function(){navFocus='tests';specialNavInFlight=true;openView('tasks');specialNavInFlight=false;setTimeout(()=>{ensureSidebar();document.getElementById('testList')?.closest('.section')?.scrollIntoView({block:'start',behavior:'smooth'})},80)};
+  window.v210OpenNotes=function(){navFocus='notes';specialNavInFlight=true;openView('subjects');specialNavInFlight=false;setTimeout(ensureSidebar,0)};
+  window.v210OpenMissedHours=function(){navFocus='';ensureMissedHoursView();openView('missed-hours');setTimeout(renderMissedHours,0)};
+
+  function ensureSidebar(){
+    document.body.classList.toggle('v210Desktop',desktop());
+    if(!desktop())return;
+    const app=document.querySelector('.app');if(!app)return;
+    let s=document.getElementById('v210Sidebar');if(!s){s=document.createElement('aside');s.id='v210Sidebar';app.insertBefore(s,app.firstChild)}
+    const bubble=taskBubble();
+    s.innerHTML=`<div class="brand" onclick="openView('home')"><span class="brandIcon">${svg('bunny')}</span><span class="brandText"><b>Studia</b><small>PLAN · LERNEN · ERREICHEN</small></span></div>
+      <div class="navList">
+        ${side('Stundenplan','cal','plan',`openView('plan')`,'')}
+        ${side('Aufgaben','tasks','tasks',`openView('tasks')`,bubble?String(bubble):'')}
+        ${side('Lernen','learn',['study','learnsets'],`v210Nav('study')`,'','study')}
+        ${side('Fächer','folder',['subjects','subject-detail','topic-detail','deck-detail'],`v210Nav('subjects')`,'','subjects')}
+        ${side('Tests','test','__never__',`v210OpenTests()`,'','tests')}
+        ${side('Notizen','notes','__never__',`v210OpenNotes()`,'','notes')}
+        <div class="navDivider"></div>
+        ${side('Fehltage','dayoff','absence',`v210Nav('absence')`,'','absence')}
+        ${side('Fehlstunden','clock','missed-hours',`v210OpenMissedHours()`,'','missed-hours')}
+      </div>
+      <div class="sidebarBottom">${side('Einstellungen','settings','settings',`v210Nav('settings')`,'','settings')}
+        <div class="quoteBox"><span class="quoteIcon">${svg('sprout')}</span><div class="quoteText">Better<br>than<br>yesterday.</div><span class="quoteHeart">${svg('heart')}</span></div>
+      </div>`;
+  }
+
+  function startOfWeek(offset=0){const n=new Date();const d=new Date(n.getFullYear(),n.getMonth(),n.getDate(),12);d.setDate(d.getDate()-((d.getDay()+6)%7)+(offset*7));return d}
+  function isoWeek(d){const x=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));const day=x.getUTCDay()||7;x.setUTCDate(x.getUTCDate()+4-day);const ys=new Date(Date.UTC(x.getUTCFullYear(),0,1));return Math.ceil((((x-ys)/86400000)+1)/7)}
+  function weekInfo(){const mon=startOfWeek(weekOffset),dates=[];for(let i=0;i<5;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);dates.push(d)}const fmt=d=>d.toLocaleDateString('de-DE',{day:'2-digit',month:'short'}).replace('. ',' ').replace(/\.$/,'');const range=`${dates[0].toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'})} – ${dates[4].toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'})}`;return{week:`KW ${isoWeek(mon)}`,range,dates,short:fmt}}
+  window.v210ShiftWeek=function(n){weekOffset+=Number(n)||0;localStorage.setItem('studia-v210-week-offset',String(weekOffset));ensurePlanHead();if(document.getElementById('view-plan')?.classList.contains('active'))renderPlan()};
+  window.v210SetPlanMode=function(mode){desktopMode=mode==='day'?'day':'week';localStorage.setItem('studia-v210-plan-mode',desktopMode);ensurePlanHead();renderPlan()};
+  window.v210SetPlanDay=function(day){if(!['Mo','Di','Mi','Do','Fr'].includes(day))return;desktopDay=day;localStorage.setItem('studia-v210-plan-day',day);renderPlan()};
+  window.v210SetTimetableMode=function(mode){
+    const m=mode==='basis'?'basis':'current';
+    if(typeof window.setTimetableViewMode==='function')window.setTimetableViewMode(m);
+    else{try{timetableViewMode=m}catch(_){ }try{renderPlan()}catch(_){ }}
+    setTimeout(()=>{ensurePlanHead();ensureSidebar()},0);
+  };
+  window.v210RefreshPlan=async function(btn){
+    const b=btn instanceof Element?btn:null;if(b){b.classList.add('isLoading');b.disabled=true}
+    try{if(typeof window.loadRemotePlan==='function')await window.loadRemotePlan(true)}catch(_){ }
+    finally{if(b){b.classList.remove('isLoading');b.disabled=false}setTimeout(()=>{ensurePlanHead();try{renderPlan()}catch(_){ }},0)}
+  };
+  window.v210OpenTimetableSettings=function(){
+    openView('settings');
+    setTimeout(()=>{ensureTimetableSettings();ensureSidebar();const box=document.getElementById('v210TimetableSettings');if(box){box.classList.add('v210SettingsFocus');box.scrollIntoView({block:'start',behavior:'smooth'});setTimeout(()=>box.classList.remove('v210SettingsFocus'),1300)}},80);
+  };
+
+  function ensurePlanHead(){
+    if(!desktop()||!document.getElementById('view-plan')?.classList.contains('active'))return;
+    const view=document.getElementById('view-plan');let h=document.getElementById('v210PlanHead');if(!h){h=document.createElement('div');h.id='v210PlanHead';view.insertBefore(h,view.firstChild)}
+    const wk=weekInfo();
+    h.innerHTML=`<div class="title">Stundenplan</div><div class="sub">${esc2(data.settings.school||'PHS Ludwigshafen')}</div>
+      <div class="modeWrap"><button class="modeBtn ${desktopMode==='day'?'active':''}" onclick="v210SetPlanMode('day')">Tag</button><button class="modeBtn ${desktopMode==='week'?'active':''}" onclick="v210SetPlanMode('week')">Woche</button></div>
+      <div class="actionRow"><button class="headBtn refreshAction" onclick="v210RefreshPlan(this)" title="Stundenplan aktualisieren">${svg('refresh')}<span>Aktualisieren</span></button><button class="headBtn" onclick="openView('tasks')" title="Kalender">${svg('calendar2')}</button><button class="headBtn" onclick="v210OpenTimetableSettings()" title="Stundenplan-Einstellungen">${svg('settings')}</button></div>
+      <div class="planTypeWrap"><button class="planTypeBtn ${timetableViewMode==='current'?'active':''}" onclick="v210SetTimetableMode('current')"><span class="miniStar">✦</span>Aktuell & Änderungen</button><button class="planTypeBtn ${timetableViewMode==='basis'?'active':''}" onclick="v210SetTimetableMode('basis')">▦ Basisplan</button></div>
+      <div class="weekNav"><button class="weekBtn" onclick="v210ShiftWeek(-1)" aria-label="Vorherige Woche">‹</button><button class="weekInfo" onclick="${weekOffset?`v210ShiftWeek(${-weekOffset})`:`void 0`}" title="${weekOffset?'Zur aktuellen Woche':'Aktuelle Woche'}"><b>${esc2(wk.week)}</b><small>${esc2(wk.range)}</small></button><button class="weekBtn v210WeekBtnRight" onclick="v210ShiftWeek(1)" aria-label="Nächste Woche">›</button></div>`;
+  }
+
+  function toMin(t){const[a,b]=String(t||'00:00').split(':').map(Number);return(a||0)*60+(b||0)}
+  function timeline(viewLessons){
+    const start=480,end=960,labels=new Set(['08:00','15:45']);
+    try{for(let i=1;i<=16;i++){const t=effectiveTimeForRow(i);if(!t)continue;if(toMin(t.start)>=start&&toMin(t.start)<=end)labels.add(t.start);if(toMin(t.end)>=start&&toMin(t.end)<=end)labels.add(t.end)}}catch(_){ }
+    for(const l of (viewLessons||[])){if(toMin(l.start)>=start&&toMin(l.start)<=end)labels.add(l.start);if(toMin(l.end)>=start&&toMin(l.end)<=end)labels.add(l.end)}
+    try{for(const p of getActivePauses()){if(toMin(p.start)>=start&&toMin(p.start)<=end)labels.add(p.start);if(toMin(p.end)>=start&&toMin(p.end)<=end)labels.add(p.end)}}catch(_){ }
+    return{start,end,labels:[...labels].sort((a,b)=>toMin(a)-toMin(b))}
+  }
+  function changeLabel(l,p){
+    if(l.cancelledFromBasis)return'ENTFÄLLT';
+    const raw=String(l.raw||'');if(/\b(entfall|entfällt|ausfall|fällt\s+aus)\b/i.test(raw))return'ENTFÄLLT';
+    if(!l.changedFromBasis)return'';
+    try{const old=splitCell(l.changedFromRaw||'');const now=p||splitCell(raw);if(old.subject&&prettySubject(old.subject)===prettySubject(now.subject)){if(old.teacher&&now.teacher&&old.teacher!==now.teacher)return'VERTRETUNG';if(old.room&&now.room&&old.room!==now.room)return'RAUMÄNDERUNG'} }catch(_){ }
+    return'GEÄNDERT'
+  }
+  function desktopPretty(subject){const p=prettySubject(subject),u=String(p||'').trim().toUpperCase();const map={PH:'Physik',PHY:'Physik',PHYS:'Physik',BIO:'Biologie',BI:'Biologie',GES:'Geschichte',GE:'Geschichte',G:'Geschichte',CH:'Chemie',CHE:'Chemie'};return map[u]||p}
+  function referenceSubjectColor(title){
+    const s=String(title||'').toLowerCase();
+    if(s.includes('mathe'))return'#dca0a7';
+    if(s.includes('bio'))return'#a6b978';
+    if(s.includes('engl'))return'#83a4d0';
+    if(s.includes('geschichte')||s==='ges')return'#d6b16b';
+    if(s.includes('chem'))return'#aa83c2';
+    if(s.includes('deutsch'))return'#d3a17a';
+    if(s.includes('phys'))return'#a48abb';
+    if(s.includes('sport'))return'#86b7a4';
+    if(s.includes('kunst'))return'#d899ad';
+    if(s.includes('musik'))return'#9da7cf';
+    return'#c3a6b8';
+  }
+  function subjectColor(title){
+    try{
+      const key=typeof timetableSubjectKey==='function'?timetableSubjectKey(title):String(title||'').trim().toUpperCase();
+      const custom=data.timetableSubjectColors&&data.timetableSubjectColors[key];
+      return custom||referenceSubjectColor(title);
+    }catch(_){return referenceSubjectColor(title)}
+  }
+
+  function renderV210Plan(){
+    const selectedClass=data.timetable.selectedClass||data.settings.className||'M U1';
+    /* Keep the existing business logic: users can switch between current/effective plan and saved basis plan. */
+    const viewLessons=(timetableViewMode==='basis'
+      ? (typeof basisScheduleForClass==='function'?basisScheduleForClass(selectedClass):[])
+      : (typeof currentScheduleForClass==='function'?currentScheduleForClass(selectedClass):(data.timetable.lessons||[])))||[];
+    const tl=timeline(viewLessons),px=1.32,bodyHeight=Math.round((tl.end-tl.start)*px),pos=t=>Math.round((toMin(t)-tl.start)*px),wk=weekInfo(),today=dayCode(new Date());
+    const days=desktopMode==='day'?[desktopDay]:dayOrder;
+    const dayIndex=d=>dayOrder.indexOf(d);
+    function body(day){
+      const rawDay=stableTimetableDay(applyEffectiveDisplayTimes(viewLessons.filter(x=>x.day===day))).filter(x=>toMin(x.end)>tl.start&&toMin(x.start)<tl.end);
+      const special=rawDay.filter(x=>x.specialOnly),normal=rawDay.filter(x=>!x.specialOnly);
+      const lines=tl.labels.map(t=>`<div class="v210GridLine" style="top:${pos(t)}px"></div>`).join('');
+      const pauses=(typeof getActivePauses==='function'?getActivePauses():[]).filter(p=>toMin(p.end)>tl.start&&toMin(p.start)<tl.end).map(p=>{const active=day===today&&toMin(p.start)<=toMinNow()&&toMinNow()<toMin(p.end);return `<div class="v210PauseBand ${active?'current':''}" style="top:${Math.max(0,pos(p.start))}px;height:${Math.max(10,pos(p.end)-pos(p.start))}px">${active?'JETZT · ':''}${esc2(p.label||'Pause')}</div>`}).join('');
+      if(special.length&&!normal.length){const cards=special.map(x=>{const raw=cleanPdfCellText(x.raw||'');const tm=raw.match(/^(\d{1,2}(?::\d{2})?\s*Uhr)\s*(.*)$/i);return `<div class="v210Special"><b>${esc2(tm?tm[1]:'Info')}</b>${esc2(tm?tm[2]:raw)}</div>`}).join('');return `<div class="v210DayBody" style="height:${bodyHeight}px">${lines}${pauses}${cards}</div>`}
+      const merged=expandLessonsForVisibleBreaks(mergeLessons(rawDay));
+      const cards=merged.map(l=>{
+        const raw=(Array.isArray(l.duplicates)&&l.duplicates.length?l.duplicates[0].raw:l.raw)||'';const p=splitCell(raw),title=desktopPretty(p.subject||raw),badge=timetableViewMode==='basis'?'':changeLabel(l,p),cancelled=badge==='ENTFÄLLT';
+        const top=Math.max(0,pos(l.start))+4,height=Math.max(44,Math.round((toMin(l.end)-toMin(l.start))*px)-7),compact=height<70,current=!cancelled&&typeof isLessonCurrentNow==='function'&&isLessonCurrentNow(l);
+        const meta=[p.room,p.teacher||p.meta].filter(Boolean).join(' · ');const color=subjectColor(title);
+        return `<button class="v210Lesson ${compact?'compact':''} ${current?'current':''} ${cancelled?'cancelled':''} ${badge?'hasBadge':''}" style="top:${top}px;height:${height}px;--lesson-color:${esc2(color)}" onclick='openLessonDetails(${JSON.stringify(JSON.stringify(l))})'>${badge?`<span class="v210Badge">${esc2(badge)}</span>`:''}<span class="v210LessonIcon">${lessonIcon(title)}</span><span><span class="v210LessonTitle">${esc2(title)}</span><span class="v210LessonTime">${esc2(l.start)} – ${esc2(l.end)}</span>${meta&&!cancelled?`<span class="v210LessonMeta">${esc2(meta)}</span>`:''}</span></button>`
+      }).join('');
+      return `<div class="v210DayBody" style="height:${bodyHeight}px">${lines}${pauses}${cards||'<div class="v210Empty">Kein Unterricht</div>'}</div>`
+    }
+    function toMinNow(){const n=new Date();return n.getHours()*60+n.getMinutes()}
+    const tabs=desktopMode==='day'?`<div class="v210DayTabs">${dayOrder.map((d,i)=>`<button class="v210DayTab ${d===desktopDay?'active':''}" onclick="v210SetPlanDay('${d}')">${d} · ${esc2(wk.short(wk.dates[i]))}</button>`).join('')}</div>`:'';
+    const heads=days.map(d=>{const i=dayIndex(d),date=wk.dates[Math.max(0,i)];return `<div class="v210DayHead ${weekOffset===0&&d===today?'today':''}"><b>${esc2(d)}</b><span>${esc2(wk.short(date))}</span></div>`}).join('');
+    return `${tabs}<div class="v210WeekBoard ${desktopMode==='day'?'dayMode':''}"><div class="v210Corner"></div>${heads}<div class="v210TimeRail" style="height:${bodyHeight}px">${tl.labels.map(t=>`<div class="v210TimeLabel" style="top:${pos(t)}px">${esc2(t)}</div>`).join('')}</div>${days.map(body).join('')}</div>`
+  }
+
+  /* Own the desktop renderer only; the mobile/tablet renderer/business logic remains untouched. */
+  const priorDesktopWeekRenderer=window.renderDesktopWeekPlan;
+  window.renderDesktopWeekPlan=function(){
+    if(desktop())return renderV210Plan();
+    return typeof priorDesktopWeekRenderer==='function'?priorDesktopWeekRenderer.apply(this,arguments):'';
+  };
+  try{renderDesktopWeekPlan=window.renderDesktopWeekPlan}catch(_){ }
+
+  function ensureMissedHoursView(){
+    if(document.getElementById('view-missed-hours'))return;
+    const settings=document.getElementById('view-settings');if(!settings)return;
+    const v=document.createElement('section');v.className='view';v.id='view-missed-hours';v.innerHTML=`<div class="sectionHead"><h2>Fehlstunden</h2><button class="primary" onclick="openAddMissedHour()">+ Eintragen</button></div><div class="v210MissingSummary" id="missedHoursSummary"></div><div class="v210MissingList" id="missedHoursList"></div>`;settings.parentNode.insertBefore(v,settings)
+  }
+  window.openAddMissedHour=function(){data.missedHours ||= [];openModal(`<h2>Fehlstunde eintragen</h2><div class="formGrid"><div><label>Datum</label><input id="mhDate" type="date" value="${todayISO()}"></div><div><label>Fach</label><input id="mhSubject" placeholder="z. B. Mathematik"></div><div><label>Von</label><input id="mhStart" type="time" value="08:00"></div><div><label>Bis</label><input id="mhEnd" type="time" value="08:45"></div><div><label>Status</label><select id="mhStatus"><option>Entschuldigung offen</option><option>Entschuldigt</option></select></div><div><label>Grund</label><input id="mhReason" placeholder="z. B. Arzttermin"></div><div class="full"><label>Notiz</label><input id="mhNote" placeholder="Optional"></div></div><button class="primary" style="margin-top:12px" onclick="addMissedHour()">Speichern</button>`)};
+  window.addMissedHour=function(){data.missedHours ||= [];const date=document.getElementById('mhDate')?.value||todayISO(),subject=document.getElementById('mhSubject')?.value.trim()||'Unterricht',start=document.getElementById('mhStart')?.value||'',end=document.getElementById('mhEnd')?.value||'',status=document.getElementById('mhStatus')?.value||'Entschuldigung offen',reason=document.getElementById('mhReason')?.value.trim()||'Fehlstunde',note=document.getElementById('mhNote')?.value.trim()||'';data.missedHours.push({id:id(),date,subject,start,end,status,reason,note});save();closeModal();setTimeout(renderMissedHours,0)};
+  window.toggleMissedHour=function(mid){data.missedHours ||= [];const x=data.missedHours.find(x=>x.id===mid);if(x){x.status=x.status==='Entschuldigt'?'Entschuldigung offen':'Entschuldigt';save();setTimeout(renderMissedHours,0)}};
+  window.deleteMissedHour=function(mid){data.missedHours ||= [];data.missedHours=data.missedHours.filter(x=>x.id!==mid);save();setTimeout(renderMissedHours,0)};
+  function renderMissedHours(){ensureMissedHoursView();data.missedHours ||= [];const sum=document.getElementById('missedHoursSummary'),list=document.getElementById('missedHoursList');if(!sum||!list)return;const total=data.missedHours.length,open=data.missedHours.filter(x=>x.status!=='Entschuldigt').length;sum.innerHTML=`<div class="kpi"><div class="big">${total}</div><div class="small">Fehlstunden eingetragen</div></div><div class="kpi"><div class="big">${open}</div><div class="small">Entschuldigungen offen</div></div>`;list.innerHTML=total?data.missedHours.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date))).map(x=>`<div class="card rowBetween"><div><b>${esc2(x.subject)}</b><div class="small">${esc2(fmtDate(x.date))}${x.start?` · ${esc2(x.start)}${x.end?'–'+esc2(x.end):''}`:''}${x.reason?' · '+esc2(x.reason):''}${x.note?' · '+esc2(x.note):''}</div></div><div class="row"><button class="badge ${x.status==='Entschuldigt'?'good':'warn'}" onclick="toggleMissedHour('${esc2(x.id)}')">${esc2(x.status)}</button><button class="dangerBtn" onclick="deleteMissedHour('${esc2(x.id)}')">×</button></div></div>`).join(''):'<div class="empty">Keine Fehlstunden eingetragen.</div>'}
+  window.renderMissedHours=renderMissedHours;
+
+  function uniquePlanSubjects(){const cls=data.timetable.selectedClass||data.settings.className||'M U1',ls=(typeof currentScheduleForClass==='function'?currentScheduleForClass(cls):(data.timetable.lessons||[]))||[],set=new Map();for(const l of ls){if(l.specialOnly||l.cancelledFromBasis)continue;try{const p=splitCell(l.raw||'');const t=desktopPretty(p.subject);if(t&&!set.has(t))set.set(t,subjectColor(t))}catch(_){ }}return[...set.entries()].slice(0,18)}
+  function ensureTimetableSettings(){
+    if(!desktop())return;const view=document.getElementById('view-settings');if(!view)return;let box=document.getElementById('v210TimetableSettings');if(!box){box=document.createElement('div');box.id='v210TimetableSettings';box.className='panel';view.insertBefore(box,view.firstChild)}
+    const subs=uniquePlanSubjects();const heatAuto=(()=>{try{return data.timetable?.heatSchedule?'Auto erkannt · Hitzestunden aktiv':'Auto-Erkennung bereit · aktuell keine Hitzestunden erkannt'}catch(_){return'Auto-Erkennung aktiv'}})();box.innerHTML=`<div class="rowBetween"><div><div class="eyebrow">STUNDENPLAN</div><h2>Stundenplan</h2></div><span class="badge">Desktop</span></div><div class="v210SettingsGrid"><div class="v210SettingCard"><b>Hitzestunden & Auto-Erkennung</b><small id="v210HeatState">${esc2(heatModeOverride==='on'?'Manuell aktiviert':heatModeOverride==='off'?'Manuell deaktiviert':heatAuto)}</small><div class="heatModeButtons"><button class="${heatModeOverride==='auto'?'active':''}" onclick="setHeatMode('auto',this);setTimeout(v210RefreshDesktopSettings,0)">Auto</button><button class="${heatModeOverride==='on'?'active':''}" onclick="setHeatMode('on',this);setTimeout(v210RefreshDesktopSettings,0)">An</button><button class="${heatModeOverride==='off'?'active':''}" onclick="setHeatMode('off',this);setTimeout(v210RefreshDesktopSettings,0)">Aus</button></div></div><div class="v210SettingCard"><b>Automatische Aktualisierung</b><small>Der Plan wird beim Öffnen und im Vordergrund automatisch geprüft. Die bestehende Auto-Sync-Logik bleibt aktiv.</small><button class="ghost" style="margin-top:9px;min-height:32px;padding:6px 9px;font-size:9px" onclick="v210RefreshPlan(this)">Jetzt aktualisieren</button></div><div class="v210SettingCard full" style="grid-column:1/-1"><b>Fachfarben</b><small>Standardmäßig werden die sanften Pastellfarben aus dem Referenzbild genutzt. Du kannst jede Fachfarbe hier ändern.</small><button class="v211RefColorsBtn" onclick="v210UseReferenceColors()">Referenzfarben verwenden</button><div id="v210SubjectColors">${subs.length?subs.map(([name,color])=>`<label class="v210ColorRow" style="--preview:${esc2(colorToHex(color))}"><span>${esc2(name)}</span><input type="color" value="${esc2(colorToHex(color))}" oninput="this.closest('.v210ColorRow').style.setProperty('--preview',this.value)" onchange='v210SaveSubjectColor(${JSON.stringify(name)},this.value)'></label>`).join(''):'<span class="small">Noch keine Fächer im Plan erkannt.</span>'}</div></div></div>`
+  }
+  window.v210RefreshDesktopSettings=function(){ensureTimetableSettings();ensureSidebar();if(document.getElementById('view-plan')?.classList.contains('active')){ensurePlanHead();renderPlan()}};
+  window.v210SaveSubjectColor=function(subject,color){
+    if(!/^#[0-9a-f]{6}$/i.test(String(color||'')))return;
+    const key=typeof timetableSubjectKey==='function'?timetableSubjectKey(subject):String(subject||'').trim().toUpperCase();
+    data.timetableSubjectColors ||= {};data.timetableSubjectColors[key]=String(color).toLowerCase();
+    try{localStorage.setItem(KEY,JSON.stringify(data))}catch(_){ }
+    try{window.v150MarkDirty?.(80)}catch(_){ }
+    try{renderPlan();renderHome()}catch(_){ }
+    setTimeout(()=>{ensureTimetableSettings();ensureSidebar()},30);
+  };
+  window.v210UseReferenceColors=function(){
+    data.timetableSubjectColors ||= {};for(const [name] of uniquePlanSubjects()){try{delete data.timetableSubjectColors[timetableSubjectKey(name)]}catch(_){ }}
+    try{localStorage.setItem(KEY,JSON.stringify(data))}catch(_){ }
+    try{window.v150MarkDirty?.(80)}catch(_){ }
+    try{renderPlan();renderHome()}catch(_){ }
+    setTimeout(()=>{ensureTimetableSettings();ensureSidebar()},30);
+  };
+
+  function ensurePageHead(){if(!desktop())return;const v=currentView();const labels={absence:['Fehltage','Ganze versäumte Schultage & Entschuldigungen'],'missed-hours':['Fehlstunden','Einzelne versäumte Unterrichtsstunden']};const view=document.getElementById('view-'+v);if(!view||!labels[v])return;let h=view.querySelector(':scope > .v210PageHead');if(!h){h=document.createElement('div');h.className='v210PageHead';view.insertBefore(h,view.firstChild)}h.innerHTML=`<div><h1>${labels[v][0]}</h1><p>${labels[v][1]}</p></div>`}
+
+  function reconcile(){ensureMissedHoursView();ensureSidebar();if(!desktop())return;ensurePlanHead();ensureTimetableSettings();renderMissedHours();ensurePageHead()}
+  const oldOpen=window.openView;if(typeof oldOpen==='function'&&!oldOpen.__v210){window.openView=function(){if(!specialNavInFlight)navFocus='';if(innerWidth>=MIN&&!document.body.classList.contains('editorMode'))document.body.classList.add('v210Desktop');ensureSidebar();const r=oldOpen.apply(this,arguments);requestAnimationFrame(()=>{if(innerWidth>=MIN&&!document.body.classList.contains('editorMode'))document.body.classList.add('v210Desktop');reconcile()});setTimeout(reconcile,80);return r};window.openView.__v210=true;try{openView=window.openView}catch(_){ }}
+  const oldPlan=window.renderPlan;if(typeof oldPlan==='function'&&!oldPlan.__v210){window.renderPlan=function(){const r=oldPlan.apply(this,arguments);setTimeout(()=>{ensureSidebar();ensurePlanHead()},0);return r};window.renderPlan.__v210=true;try{renderPlan=window.renderPlan}catch(_){ }}
+  window.addEventListener('resize',()=>setTimeout(reconcile,60));document.addEventListener('click',()=>setTimeout(()=>{if(desktop())ensureSidebar()},0),true);
+  const v210Observer=new MutationObserver(()=>{if(innerWidth>=MIN&&!document.body.classList.contains('editorMode')){document.body.classList.add('v210Desktop');if(!document.getElementById('v210Sidebar'))ensureSidebar()}});
+  try{v210Observer.observe(document.querySelector('.app')||document.body,{subtree:true,attributes:true,attributeFilter:['class'],childList:true})}catch(_){ }
+  [0,180,600,1500].forEach(t=>setTimeout(reconcile,t));
+})();
+</script>
+<!-- ===== /Studia V210 ===== -->
+<!-- Studia V211 fixes: persistent desktop sidebar, reference palette + editable colors, rounded type, timetable settings shortcut, refresh control, current/basis switch. -->
