@@ -21598,3 +21598,391 @@ const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 228'};
 })();
 </script>
 <!-- ===== /Studia V228 ===== -->
+
+
+<!-- ===== Studia V229 · Graph-Formel Save komplett entkoppelt ===== -->
+<script id="studia-v229-graph-save-hardfix">
+(()=>{
+'use strict';
+if(window.__STUDIA_V229__)return;window.__STUDIA_V229__=true;
+const q=(s,r=document)=>r?.querySelector?.(s)||null;
+const qa=(s,r=document)=>r?.querySelectorAll?[...r.querySelectorAll(s)]:[];
+const clone=o=>JSON.parse(JSON.stringify(o));
+let activeGraphCurve=-1;
+
+function normText(s){
+  const supMap={'⁰':'0','¹':'1','²':'2','³':'3','⁴':'4','⁵':'5','⁶':'6','⁷':'7','⁸':'8','⁹':'9','⁻':'-','⁺':'+'};
+  return String(s??'').replace(/\u200b/g,'').replace(/\u00a0/g,' ')
+    .replace(/[×⋅]/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/π/g,'pi')
+    .replace(/(\d),(\d)/g,'$1.$2')
+    .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺]+/g,m=>'^('+[...m].map(c=>supMap[c]||c).join('')+')');
+}
+function visible(el){
+  if(!el)return '';
+  let s=String(el.textContent||'').replace(/\u200b/g,'').trim();
+  if(!s)s=String(el.dataset?.mathValue||'').replace(/\u200b/g,'').trim();
+  return normText(s);
+}
+function children(el){return el?[...el.childNodes].map(node).join(''):''}
+function required(v,label){v=String(v||'').replace(/\s+/g,'');if(!v)throw new Error(label+' ist leer');return v}
+function node(n){
+  if(!n)return '';
+  if(n.nodeType===Node.TEXT_NODE)return normText(n.nodeValue);
+  if(n.nodeType!==Node.ELEMENT_NODE)return '';
+  if(n.tagName==='BR'||n.classList?.contains('vfParenMark'))return '';
+  if(n.matches('.vfPeriodDigit'))return normText(n.textContent||'');
+  if(n.matches('.vfPower')){
+    const b=n.querySelector(':scope > .vfPowerBase');
+    const s=n.querySelector(':scope > sup');
+    let base=children(b).replace(/\s+/g,'') || visible(b);
+    let exp=children(s).replace(/\s+/g,'') || visible(s);
+    /* Wenn der Browser einen Slot intern merkwürdig verschachtelt, textContent des sup ist maßgeblich. */
+    if(!exp&&s)exp=normText(s.innerText||s.textContent||s.dataset?.mathValue||'').replace(/\s+/g,'');
+    /* Letzte Rettung: direkt aus dem HTML des sup. */
+    if(!exp&&s){
+      const tmp=document.createElement('div');tmp.innerHTML=s.innerHTML||'';
+      exp=normText(tmp.textContent||'').replace(/\s+/g,'');
+    }
+    return `(${required(base,'Basis')})^(${required(exp,'Exponent')})`;
+  }
+  if(n.matches('.vfFrac,.fracExpr')){
+    const ps=[...n.children].filter(x=>!x.classList.contains('vfParenMark'));
+    return `((${required(children(ps[0])||visible(ps[0]),'Zähler')})/(${required(children(ps[1])||visible(ps[1]),'Nenner')}))`;
+  }
+  if(n.matches('.vfRoot,.sqrtExpr')){
+    const a=n.querySelector(':scope > span');return `sqrt(${required(children(a)||visible(a),'Wurzel')})`;
+  }
+  if(n.matches('.vfFunction')){
+    const lead=String(n.childNodes[0]?.nodeValue||'');const fn=(lead.match(/(?:sin|cos|tan)/i)||[])[0]?.toLowerCase();
+    const a=n.querySelector(':scope > span');if(!fn)throw new Error('Funktion nicht erkannt');return `${fn}(${required(children(a)||visible(a),fn)})`;
+  }
+  if(n.matches('.vfAbs')){const a=n.querySelector(':scope > span');return `abs(${required(children(a)||visible(a),'Betrag')})`}
+  if(n.matches('.vfExp')){const s=n.querySelector(':scope > sup');return `e^(${required(children(s)||visible(s),'Exponent')})`}
+  if(n.tagName==='SUP')return `^(${required(children(n)||visible(n),'Exponent')})`;
+  if(n.tagName==='SUB')return '';
+  if(n.matches('.vfParen')){
+    const a=n.querySelector(':scope > .vfParenBody')||n.querySelector(':scope > .vfEditable');
+    return a?`(${required(children(a)||visible(a),'Klammer')})`:children(n);
+  }
+  return children(n);
+}
+function serialize(ed){
+  let expr=children(ed).replace(/\s+/g,'');
+  expr=expr.replace(/^f\(x\)=/i,'').replace(/^y=/i,'');
+  if(!expr)throw new Error('Funktion ist leer');
+  return expr;
+}
+function compileCheck(expr){
+  const code=typeof window.normalizeGraphExpr==='function'?window.normalizeGraphExpr(expr):expr.replace(/\^/g,'**');
+  /* echte JS-Syntaxprüfung – normalizeGraphExpr alleine prüft nur erlaubte Zeichen. */
+  new Function('x',`"use strict"; return (${code});`);
+  return expr;
+}
+function restoreGraph(saved){
+  try{graphDraft=clone(saved)}catch(_){ }
+  try{window.graphDraft=graphDraft}catch(_){ }
+  try{renderGraphCurveRows()}catch(_){ }
+  try{openGraphDialogRefreshFields()}catch(_){ }
+  try{renderGraphPreview()}catch(_){ }
+}
+function returnToGraph(saved){
+  /* v222 kennt den aktuellen Graph-Dialog/Edit-ID und öffnet ihn wieder. */
+  try{window.v222ReturnToGraphDialog?.()}catch(_){ }
+  [0,30,90,180].forEach(t=>setTimeout(()=>restoreGraph(saved),t));
+}
+function saveGraphFormula(i){
+  i=Number(i);const ed=q('#formulaVisualEditor');if(!ed)return;
+  let expr='';
+  try{expr=compileCheck(serialize(ed))}
+  catch(err){
+    let msg=String(err?.message||'Ungültige Funktion');
+    if(/Unexpected token|Unexpected end|missing|expected/i.test(msg))msg='Die Formel ist noch nicht vollständig';
+    try{cuteToast('Formel prüfen: '+msg)}catch(_){ }
+    return;
+  }
+  let draft=null;
+  try{draft=graphDraft}catch(_){draft=window.graphDraft}
+  if(!draft?.curves?.[i]){try{cuteToast('Graph-Funktion nicht gefunden')}catch(_){};return}
+  draft.curves[i].expr=expr;
+  draft.curves[i].formulaHTML=ed.innerHTML;
+  const saved=clone(draft);
+  try{cuteToast('Funktion übernommen ♡')}catch(_){ }
+  returnToGraph(saved);
+}
+window.v229SaveGraphFormula=saveGraphFormula;
+window.v224SaveGraphFormula=saveGraphFormula;
+window.saveGraphFunctionEditor=saveGraphFormula;
+try{v224SaveGraphFormula=saveGraphFormula}catch(_){ }
+try{saveGraphFunctionEditor=saveGraphFormula}catch(_){ }
+
+function setup(i){
+  i=Number(i);activeGraphCurve=i;
+  const ed=q('#formulaVisualEditor');if(!ed)return;
+  try{window.v228EnhanceSlots?.(ed)}catch(_){ }
+  const modal=ed.closest('.visualFormulaModal,.formulaModal');if(!modal)return;
+  const eyebrow=q('.presetModalHead .eyebrow',modal);if(eyebrow)eyebrow.textContent='FUNKTIONSGRAPH';
+  const title=q('.presetModalHead h2',modal);if(title)title.textContent=`Funktion ${i+1} bearbeiten`;
+  /* Frischer Button = keine alten onClick/addEventListener Handler mehr. */
+  const old=qa('button.primary',modal).at(-1);
+  if(old && old.dataset.v229Fresh!=='1'){
+    const fresh=old.cloneNode(true);fresh.dataset.v229Fresh='1';fresh.textContent='Übernehmen';fresh.removeAttribute('onclick');
+    old.replaceWith(fresh);
+    fresh.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();saveGraphFormula(i)},true);
+  }
+  const close=q('.presetModalHead .miniIcon',modal);
+  if(close && close.dataset.v229Fresh!=='1'){
+    const fresh=close.cloneNode(true);fresh.dataset.v229Fresh='1';fresh.removeAttribute('onclick');close.replaceWith(fresh);
+    fresh.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();let d;try{d=clone(graphDraft)}catch(_){d=null}if(d)returnToGraph(d)},true);
+  }
+}
+window.openGraphFunctionEditor=function(i){
+  i=Number(i);activeGraphCurve=i;try{graphActiveCurve=i}catch(_){ }
+  let draft;try{draft=graphDraft}catch(_){draft=window.graphDraft}
+  const curve=draft?.curves?.[i];
+  window.openFormulaDialog?.(`__graph_curve_${i}`);
+  const hydrate=()=>{
+    const ed=q('#formulaVisualEditor');if(!ed||!curve)return;
+    const current=(curve.formulaHTML&&String(curve.formulaHTML).trim())?curve.formulaHTML:(typeof window.graphExprToVisual==='function'?window.graphExprToVisual(curve.expr||''):(curve.expr||''));
+    ed.innerHTML=String(current||'').replace(/×/g,'⋅');
+    try{normalizeAllVisualRoots?.(ed)}catch(_){ }
+    try{installFormulaSlotProtection?.(ed)}catch(_){ }
+    try{window.v228EnhanceSlots?.(ed)}catch(_){ }
+    setup(i);
+  };
+  [30,80,150,250].forEach(t=>setTimeout(hydrate,t));
+};
+try{openGraphFunctionEditor=window.openGraphFunctionEditor}catch(_){ }
+
+/* Falls die Graph-Zeilen durch ältere Wrapper neu gerendert werden: Klick danach immer auf V229 routen. */
+function bindRows(){
+  qa('#graphCurveRows .graphExprButton').forEach((b,i)=>{
+    if(b.dataset.v229Bound==='1')return;b.dataset.v229Bound='1';
+    b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();window.openGraphFunctionEditor(i)},true);
+  });
+}
+new MutationObserver(bindRows).observe(document.body,{childList:true,subtree:true});
+[0,100,400,1000].forEach(t=>setTimeout(bindRows,t));
+
+const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 229'};[0,250,900,1800].forEach(t=>setTimeout(setVer,t));
+})();
+</script>
+<!-- ===== /Studia V229 ===== -->
+
+<!-- ===== Studia V230 · Cursor-sicherer Exponent + Textgröße + Shortcuts ===== -->
+<style id="studia-v230-toolbar-fix-style">
+body.editorMode .v134FormatTools input.size{
+  pointer-events:auto!important;
+  opacity:1!important;
+  cursor:text!important;
+}
+</style>
+<script id="studia-v230-editor-input-fixes">
+(()=>{
+'use strict';
+if(window.__STUDIA_V230__) return; window.__STUDIA_V230__=true;
+const q=(s,r=document)=>r?.querySelector?.(s)||null;
+const qa=(s,r=document)=>r?.querySelectorAll?[...r.querySelectorAll(s)]:[];
+let lastFormulaRange=null;
+
+function formulaEditor(){return q('#formulaVisualEditor')}
+function rangeInside(ed,r){
+  if(!ed||!r)return false;
+  try{return ed.contains(r.commonAncestorContainer)}catch(_){return false}
+}
+function rememberFormulaCaret(){
+  const ed=formulaEditor(),s=getSelection();
+  if(!ed||!s?.rangeCount)return false;
+  const r=s.getRangeAt(0);
+  if(!rangeInside(ed,r))return false;
+  try{lastFormulaRange=r.cloneRange();return true}catch(_){return false}
+}
+function usableFormulaRange(ed){
+  const s=getSelection();
+  if(s?.rangeCount){const r=s.getRangeAt(0);if(rangeInside(ed,r))return r.cloneRange()}
+  if(lastFormulaRange&&rangeInside(ed,lastFormulaRange)){try{return lastFormulaRange.cloneRange()}catch(_){}}
+  const r=document.createRange();r.selectNodeContents(ed);r.collapse(false);return r;
+}
+function setSelectionRange(r){
+  const s=getSelection();if(!s)return;
+  s.removeAllRanges();s.addRange(r);
+  try{lastFormulaRange=r.cloneRange()}catch(_){ }
+}
+function selectSlot(slot){
+  if(!slot)return;
+  const r=document.createRange();r.selectNodeContents(slot);setSelectionRange(r);slot.focus?.();
+}
+function trailingTextAtom(text,offset){
+  const before=String(text||'').slice(0,offset);
+  const m=before.match(/([A-Za-zÄÖÜäöüß]+|\d+(?:[.,]\d+)?|π)\s*$/);
+  return m?{token:m[1],start:before.lastIndexOf(m[1])}:null;
+}
+function makePower(baseHTML){
+  const wrap=document.createElement('span');wrap.className='vfPower';
+  const base=document.createElement('span');base.className='vfPowerBase';base.innerHTML=baseHTML||'x';
+  const sup=document.createElement('sup');sup.className='vfEditable vfExponentSlot';sup.contentEditable='true';sup.textContent='n';
+  wrap.append(base,sup);return {wrap,sup};
+}
+function insertPowerAtSavedCaret(){
+  const ed=formulaEditor();if(!ed)return false;
+  ed.focus({preventScroll:true});
+  const r=usableFormulaRange(ed);
+  let baseHTML='';
+
+  /* Markierte Formel = exakt diese Auswahl wird die Basis. */
+  if(!r.collapsed){
+    const d=document.createElement('div');d.appendChild(r.cloneContents());baseHTML=d.innerHTML;
+    r.deleteContents();
+  }else{
+    let sc=r.startContainer,off=r.startOffset;
+    if(sc.nodeType===Node.TEXT_NODE){
+      const hit=trailingTextAtom(sc.nodeValue,off);
+      if(hit){
+        baseHTML=sc.ownerDocument.createElement('div').appendChild(document.createTextNode(hit.token)).parentNode?.innerHTML||hit.token;
+        const old=String(sc.nodeValue||'');
+        sc.nodeValue=old.slice(0,hit.start)+old.slice(off);
+        r.setStart(sc,hit.start);r.collapse(true);
+      }else{
+        const prev=sc.previousSibling;
+        if(prev?.nodeType===Node.ELEMENT_NODE && !prev.matches('br')){
+          baseHTML=prev.outerHTML;prev.remove();
+        }
+      }
+    }else if(sc.nodeType===Node.ELEMENT_NODE){
+      const prev=sc.childNodes[Math.max(0,off-1)];
+      if(prev?.nodeType===Node.TEXT_NODE){
+        const hit=trailingTextAtom(prev.nodeValue,String(prev.nodeValue||'').length);
+        if(hit){
+          baseHTML=hit.token;
+          prev.nodeValue=String(prev.nodeValue||'').slice(0,hit.start);
+          r.setStartAfter(prev);r.collapse(true);
+        }
+      }else if(prev?.nodeType===Node.ELEMENT_NODE && !prev.matches('br')){
+        baseHTML=prev.outerHTML;prev.remove();
+      }
+    }
+  }
+
+  /* Ohne vorherige Basis bleibt das bisherige sinnvolle Default x – aber exakt AM Cursor. */
+  if(!String(baseHTML).trim())baseHTML='x';
+  const {wrap,sup}=makePower(baseHTML);
+  r.insertNode(wrap);
+  const space=document.createTextNode('\u00a0');wrap.after(space);
+  selectSlot(sup);
+  try{installFormulaSlotProtection?.(ed)}catch(_){ }
+  try{window.v228EnhanceSlots?.(ed)}catch(_){ }
+  ed.dispatchEvent(new Event('input',{bubbles:true}));
+  rememberFormulaCaret();
+  return true;
+}
+
+/* Cursorposition dauerhaft merken. Buttons dürfen den Caret nicht klauen. */
+document.addEventListener('selectionchange',rememberFormulaCaret);
+document.addEventListener('keyup',e=>{if(e.target instanceof Element&&e.target.closest('#formulaVisualEditor'))rememberFormulaCaret()},true);
+document.addEventListener('pointerup',e=>{if(e.target instanceof Element&&e.target.closest('#formulaVisualEditor'))setTimeout(rememberFormulaCaret,0)},true);
+document.addEventListener('pointerdown',e=>{
+  const b=e.target instanceof Element?e.target.closest('.visualFormulaModal button,.formulaModal button'):null;
+  if(!b||!formulaEditor())return;
+  rememberFormulaCaret();
+  /* Mousedown-Fokus auf Toolbar verhindern; click/onclick läuft trotzdem. */
+  e.preventDefault();
+},true);
+
+/* Letzter Override: Power benutzt NICHT mehr die alten gestapelten Fallbacks. */
+const prevInsert=window.insertVisualFormula;
+window.insertVisualFormula=function(type){
+  if(type==='power')return insertPowerAtSavedCaret();
+  return prevInsert?.apply(this,arguments);
+};
+try{insertVisualFormula=window.insertVisualFormula}catch(_){ }
+
+/* ---------------- Textgröße oben: sofort reagieren, ohne Auswahl zu verlieren ---------------- */
+let topSizeObjectId=null,topSizeRange=null,topSizeTimer=0;
+function selectedTextObject(){
+  try{
+    if(canvasState?.selectedType!=='object')return null;
+    const o=canvasState.objects?.find(x=>String(x.id)===String(canvasState.selectedId));
+    return o&&['text','block','task','merke'].includes(o.kind)&&!o.isChecklist?o:null;
+  }catch(_){return null}
+}
+function rememberTopSizeContext(){
+  const o=selectedTextObject();topSizeObjectId=o?.id||null;topSizeRange=null;
+  const s=getSelection();const el=o&&q(`#canvasObjects .cobj[data-id="${CSS.escape(String(o.id))}"]`);
+  if(el&&s?.rangeCount&&!s.isCollapsed){
+    const r=s.getRangeAt(0),n=r.commonAncestorContainer.nodeType===1?r.commonAncestorContainer:r.commonAncestorContainer.parentNode;
+    if(n&&(n===el||el.contains(n)))try{topSizeRange=r.cloneRange()}catch(_){ }
+  }
+  try{window.v152RememberRange?.()}catch(_){ }
+}
+function applyTopSize(input,final=false){
+  const px=Math.max(6,Math.min(180,Number(input?.value)||16));if(input)input.value=String(px);
+  let o=selectedTextObject();
+  if(!o&&topSizeObjectId)try{o=canvasState.objects?.find(x=>String(x.id)===String(topSizeObjectId))||null}catch(_){ }
+  if(!o)return;
+  /* Bei markiertem Teil: Range wiederherstellen und bestehende Textformatierung benutzen. */
+  if(topSizeRange){
+    const el=q(`#canvasObjects .cobj[data-id="${CSS.escape(String(o.id))}"]`);
+    try{if(el&&el.contains(topSizeRange.commonAncestorContainer)){el.focus({preventScroll:true});const s=getSelection();s.removeAllRanges();s.addRange(topSizeRange.cloneRange());window.applyTextProperty?.('fontSize',px);return}}catch(_){ }
+  }
+  /* Ganzes Textfeld: live ändern, ohne Toolbar/Input durch komplettes Rendern zu zerstören. */
+  o.style||={};o.style.fontSize=px;
+  const el=q(`#canvasObjects .cobj[data-id="${CSS.escape(String(o.id))}"]`);if(el)el.style.fontSize=px+'px';
+  try{markCanvasDirty?.(false)}catch(_){ }
+  clearTimeout(topSizeTimer);topSizeTimer=setTimeout(()=>{try{renderCanvasInspector?.();syncToolbar?.()}catch(_){ }},80);
+  if(final)try{markCanvasDirty?.();pushHistory?.();renderCanvasInspector?.()}catch(_){ }
+}
+document.addEventListener('pointerdown',e=>{
+  const inp=e.target instanceof Element?e.target.closest('.v134FormatTools input.size'):null;
+  if(inp)rememberTopSizeContext();
+},true);
+document.addEventListener('input',e=>{
+  const inp=e.target instanceof Element?e.target.closest('.v134FormatTools input.size'):null;
+  if(inp)applyTopSize(inp,false);
+},true);
+document.addEventListener('change',e=>{
+  const inp=e.target instanceof Element?e.target.closest('.v134FormatTools input.size'):null;
+  if(inp)applyTopSize(inp,true);
+},true);
+document.addEventListener('keydown',e=>{
+  const inp=e.target instanceof Element?e.target.closest('.v134FormatTools input.size'):null;
+  if(inp&&e.key==='Enter'){e.preventDefault();applyTopSize(inp,true);inp.blur()}
+},true);
+
+/* ---------------- Desktop-Shortcuts: eigener letzter Capture-Handler ---------------- */
+function editorShortcutActive(){return innerWidth>=900&&document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active')}
+function typingTarget(t){
+  const el=t instanceof Element?t:null;
+  return !!el&&(!!el.closest('input,textarea,select,[contenteditable="true"]'));
+}
+function handleShortcut(e){
+  if(!editorShortcutActive())return;
+  const key=String(e.key||'').toLowerCase(),mod=e.ctrlKey||e.metaKey,typing=typingTarget(e.target);
+  /* Speichern soll überall im Editor funktionieren. Alles andere lässt Texteingabe in Ruhe. */
+  if(mod&&key==='s'){
+    e.preventDefault();e.stopImmediatePropagation();try{saveSheetNow?.();cuteToast?.('Gespeichert ✓')}catch(_){ }return;
+  }
+  if(typing)return;
+  const run=fn=>{e.preventDefault();e.stopImmediatePropagation();try{fn?.()}catch(_){ }};
+  if(mod&&key==='z'&&e.shiftKey)return run(window.redoCanvas||window.redo);
+  if(mod&&key==='z')return run(window.undoCanvas||window.undo);
+  if(mod&&key==='y')return run(window.redoCanvas||window.redo);
+  if(mod&&key==='c')return run(window.copySelectedCanvasItems);
+  if(mod&&key==='v')return run(window.pasteCanvasItems);
+  if(mod&&key==='d')return run(window.duplicateSelected);
+  if(mod&&key==='a')return run(window.selectAllCanvasItems);
+  if(mod&&key==='g'&&!e.shiftKey)return run(window.groupSelectedItems);
+  if(mod&&key==='g'&&e.shiftKey)return run(window.ungroupSelectedItems);
+  if(mod&&key==='0')return run(window.fitCanvasStage);
+  if((e.key==='Delete'||e.key==='Backspace'))return run(window.deleteSelectedCanvasItem);
+  if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)){
+    const n=e.shiftKey?10:1;
+    return run(()=>{const dx=e.key==='ArrowLeft'?-n:e.key==='ArrowRight'?n:0,dy=e.key==='ArrowUp'?-n:e.key==='ArrowDown'?n:0;if(typeof window.nudgeSelection==='function')return window.nudgeSelection(dx,dy);try{return nudgeSelection(dx,dy)}catch(_){}});
+  }
+  if(e.key==='?')return run(window.openShortcutHelp);
+}
+document.addEventListener('keydown',handleShortcut,true);
+
+const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 230'};
+[0,250,900,1800].forEach(t=>setTimeout(setVer,t));
+})();
+</script>
+<!-- ===== /Studia V230 ===== -->
