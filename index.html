@@ -22242,10 +22242,7 @@ window.printCanvasSheet=async function(){
  if(innerWidth<900&&typeof window.v170PrintMobile==='function')return window.v170PrintMobile();const w=window.open('about:blank','_blank','width=1050,height=900');if(!w)return alert('Bitte Pop-ups für Studia erlauben, damit die Druckvorschau geöffnet werden kann.');w.document.write('<p style="font:16px sans-serif;padding:24px">Druckvorschau wird geladen …</p>');
  try{const clones=await window.cloneAllPages181?.();if(!clones?.length){w.close();return alert('Keine Lernblatt-Seite gefunden.')}for(const page of clones)decorateTape(page);const first=clones[0],W=parseFloat(first.style.width),H=parseFloat(first.style.height),faces=[...document.querySelectorAll('style')].map(s=>s.textContent.match(/@font-face\s*\{[^}]*\}/g)||[]).flat().join('\n')+clones.map((c,i)=>{const name='studiaPage'+i;c.style.setProperty('page',name,'important');return '@page '+name+'{size:'+parseFloat(c.style.width)+'px '+parseFloat(c.style.height)+'px;margin:0}'}).join('');
  const tapeCSS='.tapeSticker{background:transparent!important;border:0!important;outline:0!important;box-shadow:none!important;overflow:visible!important}.tapeSticker:before,.tapeSticker:after{display:none!important;content:none!important}.tapeSticker>.v242TapeArt{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;display:block!important;pointer-events:none!important;overflow:visible!important}';
- w.document.open();w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Studia · Druckvorschau</title><base href="'+location.href+'"><style>'+faces+'@page{size:'+W+'px '+H+'px;margin:0}*{box-sizing:border-box}html,body{margin:0;padding:0;background:#eee9e6;color:#65514b;font-family:Arial,sans-serif}.toolbar{position:sticky;top:0;z-index:2147483600;display:flex;align-items:center;gap:10px;padding:12px 18px;background:#fffaf8;border-bottom:1px solid #ecd9d6}.toolbar b{margin-right:auto}.toolbar button{border:1px solid #ead5d0;background:#fff;border-radius:12px;padding:10px 16px;color:#65514b;font-weight:700;cursor:pointer}.toolbar button:first-of-type{background:#f9d7d9}.printRoot{display:grid;justify-items:center;gap:24px;padding:24px;overflow:auto}.v181PreviewPage{flex:none;break-after:page;page-break-after:always}.v181PreviewPage:last-child{break-after:auto;page-break-after:auto}.v181PreviewPage,.v181PreviewPage *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;forced-color-adjust:none!important}'+tapeCSS+'@media print{html,body{background:#fff!important}.toolbar{display:none!important}.printRoot{display:block;margin:0;padding:0;overflow:visible}.v181PreviewPage{justify-self:start!important}}</style></head><body><header class="toolbar"><b>Druckvorschau · nur das Lernblatt</b><button id="print">Drucken</button><button id="close">Schließen</button></header><main class="printRoot">'+clones.map(c=>c.outerHTML).join('')+'</main>
-
-
-</body></html>');w.document.close();q('#close',w.document).onclick=()=>w.close();q('#print',w.document).onclick=async()=>{try{await w.document.fonts.ready}catch(_){}await Promise.all([...w.document.images].map(img=>img.complete?Promise.resolve():new Promise(r=>{img.onload=r;img.onerror=r})));w.focus();w.print()};w.focus();
+ w.document.open();w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Studia · Druckvorschau</title><base href="'+location.href+'"><style>'+faces+'@page{size:'+W+'px '+H+'px;margin:0}*{box-sizing:border-box}html,body{margin:0;padding:0;background:#eee9e6;color:#65514b;font-family:Arial,sans-serif}.toolbar{position:sticky;top:0;z-index:2147483600;display:flex;align-items:center;gap:10px;padding:12px 18px;background:#fffaf8;border-bottom:1px solid #ecd9d6}.toolbar b{margin-right:auto}.toolbar button{border:1px solid #ead5d0;background:#fff;border-radius:12px;padding:10px 16px;color:#65514b;font-weight:700;cursor:pointer}.toolbar button:first-of-type{background:#f9d7d9}.printRoot{display:grid;justify-items:center;gap:24px;padding:24px;overflow:auto}.v181PreviewPage{flex:none;break-after:page;page-break-after:always}.v181PreviewPage:last-child{break-after:auto;page-break-after:auto}.v181PreviewPage,.v181PreviewPage *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;forced-color-adjust:none!important}'+tapeCSS+'@media print{html,body{background:#fff!important}.toolbar{display:none!important}.printRoot{display:block;margin:0;padding:0;overflow:visible}.v181PreviewPage{justify-self:start!important}}</style></head><body><header class="toolbar"><b>Druckvorschau · nur das Lernblatt</b><button id="print">Drucken</button><button id="close">Schließen</button></header><main class="printRoot">'+clones.map(c=>c.outerHTML).join('')+'</main></body></html>');w.document.close();q('#close',w.document).onclick=()=>w.close();q('#print',w.document).onclick=async()=>{try{await w.document.fonts.ready}catch(_){}await Promise.all([...w.document.images].map(img=>img.complete?Promise.resolve():new Promise(r=>{img.onload=r;img.onerror=r})));w.focus();w.print()};w.focus();
  }catch(e){console.error('[Studia V242 print]',e);try{w.close()}catch(_){}alert('Die Druckvorschau konnte nicht erstellt werden. '+(e?.message?`(${e.message})`:''))}
 };try{printCanvasSheet=window.printCanvasSheet}catch(_){}
 
@@ -22431,108 +22428,73 @@ const openBase253=window.openView;if(typeof openBase253==='function'){window.ope
 </script>
 <!-- ===== /Studia V253 ===== -->
 
-<!-- ===== Studia V255 — reliable Apps Script POST + JSONP sync ===== -->
-<style id="studia-v255-sync-style">
-#v255SyncTrace{margin-top:8px;padding:9px 11px;border:1px solid #ead8d1;border-radius:11px;background:#fffaf7;color:#806c65;font-size:10px;font-weight:800;line-height:1.45}
-#v255SyncTrace.bad{background:#fff1f0;border-color:#edc5c2;color:#a06767}
+<!-- ===== Studia V256 — chunked JSONP sync ===== -->
+<style id="v256-sync-style">
+#v256SyncTrace{margin-top:8px;padding:8px 10px;border-radius:10px;background:#f7fbf1;border:1px solid #dae8ca;color:#71805f;font-size:10px;font-weight:850;line-height:1.4}
+#v256SyncTrace.bad{background:#fff1f0;border-color:#efc8c5;color:#a56868}
 </style>
-<script id="studia-v255-sync">
+<script id="studia-v256-sync">
 (function(){
  'use strict';
- if(window.__STUDIA_V255_SYNC__)return;window.__STUDIA_V255_SYNC__=true;
- const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
- const getData=()=>{try{return data}catch(_){return window.data||{}}};
- const setData=v=>{try{data=v}catch(_){window.data=v}};
- const clone=v=>JSON.parse(JSON.stringify(v||{}));
- const localKey=()=>{try{return KEY}catch(_){return 'schoolhub-v1'}};
- const BASE='studia-v255-sync-base';
+ if(window.__STUDIA_V256__)return;window.__STUDIA_V256__=true;
+ const $=(s,r=document)=>r?.querySelector?.(s)||null,$$=(s,r=document)=>r?.querySelectorAll?[...r.querySelectorAll(s)]:[];
+ const clone=v=>JSON.parse(JSON.stringify(v==null?{}:v));
+ const KEY=window.DATA_KEY||'studia-data';
+ const BASE='studia-v242-last-synced-state';
  let busy=false;
- function persist(){try{localStorage.setItem(localKey(),JSON.stringify(getData()))}catch(e){console.warn('[Studia V255 local]',e)}}
+ function getData(){try{return window.data||JSON.parse(localStorage.getItem(KEY)||'{}')}catch(_){return window.data||{}}}
+ function setData(v){try{window.data=v;data=v}catch(_){window.data=v}}
+ function persist(){try{localStorage.setItem(KEY,JSON.stringify(getData()))}catch(_){try{window.save?.()}catch(__){}}}
  function readBase(){try{return JSON.parse(localStorage.getItem(BASE)||'{}')}catch(_){return {}}}
  function saveBase(v){try{localStorage.setItem(BASE,JSON.stringify(v||{}))}catch(_){}}
- function status(text,bad=false){
-   text=String(text||'');
-   try{window.StudiaCloud?.setStatus?.(text,bad)}catch(_){}
-   const x=$('#v242SyncStatus');if(x){x.textContent=text;x.classList.toggle('bad',!!bad)}
-   const b=$('#v242DesktopSync');if(b){b.title=text;b.classList.toggle('syncing',/^Synchronisiere|^Sende|^Cloud verarbeitet/i.test(text))}
-   const p=$('#v242PullSync');if(p&&p.classList.contains('show'))p.textContent=text;
-   trace(text,bad);
- }
- function trace(text,bad=false){
-   const card=$('.v171CloudSettings');if(!card)return;let el=$('#v255SyncTrace');if(!el){el=document.createElement('div');el.id='v255SyncTrace';card.appendChild(el)}
-   el.classList.toggle('bad',!!bad);el.textContent='V255 · '+String(text||'');
- }
- function deviceId(){let v='';try{v=localStorage.getItem('studia-v255-device-id')||localStorage.getItem('studia-v253-device-id')||''}catch(_){}if(!v){v='device-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,10)}try{localStorage.setItem('studia-v255-device-id',v)}catch(_){}return v}
+ function status(text,bad=false){try{window.StudiaCloud?.setStatus?.(text,bad)}catch(_){}const x=$('#v242SyncStatus');if(x){x.textContent=text;x.classList.toggle('bad',!!bad)}const b=$('#v242DesktopSync');if(b){b.title=text;b.classList.toggle('syncing',/^Prüfe|^Sende|^Cloud|^Lade/i.test(text))}trace(text,bad)}
+ function trace(text,bad=false){const card=$('.v171CloudSettings');if(!card)return;let el=$('#v256SyncTrace');if(!el){el=document.createElement('div');el.id='v256SyncTrace';card.appendChild(el)}el.classList.toggle('bad',!!bad);el.textContent='V256 · '+String(text||'')}
+ function cfg(){const c=window.StudiaCloud?.config?.()||{};return {url:String(c.url||'').trim().replace(/\?.*$/,''),token:String(c.token||'')}}
+ function deviceId(){let v='';try{v=localStorage.getItem('studia-v256-device-id')||localStorage.getItem('studia-v255-device-id')||localStorage.getItem('studia-v253-device-id')||''}catch(_){}if(!v){v='device-'+secureId()}try{localStorage.setItem('studia-v256-device-id',v)}catch(_){}return v}
  function deviceName(){return (/iPhone|iPad|Android|Mobile/i.test(navigator.userAgent)?'Handy':'Laptop')+' · '+String(navigator.platform||'Browser').slice(0,28)}
+ function secureId(){try{const a=new Uint32Array(5);crypto.getRandomValues(a);return [...a].map(x=>x.toString(36)).join('')}catch(_){return Date.now().toString(36)+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2)}}
  function bytesB64(bytes){let s='';for(let i=0;i<bytes.length;i+=0x8000)s+=String.fromCharCode(...bytes.subarray(i,i+0x8000));return btoa(s)}
  function b64Bytes(s){const raw=atob(String(s||'')),a=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)a[i]=raw.charCodeAt(i);return a}
  async function gzipText(s){if(typeof CompressionStream!=='function')return '';const cs=new CompressionStream('gzip');const ab=await new Response(new Blob([String(s)]).stream().pipeThrough(cs)).arrayBuffer();return bytesB64(new Uint8Array(ab))}
  async function ungzipText(s){if(typeof DecompressionStream!=='function')throw new Error('Browser kann Cloud-Daten nicht entpacken');const ds=new DecompressionStream('gzip');return await new Response(new Blob([b64Bytes(s)]).stream().pipeThrough(ds)).text()}
- function cfg(){const c=window.StudiaCloud?.config?.()||{};return {url:String(c.url||'').trim().replace(/\?.*$/,''),token:String(c.token||'')}}
- function rid(){return 'v255-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,12)}
- async function addPayload(form,name,obj){
-   const raw=JSON.stringify(obj||{});let gz='';try{gz=await gzipText(raw)}catch(_){}
-   const inp=document.createElement('input');inp.type='hidden';inp.name=(gz&&gz.length<raw.length)?name+'Gzip':name;inp.value=(gz&&gz.length<raw.length)?gz:raw;form.appendChild(inp)
- }
+ async function addPayload(form,name,obj){const raw=JSON.stringify(obj||{});let gz='';try{gz=await gzipText(raw)}catch(_){}const i=document.createElement('input');i.type='hidden';i.name=(gz&&gz.length<raw.length)?name+'Gzip':name;i.value=(gz&&gz.length<raw.length)?gz:raw;form.appendChild(i)}
  async function push(url,token,requestId,local,base){
-   const target='studiaV255Sink_'+requestId.replace(/[^a-z0-9_]/gi,'');
-   const frame=document.createElement('iframe');frame.name=target;frame.style.cssText='position:fixed;width:1px;height:1px;left:-9999px;top:-9999px;border:0;opacity:0;pointer-events:none';
+   const target='studiaV256Sink_'+secureId();const frame=document.createElement('iframe');frame.name=target;frame.style.cssText='position:fixed;width:1px;height:1px;left:-9999px;top:-9999px;border:0;opacity:0;pointer-events:none';
    const form=document.createElement('form');form.method='POST';form.action=url;form.target=target;form.enctype='application/x-www-form-urlencoded';form.acceptCharset='UTF-8';form.style.display='none';
    const add=(k,v)=>{const i=document.createElement('input');i.type='hidden';i.name=k;i.value=String(v??'');form.appendChild(i)};
-   add('action','sync_push_v255');add('token',token);add('requestId',requestId);add('deviceId',deviceId());add('deviceName',deviceName());
-   await addPayload(form,'data',local);await addPayload(form,'base',base);
-   document.body.append(frame,form);
-   try{form.submit()}catch(e){form.remove();frame.remove();throw e}
+   add('action','sync_push_v256');add('token',token);add('requestId',requestId);add('deviceId',deviceId());add('deviceName',deviceName());await addPayload(form,'data',local);await addPayload(form,'base',base);
+   document.body.append(frame,form);try{form.submit()}catch(e){form.remove();frame.remove();throw e}
    return ()=>{try{form.remove()}catch(_){}try{frame.remove()}catch(_){}};
  }
- function jsonpOnce(url,requestId,timeoutMs=8000){
-   return new Promise((resolve,reject)=>{
-     const cb='__studiaV255_'+Math.random().toString(36).slice(2)+Date.now().toString(36);let done=false;
-     const script=document.createElement('script');
-     const finish=(err,val)=>{if(done)return;done=true;clearTimeout(timer);try{delete window[cb]}catch(_){window[cb]=undefined}script.remove();err?reject(err):resolve(val)};
-     window[cb]=payload=>finish(null,payload);
-     script.onerror=()=>finish(new Error('Cloud-Antwort konnte nicht geladen werden'));
-     script.src=url+(url.includes('?')?'&':'?')+'action=sync_pull_v255&requestId='+encodeURIComponent(requestId)+'&callback='+encodeURIComponent(cb)+'&_='+Date.now();
-     const timer=setTimeout(()=>finish(new Error('Cloud-GET antwortet nicht')),timeoutMs);
-     document.head.appendChild(script);
+ const pending=new Map();
+ window.__studiaV256Receive=function(payload){const id=String(payload?.callId||'');const p=pending.get(id);if(p)p.finish(null,payload)};
+ function jsonp(url,params={},timeoutMs=10000){
+   return new Promise((resolve,reject)=>{const callId=secureId(),script=document.createElement('script');let done=false;
+     const finish=(err,val)=>{if(done)return;done=true;clearTimeout(timer);pending.delete(callId);try{script.remove()}catch(_){}err?reject(err):resolve(val)};
+     pending.set(callId,{finish});const qp=new URLSearchParams({...params,callId,prefix:'__studiaV256Receive',_:Date.now().toString()});
+     script.async=true;script.referrerPolicy='no-referrer';script.onerror=()=>finish(new Error('Cloud-GET konnte nicht geladen werden'));script.src=url+(url.includes('?')?'&':'?')+qp.toString();
+     const timer=setTimeout(()=>finish(new Error('Cloud-GET antwortet nicht')),timeoutMs);document.head.appendChild(script);
    });
  }
- async function pullUntilReady(url,requestId){
-   const deadline=Date.now()+35000;let last=null;
-   while(Date.now()<deadline){
-     last=await jsonpOnce(url,requestId,8000);
-     if(last?.ready){
-       if(!last.ok)throw new Error(String(last.error||'Sync fehlgeschlagen'));
-       if(last.dataGzip){last.data=JSON.parse(await ungzipText(last.dataGzip));delete last.dataGzip}
-       return last;
-     }
-     status('Cloud verarbeitet …');
-     await new Promise(r=>setTimeout(r,700));
-   }
-   throw new Error('Cloud-POST wurde nicht bestätigt · Apps-Script-Ausführungen prüfen');
+ async function cloudPing(url){const r=await jsonp(url,{action:'sync_ping_v256'},10000);if(!r?.ok||Number(r.version||0)<256)throw new Error('Apps-Script V256 nicht erreichbar');return r}
+ async function waitMeta(url,requestId){const until=Date.now()+40000;while(Date.now()<until){const r=await jsonp(url,{action:'sync_meta_v256',requestId},10000);if(r?.ready){if(!r.ok)throw new Error(String(r.error||'Sync fehlgeschlagen'));return r}status('Cloud verarbeitet …');await new Promise(res=>setTimeout(res,650))}throw new Error('Cloud-POST wurde nicht bestätigt')}
+ async function pullState(url,requestId,meta){
+   const count=Math.max(0,Number(meta.chunkCount||0));if(!count)return {};
+   const parts=[];for(let i=0;i<count;i++){status(`Lade Cloud-Daten ${i+1}/${count} …`);const r=await jsonp(url,{action:'sync_chunk_v256',requestId,index:String(i)},10000);if(!r?.ok)throw new Error(String(r?.error||'Cloud-Block konnte nicht geladen werden'));if(Number(r.updatedAt||0)!==Number(meta.updatedAt||0))throw new Error('Cloud hat sich während des Ladens geändert · bitte nochmal synchronisieren');parts.push(String(r.chunk||''))}
+   const txt=await ungzipText(parts.join(''));return JSON.parse(txt||'{}');
  }
- async function syncV255(){
-   if(busy)return {busy:true};busy=true;status('Sende Daten …');let cleanup=()=>{};
-   try{
-     const c=cfg();if(!c.url)throw new Error('Server-Script-Service-URL fehlt');if(!c.token)throw new Error('Nicht angemeldet');
-     try{if(document.body.classList.contains('editorMode'))window.saveCanvasSheetCore?.(true)}catch(_){}persist();
-     const local=clone(getData()),base=readBase(),requestId=rid();
-     cleanup=await push(c.url,c.token,requestId,local,base);
-     status('Cloud verarbeitet …');
-     const res=await pullUntilReady(c.url,requestId);
-     if(Number(res?.version||0)<255)throw new Error('Backend V255 fehlt · neuen Code.gs bereitstellen');
-     const merged=res?.data&&typeof res.data==='object'?res.data:local;
-     setData(merged);persist();saveBase(merged);try{window.v150ClearDirty?.()}catch(_){}
-     try{window.renderAll?.();if($('#view-plan.active'))window.renderPlan?.();if($('#view-home.active'))window.renderHome?.();if($('#view-subjects.active'))window.renderSubjects?.();if($('#view-subject-detail.active'))window.renderSubjectDetail?.();if($('#view-topic-detail.active'))window.renderTopicDetail?.();if($('#view-deck-detail.active'))window.renderDeckDetail?.()}catch(_){}
-     const n=Number(res?.deviceCount||1);status(n>=2?'Synchronisiert ✓ · '+n+' Geräte':'Cloud gespeichert ✓ · zweites Gerät jetzt synchronisieren',false);
-     let info=$('#v253CloudInfo'),card=$('.v171CloudSettings');if(card&&!info){info=document.createElement('div');info.id='v253CloudInfo';card.appendChild(info)}if(info)info.textContent='Cloud '+String(res?.cloudId||'—')+' · '+String(res?.account?.username||'Konto')+' · '+n+' Gerät'+(n===1?'':'e')+' erkannt';
-     return res;
-   }catch(e){console.error('[Studia V255 sync]',e);persist();status(String(e?.message||'Sync fehlgeschlagen')+' · lokal sicher',true);throw e}
-   finally{cleanup();busy=false;$('#v242DesktopSync')?.classList.remove('syncing');setTimeout(()=>$('#v242PullSync')?.classList.remove('show','ready','syncing'),300)}
- }
- window.studiaSyncNow=syncV255;window.v171CloudNow=syncV255;window.v171CloudNow.__v219Guarded=true;try{v171CloudNow=window.v171CloudNow}catch(_){}
- function bind(){const b=$('#v242DesktopSync');if(b)b.onclick=e=>{e.preventDefault();syncV255().catch(()=>{})};$$('.v171CloudSettings button').forEach(b=>{if(/jetzt synchronisieren|geräte synchronisieren/i.test(b.textContent||'')){b.removeAttribute('onclick');b.onclick=e=>{e.preventDefault();syncV255().catch(()=>{})}}});const hint=$('#v246BackendHint');if(hint)hint.textContent='Sync V255: POST senden → Ergebnis über GET laden. Kein postMessage, kein automatischer Retry.';const e=$('#headerEyebrow');if(e)e.textContent='VERSION 255'}
- [0,120,600,1600].forEach(t=>setTimeout(bind,t));
+ async function syncV256(){if(busy)return {busy:true};busy=true;let cleanup=()=>{};try{
+   const c=cfg();if(!c.url)throw new Error('Server-Script-Service-URL fehlt');if(!c.token)throw new Error('Nicht angemeldet');
+   status('Prüfe Cloud …');await cloudPing(c.url);
+   try{if(document.body.classList.contains('editorMode'))window.saveCanvasSheetCore?.(true)}catch(_){}persist();
+   const local=clone(getData()),base=readBase(),requestId='v256-'+secureId();status('Sende Daten …');cleanup=await push(c.url,c.token,requestId,local,base);status('Cloud verarbeitet …');
+   const meta=await waitMeta(c.url,requestId);const merged=await pullState(c.url,requestId,meta);setData(merged);persist();saveBase(merged);try{window.v150ClearDirty?.()}catch(_){}
+   try{window.renderAll?.();if($('#view-plan.active'))window.renderPlan?.();if($('#view-home.active'))window.renderHome?.();if($('#view-subjects.active'))window.renderSubjects?.();if($('#view-subject-detail.active'))window.renderSubjectDetail?.();if($('#view-topic-detail.active'))window.renderTopicDetail?.();if($('#view-deck-detail.active'))window.renderDeckDetail?.()}catch(_){}
+   const n=Number(meta.deviceCount||1);status(n>=2?'Synchronisiert ✓ · '+n+' Geräte':'Cloud gespeichert ✓ · zweites Gerät jetzt synchronisieren');let info=$('#v253CloudInfo'),card=$('.v171CloudSettings');if(card&&!info){info=document.createElement('div');info.id='v253CloudInfo';card.appendChild(info)}if(info)info.textContent='Cloud '+String(meta.cloudId||'—')+' · '+String(meta.account?.username||'Konto')+' · '+n+' Gerät'+(n===1?'':'e')+' erkannt';return meta;
+ }catch(e){console.error('[Studia V256 sync]',e);persist();status(String(e?.message||'Sync fehlgeschlagen')+' · lokal sicher',true);throw e}finally{cleanup();busy=false;$('#v242DesktopSync')?.classList.remove('syncing');setTimeout(()=>$('#v242PullSync')?.classList.remove('show','ready','syncing'),300)}}
+ window.studiaSyncNow=syncV256;window.v171CloudNow=syncV256;window.v171CloudNow.__v219Guarded=true;try{v171CloudNow=window.v171CloudNow}catch(_){}
+ function bind(){const b=$('#v242DesktopSync');if(b)b.onclick=e=>{e.preventDefault();syncV256().catch(()=>{})};$$('.v171CloudSettings button').forEach(b=>{if(/jetzt synchronisieren|geräte synchronisieren/i.test(b.textContent||'')){b.removeAttribute('onclick');b.onclick=e=>{e.preventDefault();syncV256().catch(()=>{})}}});const hint=$('#v246BackendHint');if(hint)hint.textContent='Sync V256: kleiner JSONP-Test → POST → Cloud-Blöcke einzeln laden. Kein Auto-Retry.';const e=$('#headerEyebrow');if(e)e.textContent='VERSION 256'}
+ [0,120,600,1700,2600].forEach(t=>setTimeout(bind,t));
 })();
 </script>
-<!-- ===== /Studia V255 ===== -->
+<!-- ===== /Studia V256 ===== -->
