@@ -16166,22 +16166,46 @@ function setStatus(text,bad=false){
   const c=$('#v242SyncStatus'); if(c){c.textContent=s;c.classList.toggle('bad',!!bad)}
   const p=$('#v242PullSync'); if(p&&/Synchron/i.test(s))p.textContent=s;
 }
-function timeout(ms=18000){const c=new AbortController(),id=setTimeout(()=>c.abort(),ms);return {signal:c.signal,done:()=>clearTimeout(id)}}
+function timeout(ms){const c=new AbortController(),id=setTimeout(()=>c.abort(),ms);return {signal:c.signal,done:()=>clearTimeout(id)}}
+function wait(ms){return new Promise(r=>setTimeout(r,ms))}
+function retryableCloudError(e){return e?.name==='AbortError'||e instanceof TypeError||/Zeitüberschreitung|Failed to fetch|NetworkError|Load failed/i.test(String(e?.message||e))}
 async function parse(res){
   const txt=await res.text(); let out;
-  try{out=JSON.parse(txt)}catch(_){throw new Error('Cloud antwortet nicht mit gültigem JSON')}
+  try{out=JSON.parse(txt)}catch(_){
+    if(/<!doctype|<html/i.test(txt))throw new Error('Cloud-Web-App ist nicht öffentlich erreichbar oder die Deployment-URL ist falsch');
+    throw new Error('Cloud antwortet nicht mit gültigem JSON');
+  }
   if(!out?.ok){const msg=String(out?.error||`Serverfehler ${res.status}`);const e=new Error(msg);e.status=out?.status||res.status;throw e}
   return out;
+}
+async function runCloudRequest(makeRequest,ms,label){
+  let last=null;
+  for(let attempt=1;attempt<=2;attempt++){
+    const t=timeout(ms);
+    try{return await parse(await makeRequest(t.signal))}
+    catch(e){
+      last=e;
+      if(!retryableCloudError(e)||attempt===2)break;
+      setStatus(`Cloud langsam · ${label} wird erneut versucht …`);
+      await wait(1200);
+    }finally{t.done()}
+  }
+  if(last?.name==='AbortError')throw new Error(`Cloud-Zeitüberschreitung bei ${label} · Server antwortet zu langsam`);
+  if(last instanceof TypeError)throw new Error(`Cloud-Verbindung bei ${label} blockiert oder nicht erreichbar`);
+  throw last||new Error(`Cloud-Fehler bei ${label}`);
 }
 async function get(action,params={}){
   const c=config(); if(!c.url)throw new Error('Server-Script-Service-URL fehlt');
   const u=new URL(normalizeUrl(c.url));u.searchParams.set('action',action);u.searchParams.set('_',String(Date.now()));
   for(const[k,v]of Object.entries(params))if(v!=null&&v!=='')u.searchParams.set(k,String(v));
-  const t=timeout();try{return await parse(await fetch(u.toString(),{method:'GET',cache:'no-store',redirect:'follow',credentials:'omit',signal:t.signal}))}catch(e){if(e?.name==='AbortError')throw new Error('Cloud-Zeitüberschreitung');throw e}finally{t.done()}
+  const label=action==='state'?'Daten laden':action==='me'?'Anmeldung prüfen':action==='health'?'Server prüfen':action;
+  return runCloudRequest(signal=>fetch(u.toString(),{method:'GET',cache:'no-store',redirect:'follow',credentials:'omit',signal}),60000,label);
 }
 async function post(action,payload={}){
   const c=config(); if(!c.url)throw new Error('Server-Script-Service-URL fehlt');
-  const t=timeout();try{return await parse(await fetch(normalizeUrl(c.url),{method:'POST',cache:'no-store',redirect:'follow',credentials:'omit',signal:t.signal,headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action,...payload})}))}catch(e){if(e?.name==='AbortError')throw new Error('Cloud-Zeitüberschreitung');throw e}finally{t.done()}
+  const label=action==='state_put'?'Daten speichern':action==='login'?'Anmeldung':action==='register'?'Registrierung':action;
+  const ms=action==='state_put'?90000:60000;
+  return runCloudRequest(signal=>fetch(normalizeUrl(c.url),{method:'POST',cache:'no-store',redirect:'follow',credentials:'omit',signal,headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action,...payload})}),ms,label);
 }
 async function health(){return get('health')}
 async function me(){const c=config();if(!c.token)throw new Error('Nicht angemeldet');return get('me',{token:c.token})}
@@ -22207,7 +22231,7 @@ window.printCanvasSheet=async function(){
  }catch(e){console.error('[Studia V242 print]',e);try{w.close()}catch(_){}alert('Die Druckvorschau konnte nicht erstellt werden. '+(e?.message?`(${e.message})`:''))}
 };try{printCanvasSheet=window.printCanvasSheet}catch(_){}
 
-function maintain(){if(maintainQueued)return;maintainQueued=true;requestAnimationFrame(()=>{maintainQueued=false;ensureSyncUI();decorateTape();const e=q('#headerEyebrow');if(e)e.textContent='VERSION 243'})}
+function maintain(){if(maintainQueued)return;maintainQueued=true;requestAnimationFrame(()=>{maintainQueued=false;ensureSyncUI();decorateTape();const e=q('#headerEyebrow');if(e)e.textContent='VERSION 244'})}
 const obs=new MutationObserver(maintain);obs.observe(document.body,{childList:true,subtree:true});[0,120,450,1200].forEach(t=>setTimeout(maintain,t));
 window.addEventListener('online',()=>setTimeout(()=>window.studiaSyncNow(false).catch(()=>{}),700));
 })();
@@ -22224,8 +22248,10 @@ window.addEventListener('online',()=>setTimeout(()=>window.studiaSyncNow(false).
     if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',show,{once:true});else show();
     return;
   }
-  const mark=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 243'};
+  const mark=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 244'};
   [0,250,900,1800].forEach(t=>setTimeout(mark,t));
 })();
 </script>
 <!-- ===== /Studia V243 ===== -->
+
+<!-- Studia V244: cloud transport timeout/retry upgraded in-place; no additional sync handler. -->
