@@ -16221,7 +16221,7 @@ async function v247BridgeSync(data){
   return await new Promise((resolve,reject)=>{
     let done=false;const cleanup=()=>{if(done)return;done=true;clearTimeout(timer);window.removeEventListener('message',onmsg);setTimeout(()=>{form.remove();frame.remove()},0)};
     const finishErr=e=>{cleanup();reject(e instanceof Error?e:new Error(String(e||'Sync fehlgeschlagen')))};
-    const onmsg=async ev=>{if(ev.source!==frame.contentWindow)return;const m=ev.data;if(!m||m.type!=='studia-sync-bridge'||m.id!==id)return;try{const p=m.payload||{};if(!p.ok)throw new Error(String(p.error||'Sync fehlgeschlagen'));if(p.dataGzip){p.data=JSON.parse(await v247UngzipText(p.dataGzip));delete p.dataGzip}cleanup();resolve(p)}catch(e){finishErr(e)}};
+    const onmsg=async ev=>{const m=ev.data;if(!m||m.type!=='studia-sync-bridge'||m.id!==id)return;try{const p=m.payload||{};if(!p.ok)throw new Error(String(p.error||'Sync fehlgeschlagen'));if(p.dataGzip){p.data=JSON.parse(await v247UngzipText(p.dataGzip));delete p.dataGzip}cleanup();resolve(p)}catch(e){finishErr(e)}};
     const timer=setTimeout(()=>finishErr(new Error('Cloud antwortet nicht · Apps-Script-Bereitstellung prüfen')),18000);
     window.addEventListener('message',onmsg);document.body.append(frame,form);try{form.submit()}catch(e){finishErr(e)}
   });
@@ -22247,7 +22247,7 @@ window.printCanvasSheet=async function(){
 };try{printCanvasSheet=window.printCanvasSheet}catch(_){}
 
 if(!window.__STUDIA_V245_HOME_CLOCK__){window.__STUDIA_V245_HOME_CLOCK__=setInterval(()=>{try{if(document.querySelector('#view-home.active')&&!document.body.classList.contains('editorMode'))window.renderHome?.()}catch(_){}},1000)}
-function maintain(){if(maintainQueued)return;maintainQueued=true;requestAnimationFrame(()=>{maintainQueued=false;ensureSyncUI();decorateTape();const e=q('#headerEyebrow');if(e)e.textContent='VERSION 253'})}
+function maintain(){if(maintainQueued)return;maintainQueued=true;requestAnimationFrame(()=>{maintainQueued=false;ensureSyncUI();decorateTape();const e=q('#headerEyebrow');if(e)e.textContent='VERSION 254'})}
 /* V253: global DOM observer removed; it caused continuous self-triggered maintenance. */[0,120,450,1200].forEach(t=>setTimeout(maintain,t));
 /* V245: no automatic network sync on reconnect; user triggers sync explicitly. */
 })();
@@ -22264,7 +22264,7 @@ function maintain(){if(maintainQueued)return;maintainQueued=true;requestAnimatio
     if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',show,{once:true});else show();
     return;
   }
-  const mark=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 253'};
+  const mark=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 254'};
   [0,250,900,1800].forEach(t=>setTimeout(mark,t));
 })();
 </script>
@@ -22272,7 +22272,7 @@ function maintain(){if(maintainQueued)return;maintainQueued=true;requestAnimatio
 
 <!-- Studia V244: cloud transport timeout/retry upgraded in-place; no additional sync handler. -->
 
-<script id="studia-v247-backend-hint">(()=>{function add(){const c=document.querySelector('.v171CloudSettings');if(!c||document.getElementById('v246BackendHint'))return;const p=document.createElement('div');p.id='v246BackendHint';p.className='small';p.style.cssText='margin-top:8px;padding:8px 10px;border-radius:10px;background:#fff7f3;color:#8b7068;font-weight:750';p.textContent='Sync V248: manueller Einmal-Sync über Apps-Script-Bridge. Kein automatischer Retry.';c.appendChild(p)}[0,300,1200].forEach(t=>setTimeout(add,t));/* V253: no global observer */})();</script>
+<script id="studia-v247-backend-hint">(()=>{function add(){const c=document.querySelector('.v171CloudSettings');if(!c||document.getElementById('v246BackendHint'))return;const p=document.createElement('div');p.id='v246BackendHint';p.className='small';p.style.cssText='margin-top:8px;padding:8px 10px;border-radius:10px;background:#fff7f3;color:#8b7068;font-weight:750';p.textContent='Sync V254: manueller Einmal-Sync über Apps-Script-Bridge. Kein automatischer Retry.';c.appendChild(p)}[0,300,1200].forEach(t=>setTimeout(add,t));/* V253: no global observer */})();</script>
 
 
 <!-- ===== Studia V248 · bridge transport + stale-sync purge ===== -->
@@ -22286,7 +22286,7 @@ function maintain(){if(maintainQueued)return;maintainQueued=true;requestAnimatio
       const s=String(el.textContent||'');
       if(/versucht es automatisch erneut/i.test(s)) el.textContent='Sync fehlgeschlagen · kein automatischer Retry';
     });
-    const e=document.querySelector('#headerEyebrow'); if(e)e.textContent='VERSION 253';
+    const e=document.querySelector('#headerEyebrow'); if(e)e.textContent='VERSION 254';
   };
   [0,120,500,1500].forEach(ms=>setTimeout(scrub,ms));
   /* V253: removed self-triggering global mutation observer. */
@@ -22298,7 +22298,7 @@ function maintain(){if(maintainQueued)return;maintainQueued=true;requestAnimatio
 <script id="studia-v251-safe-version">
 (()=>{
   window.__STUDIA_VERSION__=251;
-  const mark=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 253'};
+  const mark=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 254'};
   [0,120,500,1500].forEach(ms=>setTimeout(mark,ms));
 })();
 </script>
@@ -22346,7 +22346,7 @@ const setData253=v=>{try{data=v}catch(_){window.data=v}};
 const key253=()=>{try{return KEY}catch(_){return 'schoolhub-v1'}};
 function persist253(){try{localStorage.setItem(key253(),JSON.stringify(data253()))}catch(e){console.warn('[Studia V253 local]',e)}}
 function id253(){try{return id()}catch(_){return 'id-'+Date.now()+'-'+Math.random().toString(36).slice(2)}}
-function mark253(){const e=$253('#headerEyebrow');if(e&&e.textContent!=='VERSION 253')e.textContent='VERSION 253'}
+function mark253(){const e=$253('#headerEyebrow');if(e&&e.textContent!=='VERSION 254')e.textContent='VERSION 254'}
 
 /* ---------- SYNC: one manual bridge, no retry loop, server does the 3-way merge ---------- */
 const SYNC_BASE='studia-v253-sync-base';
@@ -22366,20 +22366,20 @@ async function bridgeSync253(local,base){
  const frame=document.createElement('iframe');frame.name=target;frame.style.cssText='position:fixed;width:1px;height:1px;left:-9999px;top:-9999px;border:0;opacity:0;pointer-events:none';
  const form=document.createElement('form');form.method='POST';form.action=url;form.target=target;form.enctype='application/x-www-form-urlencoded';form.acceptCharset='UTF-8';form.style.display='none';
  const add=(k,v)=>{const x=document.createElement('input');x.type='hidden';x.name=k;x.value=String(v??'');form.appendChild(x)};
- add('action','sync_bridge_v253');add('token',cfg.token);add('bridgeId',bridgeId);add('deviceId',deviceId253());add('deviceName',deviceName253());add('replyGzip',typeof DecompressionStream==='function'?'1':'0');
+ add('action','sync_bridge_v254');add('token',cfg.token);add('bridgeId',bridgeId);add('deviceId',deviceId253());add('deviceName',deviceName253());add('replyGzip',typeof DecompressionStream==='function'?'1':'0');
  for(const [plain,gzKey,obj] of [['data','dataGzip',local],['base','baseGzip',base]]){const raw=JSON.stringify(obj||{});let gz='';try{gz=await gzip253(raw)}catch(_){}if(gz&&gz.length<raw.length)add(gzKey,gz);else add(plain,raw)}
- return await new Promise((resolve,reject)=>{let finished=false;const clean=()=>{if(finished)return;finished=true;clearTimeout(timer);window.removeEventListener('message',onMessage);setTimeout(()=>{form.remove();frame.remove()},0)};const fail=e=>{clean();reject(e instanceof Error?e:new Error(String(e||'Sync fehlgeschlagen')))};const onMessage=async ev=>{if(ev.source!==frame.contentWindow)return;const m=ev.data;if(!m||m.type!=='studia-sync-bridge'||m.id!==bridgeId)return;try{const r=m.payload||{};if(!r.ok)throw new Error(String(r.error||'Sync fehlgeschlagen'));if(r.dataGzip){r.data=JSON.parse(await ungzip253(r.dataGzip));delete r.dataGzip}clean();resolve(r)}catch(e){fail(e)}};const timer=setTimeout(()=>fail(new Error('Cloud antwortet nicht · Apps-Script V253/URL prüfen')),12000);window.addEventListener('message',onMessage);document.body.appendChild(frame);document.body.appendChild(form);try{form.submit()}catch(e){fail(e)}})
+ return await new Promise((resolve,reject)=>{let finished=false;const clean=()=>{if(finished)return;finished=true;clearTimeout(timer);window.removeEventListener('message',onMessage);setTimeout(()=>{form.remove();frame.remove()},0)};const fail=e=>{clean();reject(e instanceof Error?e:new Error(String(e||'Sync fehlgeschlagen')))};const onMessage=async ev=>{const m=ev.data;if(!m||m.type!=='studia-sync-bridge'||m.id!==bridgeId)return;try{const r=m.payload||{};if(!r.ok)throw new Error(String(r.error||'Sync fehlgeschlagen'));if(r.dataGzip){r.data=JSON.parse(await ungzip253(r.dataGzip));delete r.dataGzip}clean();resolve(r)}catch(e){fail(e)}};const timer=setTimeout(()=>fail(new Error('Cloud antwortet nicht · Apps-Script V254/URL prüfen')),12000);window.addEventListener('message',onMessage);document.body.appendChild(frame);document.body.appendChild(form);try{form.submit()}catch(e){fail(e)}})
 }
 window.studiaSyncNow=async function(){
  if(syncBusy253)return {busy:true};syncBusy253=true;syncStatus253('Synchronisiere …');
  try{
   try{if(document.body.classList.contains('editorMode'))window.saveCanvasSheetCore?.(true)}catch(_){}persist253();
-  const local=clone253(data253()),base=syncBase253();const res=await bridgeSync253(local,base);if(Number(res?.version||0)<253)throw new Error('Backend V253 fehlt · neuen Code.gs bereitstellen');
+  const local=clone253(data253()),base=syncBase253();const res=await bridgeSync253(local,base);if(Number(res?.version||0)<254)throw new Error('Backend V254 fehlt · neuen Code.gs bereitstellen');
   const merged=res?.data&&typeof res.data==='object'?res.data:local;setData253(merged);persist253();saveSyncBase253(merged);try{window.v150ClearDirty?.()}catch(_){}
   try{window.renderAll?.();if($253('#view-plan.active'))window.renderPlan?.();if($253('#view-home.active'))window.renderHome?.();if($253('#view-subjects.active'))window.renderSubjects?.();if($253('#view-subject-detail.active'))window.renderSubjectDetail?.();if($253('#view-topic-detail.active'))window.renderTopicDetail?.();if($253('#view-deck-detail.active'))window.renderDeckDetail?.()}catch(_){}
   const n=Number(res?.deviceCount||0),cloud=String(res?.cloudId||'—'),user=String(res?.account?.username||'Konto');let info=$253('#v253CloudInfo'),card=$253('.v171CloudSettings');if(card&&!info){info=document.createElement('div');info.id='v253CloudInfo';card.appendChild(info)}if(info){info.classList.toggle('warn',n<2);info.textContent=`Cloud ${cloud} · ${user} · ${n||1} Gerät${n===1?'':'e'} erkannt`}
   syncStatus253(n>=2?`Synchronisiert ✓ · ${n} Geräte`:'Cloud gespeichert ✓ · zweites Gerät jetzt synchronisieren',n<2);return res;
- }catch(e){console.error('[Studia V253 sync]',e);persist253();syncStatus253(String(e?.message||'Sync fehlgeschlagen')+' · lokal sicher',true);throw e}
+ }catch(e){console.error('[Studia V254 sync]',e);persist253();syncStatus253(String(e?.message||'Sync fehlgeschlagen')+' · lokal sicher',true);throw e}
  finally{syncBusy253=false;$253('#v242DesktopSync')?.classList.remove('syncing');setTimeout(()=>$253('#v242PullSync')?.classList.remove('show','ready','syncing'),300)}
 };
 window.v171CloudNow=()=>window.studiaSyncNow();window.v171CloudNow.__v219Guarded=true;try{v171CloudNow=window.v171CloudNow}catch(_){}
