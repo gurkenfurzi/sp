@@ -22710,10 +22710,10 @@ const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 236'};
 <!-- ===== /Studia V237 ===== -->
 
 
-<!-- ===== Studia V238 · print tape exact match ===== -->
-<script id="studia-v238-print-tape-exact">
+<!-- ===== Studia V239 · print tape no border ===== -->
+<script id="studia-v239-print-tape-no-border">
 (()=>{
-if(window.__STUDIA_V238_PRINT__)return;window.__STUDIA_V238_PRINT__=true;
+if(window.__STUDIA_V239_PRINT__)return;window.__STUDIA_V238_PRINT__=true;
 window.printCanvasSheet=async function(){
   if(innerWidth<900 && typeof window.v170PrintMobile==='function') return window.v170PrintMobile();
   const w=window.open('about:blank','_blank','width=1050,height=900');
@@ -22730,7 +22730,7 @@ window.printCanvasSheet=async function(){
       .map(s=>s.textContent.match(/@font-face\s*\{[^}]*\}/g)||[]).flat().join('\n')+
       clones.map((c,i)=>{const name='studiaPage'+i;c.style.setProperty('page',name,'important');return '@page '+name+'{size:'+parseFloat(c.style.width)+'px '+parseFloat(c.style.height)+'px;margin:0}'}).join('');
 
-    const exactTapeCSS = '.tapeSticker{position:absolute;box-sizing:border-box;background:rgba(242,190,178,.62);border:1px solid rgba(200,145,135,.18);transform:rotate(var(--rot,-4deg));box-shadow:0 2px 6px rgba(120,90,80,.08);pointer-events:auto;touch-action:none}.tapeSticker:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent 0 7px,rgba(255,255,255,.18) 7px 9px)}';
+    const exactTapeCSS = '.tapeSticker{position:absolute;box-sizing:border-box;background:rgba(242,190,178,.62);border:0!important;outline:0!important;transform:rotate(var(--rot,-4deg));box-shadow:0 2px 6px rgba(120,90,80,.08);pointer-events:auto;touch-action:none}.tapeSticker:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent 0 7px,rgba(255,255,255,.18) 7px 9px)}';
 
     w.document.open();
     w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Studia · Druckvorschau</title><base href="'+location.href+'"><style>'+faces+
@@ -22750,7 +22750,7 @@ window.printCanvasSheet=async function(){
     };
     w.focus();
   }catch(e){
-    console.error('[Studia V238 print]',e);
+    console.error('[Studia V239 print]',e);
     try{w.close()}catch(_){ }
     alert('Die Druckvorschau konnte nicht erstellt werden. '+(e?.message?`(${e.message})`:''));
   }
