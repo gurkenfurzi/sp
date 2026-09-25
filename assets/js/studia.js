@@ -45,7 +45,7 @@ const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const KEY="schoolhub-v1";
 const defaultData={
   settings:{name:"",type:"school",className:"M U1",school:"PHS Ludwigshafen",pet:"on",pdf:"https://www.phs-lu.de/wp-content/uploads/2023/04/Stundenplan.pdf"},
-  homework:[], tests:[], grades:[], flashcards:[], subjects:[
+  homework:[], tests:[], grades:[], gradedSubmissions:[], flashcards:[], subjects:[
     {id:"s1",name:"Deutsch",abbr:"D",color:"#f2b6b3",cover:"#f7d2cf",emoji:"🌷",notes:[],topics:[],files:[]},
     {id:"s2",name:"Mathematik",abbr:"M",color:"#b8c9ef",cover:"#dce4f7",emoji:"🫐",notes:[],topics:[],files:[]},
     {id:"s3",name:"Englisch",abbr:"E",color:"#bfd9a3",cover:"#e2edc7",emoji:"🍀",notes:[],topics:[],files:[]}
@@ -126,7 +126,7 @@ function load(){
    const saved=JSON.parse(localStorage.getItem(KEY)||"{}"), d=Object.assign(structuredClone(defaultData),saved);
    d.economy ||= {coins:0,owned:["base-room"],equipped:[]};
    d.customization ||= {theme:"blossom",compact:false};
-   d.lessonExtras ||= {}; d.reminders ||= []; d.flashDecks ||= []; d.quizzes ||= []; d.studySheets ||= []; d.canvasSheets ||= {}; d.timetableSubjectColors ||= {};
+   d.lessonExtras ||= {}; d.reminders ||= []; d.flashDecks ||= []; d.quizzes ||= []; d.studySheets ||= []; d.canvasSheets ||= {}; d.timetableSubjectColors ||= {}; d.gradedSubmissions ||= [];
    for(const s of (d.subjects||[])){ensureSubjectShapeRaw(s)}
    if(!d.flashDecks.length && d.flashcards?.length){
      const by={};
@@ -15340,7 +15340,7 @@ const getData=()=>{try{return data}catch(_){return window.data||{}}};
 const setData=v=>{try{data=v}catch(_){window.data=v}};
 const storeKey=()=>{try{return KEY}catch(_){return 'schoolhub-v1'}};
 const META='__studiaSyncMeta',UPDATED='__studiaUpdatedAt',BASE='studia-v242-last-synced-state';
-const TRACKED=['homework','tests','writtenTests','grades','flashcards','subjects','absences','studySessions','reminders','flashDecks','quizzes','studySheets'];
+const TRACKED=['homework','tests','writtenTests','grades','gradedSubmissions','flashcards','subjects','absences','studySessions','reminders','flashDecks','quizzes','studySheets'];
 let syncBusy=false,lastSyncAt=0,pullStart=null,pullReady=false,maintainQueued=false;
 function clean(v){if(Array.isArray(v))return v.map(clean);if(v&&typeof v==='object'){const o={};for(const[k,x]of Object.entries(v)){if(k===META||k===UPDATED)continue;o[k]=clean(x)}return o}return v}
 function same(a,b){try{return JSON.stringify(clean(a))===JSON.stringify(clean(b))}catch(_){return false}}
@@ -15561,106 +15561,94 @@ const openBase253=window.openView;if(typeof openBase253==='function'){window.ope
 })();
 ;
 
-/* ===== original script 68 ===== */
+/* ===== Studia V263 — GitHub UI + hidden Google Apps Script auto-sync bridge ===== */
 (()=>{
 'use strict';
-if(window.__STUDIA_V260__)return;window.__STUDIA_V260__=true;window.__STUDIA_VERSION__=260;
+if(window.__STUDIA_V263__)return;window.__STUDIA_V263__=true;window.__STUDIA_VERSION__=263;
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-const DIRECT_GOOGLE=!!(window.google&&google.script&&google.script.run);
-const BASE_KEY='studia-v260-sync-base', DEVICE_KEY='studia-v260-device-id';
-let busy=false,autoTimer=0,lastSync=0,mutationSerial=0;
+const BASE_KEY='studia-v263-sync-base',DEVICE_KEY='studia-v263-device-id';
+let bridgeWindow=null,bridgeNonce='',bridgeReadyPromise=null,bridgeReadyResolve=null,bridgeReadyReject=null;
+let bridgeURL='',pending=new Map(),busy=false,autoTimer=0,lastSync=0,mutationSerial=0,applyingRemote=false;
 function dataRef(){try{return data}catch(_){return window.data||{}}}
 function setDataRef(v){try{data=v}catch(_){window.data=v}}
 function keyRef(){try{return KEY}catch(_){return 'schoolhub-v1'}}
 function clone(v){try{return structuredClone(v)}catch(_){return JSON.parse(JSON.stringify(v))}}
-function persist(){try{localStorage.setItem(keyRef(),JSON.stringify(dataRef()))}catch(e){console.warn('[Studia V260 local]',e)}}
-function baseRead(){for(const k of [BASE_KEY,'studia-v259-sync-base','studia-v253-sync-base','studia-v242-last-synced-state']){try{const v=JSON.parse(localStorage.getItem(k)||'null');if(v&&typeof v==='object')return v}catch(_){}}return {}}
-function baseSave(v){try{localStorage.setItem(BASE_KEY,JSON.stringify(v||{}))}catch(_){}}
-function deviceId(){let v='';try{v=localStorage.getItem(DEVICE_KEY)||''}catch(_){}if(!v){v='device-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,10);try{localStorage.setItem(DEVICE_KEY,v)}catch(_){}}return v}
-function deviceName(){return (/iPhone|iPad|Android|Mobile/i.test(navigator.userAgent)?'Handy':'Laptop')+' · '+String(navigator.platform||'Browser').slice(0,30)}
 function cfg(){try{return window.StudiaCloud?.config?.()||{}}catch(_){return {}}}
 function cleanUrl(u){return String(u||'').trim().replace(/[?#].*$/,'')}
-function markVersion(){const e=$('#headerEyebrow');if(e&&e.textContent!=='VERSION 260')e.textContent='VERSION 260'}
-function status(text,bad=false){
- const s=String(text||'');try{window.StudiaCloud?.setStatus?.(s,bad)}catch(_){}
- const x=$('#v242SyncStatus');if(x){x.textContent=s;x.classList.toggle('bad',!!bad)}
- const b=$('#v242DesktopSync');if(b){b.title=s;b.classList.toggle('syncing',/Synchron|Google lädt|Google speichert/i.test(s))}
- let info=$('#v260GoogleSyncInfo'),card=$('.v171CloudSettings');if(card&&!info){info=document.createElement('div');info.id='v260GoogleSyncInfo';card.appendChild(info)}
- if(info){info.textContent='Google Auto-Sync · '+s;info.classList.toggle('bad',!!bad);info.classList.toggle('syncing',/Synchron|lädt|speichert/i.test(s))}
-}
-function rememberUrl(url){try{window.StudiaCloud?.rememberUrl?.(url)}catch(_){}const i=$('#v150ScriptUrl');if(i)i.value=url}
-function rememberAuth(r){try{window.StudiaCloud?.rememberAuth?.(r)}catch(_){} }
 function token(){return String(cfg().token||'')}
-function canAuto(){return DIRECT_GOOGLE&&navigator.onLine&&!!token()}
+function rememberUrl(url){url=cleanUrl(url);if(!url)return;try{window.StudiaCloud?.rememberUrl?.(url)}catch(_){}const i=$('#v150ScriptUrl');if(i)i.value=url}
+function rememberAuth(r){try{window.StudiaCloud?.rememberAuth?.(r)}catch(_){} }
+function persist(){try{localStorage.setItem(keyRef(),JSON.stringify(dataRef()))}catch(e){console.warn('[Studia V263 local]',e)}}
+function baseRead(){for(const k of [BASE_KEY,'studia-v260-sync-base','studia-v259-sync-base','studia-v253-sync-base','studia-v242-last-synced-state']){try{const v=JSON.parse(localStorage.getItem(k)||'null');if(v&&typeof v==='object')return v}catch(_){}}return {}}
+function baseSave(v){try{localStorage.setItem(BASE_KEY,JSON.stringify(v||{}))}catch(_){}}
+function deviceId(){let v='';try{v=localStorage.getItem(DEVICE_KEY)||localStorage.getItem('studia-v260-device-id')||''}catch(_){}if(!v){v='device-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,10);try{localStorage.setItem(DEVICE_KEY,v)}catch(_){}}return v}
+function deviceName(){return (/iPhone|iPad|Android|Mobile/i.test(navigator.userAgent)?'Handy':'Laptop')+' · '+String(navigator.platform||'Browser').slice(0,30)}
+function status(text,bad=false){const s=String(text||'');try{window.StudiaCloud?.setStatus?.(s,bad)}catch(_){}const st=$('#v242SyncStatus');if(st){st.textContent=s;st.classList.toggle('bad',!!bad)}const b=$('#v242DesktopSync');if(b){b.title=s;b.classList.toggle('syncing',/Synchron|Verbinde/i.test(s)&&!/✓|Fehler|nicht|lokal/i.test(s));const sm=b.querySelector('small');if(sm)sm.textContent=s}const p=$('#v242PullSync');if(p&&p.classList.contains('show'))p.textContent=s}
+function markVersion(){const e=$('#headerEyebrow');if(e)e.textContent='VERSION 263'}
+function safeBackupOnce(){try{const raw=localStorage.getItem(keyRef());if(raw&&!localStorage.getItem('studia-v263-pre-sync-backup'))localStorage.setItem('studia-v263-pre-sync-backup',raw)}catch(_){}try{window.v111CreateBackupNow?.(true)}catch(_){}}
 function bytesToB64(bytes){let s='';for(let i=0;i<bytes.length;i+=0x8000)s+=String.fromCharCode(...bytes.subarray(i,i+0x8000));return btoa(s)}
 function b64ToBytes(s){const raw=atob(String(s||'')),a=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)a[i]=raw.charCodeAt(i);return a}
 async function gzipText(text){if(typeof CompressionStream!=='function')return '';const cs=new CompressionStream('gzip');const ab=await new Response(new Blob([String(text)]).stream().pipeThrough(cs)).arrayBuffer();return bytesToB64(new Uint8Array(ab))}
 async function ungzipText(b64){if(typeof DecompressionStream!=='function')throw new Error('Browser kann Google-Sync-Daten nicht entpacken');const ds=new DecompressionStream('gzip');return await new Response(new Blob([b64ToBytes(b64)]).stream().pipeThrough(ds)).text()}
-function googleCall(action,payload={},timeoutMs=60000){
- if(!DIRECT_GOOGLE)return Promise.reject(new Error('Studia muss über die Google-/exec-Web-App geöffnet sein'));
- return new Promise((resolve,reject)=>{
-   let done=false;const timer=setTimeout(()=>{if(done)return;done=true;reject(new Error('Google-Sync antwortet nicht'))},timeoutMs);
-   try{
-     google.script.run
-       .withSuccessHandler(async r=>{if(done)return;done=true;clearTimeout(timer);try{r=r||{};if(r.dataGzip){r.data=JSON.parse(await ungzipText(r.dataGzip));delete r.dataGzip}if(r.ok===false)throw new Error(String(r.error||'Google-Sync fehlgeschlagen'));resolve(r)}catch(e){reject(e)}})
-       .withFailureHandler(er=>{if(done)return;done=true;clearTimeout(timer);reject(new Error(String(er&&er.message||er||'Google-Sync fehlgeschlagen')))})
-       .v260ClientCall({action,...payload});
-   }catch(e){if(!done){done=true;clearTimeout(timer);reject(e)}}
- })
+
+function resetBridge(reason){bridgeWindow=null;bridgeReadyPromise=null;bridgeReadyResolve=null;bridgeReadyReject=null;bridgeURL='';document.getElementById('studiaGoogleBridge263')?.remove();if(reason)console.warn('[Studia V263 bridge reset]',reason)}
+function makeNonce(){return Date.now().toString(36)+'-'+Math.random().toString(36).slice(2)}
+function ensureBridge(){
+ const url=cleanUrl(cfg().url||$('#v150ScriptUrl')?.value||'');
+ if(!url)return Promise.reject(new Error('Apps-Script-/exec-URL fehlt'));
+ rememberUrl(url);
+ if(bridgeWindow&&bridgeURL===url)return Promise.resolve(bridgeWindow);
+ if(bridgeReadyPromise&&bridgeURL===url)return bridgeReadyPromise;
+ resetBridge();bridgeURL=url;bridgeNonce=makeNonce();
+ bridgeReadyPromise=new Promise((resolve,reject)=>{bridgeReadyResolve=resolve;bridgeReadyReject=reject;const timer=setTimeout(()=>{if(bridgeWindow)return;resetBridge('timeout');reject(new Error('Google-Sync-Verbindung konnte nicht aufgebaut werden'))},15000);const done=w=>{clearTimeout(timer);resolve(w)};bridgeReadyResolve=done});
+ const f=document.createElement('iframe');f.id='studiaGoogleBridge263';f.setAttribute('aria-hidden','true');f.tabIndex=-1;f.style.cssText='position:fixed!important;width:1px!important;height:1px!important;left:-9999px!important;top:-9999px!important;border:0!important;opacity:0!important;pointer-events:none!important';
+ const u=new URL(url);u.searchParams.set('action','bridge_v263');u.searchParams.set('nonce',bridgeNonce);u.searchParams.set('_',String(Date.now()));f.src=u.toString();document.body.appendChild(f);
+ return bridgeReadyPromise;
 }
-function googleExecUrl(){const c=cfg();return cleanUrl(c.url||$('#v150ScriptUrl')?.value||'')}
-function redirectToGoogle(){const url=googleExecUrl();if(!url)return false;rememberUrl(url);try{location.replace(url+'?action=app_v260');return true}catch(_){location.href=url+'?action=app_v260';return true}}
-window.v260OpenGoogle=redirectToGoogle;
+window.addEventListener('message',async ev=>{
+ const m=ev.data;if(!m||typeof m!=='object')return;
+ if(m.type==='studia-v263-ready'&&m.nonce===bridgeNonce){bridgeWindow=ev.source;const r=bridgeReadyResolve;bridgeReadyResolve=null;bridgeReadyReject=null;if(typeof r==='function')r(bridgeWindow);return}
+ if(m.type==='studia-v263-response'&&m.nonce===bridgeNonce&&m.id&&pending.has(m.id)){
+   const p=pending.get(m.id);pending.delete(m.id);clearTimeout(p.timer);
+   try{let r=m.result||{};if(m.error)throw new Error(String(m.error));if(r.dataGzip){r.data=JSON.parse(await ungzipText(r.dataGzip));delete r.dataGzip}if(r.ok===false)throw new Error(String(r.error||'Google-Sync fehlgeschlagen'));p.resolve(r)}catch(e){p.reject(e)}
+ }
+});
+async function bridgeCall(action,payload={},timeoutMs=90000){
+ const w=await ensureBridge();const id='v263-'+makeNonce();
+ return new Promise((resolve,reject)=>{const timer=setTimeout(()=>{pending.delete(id);reject(new Error('Google-Sync antwortet nicht'))},timeoutMs);pending.set(id,{resolve,reject,timer});try{w.postMessage({type:'studia-v263-call',nonce:bridgeNonce,id,request:{action,...payload}},'*')}catch(e){clearTimeout(timer);pending.delete(id);reject(e)}})
+}
+
 async function syncNow(reason='auto'){
- if(busy)return {busy:true};
- if(!DIRECT_GOOGLE){if(googleExecUrl())redirectToGoogle();return {google:false}}
- if(!navigator.onLine)return {offline:true};
- if(!token()){status('Google verbunden · bitte anmelden');return {auth:false}}
- busy=true;const serialAtStart=mutationSerial;status(reason==='manual'?'Synchronisiere mit Google …':'Automatische Synchronisierung …');
+ if(busy||applyingRemote)return {busy:true};if(!navigator.onLine)return {offline:true};
+ if(!token()){if(reason==='manual')status('Bitte zuerst im Studia-Konto anmelden',true);return {auth:false}}
+ busy=true;const serialAtStart=mutationSerial;status(reason==='manual'?'Synchronisiere …':'Auto-Sync …');
  try{
-   try{if(document.body.classList.contains('editorMode'))window.saveCanvasSheetCore?.(true)}catch(_){}
-   persist();
-   const local=clone(dataRef()),base=baseRead();
-   const raw=JSON.stringify(local),rawBase=JSON.stringify(base);let dataGzip='',baseGzip='';
+   safeBackupOnce();try{if(document.body.classList.contains('editorMode'))window.saveCanvasSheetCore?.(true)}catch(_){}persist();
+   const local=clone(dataRef()),base=baseRead(),raw=JSON.stringify(local),rawBase=JSON.stringify(base);let dataGzip='',baseGzip='';
    try{dataGzip=await gzipText(raw);baseGzip=await gzipText(rawBase)}catch(_){}
    const payload={token:token(),deviceId:deviceId(),deviceName:deviceName()};
    if(dataGzip&&dataGzip.length<raw.length)payload.dataGzip=dataGzip;else payload.data=raw;
    if(baseGzip&&baseGzip.length<rawBase.length)payload.baseGzip=baseGzip;else payload.base=rawBase;
-   const r=await googleCall('sync',payload,90000);if(Number(r.version||0)<260)throw new Error('Google Backend V260 fehlt');
-   const merged=r.data&&typeof r.data==='object'?r.data:local;setDataRef(merged);persist();baseSave(merged);lastSync=Date.now();
-   try{window.renderAll?.();if($('#view-plan.active'))window.renderPlan?.();if($('#view-home.active'))window.renderHome?.();if($('#view-subjects.active'))window.renderSubjects?.();if($('#view-subject-detail.active'))window.renderSubjectDetail?.();if($('#view-topic-detail.active'))window.renderTopicDetail?.();if($('#view-deck-detail.active'))window.renderDeckDetail?.()}catch(_){}
-   if(mutationSerial===serialAtStart){try{window.v150ClearDirty?.()}catch(_){}try{localStorage.setItem('studia-v242-dirty','0')}catch(_){}}else{try{window.v150MarkDirty?.(700)}catch(_){}}
-   const n=Number(r.deviceCount||1);status(`Synchronisiert ✓${n>1?' · '+n+' Geräte':''}`);setTimeout(()=>{if(!busy)status('Auto-Sync aktiv ✓')},1600);return r;
- }catch(e){console.error('[Studia V260 Google sync]',e);status(String(e?.message||'Google-Sync fehlgeschlagen')+' · lokal sicher',true);throw e}
- finally{busy=false;if(mutationSerial!==serialAtStart)scheduleAuto('changed-during-sync',900)}
+   const r=await bridgeCall('sync',payload,90000);if(Number(r.version||0)<263)throw new Error('Google Backend V263 fehlt');
+   const merged=r.data&&typeof r.data==='object'?r.data:local;applyingRemote=true;setDataRef(merged);persist();baseSave(merged);lastSync=Date.now();
+   try{window.renderAll?.();if($('#view-plan.active'))window.renderPlan?.();if($('#view-home.active'))window.renderHome?.();if($('#view-tasks.active'))window.renderTasks?.();if($('#view-grades.active'))window.renderGrades?.();if($('#view-subjects.active'))window.renderSubjects?.();if($('#view-subject-detail.active'))window.renderSubjectDetail?.();if($('#view-topic-detail.active'))window.renderTopicDetail?.();if($('#view-deck-detail.active'))window.renderDeckDetail?.()}catch(_){}finally{applyingRemote=false}
+   if(mutationSerial===serialAtStart){try{window.v150ClearDirty?.()}catch(_){}try{localStorage.setItem('studia-v242-dirty','0')}catch(_){}}
+   const n=Number(r.deviceCount||1);status(`Synchronisiert ✓${n>1?' · '+n+' Geräte':''}`);return r;
+ }catch(e){status(String(e?.message||'Google-Sync fehlgeschlagen')+' · lokal sicher',true);throw e}
+ finally{busy=false;if(mutationSerial!==serialAtStart)scheduleAuto('changed-during-sync',1100)}
 }
-window.studiaSyncNow=(force)=>syncNow(force?'manual':'auto');window.v171CloudNow=()=>syncNow('manual');window.v171CloudNow.__v219Guarded=true;try{v171CloudNow=window.v171CloudNow}catch(_){}
-function scheduleAuto(reason='change',delay=1000){clearTimeout(autoTimer);if(!canAuto())return;autoTimer=setTimeout(()=>syncNow(reason).catch(()=>{}),Math.max(300,Number(delay)||1000))}
-const oldMark=window.v150MarkDirty;window.v150MarkDirty=function(delay=700){mutationSerial++;try{oldMark?.(delay)}catch(_){}scheduleAuto('Änderung',Math.max(750,Number(delay)||700))};
-window.v150CloudDirty=window.v150CloudDirty||(()=>{try{return localStorage.getItem('studia-v242-dirty')==='1'}catch(_){return true}});
+function scheduleAuto(reason='Änderung',delay=1200){clearTimeout(autoTimer);if(!navigator.onLine||!token())return;autoTimer=setTimeout(()=>syncNow(reason).catch(()=>{}),Math.max(500,Number(delay)||1200))}
 
-window.v171CloudLogin=async function(){
- if(!DIRECT_GOOGLE){const url=googleExecUrl();if(!url)throw new Error('Apps-Script-/exec-URL fehlt');redirectToGoogle();return}
- try{const username=$('#v150Username')?.value?.trim()||'',password=$('#v150Password')?.value||'';if(!username||!password)throw new Error('Benutzername und Passwort eingeben');status('Google-Anmeldung …');const r=await googleCall('login',{username,password});rememberAuth(r);try{localStorage.setItem('studia-v242-dirty','1')}catch(_){}status(`Angemeldet als ${r.user?.username||username} ✓`);await syncNow('login');return r}catch(e){status(String(e?.message||e),true);throw e}
-};
-window.v171CloudRegister=async function(){
- if(!DIRECT_GOOGLE){const url=googleExecUrl();if(!url)throw new Error('Apps-Script-/exec-URL fehlt');redirectToGoogle();return}
- try{const username=$('#v150Username')?.value?.trim()||'',password=$('#v150Password')?.value||'';if(!username||!password)throw new Error('Benutzername und Passwort eingeben');status('Studia-Konto wird angelegt …');const r=await googleCall('register',{username,password});rememberAuth(r);if(r.recoveryCode)alert('Wiederherstellungscode — sicher speichern:\n\n'+r.recoveryCode);try{localStorage.setItem('studia-v242-dirty','1')}catch(_){}await syncNow('register');return r}catch(e){status(String(e?.message||e),true);throw e}
-};
-if(window.StudiaCloud){window.StudiaCloud.health=()=>googleCall('health');window.StudiaCloud.login=(username,password)=>googleCall('login',{username,password});window.StudiaCloud.register=(username,password)=>googleCall('register',{username,password});window.StudiaCloud.me=()=>googleCall('me',{token:token()});}
-function bind(){
- markVersion();const b=$('#v242DesktopSync');if(b){b.onclick=e=>{e.preventDefault();syncNow('manual').catch(()=>{})};b.title='Jetzt mit Google synchronisieren'}
- $$('.v171CloudSettings button').forEach(b=>{const t=(b.textContent||'').toLowerCase();if(/jetzt synchronisieren|geräte synchronisieren/.test(t)){b.removeAttribute('onclick');b.onclick=e=>{e.preventDefault();syncNow('manual').catch(()=>{})}}});
- const hint=$('#v246BackendHint');if(hint)hint.textContent='Google Auto-Sync V260 · direkt in der Google-Web-App.';
- let info=$('#v260GoogleSyncInfo'),card=$('.v171CloudSettings');if(card&&!info){info=document.createElement('div');info.id='v260GoogleSyncInfo';card.appendChild(info)}
- if(info&&!busy)info.textContent='Google Auto-Sync · '+(DIRECT_GOOGLE?(token()?'aktiv ✓':'bitte anmelden'):'öffnet über Google …');
-}
-const oldOpen=window.openView;if(typeof oldOpen==='function'&&!oldOpen.__v260){window.openView=function(){const r=oldOpen.apply(this,arguments);setTimeout(bind,25);return r};window.openView.__v260=true;try{openView=window.openView}catch(_){} }
-window.addEventListener('online',()=>scheduleAuto('online',350));window.addEventListener('focus',()=>scheduleAuto('focus',450));window.addEventListener('pageshow',()=>scheduleAuto('pageshow',550));document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')scheduleAuto('sichtbar',450)});
-setInterval(()=>{if(document.visibilityState==='visible'&&canAuto()&&Date.now()-lastSync>18000)scheduleAuto('intervall',250)},20000);
-[0,150,600,1500].forEach(t=>setTimeout(()=>{bind();if(DIRECT_GOOGLE&&token())scheduleAuto('start',t?600:1000)},t));
-setInterval(markVersion,5000);
-if(!DIRECT_GOOGLE && /^https:\/\/gurkenfurzi\.github\.io$/i.test(location.origin||'') && googleExecUrl())setTimeout(()=>redirectToGoogle(),350);
+const oldMark=window.v150MarkDirty;window.v150MarkDirty=function(delay=700){if(applyingRemote)return;mutationSerial++;try{oldMark?.(delay)}catch(_){}try{localStorage.setItem('studia-v242-dirty','1')}catch(_){}scheduleAuto('Änderung',Math.max(900,Number(delay)||700))};
+window.studiaSyncNow=(force)=>syncNow(force?'manual':'auto');window.v171CloudNow=()=>syncNow('manual');window.v171CloudNow.__v219Guarded=true;try{v171CloudNow=window.v171CloudNow}catch(_){}
+window.v171CloudLogin=async function(){try{const url=$('#v150ScriptUrl')?.value?.trim()||cfg().url||'',username=$('#v150Username')?.value?.trim()||'',password=$('#v150Password')?.value||'';if(!url)throw new Error('Apps-Script-/exec-URL fehlt');if(!username||!password)throw new Error('Benutzername und Passwort eingeben');rememberUrl(url);resetBridge('url/login');status('Verbinde mit Google …');await bridgeCall('health',{},20000);const r=await bridgeCall('login',{username,password},30000);rememberAuth(r);status(`Angemeldet als ${r.user?.username||username} ✓`);try{localStorage.setItem('studia-v242-dirty','1')}catch(_){}await syncNow('login');return r}catch(e){status(String(e?.message||e),true);throw e}};
+window.v171CloudRegister=async function(){try{const url=$('#v150ScriptUrl')?.value?.trim()||cfg().url||'',username=$('#v150Username')?.value?.trim()||'',password=$('#v150Password')?.value||'';if(!url)throw new Error('Apps-Script-/exec-URL fehlt');if(!username||!password)throw new Error('Benutzername und Passwort eingeben');rememberUrl(url);resetBridge('url/register');status('Konto wird erstellt …');await bridgeCall('health',{},20000);const r=await bridgeCall('register',{username,password},30000);rememberAuth(r);if(r.recoveryCode)alert('Wiederherstellungscode — sicher speichern:\n\n'+r.recoveryCode);try{localStorage.setItem('studia-v242-dirty','1')}catch(_){}await syncNow('register');return r}catch(e){status(String(e?.message||e),true);throw e}};
+if(window.StudiaCloud){window.StudiaCloud.health=()=>bridgeCall('health',{},20000);window.StudiaCloud.login=(username,password)=>bridgeCall('login',{username,password},30000);window.StudiaCloud.register=(username,password)=>bridgeCall('register',{username,password},30000);window.StudiaCloud.me=()=>bridgeCall('me',{token:token()},30000);window.StudiaCloud.syncState=async data=>bridgeCall('sync',{token:token(),data:JSON.stringify(data),base:JSON.stringify(baseRead()),deviceId:deviceId(),deviceName:deviceName()},90000)}
+function bind(){markVersion();const b=$('#v242DesktopSync');if(b){b.onclick=e=>{e.preventDefault();syncNow('manual').catch(()=>{})};b.title='Jetzt synchronisieren'}$$('.v171CloudSettings button').forEach(b=>{if(/jetzt synchronisieren|geräte synchronisieren/i.test(b.textContent||'')){b.removeAttribute('onclick');b.onclick=e=>{e.preventDefault();syncNow('manual').catch(()=>{})}}});const hint=$('#v246BackendHint');if(hint)hint.textContent='Google Auto-Sync V263 · Studia bleibt auf GitHub · kein Google-Balken.'}
+const oldOpen=window.openView;if(typeof oldOpen==='function'&&!oldOpen.__v263){window.openView=function(){const r=oldOpen.apply(this,arguments);setTimeout(bind,20);return r};window.openView.__v263=true;try{openView=window.openView}catch(_){} }
+window.addEventListener('online',()=>{resetBridge('online');scheduleAuto('online',500)});window.addEventListener('focus',()=>scheduleAuto('focus',700));window.addEventListener('pageshow',()=>scheduleAuto('pageshow',800));document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')scheduleAuto('sichtbar',700)});
+setInterval(()=>{if(document.visibilityState==='visible'&&navigator.onLine&&token()&&(window.v150CloudDirty?.()||Date.now()-lastSync>60000))scheduleAuto('intervall',500)},30000);
+[0,150,600,1400].forEach(t=>setTimeout(()=>{bind();if(token())scheduleAuto('start',t?1200:1600)},t));
 })();
 ;
 
@@ -15699,5 +15687,228 @@ if(!DIRECT_GOOGLE && /^https:\/\/gurkenfurzi\.github\.io$/i.test(location.origin
       else repair(m.target);
     }
   }).observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['src','style']});
+})();
+
+
+
+/* ===== Studia V262 — Planer + benotete Abgaben + Noten + compact settings ===== */
+(function(){
+  'use strict';
+  if(window.__STUDIA_V262__)return;
+  window.__STUDIA_V262__=true;
+
+  const q=(s,r=document)=>r?.querySelector?.(s)||null;
+  const qa=(s,r=document)=>r?.querySelectorAll?[...r.querySelectorAll(s)]:[];
+  const esc262=(s='')=>String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+  const desktop262=()=>innerWidth>=1100&&!document.body.classList.contains('editorMode');
+  const canon262=s=>String(s||'').trim().toUpperCase().replace(/[Ä]/g,'AE').replace(/[Ö]/g,'OE').replace(/[Ü]/g,'UE').replace(/[^A-Z0-9]/g,'');
+
+  data.gradedSubmissions = Array.isArray(data.gradedSubmissions) ? data.gradedSubmissions : [];
+
+  function v262DayCode(date){
+    return ['So','Mo','Di','Mi','Do','Fr','Sa'][date.getDay()]||'';
+  }
+  function v262Schedule(){
+    const cls=data.timetable?.selectedClass||data.settings?.className||'M U1';
+    try{return (typeof currentScheduleForClass==='function'?currentScheduleForClass(cls):(data.timetable?.lessons||[]))||[]}
+    catch(_){return data.timetable?.lessons||[]}
+  }
+  function v262SubjectOfLesson(l){
+    try{
+      const p=splitCell(l?.raw||'');
+      const name=(typeof prettySubject==='function'?prettySubject(p.subject||''):p.subject)||'';
+      return name||p.subject||'';
+    }catch(_){return String(l?.subject||l?.raw||'')}
+  }
+  function v262DueFromLessonCount(subject,count){
+    let remaining=Math.max(1,Number(count)||1);
+    const target=canon262(subject);
+    const schedule=v262Schedule().filter(l=>!l.specialOnly&&!l.cancelledFromBasis&&canon262(v262SubjectOfLesson(l))===target);
+    if(!schedule.length)return '';
+    const now=new Date();
+    now.setSeconds(0,0);
+    for(let offset=0;offset<190;offset++){
+      const d=new Date(now.getFullYear(),now.getMonth(),now.getDate()+offset,12,0,0,0);
+      const dc=v262DayCode(d);
+      const day=schedule.filter(l=>String(l.day||'')===dc).sort((a,b)=>String(a.start||'').localeCompare(String(b.start||'')));
+      for(const l of day){
+        if(offset===0 && l.end){
+          const [hh,mm]=String(l.end).split(':').map(Number);
+          const end=new Date(now.getFullYear(),now.getMonth(),now.getDate(),hh||0,mm||0,0,0);
+          if(end<=now)continue;
+        }
+        let blocks=Number(l.blocks||0);
+        if(!blocks||blocks<1){
+          try{
+            const [sh,sm]=String(l.start||'').split(':').map(Number),[eh,em]=String(l.end||'').split(':').map(Number);
+            const mins=(eh*60+em)-(sh*60+sm);
+            blocks=Math.max(1,Math.round(mins/45));
+          }catch(_){blocks=1}
+        }
+        remaining-=blocks;
+        if(remaining<=0)return localISODate(d);
+      }
+    }
+    return '';
+  }
+  window.v262ToggleSubmissionMode=function(){
+    const mode=q('#v262SubmissionMode')?.value||'date';
+    const dateBox=q('#v262DueDateBox'),lessonBox=q('#v262DueLessonsBox');
+    if(dateBox)dateBox.style.display=mode==='date'?'':'none';
+    if(lessonBox)lessonBox.style.display=mode==='lessons'?'':'none';
+  };
+  function v262SubmissionForm(existing=null){
+    const mode=existing?.dueMode||'date';
+    return `<div class="compactPresetModal v262SubmissionModal">
+      <div class="presetModalHead"><div><span class="eyebrow">PLANER</span><h2>${existing?'Benotete Abgabe bearbeiten':'Benotete Abgabe'}</h2></div><button type="button" class="miniIcon" onclick="closeModal()">×</button></div>
+      <div class="formGrid">
+        <div><label>Fach</label><select id="v262SubmissionSubject">${subjectOptions()}</select></div>
+        <div><label>Abgabe festlegen</label><select id="v262SubmissionMode" onchange="v262ToggleSubmissionMode()"><option value="date" ${mode==='date'?'selected':''}>Bestimmter Tag</option><option value="lessons" ${mode==='lessons'?'selected':''}>In Unterrichtsstunden</option></select></div>
+        <div class="full"><label>Titel / Aufgabe</label><input id="v262SubmissionTitle" placeholder="z. B. Portfolio abgeben" value="${esc262(existing?.title||'')}"></div>
+        <div id="v262DueDateBox"><label>Abgabetag</label><input id="v262SubmissionDate" type="date" value="${esc262(existing?.dueDate||todayISO())}"></div>
+        <div id="v262DueLessonsBox"><label>In wie vielen Unterrichtsstunden?</label><input id="v262SubmissionLessons" type="number" min="1" max="100" step="1" value="${Number(existing?.dueLessons||1)}"></div>
+        <div class="full"><label>Notiz</label><textarea id="v262SubmissionNote" placeholder="optional">${esc262(existing?.note||'')}</textarea></div>
+        <div class="full"><label>Fotos / Dateien</label><input id="v262SubmissionFiles" type="file" multiple accept="image/*,.pdf,.doc,.docx,.ppt,.pptx"></div>
+      </div>
+      <button class="primary" style="margin-top:12px" onclick="v262SaveGradedSubmission('${esc262(existing?.id||'')}')">Speichern</button>
+    </div>`;
+  }
+  window.v262OpenGradedSubmission=function(idv=''){
+    const existing=(data.gradedSubmissions||[]).find(x=>String(x.id)===String(idv))||null;
+    openModal(v262SubmissionForm(existing));
+    const sub=q('#v262SubmissionSubject');
+    if(sub&&existing?.subject)sub.value=existing.subject;
+    window.v262ToggleSubmissionMode();
+  };
+  window.v262SaveGradedSubmission=async function(idv=''){
+    const subject=q('#v262SubmissionSubject')?.value||'';
+    const title=(q('#v262SubmissionTitle')?.value||'').trim();
+    const mode=q('#v262SubmissionMode')?.value||'date';
+    const lessons=Math.max(1,Number(q('#v262SubmissionLessons')?.value||1));
+    let dueDate=mode==='date'?(q('#v262SubmissionDate')?.value||''):v262DueFromLessonCount(subject,lessons);
+    if(!title)return alert('Bitte einen Titel eingeben.');
+    if(mode==='date'&&!dueDate)return alert('Bitte einen Abgabetag auswählen.');
+    if(mode==='lessons'&&!dueDate)return alert('Für dieses Fach konnte kein zukünftiger Unterricht im Stundenplan gefunden werden.');
+    let item=(data.gradedSubmissions||[]).find(x=>String(x.id)===String(idv));
+    if(!item){
+      item={id:typeof id==='function'?id():'submission-'+Date.now(),created:Date.now(),done:false,files:[]};
+      data.gradedSubmissions.push(item);
+    }
+    item.subject=subject;item.title=title;item.dueMode=mode;item.dueDate=dueDate;item.dueLessons=mode==='lessons'?lessons:null;item.note=(q('#v262SubmissionNote')?.value||'').trim();
+    item.files=Array.isArray(item.files)?item.files:[];
+    try{await storeEntityFiles(item,q('#v262SubmissionFiles')?.files||[])}catch(err){console.warn('[V262] submission files',err)}
+    save();closeModal();v262RenderGradedSubmissions();
+  };
+  window.v262ToggleGradedSubmission=function(idv){
+    const x=(data.gradedSubmissions||[]).find(x=>String(x.id)===String(idv));if(!x)return;
+    x.done=!x.done;save();v262RenderGradedSubmissions();
+  };
+  window.v262DeleteGradedSubmission=function(idv){
+    const x=(data.gradedSubmissions||[]).find(x=>String(x.id)===String(idv));if(!x)return;
+    if(!confirm('Benotete Abgabe wirklich löschen?'))return;
+    data.gradedSubmissions=(data.gradedSubmissions||[]).filter(x=>String(x.id)!==String(idv));save();v262RenderGradedSubmissions();
+  };
+  function v262EnsureSubmissionSection(){
+    const view=q('#view-tasks');if(!view)return null;
+    let sec=q('#v262GradedSubmissions',view);
+    if(!sec){
+      sec=document.createElement('div');
+      sec.id='v262GradedSubmissions';
+      sec.className='section v262GradedSubmissions';
+      sec.innerHTML=`<div class="sectionHead"><h2>Benotete Abgaben</h2><button class="primary" type="button" onclick="v262OpenGradedSubmission()">+ Neu</button></div><div class="stack" id="v262GradedSubmissionList"></div>`;
+      const sections=qa(':scope > .section',view);
+      const tests=sections.find(s=>q('#testList',s));
+      if(tests)tests.insertAdjacentElement('afterend',sec);else view.appendChild(sec);
+    }
+    return sec;
+  }
+  window.v262RenderGradedSubmissions=function(){
+    v262EnsureSubmissionSection();
+    const root=q('#v262GradedSubmissionList');if(!root)return;
+    const arr=[...(data.gradedSubmissions||[])].sort((a,b)=>String(a.dueDate||'9999').localeCompare(String(b.dueDate||'9999')));
+    root.innerHTML=arr.length?arr.map(x=>{
+      let left='';try{left=typeof daysUntilLabel==='function'?daysUntilLabel(x.dueDate):''}catch(_){}
+      const due=x.dueDate?fmtDate(x.dueDate):'–';
+      const lessonInfo=x.dueMode==='lessons'&&x.dueLessons?` · ursprünglich in ${Number(x.dueLessons)} Unterrichtsstunde${Number(x.dueLessons)===1?'':'n'}`:'';
+      return `<div class="card row v262SubmissionCard">
+        <button class="checkbox ${x.done?'done':''}" onclick="v262ToggleGradedSubmission('${esc262(x.id)}')">${x.done?'✓':''}</button>
+        <div class="v262SubmissionMain"><b class="${x.done?'doneText':''}">${esc262(x.subject)} · ${esc262(x.title)}</b>
+          <div class="small">Benotete Abgabe · ${esc262(due)}${left?` · <span class="v216DueCountdown">${esc262(left)}</span>`:''}${lessonInfo}${x.note?' · '+esc262(x.note):''}</div>
+          ${typeof fileChips==='function'?fileChips(x.files):''}
+        </div>
+        <div class="v216ItemActions"><button class="ghost v216EditBtn" onclick="v262OpenGradedSubmission('${esc262(x.id)}')">Bearbeiten</button><button class="dangerBtn" onclick="v262DeleteGradedSubmission('${esc262(x.id)}')">×</button></div>
+      </div>`;
+    }).join(''):'<div class="empty">Noch keine benotete Abgabe eingetragen.</div>';
+  };
+
+  function v262PatchTestType(){
+    const s=q('#tType');if(!s||[...s.options].some(o=>o.textContent==='Klausur'))return;
+    const o=document.createElement('option');o.textContent='Klausur';s.appendChild(o);
+  }
+
+  function v262PlannerDesktop(){
+    const side=q('#v210Sidebar');
+    if(side&&desktop262()){
+      qa('.navItem',side).forEach(btn=>{
+        const lab=q('.navLabel',btn);if(lab?.textContent.trim()==='Aufgaben')lab.textContent='Planer';
+      });
+      if(!q('.v262GradesNav',side)){
+        const divider=q('.navDivider',side);
+        const btn=document.createElement('button');
+        btn.className='navItem v262GradesNav';
+        btn.setAttribute('onclick',"openView('grades')");
+        btn.innerHTML='<span class="navIcon"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span><span class="navLabel">Noten</span><span class="navBubble"></span>';
+        if(divider)side.querySelector('.navList')?.insertBefore(btn,divider);else side.querySelector('.navList')?.appendChild(btn);
+      }
+      const gv=q('#view-grades');
+      const gradeBtn=q('.v262GradesNav',side);if(gradeBtn)gradeBtn.classList.toggle('active',!!gv?.classList.contains('active'));
+      let head=q('.v262PlannerHead',q('#view-tasks'));
+      if(!head){
+        head=document.createElement('div');head.className='v262PlannerHead';
+        head.innerHTML='<div><h1>Planer</h1><p>Hausaufgaben, Tests, Klausuren & benotete Abgaben</p></div>';
+        q('#view-tasks')?.insertBefore(head,q('#view-tasks')?.firstChild||null);
+      }
+      const topHead=q('#view-tasks > .sectionHead h2');if(topHead)topHead.textContent='Hausaufgaben';
+    } else {
+      q('.v262PlannerHead')?.remove();
+      const topHead=q('#view-tasks > .sectionHead h2');if(topHead)topHead.textContent='Aufgaben';
+    }
+  }
+
+  function v262CompactSettings(){
+    const v=q('#view-settings');if(!v)return;
+    v.classList.toggle('v262SettingsCompact',desktop262());
+  }
+
+  const oldRenderTasks=window.renderTasks||((typeof renderTasks==='function')?renderTasks:null);
+  if(typeof oldRenderTasks==='function'&&!oldRenderTasks.__v262){
+    const wrapped=function(){const r=oldRenderTasks.apply(this,arguments);v262EnsureSubmissionSection();v262RenderGradedSubmissions();v262PlannerDesktop();return r};
+    wrapped.__v262=true;window.renderTasks=wrapped;try{renderTasks=wrapped}catch(_){}
+  }
+
+  const oldOpenAddTest=window.openAddTest;
+  if(typeof oldOpenAddTest==='function'){
+    window.openAddTest=function(){const r=oldOpenAddTest.apply(this,arguments);setTimeout(v262PatchTestType,0);return r};
+    try{openAddTest=window.openAddTest}catch(_){}
+  }
+
+  const oldOpenView=window.openView;
+  if(typeof oldOpenView==='function'&&!oldOpenView.__v262){
+    window.openView=function(name){
+      const r=oldOpenView.apply(this,arguments);
+      setTimeout(()=>{v262PlannerDesktop();v262CompactSettings();if(name==='tasks')v262RenderGradedSubmissions()},0);
+      return r;
+    };
+    window.openView.__v262=true;try{openView=window.openView}catch(_){}
+  }
+
+  function v262Refresh(){
+    v262PlannerDesktop();v262CompactSettings();
+    if(q('#view-tasks.active'))v262RenderGradedSubmissions();
+    const e=q('#headerEyebrow');if(e)e.textContent='VERSION 263';
+  }
+  window.addEventListener('resize',()=>setTimeout(v262Refresh,50));
+  document.addEventListener('click',e=>{if(e.target.closest?.('#v210Sidebar,#view-tasks,#view-settings'))setTimeout(v262Refresh,30)},true);
+  [0,150,600,1400].forEach(t=>setTimeout(v262Refresh,t));
 })();
 
