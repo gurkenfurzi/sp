@@ -22294,57 +22294,290 @@ const obs=new MutationObserver(maintain);obs.observe(document.body,{childList:tr
 </script>
 <!-- ===== /Studia V248 ===== -->
 
-
-<!-- ===== Studia V249 · verified merge + delete safety ===== -->
-<style id="studia-v249-style">
-#v249CloudIdentity{margin-top:8px;padding:8px 10px;border:1px solid #ead8d1;border-radius:11px;background:#fffaf7;color:#816b63;font-size:10px;font-weight:800;line-height:1.45}
-#v249CloudIdentity.bad{background:#fff1f0;border-color:#edc5c2;color:#a06767}
-</style>
-<script id="studia-v249-core">
+<!-- ===== Studia V251 SAFE ROLLBACK · V248 BASE ===== -->
+<script id="studia-v251-safe-version">
 (()=>{
-'use strict';
-if(window.__STUDIA_V249__)return;window.__STUDIA_V249__=true;window.__STUDIA_VERSION__=249;
-const q=(s,r=document)=>r?.querySelector?.(s)||null;
-const getData=()=>{try{return data}catch(_){return window.data||{}}};
-const setData=v=>{try{data=v}catch(_){window.data=v}};
-const storeKey=()=>{try{return KEY}catch(_){return 'schoolhub-v1'}};
-const BASE='studia-v242-last-synced-state';
-const clone=x=>{try{return structuredClone(x)}catch(_){return JSON.parse(JSON.stringify(x))}};
-const readBase=()=>{try{return JSON.parse(localStorage.getItem(BASE)||'{}')}catch(_){return {}}};
-const saveBase=v=>{try{localStorage.setItem(BASE,JSON.stringify(v||{}))}catch(_){}};
-const persist=()=>{try{localStorage.setItem(storeKey(),JSON.stringify(getData()))}catch(_){}};
-const bytesToB64=bytes=>{let s='',step=0x8000;for(let i=0;i<bytes.length;i+=step)s+=String.fromCharCode(...bytes.subarray(i,i+step));return btoa(s)};
-const b64ToBytes=b64=>{const s=atob(String(b64||'')),a=new Uint8Array(s.length);for(let i=0;i<s.length;i++)a[i]=s.charCodeAt(i);return a};
-async function gzipText(text){if(typeof CompressionStream!=='function')return '';const cs=new CompressionStream('gzip');const ab=await new Response(new Blob([String(text)]).stream().pipeThrough(cs)).arrayBuffer();return bytesToB64(new Uint8Array(ab))}
-async function ungzipText(b64){if(typeof DecompressionStream!=='function')throw new Error('Browser kann Cloud-Daten nicht entpacken');const ds=new DecompressionStream('gzip');return await new Response(new Blob([b64ToBytes(b64)]).stream().pipeThrough(ds)).text()}
-function deviceId(){let v=localStorage.getItem('studia-v249-device-id');if(!v){v='dev-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,12);localStorage.setItem('studia-v249-device-id',v)}return v}
-function deviceName(){const mobile=/iPhone|iPad|Android|Mobile/i.test(navigator.userAgent);return (mobile?'Handy':'Laptop')+' · '+String(navigator.platform||'Browser').slice(0,40)}
-function status(s,bad=false){try{window.StudiaCloud?.setStatus?.(s,bad)}catch(_){}const sm=q('#v242DesktopSync small');if(sm)sm.textContent=s;const x=q('#v242SyncStatus');if(x){x.textContent=s;x.classList.toggle('bad',bad)}const b=q('#v242DesktopSync');if(b)b.classList.toggle('syncing',/Synchronisiere/i.test(s));}
-function identity(res){let el=q('#v249CloudIdentity');const card=q('.v171CloudSettings');if(!card)return;if(!el){el=document.createElement('div');el.id='v249CloudIdentity';card.appendChild(el)}const n=Number(res?.deviceCount||0),cloud=String(res?.cloudId||'—'),user=String(res?.account?.username||'—');el.classList.toggle('bad',n<2);el.textContent=`Cloud ${cloud} · Konto ${user} · ${n||1} Gerät${n===1?'':'e'} erkannt`}
-async function bridgeSync(local,base){
- const cloud=window.StudiaCloud,cfg=cloud?.config?.()||{};if(!cfg.url)throw new Error('Server-Script-Service-URL fehlt');if(!cfg.token)throw new Error('Nicht angemeldet');
- const url=String(cfg.url).trim().replace(/\?.*$/,'');const id='v249-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);const frame=document.createElement('iframe'),form=document.createElement('form');frame.name='studia249_'+id.replace(/[^a-z0-9_]/gi,'');frame.style.cssText='position:fixed;width:1px;height:1px;left:-9999px;top:-9999px;border:0;opacity:0;pointer-events:none';form.method='POST';form.action=url;form.target=frame.name;form.enctype='application/x-www-form-urlencoded';form.acceptCharset='UTF-8';form.style.display='none';const add=(k,v)=>{const i=document.createElement('input');i.type='hidden';i.name=k;i.value=String(v??'');form.appendChild(i)};
- add('action','sync_bridge_v249');add('token',cfg.token);add('bridgeId',id);add('replyGzip',typeof DecompressionStream==='function'?'1':'0');add('deviceId',deviceId());add('deviceName',deviceName());
- for(const [plain,gzKey,obj] of [['data','dataGzip',local],['base','baseGzip',base]]){const raw=JSON.stringify(obj||{});let gz='';try{gz=await gzipText(raw)}catch(_){}if(gz&&gz.length<raw.length){add(gzKey,gz)}else add(plain,raw)}
- return await new Promise((resolve,reject)=>{let done=false;const cleanup=()=>{if(done)return;done=true;clearTimeout(timer);window.removeEventListener('message',onmsg);setTimeout(()=>{form.remove();frame.remove()},0)};const fail=e=>{cleanup();reject(e instanceof Error?e:new Error(String(e||'Sync fehlgeschlagen')))};const onmsg=async ev=>{if(ev.source!==frame.contentWindow)return;const m=ev.data;if(!m||m.type!=='studia-sync-bridge'||m.id!==id)return;try{const p=m.payload||{};if(!p.ok)throw new Error(String(p.error||'Sync fehlgeschlagen'));if(p.dataGzip){p.data=JSON.parse(await ungzipText(p.dataGzip));delete p.dataGzip}cleanup();resolve(p)}catch(e){fail(e)}};const timer=setTimeout(()=>fail(new Error('Cloud antwortet nicht · Bereitstellung oder URL prüfen')),12000);window.addEventListener('message',onmsg);document.body.append(frame,form);try{form.submit()}catch(e){fail(e)}})
-}
-if(window.StudiaCloud)window.StudiaCloud.syncStateV249=bridgeSync;
-let busy=false;
-window.studiaSyncNow=async function(){if(busy)return {busy:true};busy=true;status('Synchronisiere …');try{try{if(document.body.classList.contains('editorMode'))window.saveCanvasSheetCore?.(true)}catch(_){}persist();try{await window.v111CreateBackupNow?.(false)}catch(_){}const local=clone(getData()),base=readBase();const res=await bridgeSync(local,base);if(Number(res?.version||0)<249)throw new Error('Backend V249 fehlt · neuen Code.gs bereitstellen');const merged=res?.data&&typeof res.data==='object'?res.data:local;setData(merged);persist();saveBase(merged);window.v150ClearDirty?.();identity(res);try{window.renderAll?.();window.renderPlan?.();window.renderHome?.();if(q('#view-topic-detail.active'))window.renderTopicDetail?.();if(q('#view-subject-detail.active'))window.renderSubjectDetail?.();if(q('#view-deck-detail.active'))window.renderDeckDetail?.()}catch(_){}const n=Number(res.deviceCount||1);const msg=n>=2?`Cloud synchronisiert ✓ · ${n} Geräte erkannt`:`Cloud synchronisiert ✓ · erst 1 Gerät erkannt`;status(msg,n<2);return res}catch(e){console.error('[Studia V249 sync]',e);persist();status(String(e?.message||'Sync fehlgeschlagen')+' · lokal sicher',true);throw e}finally{busy=false;q('#v242DesktopSync')?.classList.remove('syncing')}};
-window.v171CloudNow=()=>window.studiaSyncNow();try{v171CloudNow=window.v171CloudNow}catch(_){}
-const b=q('#v242DesktopSync');if(b)b.onclick=()=>window.studiaSyncNow().catch(()=>{});document.querySelectorAll('.v171CloudSettings button').forEach(btn=>{if(/jetzt synchronisieren|geräte synchronisieren/i.test(btn.textContent||'')){btn.removeAttribute('onclick');btn.onclick=()=>window.studiaSyncNow().catch(()=>{})}});
-
-/* Important delete actions always ask first. */
-const guards={
- deleteStudySheet:'Lernblatt wirklich löschen? Das kann nicht rückgängig gemacht werden.',
- deleteHomework:'Hausaufgabe wirklich löschen?',deleteTest:'Test/Klassenarbeit wirklich löschen?',deleteGrade:'Note wirklich löschen?',
- deleteFlash:'Karteikarte wirklich löschen?',deleteDeckCard:'Karteikarte wirklich löschen?',deleteQuizQuestion:'Quizfrage wirklich löschen?',deleteQuiz:'Quiz wirklich löschen?',
- deleteNote:'Notiz wirklich löschen?',deleteSubject:'Fach wirklich löschen? Inhalte in diesem Fach können dadurch verloren gehen.',
- deleteTopicFile:'Datei wirklich löschen?',deleteSubjectFile:'Datei wirklich löschen?',deleteAbsence:'Fehlzeit wirklich löschen?',deleteMissedHour:'Fehlstunde wirklich löschen?',
- deleteLessonItem:'Diesen Stundenplan-Eintrag wirklich löschen?'
-};
-Object.entries(guards).forEach(([name,msg])=>{const old=window[name];if(typeof old!=='function'||old.__v249Guarded)return;const wrapped=function(...args){if(!confirm(msg))return false;return old.apply(this,args)};wrapped.__v249Guarded=true;wrapped.__v249Original=old;window[name]=wrapped;try{if(name==='deleteHomework')deleteHomework=wrapped;if(name==='deleteTest')deleteTest=wrapped;if(name==='deleteGrade')deleteGrade=wrapped}catch(_){}});
-const mark=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 249'};[0,100,400,1200].forEach(t=>setTimeout(mark,t));
+  window.__STUDIA_VERSION__=251;
+  const mark=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 251'};
+  [0,120,500,1500].forEach(ms=>setTimeout(mark,ms));
 })();
 </script>
-<!-- ===== /Studia V249 ===== -->
+<!-- ===== /Studia V251 SAFE ROLLBACK ===== -->
+
+
+<!-- ===== Studia V252 · FINAL STABLE REPAIR ===== -->
+<style id="studia-v252-final-style">
+/* Laptop UI uses the same soft/rounded system family as mobile. Never override canvas object fonts. */
+@media (min-width:900px){
+  body:not(.editorMode),
+  body:not(.editorMode) button,
+  body:not(.editorMode) input,
+  body:not(.editorMode) select,
+  body:not(.editorMode) textarea,
+  body:not(.editorMode) label,
+  body:not(.editorMode) .panel,
+  body:not(.editorMode) .card,
+  body:not(.editorMode) .nav,
+  body:not(.editorMode) .view,
+  body.editorMode .canvasTopbar,
+  body.editorMode .desktopCommandBar,
+  body.editorMode .canvasQuickNav,
+  body.editorMode #canvasQuickDrawer,
+  body.editorMode #desktopEditorSidebar,
+  body.editorMode .v102RightTabs,
+  body.editorMode .editorActions,
+  body.editorMode .historyBar{
+    font-family:ui-rounded,"SF Pro Rounded","Avenir Next Rounded","Nunito",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+  }
+
+  /* clean timetable shell like the reference: one soft outside border, no heavy card frame */
+  body.planViewActive #view-plan .v210WeekBoard,
+  body.planViewActive #view-plan .v208WeekBoard,
+  body.planViewActive #view-plan .desktopWeekGrid{
+    border:1px solid #eaded9!important;
+    border-radius:24px!important;
+    box-shadow:none!important;
+    overflow:hidden!important;
+    background:#fffdfa!important;
+  }
+  body.planViewActive #view-plan .v210DayHead,
+  body.planViewActive #view-plan .v208DayHead,
+  body.planViewActive #view-plan .v210DayBody,
+  body.planViewActive #view-plan .v208DayBody,
+  body.planViewActive #view-plan .v210TimeRail,
+  body.planViewActive #view-plan .v208TimeRail{
+    box-shadow:none!important;
+    border-color:#f0e4df!important;
+  }
+  body.planViewActive #view-plan .v210Lesson,
+  body.planViewActive #view-plan .v208Lesson,
+  body.planViewActive #view-plan .desktopWeekBody .lesson{
+    box-shadow:none!important;
+    border-radius:18px!important;
+  }
+
+  /* Right editor close button gets its own grid cell; it may never sit over + Seite/Lernblatt. */
+  body.editorMode #desktopEditorSidebar .v102RightTabs{
+    grid-template-columns:repeat(3,minmax(0,1fr)) 34px!important;
+    padding:9px!important;
+    padding-right:9px!important;
+    align-items:center!important;
+  }
+  body.editorMode #desktopEditorSidebar .v102RightTabs>.v135SideClose{
+    position:static!important;
+    inset:auto!important;
+    width:30px!important;
+    min-width:30px!important;
+    height:30px!important;
+    margin:0!important;
+    justify-self:end!important;
+  }
+  body.editorMode #v102PagePanel .rowBetween{display:flex!important;align-items:center!important;gap:8px!important}
+  body.editorMode #v102PagePanel .rowBetween .miniIcon{position:static!important;inset:auto!important;margin-left:auto!important;z-index:1!important}
+}
+
+/* Stable modal heads: close buttons never overlap form/add buttons. */
+#modal .presetModalHead,
+#modal .v100AddSheetHead,
+#modal .rowBetween:has(>h2){display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:12px!important}
+#modal .presetModalHead>.miniIcon,
+#modal .v100AddSheetHead>button,
+#modal .rowBetween:has(>h2)>button:last-child{
+  position:static!important;inset:auto!important;transform:none!important;flex:0 0 auto!important;z-index:2!important;
+}
+
+/* final card mode switch */
+.v252DeckMode{display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap;margin:10px 0 14px}
+.v252DeckMode button{min-width:112px}
+.v252DeckMode button.active{background:#f6ddde!important;border-color:#e8bfc0!important;color:#9e6266!important}
+.v252Attachments{margin-top:12px;padding:11px;border:1px dashed #e8d4cf;border-radius:15px;background:#fffdfa}
+.v252AttachList{display:grid;gap:7px;margin-top:8px}
+.v252Attach{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border:1px solid #eadbd6;border-radius:12px;background:#fff}
+.v252Attach>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px;font-weight:800;color:#78635b}
+.v252AttachActions{display:flex;gap:5px;flex:0 0 auto}
+.v252AttachActions button{min-height:28px!important;padding:5px 8px!important;font-size:9px!important}
+.v252AttachImg{display:block;max-width:100%;max-height:160px;object-fit:contain;border:1px solid #eadbd6;border-radius:12px;margin-top:8px;background:#fff}
+
+#v252CloudIdentity{margin-top:8px;padding:8px 10px;border:1px solid #ead8d1;border-radius:11px;background:#fffaf7;color:#816b63;font-size:9px;font-weight:800;line-height:1.45}
+#v252CloudIdentity.warn{background:#fff4ef;border-color:#ebcfc3;color:#9a7065}
+</style>
+<script id="studia-v252-final-script">
+(()=>{
+'use strict';
+if(window.__STUDIA_V252__)return;window.__STUDIA_V252__=true;window.__STUDIA_VERSION__=252;
+const q=(s,r=document)=>r?.querySelector?.(s)||null;
+const qa=(s,r=document)=>r?.querySelectorAll?[...r.querySelectorAll(s)]:[];
+const esc252=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const clone252=v=>{try{return structuredClone(v)}catch(_){return JSON.parse(JSON.stringify(v))}};
+const getData252=()=>{try{return data}catch(_){return window.data||{}}};
+const setData252=v=>{try{data=v}catch(_){window.data=v}};
+const storeKey252=()=>{try{return KEY}catch(_){return 'schoolhub-v1'}};
+const BASE252='studia-v252-last-synced-state';
+const LEGACY_BASE='studia-v242-last-synced-state';
+let sync252Busy=false;
+
+function persist252(){try{localStorage.setItem(storeKey252(),JSON.stringify(getData252()))}catch(e){console.warn('[V252 local]',e)}}
+function readBase252(){try{return JSON.parse(localStorage.getItem(BASE252)||localStorage.getItem(LEGACY_BASE)||'{}')}catch(_){return {}}}
+function saveBase252(v){try{const s=JSON.stringify(v||{});localStorage.setItem(BASE252,s);localStorage.setItem(LEGACY_BASE,s)}catch(_){}}
+function deviceId252(){let v=localStorage.getItem('studia-v252-device-id');if(!v){v='dev-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,12);localStorage.setItem('studia-v252-device-id',v)}return v}
+function deviceName252(){const mobile=/iPhone|iPad|Android|Mobile/i.test(navigator.userAgent);return (mobile?'Handy':'Laptop')+' · '+String(navigator.platform||'Browser').slice(0,32)}
+function status252(text,bad=false){
+ const s=String(text||'');
+ try{window.StudiaCloud?.setStatus?.(s,bad)}catch(_){}
+ const x=q('#v242SyncStatus');if(x){x.textContent=s;x.classList.toggle('bad',!!bad)}
+ const b=q('#v242DesktopSync');if(b){b.title=s;b.classList.toggle('syncing',/^Synchronisiere/.test(s));}
+ const p=q('#v242PullSync');if(p&&p.classList.contains('show'))p.textContent=s;
+}
+function showCloudIdentity252(res){
+ const card=q('.v171CloudSettings');if(!card)return;
+ let el=q('#v252CloudIdentity',card);if(!el){el=document.createElement('div');el.id='v252CloudIdentity';card.appendChild(el)}
+ const cloud=String(res?.cloudId||'unbekannt'),user=String(res?.account?.username||window.StudiaCloud?.rememberedUser?.()?.username||'Konto'),n=Number(res?.deviceCount||0);
+ el.classList.toggle('warn',!!n&&n<2);
+ el.textContent=n?`Cloud ${cloud} · ${user} · ${n} Gerät${n===1?'':'e'} verbunden`:`Cloud verbunden · ${user}`;
+}
+function isObj252(x){return !!x&&typeof x==='object'&&!Array.isArray(x)}
+function same252(a,b){try{return JSON.stringify(a)===JSON.stringify(b)}catch(_){return a===b}}
+function itemId252(x){return isObj252(x)&&x.id!=null?String(x.id):''}
+function mergeArray252(local,remote,base){
+ local=Array.isArray(local)?local:[];remote=Array.isArray(remote)?remote:[];base=Array.isArray(base)?base:[];
+ const keyed=[...local,...remote,...base].some(itemId252);
+ if(!keyed){
+   if(same252(local,base))return clone252(remote);if(same252(remote,base))return clone252(local);
+   const out=[],seen=new Set();for(const x of [...remote,...local]){let k;try{k=JSON.stringify(x)}catch(_){k=String(x)}if(!seen.has(k)){seen.add(k);out.push(clone252(x))}}return out;
+ }
+ const map=a=>Object.fromEntries(a.filter(itemId252).map(x=>[itemId252(x),x]));const L=map(local),R=map(remote),B=map(base);
+ const order=[...new Set([...local.map(itemId252),...remote.map(itemId252),...base.map(itemId252)].filter(Boolean))],out=[];
+ for(const id of order){const hl=id in L,hr=id in R,hb=id in B,l=L[id],r=R[id],b=B[id];
+   if(!hl&&hb){if(hr&&!same252(r,b))out.push(clone252(r));continue}
+   if(!hr&&hb){if(hl&&!same252(l,b))out.push(clone252(l));continue}
+   if(hl&&hr)out.push(merge3252(l,r,hb?b:undefined));else if(hl)out.push(clone252(l));else if(hr)out.push(clone252(r));
+ }
+ const seen=new Set(out.map(x=>{try{return JSON.stringify(x)}catch(_){return String(x)}}));for(const x of [...remote,...local]){if(itemId252(x))continue;let k;try{k=JSON.stringify(x)}catch(_){k=String(x)}if(!seen.has(k)){seen.add(k);out.push(clone252(x))}}
+ return out;
+}
+function merge3252(local,remote,base){
+ if(same252(local,base))return clone252(remote);if(same252(remote,base))return clone252(local);if(same252(local,remote))return clone252(local);
+ if(Array.isArray(local)||Array.isArray(remote)||Array.isArray(base))return mergeArray252(local,remote,base);
+ if(isObj252(local)||isObj252(remote)||isObj252(base)){
+  const L=isObj252(local)?local:{},R=isObj252(remote)?remote:{},B=isObj252(base)?base:{},out={};
+  for(const k of new Set([...Object.keys(L),...Object.keys(R),...Object.keys(B)])){
+   const hl=Object.prototype.hasOwnProperty.call(L,k),hr=Object.prototype.hasOwnProperty.call(R,k),hb=Object.prototype.hasOwnProperty.call(B,k);
+   if(!hl&&hb){if(hr&&!same252(R[k],B[k]))out[k]=clone252(R[k]);continue}
+   if(!hr&&hb){if(hl&&!same252(L[k],B[k]))out[k]=clone252(L[k]);continue}
+   if(hl&&hr)out[k]=merge3252(L[k],R[k],hb?B[k]:undefined);else if(hl)out[k]=clone252(L[k]);else if(hr)out[k]=clone252(R[k]);
+  }
+  return out;
+ }
+ return local!==undefined?clone252(local):clone252(remote);
+}
+function bytesToB64252(bytes){let s='',step=0x8000;for(let i=0;i<bytes.length;i+=step)s+=String.fromCharCode(...bytes.subarray(i,i+step));return btoa(s)}
+function b64ToBytes252(b64){const s=atob(String(b64||'')),a=new Uint8Array(s.length);for(let i=0;i<s.length;i++)a[i]=s.charCodeAt(i);return a}
+async function gzip252(text){if(typeof CompressionStream!=='function')return '';const cs=new CompressionStream('gzip');const ab=await new Response(new Blob([String(text)]).stream().pipeThrough(cs)).arrayBuffer();return bytesToB64252(new Uint8Array(ab))}
+async function ungzip252(b64){if(typeof DecompressionStream!=='function')throw new Error('Browser kann Cloud-Daten nicht entpacken');const ds=new DecompressionStream('gzip');return await new Response(new Blob([b64ToBytes252(b64)]).stream().pipeThrough(ds)).text()}
+async function bridge252(action,local,base){
+ const cloud=window.StudiaCloud,cfg=cloud?.config?.()||{};if(!cfg.url)throw new Error('Server-Script-Service-URL fehlt');if(!cfg.token)throw new Error('Nicht angemeldet');
+ const url=String(cfg.url).trim().replace(/\?.*$/,'');const bid='v252-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);const target='studia252_'+bid.replace(/[^a-z0-9_]/gi,'');
+ const frame=document.createElement('iframe');frame.name=target;frame.style.cssText='position:fixed;width:1px;height:1px;left:-9999px;top:-9999px;border:0;opacity:0;pointer-events:none';
+ const form=document.createElement('form');form.method='POST';form.action=url;form.target=target;form.enctype='application/x-www-form-urlencoded';form.acceptCharset='UTF-8';form.style.display='none';
+ const add=(k,v)=>{const i=document.createElement('input');i.type='hidden';i.name=k;i.value=String(v??'');form.appendChild(i)};
+ add('action',action);add('token',cfg.token);add('bridgeId',bid);add('replyGzip',typeof DecompressionStream==='function'?'1':'0');add('deviceId',deviceId252());add('deviceName',deviceName252());
+ const entries=action==='sync_bridge_v249'?[['data','dataGzip',local],['base','baseGzip',base]]:[['data','dataGzip',local]];
+ for(const [plain,gzkey,obj] of entries){const raw=JSON.stringify(obj||{});let gz='';try{gz=await gzip252(raw)}catch(_){}if(gz&&gz.length<raw.length)add(gzkey,gz);else add(plain,raw)}
+ return await new Promise((resolve,reject)=>{let done=false;const cleanup=()=>{if(done)return;done=true;clearTimeout(timer);window.removeEventListener('message',onmsg);setTimeout(()=>{form.remove();frame.remove()},0)};const fail=e=>{cleanup();reject(e instanceof Error?e:new Error(String(e||'Sync fehlgeschlagen')))};const onmsg=async ev=>{if(ev.source!==frame.contentWindow)return;const m=ev.data;if(!m||m.type!=='studia-sync-bridge'||m.id!==bid)return;try{const r=m.payload||{};if(!r.ok)throw new Error(String(r.error||'Sync fehlgeschlagen'));if(r.dataGzip){r.data=JSON.parse(await ungzip252(r.dataGzip));delete r.dataGzip}cleanup();resolve(r)}catch(e){fail(e)}};const timer=setTimeout(()=>fail(new Error('Cloud antwortet nicht · Apps-Script-Bereitstellung prüfen')),15000);window.addEventListener('message',onmsg);document.body.append(frame,form);try{form.submit()}catch(e){fail(e)}})
+}
+async function cloudSync252(local,base){
+ try{return await bridge252('sync_bridge_v249',local,base)}catch(e){
+  const msg=String(e?.message||'');
+  if(!/Unbekannte Aktion|v249|Backend/i.test(msg))throw e;
+  return await bridge252('sync_bridge',local,base);
+ }
+}
+window.studiaSyncNow=async function(){
+ if(sync252Busy)return {busy:true};sync252Busy=true;status252('Synchronisiere …');
+ try{
+  try{if(document.body.classList.contains('editorMode'))window.saveCanvasSheetCore?.(true)}catch(_){}
+  persist252();try{await window.v111CreateBackupNow?.(false)}catch(_){}
+  const local=clone252(getData252()),base=readBase252();const res=await cloudSync252(local,base);const remote=res?.data&&typeof res.data==='object'?res.data:{};
+  let merged=merge3252(local,remote,base);if(!same252(merged,remote)){try{const confirmRes=await cloudSync252(merged,remote);if(confirmRes?.data&&typeof confirmRes.data==='object'){merged=merge3252(merged,confirmRes.data,remote);Object.assign(res,confirmRes)}}catch(e){console.warn('[Studia V252 final cloud write]',e)}}setData252(merged);persist252();saveBase252(merged);window.v150ClearDirty?.();
+  try{window.renderAll?.();if(q('#view-plan.active'))window.renderPlan?.();if(q('#view-home.active'))window.renderHome?.();if(q('#view-subjects.active'))window.renderSubjects?.();if(q('#view-subject-detail.active'))window.renderSubjectDetail?.();if(q('#view-topic-detail.active'))window.renderTopicDetail?.();if(q('#view-deck-detail.active'))window.renderDeckDetail?.()}catch(_){}
+  showCloudIdentity252(res);
+  const n=Number(res?.deviceCount||0);status252(n>=2?`Synchronisiert ✓ · ${n} Geräte verbunden`:'Cloud gespeichert ✓ · zweites Gerät einmal synchronisieren',false);
+  return res;
+ }catch(e){console.error('[Studia V252 sync]',e);persist252();status252(String(e?.message||'Sync fehlgeschlagen')+' · lokal sicher',true);throw e}
+ finally{sync252Busy=false;q('#v242DesktopSync')?.classList.remove('syncing');setTimeout(()=>q('#v242PullSync')?.classList.remove('show','ready','syncing'),350)}
+};
+window.v171CloudNow=()=>window.studiaSyncNow();window.v171CloudNow.__v219Guarded=true;try{v171CloudNow=window.v171CloudNow}catch(_){}
+
+/* Always bind the visible sync controls to V252 only. */
+function bindSync252(){
+ const b=q('#v242DesktopSync');if(b){b.onclick=e=>{e.preventDefault();window.studiaSyncNow().catch(()=>{})};b.title='Geräte synchronisieren'}
+ qa('.v171CloudSettings button').forEach(btn=>{if(/jetzt synchronisieren|geräte synchronisieren/i.test(btn.textContent||'')){btn.removeAttribute('onclick');btn.onclick=e=>{e.preventDefault();window.studiaSyncNow().catch(()=>{})}}});
+}
+
+/* ----- timetable polish / week text / room ----- */
+function repairPlan252(){
+ const head=q('#v210PlanHead')||q('#v208PlanHead');if(head){const b=q('.weekInfo b',head);if(b)b.textContent='Woche'}
+ qa('#view-plan .v210Lesson,#view-plan .v208Lesson').forEach(card=>{
+  if(/Raum\s(?:\S+|—)/i.test(card.textContent||''))return;
+  const meta=card.querySelector('.v210LessonMeta');if(meta&&/^[A-Z]?\d{1,3}[A-Z]?$/i.test((meta.textContent||'').trim())){const s=document.createElement('span');s.className='v245LessonRoom';s.textContent='Raum '+meta.textContent.trim();meta.parentNode.insertBefore(s,meta)}
+ });
+}
+
+/* Timetable colors are the Fach colors too and are saved immediately. */
+const baseSetColor252=window.setTimetableSubjectColor||window.v216SetSubjectColor;
+if(typeof baseSetColor252==='function'){
+ window.setTimetableSubjectColor=function(name,color){const r=baseSetColor252.apply(this,arguments);try{save()}catch(_){persist252()}try{window.v150MarkDirty?.(0)}catch(_){}try{window.renderPlan?.();window.renderHome?.();if(q('#view-subjects.active'))window.renderSubjects?.()}catch(_){}return r};
+ window.v216SetSubjectColor=window.setTimetableSubjectColor;try{setTimetableSubjectColor=window.setTimetableSubjectColor}catch(_){}
+}
+
+/* ----- editor close/add overlap ----- */
+function repairEditorChrome252(){
+ const tabs=q('#desktopEditorSidebar .v102RightTabs'),close=q('#desktopEditorSidebar .v135SideClose');if(tabs&&close&&close.parentElement!==tabs)tabs.appendChild(close);
+ qa('#modal button').forEach(b=>{if(!b.type)b.type='button'});
+}
+
+/* ----- flashcard multiple creation + learn/edit switch + attachments ----- */
+let cardPending252=[];
+const fileToData252=file=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result||''));r.onerror=()=>rej(r.error);r.readAsDataURL(file)});
+async function storeAttachments252(files){const out=[];for(const f of [...files]){const fid=(typeof id==='function'?id():'file-'+Date.now()+'-'+Math.random().toString(36).slice(2));try{await dbPut({id:fid,name:f.name,type:f.type||'Datei',blob:f})}catch(_){}let inline='';if(Number(f.size||0)<=700000){try{inline=await fileToData252(f)}catch(_){}}out.push({id:fid,name:f.name,type:f.type||'Datei',size:Number(f.size||0),dataUrl:inline})}return out}
+window.v252OpenAttachment=async function(fid,ownerType,ownerId){
+ let a=null;if(ownerType==='card')a=(getData252().flashcards||[]).find(x=>String(x.id)===String(ownerId))?.attachments?.find(x=>String(x.id)===String(fid));else if(ownerType==='quiz')for(const qu of getData252().quizzes||[]){const item=(qu.questions||[]).find(x=>String(x.id)===String(ownerId));if(item){a=(item.attachments||[]).find(x=>String(x.id)===String(fid));if(a)break}}
+ if(a?.dataUrl){const w=window.open(a.dataUrl,'_blank');if(!w){const link=document.createElement('a');link.href=a.dataUrl;link.download=a.name||'Datei';link.click()}return}
+ try{const obj=await dbGet(fid);if(obj?.blob){const u=URL.createObjectURL(obj.blob),link=document.createElement('a');link.href=u;link.target='_blank';link.download=obj.name||a?.name||'Datei';link.click();setTimeout(()=>URL.revokeObjectURL(u),5000);return}}catch(_){}
+ alert('Diese Datei ist nur auf dem Gerät gespeichert, auf dem sie hinzugefügt wurde. Kleine Dateien/Bilder werden automatisch mit synchronisiert.');
+};
+function attachList252(list,type,ownerId){const arr=Array.isArray(list)?list:[];if(!arr.length)return '';return `<div class="v252Attachments"><b>Bilder & Dateien</b><div class="v252AttachList">${arr.map(a=>`<div class="v252Attach"><span>${/^image\//i.test(a.type||'')?'🖼️':'📎'} ${esc252(a.name||'Datei')}</span><div class="v252AttachActions"><button type="button" class="ghost" onclick="v252OpenAttachment('${esc252(a.id)}','${type}','${esc252(ownerId)}')">Öffnen</button></div></div>${/^image\//i.test(a.type||'')&&a.dataUrl?`<img class="v252AttachImg" src="${esc252(a.dataUrl)}" alt="">`:''}`).join('')}</div></div>`}
+function pendingList252(){const root=q('#v252CardPending');if(root)root.innerHTML=cardPending252.length?`<div class="v252AttachList">${cardPending252.map((x,i)=>`<div class="v252Attach"><span>${/^image\//i.test(x.file.type||'')?'🖼️':'📎'} ${esc252(x.file.name)}</span><div class="v252AttachActions"><button type="button" class="dangerBtn" onclick="v252RemovePendingCard(${i})">×</button></div></div>`).join('')}</div>`:'<div class="small">Noch nichts angehängt.</div>'}
+window.v252RemovePendingCard=i=>{cardPending252.splice(Number(i),1);pendingList252()};
+window.v252CardFiles=input=>{for(const f of [...(input?.files||[])])cardPending252.push({file:f});if(input)input.value='';pendingList252()};
+function cardModal252(did,card=null){cardPending252=[];const editing=!!card;openModal(`<div class="compactPresetModal"><div class="presetModalHead"><div><span class="eyebrow">KARTEIKARTEN</span><h2>${editing?'Karte bearbeiten':'Karte hinzufügen'}</h2></div><button type="button" class="miniIcon" onclick="closeModal()">×</button></div><label>Frage</label><textarea id="v252CardQ">${esc252(card?.q||'')}</textarea><label style="margin-top:10px">Antwort</label><textarea id="v252CardA">${esc252(card?.a||'')}</textarea><div class="v252Attachments"><div class="rowBetween"><b>Bild / Datei hinzufügen</b><label class="ghost" style="cursor:pointer">+ Datei<input id="v252CardFile" type="file" multiple accept="image/*,.pdf,.doc,.docx,.ppt,.pptx,.txt" hidden onchange="v252CardFiles(this)"></label></div><div id="v252CardPending"><div class="small">Noch nichts angehängt.</div></div>${card?attachList252(card.attachments,'card',card.id):''}</div><div class="row" style="margin-top:12px;flex-wrap:wrap"><button type="button" class="primary" onclick="v252SaveCard('${esc252(did)}','${esc252(card?.id||'')}',false)">Speichern</button>${!editing?`<button type="button" class="ghost" onclick="v252SaveCard('${esc252(did)}','',true)">Speichern & nächste Karte</button>`:''}</div></div>`);repairEditorChrome252()}
+window.openAddCardToDeck=did=>cardModal252(did,null);
+window.editDeckCard=cid=>{const c=(getData252().flashcards||[]).find(x=>String(x.id)===String(cid));if(c)cardModal252(c.deckId,c)};
+window.v252SaveCard=async function(did,cid,again){const d=(getData252().flashDecks||[]).find(x=>String(x.id)===String(did));if(!d)return;const question=(q('#v252CardQ')?.value||'').trim(),answer=(q('#v252CardA')?.value||'').trim();if(!question||!answer)return alert('Bitte Frage und Antwort ausfüllen.');const add=await storeAttachments252(cardPending252.map(x=>x.file));if(cid){const c=(getData252().flashcards||[]).find(x=>String(x.id)===String(cid));if(!c)return;c.q=question;c.a=answer;c.attachments=[...(c.attachments||[]),...add]}else{getData252().flashcards||=[];getData252().flashcards.push({id:(typeof id==='function'?id():'card-'+Date.now()),subject:d.subject,deckId:d.id,q:question,a:answer,attachments:add,created:Date.now()})}try{save()}catch(_){persist252()}cardPending252=[];if(again&&!cid){q('#v252CardQ').value='';q('#v252CardA').value='';pendingList252();q('#v252CardQ')?.focus()}else{closeModal()}try{renderDeckDetail()}catch(_){};setTimeout(repairDeck252,0)};
+function repairDeck252(){const view=q('#view-deck-detail.active');if(!view)return;const head=q(':scope > .sectionHead',view);if(!head)return;let sw=q('.v252DeckMode',head);if(!sw){sw=document.createElement('div');sw.className='v252DeckMode';head.insertBefore(sw,q('#addCardToDeckBtn',head)||null)}const readOnly=document.body.classList.contains('v214LearningReadOnly');sw.innerHTML=`<button type="button" class="ghost ${readOnly?'active':''}" onclick="v252DeckMode('learn')">Lernen</button><button type="button" class="ghost ${readOnly?'':'active'}" onclick="v252DeckMode('edit')">Bearbeiten</button>`;const add=q('#addCardToDeckBtn',view);const did=(()=>{try{return selectedDeckId}catch(_){return window.selectedDeckId}})();if(add){add.type='button';add.style.display=readOnly?'none':'inline-flex';add.onclick=e=>{e.preventDefault();e.stopPropagation();window.openAddCardToDeck(did)}};const cards=(getData252().flashcards||[]).filter(c=>String(c.deckId)===String(did));let c=cards[0];try{const queue=window.v102DeckQueue||[],idx=window.v102DeckIndex||0;c=(getData252().flashcards||[]).find(x=>String(x.id)===String(queue[idx]))||cards[window.currentFlash||0]||cards[0]}catch(_){}const root=q('#deckDetail');if(root){q('.v252DeckAttachments',root)?.remove();if(c?.attachments?.length){const x=document.createElement('div');x.className='v252DeckAttachments';x.innerHTML=attachList252(c.attachments,'card',c.id);root.appendChild(x)}}}
+window.v252DeckMode=mode=>{try{window.v217SetLearnMode?.(mode)}catch(_){document.body.classList.toggle('v214LearningReadOnly',mode!=='edit')}try{renderDeckDetail()}catch(_){}setTimeout(repairDeck252,0)};
+const baseDeck252=window.renderDeckDetail;if(typeof baseDeck252==='function'){window.renderDeckDetail=function(){const r=baseDeck252.apply(this,arguments);setTimeout(repairDeck252,0);return r};try{renderDeckDetail=window.renderDeckDetail}catch(_){}}
+
+/* ----- quiz attachments ----- */
+let quizPending252=[];
+function quizPendingPaint252(){const x=q('#v252QuizPending');if(x)x.innerHTML=quizPending252.length?`<div class="v252AttachList">${quizPending252.map((f,i)=>`<div class="v252Attach"><span>${/^image\//i.test(f.type||'')?'🖼️':'📎'} ${esc252(f.name)}</span><div class="v252AttachActions"><button type="button" class="dangerBtn" onclick="v252RemoveQuizPending(${i})">×</button></div></div>`).join('')}</div>`:'<div class="small">Noch nichts angehängt.</div>'}
+window.v252QuizFiles=input=>{quizPending252.push(...[...(input?.files||[])]);if(input)input.value='';quizPendingPaint252()};window.v252RemoveQuizPending=i=>{quizPending252.splice(Number(i),1);quizPendingPaint252()};
+const baseEditQuiz252=window.editQuiz;if(typeof baseEditQuiz252==='function'){window.editQuiz=function(qid){quizPending252=[];const r=baseEditQuiz252.apply(this,arguments);setTimeout(()=>{const modal=q('#modal'),answer=q('#newQuizA',modal);if(answer&&!q('#v252QuizAttachBox',modal)){const box=document.createElement('div');box.id='v252QuizAttachBox';box.className='v252Attachments';box.innerHTML=`<div class="rowBetween"><b>Bild / Datei zur Frage</b><label class="ghost" style="cursor:pointer">+ Datei<input type="file" multiple accept="image/*,.pdf,.doc,.docx,.ppt,.pptx,.txt" hidden onchange="v252QuizFiles(this)"></label></div><div id="v252QuizPending"><div class="small">Noch nichts angehängt.</div></div>`;answer.insertAdjacentElement('afterend',box)}const quiz=(getData252().quizzes||[]).find(x=>String(x.id)===String(qid));qa('.quizEditorQuestion',modal).forEach((el,i)=>{const item=quiz?.questions?.[i];if(item?.attachments?.length&&!q('.v252QuestionAtt',el)){const d=document.createElement('div');d.className='v252QuestionAtt';d.innerHTML=attachList252(item.attachments,'quiz',item.id);el.appendChild(d)}});repairEditorChrome252()},0);return r};try{editQuiz=window.editQuiz}catch(_){}}
+window.addQuizQuestion=async function(qid){const quiz=(getData252().quizzes||[]).find(x=>String(x.id)===String(qid));const type=q('#quizQType')?.value||'text',question=(q('#newQuizQ')?.value||'').trim(),answer=(q('#newQuizA')?.value||'').trim();if(!quiz)return alert('Quiz nicht gefunden.');if(!question||!answer)return alert('Bitte Frage und richtige Antwort ausfüllen.');let options=[];if(type==='mc'){options=(q('#newQuizOptions')?.value||'').split(/\n+/).map(x=>x.trim()).filter(Boolean);if(!options.some(x=>x.toLowerCase()===answer.toLowerCase()))options.push(answer);options=[...new Map(options.map(x=>[x.toLowerCase(),x])).values()];if(options.length<2)return alert('Bitte mindestens zwei Antwortmöglichkeiten eintragen.')}const attachments=await storeAttachments252(quizPending252);quiz.questions=Array.isArray(quiz.questions)?quiz.questions:[];quiz.questions.push({id:(typeof id==='function'?id():'quizq-'+Date.now()),type,q:question,a:answer,options,attachments});quizPending252=[];try{save()}catch(_){persist252()}window.editQuiz(qid)};try{addQuizQuestion=window.addQuizQuestion}catch(_){}
+const baseQuizRender252=window.renderQuizPlayer;if(typeof baseQuizRender252==='function'){window.renderQuizPlayer=function(){const r=baseQuizRender252.apply(this,arguments);setTimeout(()=>{try{const qid=(()=>{try{return selectedQuizId}catch(_){return window.selectedQuizId}})(),quiz=(getData252().quizzes||[]).find(x=>String(x.id)===String(qid)),sess=(()=>{try{return quizSession}catch(_){return window.quizSession}})(),item=quiz?.questions?.[sess?.index],root=q('#quizPlayerRoot .quizQuestion');if(root&&item?.attachments?.length&&!q('.v252QuizPlayerAtt',root)){const d=document.createElement('div');d.className='v252QuizPlayerAtt';d.innerHTML=attachList252(item.attachments,'quiz',item.id);root.appendChild(d)}}catch(_){}},0);return r};try{renderQuizPlayer=window.renderQuizPlayer}catch(_){}}
+
+/* ----- delete warnings for important content ----- */
+function guard252(name,message){const old=window[name];if(typeof old!=='function'||old.__v252Guarded)return;const fn=function(...args){if(!confirm(message))return false;return old.apply(this,args)};fn.__v252Guarded=true;window[name]=fn;try{if(name==='deleteHomework')deleteHomework=fn;if(name==='deleteTest')deleteTest=fn;if(name==='deleteGrade')deleteGrade=fn}catch(_){}}
+[['deleteStudySheet','Lernblatt wirklich löschen?'],['deleteHomework','Hausaufgabe wirklich löschen?'],['deleteTest','Test/Klassenarbeit wirklich löschen?'],['deleteGrade','Note wirklich löschen?'],['deleteDeckCard','Karteikarte wirklich löschen?'],['deleteQuizQuestion','Quizfrage wirklich löschen?'],['deleteQuiz','Quiz wirklich löschen?'],['deleteNote','Notiz wirklich löschen?'],['deleteTopicFile','Datei wirklich löschen?'],['deleteSubjectFile','Datei wirklich löschen?'],['deleteAbsence','Fehltag wirklich löschen?'],['deleteMissedHour','Fehlstunde wirklich löschen?'],['deletePageTemplate','Seitenvorlage wirklich löschen?']].forEach(x=>guard252(x[0],x[1]+' Diese Aktion kann nicht rückgängig gemacht werden.'));
+
+/* Never remove auto-created subject folders merely because the current timetable no longer contains the subject. */
+function preserveAutoSubjects252(){const d=getData252();d.subjects=Array.isArray(d.subjects)?d.subjects:[];for(const s of d.subjects)if(s.autoFromTimetable)s.keepWhenMissingFromTimetable=true;persist252()}
+
+/* final, low-risk wrappers only */
+const basePlan252=window.renderPlan;if(typeof basePlan252==='function'){window.renderPlan=function(){const r=basePlan252.apply(this,arguments);setTimeout(repairPlan252,0);return r};try{renderPlan=window.renderPlan}catch(_){}}
+const baseOpen252=window.openView;if(typeof baseOpen252==='function'){window.openView=function(){const r=baseOpen252.apply(this,arguments);setTimeout(()=>{repairPlan252();repairEditorChrome252();repairDeck252();bindSync252()},0);return r};try{openView=window.openView}catch(_){}}
+function boot252(){bindSync252();repairPlan252();repairEditorChrome252();repairDeck252();preserveAutoSubjects252();const e=q('#headerEyebrow');if(e)e.textContent='VERSION 252'}
+[0,120,500,1400].forEach(ms=>setTimeout(boot252,ms));
+})();
+</script>
+<!-- ===== /Studia V252 ===== -->
