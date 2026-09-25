@@ -9190,10 +9190,12 @@ function renderHome(){
    return hh*60+mm;
  };
  const minsText=n=>{
-   n=Math.max(0,Math.round(n));
-   return n===1?"1 Min.":`${n} Min.`;
+   const sec=Math.max(0,Math.ceil(Number(n||0)*60));
+   const m=Math.floor(sec/60),s=sec%60;
+   return `${m} Min. ${String(s).padStart(2,"0")} Sek.`;
  };
- const nowMin=new Date().getHours()*60+new Date().getMinutes();
+ const __now=new Date();
+ const nowMin=__now.getHours()*60+__now.getMinutes()+__now.getSeconds()/60;
  const todayCode=dayCode(new Date());
  const todayLessons=expandLessonsForCountdown(mergeLessons(stableTimetableDay(
    applyEffectiveDisplayTimes((data.timetable.lessons||[]).filter(x=>x.day===todayCode))
@@ -9201,7 +9203,7 @@ function renderHome(){
  const breaksToday=getActivePauses();
  $("#todayDate").textContent=new Date().toLocaleDateString("de-DE",{weekday:"long",day:"2-digit",month:"long"});
  const today=dayCode(new Date()), lessons=fillCancelledSlots(mergeLessons((data.timetable.lessons||[]).filter(x=>x.day===today)));
- const now=new Date(),min=now.getHours()*60+now.getMinutes();
+ const now=new Date(),min=now.getHours()*60+now.getMinutes()+now.getSeconds()/60;
  let next=todayLessons.find(x=>x.raw!=="__ENTFALL__"&&timeToMin(x.end)>min);
  if(next){
   const raw=String(next.raw||"").replace(/\s+/g," ").trim();
@@ -16167,8 +16169,6 @@ function setStatus(text,bad=false){
   const p=$('#v242PullSync'); if(p&&/Synchron/i.test(s))p.textContent=s;
 }
 function timeout(ms){const c=new AbortController(),id=setTimeout(()=>c.abort(),ms);return {signal:c.signal,done:()=>clearTimeout(id)}}
-function wait(ms){return new Promise(r=>setTimeout(r,ms))}
-function retryableCloudError(e){return e?.name==='AbortError'||e instanceof TypeError||/Zeitüberschreitung|Failed to fetch|NetworkError|Load failed/i.test(String(e?.message||e))}
 async function parse(res){
   const txt=await res.text(); let out;
   try{out=JSON.parse(txt)}catch(_){
@@ -16179,32 +16179,25 @@ async function parse(res){
   return out;
 }
 async function runCloudRequest(makeRequest,ms,label){
-  let last=null;
-  for(let attempt=1;attempt<=2;attempt++){
-    const t=timeout(ms);
-    try{return await parse(await makeRequest(t.signal))}
-    catch(e){
-      last=e;
-      if(!retryableCloudError(e)||attempt===2)break;
-      setStatus(`Cloud langsam · ${label} wird erneut versucht …`);
-      await wait(1200);
-    }finally{t.done()}
-  }
-  if(last?.name==='AbortError')throw new Error(`Cloud-Zeitüberschreitung bei ${label} · Server antwortet zu langsam`);
-  if(last instanceof TypeError)throw new Error(`Cloud-Verbindung bei ${label} blockiert oder nicht erreichbar`);
-  throw last||new Error(`Cloud-Fehler bei ${label}`);
+  const t=timeout(ms);
+  try{return await parse(await makeRequest(t.signal))}
+  catch(e){
+    if(e?.name==='AbortError')throw new Error(`${label} dauert zu lange`);
+    if(e instanceof TypeError)throw new Error(`${label} nicht erreichbar`);
+    throw e;
+  }finally{t.done()}
 }
 async function get(action,params={}){
   const c=config(); if(!c.url)throw new Error('Server-Script-Service-URL fehlt');
   const u=new URL(normalizeUrl(c.url));u.searchParams.set('action',action);u.searchParams.set('_',String(Date.now()));
   for(const[k,v]of Object.entries(params))if(v!=null&&v!=='')u.searchParams.set(k,String(v));
   const label=action==='state'?'Daten laden':action==='me'?'Anmeldung prüfen':action==='health'?'Server prüfen':action;
-  return runCloudRequest(signal=>fetch(u.toString(),{method:'GET',cache:'no-store',redirect:'follow',credentials:'omit',signal}),60000,label);
+  return runCloudRequest(signal=>fetch(u.toString(),{method:'GET',cache:'no-store',redirect:'follow',credentials:'omit',signal}),8000,label);
 }
 async function post(action,payload={}){
   const c=config(); if(!c.url)throw new Error('Server-Script-Service-URL fehlt');
   const label=action==='state_put'?'Daten speichern':action==='login'?'Anmeldung':action==='register'?'Registrierung':action;
-  const ms=action==='state_put'?90000:60000;
+  const ms=action==='state_put'?12000:10000;
   return runCloudRequest(signal=>fetch(normalizeUrl(c.url),{method:'POST',cache:'no-store',redirect:'follow',credentials:'omit',signal,headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action,...payload})}),ms,label);
 }
 async function health(){return get('health')}
@@ -16218,8 +16211,7 @@ window.GOOGLE_SYNC_CONFIG=window.GOOGLE_SYNC_CONFIG||{};
 try{Object.defineProperty(window.GOOGLE_SYNC_CONFIG,'scriptUrl',{configurable:true,get:scanUrl,set:rememberUrl})}catch(_){window.GOOGLE_SYNC_CONFIG.scriptUrl=scanUrl()}
 window.v150MarkDirty=function(delay=700){
   localStorage.setItem(DIRTY,'1');clearTimeout(dirtyTimer);
-  const ms=Math.max(300,Number(delay)||700);
-  dirtyTimer=setTimeout(()=>{try{window.studiaSyncNow?.(false)}catch(_){}},ms);
+  try{document.getElementById('v242DesktopSync')?.classList.add('dirty')}catch(_){}
 };
 window.v150CloudDirty=()=>localStorage.getItem(DIRTY)==='1';
 window.v150ClearDirty=()=>localStorage.setItem(DIRTY,'0');
@@ -17415,13 +17407,8 @@ window.addEventListener('resize',()=>setTimeout(reconcile193,100));document.addE
   // It is throttled so opening/focusing the app is instant without hammering
   // the Apps Script backend.
   function cloudKick(force){
-    if(!navigator.onLine||document.visibilityState==='hidden')return;
-    var now=Date.now();
-    if(!force&&now-lastCloudKick<8000)return;
-    // Give a fresh local edit time to reach the dirty queue first.
-    if(now-lastLocalMutation<450)return;
-    lastCloudKick=now;
-    try{ if(typeof window.v171CloudNow==='function')window.v171CloudNow(); }catch(_){ }
+    /* V245: cloud network runs only on explicit user sync. Local saves stay automatic. */
+    return;
   }
 
   function planNeedsRefresh(){
@@ -18474,7 +18461,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
       const rawDay=stableTimetableDay(applyEffectiveDisplayTimes(source.filter(x=>x.day===day))).filter(x=>toMin(x.end)>tl.start&&toMin(x.start)<tl.end);const special=rawDay.filter(x=>x.specialOnly),normal=rawDay.filter(x=>!x.specialOnly);const lines=tl.labels.map(t=>`<div class="v210GridLine" style="top:${pos(t)}px"></div>`).join('');
       const pauses=(typeof getActivePauses==='function'?getActivePauses():[]).filter(p=>toMin(p.end)>tl.start&&toMin(p.start)<tl.end).map(p=>{const n=new Date(),now=n.getHours()*60+n.getMinutes(),active=day===today&&toMin(p.start)<=now&&now<toMin(p.end);return `<div class="v210PauseBand ${active?'current':''}" style="top:${Math.max(0,pos(p.start))}px;height:${Math.max(10,pos(p.end)-pos(p.start))}px">${active?'JETZT · ':''}${esc(p.label||'Pause')}</div>`}).join('');
       if(special.length&&!normal.length){const info=special.map(x=>`<div class="v210Special"><b>Info</b>${esc(cleanPdfCellText(x.raw||''))}</div>`).join('');return `<div class="v210DayBody" style="height:${bodyHeight}px">${lines}${pauses}${info}</div>`}
-      const merged=expandLessonsForVisibleBreaks(mergeLessons(rawDay.filter(x=>timetableViewMode==='basis'?!x.cancelledFromBasis:true)));const cards=merged.map(l=>{const p=splitCell(l.raw||''),title=planTitle(p.subject||l.raw||''),badge=changeBadge(l,p),cancelled=badge==='ENTFÄLLT',top=Math.max(0,pos(l.start))+4,height=Math.max(44,Math.round((toMin(l.end)-toMin(l.start))*px)-7),compact=height<70,current=!cancelled&&typeof isLessonCurrentNow==='function'&&isLessonCurrentNow(l),meta=[p.room?('Raum '+p.room):'',p.teacher||p.meta].filter(Boolean).join(' · '),color=getColor(title);return `<button class="v210Lesson ${compact?'compact':''} ${current?'current':''} ${cancelled?'cancelled':''} ${badge?'hasBadge':''}" style="top:${top}px;height:${height}px;--lesson-color:${esc(color)}" onclick='openLessonDetails(${JSON.stringify(JSON.stringify(l))})'>${badge?`<span class="v210Badge">${esc(badge)}</span>`:''}<span class="v210LessonIcon" style="font-size:17px">${esc(lessonSvg(title))}</span><span><span class="v210LessonTitle">${esc(title)}</span><span class="v210LessonTime">${esc(l.start)} – ${esc(l.end)}</span>${meta&&!cancelled?`<span class="v210LessonMeta">${esc(meta)}</span>`:''}${Number(l.blocks||1)>=2?`<span class="v210LessonMeta">Doppelstunde</span>`:''}</span></button>`}).join('');return `<div class="v210DayBody" style="height:${bodyHeight}px">${lines}${pauses}${cards||'<div class="v210Empty">Kein Unterricht</div>'}</div>`
+      const merged=expandLessonsForVisibleBreaks(mergeLessons(rawDay.filter(x=>timetableViewMode==='basis'?!x.cancelledFromBasis:true)));const cards=merged.map(l=>{const p=splitCell(l.raw||''),altRaw=(Array.isArray(l.duplicates)&&l.duplicates.length?l.duplicates[0]?.raw:'')||l.changedFromRaw||'',alt=altRaw?splitCell(altRaw):{},room=String(p.room||alt.room||l.room||'').trim(),title=planTitle(p.subject||l.raw||''),badge=changeBadge(l,p),cancelled=badge==='ENTFÄLLT',top=Math.max(0,pos(l.start))+4,height=Math.max(44,Math.round((toMin(l.end)-toMin(l.start))*px)-7),compact=height<70,current=!cancelled&&typeof isLessonCurrentNow==='function'&&isLessonCurrentNow(l),teacher=String(p.teacher||p.meta||alt.teacher||alt.meta||'').trim(),color=getColor(title);return `<button class="v210Lesson ${compact?'compact':''} ${current?'current':''} ${cancelled?'cancelled':''} ${badge?'hasBadge':''}" style="top:${top}px;height:${height}px;--lesson-color:${esc(color)}" onclick='openLessonDetails(${JSON.stringify(JSON.stringify(l))})'>${badge?`<span class="v210Badge">${esc(badge)}</span>`:''}<span class="v210LessonIcon" style="font-size:17px">${esc(lessonSvg(title))}</span><span><span class="v210LessonTitle">${esc(title)}</span><span class="v210LessonTime">${esc(l.start)} – ${esc(l.end)}</span>${!cancelled?`<span class="v245LessonRoom">Raum ${esc(room||'—')}</span>`:''}${teacher&&!cancelled?`<span class="v210LessonMeta">${esc(teacher)}</span>`:''}${Number(l.blocks||1)>=2?`<span class="v210LessonMeta">Doppelstunde</span>`:''}</span></button>`}).join('');return `<div class="v210DayBody" style="height:${bodyHeight}px">${lines}${pauses}${cards||'<div class="v210Empty">Kein Unterricht</div>'}</div>`
     }
     const heads=days.map(d=>{const i=dayOrderV212.indexOf(d);return `<div class="v210DayHead ${d===today?'today':''}"><b>${esc(d)}</b><span>${esc(dates[i].toLocaleDateString('de-DE',{day:'2-digit',month:'short'}).replace(/\.$/,''))}</span></div>`}).join('');
     const tabs=mode==='day'?`<div class="v210DayTabs">${dayOrderV212.map((d,i)=>`<button class="v210DayTab ${d===selectedDay?'active':''}" onclick="v210SetPlanDay('${d}')">${d} · ${esc(dates[i].toLocaleDateString('de-DE',{day:'2-digit',month:'short'}).replace(/\.$/,''))}</button>`).join('')}</div>`:'';
@@ -20058,7 +20045,7 @@ body.editorMode .app > .header{
       window.openView=function(name){
         const leaving=editorActive()&&name!=='sheet-editor';if(leaving)flushBeforeLeave();
         const r=baseOpenView.apply(this,arguments);
-        if(leaving){canvasLive=false;setTimeout(()=>{installCloudGuard();const g=window.v171CloudNow;if(pendingCloud&&typeof g==='function'){pendingCloud=false;try{g()}catch(_){}}},900)}
+        if(leaving){canvasLive=false;setTimeout(()=>{installCloudGuard();if(pendingCloud){pendingCloud=false;try{window.v150MarkDirty?.(0)}catch(_){}}},120)}
         return r;
       };
       try{openView=window.openView}catch(_){}
@@ -22130,16 +22117,21 @@ body.editorMode #desktopEditorSidebar,body.editorMode .objectPanel,#v242DesktopS
 }
 #canvasObjects .cobj:not(.formulaObj){font-family:var(--studia-object-font,inherit)}
 @media(min-width:900px){
- #v242DesktopSync{position:fixed;right:18px;bottom:18px;z-index:10050;display:flex;align-items:center;gap:8px;min-height:42px;padding:8px 12px;border-radius:15px;border:1px solid #ead7d1;background:rgba(255,252,249,.97);color:#775f58;box-shadow:0 10px 28px rgba(91,67,59,.12);backdrop-filter:blur(14px);font-size:10px;font-weight:900;cursor:pointer}
+ #v242DesktopSync{position:fixed;right:18px;bottom:18px;z-index:10050;display:grid;place-items:center;width:42px;height:42px;padding:0;border-radius:50%;border:1px solid #ead7d1;background:rgba(255,252,249,.97);color:#775f58;box-shadow:0 8px 22px rgba(91,67,59,.10);backdrop-filter:blur(14px);font-size:10px;font-weight:900;cursor:pointer}
  #v242DesktopSync:hover{background:#fff7f5;border-color:#e4c5c1;transform:translateY(-1px)}
  #v242DesktopSync .spin{font-size:17px;line-height:1}#v242DesktopSync.syncing .spin{animation:v242spin .8s linear infinite}
- #v242DesktopSync small{display:block;font-size:7px;font-weight:750;color:#a58d85;margin-top:1px;max-width:190px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ #v242DesktopSync>span:nth-child(2){display:none!important}#v242DesktopSync small{display:none!important}#v242DesktopSync.dirty{box-shadow:0 0 0 4px rgba(237,166,164,.16),0 8px 22px rgba(91,67,59,.10)}
  @keyframes v242spin{to{transform:rotate(360deg)}}
 }
 @media(max-width:899px){#v242DesktopSync{display:none!important}}
 #v242PullSync{position:fixed;left:50%;top:8px;transform:translate(-50%,-130%);z-index:10080;pointer-events:none;min-width:180px;max-width:84vw;padding:9px 14px;border-radius:999px;border:1px solid #ead8d2;background:rgba(255,252,249,.98);box-shadow:0 8px 25px rgba(91,67,59,.12);color:#826961;font:850 10px/1.2 "Nunito",sans-serif;text-align:center;transition:transform .16s ease,opacity .16s ease;opacity:0}
 #v242PullSync.show{opacity:1}#v242PullSync.ready{background:#fff2f1;border-color:#e7c6c4;color:#ad6f72}#v242PullSync.syncing{background:#f5f9ef;border-color:#dbe5c8;color:#75845b}
 #v242SyncStatus{font-size:8px;color:#8b786f;font-weight:800;margin-top:7px;word-break:break-word}#v242SyncStatus.bad{color:#b05d63}
+
+@media(min-width:900px){
+ #view-plan .v245LessonRoom{display:block!important;margin-top:3px!important;font-size:8px!important;line-height:1.15!important;font-weight:850!important;color:#88746d!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+ #view-plan .v210Lesson.compact .v245LessonRoom{display:block!important;font-size:7px!important;margin-top:2px!important}
+}
 /* New tape is real SVG art. No CSS border/pseudo layer => screen and PDF match. */
 .tapeSticker{background:transparent!important;border:0!important;outline:0!important;box-shadow:none!important;overflow:visible!important}
 .tapeSticker:before,.tapeSticker:after{display:none!important;content:none!important}
@@ -22186,22 +22178,22 @@ function editorActive(){return document.body.classList.contains('editorMode')&&!
 function commitEditor(){if(editorActive())try{window.saveCanvasSheetCore?.(true)}catch(e){console.warn('[V242 editor commit]',e)}persist()}
 function rerender(){if(editorActive())return;try{window.renderAll?.()}catch(_){ }try{if(q('#view-plan.active'))window.renderPlan?.()}catch(_){ }try{if(q('#view-home.active'))window.renderHome?.()}catch(_){ }}
 async function backup(){try{await window.v111CreateBackupNow?.(false)}catch(_){}}
-function status(text,bad=false){const s=String(text||'');try{window.StudiaCloud?.setStatus?.(s,bad)}catch(_){}const b=q('#v242DesktopSync');if(b){b.classList.toggle('syncing',/Synchron/i.test(s)&&!/✓|Fehler|fehl|nicht|lokal/i.test(s));const sm=q('small',b);if(sm)sm.textContent=s}const p=q('#v242PullSync');if(p&&p.classList.contains('show'))p.textContent=s;const x=q('#v242SyncStatus');if(x){x.textContent=s;x.classList.toggle('bad',!!bad)}}
+function status(text,bad=false){const s=String(text||'');try{window.StudiaCloud?.setStatus?.(s,bad)}catch(_){}const b=q('#v242DesktopSync');if(b){b.title=s;b.classList.toggle('syncing',/Synchron/i.test(s)&&!/✓|Fehler|fehl|nicht|lokal/i.test(s));if(/gespeichert ✓|Lokal gespeichert/i.test(s))b.classList.remove('dirty');const sm=q('small',b);if(sm)sm.textContent=s}const p=q('#v242PullSync');if(p&&p.classList.contains('show'))p.textContent=s;const x=q('#v242SyncStatus');if(x){x.textContent=s;x.classList.toggle('bad',!!bad)}}
 window.studiaSyncNow=async function(force=false){
  const dirty=!!window.v150CloudDirty?.();if(syncBusy)return {busy:true};if(!force&&!dirty&&Date.now()-lastSyncAt<15000)return {skipped:true};syncBusy=true;status('Synchronisiere Geräte …');
  try{
   const cloud=window.StudiaCloud;if(!cloud)throw new Error('Sync-Modul fehlt');const cfg=cloud.config?.()||{};if(!cfg.url)throw new Error('Server-Script-Service-URL fehlt');if(!cfg.token)throw new Error('Nicht angemeldet');
-  await cloud.me();commitEditor();await backup();const d=getData(),base=readBase();stamp(d,base);persist();const local=clone(d);
+  commitEditor();await backup();const d=getData(),base=readBase();stamp(d,base);persist();const local=clone(d);
   const pulled=await cloud.getState(),remote=pulled?.data&&typeof pulled.data==='object'?pulled.data:{};const merged=mergeState(local,remote);setData(merged);persist();rerender();
-  const put=await cloud.putState(clone(merged));const confirm=await cloud.getState(),remote2=confirm?.data&&typeof confirm.data==='object'?confirm.data:{};const finalState=mergeState(merged,remote2);setData(finalState);persist();saveBase(finalState);rerender();window.v150ClearDirty?.();lastSyncAt=Date.now();status('Auf allen Geräten gespeichert ✓');return {ok:true,updatedAt:put?.updatedAt||confirm?.updatedAt||lastSyncAt};
- }catch(e){console.error('[Studia V242 sync]',e);persist();const msg=String(e?.message||'Sync fehlgeschlagen');status(msg+' · lokal sicher',true);throw e}finally{syncBusy=false;setTimeout(()=>q('#v242PullSync')?.classList.remove('show','ready','syncing'),700)}
+  const put=await cloud.putState(clone(merged));saveBase(merged);window.v150ClearDirty?.();lastSyncAt=Date.now();status('Auf allen Geräten gespeichert ✓');setTimeout(()=>status('Lokal gespeichert'),2200);return {ok:true,updatedAt:put?.updatedAt||lastSyncAt};
+ }catch(e){console.error('[Studia V245 sync]',e);persist();const msg=String(e?.message||'Sync fehlgeschlagen');status(msg+' · lokal sicher',true);try{window.cuteToast?.('Sync: '+msg)}catch(_){}setTimeout(()=>status('Lokal gespeichert'),3500);throw e}finally{syncBusy=false;setTimeout(()=>q('#v242PullSync')?.classList.remove('show','ready','syncing'),450)}
 };
 window.studiaSyncNow.__v219Guarded=true;
 window.v171CloudNow=function(){return window.studiaSyncNow(false)};window.v171CloudNow.__v219Guarded=true;try{v171CloudNow=window.v171CloudNow}catch(_){}
 
 /* one sync button + one pull gesture */
 function ensureSyncUI(){
- let b=q('#v242DesktopSync');if(!b){b=document.createElement('button');b.id='v242DesktopSync';b.type='button';b.innerHTML='<span class="spin">↻</span><span>Geräte synchronisieren<small>Lokal gespeichert</small></span>';b.onclick=()=>window.studiaSyncNow(true).catch(()=>{});document.body.appendChild(b)}
+ let b=q('#v242DesktopSync');if(!b){b=document.createElement('button');b.id='v242DesktopSync';b.type='button';b.title='Geräte synchronisieren';b.setAttribute('aria-label','Geräte synchronisieren');b.innerHTML='<span class="spin">↻</span><span>Geräte synchronisieren<small>Lokal gespeichert</small></span>';b.onclick=()=>window.studiaSyncNow(true).catch(()=>{});document.body.appendChild(b)}
  let p=q('#v242PullSync');if(!p){p=document.createElement('div');p.id='v242PullSync';p.textContent='Zum Synchronisieren ziehen';document.body.appendChild(p)}
  const card=q('.v171CloudSettings');if(card){let st=q('#v242SyncStatus',card);if(!st){st=document.createElement('div');st.id='v242SyncStatus';st.textContent='Lokal gespeichert';card.appendChild(st)}for(const btn of qa('button',card)){if(/jetzt synchronisieren|zusammenführen|geräte synchronisieren/i.test(btn.textContent||'')){btn.removeAttribute('onclick');btn.onclick=()=>window.studiaSyncNow(true).catch(()=>{});btn.textContent='Jetzt synchronisieren'}}}
 }
@@ -22231,9 +22223,10 @@ window.printCanvasSheet=async function(){
  }catch(e){console.error('[Studia V242 print]',e);try{w.close()}catch(_){}alert('Die Druckvorschau konnte nicht erstellt werden. '+(e?.message?`(${e.message})`:''))}
 };try{printCanvasSheet=window.printCanvasSheet}catch(_){}
 
-function maintain(){if(maintainQueued)return;maintainQueued=true;requestAnimationFrame(()=>{maintainQueued=false;ensureSyncUI();decorateTape();const e=q('#headerEyebrow');if(e)e.textContent='VERSION 244'})}
+if(!window.__STUDIA_V245_HOME_CLOCK__){window.__STUDIA_V245_HOME_CLOCK__=setInterval(()=>{try{if(document.querySelector('#view-home.active')&&!document.body.classList.contains('editorMode'))window.renderHome?.()}catch(_){}},1000)}
+function maintain(){if(maintainQueued)return;maintainQueued=true;requestAnimationFrame(()=>{maintainQueued=false;ensureSyncUI();decorateTape();const e=q('#headerEyebrow');if(e)e.textContent='VERSION 245'})}
 const obs=new MutationObserver(maintain);obs.observe(document.body,{childList:true,subtree:true});[0,120,450,1200].forEach(t=>setTimeout(maintain,t));
-window.addEventListener('online',()=>setTimeout(()=>window.studiaSyncNow(false).catch(()=>{}),700));
+/* V245: no automatic network sync on reconnect; user triggers sync explicitly. */
 })();
 </script>
 <!-- ===== /Studia V242 ===== -->
