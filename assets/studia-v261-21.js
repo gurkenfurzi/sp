@@ -1,1 +1,0 @@
-window.__STUDIA_V129_INPUT__=true;
