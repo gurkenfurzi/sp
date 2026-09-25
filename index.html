@@ -22708,3 +22708,54 @@ const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 236'};
 })();
 </script>
 <!-- ===== /Studia V237 ===== -->
+
+
+<!-- ===== Studia V238 · print tape exact match ===== -->
+<script id="studia-v238-print-tape-exact">
+(()=>{
+if(window.__STUDIA_V238_PRINT__)return;window.__STUDIA_V238_PRINT__=true;
+window.printCanvasSheet=async function(){
+  if(innerWidth<900 && typeof window.v170PrintMobile==='function') return window.v170PrintMobile();
+  const w=window.open('about:blank','_blank','width=1050,height=900');
+  if(!w) return alert('Bitte Pop-ups für Studia erlauben, damit die Druckvorschau geöffnet werden kann.');
+  w.document.write('<p style="font:16px sans-serif;padding:24px">Druckvorschau wird geladen …</p>');
+  try{
+    let clones=[];
+    if(typeof cloneAllPages181==='function') clones=await cloneAllPages181();
+    else if(typeof window.cloneAllPages181==='function') clones=await window.cloneAllPages181();
+    if(!clones.length){w.close();return alert('Keine Lernblatt-Seite gefunden.');}
+
+    const first=clones[0],W=parseFloat(first.style.width),H=parseFloat(first.style.height);
+    const faces=[...document.querySelectorAll('style')]
+      .map(s=>s.textContent.match(/@font-face\s*\{[^}]*\}/g)||[]).flat().join('\n')+
+      clones.map((c,i)=>{const name='studiaPage'+i;c.style.setProperty('page',name,'important');return '@page '+name+'{size:'+parseFloat(c.style.width)+'px '+parseFloat(c.style.height)+'px;margin:0}'}).join('');
+
+    const exactTapeCSS = '.tapeSticker{position:absolute;box-sizing:border-box;background:rgba(242,190,178,.62);border:1px solid rgba(200,145,135,.18);transform:rotate(var(--rot,-4deg));box-shadow:0 2px 6px rgba(120,90,80,.08);pointer-events:auto;touch-action:none}.tapeSticker:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent 0 7px,rgba(255,255,255,.18) 7px 9px)}';
+
+    w.document.open();
+    w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Studia · Druckvorschau</title><base href="'+location.href+'"><style>'+faces+
+      '@page{size:'+W+'px '+H+'px;margin:0}*{box-sizing:border-box}html,body{margin:0;padding:0;background:#eee9e6;color:#65514b;font-family:Arial,sans-serif}'+
+      '.toolbar{position:sticky;top:0;z-index:2147483600;display:flex;align-items:center;gap:10px;padding:12px 18px;background:#fffaf8;border-bottom:1px solid #ecd9d6}.toolbar b{margin-right:auto}.toolbar button{border:1px solid #ead5d0;background:#fff;border-radius:12px;padding:10px 16px;color:#65514b;font-weight:700;cursor:pointer}.toolbar button:first-of-type{background:#f9d7d9}'+
+      '.printRoot{display:grid;justify-items:center;gap:24px;padding:24px;overflow:auto}.v181PreviewPage{flex:none;break-after:page;page-break-after:always}.v181PreviewPage:last-child{break-after:auto;page-break-after:auto}'+
+      '.v181PreviewPage,.v181PreviewPage *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;forced-color-adjust:none!important}'+
+      exactTapeCSS+
+      '@media print{html,body{background:#fff!important}.toolbar{display:none!important}.printRoot{display:block;margin:0;padding:0;overflow:visible;justify-items:start}.v181PreviewPage{justify-self:start!important}}'+
+      '</style></head><body><header class="toolbar"><b>Druckvorschau · nur das Lernblatt</b><button id="print">Drucken</button><button id="close">Schließen</button></header><main class="printRoot">'+clones.map(c=>c.outerHTML).join('')+'</main></body></html>');
+    w.document.close();
+    w.document.querySelector('#close').onclick=()=>w.close();
+    w.document.querySelector('#print').onclick=async()=>{
+      try{await w.document.fonts.ready}catch(_){ }
+      await Promise.all([...w.document.images].map(img=>img.complete?Promise.resolve():new Promise(r=>{img.onload=r;img.onerror=r})));
+      w.focus();w.print();
+    };
+    w.focus();
+  }catch(e){
+    console.error('[Studia V238 print]',e);
+    try{w.close()}catch(_){ }
+    alert('Die Druckvorschau konnte nicht erstellt werden. '+(e?.message?`(${e.message})`:''));
+  }
+};
+try{printCanvasSheet=window.printCanvasSheet}catch(_){ }
+})();
+</script>
+<!-- ===== /Studia V238 ===== -->
