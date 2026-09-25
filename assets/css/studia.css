@@ -6171,3 +6171,50 @@ body.editorMode #desktopEditorSidebar,body.editorMode .objectPanel,#v242DesktopS
 #v260GoogleSyncInfo{margin-top:8px;padding:9px 11px;border:1px solid #d9e7d1;border-radius:12px;background:#f6fbf2;color:#64765b;font-size:10px;font-weight:850;line-height:1.45}
 #v260GoogleSyncInfo.bad{border-color:#ebc8c1;background:#fff3f1;color:#9b6661}
 #v260GoogleSyncInfo.syncing{border-color:#ead7b7;background:#fffaf0;color:#8c7452}
+
+
+/* ===== Studia V262 ===== */
+@media (min-width:1100px){
+  #view-tasks .v262PlannerHead{
+    display:flex;align-items:flex-end;justify-content:space-between;gap:16px;
+    margin:0 0 14px;padding:2px 2px 4px;
+  }
+  #view-tasks .v262PlannerHead h1{margin:0;font-size:30px;line-height:1;color:#453b38;letter-spacing:-.04em}
+  #view-tasks .v262PlannerHead p{margin:6px 0 0;color:#a0877f;font-size:11px;font-weight:700}
+  #view-tasks > .sectionHead{margin-top:0}
+  #view-tasks .v262GradedSubmissions{margin-top:16px}
+  .v262SubmissionCard{align-items:center!important}
+  .v262SubmissionMain{flex:1;min-width:0}
+
+  #view-settings.v262SettingsCompact{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:12px!important;
+    align-items:start!important;
+  }
+  #view-settings.v262SettingsCompact > .panel,
+  #view-settings.v262SettingsCompact > .section.panel{
+    margin:0!important;padding:15px!important;border-radius:18px!important;min-width:0!important;
+  }
+  #view-settings.v262SettingsCompact h2{font-size:17px!important;margin:0 0 8px!important}
+  #view-settings.v262SettingsCompact .section{margin-top:8px!important}
+  #view-settings.v262SettingsCompact .formGrid,
+  #view-settings.v262SettingsCompact .v171CloudGrid{gap:8px!important}
+  #view-settings.v262SettingsCompact label{font-size:10px!important}
+  #view-settings.v262SettingsCompact input,
+  #view-settings.v262SettingsCompact select,
+  #view-settings.v262SettingsCompact textarea{min-height:35px!important;padding:8px 10px!important;font-size:11px!important}
+  #view-settings.v262SettingsCompact button,
+  #view-settings.v262SettingsCompact .ghost,
+  #view-settings.v262SettingsCompact .primary{min-height:34px!important;padding:7px 10px!important;font-size:10px!important}
+  #view-settings.v262SettingsCompact .v111BackupButtons,
+  #view-settings.v262SettingsCompact .v171CloudActions{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}
+  #view-settings.v262SettingsCompact .v111BackupToggle{padding:8px 0!important}
+  #view-settings.v262SettingsCompact .small,
+  #view-settings.v262SettingsCompact small{font-size:9px!important;line-height:1.35!important}
+  #view-settings.v262SettingsCompact .themeSwatches{gap:7px!important}
+  #view-settings.v262SettingsCompact .themeSwatch{width:34px!important;height:34px!important}
+}
+.v262SubmissionModal #v262DueLessonsBox{display:none}
+.v262SubmissionCard .v216ItemActions{flex-wrap:wrap}
+
