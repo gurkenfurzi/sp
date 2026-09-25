@@ -49,14 +49,19 @@ function doGet(e) {
   try {
     ensureConfigured_();
     const req = requestData_(e);
-    const action = normalizeAction_(req.action || 'health');
+    const action = normalizeAction_(req.action || 'app_v260');
     const token = String(req.token || '');
     let result;
 
     switch (action) {
+      case 'app_v260':
+      case 'app':
+        return v260AppDirect_();
+      case 'app_v259':
+        return v259AppShell_();
       case 'health':
       case 'ping':
-        result = { ok: true, service: 'studia-google-account-sync', version: 178 };
+        result = { ok: true, service: 'studia-google-account-sync', version: 261, transport: 'google-script-run-external-assets-v261', automatic: true };
         break;
       case 'me':
       case 'api/me':
@@ -137,6 +142,55 @@ function doPost(e) {
         result = putState_(user.id, body.data);
         break;
       }
+      case 'sync':
+      case 'state_sync':
+      case 'stateSync':
+      case 'api/state/sync':
+      case '/api/state/sync': {
+        const user = requireUser_(body.token);
+        result = syncStateFast_(user.id, decodeSyncIncoming_(body));
+        break;
+      }
+      case 'sync_bridge': {
+        let bridgeResult;
+        try {
+          const user = requireUser_(body.token);
+          bridgeResult = syncStateFast_(user.id, decodeSyncIncoming_(body));
+        } catch (bridgeErr) {
+          bridgeResult = fromError_(bridgeErr);
+        }
+        return bridgeHtml_(body.bridgeId, bridgeResult, String(body.replyGzip || '') === '1');
+      }
+
+
+      case 'sync_bridge_v253': {
+        let bridgeResult;
+        try {
+          const user = requireUser_(body.token);
+          const incoming = v249DecodeField_(body, 'data', 'dataGzip');
+          const base = v249DecodeField_(body, 'base', 'baseGzip');
+          bridgeResult = syncStateV249_(user, incoming, base, String(body.deviceId || ''), String(body.deviceName || ''));
+          bridgeResult.version = 253;
+          bridgeResult.storage = 'sheet-fast-v253';
+        } catch (bridgeErr) {
+          bridgeResult = fromError_(bridgeErr);
+        }
+        return bridgeHtml_(body.bridgeId, bridgeResult, String(body.replyGzip || '') === '1');
+      }
+
+      case 'sync_bridge_v249': {
+        let bridgeResult;
+        try {
+          const user = requireUser_(body.token);
+          const incoming = v249DecodeField_(body, 'data', 'dataGzip');
+          const base = v249DecodeField_(body, 'base', 'baseGzip');
+          bridgeResult = syncStateV249_(user, incoming, base, String(body.deviceId || ''), String(body.deviceName || ''));
+        } catch (bridgeErr) {
+          bridgeResult = fromError_(bridgeErr);
+        }
+        return bridgeHtml_(body.bridgeId, bridgeResult, String(body.replyGzip || '') === '1');
+      }
+
       case 'upload': {
         requireUser_(body.token);
         result = uploadFile_(body.dataUrl);
@@ -551,6 +605,7 @@ function normalizeAction_(value) {
     'auth/recover':'recover', 'account/recover':'recover',
     'state/put':'state_put', 'state-put':'state_put', 'stateput':'state_put',
     'state/meta':'state_meta', 'statemeta':'state_meta',
+    'state/sync':'sync', 'state-sync':'sync', 'statesync':'sync', 'sync':'sync',
     'api/me':'me', 'api/state':'state', 'api/state/meta':'state_meta'
   };
   const key = a.toLowerCase();
@@ -635,4 +690,561 @@ function constantEqual_(a, b) {
   let diff = 0;
   for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
   return diff === 0;
+}
+
+
+
+/* ===== Studia V247: fast compressed spreadsheet state + iframe bridge ===== */
+const V247_FAST_SHEET = 'StateFast';
+const V247_CHUNK = 45000;
+
+function fastStateSheet_() {
+  const ss = spreadsheet_();
+  let sh = ss.getSheetByName(V247_FAST_SHEET);
+  if (!sh) {
+    sh = ss.insertSheet(V247_FAST_SHEET);
+    sh.getRange(1,1,1,3).setValues([['userId','updatedAt','chunkCount']]);
+    sh.setFrozenRows(1);
+  }
+  return sh;
+}
+
+function fastStateRow_(sh, userId) {
+  const last = sh.getLastRow();
+  if (last < 2) return null;
+  const ids = sh.getRange(2,1,last-1,1).getDisplayValues();
+  for (let i=0;i<ids.length;i++) if (String(ids[i][0]) === String(userId)) return i+2;
+  return null;
+}
+
+function fastEncode_(obj) {
+  const json = JSON.stringify(obj || {});
+  const gz = Utilities.gzip(Utilities.newBlob(json, 'application/json', 'state.json'));
+  return Utilities.base64Encode(gz.getBytes());
+}
+
+function fastDecode_(encoded) {
+  if (!encoded) return {};
+  const bytes = Utilities.base64Decode(String(encoded));
+  const json = Utilities.ungzip(Utilities.newBlob(bytes, 'application/gzip', 'state.json.gz')).getDataAsString('UTF-8');
+  return JSON.parse(json || '{}');
+}
+
+function readFastState_(userId) {
+  const sh = fastStateSheet_();
+  const row = fastStateRow_(sh, userId);
+  if (!row) return {data:{}, updatedAt:0, exists:false};
+  const meta = sh.getRange(row,1,1,3).getValues()[0];
+  const count = Math.max(0, Number(meta[2] || 0));
+  if (!count) return {data:{}, updatedAt:Number(meta[1]||0), exists:true};
+  const parts = sh.getRange(row,4,1,count).getDisplayValues()[0];
+  return {data:fastDecode_(parts.join('')), updatedAt:Number(meta[1]||0), exists:true};
+}
+
+function writeFastState_(userId, data, updatedAt) {
+  const sh = fastStateSheet_();
+  const encoded = fastEncode_(data || {});
+  const parts = [];
+  for (let i=0;i<encoded.length;i+=V247_CHUNK) parts.push(encoded.slice(i,i+V247_CHUNK));
+  let row = fastStateRow_(sh, userId);
+  if (!row) row = sh.getLastRow()+1;
+  const needCols = 3 + Math.max(1, parts.length);
+  if (sh.getMaxColumns() < needCols) sh.insertColumnsAfter(sh.getMaxColumns(), needCols-sh.getMaxColumns());
+  const oldCount = row <= sh.getLastRow() ? Number(sh.getRange(row,3).getValue()||0) : 0;
+  sh.getRange(row,1,1,3).setValues([[String(userId), Number(updatedAt||Date.now()), parts.length]]);
+  if (parts.length) {
+    const r = sh.getRange(row,4,1,parts.length);
+    r.setNumberFormat('@');
+    r.setValues([parts]);
+  }
+  if (oldCount > parts.length) sh.getRange(row,4+parts.length,1,oldCount-parts.length).clearContent();
+}
+
+function decodeSyncIncoming_(body) {
+  if (body && body.dataGzip) {
+    const bytes = Utilities.base64Decode(String(body.dataGzip));
+    const txt = Utilities.ungzip(Utilities.newBlob(bytes, 'application/gzip', 'incoming.json.gz')).getDataAsString('UTF-8');
+    return JSON.parse(txt || '{}');
+  }
+  const d = body ? body.data : null;
+  if (d && typeof d === 'object') return d;
+  if (typeof d === 'string' && d.trim()) return JSON.parse(d);
+  return {};
+}
+
+function bridgeHtml_(bridgeId, result, gzipReply) {
+  let payload = result || fail_('Sync fehlgeschlagen', 500);
+  if (payload.ok && gzipReply && payload.data && typeof payload.data === 'object') {
+    const dataGzip = fastEncode_(payload.data);
+    payload = Object.assign({}, payload, {data:null, dataGzip:dataGzip, encoding:'gzip-base64'});
+  }
+  const id = String(bridgeId || '');
+  const safePayload = JSON.stringify(payload).replace(/</g, '\\u003c');
+  const safeId = JSON.stringify(id).replace(/</g, '\\u003c');
+  const html = '<!doctype html><meta charset="utf-8"><script>parent.postMessage({type:"studia-sync-bridge",id:'+safeId+',payload:'+safePayload+'},"*");<\\/script>';
+  return HtmlService.createHtmlOutput(html).setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+}
+
+function syncStateFast_(userId, incoming) {
+  const lock = LockService.getScriptLock();
+  if (!lock.tryLock(1200)) throw appError_('Cloud ist gerade beschäftigt · bitte einmal erneut synchronisieren.', 409);
+  try {
+    const remoteRec = readFastState_(userId);
+    const local = incoming && typeof incoming === 'object' ? incoming : {};
+    const merged = mergeStudiaState_(local, remoteRec.data || {});
+    const updatedAt = Date.now();
+    writeFastState_(userId, merged, updatedAt);
+    return {ok:true, data:merged, updatedAt, version:247, storage:'sheet-fast'};
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+/* ===== Legacy V246 Drive sync kept for compatibility only ===== */
+function syncState_(userId, incoming) {
+  const lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  try {
+    const meta = findStateRow_(userId);
+    let remote = {};
+    let fileId = meta && meta.fileId ? meta.fileId : '';
+    if (fileId) {
+      try {
+        const raw = DriveApp.getFileById(fileId).getBlob().getDataAsString('UTF-8');
+        remote = JSON.parse(raw || '{}');
+      } catch (_) {
+        remote = {};
+      }
+    }
+    const merged = mergeStudiaState_(incoming && typeof incoming === 'object' ? incoming : {}, remote);
+    const json = JSON.stringify(merged || {});
+    if (fileId) {
+      DriveApp.getFileById(fileId).setContent(json);
+    } else {
+      const f = filesFolder_().createFile(`state-${userId}.json`, json, MimeType.PLAIN_TEXT);
+      fileId = f.getId();
+    }
+    const updatedAt = Date.now();
+    const sh = sheet_(ST.STATE);
+    if (meta) sh.getRange(meta.row, 1, 1, 3).setValues([[userId, fileId, updatedAt]]);
+    else sh.appendRow([userId, fileId, updatedAt]);
+    return { ok:true, data:merged, updatedAt, version:246 };
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function studiaClone_(v) { return v == null ? v : JSON.parse(JSON.stringify(v)); }
+function studiaId_(x) { return x && typeof x === 'object' && x.id != null ? String(x.id) : ''; }
+function studiaClean_(v) {
+  if (Array.isArray(v)) return v.map(studiaClean_);
+  if (v && typeof v === 'object') {
+    const o = {};
+    Object.keys(v).forEach(k => { if (k !== '__studiaSyncMeta' && k !== '__studiaUpdatedAt') o[k] = studiaClean_(v[k]); });
+    return o;
+  }
+  return v;
+}
+function studiaSame_(a,b) { try { return JSON.stringify(studiaClean_(a)) === JSON.stringify(studiaClean_(b)); } catch (_) { return false; } }
+function studiaMergeMeta_(a,b) {
+  const A=a||{}, B=b||{}, o={version:1,fields:{},tombstones:{}};
+  [...new Set([...Object.keys(A.fields||{}),...Object.keys(B.fields||{})])].forEach(k=>o.fields[k]=Math.max(Number((A.fields||{})[k]||0),Number((B.fields||{})[k]||0)));
+  [...new Set([...Object.keys(A.tombstones||{}),...Object.keys(B.tombstones||{})])].forEach(n=>{o.tombstones[n]={};const aa=(A.tombstones||{})[n]||{},bb=(B.tombstones||{})[n]||{};[...new Set([...Object.keys(aa),...Object.keys(bb)])].forEach(id=>o.tombstones[n][id]=Math.max(Number(aa[id]||0),Number(bb[id]||0)));});
+  return o;
+}
+function studiaMergePlain_(r,l) {
+  if (l == null) return studiaClone_(r);
+  if (r == null) return studiaClone_(l);
+  if (Array.isArray(l) || Array.isArray(r)) return studiaClone_(l);
+  if (typeof l === 'object' && typeof r === 'object') return Object.assign({},studiaClone_(r),studiaClone_(l));
+  return studiaClone_(l);
+}
+function studiaMergeCollection_(name,larr,rarr,meta) {
+  const la=Array.isArray(larr)?larr:[], ra=Array.isArray(rarr)?rarr:[];
+  const L={},R={}; la.forEach(x=>{const id=studiaId_(x);if(id)L[id]=x}); ra.forEach(x=>{const id=studiaId_(x);if(id)R[id]=x});
+  const ids=[...new Set([...la.map(studiaId_),...ra.map(studiaId_)].filter(Boolean))], out=[];
+  ids.forEach(id=>{const l=L[id],r=R[id];let v;if(l&&r){const lt=Number(l.__studiaUpdatedAt||l.updatedAt||l.modifiedAt||l.v219LocalSavedAt||0),rt=Number(r.__studiaUpdatedAt||r.updatedAt||r.modifiedAt||r.v219LocalSavedAt||0);v=rt>lt?studiaClone_(r):lt>rt?studiaClone_(l):studiaMergePlain_(r,l);v.__studiaUpdatedAt=Math.max(lt,rt,Number(v.__studiaUpdatedAt||0));}else v=studiaClone_(l||r);const dead=Number((((meta||{}).tombstones||{})[name]||{})[id]||0),vt=Number((v||{}).__studiaUpdatedAt||(v||{}).updatedAt||(v||{}).modifiedAt||(v||{}).v219LocalSavedAt||0);if(!(dead&&dead>=vt)&&v)out.push(v);});
+  const seen={};out.forEach(x=>{try{seen[JSON.stringify(studiaClean_(x))]=1}catch(_){}});[...la,...ra].forEach(x=>{if(studiaId_(x))return;let k;try{k=JSON.stringify(studiaClean_(x))}catch(_){k=String(x)}if(!seen[k]){seen[k]=1;out.push(studiaClone_(x))}});
+  return out;
+}
+function mergeStudiaState_(local,remote) {
+  local=local&&typeof local==='object'?local:{}; remote=remote&&typeof remote==='object'?remote:{};
+  const TRACKED=['homework','tests','writtenTests','grades','flashcards','subjects','absences','studySessions','reminders','flashDecks','quizzes','studySheets'];
+  const lm=local.__studiaSyncMeta||{}, rm=remote.__studiaSyncMeta||{}, meta=studiaMergeMeta_(lm,rm), out={};
+  const keys=[...new Set([...Object.keys(local),...Object.keys(remote)])].filter(k=>k!=='__studiaSyncMeta');
+  keys.forEach(k=>{if(TRACKED.indexOf(k)>=0){out[k]=studiaMergeCollection_(k,local[k],remote[k],meta);return;}const lt=Number((lm.fields||{})[k]||0),rt=Number((rm.fields||{})[k]||0);out[k]=rt>lt?studiaClone_(remote[k]):lt>rt?studiaClone_(local[k]):studiaMergePlain_(remote[k],local[k]);});
+  out.__studiaSyncMeta=meta;
+  return out;
+}
+/* ===== /Studia V246 ===== */
+
+
+/* =========================================
+   STUDIA V249 — VERIFIED MULTI-DEVICE SYNC
+   ========================================= */
+
+const V249_DEVICE_SHEET = 'SyncDevices';
+
+function v249DecodeField_(body, plainKey, gzipKey) {
+  if (body && body[gzipKey]) {
+    const bytes = Utilities.base64Decode(String(body[gzipKey]));
+    const txt = Utilities.ungzip(Utilities.newBlob(bytes, 'application/gzip', gzipKey + '.gz')).getDataAsString('UTF-8');
+    return JSON.parse(txt || '{}');
+  }
+  const v = body ? body[plainKey] : null;
+  if (v && typeof v === 'object') return v;
+  if (typeof v === 'string' && v.trim()) return JSON.parse(v);
+  return {};
+}
+
+function v249Clone_(v) {
+  return v == null ? v : JSON.parse(JSON.stringify(v));
+}
+
+function v249Clean_(v) {
+  if (Array.isArray(v)) return v.map(v249Clean_);
+  if (v && typeof v === 'object') {
+    const o = {};
+    Object.keys(v).sort().forEach(k => {
+      if (k === '__studiaSyncMeta' || k === '__studiaUpdatedAt') return;
+      o[k] = v249Clean_(v[k]);
+    });
+    return o;
+  }
+  return v;
+}
+
+function v249Same_(a, b) {
+  try { return JSON.stringify(v249Clean_(a)) === JSON.stringify(v249Clean_(b)); }
+  catch (_) { return false; }
+}
+
+function v249IsObj_(v) {
+  return !!v && typeof v === 'object' && !Array.isArray(v);
+}
+
+function v249ItemId_(v) {
+  return v249IsObj_(v) && v.id != null ? String(v.id) : '';
+}
+
+function v249MergeArray_(local, remote, base) {
+  local = Array.isArray(local) ? local : [];
+  remote = Array.isArray(remote) ? remote : [];
+  base = Array.isArray(base) ? base : [];
+  const hasIds = [...local, ...remote, ...base].some(x => v249ItemId_(x));
+  if (!hasIds) {
+    const out = [];
+    const seen = {};
+    [...local, ...remote].forEach(x => {
+      let k; try { k = JSON.stringify(v249Clean_(x)); } catch (_) { k = String(x); }
+      if (!seen[k]) { seen[k] = 1; out.push(v249Clone_(x)); }
+    });
+    return out;
+  }
+  const L = {}, R = {}, B = {};
+  local.forEach(x => { const id=v249ItemId_(x); if(id) L[id]=x; });
+  remote.forEach(x => { const id=v249ItemId_(x); if(id) R[id]=x; });
+  base.forEach(x => { const id=v249ItemId_(x); if(id) B[id]=x; });
+  const order=[];
+  [...local,...remote,...base].forEach(x=>{const id=v249ItemId_(x);if(id&&order.indexOf(id)<0)order.push(id)});
+  const out=[];
+  order.forEach(id=>{
+    const hl=Object.prototype.hasOwnProperty.call(L,id), hr=Object.prototype.hasOwnProperty.call(R,id), hb=Object.prototype.hasOwnProperty.call(B,id);
+    const l=L[id], r=R[id], b=B[id];
+    if(!hl && hb){
+      if(hr && !v249Same_(r,b)) out.push(v249Clone_(r));
+      return;
+    }
+    if(!hr && hb){
+      if(hl && !v249Same_(l,b)) out.push(v249Clone_(l));
+      return;
+    }
+    if(hl && hr) out.push(v249Merge3_(l,r,hb?b:undefined));
+    else if(hl) out.push(v249Clone_(l));
+    else if(hr) out.push(v249Clone_(r));
+  });
+  const seenNoId={};
+  [...local,...remote].forEach(x=>{
+    if(v249ItemId_(x))return;
+    let k;try{k=JSON.stringify(v249Clean_(x))}catch(_){k=String(x)}
+    if(!seenNoId[k]){seenNoId[k]=1;out.push(v249Clone_(x))}
+  });
+  return out;
+}
+
+function v249Merge3_(local, remote, base) {
+  if (v249Same_(local, base)) return v249Clone_(remote);
+  if (v249Same_(remote, base)) return v249Clone_(local);
+  if (v249Same_(local, remote)) return v249Clone_(local);
+
+  if (Array.isArray(local) || Array.isArray(remote) || Array.isArray(base)) {
+    return v249MergeArray_(local, remote, base);
+  }
+
+  if (v249IsObj_(local) || v249IsObj_(remote) || v249IsObj_(base)) {
+    const L=v249IsObj_(local)?local:{}, R=v249IsObj_(remote)?remote:{}, B=v249IsObj_(base)?base:{};
+    const out={};
+    const keys=[...new Set([...Object.keys(L),...Object.keys(R),...Object.keys(B)])];
+    keys.forEach(k=>{
+      if(k==='__studiaSyncMeta')return;
+      const hl=Object.prototype.hasOwnProperty.call(L,k), hr=Object.prototype.hasOwnProperty.call(R,k), hb=Object.prototype.hasOwnProperty.call(B,k);
+      if(!hl && hb){
+        if(hr && !v249Same_(R[k],B[k])) out[k]=v249Clone_(R[k]);
+        return;
+      }
+      if(!hr && hb){
+        if(hl && !v249Same_(L[k],B[k])) out[k]=v249Clone_(L[k]);
+        return;
+      }
+      if(hl && hr) out[k]=v249Merge3_(L[k],R[k],hb?B[k]:undefined);
+      else if(hl) out[k]=v249Clone_(L[k]);
+      else if(hr) out[k]=v249Clone_(R[k]);
+    });
+    return out;
+  }
+
+  // Both sides changed the same scalar since base. The device initiating this
+  // sync wins for that scalar; arrays/objects above are merged instead.
+  return local !== undefined ? v249Clone_(local) : v249Clone_(remote);
+}
+
+function v249DeviceSheet_(){
+  const ss=spreadsheet_();
+  let sh=ss.getSheetByName(V249_DEVICE_SHEET);
+  if(!sh){sh=ss.insertSheet(V249_DEVICE_SHEET);sh.appendRow(['userId','deviceId','deviceName','lastSeen']);sh.setFrozenRows(1)}
+  return sh;
+}
+
+function v249TouchDevice_(userId, deviceId, deviceName){
+  deviceId=String(deviceId||'').trim()||('unknown-'+sha256_(String(deviceName||'device')).slice(0,12));
+  deviceName=String(deviceName||'Gerät').slice(0,100);
+  const sh=v249DeviceSheet_(), rows=rows_(sh), now=Date.now();
+  let row=0;
+  for(let i=0;i<rows.length;i++) if(String(rows[i][0])===String(userId)&&String(rows[i][1])===deviceId){row=i+2;break}
+  if(row) sh.getRange(row,1,1,4).setValues([[String(userId),deviceId,deviceName,now]]);
+  else sh.appendRow([String(userId),deviceId,deviceName,now]);
+  const fresh=rows_(sh).filter(r=>String(r[0])===String(userId)&&now-Number(r[3]||0)<90*24*60*60*1000);
+  return Math.max(1,fresh.length);
+}
+
+function v249CloudId_(){
+  const sid=String(PropertiesService.getScriptProperties().getProperty('STUDIA_SPREADSHEET_ID')||'');
+  return sha256_(sid).slice(0,8).toUpperCase();
+}
+
+function syncStateV249_(user, incoming, base, deviceId, deviceName){
+  const lock=LockService.getScriptLock();
+  if(!lock.tryLock(1800)) throw appError_('Cloud ist gerade beschäftigt · bitte in wenigen Sekunden erneut synchronisieren.',409);
+  try{
+    const remoteRec=readFastState_(user.id);
+    const merged=v249Merge3_(incoming||{}, remoteRec.data||{}, base||{});
+    const updatedAt=Date.now();
+    writeFastState_(user.id, merged, updatedAt);
+    const deviceCount=v249TouchDevice_(user.id,deviceId,deviceName);
+    return {
+      ok:true,
+      data:merged,
+      updatedAt,
+      version:249,
+      storage:'sheet-fast-v249',
+      cloudId:v249CloudId_(),
+      deviceCount,
+      account:publicUser_(user)
+    };
+  } finally { lock.releaseLock(); }
+}
+
+
+/* =========================================
+   STUDIA V259 — GOOGLE-ONLY DIRECT BRIDGE
+   The user opens the Apps Script web app itself.
+   It embeds the GitHub UI so GitHub localStorage / IndexedDB remain intact,
+   while all cloud calls go through google.script.run (no CORS / JSONP).
+   ========================================= */
+const V259_APP_URL = 'https://gurkenfurzi.github.io/sp/?studiaGoogle=1&v=259';
+
+function v259AppShell_() {
+  const src = V259_APP_URL;
+  const safeSrc = JSON.stringify(src).replace(/<\//g, '<\\/');
+  const html = '<!doctype html><html><head><meta charset="utf-8">'
+    + '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">'
+    + '<title>Studia</title><style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#fff8f6}#studiaApp{display:block;width:100%;height:100%;border:0;background:#fff8f6}</style></head><body>'
+    + '<iframe id="studiaApp" src='+safeSrc+' allow="clipboard-read; clipboard-write; fullscreen" referrerpolicy="no-referrer-when-downgrade"></iframe>'
+    + '<script>(function(){var app=document.getElementById("studiaApp");'
+    + 'function send(m){try{app.contentWindow.postMessage(m,"https://gurkenfurzi.github.io")}catch(e){try{app.contentWindow.postMessage(m,"*")}catch(_){}}}'
+    + 'window.addEventListener("message",function(ev){if(ev.source!==app.contentWindow)return;var m=ev.data;if(!m||m.type!=="studia-v259-call"||!m.id)return;'
+    + 'google.script.run.withSuccessHandler(function(r){send({type:"studia-v259-response",id:m.id,result:r})}).withFailureHandler(function(er){send({type:"studia-v259-response",id:m.id,error:String(er&&er.message||er||"Google-Sync fehlgeschlagen")})}).v259ClientCall(m.request||{});});'
+    + 'app.addEventListener("load",function(){send({type:"studia-v259-ready",version:259})});setTimeout(function(){send({type:"studia-v259-ready",version:259})},500);'
+    + '})();<\/script></body></html>';
+  return HtmlService.createHtmlOutput(html)
+    .setTitle('Studia')
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+}
+
+function v259PackResult_(result) {
+  const out = Object.assign({}, result || {});
+  if (out.data && typeof out.data === 'object') {
+    const txt = JSON.stringify(out.data);
+    if (txt.length > 12000) {
+      const gz = Utilities.gzip(Utilities.newBlob(txt, 'application/json', 'state.json'));
+      out.dataGzip = Utilities.base64Encode(gz.getBytes());
+      delete out.data;
+      out.encoding = 'gzip-base64';
+    }
+  }
+  return out;
+}
+
+function v259ClientCall(req) {
+  try {
+    ensureConfigured_();
+    req = req && typeof req === 'object' ? req : {};
+    const action = normalizeAction_(req.action || 'health');
+    let result;
+    switch (action) {
+      case 'health':
+      case 'ping':
+        result = {ok:true, service:'studia-google-account-sync', version:259, transport:'google-script-run-v259', automatic:true};
+        break;
+      case 'register':
+        result = register_(req.username, req.password);
+        break;
+      case 'login':
+        result = login_(req.username, req.password);
+        break;
+      case 'recover':
+        result = recover_(req.username, req.recoveryCode, req.newPassword);
+        break;
+      case 'logout':
+        result = logout_(req.token);
+        break;
+      case 'me': {
+        const user = requireUser_(req.token);
+        result = {ok:true, user:publicUser_(user), version:259};
+        break;
+      }
+      case 'sync': {
+        const user = requireUser_(req.token);
+        const incoming = v249DecodeField_(req, 'data', 'dataGzip');
+        const base = v249DecodeField_(req, 'base', 'baseGzip');
+        result = syncStateV249_(user, incoming, base, String(req.deviceId || ''), String(req.deviceName || ''));
+        result.version = 259;
+        result.transport = 'google-script-run-v259';
+        break;
+      }
+      default:
+        result = fail_('Unbekannte V259-Aktion: ' + action, 404);
+    }
+    return v259PackResult_(result);
+  } catch (err) {
+    return fromError_(err);
+  }
+}
+
+
+/* =========================================
+   STUDIA V261 — DIRECT GOOGLE HTML HOST WITH EXTERNAL ASSETS
+   No nested GitHub iframe. Apps Script fetches the current GitHub HTML server-side
+   and serves it as the actual HtmlService page. The page can therefore call
+   google.script.run directly while relative assets still resolve to GitHub.
+   ========================================= */
+const V260_APP_URL = 'https://gurkenfurzi.github.io/sp/?v=261&googleHost=1';
+const V260_BASE_URL = 'https://gurkenfurzi.github.io/sp/';
+
+function v260AppDirect_() {
+  let html = '';
+  try {
+    const res = UrlFetchApp.fetch(V260_APP_URL, {
+      muteHttpExceptions: true,
+      followRedirects: true,
+      headers: { 'Cache-Control': 'no-cache' }
+    });
+    const code = Number(res.getResponseCode() || 0);
+    if (code < 200 || code >= 300) throw new Error('GitHub lieferte HTTP ' + code);
+    html = String(res.getContentText() || '');
+    if (!/<html[\s>]/i.test(html) || !/<body[\s>]/i.test(html)) throw new Error('Studia-HTML ist unvollständig');
+  } catch (err) {
+    html = '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Studia</title></head><body style="font-family:Arial,sans-serif;padding:24px;background:#fff8f6;color:#5f514c"><h2>Studia konnte nicht geladen werden</h2><p>Google erreicht die GitHub-App gerade nicht.</p><pre style="white-space:pre-wrap">'+escapeHtmlV260_(String(err && err.message || err))+'</pre></body></html>';
+  }
+  const baseTag = '<base href="' + V260_BASE_URL + '" target="_top">';
+  html = html.replace(/<head([^>]*)>/i, '<head$1><meta name="studia-google-host" content="v261">');
+  if (/<head[^>]*>/i.test(html)) html = html.replace(/<head([^>]*)>/i, '<head$1>' + baseTag);
+  else html = html.replace(/<html([^>]*)>/i, '<html$1><head>' + baseTag + '</head>');
+  // Avoid an old manifest pointing at the Google origin; assets continue to resolve via <base>.
+  html = html.replace(/<link\s+rel=["']manifest["'][^>]*>/ig, '');
+  return HtmlService.createHtmlOutput(html)
+    .setTitle('Studia')
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+}
+
+function escapeHtmlV260_(s) {
+  return String(s || '').replace(/[&<>"']/g, function(ch) {
+    return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[ch];
+  });
+}
+
+function v260PackResult_(result) {
+  const out = Object.assign({}, result || {});
+  if (out.data && typeof out.data === 'object') {
+    const txt = JSON.stringify(out.data);
+    if (txt.length > 12000) {
+      const gz = Utilities.gzip(Utilities.newBlob(txt, 'application/json', 'state.json'));
+      out.dataGzip = Utilities.base64Encode(gz.getBytes());
+      delete out.data;
+      out.encoding = 'gzip-base64';
+    }
+  }
+  return out;
+}
+
+function v260ClientCall(req) {
+  try {
+    ensureConfigured_();
+    req = req && typeof req === 'object' ? req : {};
+    const action = normalizeAction_(req.action || 'health');
+    let result;
+    switch (action) {
+      case 'health':
+      case 'ping':
+        result = {ok:true, service:'studia-google-account-sync', version:261, transport:'google-script-run-external-assets-v261', automatic:true};
+        break;
+      case 'register':
+        result = register_(req.username, req.password);
+        break;
+      case 'login':
+        result = login_(req.username, req.password);
+        break;
+      case 'recover':
+        result = recover_(req.username, req.recoveryCode, req.newPassword);
+        break;
+      case 'logout':
+        result = logout_(req.token);
+        break;
+      case 'me': {
+        const user = requireUser_(req.token);
+        result = {ok:true, user:publicUser_(user), version:261};
+        break;
+      }
+      case 'state': {
+        const user = requireUser_(req.token);
+        const rec = readFastState_(user.id);
+        result = {ok:true, data:rec.data || {}, updatedAt:rec.updatedAt || 0, version:261};
+        break;
+      }
+      case 'sync': {
+        const user = requireUser_(req.token);
+        const incoming = v249DecodeField_(req, 'data', 'dataGzip');
+        const base = v249DecodeField_(req, 'base', 'baseGzip');
+        result = syncStateV249_(user, incoming, base, String(req.deviceId || ''), String(req.deviceName || ''));
+        result.version = 261;
+        result.transport = 'google-script-run-external-assets-v261';
+        break;
+      }
+      default:
+        result = fail_('Unbekannte V260-Aktion: ' + action, 404);
+    }
+    return v260PackResult_(result);
+  } catch (err) {
+    return fromError_(err);
+  }
 }
