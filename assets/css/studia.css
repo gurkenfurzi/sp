@@ -1,4 +1,4 @@
-
+/* ===== original style 01 ===== */
 :root{
   --bg:#070b14; --panel:#0d1322; --panel2:#111a2d; --text:#f6f7fb; --muted:#9ea9bd;
   --line:rgba(255,255,255,.08); --accent:#8ca8ff; --good:#72e0a6; --warn:#ffd379; --danger:#ff8d9a;
@@ -1180,10 +1180,7 @@ button.primary,button.ghost,.iconbtn{
  #nav button{min-width:43px!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 02 ===== */
 /* VERSION 63 — compact information architecture */
 #nav{grid-template-columns:repeat(5,1fr)!important;width:min(94vw,520px)!important}
 #nav button{min-width:0!important}
@@ -1214,10 +1211,7 @@ button.primary,button.ghost,.iconbtn{
  #nav .navLabel{font-size:9px!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 03 ===== */
 /* VERSION 63 — Fächer / Lernsets / Study sauber getrennt */
 .learningBackRow{
  display:flex;
@@ -1371,10 +1365,7 @@ button.primary,button.ghost,.iconbtn{
  line-height:1.4;
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 04 ===== */
 body.editorMode{-webkit-text-size-adjust:100%;overscroll-behavior:none}
 .canvasEditorShell{max-width:980px}
 .editorDock,.editorZoomBar{display:none!important}
@@ -1401,10 +1392,7 @@ body.editorMode{-webkit-text-size-adjust:100%;overscroll-behavior:none}
  .formatChip{padding:6px 8px!important;font-size:10px!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 05 ===== */
 /* VERSION 63 — one toolbar, top view, tables + multiselect */
 .canvasQuickNav{grid-template-columns:repeat(4,1fr)!important}
 .stylePresetBar,#stylePresetBar{display:none!important}
@@ -1452,10 +1440,7 @@ body.editorMode{-webkit-text-size-adjust:100%;overscroll-behavior:none}
  .tableMoveHandle{left:-10px;top:-28px}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 06 ===== */
 .modalOverlay,.modalBackdrop{
  align-items:flex-start!important;
  padding:calc(env(safe-area-inset-top) + 12px) 10px calc(env(safe-area-inset-bottom) + 14px)!important;
@@ -1517,10 +1502,7 @@ body.editorMode{-webkit-text-size-adjust:100%;overscroll-behavior:none}
 }
 @media(max-width:390px){.presetFormGrid{grid-template-columns:1fr}}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 07 ===== */
 /* hard fix for modal layout on iPhone */
 #modalWrap.modalWrap.open{
  display:flex!important;
@@ -1571,10 +1553,7 @@ body.editorMode{-webkit-text-size-adjust:100%;overscroll-behavior:none}
  .confirmDangerActions{grid-template-columns:1fr 1fr}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 08 ===== */
 .formatManagerList{display:grid;gap:7px;margin:8px 0 12px}
 .formatManagerRow{
  display:grid;grid-template-columns:40px 1fr auto 38px;align-items:center;gap:7px;
@@ -1600,10 +1579,7 @@ body.editorMode{-webkit-text-size-adjust:100%;overscroll-behavior:none}
 .multiInspector .alignRow{display:flex;flex-wrap:wrap!important}
 .multiInspector .alignRow button{flex:1 1 110px}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 09 ===== */
 .layerDeleteBtn{color:#bd686c!important;background:#fff3f3!important;border-color:#ebc7c8!important;font-weight:950!important}
 .formulaHelperTitle{font-size:9px;font-weight:900;letter-spacing:.11em;text-transform:uppercase;color:#9c8178;margin-top:2px}
 .formulaTemplateGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
@@ -1628,10 +1604,7 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
 @media(max-width:520px){.formulaTemplateGrid{grid-template-columns:repeat(4,1fr)}.formulaTemplateGrid button{min-height:64px!important}.formulaTemplateGrid button b{font-size:20px}}
 @media(prefers-reduced-motion:reduce){button.cutePop,.cuteBurst i{animation:none!important}.cuteBurst{display:none!important}}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 10 ===== */
 .visualFormulaModal{display:grid;gap:11px}
 .formulaEasyHint{
  margin:0;padding:10px 11px;border-radius:12px;
@@ -1734,10 +1707,7 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
  .formulaTemplateGrid.visualOnly button b{font-size:20px}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 11 ===== */
 .formulaTemplateGrid.visualOnly{
  grid-template-columns:repeat(4,minmax(0,1fr))!important;
 }
@@ -1793,10 +1763,7 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
  }
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 12 ===== */
 /* Page margin guide */
 .canvasPage.showPageMargins:after{
  content:"";
@@ -1944,10 +1911,7 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
  .formulaTemplateGrid.visualOnly{grid-template-columns:repeat(3,1fr)!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 13 ===== */
 /* Visible Seite button */
 .pageTopButton{
  width:auto!important;
@@ -2016,10 +1980,7 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
  .graphAsymGrid{grid-template-columns:1fr}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 14 ===== */
 @media (min-width: 900px){
   body{overflow:hidden}
   .sheetEditorScreen,.sheetEditorPage,.editorScreen{max-width:none!important;width:100%!important;margin:0!important}
@@ -2090,10 +2051,7 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
 .graphTokenInput{min-height:43px!important;font:18px "Cambria Math",serif!important}
 .graphHintTiny{font-size:8px;color:#9b8279;line-height:1.35}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 15 ===== */
 /* Real desktop workspace — not a stretched mobile card */
 @media (min-width:900px){
  html,body{width:100%;height:100%;margin:0}
@@ -2165,10 +2123,7 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
 .graphCurveRow.activeCurve{outline:2px solid #e8aaa9;outline-offset:2px;background:#fff3f1}
 .graphAutoRangeNote{font-size:8px;color:#998078;margin-top:4px}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 16 ===== */
 @media(min-width:900px){
  body.v57,body{background:#ecebea!important;overflow:hidden!important}
  main,.appMain,.pageShell,.sheetEditorPage,.sheetEditorScreen{
@@ -2250,10 +2205,7 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
  .graphFormulaMenu{grid-template-columns:repeat(3,1fr)!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 17 ===== */
 /* ---------- TRUE DESKTOP LAYOUT USING THE REAL DOM ---------- */
 @media(min-width:900px){
   html,body{width:100%;height:100%;overflow:hidden!important}
@@ -2409,10 +2361,7 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
   white-space:normal!important;
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 18 ===== */
 /* Notebook abbreviation: sans-serif, clean */
 .subjectNotebook .abbr,
 .subjectNotebook .subjectAbbr,
@@ -2511,10 +2460,7 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
   }
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 19 ===== */
 .graphInlineOps{
   display:grid;
   grid-template-columns:repeat(6,1fr);
@@ -2568,10 +2514,7 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
   .graphInlineOps button{min-height:44px;font-size:20px}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 20 ===== */
 @media(min-width:900px){
   html,body{height:100%;overflow:hidden!important}
   body.editorMode{
@@ -2809,10 +2752,7 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
   .desktopCommandBar{display:none!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 21 ===== */
 /* root artifact: never allow browser-generated pseudo decoration */
 .vfRoot{position:relative!important;text-decoration:none!important;border:0!important}
 .vfRoot::before,.vfRoot::after{content:none!important}
@@ -2897,10 +2837,7 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
  .shortcutGrid{grid-template-columns:1fr}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 22 ===== */
 /* V84: editor UI is strictly scoped to editorMode. App navigation remains untouched elsewhere. */
 @media (max-width:899px){
   body:not(.editorMode) #nav{display:flex!important}
@@ -2980,10 +2917,7 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
   body.editorMode #topViewMenu{z-index:635!important;left:10px!important;right:10px!important;top:66px!important;max-height:55dvh!important;overflow:auto!important;border-radius:20px!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 23 ===== */
 @media (max-width:899px){
  body.editorMode #canvasQuickDrawer.open{padding-bottom:8px!important;overflow:hidden!important;display:flex!important;flex-direction:column!important;max-height:min(58vh,510px)!important}
  body.editorMode #canvasQuickDrawer .mobileDrawerHead{flex:0 0 auto!important;margin-bottom:0!important}
@@ -2997,19 +2931,13 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
  .mobileTextBar{padding:0!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 24 ===== */
 html,body{background:#fff7f4;}
 @media (max-width:899px){.canvasQuickNav{grid-template-columns:repeat(5,minmax(0,1fr))!important}}
 .v91FontAdd{border:1px solid #ead2cb!important;background:#fff!important;color:#735d55!important;border-radius:12px!important;min-height:54px!important;padding:7px 10px!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:5px!important;font-weight:900!important}
 .v91TextFormats{padding:10px 2px 2px}.v91TextFormatsHead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}.v91TextFormatsHead b{font-size:12px}.v91TextFormatsHead button{border:1px solid #ead2cb;background:#fff;border-radius:10px;padding:7px 9px;color:#735d55;font-weight:800}.v91FormatScroll{display:flex;gap:7px;overflow-x:auto;padding-bottom:3px;scrollbar-width:none}.v91FormatScroll::-webkit-scrollbar{display:none}.v91FormatScroll button{flex:0 0 auto;border:1px solid #ead2cb;background:#fffaf7;border-radius:12px;padding:9px 11px;color:#735d55;font-weight:850;min-height:44px}.v91ZoomPill{position:fixed;right:12px;bottom:calc(92px + env(safe-area-inset-bottom));z-index:151;display:none;align-items:center;gap:4px;background:rgba(255,250,247,.94);border:1px solid #ead2cb;border-radius:999px;padding:5px;box-shadow:0 10px 30px rgba(110,72,65,.12);backdrop-filter:blur(14px)}body:has(#view-canvas.active) .v91ZoomPill{display:flex}.v91ZoomPill button{width:36px;height:36px;border:0;border-radius:999px;background:#fff;color:#735d55;font-weight:900}.v91ZoomPill span{min-width:47px;text-align:center;font-size:11px;font-weight:900;color:#80685f}.editorDrawerOpen .v91ZoomPill{opacity:.3;pointer-events:none}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 25 ===== */
 @media (max-width:899px){
  body.editorMode .canvasQuickNav{gap:6px!important;padding:7px 8px!important;border-radius:24px!important}
  body.editorMode .canvasQuickNav button{font-size:inherit!important;gap:4px!important}
@@ -3033,2406 +2961,7 @@ html,body{background:#fff7f4;}
 }
 @media (min-width:900px){.canvasQuickNav .editorNavIcon{display:inline-grid;width:18px;height:18px;vertical-align:middle}.canvasQuickNav .editorNavIcon svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}}
 
-
-/* ---- next original style block ---- */
-
-@page{size:A4;margin:0}body{margin:0;background:#ddd}.page{position:relative;width:${canvasPageWidth()}px;height:${canvasPageHeight()}px;margin:auto;${ps};overflow:hidden}@media print{body{background:white}.page{margin:0}}
-/* ===== V10 stable canvas UX ===== */
-.toolSections{display:grid;gap:8px}
-.toolSection{border:1px solid #ead1ca;background:#fffaf6;border-radius:16px;padding:8px}
-.toolSectionTitle{font-size:11px;font-weight:900;color:#a07e74;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
-.toolButtons{display:flex;gap:6px;flex-wrap:wrap}
-.toolButtons button,.toolButtons label{border:1px solid #e6cec6;background:white;color:#725e55;border-radius:11px;padding:8px 9px;font-weight:850;margin:0}
-.quickAddGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
-.quickAddGrid button{min-height:62px;border:1px solid #ead1ca;border-radius:14px;background:#fffdf9;color:#725e55;font-weight:850}
-.paperSticker{position:absolute;box-sizing:border-box;background:#fffdf7;border:1px solid rgba(130,105,90,.14);box-shadow:0 6px 15px rgba(110,82,70,.08);pointer-events:auto;touch-action:none}
-.paperSticker.gridPaper{
- background-color:#fffdf7;
- background-image:linear-gradient(rgba(187,205,169,.35) 1px,transparent 1px),linear-gradient(90deg,rgba(187,205,169,.35) 1px,transparent 1px);
- background-size:var(--gridSize,20px) var(--gridSize,20px);
-}
-.paperSticker.linePaper{
- background-color:#fffdf7;
- background-image:repeating-linear-gradient(to bottom,transparent 0,transparent calc(var(--lineSize,28px) - 1px),rgba(168,190,210,.38) calc(var(--lineSize,28px) - 1px),rgba(168,190,210,.38) var(--lineSize,28px));
-}
-.paperSticker.blankPaper{background:#fffdf7}
-.tapeSticker{
- position:absolute;box-sizing:border-box;background:rgba(242,190,178,.62);border:1px solid rgba(200,145,135,.18);
- transform:rotate(var(--rot,-4deg));box-shadow:0 2px 6px rgba(120,90,80,.08);pointer-events:auto;touch-action:none
-}
-.tapeSticker:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent 0 7px,rgba(255,255,255,.18) 7px 9px)}
-.selectionHelp{font-size:11px;color:#9c8278;line-height:1.5}
-.inlineFormatBar{display:flex;gap:5px;flex-wrap:wrap}
-.inlineFormatBar button{border:1px solid #e6cec6;background:white;border-radius:9px;padding:6px 8px;color:#725f56}
-.layerList{display:grid;gap:5px;max-height:220px;overflow:auto}
-.layerItem{display:flex;justify-content:space-between;align-items:center;gap:7px;padding:7px 9px;border:1px solid #ead5ce;border-radius:10px;background:white;font-size:11px}
-.layerItem.active{border-color:#e9a7a4;background:#fff0ee}
-.editorHint{border-radius:14px;padding:10px 12px;background:#f5f8eb;border:1px solid #dce5c5;color:#748758;font-size:11px}
-@media(max-width:850px){
- .quickAddGrid{grid-template-columns:repeat(2,1fr)}
- .toolSection{padding:7px}
-}
-
-
-/* ===== V11 Canva-like editor ===== */
-body.editorMode .header,body.editorMode #nav{display:none!important}
-body.editorMode main{max-width:none;padding:8px 8px 30px}
-body.editorMode .view#view-sheet-editor{padding-bottom:20px}
-.canvasEditorShell{max-width:1180px;margin:auto}
-.canvasTopbar{position:sticky;top:0;z-index:120;background:rgba(255,250,246,.94);backdrop-filter:blur(18px);padding:6px;border:1px solid #ead3cc;border-radius:16px}
-.editorTitle{display:grid;text-align:center;font-size:13px}.editorTitle .wordStatus{font-size:9px}
-.editorActions{display:flex;gap:5px}
-.editorIcon,.miniIcon{border:1px solid #e7cec7;background:#fffdf9;color:#745f57;border-radius:11px;width:38px;height:38px;padding:0;font-size:20px;font-weight:900}
-.primaryIcon{background:#eda6a4;color:white}.dangerMini{color:#b96f6d}
-.editorDock{display:flex;gap:5px;overflow-x:auto;padding:6px;position:sticky;top:58px;z-index:110;background:rgba(255,250,246,.94);backdrop-filter:blur(16px);border:1px solid #ead3cc;border-radius:15px}
-.editorDock button,.editorDock label{flex:0 0 42px;width:42px;height:42px;display:grid;place-items:center;border:1px solid #e7cec7;background:white;color:#715e56;border-radius:11px;font-size:19px;font-weight:900;margin:0;padding:0}
-.iconOnlyBtn{width:52px;font-size:24px}
-.cobj.locked{outline-style:dashed!important}
-.cobj.locked .resizeHandle{display:none!important}
-.layerItem{border:0;width:100%;cursor:pointer}
-.layerItem .layerBtns{display:flex;gap:3px}
-.layerItem .layerBtns span{display:grid;place-items:center;min-width:24px;height:24px;border-radius:7px;background:#fff7f4}
-.canvasPage{pointer-events:auto}
-.canvasSvg{pointer-events:auto}
-.fontSelect{width:100%}
-@media(max-width:600px){
- .canvasViewport{border-radius:12px;padding:4px}
- .objectPanel{border-radius:14px;padding:8px}
- .editorDock{top:55px}
- .stylePresetBar{gap:5px}
- .stylePreset{font-size:11px;padding:7px 9px}
-}
-
-
-/* ===== V12 interaction + icon overhaul ===== */
-:root{--icon:#8e7168}
-.nav button b{display:none!important}
-.nav button svg{width:22px;height:22px;display:block;margin:auto;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.nav button.active svg{stroke:currentColor}
-.editorDock button svg,.editorDock label svg,.editorIcon svg,.miniIcon svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.editorDock button,.editorDock label{font-size:0}
-.editorIcon,.miniIcon{display:grid;place-items:center;font-size:0}
-.editorDock{scrollbar-width:none}
-.editorDock::-webkit-scrollbar{display:none}
-.formatStrip{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none}
-.formatStrip::-webkit-scrollbar{display:none}
-.formatChip{flex:0 0 auto;border:1px solid #e7cec7;background:#fffdf9;border-radius:999px;padding:7px 10px;color:#765f56;font-size:11px;font-weight:850}
-.formatAdd{width:34px;height:34px;border-radius:50%!important;padding:0!important;font-size:20px!important;display:grid!important;place-items:center!important}
-.cobj{cursor:grab}
-.cobj.editing{cursor:text;outline:2px solid #9eb8e9!important}
-.cobj.selected:not(.editing){outline:2px solid #e99e9a;outline-offset:3px}
-.cobj .resizeHandle,.cobj .rotateHandle{display:none;position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid #e99e9a;z-index:50}
-.cobj .resizeHandle{right:-9px;bottom:-9px}
-.cobj .rotateHandle{right:-9px;top:-30px;background:#fff}
-.cobj .rotateHandle:after{content:"";position:absolute;left:6px;top:14px;width:2px;height:15px;background:#e99e9a}
-.cobj.selected:not(.locked) .resizeHandle,.cobj.selected:not(.locked) .rotateHandle{display:block}
-.cobj.locked{cursor:default;outline-style:dashed!important}
-.vectorObj{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
-.vectorObj .shapeHit{pointer-events:all;cursor:grab}
-.vectorObj.locked .shapeHit{cursor:default}
-.vectorSelectBox{fill:none;stroke:#e99e9a;stroke-width:2;stroke-dasharray:6 4;pointer-events:none}
-.vectorHandle{fill:#fff;stroke:#e99e9a;stroke-width:2;pointer-events:all;cursor:pointer}
-.vectorRotateLine{stroke:#e99e9a;stroke-width:2;pointer-events:none}
-.vectorObj.selected .shapeHit{filter:drop-shadow(0 0 2px rgba(233,158,154,.8))}
-.canvasSvg{pointer-events:none!important;z-index:30}
-.canvasSvg.drawing{pointer-events:auto!important}
-.canvasObjects{z-index:20}
-.inspectorGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
-.layerItem{padding:6px 8px}
-.layerRow{display:flex;align-items:center;justify-content:space-between;gap:6px;width:100%}
-.layerMeta{display:flex;align-items:center;gap:6px;min-width:0}
-.layerName{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.layerTools{display:flex;gap:3px}
-.layerTools button{width:27px;height:27px;border:0;background:#fff7f3;border-radius:8px;color:#80675e;padding:0;font-size:13px}
-.editorHintStrong{border:1px solid #d9e4c4;background:#f5f9eb;color:#6e8453;border-radius:12px;padding:8px 10px;font-size:11px}
-.customFormatPreview{padding:10px;border-radius:12px;margin:8px 0}
-@media(max-width:600px){
- .editorDock button,.editorDock label{flex-basis:38px;width:38px;height:38px}
- .editorDock button svg,.editorDock label svg{width:18px;height:18px}
- .objectPanel{margin-top:4px}
-}
-
-
-/* ===== V13 stability + snapping + history ===== */
-.canvasGuides{position:absolute;inset:0;z-index:95;pointer-events:none}
-.guideLine{position:absolute;background:#e78fa0;box-shadow:0 0 0 1px rgba(255,255,255,.75)}
-.guideV{top:0;bottom:0;width:1px}.guideH{left:0;right:0;height:1px}
-.guideLabel{position:absolute;font-size:9px;font-weight:900;color:#b56d7a;background:#fff7f8;border:1px solid #efb7c0;border-radius:999px;padding:2px 5px;transform:translate(-50%,-50%)}
-.historyBar{display:flex;gap:5px;align-items:center}.historyBtn{width:38px;height:38px;border:1px solid #e7cec7;background:#fffdf9;color:#735f56;border-radius:11px;display:grid;place-items:center}.historyBtn:disabled{opacity:.35}
-.autosaveState{font-size:10px;font-weight:800;color:#8b756d}.autosaveState.saving{color:#b48b59}.autosaveState.saved{color:#738c58}
-.cobj.selected{z-index:9999!important}.cobj .resizeHandle,.cobj .rotateHandle{touch-action:none}.vectorObj.selected{z-index:9998!important}.vectorObj .shapeHit{pointer-events:all!important}.canvasSvg.drawing{z-index:100!important;background:rgba(255,255,255,.001)}
-.positionGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.positionGrid input{padding:7px 8px}.alignRow{display:flex;gap:5px;flex-wrap:wrap}.alignRow button{border:1px solid #e5cec7;background:white;border-radius:9px;padding:7px 8px;color:#745f56}.snapToggle{display:flex;align-items:center;gap:6px;font-size:11px;color:#806a61}.snapToggle input{width:auto}.pathHint{padding:8px 10px;border:1px solid #d8e3c4;background:#f5f9eb;color:#708652;border-radius:12px;font-size:11px}
-@media(max-width:600px){.positionGrid{grid-template-columns:repeat(2,1fr)}}
-
-
-/* ===== V14 usability / zoom / pet / nav ===== */
-.nav{width:min(92vw,560px);padding:5px 6px;border-radius:18px;grid-template-columns:repeat(6,1fr);gap:2px}
-.nav button{height:46px;border-radius:12px;padding:3px;color:#a2857b}
-.nav button.active{background:#eca7a3;color:#fff}
-.nav button svg{width:20px;height:20px}
-.navLabel{display:block;font-size:8px;line-height:1;margin-top:2px;font-weight:800}
-.petRoom{min-height:260px;background:linear-gradient(#f8e6e4 0 65%,#e3c99e 65%);border:1px solid #eccdc5;overflow:hidden}
-.petShelf{position:absolute;right:18px;top:78px;font-size:26px}.petPlant{position:absolute;left:28px;bottom:38px;font-size:32px}
-.petAvatarCute{position:absolute;left:50%;bottom:42px;transform:translateX(-50%);width:118px;height:112px;border-radius:48% 48% 45% 45%;background:#dcebb9;border:5px solid #bed393;z-index:4;display:grid;place-items:center;box-shadow:0 8px 0 rgba(175,190,130,.18)}
-.petEar{position:absolute;top:-17px;width:45px;height:45px;border-radius:50%;background:#dcebb9;border:5px solid #bed393}.petEar.left{left:5px}.petEar.right{right:5px}
-.petFace{font-size:28px;color:#68594f;position:relative;z-index:2;letter-spacing:3px}.petBlush{position:absolute;bottom:33px;width:18px;height:10px;border-radius:50%;background:#efb7b0;opacity:.8}.petBlush.left{left:20px}.petBlush.right{right:20px}.petBow{position:absolute;top:-8px;right:-10px;font-size:28px;z-index:5}
-.zoomPanel{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.zoomPanel input[type="range"]{width:150px}.zoomPct{font-size:11px;font-weight:900;color:#846d64;min-width:42px;text-align:right}
-.vectorTouchProxy{fill:none;stroke:transparent;stroke-width:26;pointer-events:stroke!important;cursor:grab}
-.vectorObj.selected .vectorTouchProxy{stroke:rgba(233,158,154,.06)}
-.pathDrawHint{position:absolute;left:50%;top:12px;transform:translateX(-50%);z-index:130;background:#fff8f5;border:1px solid #efcbc5;color:#7a635a;padding:7px 10px;border-radius:999px;font-size:10px;font-weight:850;pointer-events:none}
-
-
-/* ===== V15 timetable freshness + cancellations ===== */
-.lesson.cancelled{
- --subject:#d6cfc9!important;
- background:linear-gradient(135deg,#fffaf7,#f4f0ed);
- border-style:dashed;
- opacity:.9;
-}
-.lesson.cancelled .subject{color:#9a7f74}
-.lesson.cancelled .small{color:#b09b92}
-.planFreshBadge{
- display:inline-flex;align-items:center;gap:6px;
- padding:6px 9px;border-radius:999px;
- background:#f3f8e9;border:1px solid #d5e3bc;
- color:#728957;font-size:10px;font-weight:900;
- margin-top:8px;
-}
-.planFreshBadge.placeholder{
- background:#fff3df;border-color:#efd7a5;color:#9c7b42;
-}
-
-
-/* V16 timetable */
-.specialLesson{background:linear-gradient(135deg,#fffaf1,#fff1d5);border:1px solid #efd8a5}
-.specialLesson .subject{color:#8d6f38}
-.lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
-
-/* ===== VERSION 63: echter Live-Refresh ===== */
-.liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
-.liveRefreshStatus.loading{color:#a77d4b}
-.liveRefreshStatus.ok{color:#6f8956}
-.liveRefreshStatus.error{color:#b06d68}
-
-/* ===== VERSION 63 timetable parser ===== */
-.doubleBadge{
- display:inline-flex;align-items:center;gap:4px;margin-top:5px;
- padding:3px 7px;border-radius:999px;background:#f7e7ee;
- border:1px solid #edcad8;color:#9a687a;font-size:9px;font-weight:900;
-}
-.lesson.doubleLesson{min-height:118px}
-.specialLesson{min-height:96px}
-
-/* ===== VERSION 63: dynamic classes ===== */
-.classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
-.classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
-.classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
-.specialOnlyDay{margin-top:12px}
-.specialOnlyCard{background:linear-gradient(135deg,#fff9e9,#fff0c9);border:1px solid #ecd397;border-radius:22px;padding:20px 18px;color:#846428}
-.specialOnlyCard .specialTime{font-size:22px;font-weight:950}
-.specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
-
-/* ===== VERSION 63: raster-exact timetable ===== */
-.liveRefreshStatus.warn{color:#a77d4b}
-.parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
-
-/* ===== VERSION 63 stability fixes ===== */
-.editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
-.editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
-.editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
-.canvasViewport{overscroll-behavior:contain}
-.canvasStage{transform:none}
-.vectorTouchProxy{fill:rgba(255,255,255,.001)!important;stroke:rgba(255,255,255,.001)!important;stroke-width:16!important;pointer-events:all!important;touch-action:none}
-.vectorObj .vectorHandle{touch-action:none}
-.vectorObj.selected .shapeVisible{filter:drop-shadow(0 0 3px rgba(233,158,154,.9))}
-.canvasSvg.drawing{cursor:crosshair}
-.pathDrawHint{z-index:140!important}
-@media(max-width:600px){.editorZoomBar{top:103px}}
-
-/* ===== VERSION 63 — stable redesign ===== */
-.newSvgNotebook{
- position:relative!important;min-height:230px!important;padding:0!important;
- border:0!important;background:transparent!important;overflow:visible!important;
- box-shadow:none!important;display:block!important;text-align:left!important;
-}
-.newSvgNotebook:before,.newSvgNotebook:after{display:none!important}
-.notebookArt{display:block;width:100%;height:100%;position:absolute;inset:0}
-.subjectNotebookSvg{width:100%;height:100%;display:block;filter:drop-shadow(0 10px 12px rgba(115,70,86,.12))}
-.notebookLabel{
- position:absolute;z-index:3;left:30%;right:17%;top:22%;height:24%;
- display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;
- align-items:center;gap:2px 8px;color:#6b4d58;text-align:left
-}
-.notebookLabel .notebookEmoji{grid-row:1/3;font-size:25px!important}
-.notebookLabel strong{font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.notebookLabel small{font-size:9px;opacity:.68;white-space:nowrap}
-.coverPreview{width:180px;height:180px;margin:8px auto 14px}
-.coverPreview svg{width:100%;height:100%}
-
-.canvasQuickNav{
- display:flex;gap:5px;overflow-x:auto;padding:6px;margin:6px 0 0;
- position:sticky;top:82px;z-index:118;background:rgba(255,250,246,.97);
- backdrop-filter:blur(16px);border:1px solid #ead2cb;border-radius:15px;scrollbar-width:none
-}
-.canvasQuickNav::-webkit-scrollbar{display:none}
-.canvasQuickNav button{
- flex:1 0 64px;border:0;background:transparent;color:#80685f;border-radius:10px;
- min-height:50px;padding:5px;display:grid;place-items:center;font-size:18px;font-weight:900
-}
-.canvasQuickNav button span{font-size:8px;font-weight:800}
-.canvasQuickNav button.active{background:#f5c1bd;color:#fff}
-.canvasQuickDrawer{
- display:flex;gap:6px;overflow-x:auto;padding:7px;margin:5px 0 7px;
- position:sticky;top:140px;z-index:117;background:rgba(255,250,246,.97);
- backdrop-filter:blur(16px);border:1px solid #ead2cb;border-radius:15px;scrollbar-width:none
-}
-.canvasQuickDrawer::-webkit-scrollbar{display:none}
-.canvasQuickDrawer button{
- flex:0 0 74px;min-height:58px;border:1px solid #ead6d0;background:white;color:#745e56;
- border-radius:12px;padding:6px;display:grid;place-items:center;gap:2px
-}
-.canvasQuickDrawer button b{font-size:17px}
-.canvasQuickDrawer button span{font-size:8px;font-weight:800}
-.editorDock{display:none!important}
-.stylePresetBar{display:none!important}
-.canvasViewport{max-height:67vh!important;margin-top:4px!important}
-.objectPanel{margin-top:7px!important}
-.studyTimerActions{display:grid;grid-template-columns:1fr 1fr 48px;gap:7px;margin-top:8px}
-.breakBtn{background:#f5f7e9!important;border-color:#d9e0b8!important;color:#768255!important}
-.homeSubjectsShortcut{
- width:100%;border:1px solid #ead5cf;background:#fffaf5;color:#735d55;border-radius:18px;
- padding:13px 15px;margin:0 0 17px;display:grid;grid-template-columns:40px 1fr auto;gap:9px;align-items:center;text-align:left
-}
-.homeSubjectsShortcut>span:first-child{width:40px;height:40px;border-radius:12px;background:#f2b6b3;display:grid;place-items:center}
-.homeSubjectsShortcut div{display:grid;gap:2px}
-.homeSubjectsShortcut b{font-size:14px}
-.homeSubjectsShortcut small{font-size:10px;color:#a0887f}
-.homeSubjectsShortcut>span:last-child{font-size:24px;color:#b98b83}
-#view-subjects .sectionHead{position:sticky;top:0;z-index:8;background:linear-gradient(var(--bg) 76%,transparent);padding:8px 0}
-.notebookGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
-@media(max-width:520px){
- .newSvgNotebook{min-height:200px!important}
- .notebookLabel{left:29%;right:16%;top:22%}
- .notebookLabel strong{font-size:14px}
- .canvasQuickNav{top:78px}
- .canvasQuickDrawer{top:136px}
-}
-
-/* ===== VERSION 63 — notebook label + timetable repair ===== */
-.notebookGrid{
- grid-template-columns:repeat(2,minmax(0,1fr))!important;
- gap:18px 12px!important;
- align-items:start!important
-}
-.newSvgNotebook{
- min-height:0!important;
- display:flex!important;
- flex-direction:column!important;
- gap:5px!important;
- overflow:visible!important;
-}
-.notebookVisual{
- position:relative;
- display:block;
- width:100%;
- aspect-ratio:1/1;
-}
-.notebookVisual .notebookArt{position:absolute;inset:0;width:100%;height:100%}
-.notebookAbbr{
- position:absolute;
- left:27%;
- right:15%;
- top:20.5%;
- height:18%;
- display:flex;
- align-items:center;
- justify-content:center;
- z-index:5;
- font-family:Georgia,serif;
- font-size:clamp(14px,4vw,22px);
- font-weight:900;
- color:#6d4e59;
- text-align:center;
- white-space:nowrap;
- overflow:hidden;
- text-overflow:ellipsis;
- padding:0 4px;
-}
-.notebookBelow{
- display:grid;
- gap:1px;
- text-align:center;
- color:#6c5750;
- padding:0 4px;
-}
-.notebookBelow strong{
- font-size:15px;
- line-height:1.15;
- white-space:nowrap;
- overflow:hidden;
- text-overflow:ellipsis;
-}
-.notebookBelow small{font-size:9px;color:#a0877e}
-.coverPreview{position:relative}
-.coverPreviewAbbr{
- position:absolute;left:27%;right:15%;top:20.5%;height:18%;
- display:flex;align-items:center;justify-content:center;
- font-family:Georgia,serif;font-size:18px;font-weight:900;color:#6d4e59
-}
-@media(max-width:520px){
- .notebookGrid{gap:16px 8px!important}
- .notebookBelow strong{font-size:13px}
- .notebookAbbr{font-size:16px}
-}
-
-/* ===== VERSION 63 — Basisplan / Entfall / Hitzestunden ===== */
-.basisCancelled{
- opacity:.82;
- border-style:dashed!important;
- background:#f8f4f1!important;
-}
-.basisCancelled .cancelTag{
- display:inline-flex;
- padding:3px 8px;
- border-radius:999px;
- background:#eadeda;
- color:#986e66;
- font-size:9px;
- font-weight:950;
- text-transform:uppercase;
- letter-spacing:.08em;
- margin-bottom:3px;
-}
-.cancelledSubject{
- text-decoration-line:line-through;
- text-decoration-thickness:2.5px;
- text-decoration-color:#b87872;
- color:#9a8179!important;
-}
-.cancelledTeacher{
- text-decoration:line-through;
- opacity:.7
-}
-.cancelledRoom{
- text-decoration:line-through;
- opacity:.65
-}
-.cancelledBadge{
- background:#eee4df!important;
- color:#9e7c73!important;
- border-color:#dbc8c1!important
-}
-
-/* ===== VERSION 63 — Current vs Basis + moved lesson logic ===== */
-.planModeSwitch{
- display:grid;
- grid-template-columns:1.35fr 1fr;
- gap:7px;
- margin:12px 0 8px;
- padding:5px;
- border:1px solid #ecd6cf;
- border-radius:17px;
- background:rgba(255,250,246,.72);
-}
-.planModeSwitch button{
- border:0;
- border-radius:13px;
- background:transparent;
- color:#90766d;
- min-height:57px;
- padding:8px 10px;
- display:grid;
- grid-template-columns:auto 1fr;
- grid-template-rows:auto auto;
- column-gap:7px;
- align-items:center;
- text-align:left;
-}
-.planModeSwitch button>span{
- grid-row:1/3;
- width:31px;height:31px;
- border-radius:10px;
- display:grid;place-items:center;
- background:#f2e7e1;
- font-size:15px;
-}
-.planModeSwitch button b{
- font-size:11px;
- line-height:1.15;
-}
-.planModeSwitch button small{
- font-size:8px;
- opacity:.66;
- margin-top:1px;
-}
-.planModeSwitch button.active{
- background:#efa9a9;
- color:white;
- box-shadow:0 5px 12px rgba(203,126,126,.16);
-}
-.planModeSwitch button.active>span{
- background:rgba(255,255,255,.22);
-}
-.planModeHint{
- font-size:9px;
- line-height:1.35;
- color:#9b8379;
- padding:4px 3px 8px;
-}
-.planModeHint .modeBasisHint{display:none}
-.planModeHint[data-mode="basis"] .modeCurrentHint{display:none}
-.planModeHint[data-mode="basis"] .modeBasisHint{display:inline}
-#planModeSwitch button[data-planmode="current"] small:after{
- content:" · Standard";
-}
-@media(max-width:520px){
- .planModeSwitch{grid-template-columns:1.25fr 1fr}
- .planModeSwitch button{padding:7px;column-gap:5px}
- .planModeSwitch button>span{width:27px;height:27px}
- .planModeSwitch button b{font-size:10px}
-}
-
-/* ===== VERSION 63 — safer row split / replacement handling ===== */
-.changedLesson{
- background:linear-gradient(90deg,#fffdfa,#fffaf6)!important;
-}
-.changeTag{
- display:inline-flex;
- padding:2px 7px;
- border-radius:999px;
- background:#eaf0d8;
- color:#748052;
- border:1px solid #d9e3bc;
- font-size:8px;
- font-weight:900;
- text-transform:uppercase;
- letter-spacing:.07em;
- margin-bottom:3px;
-}
-
-/* ===== VERSION 63 — Mehrfachstunden mit Pause dazwischen ===== */
-.splitMultiBadge{
- opacity:.86;
- font-size:8px!important;
-}
-
-/* ===== VERSION 63 — Auto / Manuell Hitzestunden ===== */
-.heatPlanControl{
- display:flex;
- align-items:center;
- justify-content:space-between;
- gap:10px;
- margin:8px 0 8px;
- padding:9px 10px;
- border:1px solid #ead9c4;
- border-radius:16px;
- background:#fffaf1;
-}
-.heatPlanInfo{
- display:flex;
- align-items:center;
- gap:8px;
- min-width:0;
-}
-.heatSun{
- width:34px;height:34px;
- border-radius:11px;
- background:#fff0bd;
- display:grid;place-items:center;
- font-size:17px;
-}
-.heatPlanInfo>div{
- display:grid;
- min-width:0;
-}
-.heatPlanInfo b{
- font-size:11px;
- color:#80694e;
-}
-.heatPlanInfo small{
- font-size:8px;
- color:#a38a68;
- white-space:nowrap;
- overflow:hidden;
- text-overflow:ellipsis;
- max-width:175px;
-}
-.heatModeButtons{
- display:flex;
- gap:4px;
- padding:3px;
- border-radius:11px;
- background:#f5eadb;
-}
-.heatModeButtons button{
- border:0;
- background:transparent;
- color:#947d60;
- border-radius:8px;
- min-width:36px;
- padding:7px 7px;
- font-size:9px;
- font-weight:900;
-}
-.heatModeButtons button.active{
- background:white;
- color:#795f3e;
- box-shadow:0 2px 7px rgba(131,100,56,.12);
-}
-.heatPlanControl.heatActive{
- background:#fff6d9;
- border-color:#ead18c;
-}
-.heatPlanControl.heatActive .heatSun{
- background:#ffd978;
-}
-@media(max-width:520px){
- .heatPlanControl{gap:6px;padding:8px}
- .heatPlanInfo small{max-width:130px}
- .heatModeButtons button{min-width:31px;padding:7px 5px}
-}
-
-/* ===== VERSION 63 — clearer navigation + polish ===== */
-:root{
- --sb-panel:#fffdfa;
- --sb-panel-soft:#fff8f4;
- --sb-line:#ead7d0;
- --sb-text:#725c54;
- --sb-muted:#a18a82;
- --sb-pink:#efa6a8;
-}
-.view{padding-bottom:116px!important}
-.panel,.card{
- border-radius:22px!important;
- box-shadow:0 8px 24px rgba(104,77,68,.055)!important;
-}
-.section{margin-top:16px!important}
-.sectionHead{margin-bottom:10px!important}
-button{touch-action:manipulation}
-
-/* Home: clear launcher */
-.homeLauncher{
- margin:0 0 14px;
- padding:14px;
- border:1px solid var(--sb-line);
- border-radius:24px;
- background:linear-gradient(145deg,#fffdfb,#fff7f3);
- box-shadow:0 10px 26px rgba(107,77,67,.055);
-}
-.launcherTop h2{
- margin:3px 0 12px;
- font-size:20px;
- color:var(--sb-text);
-}
-.launcherGrid{
- display:grid;
- grid-template-columns:repeat(3,minmax(0,1fr));
- gap:8px;
-}
-.launcherGrid button{
- min-height:88px;
- border:1px solid #eadbd5;
- border-radius:17px;
- background:#fff;
- color:#735d55;
- padding:9px;
- text-align:left;
- display:flex;
- flex-direction:column;
- justify-content:center;
- align-items:flex-start;
- gap:2px;
- box-shadow:0 4px 10px rgba(107,77,67,.035);
-}
-.launcherGrid button>span{
- width:30px;height:30px;
- border-radius:10px;
- background:#f9e2df;
- display:grid;place-items:center;
- font-size:14px;
- margin-bottom:3px;
- font-weight:900;
-}
-.launcherGrid button:nth-child(2)>span{background:#eef1ff}
-.launcherGrid button:nth-child(3)>span{background:#edf4df}
-.launcherGrid button:nth-child(4)>span{background:#fff0d8}
-.launcherGrid button:nth-child(5)>span{background:#f4e9ff}
-.launcherGrid button:nth-child(6)>span{background:#e8f5f3}
-.launcherGrid b{font-size:11px}
-.launcherGrid small{
- font-size:8px;
- line-height:1.2;
- color:var(--sb-muted);
-}
-
-/* More page: no hunting for features */
-.discoverPanel{
- padding:14px;
- margin-bottom:14px;
- border:1px solid var(--sb-line);
- border-radius:22px;
- background:var(--sb-panel);
-}
-.discoverPanel h2{margin:3px 0 11px;color:var(--sb-text)}
-.discoverGrid{
- display:grid;
- grid-template-columns:repeat(2,minmax(0,1fr));
- gap:8px;
-}
-.discoverGrid button{
- min-height:62px;
- border:1px solid #eadbd5;
- background:#fff9f5;
- color:#745f57;
- border-radius:16px;
- display:flex;
- align-items:center;
- gap:9px;
- padding:10px;
- text-align:left;
-}
-.discoverGrid button span{
- width:31px;height:31px;
- border-radius:10px;
- display:grid;place-items:center;
- background:#f4dfdc;
-}
-
-/* Heat plan: make detection obvious */
-.heatPlanControl{
- border-width:1.5px!important;
-}
-.heatPlanControl.heatActive{
- box-shadow:0 8px 20px rgba(229,184,72,.13)!important;
-}
-.heatPlanControl.heatActive:after{
- content:"AKTIV";
- position:absolute;
- right:9px;
- top:4px;
- font-size:7px;
- font-weight:950;
- letter-spacing:.12em;
- color:#a87922;
-}
-
-/* Timetable controls grouped visually */
-.planModeSwitch{margin-top:10px!important}
-.planModeHint{padding-left:4px!important}
-.daytabs{margin-top:7px!important}
-
-/* Cleaner bottom nav. Existing .navLabel becomes the one visible label. */
-#nav{
- min-height:72px!important;
- padding:6px 7px calc(7px + env(safe-area-inset-bottom))!important;
- gap:2px!important;
- border-radius:22px!important;
-}
-#nav button{
- min-height:55px!important;
- border-radius:15px!important;
- padding:5px 4px!important;
- gap:2px!important;
- display:flex!important;
- flex-direction:column!important;
- align-items:center!important;
- justify-content:center!important;
-}
-#nav button svg{width:21px!important;height:21px!important}
-#nav button .navLabel{
- display:block!important;
- font-size:7px!important;
- font-weight:850!important;
- line-height:1!important;
-}
-#nav button .navLabel + span{display:none!important}
-
-/* Fächer easier to scan */
-.notebookGrid{gap:22px 12px!important}
-.notebookBelow{margin-top:4px!important}
-.notebookBelow strong{font-size:14px!important}
-.notebookBelow small{font-size:9px!important}
-
-/* Forms/buttons consistent */
-input,select,textarea{
- border-radius:15px!important;
-}
-button.primary,button.ghost,.iconbtn{
- border-radius:15px!important;
-}
-
-@media(max-width:520px){
- .launcherGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
- .launcherGrid button{min-height:80px}
- #nav button{min-width:43px!important}
-}
-
-
-/* ---- next original style block ---- */
-
-
-/* VERSION 63 — compact information architecture */
-#nav{grid-template-columns:repeat(5,1fr)!important;width:min(94vw,520px)!important}
-#nav button{min-width:0!important}
-.view{padding-bottom:100px!important}
-.header{margin-bottom:12px!important}
-.header h1{font-size:clamp(34px,8vw,48px)!important}
-.section{margin-top:16px!important}
-.panel,.card{border-radius:22px!important}
-.homeMiniActions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:0 0 12px}
-.homeMiniActions button{border:1px solid #efcfca;background:rgba(255,252,247,.9);color:#7e655e;border-radius:14px;padding:10px 5px;font-weight:850;font-size:11px;box-shadow:0 3px 0 rgba(222,177,169,.14)}
-#nextPanel{margin-top:0!important;padding:18px!important;min-height:0!important}
-#nextPanel h2,#nextPanel h3{margin-top:2px!important}
-#homeKpis{gap:8px!important}
-#homeKpis .card{padding:12px!important}
-.learnHub{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
-.learnHub button{border:1px solid #edcec7;background:#fffaf5;color:#80665e;border-radius:17px;padding:11px 7px;text-align:left;min-width:0}
-.learnHub button.active{background:#f4bbb6}
-.learnHub span{font-size:20px;display:block;margin-bottom:4px}.learnHub b{display:block;font-size:13px}.learnHub small{display:block;font-size:9px;color:#a98c83;margin-top:2px}
-.moreGroup{background:rgba(255,252,247,.86);border:1px solid #efd6d0;border-radius:22px;padding:10px;margin-bottom:12px}
-.moreGroup>.eyebrow{padding:5px 7px 8px}
-.moreGroup button{width:100%;border:0;border-top:1px solid #f2dfda;background:transparent;color:#775f58;display:grid;grid-template-columns:38px 1fr 20px;align-items:center;gap:8px;text-align:left;padding:12px 7px}
-.moreGroup button:nth-child(2){border-top:0}
-.moreGroup button>span{font-size:19px;text-align:center}.moreGroup button b{display:block;font-size:14px}.moreGroup button small{display:block;color:#ae9188;font-size:10px;margin-top:2px}.moreGroup button i{font-style:normal;font-size:23px;color:#c9aaa2}
-@media(max-width:430px){
- .homeMiniActions{grid-template-columns:repeat(4,1fr)}
- .homeMiniActions button{font-size:10px;padding:9px 2px}
- .learnHub small{display:none}
- #nav .navLabel{font-size:9px!important}
-}
-
-
-/* ---- next original style block ---- */
-
-
-/* VERSION 63 — Fächer / Lernsets / Study sauber getrennt */
-.learningBackRow{
- display:flex;
- margin:-2px 0 12px;
-}
-.learningBackRow button{
- border:1px solid #ecd3cd;
- background:rgba(255,251,247,.94);
- color:#80675f;
- border-radius:14px;
- min-height:40px;
- padding:8px 12px;
- font-size:11px;
- font-weight:850;
- display:flex;
- align-items:center;
- gap:6px;
- box-shadow:0 4px 10px rgba(111,80,70,.04);
-}
-.learnsetsHero{
- display:flex;
- align-items:center;
- justify-content:space-between;
- gap:12px;
- padding:4px 3px 12px;
-}
-.learnsetsHero h2{
- margin:2px 0 2px;
- font-size:34px;
- color:#6e5952;
-}
-.learnsetsHero p{
- margin:0;
- color:#a1877e;
- font-size:11px;
-}
-.smallIconBtn{
- width:44px;height:44px;
- border:1px solid #ecd4ce;
- background:#fffaf6;
- border-radius:14px;
- font-size:18px;
-}
-.learnsetsTabs{
- display:grid;
- grid-template-columns:repeat(3,1fr);
- gap:6px;
- padding:5px;
- margin-bottom:12px;
- border:1px solid #ead4ce;
- background:rgba(255,250,246,.9);
- border-radius:16px;
-}
-.learnsetsTabs button{
- min-height:42px;
- border:0;
- background:transparent;
- color:#8a7169;
- border-radius:11px;
- font-size:10px;
- font-weight:900;
-}
-.learnsetsTabs button.active{
- background:#efa9a9;
- color:white;
- box-shadow:0 4px 10px rgba(191,120,120,.15);
-}
-.learnsetsPanel{
- border:1px solid #edd6d0;
- background:rgba(255,253,249,.88);
- border-radius:22px;
- padding:13px;
-}
-.compactHead{margin-bottom:10px!important}
-.compactHead h2{margin:0}
-.learnsetsList{
- display:grid;
- gap:8px;
-}
-.learnsetRow{
- display:grid;
- grid-template-columns:38px 1fr auto;
- gap:9px;
- align-items:center;
- padding:10px;
- border:1px solid #eedbd6;
- border-radius:16px;
- background:#fffaf7;
-}
-.learnsetRowIcon{
- width:36px;height:36px;
- border-radius:11px;
- background:#f4e4ff;
- display:grid;
- place-items:center;
- color:#8b6fa3;
- font-weight:950;
-}
-.learnsetRowIcon.testIcon{
- background:#eaf3df;
- color:#75895c;
-}
-.learnsetRowText{
- min-width:0;
- display:grid;
- gap:2px;
-}
-.learnsetRowText b{
- font-size:12px;
- color:#735d55;
- white-space:nowrap;
- overflow:hidden;
- text-overflow:ellipsis;
-}
-.learnsetRowText small{
- font-size:9px;
- color:#a58c83;
-}
-.learnsetRow>button{
- border:1px solid #e7cbc4;
- background:white;
- color:#866d65;
- border-radius:11px;
- padding:8px 9px;
- font-size:9px;
- font-weight:900;
-}
-.learnsetRow>button:disabled{opacity:.45}
-.learnsetsEmpty{
- text-align:center;
- padding:28px 12px;
- border:1px dashed #e7cec7;
- border-radius:18px;
- color:#846c64;
-}
-.learnsetsEmpty>span{
- width:46px;height:46px;
- margin:0 auto 8px;
- display:grid;
- place-items:center;
- border-radius:15px;
- background:#f7e4e0;
- font-size:21px;
-}
-.learnsetsEmpty b{display:block;font-size:15px}
-.learnsetsEmpty p{
- margin:5px auto 12px;
- max-width:300px;
- color:#a28a81;
- font-size:10px;
- line-height:1.4;
-}
-
-
-/* ---- next original style block ---- */
-
-@page{size:A4;margin:0}body{margin:0}.page{position:relative;width:794px;height:1123px;overflow:hidden}
-/* ===== V10 stable canvas UX ===== */
-.toolSections{display:grid;gap:8px}
-.toolSection{border:1px solid #ead1ca;background:#fffaf6;border-radius:16px;padding:8px}
-.toolSectionTitle{font-size:11px;font-weight:900;color:#a07e74;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
-.toolButtons{display:flex;gap:6px;flex-wrap:wrap}
-.toolButtons button,.toolButtons label{border:1px solid #e6cec6;background:white;color:#725e55;border-radius:11px;padding:8px 9px;font-weight:850;margin:0}
-.quickAddGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
-.quickAddGrid button{min-height:62px;border:1px solid #ead1ca;border-radius:14px;background:#fffdf9;color:#725e55;font-weight:850}
-.paperSticker{position:absolute;box-sizing:border-box;background:#fffdf7;border:1px solid rgba(130,105,90,.14);box-shadow:0 6px 15px rgba(110,82,70,.08);pointer-events:auto;touch-action:none}
-.paperSticker.gridPaper{
- background-color:#fffdf7;
- background-image:linear-gradient(rgba(187,205,169,.35) 1px,transparent 1px),linear-gradient(90deg,rgba(187,205,169,.35) 1px,transparent 1px);
- background-size:var(--gridSize,20px) var(--gridSize,20px);
-}
-.paperSticker.linePaper{
- background-color:#fffdf7;
- background-image:repeating-linear-gradient(to bottom,transparent 0,transparent calc(var(--lineSize,28px) - 1px),rgba(168,190,210,.38) calc(var(--lineSize,28px) - 1px),rgba(168,190,210,.38) var(--lineSize,28px));
-}
-.paperSticker.blankPaper{background:#fffdf7}
-.tapeSticker{
- position:absolute;box-sizing:border-box;background:rgba(242,190,178,.62);border:1px solid rgba(200,145,135,.18);
- transform:rotate(var(--rot,-4deg));box-shadow:0 2px 6px rgba(120,90,80,.08);pointer-events:auto;touch-action:none
-}
-.tapeSticker:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent 0 7px,rgba(255,255,255,.18) 7px 9px)}
-.selectionHelp{font-size:11px;color:#9c8278;line-height:1.5}
-.inlineFormatBar{display:flex;gap:5px;flex-wrap:wrap}
-.inlineFormatBar button{border:1px solid #e6cec6;background:white;border-radius:9px;padding:6px 8px;color:#725f56}
-.layerList{display:grid;gap:5px;max-height:220px;overflow:auto}
-.layerItem{display:flex;justify-content:space-between;align-items:center;gap:7px;padding:7px 9px;border:1px solid #ead5ce;border-radius:10px;background:white;font-size:11px}
-.layerItem.active{border-color:#e9a7a4;background:#fff0ee}
-.editorHint{border-radius:14px;padding:10px 12px;background:#f5f8eb;border:1px solid #dce5c5;color:#748758;font-size:11px}
-@media(max-width:850px){
- .quickAddGrid{grid-template-columns:repeat(2,1fr)}
- .toolSection{padding:7px}
-}
-
-
-/* ===== V11 Canva-like editor ===== */
-body.editorMode .header,body.editorMode #nav{display:none!important}
-body.editorMode main{max-width:none;padding:8px 8px 30px}
-body.editorMode .view#view-sheet-editor{padding-bottom:20px}
-.canvasEditorShell{max-width:1180px;margin:auto}
-.canvasTopbar{position:sticky;top:0;z-index:120;background:rgba(255,250,246,.94);backdrop-filter:blur(18px);padding:6px;border:1px solid #ead3cc;border-radius:16px}
-.editorTitle{display:grid;text-align:center;font-size:13px}.editorTitle .wordStatus{font-size:9px}
-.editorActions{display:flex;gap:5px}
-.editorIcon,.miniIcon{border:1px solid #e7cec7;background:#fffdf9;color:#745f57;border-radius:11px;width:38px;height:38px;padding:0;font-size:20px;font-weight:900}
-.primaryIcon{background:#eda6a4;color:white}.dangerMini{color:#b96f6d}
-.editorDock{display:flex;gap:5px;overflow-x:auto;padding:6px;position:sticky;top:58px;z-index:110;background:rgba(255,250,246,.94);backdrop-filter:blur(16px);border:1px solid #ead3cc;border-radius:15px}
-.editorDock button,.editorDock label{flex:0 0 42px;width:42px;height:42px;display:grid;place-items:center;border:1px solid #e7cec7;background:white;color:#715e56;border-radius:11px;font-size:19px;font-weight:900;margin:0;padding:0}
-.iconOnlyBtn{width:52px;font-size:24px}
-.cobj.locked{outline-style:dashed!important}
-.cobj.locked .resizeHandle{display:none!important}
-.layerItem{border:0;width:100%;cursor:pointer}
-.layerItem .layerBtns{display:flex;gap:3px}
-.layerItem .layerBtns span{display:grid;place-items:center;min-width:24px;height:24px;border-radius:7px;background:#fff7f4}
-.canvasPage{pointer-events:auto}
-.canvasSvg{pointer-events:auto}
-.fontSelect{width:100%}
-@media(max-width:600px){
- .canvasViewport{border-radius:12px;padding:4px}
- .objectPanel{border-radius:14px;padding:8px}
- .editorDock{top:55px}
- .stylePresetBar{gap:5px}
- .stylePreset{font-size:11px;padding:7px 9px}
-}
-
-
-/* ===== V12 interaction + icon overhaul ===== */
-:root{--icon:#8e7168}
-.nav button b{display:none!important}
-.nav button svg{width:22px;height:22px;display:block;margin:auto;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.nav button.active svg{stroke:currentColor}
-.editorDock button svg,.editorDock label svg,.editorIcon svg,.miniIcon svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.editorDock button,.editorDock label{font-size:0}
-.editorIcon,.miniIcon{display:grid;place-items:center;font-size:0}
-.editorDock{scrollbar-width:none}
-.editorDock::-webkit-scrollbar{display:none}
-.formatStrip{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none}
-.formatStrip::-webkit-scrollbar{display:none}
-.formatChip{flex:0 0 auto;border:1px solid #e7cec7;background:#fffdf9;border-radius:999px;padding:7px 10px;color:#765f56;font-size:11px;font-weight:850}
-.formatAdd{width:34px;height:34px;border-radius:50%!important;padding:0!important;font-size:20px!important;display:grid!important;place-items:center!important}
-.cobj{cursor:grab}
-.cobj.editing{cursor:text;outline:2px solid #9eb8e9!important}
-.cobj.selected:not(.editing){outline:2px solid #e99e9a;outline-offset:3px}
-.cobj .resizeHandle,.cobj .rotateHandle{display:none;position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid #e99e9a;z-index:50}
-.cobj .resizeHandle{right:-9px;bottom:-9px}
-.cobj .rotateHandle{right:-9px;top:-30px;background:#fff}
-.cobj .rotateHandle:after{content:"";position:absolute;left:6px;top:14px;width:2px;height:15px;background:#e99e9a}
-.cobj.selected:not(.locked) .resizeHandle,.cobj.selected:not(.locked) .rotateHandle{display:block}
-.cobj.locked{cursor:default;outline-style:dashed!important}
-.vectorObj{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
-.vectorObj .shapeHit{pointer-events:all;cursor:grab}
-.vectorObj.locked .shapeHit{cursor:default}
-.vectorSelectBox{fill:none;stroke:#e99e9a;stroke-width:2;stroke-dasharray:6 4;pointer-events:none}
-.vectorHandle{fill:#fff;stroke:#e99e9a;stroke-width:2;pointer-events:all;cursor:pointer}
-.vectorRotateLine{stroke:#e99e9a;stroke-width:2;pointer-events:none}
-.vectorObj.selected .shapeHit{filter:drop-shadow(0 0 2px rgba(233,158,154,.8))}
-.canvasSvg{pointer-events:none!important;z-index:30}
-.canvasSvg.drawing{pointer-events:auto!important}
-.canvasObjects{z-index:20}
-.inspectorGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
-.layerItem{padding:6px 8px}
-.layerRow{display:flex;align-items:center;justify-content:space-between;gap:6px;width:100%}
-.layerMeta{display:flex;align-items:center;gap:6px;min-width:0}
-.layerName{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.layerTools{display:flex;gap:3px}
-.layerTools button{width:27px;height:27px;border:0;background:#fff7f3;border-radius:8px;color:#80675e;padding:0;font-size:13px}
-.editorHintStrong{border:1px solid #d9e4c4;background:#f5f9eb;color:#6e8453;border-radius:12px;padding:8px 10px;font-size:11px}
-.customFormatPreview{padding:10px;border-radius:12px;margin:8px 0}
-@media(max-width:600px){
- .editorDock button,.editorDock label{flex-basis:38px;width:38px;height:38px}
- .editorDock button svg,.editorDock label svg{width:18px;height:18px}
- .objectPanel{margin-top:4px}
-}
-
-
-/* ===== V13 stability + snapping + history ===== */
-.canvasGuides{position:absolute;inset:0;z-index:95;pointer-events:none}
-.guideLine{position:absolute;background:#e78fa0;box-shadow:0 0 0 1px rgba(255,255,255,.75)}
-.guideV{top:0;bottom:0;width:1px}.guideH{left:0;right:0;height:1px}
-.guideLabel{position:absolute;font-size:9px;font-weight:900;color:#b56d7a;background:#fff7f8;border:1px solid #efb7c0;border-radius:999px;padding:2px 5px;transform:translate(-50%,-50%)}
-.historyBar{display:flex;gap:5px;align-items:center}.historyBtn{width:38px;height:38px;border:1px solid #e7cec7;background:#fffdf9;color:#735f56;border-radius:11px;display:grid;place-items:center}.historyBtn:disabled{opacity:.35}
-.autosaveState{font-size:10px;font-weight:800;color:#8b756d}.autosaveState.saving{color:#b48b59}.autosaveState.saved{color:#738c58}
-.cobj.selected{z-index:9999!important}.cobj .resizeHandle,.cobj .rotateHandle{touch-action:none}.vectorObj.selected{z-index:9998!important}.vectorObj .shapeHit{pointer-events:all!important}.canvasSvg.drawing{z-index:100!important;background:rgba(255,255,255,.001)}
-.positionGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.positionGrid input{padding:7px 8px}.alignRow{display:flex;gap:5px;flex-wrap:wrap}.alignRow button{border:1px solid #e5cec7;background:white;border-radius:9px;padding:7px 8px;color:#745f56}.snapToggle{display:flex;align-items:center;gap:6px;font-size:11px;color:#806a61}.snapToggle input{width:auto}.pathHint{padding:8px 10px;border:1px solid #d8e3c4;background:#f5f9eb;color:#708652;border-radius:12px;font-size:11px}
-@media(max-width:600px){.positionGrid{grid-template-columns:repeat(2,1fr)}}
-
-
-/* ===== V14 usability / zoom / pet / nav ===== */
-.nav{width:min(92vw,560px);padding:5px 6px;border-radius:18px;grid-template-columns:repeat(6,1fr);gap:2px}
-.nav button{height:46px;border-radius:12px;padding:3px;color:#a2857b}
-.nav button.active{background:#eca7a3;color:#fff}
-.nav button svg{width:20px;height:20px}
-.navLabel{display:block;font-size:8px;line-height:1;margin-top:2px;font-weight:800}
-.petRoom{min-height:260px;background:linear-gradient(#f8e6e4 0 65%,#e3c99e 65%);border:1px solid #eccdc5;overflow:hidden}
-.petShelf{position:absolute;right:18px;top:78px;font-size:26px}.petPlant{position:absolute;left:28px;bottom:38px;font-size:32px}
-.petAvatarCute{position:absolute;left:50%;bottom:42px;transform:translateX(-50%);width:118px;height:112px;border-radius:48% 48% 45% 45%;background:#dcebb9;border:5px solid #bed393;z-index:4;display:grid;place-items:center;box-shadow:0 8px 0 rgba(175,190,130,.18)}
-.petEar{position:absolute;top:-17px;width:45px;height:45px;border-radius:50%;background:#dcebb9;border:5px solid #bed393}.petEar.left{left:5px}.petEar.right{right:5px}
-.petFace{font-size:28px;color:#68594f;position:relative;z-index:2;letter-spacing:3px}.petBlush{position:absolute;bottom:33px;width:18px;height:10px;border-radius:50%;background:#efb7b0;opacity:.8}.petBlush.left{left:20px}.petBlush.right{right:20px}.petBow{position:absolute;top:-8px;right:-10px;font-size:28px;z-index:5}
-.zoomPanel{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.zoomPanel input[type="range"]{width:150px}.zoomPct{font-size:11px;font-weight:900;color:#846d64;min-width:42px;text-align:right}
-.vectorTouchProxy{fill:none;stroke:transparent;stroke-width:26;pointer-events:stroke!important;cursor:grab}
-.vectorObj.selected .vectorTouchProxy{stroke:rgba(233,158,154,.06)}
-.pathDrawHint{position:absolute;left:50%;top:12px;transform:translateX(-50%);z-index:130;background:#fff8f5;border:1px solid #efcbc5;color:#7a635a;padding:7px 10px;border-radius:999px;font-size:10px;font-weight:850;pointer-events:none}
-
-
-/* ===== V15 timetable freshness + cancellations ===== */
-.lesson.cancelled{
- --subject:#d6cfc9!important;
- background:linear-gradient(135deg,#fffaf7,#f4f0ed);
- border-style:dashed;
- opacity:.9;
-}
-.lesson.cancelled .subject{color:#9a7f74}
-.lesson.cancelled .small{color:#b09b92}
-.planFreshBadge{
- display:inline-flex;align-items:center;gap:6px;
- padding:6px 9px;border-radius:999px;
- background:#f3f8e9;border:1px solid #d5e3bc;
- color:#728957;font-size:10px;font-weight:900;
- margin-top:8px;
-}
-.planFreshBadge.placeholder{
- background:#fff3df;border-color:#efd7a5;color:#9c7b42;
-}
-
-
-/* V16 timetable */
-.specialLesson{background:linear-gradient(135deg,#fffaf1,#fff1d5);border:1px solid #efd8a5}
-.specialLesson .subject{color:#8d6f38}
-.lesson.cancelled{--subject:#d6cfc9!important;background:linear-gradient(135deg,#fffaf7,#f4f0ed);border-style:dashed;opacity:.9}
-
-/* ===== VERSION 63: echter Live-Refresh ===== */
-.liveRefreshStatus{margin-top:8px;font-size:11px;color:#9a8076}
-.liveRefreshStatus.loading{color:#a77d4b}
-.liveRefreshStatus.ok{color:#6f8956}
-.liveRefreshStatus.error{color:#b06d68}
-
-/* ===== VERSION 63 timetable parser ===== */
-.doubleBadge{
- display:inline-flex;align-items:center;gap:4px;margin-top:5px;
- padding:3px 7px;border-radius:999px;background:#f7e7ee;
- border:1px solid #edcad8;color:#9a687a;font-size:9px;font-weight:900;
-}
-.lesson.doubleLesson{min-height:118px}
-.specialLesson{min-height:96px}
-
-/* ===== VERSION 63: dynamic classes ===== */
-.classPickerWrap{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:center}
-.classPickerWrap label{font-size:10px;font-weight:900;color:#9a8076;text-transform:uppercase;letter-spacing:.08em}
-.classPicker{width:100%;border:1px solid #e7cec7;background:#fffdf9;color:#765f56;border-radius:13px;padding:10px 12px;font-weight:850}
-.specialOnlyDay{margin-top:12px}
-.specialOnlyCard{background:linear-gradient(135deg,#fff9e9,#fff0c9);border:1px solid #ecd397;border-radius:22px;padding:20px 18px;color:#846428}
-.specialOnlyCard .specialTime{font-size:22px;font-weight:950}
-.specialOnlyCard .specialText{font-size:18px;font-weight:850;margin-top:5px}
-
-/* ===== VERSION 63: raster-exact timetable ===== */
-.liveRefreshStatus.warn{color:#a77d4b}
-.parserTag{display:inline-flex;margin-top:5px;padding:3px 7px;border-radius:999px;background:#f4efe9;color:#9a8177;font-size:9px;font-weight:850}
-
-/* ===== VERSION 63 stability fixes ===== */
-.editorZoomBar{display:flex;align-items:center;gap:6px;overflow-x:auto;padding:7px 8px;background:#fffaf6;border:1px solid #ead3cc;border-radius:14px;position:sticky;top:108px;z-index:105}
-.editorZoomBar button,.editorZoomBar select{flex:0 0 auto;border:1px solid #e7cec7;background:white;color:#735f56;border-radius:10px;min-height:36px;padding:6px 10px;font-weight:850}
-.editorZoomBar #canvasZoomLabel{min-width:50px;text-align:center;font-size:11px;font-weight:900;color:#806a61}
-.canvasViewport{overscroll-behavior:contain}
-.canvasStage{transform:none}
-.vectorTouchProxy{fill:rgba(255,255,255,.001)!important;stroke:rgba(255,255,255,.001)!important;stroke-width:16!important;pointer-events:all!important;touch-action:none}
-.vectorObj .vectorHandle{touch-action:none}
-.vectorObj.selected .shapeVisible{filter:drop-shadow(0 0 3px rgba(233,158,154,.9))}
-.canvasSvg.drawing{cursor:crosshair}
-.pathDrawHint{z-index:140!important}
-@media(max-width:600px){.editorZoomBar{top:103px}}
-
-/* ===== VERSION 63 — stable redesign ===== */
-.newSvgNotebook{
- position:relative!important;min-height:230px!important;padding:0!important;
- border:0!important;background:transparent!important;overflow:visible!important;
- box-shadow:none!important;display:block!important;text-align:left!important;
-}
-.newSvgNotebook:before,.newSvgNotebook:after{display:none!important}
-.notebookArt{display:block;width:100%;height:100%;position:absolute;inset:0}
-.subjectNotebookSvg{width:100%;height:100%;display:block;filter:drop-shadow(0 10px 12px rgba(115,70,86,.12))}
-.notebookLabel{
- position:absolute;z-index:3;left:30%;right:17%;top:22%;height:24%;
- display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;
- align-items:center;gap:2px 8px;color:#6b4d58;text-align:left
-}
-.notebookLabel .notebookEmoji{grid-row:1/3;font-size:25px!important}
-.notebookLabel strong{font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.notebookLabel small{font-size:9px;opacity:.68;white-space:nowrap}
-.coverPreview{width:180px;height:180px;margin:8px auto 14px}
-.coverPreview svg{width:100%;height:100%}
-
-.canvasQuickNav{
- display:flex;gap:5px;overflow-x:auto;padding:6px;margin:6px 0 0;
- position:sticky;top:82px;z-index:118;background:rgba(255,250,246,.97);
- backdrop-filter:blur(16px);border:1px solid #ead2cb;border-radius:15px;scrollbar-width:none
-}
-.canvasQuickNav::-webkit-scrollbar{display:none}
-.canvasQuickNav button{
- flex:1 0 64px;border:0;background:transparent;color:#80685f;border-radius:10px;
- min-height:50px;padding:5px;display:grid;place-items:center;font-size:18px;font-weight:900
-}
-.canvasQuickNav button span{font-size:8px;font-weight:800}
-.canvasQuickNav button.active{background:#f5c1bd;color:#fff}
-.canvasQuickDrawer{
- display:flex;gap:6px;overflow-x:auto;padding:7px;margin:5px 0 7px;
- position:sticky;top:140px;z-index:117;background:rgba(255,250,246,.97);
- backdrop-filter:blur(16px);border:1px solid #ead2cb;border-radius:15px;scrollbar-width:none
-}
-.canvasQuickDrawer::-webkit-scrollbar{display:none}
-.canvasQuickDrawer button{
- flex:0 0 74px;min-height:58px;border:1px solid #ead6d0;background:white;color:#745e56;
- border-radius:12px;padding:6px;display:grid;place-items:center;gap:2px
-}
-.canvasQuickDrawer button b{font-size:17px}
-.canvasQuickDrawer button span{font-size:8px;font-weight:800}
-.editorDock{display:none!important}
-.stylePresetBar{display:none!important}
-.canvasViewport{max-height:67vh!important;margin-top:4px!important}
-.objectPanel{margin-top:7px!important}
-.studyTimerActions{display:grid;grid-template-columns:1fr 1fr 48px;gap:7px;margin-top:8px}
-.breakBtn{background:#f5f7e9!important;border-color:#d9e0b8!important;color:#768255!important}
-.homeSubjectsShortcut{
- width:100%;border:1px solid #ead5cf;background:#fffaf5;color:#735d55;border-radius:18px;
- padding:13px 15px;margin:0 0 17px;display:grid;grid-template-columns:40px 1fr auto;gap:9px;align-items:center;text-align:left
-}
-.homeSubjectsShortcut>span:first-child{width:40px;height:40px;border-radius:12px;background:#f2b6b3;display:grid;place-items:center}
-.homeSubjectsShortcut div{display:grid;gap:2px}
-.homeSubjectsShortcut b{font-size:14px}
-.homeSubjectsShortcut small{font-size:10px;color:#a0887f}
-.homeSubjectsShortcut>span:last-child{font-size:24px;color:#b98b83}
-#view-subjects .sectionHead{position:sticky;top:0;z-index:8;background:linear-gradient(var(--bg) 76%,transparent);padding:8px 0}
-.notebookGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
-@media(max-width:520px){
- .newSvgNotebook{min-height:200px!important}
- .notebookLabel{left:29%;right:16%;top:22%}
- .notebookLabel strong{font-size:14px}
- .canvasQuickNav{top:78px}
- .canvasQuickDrawer{top:136px}
-}
-
-/* ===== VERSION 63 — notebook label + timetable repair ===== */
-.notebookGrid{
- grid-template-columns:repeat(2,minmax(0,1fr))!important;
- gap:18px 12px!important;
- align-items:start!important
-}
-.newSvgNotebook{
- min-height:0!important;
- display:flex!important;
- flex-direction:column!important;
- gap:5px!important;
- overflow:visible!important;
-}
-.notebookVisual{
- position:relative;
- display:block;
- width:100%;
- aspect-ratio:1/1;
-}
-.notebookVisual .notebookArt{position:absolute;inset:0;width:100%;height:100%}
-.notebookAbbr{
- position:absolute;
- left:27%;
- right:15%;
- top:20.5%;
- height:18%;
- display:flex;
- align-items:center;
- justify-content:center;
- z-index:5;
- font-family:Georgia,serif;
- font-size:clamp(14px,4vw,22px);
- font-weight:900;
- color:#6d4e59;
- text-align:center;
- white-space:nowrap;
- overflow:hidden;
- text-overflow:ellipsis;
- padding:0 4px;
-}
-.notebookBelow{
- display:grid;
- gap:1px;
- text-align:center;
- color:#6c5750;
- padding:0 4px;
-}
-.notebookBelow strong{
- font-size:15px;
- line-height:1.15;
- white-space:nowrap;
- overflow:hidden;
- text-overflow:ellipsis;
-}
-.notebookBelow small{font-size:9px;color:#a0877e}
-.coverPreview{position:relative}
-.coverPreviewAbbr{
- position:absolute;left:27%;right:15%;top:20.5%;height:18%;
- display:flex;align-items:center;justify-content:center;
- font-family:Georgia,serif;font-size:18px;font-weight:900;color:#6d4e59
-}
-@media(max-width:520px){
- .notebookGrid{gap:16px 8px!important}
- .notebookBelow strong{font-size:13px}
- .notebookAbbr{font-size:16px}
-}
-
-/* ===== VERSION 63 — Basisplan / Entfall / Hitzestunden ===== */
-.basisCancelled{
- opacity:.82;
- border-style:dashed!important;
- background:#f8f4f1!important;
-}
-.basisCancelled .cancelTag{
- display:inline-flex;
- padding:3px 8px;
- border-radius:999px;
- background:#eadeda;
- color:#986e66;
- font-size:9px;
- font-weight:950;
- text-transform:uppercase;
- letter-spacing:.08em;
- margin-bottom:3px;
-}
-.cancelledSubject{
- text-decoration-line:line-through;
- text-decoration-thickness:2.5px;
- text-decoration-color:#b87872;
- color:#9a8179!important;
-}
-.cancelledTeacher{
- text-decoration:line-through;
- opacity:.7
-}
-.cancelledRoom{
- text-decoration:line-through;
- opacity:.65
-}
-.cancelledBadge{
- background:#eee4df!important;
- color:#9e7c73!important;
- border-color:#dbc8c1!important
-}
-
-/* ===== VERSION 63 — Current vs Basis + moved lesson logic ===== */
-.planModeSwitch{
- display:grid;
- grid-template-columns:1.35fr 1fr;
- gap:7px;
- margin:12px 0 8px;
- padding:5px;
- border:1px solid #ecd6cf;
- border-radius:17px;
- background:rgba(255,250,246,.72);
-}
-.planModeSwitch button{
- border:0;
- border-radius:13px;
- background:transparent;
- color:#90766d;
- min-height:57px;
- padding:8px 10px;
- display:grid;
- grid-template-columns:auto 1fr;
- grid-template-rows:auto auto;
- column-gap:7px;
- align-items:center;
- text-align:left;
-}
-.planModeSwitch button>span{
- grid-row:1/3;
- width:31px;height:31px;
- border-radius:10px;
- display:grid;place-items:center;
- background:#f2e7e1;
- font-size:15px;
-}
-.planModeSwitch button b{
- font-size:11px;
- line-height:1.15;
-}
-.planModeSwitch button small{
- font-size:8px;
- opacity:.66;
- margin-top:1px;
-}
-.planModeSwitch button.active{
- background:#efa9a9;
- color:white;
- box-shadow:0 5px 12px rgba(203,126,126,.16);
-}
-.planModeSwitch button.active>span{
- background:rgba(255,255,255,.22);
-}
-.planModeHint{
- font-size:9px;
- line-height:1.35;
- color:#9b8379;
- padding:4px 3px 8px;
-}
-.planModeHint .modeBasisHint{display:none}
-.planModeHint[data-mode="basis"] .modeCurrentHint{display:none}
-.planModeHint[data-mode="basis"] .modeBasisHint{display:inline}
-#planModeSwitch button[data-planmode="current"] small:after{
- content:" · Standard";
-}
-@media(max-width:520px){
- .planModeSwitch{grid-template-columns:1.25fr 1fr}
- .planModeSwitch button{padding:7px;column-gap:5px}
- .planModeSwitch button>span{width:27px;height:27px}
- .planModeSwitch button b{font-size:10px}
-}
-
-/* ===== VERSION 63 — safer row split / replacement handling ===== */
-.changedLesson{
- background:linear-gradient(90deg,#fffdfa,#fffaf6)!important;
-}
-.changeTag{
- display:inline-flex;
- padding:2px 7px;
- border-radius:999px;
- background:#eaf0d8;
- color:#748052;
- border:1px solid #d9e3bc;
- font-size:8px;
- font-weight:900;
- text-transform:uppercase;
- letter-spacing:.07em;
- margin-bottom:3px;
-}
-
-/* ===== VERSION 63 — Mehrfachstunden mit Pause dazwischen ===== */
-.splitMultiBadge{
- opacity:.86;
- font-size:8px!important;
-}
-
-/* ===== VERSION 63 — Auto / Manuell Hitzestunden ===== */
-.heatPlanControl{
- display:flex;
- align-items:center;
- justify-content:space-between;
- gap:10px;
- margin:8px 0 8px;
- padding:9px 10px;
- border:1px solid #ead9c4;
- border-radius:16px;
- background:#fffaf1;
-}
-.heatPlanInfo{
- display:flex;
- align-items:center;
- gap:8px;
- min-width:0;
-}
-.heatSun{
- width:34px;height:34px;
- border-radius:11px;
- background:#fff0bd;
- display:grid;place-items:center;
- font-size:17px;
-}
-.heatPlanInfo>div{
- display:grid;
- min-width:0;
-}
-.heatPlanInfo b{
- font-size:11px;
- color:#80694e;
-}
-.heatPlanInfo small{
- font-size:8px;
- color:#a38a68;
- white-space:nowrap;
- overflow:hidden;
- text-overflow:ellipsis;
- max-width:175px;
-}
-.heatModeButtons{
- display:flex;
- gap:4px;
- padding:3px;
- border-radius:11px;
- background:#f5eadb;
-}
-.heatModeButtons button{
- border:0;
- background:transparent;
- color:#947d60;
- border-radius:8px;
- min-width:36px;
- padding:7px 7px;
- font-size:9px;
- font-weight:900;
-}
-.heatModeButtons button.active{
- background:white;
- color:#795f3e;
- box-shadow:0 2px 7px rgba(131,100,56,.12);
-}
-.heatPlanControl.heatActive{
- background:#fff6d9;
- border-color:#ead18c;
-}
-.heatPlanControl.heatActive .heatSun{
- background:#ffd978;
-}
-@media(max-width:520px){
- .heatPlanControl{gap:6px;padding:8px}
- .heatPlanInfo small{max-width:130px}
- .heatModeButtons button{min-width:31px;padding:7px 5px}
-}
-
-/* ===== VERSION 63 — clearer navigation + polish ===== */
-:root{
- --sb-panel:#fffdfa;
- --sb-panel-soft:#fff8f4;
- --sb-line:#ead7d0;
- --sb-text:#725c54;
- --sb-muted:#a18a82;
- --sb-pink:#efa6a8;
-}
-.view{padding-bottom:116px!important}
-.panel,.card{
- border-radius:22px!important;
- box-shadow:0 8px 24px rgba(104,77,68,.055)!important;
-}
-.section{margin-top:16px!important}
-.sectionHead{margin-bottom:10px!important}
-button{touch-action:manipulation}
-
-/* Home: clear launcher */
-.homeLauncher{
- margin:0 0 14px;
- padding:14px;
- border:1px solid var(--sb-line);
- border-radius:24px;
- background:linear-gradient(145deg,#fffdfb,#fff7f3);
- box-shadow:0 10px 26px rgba(107,77,67,.055);
-}
-.launcherTop h2{
- margin:3px 0 12px;
- font-size:20px;
- color:var(--sb-text);
-}
-.launcherGrid{
- display:grid;
- grid-template-columns:repeat(3,minmax(0,1fr));
- gap:8px;
-}
-.launcherGrid button{
- min-height:88px;
- border:1px solid #eadbd5;
- border-radius:17px;
- background:#fff;
- color:#735d55;
- padding:9px;
- text-align:left;
- display:flex;
- flex-direction:column;
- justify-content:center;
- align-items:flex-start;
- gap:2px;
- box-shadow:0 4px 10px rgba(107,77,67,.035);
-}
-.launcherGrid button>span{
- width:30px;height:30px;
- border-radius:10px;
- background:#f9e2df;
- display:grid;place-items:center;
- font-size:14px;
- margin-bottom:3px;
- font-weight:900;
-}
-.launcherGrid button:nth-child(2)>span{background:#eef1ff}
-.launcherGrid button:nth-child(3)>span{background:#edf4df}
-.launcherGrid button:nth-child(4)>span{background:#fff0d8}
-.launcherGrid button:nth-child(5)>span{background:#f4e9ff}
-.launcherGrid button:nth-child(6)>span{background:#e8f5f3}
-.launcherGrid b{font-size:11px}
-.launcherGrid small{
- font-size:8px;
- line-height:1.2;
- color:var(--sb-muted);
-}
-
-/* More page: no hunting for features */
-.discoverPanel{
- padding:14px;
- margin-bottom:14px;
- border:1px solid var(--sb-line);
- border-radius:22px;
- background:var(--sb-panel);
-}
-.discoverPanel h2{margin:3px 0 11px;color:var(--sb-text)}
-.discoverGrid{
- display:grid;
- grid-template-columns:repeat(2,minmax(0,1fr));
- gap:8px;
-}
-.discoverGrid button{
- min-height:62px;
- border:1px solid #eadbd5;
- background:#fff9f5;
- color:#745f57;
- border-radius:16px;
- display:flex;
- align-items:center;
- gap:9px;
- padding:10px;
- text-align:left;
-}
-.discoverGrid button span{
- width:31px;height:31px;
- border-radius:10px;
- display:grid;place-items:center;
- background:#f4dfdc;
-}
-
-/* Heat plan: make detection obvious */
-.heatPlanControl{
- border-width:1.5px!important;
-}
-.heatPlanControl.heatActive{
- box-shadow:0 8px 20px rgba(229,184,72,.13)!important;
-}
-.heatPlanControl.heatActive:after{
- content:"AKTIV";
- position:absolute;
- right:9px;
- top:4px;
- font-size:7px;
- font-weight:950;
- letter-spacing:.12em;
- color:#a87922;
-}
-
-/* Timetable controls grouped visually */
-.planModeSwitch{margin-top:10px!important}
-.planModeHint{padding-left:4px!important}
-.daytabs{margin-top:7px!important}
-
-/* Cleaner bottom nav. Existing .navLabel becomes the one visible label. */
-#nav{
- min-height:72px!important;
- padding:6px 7px calc(7px + env(safe-area-inset-bottom))!important;
- gap:2px!important;
- border-radius:22px!important;
-}
-#nav button{
- min-height:55px!important;
- border-radius:15px!important;
- padding:5px 4px!important;
- gap:2px!important;
- display:flex!important;
- flex-direction:column!important;
- align-items:center!important;
- justify-content:center!important;
-}
-#nav button svg{width:21px!important;height:21px!important}
-#nav button .navLabel{
- display:block!important;
- font-size:7px!important;
- font-weight:850!important;
- line-height:1!important;
-}
-#nav button .navLabel + span{display:none!important}
-
-/* Fächer easier to scan */
-.notebookGrid{gap:22px 12px!important}
-.notebookBelow{margin-top:4px!important}
-.notebookBelow strong{font-size:14px!important}
-.notebookBelow small{font-size:9px!important}
-
-/* Forms/buttons consistent */
-input,select,textarea{
- border-radius:15px!important;
-}
-button.primary,button.ghost,.iconbtn{
- border-radius:15px!important;
-}
-
-@media(max-width:520px){
- .launcherGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
- .launcherGrid button{min-height:80px}
- #nav button{min-width:43px!important}
-}
-
-
-/* ---- next original style block ---- */
-
-
-/* VERSION 63 — compact information architecture */
-#nav{grid-template-columns:repeat(5,1fr)!important;width:min(94vw,520px)!important}
-#nav button{min-width:0!important}
-.view{padding-bottom:100px!important}
-.header{margin-bottom:12px!important}
-.header h1{font-size:clamp(34px,8vw,48px)!important}
-.section{margin-top:16px!important}
-.panel,.card{border-radius:22px!important}
-.homeMiniActions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:0 0 12px}
-.homeMiniActions button{border:1px solid #efcfca;background:rgba(255,252,247,.9);color:#7e655e;border-radius:14px;padding:10px 5px;font-weight:850;font-size:11px;box-shadow:0 3px 0 rgba(222,177,169,.14)}
-#nextPanel{margin-top:0!important;padding:18px!important;min-height:0!important}
-#nextPanel h2,#nextPanel h3{margin-top:2px!important}
-#homeKpis{gap:8px!important}
-#homeKpis .card{padding:12px!important}
-.learnHub{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
-.learnHub button{border:1px solid #edcec7;background:#fffaf5;color:#80665e;border-radius:17px;padding:11px 7px;text-align:left;min-width:0}
-.learnHub button.active{background:#f4bbb6}
-.learnHub span{font-size:20px;display:block;margin-bottom:4px}.learnHub b{display:block;font-size:13px}.learnHub small{display:block;font-size:9px;color:#a98c83;margin-top:2px}
-.moreGroup{background:rgba(255,252,247,.86);border:1px solid #efd6d0;border-radius:22px;padding:10px;margin-bottom:12px}
-.moreGroup>.eyebrow{padding:5px 7px 8px}
-.moreGroup button{width:100%;border:0;border-top:1px solid #f2dfda;background:transparent;color:#775f58;display:grid;grid-template-columns:38px 1fr 20px;align-items:center;gap:8px;text-align:left;padding:12px 7px}
-.moreGroup button:nth-child(2){border-top:0}
-.moreGroup button>span{font-size:19px;text-align:center}.moreGroup button b{display:block;font-size:14px}.moreGroup button small{display:block;color:#ae9188;font-size:10px;margin-top:2px}.moreGroup button i{font-style:normal;font-size:23px;color:#c9aaa2}
-@media(max-width:430px){
- .homeMiniActions{grid-template-columns:repeat(4,1fr)}
- .homeMiniActions button{font-size:10px;padding:9px 2px}
- .learnHub small{display:none}
- #nav .navLabel{font-size:9px!important}
-}
-
-
-/* ---- next original style block ---- */
-
-
-/* VERSION 63 — Fächer / Lernsets / Study sauber getrennt */
-.learningBackRow{
- display:flex;
- margin:-2px 0 12px;
-}
-.learningBackRow button{
- border:1px solid #ecd3cd;
- background:rgba(255,251,247,.94);
- color:#80675f;
- border-radius:14px;
- min-height:40px;
- padding:8px 12px;
- font-size:11px;
- font-weight:850;
- display:flex;
- align-items:center;
- gap:6px;
- box-shadow:0 4px 10px rgba(111,80,70,.04);
-}
-.learnsetsHero{
- display:flex;
- align-items:center;
- justify-content:space-between;
- gap:12px;
- padding:4px 3px 12px;
-}
-.learnsetsHero h2{
- margin:2px 0 2px;
- font-size:34px;
- color:#6e5952;
-}
-.learnsetsHero p{
- margin:0;
- color:#a1877e;
- font-size:11px;
-}
-.smallIconBtn{
- width:44px;height:44px;
- border:1px solid #ecd4ce;
- background:#fffaf6;
- border-radius:14px;
- font-size:18px;
-}
-.learnsetsTabs{
- display:grid;
- grid-template-columns:repeat(3,1fr);
- gap:6px;
- padding:5px;
- margin-bottom:12px;
- border:1px solid #ead4ce;
- background:rgba(255,250,246,.9);
- border-radius:16px;
-}
-.learnsetsTabs button{
- min-height:42px;
- border:0;
- background:transparent;
- color:#8a7169;
- border-radius:11px;
- font-size:10px;
- font-weight:900;
-}
-.learnsetsTabs button.active{
- background:#efa9a9;
- color:white;
- box-shadow:0 4px 10px rgba(191,120,120,.15);
-}
-.learnsetsPanel{
- border:1px solid #edd6d0;
- background:rgba(255,253,249,.88);
- border-radius:22px;
- padding:13px;
-}
-.compactHead{margin-bottom:10px!important}
-.compactHead h2{margin:0}
-.learnsetsList{
- display:grid;
- gap:8px;
-}
-.learnsetRow{
- display:grid;
- grid-template-columns:38px 1fr auto;
- gap:9px;
- align-items:center;
- padding:10px;
- border:1px solid #eedbd6;
- border-radius:16px;
- background:#fffaf7;
-}
-.learnsetRowIcon{
- width:36px;height:36px;
- border-radius:11px;
- background:#f4e4ff;
- display:grid;
- place-items:center;
- color:#8b6fa3;
- font-weight:950;
-}
-.learnsetRowIcon.testIcon{
- background:#eaf3df;
- color:#75895c;
-}
-.learnsetRowText{
- min-width:0;
- display:grid;
- gap:2px;
-}
-.learnsetRowText b{
- font-size:12px;
- color:#735d55;
- white-space:nowrap;
- overflow:hidden;
- text-overflow:ellipsis;
-}
-.learnsetRowText small{
- font-size:9px;
- color:#a58c83;
-}
-.learnsetRow>button{
- border:1px solid #e7cbc4;
- background:white;
- color:#866d65;
- border-radius:11px;
- padding:8px 9px;
- font-size:9px;
- font-weight:900;
-}
-.learnsetRow>button:disabled{opacity:.45}
-.learnsetsEmpty{
- text-align:center;
- padding:28px 12px;
- border:1px dashed #e7cec7;
- border-radius:18px;
- color:#846c64;
-}
-.learnsetsEmpty>span{
- width:46px;height:46px;
- margin:0 auto 8px;
- display:grid;
- place-items:center;
- border-radius:15px;
- background:#f7e4e0;
- font-size:21px;
-}
-.learnsetsEmpty b{display:block;font-size:15px}
-.learnsetsEmpty p{
- margin:5px auto 12px;
- max-width:300px;
- color:#a28a81;
- font-size:10px;
- line-height:1.4;
-}
-
-
-/* ---- next original style block ---- */
-
-
-      .cls-1 {
-        fill: #fff;
-      }
-
-      .cls-2 {
-        stroke-linecap: round;
-        stroke-linejoin: round;
-        stroke-width: 22px;
-      }
-
-      .cls-2, .cls-3 {
-        fill: var(--nb-light);
-        stroke: var(--nb-dark);
-      }
-
-      .cls-4 {
-        fill: var(--nb-dark);
-      }
-
-      .cls-3 {
-        stroke-miterlimit: 10;
-        stroke-width: 13px;
-      }
-    
-/* ===== VERSION 63 — stable redesign ===== */
-.newSvgNotebook{
- position:relative!important;min-height:230px!important;padding:0!important;
- border:0!important;background:transparent!important;overflow:visible!important;
- box-shadow:none!important;display:block!important;text-align:left!important;
-}
-.newSvgNotebook:before,.newSvgNotebook:after{display:none!important}
-.notebookArt{display:block;width:100%;height:100%;position:absolute;inset:0}
-.subjectNotebookSvg{width:100%;height:100%;display:block;filter:drop-shadow(0 10px 12px rgba(115,70,86,.12))}
-.notebookLabel{
- position:absolute;z-index:3;left:30%;right:17%;top:22%;height:24%;
- display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;
- align-items:center;gap:2px 8px;color:#6b4d58;text-align:left
-}
-.notebookLabel .notebookEmoji{grid-row:1/3;font-size:25px!important}
-.notebookLabel strong{font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.notebookLabel small{font-size:9px;opacity:.68;white-space:nowrap}
-.coverPreview{width:180px;height:180px;margin:8px auto 14px}
-.coverPreview svg{width:100%;height:100%}
-
-.canvasQuickNav{
- display:flex;gap:5px;overflow-x:auto;padding:6px;margin:6px 0 0;
- position:sticky;top:82px;z-index:118;background:rgba(255,250,246,.97);
- backdrop-filter:blur(16px);border:1px solid #ead2cb;border-radius:15px;scrollbar-width:none
-}
-.canvasQuickNav::-webkit-scrollbar{display:none}
-.canvasQuickNav button{
- flex:1 0 64px;border:0;background:transparent;color:#80685f;border-radius:10px;
- min-height:50px;padding:5px;display:grid;place-items:center;font-size:18px;font-weight:900
-}
-.canvasQuickNav button span{font-size:8px;font-weight:800}
-.canvasQuickNav button.active{background:#f5c1bd;color:#fff}
-.canvasQuickDrawer{
- display:flex;gap:6px;overflow-x:auto;padding:7px;margin:5px 0 7px;
- position:sticky;top:140px;z-index:117;background:rgba(255,250,246,.97);
- backdrop-filter:blur(16px);border:1px solid #ead2cb;border-radius:15px;scrollbar-width:none
-}
-.canvasQuickDrawer::-webkit-scrollbar{display:none}
-.canvasQuickDrawer button{
- flex:0 0 74px;min-height:58px;border:1px solid #ead6d0;background:white;color:#745e56;
- border-radius:12px;padding:6px;display:grid;place-items:center;gap:2px
-}
-.canvasQuickDrawer button b{font-size:17px}
-.canvasQuickDrawer button span{font-size:8px;font-weight:800}
-.editorDock{display:none!important}
-.stylePresetBar{display:none!important}
-.canvasViewport{max-height:67vh!important;margin-top:4px!important}
-.objectPanel{margin-top:7px!important}
-.studyTimerActions{display:grid;grid-template-columns:1fr 1fr 48px;gap:7px;margin-top:8px}
-.breakBtn{background:#f5f7e9!important;border-color:#d9e0b8!important;color:#768255!important}
-.homeSubjectsShortcut{
- width:100%;border:1px solid #ead5cf;background:#fffaf5;color:#735d55;border-radius:18px;
- padding:13px 15px;margin:0 0 17px;display:grid;grid-template-columns:40px 1fr auto;gap:9px;align-items:center;text-align:left
-}
-.homeSubjectsShortcut>span:first-child{width:40px;height:40px;border-radius:12px;background:#f2b6b3;display:grid;place-items:center}
-.homeSubjectsShortcut div{display:grid;gap:2px}
-.homeSubjectsShortcut b{font-size:14px}
-.homeSubjectsShortcut small{font-size:10px;color:#a0887f}
-.homeSubjectsShortcut>span:last-child{font-size:24px;color:#b98b83}
-#view-subjects .sectionHead{position:sticky;top:0;z-index:8;background:linear-gradient(var(--bg) 76%,transparent);padding:8px 0}
-.notebookGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
-@media(max-width:520px){
- .newSvgNotebook{min-height:200px!important}
- .notebookLabel{left:29%;right:16%;top:22%}
- .notebookLabel strong{font-size:14px}
- .canvasQuickNav{top:78px}
- .canvasQuickDrawer{top:136px}
-}
-
-/* ===== VERSION 63 — notebook label + timetable repair ===== */
-.notebookGrid{
- grid-template-columns:repeat(2,minmax(0,1fr))!important;
- gap:18px 12px!important;
- align-items:start!important
-}
-.newSvgNotebook{
- min-height:0!important;
- display:flex!important;
- flex-direction:column!important;
- gap:5px!important;
- overflow:visible!important;
-}
-.notebookVisual{
- position:relative;
- display:block;
- width:100%;
- aspect-ratio:1/1;
-}
-.notebookVisual .notebookArt{position:absolute;inset:0;width:100%;height:100%}
-.notebookAbbr{
- position:absolute;
- left:27%;
- right:15%;
- top:20.5%;
- height:18%;
- display:flex;
- align-items:center;
- justify-content:center;
- z-index:5;
- font-family:Georgia,serif;
- font-size:clamp(14px,4vw,22px);
- font-weight:900;
- color:#6d4e59;
- text-align:center;
- white-space:nowrap;
- overflow:hidden;
- text-overflow:ellipsis;
- padding:0 4px;
-}
-.notebookBelow{
- display:grid;
- gap:1px;
- text-align:center;
- color:#6c5750;
- padding:0 4px;
-}
-.notebookBelow strong{
- font-size:15px;
- line-height:1.15;
- white-space:nowrap;
- overflow:hidden;
- text-overflow:ellipsis;
-}
-.notebookBelow small{font-size:9px;color:#a0877e}
-.coverPreview{position:relative}
-.coverPreviewAbbr{
- position:absolute;left:27%;right:15%;top:20.5%;height:18%;
- display:flex;align-items:center;justify-content:center;
- font-family:Georgia,serif;font-size:18px;font-weight:900;color:#6d4e59
-}
-@media(max-width:520px){
- .notebookGrid{gap:16px 8px!important}
- .notebookBelow strong{font-size:13px}
- .notebookAbbr{font-size:16px}
-}
-
-/* ===== VERSION 63 — Basisplan / Entfall / Hitzestunden ===== */
-.basisCancelled{
- opacity:.82;
- border-style:dashed!important;
- background:#f8f4f1!important;
-}
-.basisCancelled .cancelTag{
- display:inline-flex;
- padding:3px 8px;
- border-radius:999px;
- background:#eadeda;
- color:#986e66;
- font-size:9px;
- font-weight:950;
- text-transform:uppercase;
- letter-spacing:.08em;
- margin-bottom:3px;
-}
-.cancelledSubject{
- text-decoration-line:line-through;
- text-decoration-thickness:2.5px;
- text-decoration-color:#b87872;
- color:#9a8179!important;
-}
-.cancelledTeacher{
- text-decoration:line-through;
- opacity:.7
-}
-.cancelledRoom{
- text-decoration:line-through;
- opacity:.65
-}
-.cancelledBadge{
- background:#eee4df!important;
- color:#9e7c73!important;
- border-color:#dbc8c1!important
-}
-
-/* ===== VERSION 63 — Current vs Basis + moved lesson logic ===== */
-.planModeSwitch{
- display:grid;
- grid-template-columns:1.35fr 1fr;
- gap:7px;
- margin:12px 0 8px;
- padding:5px;
- border:1px solid #ecd6cf;
- border-radius:17px;
- background:rgba(255,250,246,.72);
-}
-.planModeSwitch button{
- border:0;
- border-radius:13px;
- background:transparent;
- color:#90766d;
- min-height:57px;
- padding:8px 10px;
- display:grid;
- grid-template-columns:auto 1fr;
- grid-template-rows:auto auto;
- column-gap:7px;
- align-items:center;
- text-align:left;
-}
-.planModeSwitch button>span{
- grid-row:1/3;
- width:31px;height:31px;
- border-radius:10px;
- display:grid;place-items:center;
- background:#f2e7e1;
- font-size:15px;
-}
-.planModeSwitch button b{
- font-size:11px;
- line-height:1.15;
-}
-.planModeSwitch button small{
- font-size:8px;
- opacity:.66;
- margin-top:1px;
-}
-.planModeSwitch button.active{
- background:#efa9a9;
- color:white;
- box-shadow:0 5px 12px rgba(203,126,126,.16);
-}
-.planModeSwitch button.active>span{
- background:rgba(255,255,255,.22);
-}
-.planModeHint{
- font-size:9px;
- line-height:1.35;
- color:#9b8379;
- padding:4px 3px 8px;
-}
-.planModeHint .modeBasisHint{display:none}
-.planModeHint[data-mode="basis"] .modeCurrentHint{display:none}
-.planModeHint[data-mode="basis"] .modeBasisHint{display:inline}
-#planModeSwitch button[data-planmode="current"] small:after{
- content:" · Standard";
-}
-@media(max-width:520px){
- .planModeSwitch{grid-template-columns:1.25fr 1fr}
- .planModeSwitch button{padding:7px;column-gap:5px}
- .planModeSwitch button>span{width:27px;height:27px}
- .planModeSwitch button b{font-size:10px}
-}
-
-/* ===== VERSION 63 — safer row split / replacement handling ===== */
-.changedLesson{
- background:linear-gradient(90deg,#fffdfa,#fffaf6)!important;
-}
-.changeTag{
- display:inline-flex;
- padding:2px 7px;
- border-radius:999px;
- background:#eaf0d8;
- color:#748052;
- border:1px solid #d9e3bc;
- font-size:8px;
- font-weight:900;
- text-transform:uppercase;
- letter-spacing:.07em;
- margin-bottom:3px;
-}
-
-/* ===== VERSION 63 — Mehrfachstunden mit Pause dazwischen ===== */
-.splitMultiBadge{
- opacity:.86;
- font-size:8px!important;
-}
-
-/* ===== VERSION 63 — Auto / Manuell Hitzestunden ===== */
-.heatPlanControl{
- display:flex;
- align-items:center;
- justify-content:space-between;
- gap:10px;
- margin:8px 0 8px;
- padding:9px 10px;
- border:1px solid #ead9c4;
- border-radius:16px;
- background:#fffaf1;
-}
-.heatPlanInfo{
- display:flex;
- align-items:center;
- gap:8px;
- min-width:0;
-}
-.heatSun{
- width:34px;height:34px;
- border-radius:11px;
- background:#fff0bd;
- display:grid;place-items:center;
- font-size:17px;
-}
-.heatPlanInfo>div{
- display:grid;
- min-width:0;
-}
-.heatPlanInfo b{
- font-size:11px;
- color:#80694e;
-}
-.heatPlanInfo small{
- font-size:8px;
- color:#a38a68;
- white-space:nowrap;
- overflow:hidden;
- text-overflow:ellipsis;
- max-width:175px;
-}
-.heatModeButtons{
- display:flex;
- gap:4px;
- padding:3px;
- border-radius:11px;
- background:#f5eadb;
-}
-.heatModeButtons button{
- border:0;
- background:transparent;
- color:#947d60;
- border-radius:8px;
- min-width:36px;
- padding:7px 7px;
- font-size:9px;
- font-weight:900;
-}
-.heatModeButtons button.active{
- background:white;
- color:#795f3e;
- box-shadow:0 2px 7px rgba(131,100,56,.12);
-}
-.heatPlanControl.heatActive{
- background:#fff6d9;
- border-color:#ead18c;
-}
-.heatPlanControl.heatActive .heatSun{
- background:#ffd978;
-}
-@media(max-width:520px){
- .heatPlanControl{gap:6px;padding:8px}
- .heatPlanInfo small{max-width:130px}
- .heatModeButtons button{min-width:31px;padding:7px 5px}
-}
-
-/* ===== VERSION 63 — clearer navigation + polish ===== */
-:root{
- --sb-panel:#fffdfa;
- --sb-panel-soft:#fff8f4;
- --sb-line:#ead7d0;
- --sb-text:#725c54;
- --sb-muted:#a18a82;
- --sb-pink:#efa6a8;
-}
-.view{padding-bottom:116px!important}
-.panel,.card{
- border-radius:22px!important;
- box-shadow:0 8px 24px rgba(104,77,68,.055)!important;
-}
-.section{margin-top:16px!important}
-.sectionHead{margin-bottom:10px!important}
-button{touch-action:manipulation}
-
-/* Home: clear launcher */
-.homeLauncher{
- margin:0 0 14px;
- padding:14px;
- border:1px solid var(--sb-line);
- border-radius:24px;
- background:linear-gradient(145deg,#fffdfb,#fff7f3);
- box-shadow:0 10px 26px rgba(107,77,67,.055);
-}
-.launcherTop h2{
- margin:3px 0 12px;
- font-size:20px;
- color:var(--sb-text);
-}
-.launcherGrid{
- display:grid;
- grid-template-columns:repeat(3,minmax(0,1fr));
- gap:8px;
-}
-.launcherGrid button{
- min-height:88px;
- border:1px solid #eadbd5;
- border-radius:17px;
- background:#fff;
- color:#735d55;
- padding:9px;
- text-align:left;
- display:flex;
- flex-direction:column;
- justify-content:center;
- align-items:flex-start;
- gap:2px;
- box-shadow:0 4px 10px rgba(107,77,67,.035);
-}
-.launcherGrid button>span{
- width:30px;height:30px;
- border-radius:10px;
- background:#f9e2df;
- display:grid;place-items:center;
- font-size:14px;
- margin-bottom:3px;
- font-weight:900;
-}
-.launcherGrid button:nth-child(2)>span{background:#eef1ff}
-.launcherGrid button:nth-child(3)>span{background:#edf4df}
-.launcherGrid button:nth-child(4)>span{background:#fff0d8}
-.launcherGrid button:nth-child(5)>span{background:#f4e9ff}
-.launcherGrid button:nth-child(6)>span{background:#e8f5f3}
-.launcherGrid b{font-size:11px}
-.launcherGrid small{
- font-size:8px;
- line-height:1.2;
- color:var(--sb-muted);
-}
-
-/* More page: no hunting for features */
-.discoverPanel{
- padding:14px;
- margin-bottom:14px;
- border:1px solid var(--sb-line);
- border-radius:22px;
- background:var(--sb-panel);
-}
-.discoverPanel h2{margin:3px 0 11px;color:var(--sb-text)}
-.discoverGrid{
- display:grid;
- grid-template-columns:repeat(2,minmax(0,1fr));
- gap:8px;
-}
-.discoverGrid button{
- min-height:62px;
- border:1px solid #eadbd5;
- background:#fff9f5;
- color:#745f57;
- border-radius:16px;
- display:flex;
- align-items:center;
- gap:9px;
- padding:10px;
- text-align:left;
-}
-.discoverGrid button span{
- width:31px;height:31px;
- border-radius:10px;
- display:grid;place-items:center;
- background:#f4dfdc;
-}
-
-/* Heat plan: make detection obvious */
-.heatPlanControl{
- border-width:1.5px!important;
-}
-.heatPlanControl.heatActive{
- box-shadow:0 8px 20px rgba(229,184,72,.13)!important;
-}
-.heatPlanControl.heatActive:after{
- content:"AKTIV";
- position:absolute;
- right:9px;
- top:4px;
- font-size:7px;
- font-weight:950;
- letter-spacing:.12em;
- color:#a87922;
-}
-
-/* Timetable controls grouped visually */
-.planModeSwitch{margin-top:10px!important}
-.planModeHint{padding-left:4px!important}
-.daytabs{margin-top:7px!important}
-
-/* Cleaner bottom nav. Existing .navLabel becomes the one visible label. */
-#nav{
- min-height:72px!important;
- padding:6px 7px calc(7px + env(safe-area-inset-bottom))!important;
- gap:2px!important;
- border-radius:22px!important;
-}
-#nav button{
- min-height:55px!important;
- border-radius:15px!important;
- padding:5px 4px!important;
- gap:2px!important;
- display:flex!important;
- flex-direction:column!important;
- align-items:center!important;
- justify-content:center!important;
-}
-#nav button svg{width:21px!important;height:21px!important}
-#nav button .navLabel{
- display:block!important;
- font-size:7px!important;
- font-weight:850!important;
- line-height:1!important;
-}
-#nav button .navLabel + span{display:none!important}
-
-/* Fächer easier to scan */
-.notebookGrid{gap:22px 12px!important}
-.notebookBelow{margin-top:4px!important}
-.notebookBelow strong{font-size:14px!important}
-.notebookBelow small{font-size:9px!important}
-
-/* Forms/buttons consistent */
-input,select,textarea{
- border-radius:15px!important;
-}
-button.primary,button.ghost,.iconbtn{
- border-radius:15px!important;
-}
-
-@media(max-width:520px){
- .launcherGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
- .launcherGrid button{min-height:80px}
- #nav button{min-width:43px!important}
-}
-
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 26 ===== */
 @media (max-width:899px){
   body.editorMode.v117TextPanel .canvasQuickNav{display:none!important;visibility:hidden!important;pointer-events:none!important}
   body.editorMode.v117TextPanel #canvasQuickDrawer.open{left:12px!important;right:12px!important;bottom:calc(8px + env(safe-area-inset-bottom))!important;max-height:min(54dvh,470px)!important;width:auto!important}
@@ -5456,10 +2985,7 @@ button.primary,button.ghost,.iconbtn{
   body.editorMode #canvasQuickDrawer.open .mobileTextModeContent{min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 27 ===== */
 /* Keep the current bars/design; only fix interaction layers. */
 body.editorMode #canvasViewport{overscroll-behavior:none!important}
 @media(max-width:899px){
@@ -5482,10 +3008,7 @@ body.editorMode #canvasObjects .vectorObj.v120Dragging .vectorTouchProxy{cursor:
   .v120DesktopTextFull .mobileTextLibrary{overflow:visible!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 28 ===== */
 /* Real shape input is handled by one canvas hit tester. Old SVG hit layers must not steal pointer events. */
 body.editorMode #canvasObjects .vectorTouchProxy,
 body.editorMode #canvasObjects .shapeHit{pointer-events:none!important}
@@ -5510,10 +3033,7 @@ body.editorMode.v122ShapeDragging{user-select:none!important;-webkit-user-select
   body.editorMode .v122DesktopTextActions button{min-height:38px;border:1px solid #ead8d2;border-radius:11px;background:#fff7f4;color:#735e56;font-weight:800}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 29 ===== */
 /* V122 accidentally disabled the exact SVG hit targets used by the real vector renderer. */
 body.editorMode #canvasObjects .vectorTouchProxy,
 body.editorMode #canvasObjects .shapeHit{
@@ -5526,20 +3046,14 @@ body.editorMode #canvasObjects .vectorObj.locked .shapeHit{cursor:default!import
 body.editorMode.v125VectorDragging #canvasObjects .vectorTouchProxy,
 body.editorMode.v125VectorDragging #canvasObjects .shapeHit{cursor:grabbing!important}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 30 ===== */
 body.editorMode #canvasObjects{pointer-events:none!important}
 body.editorMode #canvasObjects .v126VectorDragProxy{position:absolute!important;display:block!important;box-sizing:border-box!important;background:rgba(255,255,255,.001)!important;border:0!important;pointer-events:auto!important;touch-action:none!important;cursor:grab!important;-webkit-user-select:none!important;user-select:none!important;z-index:9997}
 body.editorMode #canvasObjects .v126VectorDragProxy:active{cursor:grabbing!important}
 body.editorMode #canvasObjects .v126VectorDragProxy[data-locked="1"]{cursor:default!important}
 body.editorMode #canvasObjects .vectorTouchProxy,body.editorMode #canvasObjects .shapeHit{pointer-events:none!important}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 31 ===== */
 /* V202 — requested timetable fixes only */
 #view-plan .classPickerWrap{margin-top:9px!important;display:flex!important;align-items:center!important;gap:8px!important}
 #view-plan .classPickerWrap label{margin:0!important;font-size:9px!important;white-space:nowrap!important}
@@ -5570,10 +3084,7 @@ body.editorMode #canvasObjects .vectorTouchProxy,body.editorMode #canvasObjects 
 }
 @media(min-width:980px) and (max-width:1180px){.desktopWeekGrid{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 32 ===== */
 @media (max-width:899px){
  body.editorMode .canvasQuickNav{
    grid-template-columns:repeat(5,minmax(0,1fr))!important;
@@ -5590,10 +3101,7 @@ body.editorMode #canvasObjects .vectorTouchProxy,body.editorMode #canvasObjects 
  body.editorMode .canvasQuickNav button>span:last-child{display:block!important;width:100%!important;text-align:center!important;line-height:12px!important;margin:0!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 33 ===== */
 @media (max-width:899px){
  body.editorMode .canvasQuickNav{
    position:fixed!important;
@@ -5623,10 +3131,7 @@ body.editorMode #canvasObjects .vectorTouchProxy,body.editorMode #canvasObjects 
  body.editorMode #canvasQuickDrawer{bottom:calc(92px + env(safe-area-inset-bottom))!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 34 ===== */
 /* V95 — last-mile layout + editor interaction fixes */
 html,body,button,input,select,textarea{font-family:ui-rounded,"SF Pro Rounded","Avenir Next Rounded","Avenir Next",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important}
 
@@ -5683,10 +3188,7 @@ html,body,button,input,select,textarea{font-family:ui-rounded,"SF Pro Rounded","
 .tableObj table{width:100%;height:100%;border-collapse:collapse;table-layout:fixed}
 .tableObj td{transition:background-color .15s ease}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 35 ===== */
 /* ===== V96 compact mobile editor + notebook reference design ===== */
 @media (max-width:899px){
   body.editorMode #canvasQuickDrawer.open{
@@ -5752,10 +3254,7 @@ html,body,button,input,select,textarea{font-family:ui-rounded,"SF Pro Rounded","
   .v96PageStrip{display:flex;align-items:center;justify-content:center;gap:10px;padding:8px 10px 18px}.v96PageThumbs{display:flex;gap:7px}.v96PageThumb,.v96PageAdd{width:58px;height:48px;border:1px solid #ead7d1;background:#fff;border-radius:11px;color:#80675f}.v96PageThumb.active{background:#fff0ef;border-color:#e49a9a}.v96PageActions{display:flex;gap:6px}.v96PageActions button{width:38px;height:38px;border:1px solid #ead7d1;background:#fff;border-radius:10px;color:#80675f}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 36 ===== */
 @media (max-width:899px){
   body:has(#view-subject-detail.active)>.app>.header,
   body:has(#view-topic-detail.active)>.app>.header{display:none!important}
@@ -5792,10 +3291,7 @@ html,body,button,input,select,textarea{font-family:ui-rounded,"SF Pro Rounded","
 }
 @media (max-width:390px){.v97TopicCard{padding-left:10px;padding-right:10px}.v97TopicStats em span{font-size:8.6px}.v97SubjectTools{grid-template-columns:minmax(0,1fr) 108px}.v97ResourceCard{padding:10px}.v97ResourceCard>p{font-size:9px}.v97TopicPage>h2{font-size:34px}}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 37 ===== */
 /* ===== VERSION 202 — subjects reference + desktop editor reference ===== */
 @media (max-width:899px){
   body:has(#view-subjects.active)>.app>.header,
@@ -5875,10 +3371,7 @@ html,body,button,input,select,textarea{font-family:ui-rounded,"SF Pro Rounded","
 }
 @media(max-width:899px){.v100DesktopOnly,.v100RightTabs,.v100RightPage,.v100DesktopBottom{display:none!important}}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 38 ===== */
 :root{--studia-ink:#6c554d;--studia-muted:#a4877d;--studia-line:#efd7d0;--studia-pink:#e8a0a5;--studia-cream:#fffaf5;--studia-blush:#fff2f1;--studia-sage:#edf3df;--studia-yellow:#fff2cf;--studia-blue:#eaf3fb}
 html,body{background:#fff7f4!important}body:not(.editorMode){background:radial-gradient(circle at 12% 8%,rgba(247,205,210,.55),transparent 28rem),radial-gradient(circle at 88% 28%,rgba(231,241,204,.58),transparent 30rem),radial-gradient(circle at 35% 100%,rgba(255,233,196,.42),transparent 28rem),linear-gradient(180deg,#fff8f6 0%,#fffdf8 100%)!important}
 body:has(#view-subjects.active)>.app>.header,body:has(#view-subject-detail.active)>.app>.header,body:has(#view-topic-detail.active)>.app>.header{display:none!important}#view-subjects,#view-subject-detail,#view-topic-detail{padding-top:8px!important;padding-bottom:116px!important}
@@ -5896,17 +3389,11 @@ body.editorMode{overflow:hidden!important;background:radial-gradient(circle at 1
 @media(max-width:899px){.v102SubjectPageHead h2,.v102TopicPageHead h2{font-size:46px}.v102SubjectsPage{padding:18px 12px}.v102SubjectTools{grid-template-columns:minmax(0,1fr) 132px}.v102AddSubject{padding:0 14px}.v102NotebookGrid{gap:16px}.v102Notebook{padding:25px 10px 16px;min-height:205px}.v102NotebookIcon{width:66px;height:66px}.v102Notebook strong{font-size:21px}.v102TopicGrid{grid-template-columns:1fr 1fr}.v102TopicFolder{min-height:142px;padding:20px 14px 14px}.v102ResourceCard{grid-template-columns:58px 1fr auto}.v102ResourceIcon{width:56px;height:56px;border-radius:18px}.v102ResourceIcon svg{width:28px;height:28px}.v102ResourceCard b{font-size:17px}.v102AddGrid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:430px){.v102SubjectTools{grid-template-columns:1fr 118px;gap:8px}.v102Search{padding:0 12px}.v102NotebookGrid{gap:12px}.v102Notebook{min-height:190px}.v102Notebook strong{font-size:19px}.v102Notebook small{font-size:10px}.v102TopicGrid{grid-template-columns:1fr}.v102SubjectPageHead h2,.v102TopicPageHead h2{font-size:42px}.v102SubjectPageHead p,.v102TopicPageHead p{font-size:15px}}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 39 ===== */
 #view-subjects>.learningBackRow,#view-subjects>.sectionHead,#view-subject-detail>.sectionHead,#view-topic-detail>.sectionHead{display:none!important}
 @media(min-width:900px){#nav{width:min(760px,70vw)!important;min-height:72px!important;padding:8px 12px!important}#nav button{font-size:11px!important;padding:8px 10px!important}#nav button b{font-size:22px!important}}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 40 ===== */
 @media(min-width:900px){
  body.editorMode .v102DesktopLeft{grid-template-columns:minmax(0,1fr)!important;grid-template-rows:auto minmax(0,1fr)!important}
  body.editorMode .v102DesktopLeft>.canvasQuickNav{grid-column:1!important;grid-row:1!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;width:100%!important;height:auto!important;max-height:none!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-template-rows:none!important;flex-direction:initial!important;border-right:0!important}
@@ -5920,10 +3407,7 @@ body.editorMode{overflow:hidden!important;background:radial-gradient(circle at 1
  body.editorMode .canvasTopbar .historyBar{left:50%!important;transform:translateX(-50%)!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 41 ===== */
 @media(min-width:900px){
  body.editorMode .canvasTopbar{grid-template-columns:44px 150px minmax(180px,1fr) auto auto!important}
  body.editorMode .canvasTopbar:before{grid-column:2!important}
@@ -5932,10 +3416,7 @@ body.editorMode{overflow:hidden!important;background:radial-gradient(circle at 1
  body.editorMode .canvasTopbar .editorActions{grid-column:5!important;grid-row:1!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 42 ===== */
 /* Studia V103 — compact, warm, uniform */
 :root{--studia-bg:#fff8f5;--studia-paper:#fffdfa;--studia-ink:#6b554d;--studia-muted:#aa8e84;--studia-line:#ead7d1;--studia-pink:#e69aa0;--studia-soft-pink:#fae5e7;--studia-soft-green:#eef3df;--studia-soft-yellow:#fff1d4}
 html,body{background:#fff8f5}
@@ -6037,16 +3518,10 @@ body:has(#view-subjects.active)>.app>.header,body:has(#view-subject-detail.activ
 /* Export modal */
 .v103Export{display:grid;gap:14px}.v103ExportGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.v103ExportGrid button{min-height:110px;border:1px solid #ead8d2;border-radius:18px;background:#fffdfa;color:#735d56;display:grid;place-items:center;gap:4px;padding:12px}.v103ExportGrid button svg{width:28px;height:28px}.v103ExportGrid button b{font-size:14px}.v103ExportGrid button small{font-size:9px;color:#a88c82}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 43 ===== */
 @media(min-width:900px){body.editorMode #canvasViewport.v103Hand{cursor:grab!important}body.editorMode #canvasViewport.v103Hand.v102Panning{cursor:grabbing!important}}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 44 ===== */
 @media (max-width:899px){
   body.editorMode .canvasEditorShell{height:100dvh!important;min-height:100dvh!important;grid-template-rows:62px minmax(0,1fr)!important;display:grid!important}
   body.editorMode .canvasTopbar{margin:0!important;border-radius:0 0 18px 18px!important;padding:8px 10px calc(8px + env(safe-area-inset-top))!important;gap:8px!important}
@@ -6094,10 +3569,7 @@ body:has(#view-subjects.active)>.app>.header,body:has(#view-subject-detail.activ
 #desktopEditorSidebar select.fontSelect option[value="Times New Roman"]{font-family:"Times New Roman",serif}
 #desktopEditorSidebar select.fontSelect option[value="Courier New"]{font-family:"Courier New",monospace}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 45 ===== */
 @media (min-width:900px){
   body.editorMode .canvasEditorShell{grid-template-columns:300px minmax(0,1fr) 360px!important;grid-template-rows:64px 1fr 84px!important}
   body.editorMode .v102DesktopLeft{margin:10px 0 10px 10px!important}
@@ -6136,10 +3608,7 @@ body.editorMode #canvasViewport.v102Panning{cursor:grabbing!important;user-selec
 .canvasTopbar .v107RenameBtn{display:grid!important;place-items:center!important}
 .canvasTopbar .editorTitle.v107Renamable{cursor:pointer}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 46 ===== */
 /* Canvas is now a free workspace. The page itself remains the only visible sheet. */
 body.editorMode #canvasViewport{
   background:linear-gradient(135deg,rgba(255,245,244,.72),rgba(250,249,234,.72))!important;
@@ -6229,10 +3698,7 @@ body.editorMode #v96PageStrip{display:none!important}
   .cobj.selected>.v108MoveHandle{display:grid}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 47 ===== */
 /* ---------- universal overflow / sizing safety ---------- */
 body.editorMode *,#view-subjects *,#view-subject-detail *,#view-topic-detail *{box-sizing:border-box}
 body.editorMode button,body.editorMode input,body.editorMode select,body.editorMode textarea{max-width:100%;min-width:0}
@@ -6394,10 +3860,7 @@ body.editorMode .cobj table{max-width:100%!important}
 }
 @media(min-width:900px) and (max-width:1120px){.v102NotebookGrid{grid-template-columns:repeat(3,minmax(0,1fr))!important}.v103TopicList{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 48 ===== */
 .v111BackupPanel{overflow:hidden}
 .v111BackupHead{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}.v111BackupHead h2{margin-bottom:4px}.v111BackupCloud{width:44px;height:44px;flex:0 0 44px;border-radius:14px;background:#fff0ef;border:1px solid #edcfcb;color:#bc777c;display:grid;place-items:center;font-size:24px;font-weight:900}
 .v111BackupStatus{margin-top:14px;border:1px solid #e9d8d2;background:linear-gradient(135deg,#fffaf7,#f7faef);border-radius:15px;padding:11px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px}.v111BackupStatus b{font-size:12px}.v111BackupStatus span{font-size:9px;color:#8d766d;text-align:right}.v111BackupStatus.ok{border-color:#d9e5c6;background:#f6faef}.v111BackupStatus.warn{border-color:#efd6bf;background:#fff8ec}
@@ -6406,10 +3869,7 @@ body.editorMode .cobj table{max-width:100%!important}
 .v111RestoreList{display:grid;gap:8px;max-height:min(52vh,480px);overflow:auto;-webkit-overflow-scrolling:touch;margin-top:12px}.v111RestoreRow{border:1px solid #eadbd6;background:#fffdfb;border-radius:14px;padding:10px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center}.v111RestoreRow>div{min-width:0;display:grid;gap:2px}.v111RestoreRow b{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v111RestoreRow small{font-size:8px;color:#9e857c}.v111RestoreRow button{border:1px solid #e8d2cd;background:#fff5f3;border-radius:10px;color:#9a6c68;padding:7px 9px;font-size:8px;font-weight:900}.v111RestoreEmpty{padding:22px;border:1px dashed #ead3cc;border-radius:14px;text-align:center;color:#9b8178;font-size:10px}
 @media(max-width:600px){.v111BackupButtons{grid-template-columns:1fr}.v111BackupStatus{align-items:flex-start;flex-direction:column}.v111BackupStatus span{text-align:left}}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 49 ===== */
 /* Universal overflow guards. */
 body.editorMode *,#view-subjects *,#view-subject-detail *,#view-topic-detail *{box-sizing:border-box}
 body.editorMode .cobj.textObj,body.editorMode .cobj.calloutObj,body.editorMode .cobj.taskObj,body.editorMode .cobj.merkeObj{
@@ -6525,10 +3985,7 @@ body.editorMode .cobj[contenteditable="true"],body.editorMode td[contenteditable
   .graphModal,.visualGraphFunctionModal,.formulaModal,.visualFormulaModal{width:min(1240px,95vw)!important;max-width:1240px!important;max-height:90vh!important;overflow:auto!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 50 ===== */
 @media(max-width:899px){
   body.editorMode.editorDrawerOpen .canvasQuickNav{display:grid!important;visibility:visible!important;opacity:1!important}
   body.editorMode.editorDrawerOpen.v112TextEditing .canvasQuickNav{display:none!important}
@@ -6537,10 +3994,7 @@ body.editorMode .cobj[contenteditable="true"],body.editorMode td[contenteditable
   body:has(#view-topic-detail.active) .app:before,body:has(#view-topic-detail.active) .app:after{display:none!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 51 ===== */
 html,body{overflow-x:hidden!important}
 
 /* Topic detail is its own contained screen on phones: no sideways / outer-page scrolling. */
@@ -6673,10 +4127,7 @@ html,body{overflow-x:hidden!important}
 .v113SyncButtons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:10px}.v113SyncButtons button{margin:0!important;min-height:40px!important;font-size:9px!important}.v113SyncNote{margin-top:9px!important;line-height:1.45!important}
 @media(max-width:600px){.v113SyncGrid,.v113SyncButtons{grid-template-columns:1fr}.v113SyncGrid .full{grid-column:auto}.v113SyncStatus{align-items:flex-start;flex-direction:column}.v113SyncStatus span{text-align:left}}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 52 ===== */
 html,body{max-width:100%!important;overflow-x:hidden!important}
 
 /* Topic screen: one real viewport, never a wider hidden canvas. */
@@ -6749,10 +4200,7 @@ html,body{max-width:100%!important;overflow-x:hidden!important}
   body.editorMode #canvasInspector input,body.editorMode #canvasInspector select,body.editorMode #canvasInspector button{box-sizing:border-box!important;min-width:0!important;max-width:100%!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 53 ===== */
 @media(max-width:899px){
  body.editorMode .canvasTopbar:before{display:none!important;content:none!important}
  body.editorMode .canvasTopbar>.editorIcon:first-child,
@@ -6765,10 +4213,7 @@ html,body{max-width:100%!important;overflow-x:hidden!important}
  body.editorMode .canvasTopbar .editorActions>button{grid-column:auto!important;grid-row:auto!important;position:static!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 54 ===== */
 @media (max-width:899px){
   body.editorMode{overflow:hidden!important;overscroll-behavior:none!important}
   body.editorMode #mobileSelectionTools{display:none!important;visibility:hidden!important;pointer-events:none!important;width:0!important;height:0!important;padding:0!important;border:0!important;box-shadow:none!important;overflow:hidden!important}
@@ -6802,10 +4247,7 @@ html,body{max-width:100%!important;overflow-x:hidden!important}
   body.editorMode #canvasQuickDrawer.open .mobileTextModeContent{max-width:100%!important;overflow-x:hidden!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 55 ===== */
 /* V121: the old mobile-only shape handle is gone; shapes drag directly. */
 body.editorMode .v116ShapeMoveHandle,
 body.editorMode .v108MoveHandle,
@@ -6851,10 +4293,7 @@ body.editorMode .v121LayerRow.v121Drop{outline:2px solid #e8aaa9;outline-offset:
   body.editorMode .v121LayerTools button{width:31px!important;height:31px!important;min-width:31px!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 56 ===== */
 /* A V120 rule disabled every vector hit target with !important. Undo it last. */
 body.editorMode #canvasObjects .vectorObj{pointer-events:none!important}
 body.editorMode #canvasObjects .vectorTouchProxy,
@@ -6871,10 +4310,7 @@ body.editorMode #canvasViewport{touch-action:none!important;overscroll-behavior:
   body.editorMode .v123DesktopExtras{display:grid;gap:7px;margin:0 0 10px}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 57 ===== */
 body.editorMode #canvasObjects{pointer-events:auto!important}
 body.editorMode #canvasObjects .vectorObj{pointer-events:auto!important}
 body.editorMode #canvasObjects .shapeVisible{pointer-events:none!important}
@@ -6884,10 +4320,7 @@ body.editorMode #canvasObjects .vectorObj.locked .vectorTouchProxy,
 body.editorMode #canvasObjects .vectorObj.locked .shapeHit{cursor:default!important}
 body.editorMode #canvasObjects .v126VectorDragProxy{display:none!important;pointer-events:none!important}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 58 ===== */
 body.editorMode #canvasViewport{touch-action:none!important;overscroll-behavior:none!important}
 body.editorMode #canvasStage{transform-origin:0 0!important;will-change:transform!important}
 body.editorMode #canvasObjects{pointer-events:auto!important}
@@ -6897,10 +4330,7 @@ body.editorMode #canvasObjects .shapeVisible{pointer-events:none!important}
 body.editorMode #canvasObjects .shapeHit,body.editorMode #canvasObjects .vectorTouchProxy{pointer-events:all!important;touch-action:none!important;fill:transparent!important;stroke:transparent!important;stroke-width:18!important}
 @media(min-width:900px){body.editorMode .v128DesktopParityBar{display:grid;grid-template-columns:1fr;gap:7px;margin:0 0 10px}body.editorMode .v128DesktopParityBar button,body.editorMode .v128DesktopParityBar label{border:1px solid #ead8d2;border-radius:12px;background:#fffaf7;color:#765e57;padding:9px 10px;font-weight:900;cursor:pointer;text-align:center}body.editorMode .v128DesktopParityBar input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 59 ===== */
 body.editorMode #canvasViewport{touch-action:none!important;overscroll-behavior:none!important}
 body.editorMode #canvasStage{transform-origin:0 0!important;will-change:transform!important}
 body.editorMode #canvasObjects{pointer-events:auto!important}
@@ -6912,10 +4342,7 @@ body.editorMode #canvasObjects .v129ShapeProxy.v129Locked{pointer-events:none!im
   body.editorMode .v129DesktopTextExtras button{border:1px solid #ead8d2;border-radius:12px;background:#fffaf7;color:#765e57;padding:9px 10px;font-weight:900;cursor:pointer}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 60 ===== */
 body.editorMode .v130TransparentWrap{display:grid;grid-template-columns:minmax(0,1fr) 36px;gap:5px;align-items:end}
 body.editorMode .v130TransparentBtn{width:36px!important;height:36px!important;min-width:36px!important;min-height:36px!important;padding:0!important;border:1px solid #ead6d0!important;border-radius:10px!important;background:linear-gradient(135deg,#fff 0 43%,#e9a5aa 44% 56%,#fff 57% 100%)!important;color:transparent!important;box-shadow:none!important;cursor:pointer}
 body.editorMode .v130TransparentBtn.active{outline:2px solid #d98f96;outline-offset:1px}
@@ -6955,10 +4382,7 @@ body.editorMode .v130StarButton{border-color:#ead1ca!important;background:linear
  body.editorMode .v130LayerList{padding-bottom:12px}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 61 ===== */
 body.editorMode{--v131-pink:#e9a5aa;--v131-pink-soft:#fff0f0;--v131-cream:#fffaf6;--v131-green:#dce9c3;--v131-ink:#6d5750}
 body.editorMode #canvasViewport{touch-action:none!important;overscroll-behavior:none!important;overflow:hidden!important;background:radial-gradient(circle at 12% 12%,rgba(246,199,207,.42),transparent 26rem),radial-gradient(circle at 88% 78%,rgba(224,238,197,.56),transparent 28rem),#fff9f6!important}
 body.editorMode #v96PanSurface{position:relative!important;width:100%!important;height:100%!important;min-width:100%!important;min-height:100%!important;overflow:visible!important}
@@ -7025,10 +4449,7 @@ body.editorMode #canvasInspector>*{animation:v131PanelIn .18s ease both}
  @keyframes v131DrawerUp{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 62 ===== */
 body.editorMode{--v132-rose:#e9a3a7;--v132-rose-soft:#fff0f0;--v132-cream:#fffaf6;--v132-ink:#6f5952;--v132-line:#ead9d3}
 body.editorMode .v131VersionBadge,body.editorMode .v131QuickStrip{display:none!important}
 body.editorMode #canvasObjects .v126VectorDragProxy,body.editorMode #canvasObjects .v129ShapeProxy,body.editorMode #canvasObjects .v131MoveProxy{display:none!important;pointer-events:none!important}
@@ -7133,10 +4554,7 @@ body.editorMode #canvasQuickDrawer .mobileDrawerActions button{min-height:42px!i
  body.editorMode .multiSelectStatus{bottom:calc(82px + env(safe-area-inset-bottom))!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 63 ===== */
 @media(min-width:900px){
  body.editorMode{--v134-bg:#fbf8f5;--v134-paper:#fffefd;--v134-line:#eee6e2;--v134-pink:#fde8e8;--v134-pink-strong:#f3a7aa;--v134-text:#2e2927;background:var(--v134-bg)!important}
  body.editorMode .canvasEditorShell{display:grid!important;grid-template-columns:370px minmax(430px,1fr) 280px!important;grid-template-rows:92px 46px minmax(0,1fr) 42px!important;gap:0!important;width:100vw!important;height:100dvh!important;padding:0!important;background:#fcfaf8!important;overflow:hidden!important}
@@ -7243,10 +4661,7 @@ body.editorMode #canvasQuickDrawer .mobileDrawerActions button{min-height:42px!i
 }
 @media(max-width:899px){body.editorMode .canvasTopbar .primaryIcon:after{display:none!important;content:none!important}}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 64 ===== */
 @media(min-width:900px){
   /* One desktop interaction surface only. Legacy transparent layers caused text drag/selection conflicts. */
   body.editorMode #v152TextHitLayer,
@@ -7300,20 +4715,7 @@ body.editorMode #canvasQuickDrawer .mobileDrawerActions button{min-height:42px!i
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
 }
 
-
-/* ---- next original style block ---- */
-
-'+faces+
-   '@page{size:'+W+'px '+H+'px;margin:0}*{box-sizing:border-box}html,body{margin:0;padding:0;background:#eee9e6;color:#65514b;font-family:Arial,sans-serif}'+
-   '.toolbar{position:sticky;top:0;z-index:2147483600;display:flex;align-items:center;gap:10px;padding:12px 18px;background:#fffaf8;border-bottom:1px solid #ecd9d6}.toolbar b{margin-right:auto}.toolbar button{border:1px solid #ead5d0;background:#fff;border-radius:12px;padding:10px 16px;color:#65514b;font-weight:700;cursor:pointer}.toolbar button:first-of-type{background:#f9d7d9}'+
-   '.printRoot{display:grid;justify-items:center;gap:24px;padding:24px;overflow:auto}.v181PreviewPage{flex:none;break-after:page;page-break-after:always}.v181PreviewPage:last-child{break-after:auto;page-break-after:auto}'+
-   '.v181PreviewPage,.v181PreviewPage *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;forced-color-adjust:none!important}'+
-   '@media print{html,body{background:#fff!important}.toolbar{display:none!important}.printRoot{display:block;margin:0;padding:0;overflow:visible;justify-items:start}.v181PreviewPage{justify-self:start!important}}'+
-   '
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 65 ===== */
 @media(min-width:900px){
  body.editorMode #v132InteractionLayer{display:block!important;visibility:visible!important;pointer-events:none!important}
  body.editorMode #v132InteractionLayer .v132Hit{display:block!important;visibility:visible!important;pointer-events:auto!important}
@@ -7322,10 +4724,7 @@ body.editorMode #canvasQuickDrawer .mobileDrawerActions button{min-height:42px!i
  body.editorMode #canvasObjects .cobj.editing,body.editorMode #canvasObjects .cobj[contenteditable="true"]{pointer-events:auto!important;user-select:text!important;-webkit-user-select:text!important;cursor:text!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 66 ===== */
 @media (min-width:900px){
   /* Historical transparent move layers must never sit over text/cells on laptop. */
   body.editorMode #v132InteractionLayer,
@@ -7443,10 +4842,7 @@ body.v184PreviewOpen{overflow:hidden!important}
 body.v184PreviewOpen #v181Preview{display:block!important;inset:0!important;width:100vw!important;height:100dvh!important;background:#eee9e6!important;z-index:2147483600!important}
 @media print{html,body,*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;forced-color-adjust:none!important;color-scheme:only light!important}}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 67 ===== */
 /* Only font chooser previews: keep the existing UI, but force each preview to use its own family. */
 .v144FontCard>span,.v144FontCard>b,
 .v165FontMenuList button,.v165FontMenuList button .v165FontAa,
@@ -7454,10 +4850,7 @@ body.v184PreviewOpen #v181Preview{display:block!important;inset:0!important;widt
   font-family:inherit!important;
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 68 ===== */
 @media (min-width:900px){
   /* Full-page SVG wrappers must never block blank paper or normal objects. Only the real shape hit area is clickable. */
   body.editorMode #canvasObjects .vectorObj{pointer-events:none!important}
@@ -7470,10 +4863,7 @@ body.v184PreviewOpen #v181Preview{display:block!important;inset:0!important;widt
   body.editorMode #v102PagePanel .v185PageActions button:last-child{background:#fff5f4;color:#a45f64;border-color:#efd0cd}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 69 ===== */
 @media (min-width:900px){
   body.editorMode .canvasTopbar .editorActions>.historyBar{display:flex!important;align-items:center!important;gap:4px!important;flex:0 0 auto!important;margin:0 1px 0 0!important}
   body.editorMode .canvasTopbar .editorActions>.historyBar .historyBtn{width:38px!important;min-width:38px!important;height:38px!important;padding:0!important;border:1px solid var(--v134-line,#eee6e2)!important;border-radius:11px!important;background:#fff!important;color:#4e4642!important;display:grid!important;place-items:center!important;font-size:18px!important}
@@ -7502,10 +4892,7 @@ body.v184PreviewOpen #v181Preview{display:block!important;inset:0!important;widt
   body.editorMode .canvasTopbar .editorActions button span{display:none!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 70 ===== */
 @media (min-width:900px){
   body.editorMode.v187Multi #v183DesktopFrame{display:none!important}
   body.editorMode .v187Marquee{position:absolute;z-index:2147483490;pointer-events:none;border:1.5px solid #dc7f89;background:rgba(244,177,183,.11);border-radius:3px;box-sizing:border-box}
@@ -7527,10 +4914,7 @@ body.v184PreviewOpen #v181Preview{display:block!important;inset:0!important;widt
   body.editorMode .v187WholeTextBadge{position:absolute;right:8px;top:8px;z-index:3;padding:3px 6px;border-radius:999px;background:#fff5f3;border:1px solid #edcfca;color:#9a6668;font-size:8px;font-weight:850;pointer-events:none}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 71 ===== */
 /* Inserted formulas only, on both devices; the input dialog keeps slot boxes. */
 #canvasObjects .formulaObj>.formulaContent{display:inline-block;position:relative;line-height:1.2}
 #canvasObjects .formulaObj>.formulaContent :is(sup,sub):not(.vfPower>sup){display:inline-block;position:relative}
@@ -7569,10 +4953,7 @@ body.v184PreviewOpen #v181Preview{display:block!important;inset:0!important;widt
   body.editorMode .canvasEditorShell>.v134BottomBar{display:flex!important;visibility:visible!important;opacity:1!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 72 ===== */
 @media (min-width:900px){
   body.editorMode .v193HexColor{width:72px;min-width:72px;height:30px;padding:0 7px;border:1px solid #eadbd5;border-radius:9px;background:#fff;color:#68564f;font:700 10px/1 Inter,Arial,sans-serif;letter-spacing:.25px;text-transform:uppercase;box-sizing:border-box}
   body.editorMode .v165Color:has(.v193HexColor){width:auto!important;min-width:102px!important;padding:0 5px 0 9px!important;gap:5px!important}
@@ -7589,10 +4970,7 @@ body.v184PreviewOpen #v181Preview{display:block!important;inset:0!important;widt
   body.editorMode #v193GroupFrame button[data-h="w"]{left:-7px;top:50%;transform:translateY(-50%);cursor:ew-resize}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 73 ===== */
 /* ===== V203 — compact, cute, no overlaps timetable layout ===== */
 @media (max-width:899px){
   body.planViewActive .header{margin-bottom:10px!important}
@@ -7711,20 +5089,14 @@ body.v184PreviewOpen #v181Preview{display:block!important;inset:0!important;widt
   body.planViewActive .desktopWeekGrid{grid-template-columns:repeat(5,minmax(0,1fr))!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 74 ===== */
 .lessonColorEditor{display:grid;grid-template-columns:minmax(0,1fr) 48px auto;gap:9px;align-items:center;margin-top:14px;padding:11px 12px;border:1px solid #efd8d2;border-radius:16px;background:#fffaf7}
 .lessonColorEditor>div{display:grid;gap:2px;min-width:0}.lessonColorEditor b{font-size:12px;color:#745e57}.lessonColorEditor small{font-size:9px;color:#a78b82;white-space:normal}
 .lessonColorEditor input[type=color]{width:44px!important;height:38px!important;padding:3px!important;border-radius:11px!important;background:#fff!important;border:1px solid #ead6d0!important}
 .lessonColorEditor .ghost{min-height:38px!important;padding:7px 10px!important;font-size:10px!important}
 @media(max-width:520px){.lessonColorEditor{grid-template-columns:minmax(0,1fr) 44px}.lessonColorEditor .ghost{grid-column:1/-1;width:100%}}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 75 ===== */
 /* The timetable itself stays visually dominant. Secondary controls live behind •••. */
 #view-plan .planTopPanel{
   overflow:visible!important;
@@ -7832,10 +5204,7 @@ body.v184PreviewOpen #v181Preview{display:block!important;inset:0!important;widt
   #view-plan .planModeSwitch button b{font-size:9px!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 76 ===== */
 /* Neutralize older V203 first-panel rules inside the new options popover. */
 body.planViewActive #view-plan>.planTopPanel .planToolsMenu .planRefreshBtn{
   grid-column:auto!important;grid-row:auto!important;align-self:auto!important;display:block!important;
@@ -7858,10 +5227,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
   body.planViewActive #view-plan>.planTopPanel .classPicker{width:128px!important;max-width:145px!important;min-width:105px!important;padding:8px 30px 8px 10px!important;font-size:12px!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 77 ===== */
 @media (min-width:1100px){
   body.planViewActive{
     background:linear-gradient(180deg,#f7eeeb 0%,#fff7f5 100%)!important;
@@ -7975,10 +5341,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
   body.planViewActive .v208Special b{display:block!important;margin-bottom:5px!important;color:#5f524b!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 78 ===== */
 @media (min-width:1100px){
   body.v209Shell .header,
   body.v209Shell #nav{display:none!important}
@@ -8099,10 +5462,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
   #view-home #homeOpen .empty{grid-column:1/-1!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 79 ===== */
 /* Mobile stays as-is. The only mobile change in this build is moving the JETZT badge away from the room. */
 @media (max-width:899px){
   body.planViewActive .lesson.currentLesson:after{
@@ -8240,10 +5600,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
   #view-missed-hours .v210MissingList{display:grid!important;gap:9px!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 80 ===== */
 /* Shared Fachfarben on HEUTE. */
 #view-home #todayLessons .lesson.lessonClickable{
   background:color-mix(in srgb,var(--subject,#e9a7a4) 22%,#fffaf8)!important;
@@ -8306,10 +5663,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
   .v212TimeEndNote{font-size:9px;color:#ad9992;text-align:right;margin-top:5px}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 81 ===== */
 /* Uploaded Panda.ai rendered as a transparent StudyPet asset. */
 #petRoomMini .v213PandaPet{
   position:absolute;left:50%;bottom:28px;transform:translateX(-50%);
@@ -8354,10 +5708,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
   }
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 82 ===== */
 @media (min-width:1100px){
   /* Rounded, friendly desktop typography. Keep the document/canvas editor untouched. */
   body.v210Desktop:not(.editorMode),
@@ -8406,10 +5757,7 @@ body.v214LearningReadOnly #view-deck-detail .v214EditOnly{display:none!important
   .v214LearnModeSwitch button{min-height:32px;padding:0 11px}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 83 ===== */
 /* Keep the timetable time rail, but remove duplicate start/end text from lesson cards. */
 @media (min-width:1100px){
   #view-plan .v210Lesson .v210LessonTime{display:none!important}
@@ -8429,10 +5777,7 @@ body.v214LearningReadOnly #view-deck-detail #addCardToDeckBtn{display:none!impor
 body.editorMode #view-sheet-editor.active{pointer-events:auto!important}
 body.editorMode #view-sheet-editor.active[aria-hidden="true"]{visibility:visible!important}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 84 ===== */
 @media (min-width:1100px){
   /* No mascot/animal beside the Studia wordmark. */
   #v210Sidebar .brandIcon{display:none!important}
@@ -8473,10 +5818,7 @@ body.editorMode #view-sheet-editor.active[aria-hidden="true"]{visibility:visible
   body.editorMode.v216MobileMulti #canvasObjects .cobj.selected{outline:2px solid #d98992!important;outline-offset:2px!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 85 ===== */
 /* Keep the time rail, remove the duplicate time text from lesson blocks. */
 @media (min-width:900px){
   #view-plan .v210Lesson .v210LessonTime{display:none!important}
@@ -8508,10 +5850,7 @@ body:not(.v214LearningReadOnly) #view-deck-detail #addCardToDeckBtn{display:inli
   body.editorMode.v217MobileMulti #mobileSelectionTools{display:flex!important;visibility:visible!important;opacity:1!important}
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 86 ===== */
 /* Beim Lernblatt verschwindet die normale Studia-Navigation vollständig.
    Die Editor-eigenen Werkzeugleisten bleiben erhalten. */
 body.editorMode #v210Sidebar,
@@ -8577,10 +5916,7 @@ body.editorMode .app > .header{
   }
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 87 ===== */
 .formulaInlineOps{grid-template-columns:repeat(7,minmax(0,1fr))!important}
 .v219FormulaAlign{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:7px 8px;border:1px solid #ead7d1;border-radius:12px;background:#fffdfb}
 .v219FormulaAlign>span{font-size:9px;font-weight:900;color:#9b8178;margin-right:auto}
@@ -8589,10 +5925,7 @@ body.editorMode .app > .header{
 .v219ProtectedState{color:#7f9468!important}
 @media(max-width:650px){.formulaInlineOps{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 88 ===== */
 /* Leere Exponenten/Indizes bleiben echte, anklickbare Eingabefelder. */
 .formulaVisualEditor sup[contenteditable="true"],
 .formulaVisualEditor sub[contenteditable="true"],
@@ -8627,10 +5960,7 @@ body.editorMode .app > .header{
 .v221GapRow button{min-height:35px;border:1px solid #e6cec8;background:#fff;border-radius:8px;color:#735e57;font-size:9px;font-weight:850}
 @media(max-width:650px){.v221GraphFormulaModal .formulaInlineOps{grid-template-columns:repeat(4,minmax(0,1fr))!important}.v221GapRow{grid-template-columns:1fr 1fr}}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 89 ===== */
 .graphModal .graphRangeGrid{display:none!important}
 .graphPreviewWrap{position:relative;user-select:none}
 .graphPreview{cursor:grab;touch-action:none;outline:none}
@@ -8650,10 +5980,7 @@ body.editorMode .app > .header{
 .graphObj{cursor:move}
 @media(max-width:700px){.v222GraphNav{align-items:flex-start;flex-direction:column}.v222GraphNav button{width:100%}}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 90 ===== */
 /* Exponenten/Indizes bleiben immer sauber an der Grundlinie verankert. */
 #formulaVisualEditor sup,#graphFunctionVisual sup,
 #canvasObjects .formulaObj .formulaContent sup,.v181PreviewPage .formulaObj .formulaContent sup{
@@ -8750,10 +6077,7 @@ body.editorMode .app > .header{
 }
 .v223PeriodBtn b{letter-spacing:.04em}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 91 ===== */
 /* Ein Exponent ist ein echtes zusammenhängendes mathematisches Objekt. */
 #formulaVisualEditor .vfPower{
   display:inline-flex!important;
@@ -8768,10 +6092,7 @@ body.editorMode .app > .header{
   transform:translateY(-.05em)!important;
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 92 ===== */
 #formulaVisualEditor :is(.vfEditable,.vfExponentSlot,sup[contenteditable],sub[contenteditable],.vfFrac>span,.vfRoot>span,.vfParenBody,.vfAbs>span,.vfFunction>span)[contenteditable="true"]{
   min-width:.28em!important;
   cursor:text!important;
@@ -8781,20 +6102,14 @@ body.editorMode .app > .header{
 }
 #formulaVisualEditor :is(sup,sub)[contenteditable="true"]{white-space:pre!important}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 93 ===== */
 body.editorMode .v134FormatTools input.size{
   pointer-events:auto!important;
   opacity:1!important;
   cursor:text!important;
 }
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 94 ===== */
 /* Same rounded UI font on phone + laptop. Document object fonts stay user controlled. */
 html,body,.app,.view,.panel,.card,.section,.modal,.nav,button,input,select,textarea,label,.small,.badge,
 #v210Sidebar,#v208Sidebar,#view-plan,.v210Lesson,.v210DayHead,.v210TimeRail,
@@ -8825,14 +6140,7 @@ body.editorMode #desktopEditorSidebar,body.editorMode .objectPanel,#v242DesktopS
 .tapeSticker>.v242TapeArt{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;display:block!important;pointer-events:none!important;overflow:visible!important;z-index:0!important}
 .tapeSticker>.rotateHandle,.tapeSticker>.resizeHandle{z-index:3!important}
 
-
-/* ---- next original style block ---- */
-
-'+faces+'@page{size:'+W+'px '+H+'px;margin:0}*{box-sizing:border-box}html,body{margin:0;padding:0;background:#eee9e6;color:#65514b;font-family:Arial,sans-serif}.toolbar{position:sticky;top:0;z-index:2147483600;display:flex;align-items:center;gap:10px;padding:12px 18px;background:#fffaf8;border-bottom:1px solid #ecd9d6}.toolbar b{margin-right:auto}.toolbar button{border:1px solid #ead5d0;background:#fff;border-radius:12px;padding:10px 16px;color:#65514b;font-weight:700;cursor:pointer}.toolbar button:first-of-type{background:#f9d7d9}.printRoot{display:grid;justify-items:center;gap:24px;padding:24px;overflow:auto}.v181PreviewPage{flex:none;break-after:page;page-break-after:always}.v181PreviewPage:last-child{break-after:auto;page-break-after:auto}.v181PreviewPage,.v181PreviewPage *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;forced-color-adjust:none!important}'+tapeCSS+'@media print{html,body{background:#fff!important}.toolbar{display:none!important}.printRoot{display:block;margin:0;padding:0;overflow:visible}.v181PreviewPage{justify-self:start!important}}
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 95 ===== */
 /* Laptop stays rounded like mobile, but editor object fonts remain user-controlled. */
 @media(min-width:900px){
   body:not(.editorMode),body:not(.editorMode) button,body:not(.editorMode) input,body:not(.editorMode) select,body:not(.editorMode) textarea,
@@ -8859,10 +6167,7 @@ body.editorMode #desktopEditorSidebar,body.editorMode .objectPanel,#v242DesktopS
 .v253AttachList{display:grid;gap:7px;margin-top:8px}.v253Attach{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border:1px solid #eadbd6;border-radius:12px;background:#fff}.v253Attach span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px;font-weight:800;color:#78635b}.v253Attach .row{gap:5px}.v253Attach button{min-height:28px!important;padding:5px 8px!important;font-size:9px!important}.v253AttachPreview{max-width:100%;max-height:170px;object-fit:contain;border:1px solid #eadbd6;border-radius:12px;background:#fff;margin-top:7px}
 #v253CloudInfo{margin-top:8px;padding:8px 10px;border:1px solid #ead8d1;border-radius:11px;background:#fffaf7;color:#816b63;font-size:9px;font-weight:800;line-height:1.45}#v253CloudInfo.warn{background:#fff2ef;border-color:#eccbc3;color:#9b6c63}
 
-
-/* ---- next original style block ---- */
-
-
+/* ===== original style 96 ===== */
 #v260GoogleSyncInfo{margin-top:8px;padding:9px 11px;border:1px solid #d9e7d1;border-radius:12px;background:#f6fbf2;color:#64765b;font-size:10px;font-weight:850;line-height:1.45}
 #v260GoogleSyncInfo.bad{border-color:#ebc8c1;background:#fff3f1;color:#9b6661}
 #v260GoogleSyncInfo.syncing{border-color:#ead7b7;background:#fffaf0;color:#8c7452}
