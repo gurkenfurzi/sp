@@ -16204,7 +16204,29 @@ async function health(){return get('health')}
 async function me(){const c=config();if(!c.token)throw new Error('Nicht angemeldet');return get('me',{token:c.token})}
 async function getState(){const c=config();if(!c.token)throw new Error('Nicht angemeldet');return get('state',{token:c.token})}
 async function putState(data){const c=config();if(!c.token)throw new Error('Nicht angemeldet');return post('state_put',{token:c.token,data})}
-async function syncState(data){const c=config();if(!c.token)throw new Error('Nicht angemeldet');return post('sync',{token:c.token,data})}
+function v247BytesToB64(bytes){let s='';const step=0x8000;for(let i=0;i<bytes.length;i+=step)s+=String.fromCharCode(...bytes.subarray(i,i+step));return btoa(s)}
+function v247B64ToBytes(b64){const s=atob(String(b64||'')),a=new Uint8Array(s.length);for(let i=0;i<s.length;i++)a[i]=s.charCodeAt(i);return a}
+async function v247GzipText(text){if(typeof CompressionStream!=='function')return '';const cs=new CompressionStream('gzip');const ab=await new Response(new Blob([String(text)]).stream().pipeThrough(cs)).arrayBuffer();return v247BytesToB64(new Uint8Array(ab))}
+async function v247UngzipText(b64){if(typeof DecompressionStream!=='function')throw new Error('Browser kann Cloud-Daten nicht entpacken');const ds=new DecompressionStream('gzip');return await new Response(new Blob([v247B64ToBytes(b64)]).stream().pipeThrough(ds)).text()}
+async function v247BridgeSync(data){
+  const c=config();if(!c.url)throw new Error('Server-Script-Service-URL fehlt');if(!c.token)throw new Error('Nicht angemeldet');
+  const id='v247-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);
+  const name='studiaBridge_'+id.replace(/[^a-z0-9_]/gi,'');
+  const frame=document.createElement('iframe');frame.name=name;frame.style.cssText='position:fixed;width:1px;height:1px;left:-9999px;top:-9999px;border:0;opacity:0;pointer-events:none';
+  const form=document.createElement('form');form.method='POST';form.action=normalizeUrl(c.url);form.target=name;form.enctype='multipart/form-data';form.acceptCharset='UTF-8';form.style.display='none';
+  const add=(k,v)=>{const i=document.createElement('input');i.type='hidden';i.name=k;i.value=String(v??'');form.appendChild(i)};
+  add('action','sync_bridge');add('token',c.token);add('bridgeId',id);add('replyGzip',typeof DecompressionStream==='function'?'1':'0');
+  const raw=JSON.stringify(data||{});let gz='';try{gz=await v247GzipText(raw)}catch(_){}
+  if(gz&&gz.length<raw.length){add('dataGzip',gz);add('encoding','gzip-base64')}else add('data',raw);
+  return await new Promise((resolve,reject)=>{
+    let done=false;const cleanup=()=>{if(done)return;done=true;clearTimeout(timer);window.removeEventListener('message',onmsg);setTimeout(()=>{form.remove();frame.remove()},0)};
+    const finishErr=e=>{cleanup();reject(e instanceof Error?e:new Error(String(e||'Sync fehlgeschlagen')))};
+    const onmsg=async ev=>{if(ev.source!==frame.contentWindow)return;const m=ev.data;if(!m||m.type!=='studia-sync-bridge'||m.id!==id)return;try{const p=m.payload||{};if(!p.ok)throw new Error(String(p.error||'Sync fehlgeschlagen'));if(p.dataGzip){p.data=JSON.parse(await v247UngzipText(p.dataGzip));delete p.dataGzip}cleanup();resolve(p)}catch(e){finishErr(e)}};
+    const timer=setTimeout(()=>finishErr(new Error('Cloud antwortet nicht · Apps-Script-Bereitstellung prüfen')),18000);
+    window.addEventListener('message',onmsg);document.body.append(frame,form);try{form.submit()}catch(e){finishErr(e)}
+  });
+}
+async function syncState(data){return v247BridgeSync(data)}
 async function login(username,password){const r=await post('login',{username,password});rememberAuth(r);return r}
 async function register(username,password){const r=await post('register',{username,password});rememberAuth(r);return r}
 window.StudiaCloud={config,rememberUrl,rememberAuth,rememberedUser,health,me,getState,putState,syncState,login,register,setStatus};
@@ -22185,12 +22207,12 @@ window.studiaSyncNow=async function(force=false){
  try{
   const cloud=window.StudiaCloud;if(!cloud)throw new Error('Sync-Modul fehlt');const cfg=cloud.config?.()||{};if(!cfg.url)throw new Error('Server-Script-Service-URL fehlt');if(!cfg.token)throw new Error('Nicht angemeldet');
   commitEditor();await backup();const d=getData(),base=readBase();stamp(d,base);persist();const local=clone(d);
-  if(typeof cloud.syncState!=='function')throw new Error('Sync-Client V246 fehlt');
+  if(typeof cloud.syncState!=='function')throw new Error('Sync-Client V247 fehlt');
   const res=await cloud.syncState(clone(local));
-  if(Number(res?.version||0)<246)throw new Error('Backend V246 fehlt · Apps Script einmal aktualisieren');
+  if(Number(res?.version||0)<247)throw new Error('Backend V247 fehlt · Apps Script einmal aktualisieren');
   const merged=res?.data&&typeof res.data==='object'?res.data:local;setData(merged);persist();rerender();
   saveBase(merged);window.v150ClearDirty?.();lastSyncAt=Date.now();status('Auf allen Geräten gespeichert ✓');setTimeout(()=>status('Lokal gespeichert'),2200);return {ok:true,updatedAt:res?.updatedAt||lastSyncAt};
- }catch(e){console.error('[Studia V246 sync]',e);persist();let msg=String(e?.message||'Sync fehlgeschlagen');if(/Unbekannte Aktion:\s*sync/i.test(msg))msg='Backend V246 fehlt · Apps Script einmal aktualisieren';status(msg+' · lokal sicher',true);try{window.cuteToast?.('Sync: '+msg)}catch(_){}setTimeout(()=>status('Lokal gespeichert'),3500);throw e}finally{syncBusy=false;setTimeout(()=>q('#v242PullSync')?.classList.remove('show','ready','syncing'),450)}
+ }catch(e){console.error('[Studia V247 sync]',e);persist();let msg=String(e?.message||'Sync fehlgeschlagen');if(/Unbekannte Aktion:\s*sync/i.test(msg))msg='Backend V247 fehlt · Apps Script einmal aktualisieren';status(msg+' · lokal sicher',true);try{window.cuteToast?.('Sync: '+msg)}catch(_){}setTimeout(()=>status('Lokal gespeichert'),3500);throw e}finally{syncBusy=false;setTimeout(()=>q('#v242PullSync')?.classList.remove('show','ready','syncing'),450)}
 };
 window.studiaSyncNow.__v219Guarded=true;
 window.v171CloudNow=function(){return window.studiaSyncNow(false)};window.v171CloudNow.__v219Guarded=true;try{v171CloudNow=window.v171CloudNow}catch(_){}
@@ -22228,7 +22250,7 @@ window.printCanvasSheet=async function(){
 };try{printCanvasSheet=window.printCanvasSheet}catch(_){}
 
 if(!window.__STUDIA_V245_HOME_CLOCK__){window.__STUDIA_V245_HOME_CLOCK__=setInterval(()=>{try{if(document.querySelector('#view-home.active')&&!document.body.classList.contains('editorMode'))window.renderHome?.()}catch(_){}},1000)}
-function maintain(){if(maintainQueued)return;maintainQueued=true;requestAnimationFrame(()=>{maintainQueued=false;ensureSyncUI();decorateTape();const e=q('#headerEyebrow');if(e)e.textContent='VERSION 246'})}
+function maintain(){if(maintainQueued)return;maintainQueued=true;requestAnimationFrame(()=>{maintainQueued=false;ensureSyncUI();decorateTape();const e=q('#headerEyebrow');if(e)e.textContent='VERSION 247'})}
 const obs=new MutationObserver(maintain);obs.observe(document.body,{childList:true,subtree:true});[0,120,450,1200].forEach(t=>setTimeout(maintain,t));
 /* V245: no automatic network sync on reconnect; user triggers sync explicitly. */
 })();
@@ -22253,4 +22275,4 @@ const obs=new MutationObserver(maintain);obs.observe(document.body,{childList:tr
 
 <!-- Studia V244: cloud transport timeout/retry upgraded in-place; no additional sync handler. -->
 
-<script id="studia-v246-backend-hint">(()=>{function add(){const c=document.querySelector('.v171CloudSettings');if(!c||document.getElementById('v246BackendHint'))return;const p=document.createElement('div');p.id='v246BackendHint';p.className='small';p.style.cssText='margin-top:8px;padding:8px 10px;border-radius:10px;background:#fff7f3;color:#8b7068;font-weight:750';p.textContent='Sync V246: ein Server-Request. Falls „Backend V246 fehlt“ erscheint, backend-v246/Code.gs einmal in Apps Script einsetzen und neu bereitstellen.';c.appendChild(p)}[0,300,1200].forEach(t=>setTimeout(add,t));new MutationObserver(add).observe(document.documentElement,{childList:true,subtree:true})})();</script>
+<script id="studia-v247-backend-hint">(()=>{function add(){const c=document.querySelector('.v171CloudSettings');if(!c||document.getElementById('v246BackendHint'))return;const p=document.createElement('div');p.id='v246BackendHint';p.className='small';p.style.cssText='margin-top:8px;padding:8px 10px;border-radius:10px;background:#fff7f3;color:#8b7068;font-weight:750';p.textContent='Sync V246: ein Server-Request. Falls „Backend V246 fehlt“ erscheint, backend-v247/Code.gs einmal in Apps Script einsetzen und neu bereitstellen.';c.appendChild(p)}[0,300,1200].forEach(t=>setTimeout(add,t));new MutationObserver(add).observe(document.documentElement,{childList:true,subtree:true})})();</script>
