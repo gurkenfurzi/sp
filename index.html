@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Studia">
-<link rel="manifest" href="https://gurkenfurzi.github.io/sp/manifest.webmanifest?v=261-structure-fix">
+<link rel="manifest" href="https://gurkenfurzi.github.io/sp/manifest.webmanifest?v=263">
 <link rel="icon" type="image/png" sizes="64x64" href="https://gurkenfurzi.github.io/sp/assets/icons/favicon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="https://gurkenfurzi.github.io/sp/assets/icons/icon-192.png">
 <link rel="apple-touch-icon" sizes="180x180" href="https://gurkenfurzi.github.io/sp/assets/icons/apple-touch-icon.png">
@@ -89,7 +89,12 @@
 
 
 
-<link rel="stylesheet" href="https://gurkenfurzi.github.io/sp/assets/css/studia.css?v=261-structure-fix">
+<!-- Original editor stylesheet stays before the later Studia patch bundle.
+     This preserves the historical editor/mobile/tape layout while allowing later fixes to win. -->
+<link rel="stylesheet" href="https://gurkenfurzi.github.io/sp/editor.css?v=202">
+<link rel="stylesheet" href="https://gurkenfurzi.github.io/sp/assets/css/studia.css?v=263">
+
+<script id="studia-v263-safety-backup">(function(){try{var k='schoolhub-v1',raw=localStorage.getItem(k);if(raw&&!localStorage.getItem('studia-v263-preupgrade-backup'))localStorage.setItem('studia-v263-preupgrade-backup',raw)}catch(_){}})();</script>
 </head>
 <body class="v57">
 <script>(function(){
@@ -601,7 +606,7 @@
   <div class="modal" id="modal"></div>
 </div>
 
-<script src="https://gurkenfurzi.github.io/sp/assets/js/studia.js?v=261-structure-fix"></script>
+<script src="https://gurkenfurzi.github.io/sp/assets/js/studia.js?v=263"></script>
 <!-- ===== Studia V117 interaction + mobile toolbar stabilization ===== -->
 <!-- ===== /Studia V117 ===== -->
 
@@ -669,7 +674,6 @@
 
 <!-- ===== Studia V134 reference-inspired desktop editor ===== -->
 <!-- ===== /Studia V134 ===== -->
-<link rel="stylesheet" href="https://gurkenfurzi.github.io/sp/editor.css?v=202">
 <!-- Studia V243: cloud transport is inlined so GitHub Pages cannot miss google-sync-config.js -->
 <!-- V248: legacy external editor.js disabled; current editor code is inline -->
 <!-- Desktop editor stability repair: one direct-edit surface + edge-only movement -->
