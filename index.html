@@ -16196,17 +16196,18 @@ async function get(action,params={}){
 }
 async function post(action,payload={}){
   const c=config(); if(!c.url)throw new Error('Server-Script-Service-URL fehlt');
-  const label=action==='state_put'?'Daten speichern':action==='login'?'Anmeldung':action==='register'?'Registrierung':action;
-  const ms=action==='state_put'?12000:10000;
+  const label=action==='sync'?'Geräte synchronisieren':action==='state_put'?'Daten speichern':action==='login'?'Anmeldung':action==='register'?'Registrierung':action;
+  const ms=action==='sync'?25000:(action==='state_put'?12000:10000);
   return runCloudRequest(signal=>fetch(normalizeUrl(c.url),{method:'POST',cache:'no-store',redirect:'follow',credentials:'omit',signal,headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action,...payload})}),ms,label);
 }
 async function health(){return get('health')}
 async function me(){const c=config();if(!c.token)throw new Error('Nicht angemeldet');return get('me',{token:c.token})}
 async function getState(){const c=config();if(!c.token)throw new Error('Nicht angemeldet');return get('state',{token:c.token})}
 async function putState(data){const c=config();if(!c.token)throw new Error('Nicht angemeldet');return post('state_put',{token:c.token,data})}
+async function syncState(data){const c=config();if(!c.token)throw new Error('Nicht angemeldet');return post('sync',{token:c.token,data})}
 async function login(username,password){const r=await post('login',{username,password});rememberAuth(r);return r}
 async function register(username,password){const r=await post('register',{username,password});rememberAuth(r);return r}
-window.StudiaCloud={config,rememberUrl,rememberAuth,rememberedUser,health,me,getState,putState,login,register,setStatus};
+window.StudiaCloud={config,rememberUrl,rememberAuth,rememberedUser,health,me,getState,putState,syncState,login,register,setStatus};
 window.GOOGLE_SYNC_CONFIG=window.GOOGLE_SYNC_CONFIG||{};
 try{Object.defineProperty(window.GOOGLE_SYNC_CONFIG,'scriptUrl',{configurable:true,get:scanUrl,set:rememberUrl})}catch(_){window.GOOGLE_SYNC_CONFIG.scriptUrl=scanUrl()}
 window.v150MarkDirty=function(delay=700){
@@ -22184,9 +22185,12 @@ window.studiaSyncNow=async function(force=false){
  try{
   const cloud=window.StudiaCloud;if(!cloud)throw new Error('Sync-Modul fehlt');const cfg=cloud.config?.()||{};if(!cfg.url)throw new Error('Server-Script-Service-URL fehlt');if(!cfg.token)throw new Error('Nicht angemeldet');
   commitEditor();await backup();const d=getData(),base=readBase();stamp(d,base);persist();const local=clone(d);
-  const pulled=await cloud.getState(),remote=pulled?.data&&typeof pulled.data==='object'?pulled.data:{};const merged=mergeState(local,remote);setData(merged);persist();rerender();
-  const put=await cloud.putState(clone(merged));saveBase(merged);window.v150ClearDirty?.();lastSyncAt=Date.now();status('Auf allen Geräten gespeichert ✓');setTimeout(()=>status('Lokal gespeichert'),2200);return {ok:true,updatedAt:put?.updatedAt||lastSyncAt};
- }catch(e){console.error('[Studia V245 sync]',e);persist();const msg=String(e?.message||'Sync fehlgeschlagen');status(msg+' · lokal sicher',true);try{window.cuteToast?.('Sync: '+msg)}catch(_){}setTimeout(()=>status('Lokal gespeichert'),3500);throw e}finally{syncBusy=false;setTimeout(()=>q('#v242PullSync')?.classList.remove('show','ready','syncing'),450)}
+  if(typeof cloud.syncState!=='function')throw new Error('Sync-Client V246 fehlt');
+  const res=await cloud.syncState(clone(local));
+  if(Number(res?.version||0)<246)throw new Error('Backend V246 fehlt · Apps Script einmal aktualisieren');
+  const merged=res?.data&&typeof res.data==='object'?res.data:local;setData(merged);persist();rerender();
+  saveBase(merged);window.v150ClearDirty?.();lastSyncAt=Date.now();status('Auf allen Geräten gespeichert ✓');setTimeout(()=>status('Lokal gespeichert'),2200);return {ok:true,updatedAt:res?.updatedAt||lastSyncAt};
+ }catch(e){console.error('[Studia V246 sync]',e);persist();let msg=String(e?.message||'Sync fehlgeschlagen');if(/Unbekannte Aktion:\s*sync/i.test(msg))msg='Backend V246 fehlt · Apps Script einmal aktualisieren';status(msg+' · lokal sicher',true);try{window.cuteToast?.('Sync: '+msg)}catch(_){}setTimeout(()=>status('Lokal gespeichert'),3500);throw e}finally{syncBusy=false;setTimeout(()=>q('#v242PullSync')?.classList.remove('show','ready','syncing'),450)}
 };
 window.studiaSyncNow.__v219Guarded=true;
 window.v171CloudNow=function(){return window.studiaSyncNow(false)};window.v171CloudNow.__v219Guarded=true;try{v171CloudNow=window.v171CloudNow}catch(_){}
@@ -22224,7 +22228,7 @@ window.printCanvasSheet=async function(){
 };try{printCanvasSheet=window.printCanvasSheet}catch(_){}
 
 if(!window.__STUDIA_V245_HOME_CLOCK__){window.__STUDIA_V245_HOME_CLOCK__=setInterval(()=>{try{if(document.querySelector('#view-home.active')&&!document.body.classList.contains('editorMode'))window.renderHome?.()}catch(_){}},1000)}
-function maintain(){if(maintainQueued)return;maintainQueued=true;requestAnimationFrame(()=>{maintainQueued=false;ensureSyncUI();decorateTape();const e=q('#headerEyebrow');if(e)e.textContent='VERSION 245'})}
+function maintain(){if(maintainQueued)return;maintainQueued=true;requestAnimationFrame(()=>{maintainQueued=false;ensureSyncUI();decorateTape();const e=q('#headerEyebrow');if(e)e.textContent='VERSION 246'})}
 const obs=new MutationObserver(maintain);obs.observe(document.body,{childList:true,subtree:true});[0,120,450,1200].forEach(t=>setTimeout(maintain,t));
 /* V245: no automatic network sync on reconnect; user triggers sync explicitly. */
 })();
@@ -22248,3 +22252,5 @@ const obs=new MutationObserver(maintain);obs.observe(document.body,{childList:tr
 <!-- ===== /Studia V243 ===== -->
 
 <!-- Studia V244: cloud transport timeout/retry upgraded in-place; no additional sync handler. -->
+
+<script id="studia-v246-backend-hint">(()=>{function add(){const c=document.querySelector('.v171CloudSettings');if(!c||document.getElementById('v246BackendHint'))return;const p=document.createElement('div');p.id='v246BackendHint';p.className='small';p.style.cssText='margin-top:8px;padding:8px 10px;border-radius:10px;background:#fff7f3;color:#8b7068;font-weight:750';p.textContent='Sync V246: ein Server-Request. Falls „Backend V246 fehlt“ erscheint, backend-v246/Code.gs einmal in Apps Script einsetzen und neu bereitstellen.';c.appendChild(p)}[0,300,1200].forEach(t=>setTimeout(add,t));new MutationObserver(add).observe(document.documentElement,{childList:true,subtree:true})})();</script>
