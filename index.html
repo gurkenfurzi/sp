@@ -21992,826 +21992,128 @@ const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 231'};
 <!-- ===== /Studia V230 ===== -->
 
 
-<!-- ===== Studia V232 · SAFE MERGE SYNC + PULL TO SYNC + DESKTOP POLISH ===== -->
-<style id="studia-v232-safe-sync-style">
-@media (min-width:900px){
-  html,body,button,input,select,textarea,
-  #v210Sidebar,#v208Sidebar,#view-plan,.v210Lesson,.v210DayHead,.v210TimeRail,
-  .panel,.card,.section,.modal,.canvasTopbar,.canvasQuickNav,.canvasQuickDrawer,#desktopEditorSidebar{
-    font-family:ui-rounded,"SF Pro Rounded","Arial Rounded MT Bold","Avenir Next Rounded","Trebuchet MS",system-ui,sans-serif!important;
-  }
-  #v232DesktopSync{
-    position:fixed;right:20px;bottom:20px;z-index:10050;display:flex;align-items:center;gap:9px;
-    min-height:42px;padding:8px 13px;border-radius:15px;border:1px solid #ead7d1;background:rgba(255,252,249,.96);
-    color:#775f58;box-shadow:0 10px 28px rgba(91,67,59,.12);backdrop-filter:blur(14px);font-size:10px;font-weight:900;cursor:pointer
-  }
-  #v232DesktopSync:hover{background:#fff7f5;border-color:#e4c5c1;transform:translateY(-1px)}
-  #v232DesktopSync .spin{font-size:17px;line-height:1;transition:transform .25s ease}
-  #v232DesktopSync.syncing .spin{animation:v232Spin .8s linear infinite}
-  #v232DesktopSync small{display:block;font-size:7px;font-weight:750;color:#a58d85;margin-top:1px;max-width:170px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  @keyframes v232Spin{to{transform:rotate(360deg)}}
-}
-@media(max-width:899px){#v232DesktopSync{display:none!important}}
-#v232PullSync{
-  position:fixed;left:50%;top:8px;transform:translate(-50%,-125%);z-index:10080;pointer-events:none;
-  min-width:170px;max-width:80vw;padding:9px 14px;border-radius:999px;border:1px solid #ead8d2;background:rgba(255,252,249,.97);
-  box-shadow:0 8px 25px rgba(91,67,59,.12);color:#826961;font:850 10px/1.2 ui-rounded,"SF Pro Rounded","Trebuchet MS",sans-serif;text-align:center;
-  transition:transform .18s ease,opacity .18s ease;opacity:0
-}
-#v232PullSync.show{opacity:1}
-#v232PullSync.ready{background:#fff2f1;border-color:#e7c6c4;color:#ad6f72}
-#v232PullSync.syncing{background:#f5f9ef;border-color:#dbe5c8;color:#75845b}
-.v232SizeGroup{display:inline-flex!important;align-items:center!important;gap:3px!important;height:32px!important;padding:2px!important;border:1px solid #ead8d2!important;border-radius:10px!important;background:#fff!important}
-.v232SizeGroup>button{width:25px!important;height:26px!important;min-width:25px!important;padding:0!important;border:0!important;border-radius:7px!important;background:transparent!important;font-size:15px!important;font-weight:900!important;color:#795f57!important;display:grid!important;place-items:center!important}
-.v232SizeGroup>button:hover{background:#fff0ef!important}
-.v232SizeGroup>input.size{width:44px!important;height:26px!important;min-height:26px!important;border:0!important;background:transparent!important;padding:0 2px!important;text-align:center!important;font-size:11px!important;font-weight:900!important;outline:none!important}
-#v232SyncStatusInline{font-size:8px;color:#9c837a;font-weight:800;margin-top:6px}
-.v210LessonMeta .v232RoomLabel{font-weight:900}
-</style>
-<script id="studia-v232-safe-sync-script">
-(()=>{
-'use strict';
-if(window.__STUDIA_V232__)return;window.__STUDIA_V232__=true;
-const q=(s,r=document)=>r?.querySelector?.(s)||null;
-const qa=(s,r=document)=>r?.querySelectorAll?[...r.querySelectorAll(s)]:[];
-const clone=x=>{try{return structuredClone(x)}catch(_){try{return JSON.parse(JSON.stringify(x))}catch(__){return x}}};
-const now=()=>Date.now();
-const META='_syncMeta',UPDATED='_updatedAt';
-const TRACKED=['homework','tests','grades','flashcards','subjects','absences','studySessions','reminders','flashDecks','quizzes','studySheets'];
-let v232SyncBusy=false,v232Installing=false,v232LastStatus='Lokal gespeichert';
-
-function cleanForCompare(v){
-  if(Array.isArray(v))return v.map(cleanForCompare);
-  if(v&&typeof v==='object'){
-    const out={};for(const [k,val] of Object.entries(v)){if(k===UPDATED||k===META)continue;out[k]=cleanForCompare(val)}return out;
-  }
-  return v;
-}
-function same(a,b){try{return JSON.stringify(cleanForCompare(a))===JSON.stringify(cleanForCompare(b))}catch(_){return false}}
-function ensureMeta(d){
-  if(!d||typeof d!=='object')return {fields:{},tombstones:{}};
-  d[META] ||= {version:1,fields:{},tombstones:{}};
-  d[META].fields ||= {};d[META].tombstones ||= {};d[META].version=1;return d[META];
-}
-function objectId(x){return x&&typeof x==='object'&&x.id!=null?String(x.id):''}
-function stampChanges(cur,old){
-  if(!cur||typeof cur!=='object')return;
-  const ts=now(),meta=ensureMeta(cur),oldMeta=old?.[META]||{};
-  for(const key of TRACKED){
-    const a=Array.isArray(cur[key])?cur[key]:[],b=Array.isArray(old?.[key])?old[key]:[];
-    const bm=new Map(b.map(x=>[objectId(x),x]).filter(x=>x[0]));
-    const am=new Map(a.map(x=>[objectId(x),x]).filter(x=>x[0]));
-    meta.tombstones[key] ||= {};
-    for(const item of a){
-      const id=objectId(item);if(!id)continue;const prev=bm.get(id);
-      if(!prev)item[UPDATED]=Number(item[UPDATED])||ts;
-      else if(!same(item,prev))item[UPDATED]=ts;
-      else if(!Number(item[UPDATED]))item[UPDATED]=Number(prev?.[UPDATED])||1;
-      const dead=Number(meta.tombstones[key][id]||0);if(dead&&Number(item[UPDATED]||0)>dead)delete meta.tombstones[key][id];
-    }
-    for(const prev of b){const id=objectId(prev);if(id&&!am.has(id))meta.tombstones[key][id]=Math.max(Number(meta.tombstones[key][id]||0),ts)}
-  }
-  const fields=Object.keys(cur).filter(k=>k!==META&&!TRACKED.includes(k));
-  for(const key of fields){
-    if(!same(cur[key],old?.[key]))meta.fields[key]=ts;
-    else if(!meta.fields[key]&&oldMeta?.fields?.[key])meta.fields[key]=oldMeta.fields[key];
-  }
-}
-function mergedMeta(a,b){
-  const A=a||{},B=b||{},out={version:1,fields:{},tombstones:{}};
-  for(const k of new Set([...Object.keys(A.fields||{}),...Object.keys(B.fields||{})]))out.fields[k]=Math.max(Number(A.fields?.[k]||0),Number(B.fields?.[k]||0));
-  for(const col of new Set([...Object.keys(A.tombstones||{}),...Object.keys(B.tombstones||{})])){
-    out.tombstones[col]={};const aa=A.tombstones?.[col]||{},bb=B.tombstones?.[col]||{};
-    for(const id of new Set([...Object.keys(aa),...Object.keys(bb)]))out.tombstones[col][id]=Math.max(Number(aa[id]||0),Number(bb[id]||0));
-  }
-  return out;
-}
-function mergePlain(remote,local){
-  if(local==null)return clone(remote);if(remote==null)return clone(local);
-  if(Array.isArray(local)||Array.isArray(remote))return clone(local);
-  if(typeof local==='object'&&typeof remote==='object'){
-    const out={...clone(remote)};for(const [k,v] of Object.entries(local))out[k]=clone(v);return out;
-  }
-  return clone(local);
-}
-function mergeCollection(name,localArr,remoteArr,meta){
-  const la=Array.isArray(localArr)?localArr:[],ra=Array.isArray(remoteArr)?remoteArr:[];
-  const lmap=new Map(la.map(x=>[objectId(x),x]).filter(x=>x[0])),rmap=new Map(ra.map(x=>[objectId(x),x]).filter(x=>x[0]));
-  const order=[...la.map(objectId),...ra.map(objectId)].filter(Boolean),ids=[...new Set(order)],out=[];
-  for(const id of ids){
-    const l=lmap.get(id),r=rmap.get(id);let item;
-    if(l&&r){
-      const lt=Number(l[UPDATED]||0),rt=Number(r[UPDATED]||0);
-      if(rt>lt)item=clone(r);else if(lt>rt)item=clone(l);else item=mergePlain(r,l);
-      item[UPDATED]=Math.max(lt,rt,Number(item[UPDATED]||0));
-    }else item=clone(l||r);
-    const dead=Number(meta?.tombstones?.[name]?.[id]||0),it=Number(item?.[UPDATED]||0);
-    if(dead&&dead>=it)continue;
-    if(item)out.push(item);
-  }
-  /* objects without IDs: keep both without duplicates instead of dropping data */
-  const seen=new Set(out.map(x=>{try{return JSON.stringify(cleanForCompare(x))}catch(_){return String(x)}}));
-  for(const x of [...la,...ra]){if(objectId(x))continue;let k='';try{k=JSON.stringify(cleanForCompare(x))}catch(_){k=String(x)}if(!seen.has(k)){seen.add(k);out.push(clone(x))}}
-  return out;
-}
-function mergeState(local,remote){
-  local=local&&typeof local==='object'?local:{};remote=remote&&typeof remote==='object'?remote:{};
-  const meta=mergedMeta(local[META],remote[META]),out={};
-  const keys=new Set([...Object.keys(remote),...Object.keys(local)]);keys.delete(META);
-  for(const key of keys){
-    if(TRACKED.includes(key)){out[key]=mergeCollection(key,local[key],remote[key],meta);continue}
-    const lt=Number(local[META]?.fields?.[key]||0),rt=Number(remote[META]?.fields?.[key]||0);
-    if(rt>lt)out[key]=clone(remote[key]);
-    else if(lt>rt)out[key]=clone(local[key]);
-    else out[key]=mergePlain(remote[key],local[key]);
-  }
-  out[META]=meta;return out;
-}
-function readStored(){try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(_){return {}}}
-function persistLocal(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){console.warn('[Studia V232] local save failed',e)}}
-function editorActive(){return document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active')}
-function commitEditor(){
-  if(!editorActive())return;
-  try{if(typeof saveCanvasSheetCore==='function')saveCanvasSheetCore(true)}catch(e){console.warn('[Studia V232] editor commit',e)}
-  try{persistLocal()}catch(_){ }
-}
-function setStatus(text,state='ok'){
-  v232LastStatus=text;const b=q('#v232DesktopSync'),m=q('#v232PullSync'),inline=q('#v232SyncStatusInline');
-  if(b){b.classList.toggle('syncing',state==='syncing');const s=b.querySelector('small');if(s)s.textContent=text}
-  if(m&&state==='syncing'){m.textContent=text;m.classList.add('show','syncing')}
-  if(inline)inline.textContent=text;
-}
-window.v232SetSyncStatus=setStatus;
-
-/* Local-first: stamp changed records BEFORE any cloud dirty/push layer sees them. */
-function installSave(){
-  const fn=window.save||(()=>{});if(typeof fn!=='function'||fn.__v232LocalFirst)return;
-  function wrappedSave(){
-    const old=readStored();if(!v232SyncBusy)stampChanges(data,old);persistLocal();setStatus('Lokal gespeichert ✓');
-    const r=fn.apply(this,arguments);persistLocal();return r;
-  }
-  wrappedSave.__v232LocalFirst=true;wrappedSave.__v232Original=fn;window.save=wrappedSave;try{save=wrappedSave}catch(_){ }
-}
-
-async function preSyncSafety(){
-  commitEditor();const old=readStored();stampChanges(data,old);persistLocal();
-  try{if(typeof window.v111CreateBackupNow==='function')await window.v111CreateBackupNow(false)}catch(_){ }
-}
-function installCloudMerge(){
-  if(v232Installing)return;v232Installing=true;
-  try{
-    const fn=window.v171CloudNow;if(typeof fn!=='function'||fn.__v232MergeSafe)return;
-    async function safeSync(){
-      if(v232SyncBusy)return {busy:true};
-      if(editorActive()){
-        commitEditor();persistLocal();setStatus('Lokal sicher · Sync nach Editor');
-        try{window.v150MarkDirty?.(0)}catch(_){ }
-        return {deferred:true};
-      }
-      v232SyncBusy=true;setStatus('Geräte werden zusammengeführt …','syncing');
-      let localBefore=null,result=null,error=null;
-      try{
-        await preSyncSafety();localBefore=clone(data);
-        result=await Promise.resolve(fn.apply(this,arguments));
-        const remoteAfter=clone(data),merged=mergeState(localBefore,remoteAfter);
-        data=merged;persistLocal();
-        try{renderAll?.()}catch(_){ }
-        try{if(q('#view-plan.active'))renderPlan?.()}catch(_){ }
-        setStatus('Auf diesem Gerät zusammengeführt ✓');
-        /* The merged state becomes the next outgoing state instead of letting a stale pull win. */
-        try{window.v150MarkDirty?.(120)}catch(_){ }
-      }catch(e){error=e;console.error('[Studia V232] sync',e);if(localBefore){data=localBefore;persistLocal();try{renderAll?.()}catch(_){ }}setStatus('Cloud fehlgeschlagen · lokal sicher');}
-      finally{v232SyncBusy=false;setTimeout(()=>{const m=q('#v232PullSync');m?.classList.remove('show','ready','syncing')},900)}
-      if(error)throw error;return result;
-    }
-    safeSync.__v232MergeSafe=true;safeSync.__v219Guarded=true;safeSync.__v232Original=fn;window.v171CloudNow=safeSync;
-  }finally{v232Installing=false}
-}
-window.studiaSyncNow=async function(){installSave();installCloudMerge();const fn=window.v171CloudNow;if(typeof fn!=='function'){setStatus('Sync noch nicht verbunden');return}try{return await fn()}catch(_){ }};
-
-/* Desktop sync control. */
-function ensureDesktopSyncButton(){
-  if(q('#v232DesktopSync'))return;const b=document.createElement('button');b.id='v232DesktopSync';b.type='button';b.innerHTML='<span class="spin">↻</span><span>Geräte synchronisieren<small>Lokal gespeichert</small></span>';b.onclick=()=>window.studiaSyncNow();document.body.appendChild(b);
-}
-
-/* Mobile pull-to-sync: drag down from the top. */
-let pullStart=null,pullY=0,pullReady=false;
-function ensurePull(){if(q('#v232PullSync'))return;const e=document.createElement('div');e.id='v232PullSync';e.textContent='Zum Synchronisieren ziehen';document.body.appendChild(e)}
-document.addEventListener('touchstart',e=>{
-  if(innerWidth>=900||editorActive()||document.body.classList.contains('modalOpen'))return;
-  const sc=document.scrollingElement||document.documentElement;if((sc.scrollTop||window.scrollY)>3)return;
-  const t=e.touches?.[0];if(!t)return;pullStart=t.clientY;pullY=0;pullReady=false;ensurePull();
-},{passive:true});
-document.addEventListener('touchmove',e=>{
-  if(pullStart==null)return;const t=e.touches?.[0];if(!t)return;pullY=Math.max(0,t.clientY-pullStart);const el=q('#v232PullSync');if(!el)return;
-  if(pullY>8){el.classList.add('show');el.style.transform=`translate(-50%, ${Math.min(58,pullY*.42)-45}px)`}
-  pullReady=pullY>=85;el.classList.toggle('ready',pullReady);el.textContent=pullReady?'Loslassen zum Synchronisieren ↻':'Zum Synchronisieren ziehen';
-},{passive:true});
-document.addEventListener('touchend',()=>{
-  if(pullStart==null)return;const run=pullReady;pullStart=null;pullReady=false;const el=q('#v232PullSync');if(el)el.style.transform='';if(run)window.studiaSyncNow();else setTimeout(()=>el?.classList.remove('show','ready'),180);
-},{passive:true});
-
-/* ---------- Text size in the desktop top toolbar: own +/- and direct formatting ---------- */
-let sizeRange=null,sizeObjectId=null;
-function selectedTextObj(){
-  try{const ids=[canvasState?.selectedId,...(canvasState?.selectedIds||[])].filter(Boolean),o=(canvasState?.objects||[]).find(x=>ids.some(id=>String(id)===String(x.id)));return o&&['text','block','task','merke'].includes(o.kind)&&!o.isChecklist?o:null}catch(_){return null}
-}
-function textEl(o){return o?q(`#canvasObjects .cobj[data-id="${CSS.escape(String(o.id))}"]`):null}
-function rememberSizeSelection(){
-  const o=selectedTextObj();sizeObjectId=o?.id||null;sizeRange=null;const el=textEl(o),s=getSelection();if(!el||!s?.rangeCount)return;
-  const r=s.getRangeAt(0),n=r.commonAncestorContainer.nodeType===1?r.commonAncestorContainer:r.commonAncestorContainer.parentElement;
-  if(n&&(n===el||el.contains(n))&&!r.collapsed)try{sizeRange=r.cloneRange()}catch(_){ }
-}
-document.addEventListener('selectionchange',()=>{const s=getSelection(),o=selectedTextObj(),el=textEl(o);if(!s?.rangeCount||!el)return;const r=s.getRangeAt(0),n=r.commonAncestorContainer.nodeType===1?r.commonAncestorContainer:r.commonAncestorContainer.parentElement;if(n&&(n===el||el.contains(n))&&!r.collapsed){sizeObjectId=o.id;try{sizeRange=r.cloneRange()}catch(_){ }} });
-function applySizeDirect(px){
-  px=Math.max(6,Math.min(180,Math.round(Number(px)||16)));let o=selectedTextObj();if(!o&&sizeObjectId)try{o=(canvasState.objects||[]).find(x=>String(x.id)===String(sizeObjectId))}catch(_){ }
-  if(!o)return;
-  const el=textEl(o);let ranged=false;
-  if(sizeRange&&el){
-    try{const n=sizeRange.commonAncestorContainer.nodeType===1?sizeRange.commonAncestorContainer:sizeRange.commonAncestorContainer.parentElement;if(n&&(n===el||el.contains(n))){el.focus({preventScroll:true});const s=getSelection();s.removeAllRanges();s.addRange(sizeRange.cloneRange());document.execCommand('styleWithCSS',false,false);document.execCommand('fontSize',false,'7');qa('font[size="7"]',el).forEach(f=>{f.removeAttribute('size');f.style.fontSize=px+'px'});o.text=el.innerHTML;ranged=true;sizeRange=s.rangeCount?s.getRangeAt(0).cloneRange():sizeRange}}catch(_){ }
-  }
-  if(!ranged){o.style||={};o.style.fontSize=px;if(el)el.style.fontSize=px+'px'}
-  qa('.v134FormatTools input.size').forEach(i=>i.value=String(px));
-  try{markCanvasDirty?.(false)}catch(_){ }try{pushHistory?.()}catch(_){ }try{renderCanvasInspector?.()}catch(_){ }
-}
-window.v232FontStep=function(delta){rememberSizeSelection();const inp=q('.v134FormatTools input.size');const o=selectedTextObj();const cur=Number(inp?.value)||Number(o?.style?.fontSize)||16;applySizeDirect(cur+Number(delta||0))};
-function ensureSizeControls(){
-  const inp=q('.v134FormatTools input.size');if(!inp||inp.closest('.v232SizeGroup'))return;
-  inp.removeAttribute('onchange');const g=document.createElement('span');g.className='v232SizeGroup';const minus=document.createElement('button'),plus=document.createElement('button');minus.type=plus.type='button';minus.textContent='−';plus.textContent='+';minus.title='Text kleiner';plus.title='Text größer';inp.parentNode.insertBefore(g,inp);g.append(minus,inp,plus);
-  const keep=e=>{rememberSizeSelection();e.preventDefault()};minus.addEventListener('pointerdown',keep);plus.addEventListener('pointerdown',keep);inp.addEventListener('pointerdown',rememberSizeSelection,true);
-  minus.addEventListener('click',()=>window.v232FontStep(-1));plus.addEventListener('click',()=>window.v232FontStep(1));
-  inp.addEventListener('input',()=>applySizeDirect(inp.value));inp.addEventListener('change',()=>applySizeDirect(inp.value));inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();applySizeDirect(inp.value);inp.blur()}});
-}
-
-/* ---------- Timetable colors: one authoritative setter/resolver ---------- */
-function canonSubject(name){
-  let x=String(name||'').replace(/\s+/g,' ').trim();try{x=prettySubject(x)}catch(_){ }x=String(x||'').toUpperCase().replace(/\s+/g,' ').trim();
-  const a={M:'MATHEMATIK',MATHE:'MATHEMATIK',MATHEMATIK:'MATHEMATIK',D:'DEUTSCH',DE:'DEUTSCH',DEUTSCH:'DEUTSCH',E:'ENGLISCH',ENG:'ENGLISCH',ENGLISCH:'ENGLISCH',PH:'PHYSIK',PHY:'PHYSIK',PHYSIK:'PHYSIK',BIO:'BIOLOGIE',BI:'BIOLOGIE',BIOLOGIE:'BIOLOGIE',CH:'CHEMIE',CHE:'CHEMIE',CHEMIE:'CHEMIE',G:'GESCHICHTE',GE:'GESCHICHTE',GES:'GESCHICHTE',GESCHICHTE:'GESCHICHTE',ET:'ETHIK',ETHIK:'ETHIK',SP:'SPORT',SPORT:'SPORT',INF:'INFORMATIK',INFORMATIK:'INFORMATIK'};
-  return a[x]||x;
-}
-function subjectColor232(name){
-  data.timetableSubjectColors ||= {};const c=canonSubject(name);
-  for(const [k,v] of Object.entries(data.timetableSubjectColors)){if(canonSubject(k)===c&&/^#[0-9a-f]{6}$/i.test(String(v)))return String(v).toLowerCase()}
-  const rec=(data.subjects||[]).find(s=>canonSubject(s.name)===c||canonSubject(s.abbr)===c);if(rec?.color)return String(rec.color);
-  try{return hashColor(c)}catch(_){return '#e9a7a4'}
-}
-function setSubjectColor232(name,color){
-  color=String(color||'').toLowerCase();if(!/^#[0-9a-f]{6}$/.test(color))return;const c=canonSubject(name);if(!c)return;
-  data.timetableSubjectColors ||= {};data.timetableSubjectColors[c]=color;
-  try{const k=timetableSubjectKey(name);if(k)data.timetableSubjectColors[k]=color}catch(_){ }
-  for(const s of data.subjects||[]){if(canonSubject(s.name)===c||canonSubject(s.abbr)===c){s.color=color;if(s.autoFromTimetable)s.cover=color;s[UPDATED]=now()}}
-  ensureMeta(data).fields.timetableSubjectColors=now();
-  try{save()}catch(_){persistLocal()}
-  try{renderPlan?.();renderHome?.();if(q('#view-subjects.active'))renderSubjects?.()}catch(_){ }
-  setTimeout(()=>{try{renderPlan?.()}catch(_){ }},30);
-}
-window.setTimetableSubjectColor=setSubjectColor232;window.v216SetSubjectColor=setSubjectColor232;window.v232SetSubjectColor=setSubjectColor232;
-try{timetableSubjectColor=subjectColor232}catch(_){ }window.timetableSubjectColor=subjectColor232;
-document.addEventListener('change',e=>{const inp=e.target instanceof Element?e.target.closest('#v210SubjectColors input[type="color"]'):null;if(!inp)return;const name=inp.closest('.v210ColorRow')?.querySelector('span')?.textContent?.trim();if(name)setSubjectColor232(name,inp.value)},true);
-
-function ensureSyncInfoSettings(){
-  const card=q('.v171CloudSettings');if(!card||q('#v232SyncStatusInline',card))return;const e=document.createElement('div');e.id='v232SyncStatusInline';e.textContent=v232LastStatus;card.appendChild(e);
-  const btn=qa('button',card).find(b=>/Jetzt synchronisieren/i.test(b.textContent||''));if(btn){btn.removeAttribute('onclick');btn.onclick=()=>window.studiaSyncNow();btn.textContent='Jetzt zusammenführen & synchronisieren'}
-}
-function maintain(){installSave();installCloudMerge();ensureDesktopSyncButton();ensurePull();ensureSizeControls();ensureSyncInfoSettings()}
-const obs=new MutationObserver(()=>requestAnimationFrame(maintain));obs.observe(document.documentElement,{childList:true,subtree:true});
-[0,120,450,1200,2500].forEach(t=>setTimeout(maintain,t));
-window.addEventListener('online',()=>setTimeout(()=>window.studiaSyncNow(),350));
-
-const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 232'};[0,250,900,1800].forEach(t=>setTimeout(setVer,t));
-})();
-</script>
-<!-- ===== /Studia V232 ===== -->
 
 
-<!-- ===== Studia V233 · two-phase cloud sync transport fix ===== -->
-<style id="studia-v233-sync-style">
-#v232DesktopSync.v233Error small,#v232SyncStatusInline.v233Error{color:#b55d61!important}
-#v232DesktopSync.v233Ok small,#v232SyncStatusInline.v233Ok{color:#71845f!important}
-</style>
-<script id="studia-v233-sync-script">
-(()=>{
-'use strict';
-if(window.__STUDIA_V233__)return;window.__STUDIA_V233__=true;
-const q=(s,r=document)=>r?.querySelector?.(s)||null;
-const clone=x=>{try{return structuredClone(x)}catch(_){try{return JSON.parse(JSON.stringify(x))}catch(__){return x}}};
-const TRACKED=['homework','tests','grades','flashcards','subjects','absences','studySessions','reminders','flashDecks','quizzes','studySheets'];
-const META='_syncMeta',UPDATED='_updatedAt';
-let busy=false;
-
-function status(t,state='ok'){
-  try{window.v232SetSyncStatus?.(t,state==='syncing'?'syncing':'ok')}catch(_){ }
-  const b=q('#v232DesktopSync'),i=q('#v232SyncStatusInline');
-  for(const el of [b,i]){if(!el)continue;el.classList.toggle('v233Error',state==='error');el.classList.toggle('v233Ok',state==='ok')}
-}
-function localPersist(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){console.warn('[V233] persist',e)}}
-function objectId(x){return x&&typeof x==='object'&&x.id!=null?String(x.id):''}
-function clean(v){
-  if(Array.isArray(v))return v.map(clean);
-  if(v&&typeof v==='object'){const o={};for(const [k,val] of Object.entries(v)){if(k===UPDATED||k===META)continue;o[k]=clean(val)}return o}
-  return v;
-}
-function same(a,b){try{return JSON.stringify(clean(a))===JSON.stringify(clean(b))}catch(_){return false}}
-function ensureMeta(d){
-  if(!d||typeof d!=='object')return {version:1,fields:{},tombstones:{}};
-  d[META] ||= {version:1,fields:{},tombstones:{}};d[META].fields ||= {};d[META].tombstones ||= {};return d[META];
-}
-function stampState(cur,old){
-  if(!cur||typeof cur!=='object')return;const ts=Date.now(),m=ensureMeta(cur),om=old?.[META]||{};
-  for(const key of TRACKED){
-    const a=Array.isArray(cur[key])?cur[key]:[],b=Array.isArray(old?.[key])?old[key]:[];
-    const bm=new Map(b.map(x=>[objectId(x),x]).filter(x=>x[0])),am=new Map(a.map(x=>[objectId(x),x]).filter(x=>x[0]));
-    m.tombstones[key] ||= {};
-    for(const item of a){const id=objectId(item);if(!id)continue;const prev=bm.get(id);if(!prev)item[UPDATED]=Number(item[UPDATED])||ts;else if(!same(item,prev))item[UPDATED]=ts;else if(!Number(item[UPDATED]))item[UPDATED]=Number(prev?.[UPDATED])||1;const dead=Number(m.tombstones[key][id]||0);if(dead&&Number(item[UPDATED]||0)>dead)delete m.tombstones[key][id]}
-    for(const prev of b){const id=objectId(prev);if(id&&!am.has(id))m.tombstones[key][id]=Math.max(Number(m.tombstones[key][id]||0),ts)}
-  }
-  for(const key of Object.keys(cur).filter(k=>k!==META&&!TRACKED.includes(k))){if(!same(cur[key],old?.[key]))m.fields[key]=ts;else if(!m.fields[key]&&om?.fields?.[key])m.fields[key]=om.fields[key]}
-}
-function combineMeta(a,b){
-  const A=a||{},B=b||{},o={version:1,fields:{},tombstones:{}};
-  for(const k of new Set([...Object.keys(A.fields||{}),...Object.keys(B.fields||{})]))o.fields[k]=Math.max(Number(A.fields?.[k]||0),Number(B.fields?.[k]||0));
-  for(const c of new Set([...Object.keys(A.tombstones||{}),...Object.keys(B.tombstones||{})])){o.tombstones[c]={};const aa=A.tombstones?.[c]||{},bb=B.tombstones?.[c]||{};for(const id of new Set([...Object.keys(aa),...Object.keys(bb)]))o.tombstones[c][id]=Math.max(Number(aa[id]||0),Number(bb[id]||0))}
-  return o;
-}
-function mergePlain(r,l){
-  if(l==null)return clone(r);if(r==null)return clone(l);
-  if(Array.isArray(l)||Array.isArray(r))return clone(l);
-  if(typeof l==='object'&&typeof r==='object')return {...clone(r),...clone(l)};
-  return clone(l);
-}
-function mergeCollection(name,larr,rarr,meta){
-  const la=Array.isArray(larr)?larr:[],ra=Array.isArray(rarr)?rarr:[];
-  const lm=new Map(la.map(x=>[objectId(x),x]).filter(x=>x[0])),rm=new Map(ra.map(x=>[objectId(x),x]).filter(x=>x[0]));
-  const ids=[...new Set([...la.map(objectId),...ra.map(objectId)].filter(Boolean))],out=[];
-  for(const id of ids){
-    const l=lm.get(id),r=rm.get(id);let v;
-    if(l&&r){const lt=Number(l[UPDATED]||0),rt=Number(r[UPDATED]||0);v=rt>lt?clone(r):lt>rt?clone(l):mergePlain(r,l);v[UPDATED]=Math.max(lt,rt,Number(v?.[UPDATED]||0))}else v=clone(l||r);
-    const dead=Number(meta?.tombstones?.[name]?.[id]||0),vt=Number(v?.[UPDATED]||0);if(dead&&dead>=vt)continue;if(v)out.push(v);
-  }
-  const seen=new Set(out.map(x=>{try{return JSON.stringify(clean(x))}catch(_){return String(x)}}));
-  for(const x of [...la,...ra]){if(objectId(x))continue;let k;try{k=JSON.stringify(clean(x))}catch(_){k=String(x)}if(!seen.has(k)){seen.add(k);out.push(clone(x))}}
-  return out;
-}
-function mergeState(local,remote){
-  local=local&&typeof local==='object'?local:{};remote=remote&&typeof remote==='object'?remote:{};
-  const meta=combineMeta(local[META],remote[META]),out={},keys=new Set([...Object.keys(local),...Object.keys(remote)]);keys.delete(META);
-  for(const k of keys){
-    if(TRACKED.includes(k)){out[k]=mergeCollection(k,local[k],remote[k],meta);continue}
-    const lt=Number(local[META]?.fields?.[k]||0),rt=Number(remote[META]?.fields?.[k]||0);
-    out[k]=rt>lt?clone(remote[k]):lt>rt?clone(local[k]):mergePlain(remote[k],local[k]);
-  }
-  out[META]=meta;return out;
-}
-function commitOpenEditor(){
-  try{if(document.body.classList.contains('editorMode')&&q('#view-sheet-editor.active')&&typeof saveCanvasSheetCore==='function')saveCanvasSheetCore(true)}catch(e){console.warn('[V233] editor commit',e)}
-  localPersist();
-}
-function getRawTransport(){
-  let fn=window.v171CloudNow,seen=new Set();
-  while(typeof fn==='function'&&!seen.has(fn)){
-    seen.add(fn);
-    const next=fn.__v232Original||fn.__v219Original||fn.__v205Original;
-    if(typeof next!=='function'||next===fn)break;
-    fn=next;
-  }
-  return typeof fn==='function'?fn:null;
-}
-const rawTransport=getRawTransport();
-
-async function rawCall(){
-  if(typeof rawTransport!=='function')throw new Error('Cloud-Sync-Modul fehlt (google-sync-config.js)');
-  return await Promise.resolve(rawTransport.call(window));
-}
-async function backup(){try{await window.v111CreateBackupNow?.(false)}catch(_){ }}
-function rerender(){try{renderAll?.()}catch(_){ }try{if(q('#view-plan.active'))renderPlan?.()}catch(_){ }try{if(q('#view-home.active'))renderHome?.()}catch(_){ }}
-
-window.studiaSyncNow=async function(){
-  if(busy)return {busy:true};
-  busy=true;status('Synchronisiere Geräte …','syncing');
-  try{
-    commitOpenEditor();await backup();
-    let before={};try{before=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(_){ }
-    stampState(data,before);localPersist();
-    const local1=clone(data);
-
-    /* Phase 1: existing server transport. It may pull, push, or do both. */
-    await rawCall();
-    const server1=clone(data);
-    data=mergeState(local1,server1);localPersist();rerender();
-
-    /* IMPORTANT: the merged state must actually be sent back to the server. */
-    try{window.v150MarkDirty?.(0)}catch(_){ }
-    try{window.save?.()}catch(_){ localPersist() }
-    await new Promise(r=>setTimeout(r,180));
-    await rawCall();
-
-    /* Phase 2 confirmation: merge whatever server returned with our outgoing merged state. */
-    const server2=clone(data),merged2=mergeState(mergeState(local1,server1),server2);
-    data=merged2;localPersist();rerender();
-    try{window.v150MarkDirty?.(20)}catch(_){ }
-    status('Auf allen Geräten synchronisiert ✓','ok');
-    return {ok:true};
-  }catch(e){
-    console.error('[Studia V233] Sync fehlgeschlagen',e);localPersist();status(String(e?.message||'Sync fehlgeschlagen')+' · lokale Daten bleiben gespeichert','error');
-    throw e;
-  }finally{busy=false;setTimeout(()=>q('#v232PullSync')?.classList.remove('show','ready','syncing'),900)}
-};
-
-/* All automatic old cloud kicks now use the same reliable two-phase path. */
-window.v171CloudNow=window.studiaSyncNow;
-try{v171CloudNow=window.v171CloudNow}catch(_){ }
-
-/* Rebind visible controls because older handlers may still point at wrappers. */
-function bindButtons(){
-  const d=q('#v232DesktopSync');if(d)d.onclick=()=>window.studiaSyncNow();
-  const card=q('.v171CloudSettings');if(card){const b=[...card.querySelectorAll('button')].find(x=>/synchronisieren|zusammenführen/i.test(x.textContent||''));if(b){b.removeAttribute('onclick');b.onclick=()=>window.studiaSyncNow()}}
-}
-[0,150,500,1500].forEach(t=>setTimeout(bindButtons,t));
-new MutationObserver(()=>requestAnimationFrame(bindButtons)).observe(document.documentElement,{childList:true,subtree:true});
-window.addEventListener('online',()=>setTimeout(()=>window.studiaSyncNow().catch(()=>{}),500));
-
-const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 233'};[0,250,900,1800].forEach(t=>setTimeout(setVer,t));
-})();
-</script>
-<!-- ===== /Studia V233 ===== -->
 
 
-<!-- ===== Studia V234 · REAL BACKEND SYNC + IDENTICAL CROSS-DEVICE UI FONT ===== -->
+<!-- ===== Studia V242 · CLEAN CORE: one sync + one print + SVG tape ===== -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<style id="studia-v234-font-sync-style">
-/* Exactly the same application UI typeface on iPhone and laptop. User-selected canvas fonts stay untouched. */
-html,body,
-.app,.view,.panel,.card,.section,.modal,.nav,
-button,input,select,textarea,label,.small,.badge,
+<style id="studia-v242-clean-style">
+/* Same rounded UI font on phone + laptop. Document object fonts stay user controlled. */
+html,body,.app,.view,.panel,.card,.section,.modal,.nav,button,input,select,textarea,label,.small,.badge,
 #v210Sidebar,#v208Sidebar,#view-plan,.v210Lesson,.v210DayHead,.v210TimeRail,
 body.editorMode .canvasTopbar,body.editorMode .canvasQuickNav,body.editorMode .canvasQuickDrawer,
-body.editorMode #desktopEditorSidebar,body.editorMode .objectPanel,
-#v232DesktopSync,#v232PullSync{
+body.editorMode #desktopEditorSidebar,body.editorMode .objectPanel,#v242DesktopSync,#v242PullSync{
   font-family:"Nunito",ui-rounded,"SF Pro Rounded",system-ui,-apple-system,"Segoe UI",sans-serif!important;
 }
-/* Do not overwrite fonts chosen by the user inside document text objects/formulas. */
 #canvasObjects .cobj:not(.formulaObj){font-family:var(--studia-object-font,inherit)}
-#v234SyncDiag{margin-top:7px;font-size:8px;font-weight:800;color:#9b8279;white-space:pre-wrap}
+@media(min-width:900px){
+ #v242DesktopSync{position:fixed;right:18px;bottom:18px;z-index:10050;display:flex;align-items:center;gap:8px;min-height:42px;padding:8px 12px;border-radius:15px;border:1px solid #ead7d1;background:rgba(255,252,249,.97);color:#775f58;box-shadow:0 10px 28px rgba(91,67,59,.12);backdrop-filter:blur(14px);font-size:10px;font-weight:900;cursor:pointer}
+ #v242DesktopSync:hover{background:#fff7f5;border-color:#e4c5c1;transform:translateY(-1px)}
+ #v242DesktopSync .spin{font-size:17px;line-height:1}#v242DesktopSync.syncing .spin{animation:v242spin .8s linear infinite}
+ #v242DesktopSync small{display:block;font-size:7px;font-weight:750;color:#a58d85;margin-top:1px;max-width:190px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ @keyframes v242spin{to{transform:rotate(360deg)}}
+}
+@media(max-width:899px){#v242DesktopSync{display:none!important}}
+#v242PullSync{position:fixed;left:50%;top:8px;transform:translate(-50%,-130%);z-index:10080;pointer-events:none;min-width:180px;max-width:84vw;padding:9px 14px;border-radius:999px;border:1px solid #ead8d2;background:rgba(255,252,249,.98);box-shadow:0 8px 25px rgba(91,67,59,.12);color:#826961;font:850 10px/1.2 "Nunito",sans-serif;text-align:center;transition:transform .16s ease,opacity .16s ease;opacity:0}
+#v242PullSync.show{opacity:1}#v242PullSync.ready{background:#fff2f1;border-color:#e7c6c4;color:#ad6f72}#v242PullSync.syncing{background:#f5f9ef;border-color:#dbe5c8;color:#75845b}
+#v242SyncStatus{font-size:8px;color:#8b786f;font-weight:800;margin-top:7px;word-break:break-word}#v242SyncStatus.bad{color:#b05d63}
+/* New tape is real SVG art. No CSS border/pseudo layer => screen and PDF match. */
+.tapeSticker{background:transparent!important;border:0!important;outline:0!important;box-shadow:none!important;overflow:visible!important}
+.tapeSticker:before,.tapeSticker:after{display:none!important;content:none!important}
+.tapeSticker>.v242TapeArt{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;display:block!important;pointer-events:none!important;overflow:visible!important;z-index:0!important}
+.tapeSticker>.rotateHandle,.tapeSticker>.resizeHandle{z-index:3!important}
 </style>
-<script id="studia-v234-real-sync-script">
+<script id="studia-v242-clean-core">
 (()=>{
 'use strict';
-if(window.__STUDIA_V234__)return;window.__STUDIA_V234__=true;
-const q=(s,r=document)=>r?.querySelector?.(s)||null;
+if(window.__STUDIA_V242_CORE__)return;window.__STUDIA_V242_CORE__=true;
+const q=(s,r=document)=>r?.querySelector?.(s)||null,qa=(s,r=document)=>r?.querySelectorAll?[...r.querySelectorAll(s)]:[];
 const clone=x=>{try{return structuredClone(x)}catch(_){try{return JSON.parse(JSON.stringify(x))}catch(__){return x}}};
-const META='_syncMeta',UPDATED='_updatedAt',BASEKEY='studia-v234-last-synced-state';
-const TRACKED=['homework','tests','grades','flashcards','subjects','absences','studySessions','reminders','flashDecks','quizzes','studySheets'];
-let busy=false;
-function getKey(){try{return typeof KEY!=='undefined'?KEY:'schoolhub-v1'}catch(_){return 'schoolhub-v1'}}
-function readLocal(){try{return JSON.parse(localStorage.getItem(getKey())||'{}')}catch(_){return {}}}
-function readBase(){try{return JSON.parse(localStorage.getItem(BASEKEY)||'null')}catch(_){return null}}
-function persist(){try{localStorage.setItem(getKey(),JSON.stringify(data))}catch(e){console.error('[V234 persist]',e)}}
-function saveBase(v){try{localStorage.setItem(BASEKEY,JSON.stringify(v))}catch(_){}}
+const getData=()=>{try{return data}catch(_){return window.data||{}}};
+const setData=v=>{try{data=v}catch(_){window.data=v}};
+const storeKey=()=>{try{return KEY}catch(_){return 'schoolhub-v1'}};
+const META='__studiaSyncMeta',UPDATED='__studiaUpdatedAt',BASE='studia-v242-last-synced-state';
+const TRACKED=['homework','tests','writtenTests','grades','flashcards','subjects','absences','studySessions','reminders','flashDecks','quizzes','studySheets'];
+let syncBusy=false,lastSyncAt=0,pullStart=null,pullReady=false,maintainQueued=false;
 function clean(v){if(Array.isArray(v))return v.map(clean);if(v&&typeof v==='object'){const o={};for(const[k,x]of Object.entries(v)){if(k===META||k===UPDATED)continue;o[k]=clean(x)}return o}return v}
 function same(a,b){try{return JSON.stringify(clean(a))===JSON.stringify(clean(b))}catch(_){return false}}
 function idOf(x){return x&&typeof x==='object'&&x.id!=null?String(x.id):''}
-function ensureMeta(d){if(!d||typeof d!=='object')return {version:1,fields:{},tombstones:{}};d[META]||={version:1,fields:{},tombstones:{}};d[META].fields||={};d[META].tombstones||={};return d[META]}
+function ensureMeta(d){if(!d||typeof d!=='object')return {version:1,fields:{},tombstones:{}};d[META]||={version:1,fields:{},tombstones:{}};d[META].fields||={};d[META].tombstones||={};d[META].version=1;return d[META]}
 function stamp(cur,base){
-  if(!cur||typeof cur!=='object')return;const ts=Date.now(),m=ensureMeta(cur),bm=base?.[META]||{};
-  for(const name of TRACKED){
-    const a=Array.isArray(cur[name])?cur[name]:[],b=Array.isArray(base?.[name])?base[name]:[];
-    const B=new Map(b.map(x=>[idOf(x),x]).filter(x=>x[0])),A=new Map(a.map(x=>[idOf(x),x]).filter(x=>x[0]));m.tombstones[name]||={};
-    for(const item of a){const id=idOf(item);if(!id)continue;const old=B.get(id);if(!old)item[UPDATED]=Number(item[UPDATED])||ts;else if(!same(item,old))item[UPDATED]=ts;else if(!Number(item[UPDATED]))item[UPDATED]=Number(old?.[UPDATED])||1;if(Number(item[UPDATED]||0)>Number(m.tombstones[name][id]||0))delete m.tombstones[name][id]}
-    for(const old of b){const id=idOf(old);if(id&&!A.has(id))m.tombstones[name][id]=Math.max(Number(m.tombstones[name][id]||0),ts)}
-  }
-  for(const k of Object.keys(cur).filter(k=>k!==META&&!TRACKED.includes(k))){if(!same(cur[k],base?.[k]))m.fields[k]=ts;else if(!m.fields[k]&&bm?.fields?.[k])m.fields[k]=bm.fields[k]}
+ if(!cur||typeof cur!=='object')return;const ts=Date.now(),m=ensureMeta(cur),bm=base?.[META]||{};
+ for(const name of TRACKED){
+  const a=Array.isArray(cur[name])?cur[name]:[],b=Array.isArray(base?.[name])?base[name]:[],B=new Map(b.map(x=>[idOf(x),x]).filter(x=>x[0])),A=new Map(a.map(x=>[idOf(x),x]).filter(x=>x[0]));m.tombstones[name]||={};
+  for(const item of a){const id=idOf(item);if(!id)continue;const old=B.get(id);const natural=Number(item.updatedAt||item.modifiedAt||item.v219LocalSavedAt||0);if(!old)item[UPDATED]=Math.max(Number(item[UPDATED])||0,natural,ts);else if(!same(item,old))item[UPDATED]=Math.max(natural,ts);else if(!Number(item[UPDATED]))item[UPDATED]=Math.max(Number(old?.[UPDATED])||0,natural,1);if(Number(item[UPDATED]||0)>Number(m.tombstones[name][id]||0))delete m.tombstones[name][id]}
+  for(const old of b){const id=idOf(old);if(id&&!A.has(id))m.tombstones[name][id]=Math.max(Number(m.tombstones[name][id]||0),ts)}
+ }
+ for(const k of Object.keys(cur).filter(k=>k!==META&&!TRACKED.includes(k))){if(!same(cur[k],base?.[k]))m.fields[k]=ts;else if(!m.fields[k]&&bm?.fields?.[k])m.fields[k]=bm.fields[k]}
 }
 function mergeMeta(a,b){const A=a||{},B=b||{},o={version:1,fields:{},tombstones:{}};for(const k of new Set([...Object.keys(A.fields||{}),...Object.keys(B.fields||{})]))o.fields[k]=Math.max(Number(A.fields?.[k]||0),Number(B.fields?.[k]||0));for(const n of new Set([...Object.keys(A.tombstones||{}),...Object.keys(B.tombstones||{})])){o.tombstones[n]={};const aa=A.tombstones?.[n]||{},bb=B.tombstones?.[n]||{};for(const id of new Set([...Object.keys(aa),...Object.keys(bb)]))o.tombstones[n][id]=Math.max(Number(aa[id]||0),Number(bb[id]||0))}return o}
 function mergePlain(r,l){if(l==null)return clone(r);if(r==null)return clone(l);if(Array.isArray(l)||Array.isArray(r))return clone(l);if(typeof l==='object'&&typeof r==='object')return {...clone(r),...clone(l)};return clone(l)}
 function mergeCollection(name,larr,rarr,meta){
-  const la=Array.isArray(larr)?larr:[],ra=Array.isArray(rarr)?rarr:[],L=new Map(la.map(x=>[idOf(x),x]).filter(x=>x[0])),R=new Map(ra.map(x=>[idOf(x),x]).filter(x=>x[0]));
-  const ids=[...new Set([...la.map(idOf),...ra.map(idOf)].filter(Boolean))],out=[];
-  for(const id of ids){const l=L.get(id),r=R.get(id);let v;if(l&&r){const lt=Number(l[UPDATED]||0),rt=Number(r[UPDATED]||0);v=rt>lt?clone(r):lt>rt?clone(l):mergePlain(r,l);v[UPDATED]=Math.max(lt,rt,Number(v?.[UPDATED]||0))}else v=clone(l||r);const dead=Number(meta?.tombstones?.[name]?.[id]||0),vt=Number(v?.[UPDATED]||0);if(dead&&dead>=vt)continue;if(v)out.push(v)}
-  const seen=new Set(out.map(x=>{try{return JSON.stringify(clean(x))}catch(_){return String(x)}}));for(const x of [...la,...ra]){if(idOf(x))continue;let k;try{k=JSON.stringify(clean(x))}catch(_){k=String(x)}if(!seen.has(k)){seen.add(k);out.push(clone(x))}}return out;
+ const la=Array.isArray(larr)?larr:[],ra=Array.isArray(rarr)?rarr:[],L=new Map(la.map(x=>[idOf(x),x]).filter(x=>x[0])),R=new Map(ra.map(x=>[idOf(x),x]).filter(x=>x[0])),ids=[...new Set([...la.map(idOf),...ra.map(idOf)].filter(Boolean))],out=[];
+ for(const id of ids){const l=L.get(id),r=R.get(id);let v;if(l&&r){const lt=Number(l[UPDATED]||l.updatedAt||l.modifiedAt||l.v219LocalSavedAt||0),rt=Number(r[UPDATED]||r.updatedAt||r.modifiedAt||r.v219LocalSavedAt||0);v=rt>lt?clone(r):lt>rt?clone(l):mergePlain(r,l);v[UPDATED]=Math.max(lt,rt,Number(v?.[UPDATED]||0))}else v=clone(l||r);const dead=Number(meta?.tombstones?.[name]?.[id]||0),vt=Number(v?.[UPDATED]||v?.updatedAt||v?.modifiedAt||v?.v219LocalSavedAt||0);if(dead&&dead>=vt)continue;if(v)out.push(v)}
+ const seen=new Set(out.map(x=>{try{return JSON.stringify(clean(x))}catch(_){return String(x)}}));for(const x of [...la,...ra]){if(idOf(x))continue;let k;try{k=JSON.stringify(clean(x))}catch(_){k=String(x)}if(!seen.has(k)){seen.add(k);out.push(clone(x))}}return out;
 }
-function merge(local,remote){local=local&&typeof local==='object'?local:{};remote=remote&&typeof remote==='object'?remote:{};const meta=mergeMeta(local[META],remote[META]),out={},keys=new Set([...Object.keys(local),...Object.keys(remote)]);keys.delete(META);for(const k of keys){if(TRACKED.includes(k)){out[k]=mergeCollection(k,local[k],remote[k],meta);continue}const lt=Number(local[META]?.fields?.[k]||0),rt=Number(remote[META]?.fields?.[k]||0);out[k]=rt>lt?clone(remote[k]):lt>rt?clone(local[k]):mergePlain(remote[k],local[k])}out[META]=meta;return out}
-function status(t,bad=false){try{window.StudiaCloud?.setStatus?.(t,bad)}catch(_){}try{window.v232SetSyncStatus?.(t,bad?'error':'ok')}catch(_){}const b=q('#v232DesktopSync');if(b)b.classList.toggle('syncing',/Synchron/i.test(t)&&!/✓|Fehler|fehl/i.test(t))}
-function commitEditor(){try{if(document.body.classList.contains('editorMode')&&q('#view-sheet-editor.active')&&typeof saveCanvasSheetCore==='function')saveCanvasSheetCore(true)}catch(e){console.warn('[V234 editor commit]',e)}persist()}
-function render(){try{renderAll?.()}catch(_){ }try{if(q('#view-plan.active'))renderPlan?.()}catch(_){ }try{if(q('#view-home.active'))renderHome?.()}catch(_){ }}
+function mergeState(local,remote){local=local&&typeof local==='object'?local:{};remote=remote&&typeof remote==='object'?remote:{};const meta=mergeMeta(local[META],remote[META]),out={},keys=new Set([...Object.keys(local),...Object.keys(remote)]);keys.delete(META);for(const k of keys){if(TRACKED.includes(k)){out[k]=mergeCollection(k,local[k],remote[k],meta);continue}const lt=Number(local[META]?.fields?.[k]||0),rt=Number(remote[META]?.fields?.[k]||0);out[k]=rt>lt?clone(remote[k]):lt>rt?clone(local[k]):mergePlain(remote[k],local[k])}out[META]=meta;return out}
+function persist(){try{localStorage.setItem(storeKey(),JSON.stringify(getData()))}catch(e){console.warn('[V242 local save]',e)}}
+function readBase(){try{return JSON.parse(localStorage.getItem(BASE)||'{}')}catch(_){return {}}}
+function saveBase(v){try{localStorage.setItem(BASE,JSON.stringify(v||{}))}catch(_){}}
+function editorActive(){return document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active')}
+function commitEditor(){if(editorActive())try{window.saveCanvasSheetCore?.(true)}catch(e){console.warn('[V242 editor commit]',e)}persist()}
+function rerender(){if(editorActive())return;try{window.renderAll?.()}catch(_){ }try{if(q('#view-plan.active'))window.renderPlan?.()}catch(_){ }try{if(q('#view-home.active'))window.renderHome?.()}catch(_){ }}
 async function backup(){try{await window.v111CreateBackupNow?.(false)}catch(_){}}
-
-window.studiaSyncNow=async function(){
-  if(busy)return {busy:true};busy=true;status('Synchronisiere Geräte …');
-  try{
-    if(!window.StudiaCloud)throw new Error('Sync-Modul konnte nicht geladen werden');
-    const cfg=window.StudiaCloud.config();if(!cfg.url)throw new Error('Server-Script-Service-URL fehlt');if(!cfg.token)throw new Error('Nicht angemeldet');
-    commitEditor();await backup();
-    const baseline=readBase()||readLocal();stamp(data,baseline);persist();const local=clone(data);
-
-    /* Critical order: PULL first. Never overwrite the server before we have seen its latest state. */
-    const pulled=await window.StudiaCloud.getState();const remote=pulled?.data&&typeof pulled.data==='object'?pulled.data:{};
-    const merged=merge(local,remote);data=merged;persist();render();
-
-    /* Then PUSH the merged state, so both devices converge to the same complete dataset. */
-    const put=await window.StudiaCloud.putState(clone(merged));
-    const confirm=await window.StudiaCloud.getState();
-    const finalState=merge(merged,confirm?.data&&typeof confirm.data==='object'?confirm.data:{});
-    data=finalState;persist();saveBase(finalState);render();
-    try{window.v150ClearDirty?.()}catch(_){ }
-    status('Auf allen Geräten gespeichert ✓');
-    return {ok:true,updatedAt:put?.updatedAt||confirm?.updatedAt||Date.now()};
-  }catch(e){console.error('[Studia V234 sync]',e);persist();status(String(e?.message||'Sync fehlgeschlagen')+' · lokal bleibt gespeichert',true);throw e}
-  finally{busy=false;setTimeout(()=>q('#v232PullSync')?.classList.remove('show','ready','syncing'),800)}
+function status(text,bad=false){const s=String(text||'');try{window.StudiaCloud?.setStatus?.(s,bad)}catch(_){}const b=q('#v242DesktopSync');if(b){b.classList.toggle('syncing',/Synchron/i.test(s)&&!/✓|Fehler|fehl|nicht|lokal/i.test(s));const sm=q('small',b);if(sm)sm.textContent=s}const p=q('#v242PullSync');if(p&&p.classList.contains('show'))p.textContent=s;const x=q('#v242SyncStatus');if(x){x.textContent=s;x.classList.toggle('bad',!!bad)}}
+window.studiaSyncNow=async function(force=false){
+ const dirty=!!window.v150CloudDirty?.();if(syncBusy)return {busy:true};if(!force&&!dirty&&Date.now()-lastSyncAt<15000)return {skipped:true};syncBusy=true;status('Synchronisiere Geräte …');
+ try{
+  const cloud=window.StudiaCloud;if(!cloud)throw new Error('Sync-Modul fehlt');const cfg=cloud.config?.()||{};if(!cfg.url)throw new Error('Server-Script-Service-URL fehlt');if(!cfg.token)throw new Error('Nicht angemeldet');
+  await cloud.me();commitEditor();await backup();const d=getData(),base=readBase();stamp(d,base);persist();const local=clone(d);
+  const pulled=await cloud.getState(),remote=pulled?.data&&typeof pulled.data==='object'?pulled.data:{};const merged=mergeState(local,remote);setData(merged);persist();rerender();
+  const put=await cloud.putState(clone(merged));const confirm=await cloud.getState(),remote2=confirm?.data&&typeof confirm.data==='object'?confirm.data:{};const finalState=mergeState(merged,remote2);setData(finalState);persist();saveBase(finalState);rerender();window.v150ClearDirty?.();lastSyncAt=Date.now();status('Auf allen Geräten gespeichert ✓');return {ok:true,updatedAt:put?.updatedAt||confirm?.updatedAt||lastSyncAt};
+ }catch(e){console.error('[Studia V242 sync]',e);persist();const msg=String(e?.message||'Sync fehlgeschlagen');status(msg+' · lokal sicher',true);throw e}finally{syncBusy=false;setTimeout(()=>q('#v242PullSync')?.classList.remove('show','ready','syncing'),700)}
 };
-window.v171CloudNow=window.studiaSyncNow;try{v171CloudNow=window.v171CloudNow}catch(_){ }
+window.studiaSyncNow.__v219Guarded=true;
+window.v171CloudNow=function(){return window.studiaSyncNow(false)};window.v171CloudNow.__v219Guarded=true;try{v171CloudNow=window.v171CloudNow}catch(_){}
 
-/* Every normal save is marked dirty; local save remains immediate. */
-try{
-  const baseSave=window.save;if(typeof baseSave==='function'&&!baseSave.__v234Dirty){window.save=function(){const r=baseSave.apply(this,arguments);try{window.v150MarkDirty?.(350)}catch(_){}return r};window.save.__v234Dirty=true;window.save.__v234Original=baseSave;try{save=window.save}catch(_){}}
-}catch(_){ }
-
-function bind(){
-  const d=q('#v232DesktopSync');if(d)d.onclick=()=>window.studiaSyncNow().catch(()=>{});
-  const card=q('.v171CloudSettings');if(card){const b=[...card.querySelectorAll('button')].find(x=>/jetzt synchronisieren|geräte synchronisieren|zusammenführen/i.test(x.textContent||''));if(b){b.removeAttribute('onclick');b.onclick=()=>window.studiaSyncNow().catch(()=>{})}}
+/* one sync button + one pull gesture */
+function ensureSyncUI(){
+ let b=q('#v242DesktopSync');if(!b){b=document.createElement('button');b.id='v242DesktopSync';b.type='button';b.innerHTML='<span class="spin">↻</span><span>Geräte synchronisieren<small>Lokal gespeichert</small></span>';b.onclick=()=>window.studiaSyncNow(true).catch(()=>{});document.body.appendChild(b)}
+ let p=q('#v242PullSync');if(!p){p=document.createElement('div');p.id='v242PullSync';p.textContent='Zum Synchronisieren ziehen';document.body.appendChild(p)}
+ const card=q('.v171CloudSettings');if(card){let st=q('#v242SyncStatus',card);if(!st){st=document.createElement('div');st.id='v242SyncStatus';st.textContent='Lokal gespeichert';card.appendChild(st)}for(const btn of qa('button',card)){if(/jetzt synchronisieren|zusammenführen|geräte synchronisieren/i.test(btn.textContent||'')){btn.removeAttribute('onclick');btn.onclick=()=>window.studiaSyncNow(true).catch(()=>{});btn.textContent='Jetzt synchronisieren'}}}
 }
-[0,150,500,1500].forEach(t=>setTimeout(bind,t));new MutationObserver(()=>requestAnimationFrame(bind)).observe(document.documentElement,{childList:true,subtree:true});
-window.addEventListener('online',()=>setTimeout(()=>window.studiaSyncNow().catch(()=>{}),700));
+document.addEventListener('touchstart',e=>{if(innerWidth>=900||editorActive()||document.body.classList.contains('modalOpen'))return;const sc=document.scrollingElement||document.documentElement;if((sc.scrollTop||window.scrollY)>3)return;const t=e.touches?.[0];if(!t)return;pullStart=t.clientY;pullReady=false;ensureSyncUI()},{passive:true});
+document.addEventListener('touchmove',e=>{if(pullStart==null)return;const t=e.touches?.[0];if(!t)return;const dy=Math.max(0,t.clientY-pullStart),p=q('#v242PullSync');if(!p)return;if(dy>8){p.classList.add('show');p.style.transform=`translate(-50%, ${Math.min(58,dy*.42)-45}px)`}pullReady=dy>=85;p.classList.toggle('ready',pullReady);p.textContent=pullReady?'Loslassen zum Synchronisieren ↻':'Zum Synchronisieren ziehen'},{passive:true});
+document.addEventListener('touchend',()=>{if(pullStart==null)return;const run=pullReady;pullStart=null;pullReady=false;const p=q('#v242PullSync');if(p)p.style.transform='';if(run)window.studiaSyncNow(true).catch(()=>{});else setTimeout(()=>p?.classList.remove('show','ready'),180)},{passive:true});
 
-/* Verify saved session and run a pull→merge→push once after startup. */
-setTimeout(async()=>{try{const c=window.StudiaCloud?.config?.();if(c?.url&&c?.token){await window.StudiaCloud.me();status('Konto verbunden ✓');await window.studiaSyncNow()}}catch(e){status(String(e?.message||'Sync nicht verbunden'),true)}},1300);
-const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 234'};[0,250,900,1800].forEach(t=>setTimeout(setVer,t));
-})();
-</script>
-<!-- ===== /Studia V234 ===== -->
+/* Subject colors stay authoritative and saved. */
+function canon(name){let x=String(name||'').replace(/\s+/g,' ').trim();try{x=window.prettySubject?.(x)||x}catch(_){}x=x.toUpperCase().trim();const a={M:'MATHEMATIK',MATHE:'MATHEMATIK',MATHEMATIK:'MATHEMATIK',D:'DEUTSCH',DE:'DEUTSCH',DEUTSCH:'DEUTSCH',E:'ENGLISCH',ENG:'ENGLISCH',ENGLISCH:'ENGLISCH',PH:'PHYSIK',PHY:'PHYSIK',PHYSIK:'PHYSIK',BIO:'BIOLOGIE',BI:'BIOLOGIE',BIOLOGIE:'BIOLOGIE',CH:'CHEMIE',CHE:'CHEMIE',CHEMIE:'CHEMIE',G:'GESCHICHTE',GE:'GESCHICHTE',GES:'GESCHICHTE',GESCHICHTE:'GESCHICHTE',ET:'ETHIK',ETHIK:'ETHIK',SP:'SPORT',SPORT:'SPORT',INF:'INFORMATIK',INFORMATIK:'INFORMATIK'};return a[x]||x}
+function subjectColor(name){const d=getData();d.timetableSubjectColors||={};const c=canon(name);for(const[k,v]of Object.entries(d.timetableSubjectColors))if(canon(k)===c&&/^#[0-9a-f]{6}$/i.test(String(v)))return String(v).toLowerCase();const rec=(d.subjects||[]).find(s=>canon(s.name)===c||canon(s.abbr)===c);if(rec?.color)return String(rec.color);try{return window.hashColor?.(c)||'#e9a7a4'}catch(_){return '#e9a7a4'}}
+function setSubjectColor(name,color){color=String(color||'').toLowerCase();if(!/^#[0-9a-f]{6}$/.test(color))return;const d=getData(),c=canon(name);d.timetableSubjectColors||={};d.timetableSubjectColors[c]=color;for(const s of d.subjects||[])if(canon(s.name)===c||canon(s.abbr)===c){s.color=color;if(s.autoFromTimetable)s.cover=color;s[UPDATED]=Date.now()}ensureMeta(d).fields.timetableSubjectColors=Date.now();persist();window.v150MarkDirty?.(500);try{window.renderPlan?.();window.renderHome?.()}catch(_){}}
+window.setTimetableSubjectColor=setSubjectColor;window.v216SetSubjectColor=setSubjectColor;window.timetableSubjectColor=subjectColor;try{timetableSubjectColor=subjectColor}catch(_){}
+document.addEventListener('change',e=>{const inp=e.target instanceof Element?e.target.closest('#v210SubjectColors input[type="color"]'):null;if(!inp)return;const name=inp.closest('.v210ColorRow')?.querySelector('span')?.textContent?.trim();if(name)setSubjectColor(name,inp.value)},true);
 
+/* New tape SVG — same DOM is cloned to print/PDF. */
+function tapeColor(el){return el.dataset.v242TapeColor||el.style.backgroundColor||el.style.background||'#f2beb2'}
+function tapeSVG(color){let lines='';for(let x=-25;x<130;x+=13)lines+=`<line x1="${x}" y1="32" x2="${x+34}" y2="-2" stroke="white" stroke-opacity=".18" stroke-width="3"/>`;return `<svg class="v242TapeArt" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"><path d="M1.5 2 L98.5 .8 L99 27.5 L1 29 Z" fill="${color}" fill-opacity=".76"/>${lines}</svg>`}
+function decorateTape(root=document){for(const el of qa('.tapeSticker',root)){const color=tapeColor(el);el.dataset.v242TapeColor=color;let art=q(':scope > .v242TapeArt',el);if(!art){el.insertAdjacentHTML('afterbegin',tapeSVG(color));art=q(':scope > .v242TapeArt',el)}else{const path=q('path',art);if(path)path.setAttribute('fill',color)}}}
+window.v242DecorateTape=decorateTape;
 
-<!-- ===== Studia V235 · SYNC CLEANUP + PRINT TAPE FIX ===== -->
-<script id="studia-v235-sync-cleanup">
-(()=>{
-  const q=(s,r=document)=>r.querySelector(s), qa=(s,r=document)=>[...r.querySelectorAll(s)];
-  const VERSION='235';
-  const STORE_KEY=(window.KEY||'schoolhub-v1');
-  let busy=false;
-  const clone=v=>{try{return JSON.parse(JSON.stringify(v))}catch(_){return v}};
-  const safeParse=s=>{try{return JSON.parse(s)}catch(_){return null}};
-  const META='__studiaSyncMeta';
-  const UPDATED='__studiaUpdatedAt';
-  const TRACKED=['subjects','topicFolders','studySheets','todos','tests','grades','flashcards','quizzes','learnsets'];
-  function status(text,bad=false){
-    try{window.StudiaCloud?.setStatus?.(text,bad)}catch(_){ }
-    try{window.v232SetSyncStatus?.(text,bad?'error':'ok')}catch(_){ }
-    const b=q('#v232DesktopSync'); if(b){ b.classList.toggle('syncing',/Synchron/i.test(text)&&!/✓|Fehler|fehl|lokal/i.test(text)); const sm=b.querySelector('small'); if(sm) sm.textContent=text; }
-    const i=q('#v232SyncStatusInline'); if(i) i.textContent=text;
-  }
-  function persist(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(window.data||{})); }catch(e){ console.warn('[V235 persist]',e); } }
-  function readBase(){ return safeParse(localStorage.getItem('studia-sync-base')||'null') || {}; }
-  function saveBase(v){ try{ localStorage.setItem('studia-sync-base', JSON.stringify(v||{})); }catch(_){ } }
-  function render(){ try{ window.renderAll?.(); }catch(_){ } try{ if(q('#view-plan.active')) window.renderPlan?.(); }catch(_){ } try{ if(q('#view-home.active')) window.renderHome?.(); }catch(_){ } }
-  function clean(v){ if(Array.isArray(v)) return v.map(clean); if(v && typeof v==='object'){ const o={}; for(const [k,x] of Object.entries(v)){ if(k===META||k===UPDATED) continue; o[k]=clean(x); } return o; } return v; }
-  function same(a,b){ try{return JSON.stringify(clean(a))===JSON.stringify(clean(b)); }catch(_){ return false; } }
-  function idOf(x){ return x && typeof x==='object' && x.id!=null ? String(x.id) : ''; }
-  function ensureMeta(d){ if(!d||typeof d!=='object') return {version:1,fields:{},tombstones:{}}; d[META] ||= {version:1,fields:{},tombstones:{}}; d[META].fields ||= {}; d[META].tombstones ||= {}; return d[META]; }
-  function stamp(cur,base){
-    if(!cur||typeof cur!=='object') return; const ts=Date.now(), m=ensureMeta(cur), bm=base?.[META]||{};
-    for(const name of TRACKED){
-      const a=Array.isArray(cur[name])?cur[name]:[], b=Array.isArray(base?.[name])?base[name]:[];
-      const B=new Map(b.map(x=>[idOf(x),x]).filter(x=>x[0])), A=new Map(a.map(x=>[idOf(x),x]).filter(x=>x[0])); m.tombstones[name] ||= {};
-      for(const item of a){ const id=idOf(item); if(!id) continue; const old=B.get(id); if(!old) item[UPDATED]=Number(item[UPDATED])||ts; else if(!same(item,old)) item[UPDATED]=ts; else if(!Number(item[UPDATED])) item[UPDATED]=Number(old?.[UPDATED])||1; if(Number(item[UPDATED]||0) > Number(m.tombstones[name][id]||0)) delete m.tombstones[name][id]; }
-      for(const old of b){ const id=idOf(old); if(id && !A.has(id)) m.tombstones[name][id]=Math.max(Number(m.tombstones[name][id]||0), ts); }
-    }
-    for(const k of Object.keys(cur).filter(k=>k!==META && !TRACKED.includes(k))){ if(!same(cur[k],base?.[k])) m.fields[k]=ts; else if(!m.fields[k] && bm?.fields?.[k]) m.fields[k]=bm.fields[k]; }
-  }
-  function mergeMeta(a,b){ const A=a||{},B=b||{},o={version:1,fields:{},tombstones:{}}; for(const k of new Set([...Object.keys(A.fields||{}),...Object.keys(B.fields||{})])) o.fields[k]=Math.max(Number(A.fields?.[k]||0),Number(B.fields?.[k]||0)); for(const n of new Set([...Object.keys(A.tombstones||{}),...Object.keys(B.tombstones||{})])){ o.tombstones[n]={}; const aa=A.tombstones?.[n]||{}, bb=B.tombstones?.[n]||{}; for(const id of new Set([...Object.keys(aa),...Object.keys(bb)])) o.tombstones[n][id]=Math.max(Number(aa[id]||0),Number(bb[id]||0)); } return o; }
-  function mergePlain(r,l){ if(l==null) return clone(r); if(r==null) return clone(l); if(Array.isArray(l)||Array.isArray(r)) return clone(l); if(typeof l==='object'&&typeof r==='object') return {...clone(r), ...clone(l)}; return clone(l); }
-  function mergeCollection(name,larr,rarr,meta){ const la=Array.isArray(larr)?larr:[], ra=Array.isArray(rarr)?rarr:[], L=new Map(la.map(x=>[idOf(x),x]).filter(x=>x[0])), R=new Map(ra.map(x=>[idOf(x),x]).filter(x=>x[0])); const ids=[...new Set([...la.map(idOf),...ra.map(idOf)].filter(Boolean))], out=[]; for(const id of ids){ const l=L.get(id), r=R.get(id); let v; if(l&&r){ const lt=Number(l[UPDATED]||0), rt=Number(r[UPDATED]||0); v=rt>lt?clone(r):lt>rt?clone(l):mergePlain(r,l); v[UPDATED]=Math.max(lt,rt,Number(v?.[UPDATED]||0)); } else v=clone(l||r); const dead=Number(meta?.tombstones?.[name]?.[id]||0), vt=Number(v?.[UPDATED]||0); if(dead&&dead>=vt) continue; if(v) out.push(v); } const seen=new Set(out.map(x=>{try{return JSON.stringify(clean(x))}catch(_){return String(x)}})); for(const x of [...la,...ra]){ if(idOf(x)) continue; let k; try{k=JSON.stringify(clean(x))}catch(_){k=String(x)} if(!seen.has(k)){ seen.add(k); out.push(clone(x)); } } return out; }
-  function merge(local,remote){ local=local&&typeof local==='object'?local:{}; remote=remote&&typeof remote==='object'?remote:{}; const meta=mergeMeta(local[META],remote[META]), out={}, keys=new Set([...Object.keys(local),...Object.keys(remote)]); keys.delete(META); for(const k of keys){ if(TRACKED.includes(k)){ out[k]=mergeCollection(k,local[k],remote[k],meta); continue; } const lt=Number(local[META]?.fields?.[k]||0), rt=Number(remote[META]?.fields?.[k]||0); out[k]=rt>lt?clone(remote[k]):lt>rt?clone(local[k]):mergePlain(remote[k],local[k]); } out[META]=meta; return out; }
-  function commitEditor(){ try{ if(document.body.classList.contains('editorMode') && q('#view-sheet-editor.active') && typeof window.saveCanvasSheetCore==='function') window.saveCanvasSheetCore(true); }catch(e){ console.warn('[V235 commit]',e); } persist(); }
-  async function backup(){ try{ await window.v111CreateBackupNow?.(false); }catch(_){ } }
-  function bind(){
-    const d=q('#v232DesktopSync'); if(d) d.onclick=()=>window.studiaSyncNow().catch(()=>{});
-    const card=q('.v171CloudSettings'); if(card){ for(const b of qa('button',card)){ if(/jetzt synchronisieren|geräte synchronisieren|zusammenführen|synchronisieren/i.test(b.textContent||'')){ b.removeAttribute('onclick'); b.onclick=()=>window.studiaSyncNow().catch(()=>{}); } } }
-    const eye=q('#headerEyebrow'); if(eye) eye.textContent='VERSION '+VERSION;
-  }
-  [0,150,500,1500,2500].forEach(t=>setTimeout(bind,t)); new MutationObserver(()=>requestAnimationFrame(bind)).observe(document.documentElement,{childList:true,subtree:true});
-  window.studiaSyncNow=async function(){
-    if(busy) return {busy:true}; busy=true; status('Synchronisiere Geräte …');
-    try{
-      const cloud=window.StudiaCloud; if(!cloud) throw new Error('Sync-Modul konnte nicht geladen werden');
-      const cfg=cloud.config?.()||{}; if(!cfg.url) throw new Error('Server-Script-Service-URL fehlt'); if(!cfg.token) throw new Error('Nicht angemeldet');
-      await cloud.me();
-      commitEditor(); await backup();
-      const baseline=readBase() || safeParse(localStorage.getItem(STORE_KEY)||'{}') || {};
-      stamp(window.data, baseline); persist();
-      const local=clone(window.data||{});
-      const pulled=await cloud.getState(); const remote=pulled?.data && typeof pulled.data==='object' ? pulled.data : {};
-      const merged=merge(local, remote); window.data=merged; persist(); render();
-      const put=await cloud.putState(clone(merged));
-      const confirm=await cloud.getState(); const finalRemote=confirm?.data && typeof confirm.data==='object' ? confirm.data : {};
-      const finalState=merge(merged, finalRemote); window.data=finalState; persist(); saveBase(finalState); render();
-      try{ window.v150ClearDirty?.(); }catch(_){ }
-      status('Auf allen Geräten gespeichert ✓');
-      return {ok:true, updatedAt:put?.updatedAt || confirm?.updatedAt || Date.now()};
-    }catch(e){ console.error('[Studia V235 sync]',e); persist(); status(String(e?.message||'Sync fehlgeschlagen')+' · lokal bleibt gespeichert', true); throw e; }
-    finally{ busy=false; setTimeout(()=>q('#v232PullSync')?.classList.remove('show','ready','syncing'),700); }
-  };
-  window.v171CloudNow=window.studiaSyncNow; try{ v171CloudNow=window.v171CloudNow; }catch(_){ }
-  window.addEventListener('online',()=>setTimeout(()=>window.studiaSyncNow().catch(()=>{}),700));
-  setTimeout(async()=>{ try{ const c=window.StudiaCloud?.config?.(); if(c?.url&&c?.token){ await window.StudiaCloud.me(); status('Konto verbunden ✓'); } }catch(e){ status(String(e?.message||'Sync nicht verbunden'), true); } },1300);
-
-  window.printCanvasSheet=async function(){
-    if(innerWidth<900&&window.v170PrintMobile) return window.v170PrintMobile();
-    const w=window.open('about:blank','_blank','width=1050,height=900'); if(!w) return alert('Bitte Pop-ups für Studia erlauben, damit die Druckvorschau geöffnet werden kann.');
-    w.document.write('<p style="font:16px sans-serif;padding:24px">Druckvorschau wird geladen …</p>');
-    try{
-      const clones=await window.cloneAllPages181(); if(!clones.length){ w.close(); return alert('Keine Lernblatt-Seite gefunden.'); }
-      const first=clones[0], W=parseFloat(first.style.width), H=parseFloat(first.style.height);
-      const faces=[...document.querySelectorAll('style')].map(s=>s.textContent.match(/@font-face\s*\{[^}]*\}/g)||[]).flat().join('\n')+clones.map((c,i)=>{const name='studiaPage'+i; c.style.setProperty('page',name,'important'); return '@page '+name+'{size:'+parseFloat(c.style.width)+'px '+parseFloat(c.style.height)+'px;margin:0}';}).join('');
-      w.document.open(); w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Studia · Druckvorschau</title><base href="'+location.href+'"><style>'+faces+'@page{size:'+W+'px '+H+'px;margin:0}*{box-sizing:border-box}html,body{margin:0;padding:0;background:#eee9e6;color:#65514b;font-family:Arial,sans-serif}.toolbar{position:sticky;top:0;z-index:2147483600;display:flex;align-items:center;gap:10px;padding:12px 18px;background:#fffaf8;border-bottom:1px solid #ecd9d6}.toolbar b{margin-right:auto}.toolbar button{border:1px solid #ead5d0;background:#fff;border-radius:12px;padding:10px 16px;color:#65514b;font-weight:700;cursor:pointer}.toolbar button:first-of-type{background:#f9d7d9}.printRoot{display:grid;justify-items:center;gap:24px;padding:24px;overflow:auto}.v181PreviewPage{flex:none;break-after:page;page-break-after:always}.v181PreviewPage:last-child{break-after:auto;page-break-after:auto}.v181PreviewPage,.v181PreviewPage *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;forced-color-adjust:none!important}.v181PreviewPage .tapeSticker{box-shadow:none!important;border:0!important;opacity:.78!important;border-radius:3px!important;transform-origin:50% 50%!important;background:rgba(242,190,178,.82)!important}.v181PreviewPage .tapeSticker:after{display:none!important}@media print{html,body{background:#fff!important}.toolbar{display:none!important}.printRoot{display:block;margin:0;padding:0;overflow:visible;justify-items:start}.v181PreviewPage{justify-self:start!important}}</style></head><body><header class="toolbar"><b>Druckvorschau · nur das Lernblatt</b><button id="print">Drucken</button><button id="close">Schließen</button></header><main class="printRoot">'+clones.map(c=>c.outerHTML).join('')+'</main></body></html>');
-      w.document.close(); w.document.querySelector('#close').onclick=()=>w.close(); w.document.querySelector('#print').onclick=async()=>{ await w.document.fonts.ready; await Promise.all([...w.document.images].map(img=>img.complete?Promise.resolve():new Promise(r=>{img.onload=r;img.onerror=r}))); w.focus(); w.print(); }; w.focus();
-    }catch(e){ w.close(); console.error(e); alert('Die Druckvorschau konnte nicht erstellt werden. Bitte versuche es erneut.'); }
-  };
-  try{ printCanvasSheet=window.printCanvasSheet; }catch(_){ }
-})();
-</script>
-<!-- ===== /Studia V235 ===== -->
-
-
-<!-- ===== Studia V236 · PRINT RECOVERY ===== -->
-<script id="studia-v236-print-recovery">
-(()=>{
-'use strict';
-if(window.__STUDIA_V236_PRINT__)return;window.__STUDIA_V236_PRINT__=true;
-const q=(s,r=document)=>r.querySelector(s);
-
+/* one print handler */
 window.printCanvasSheet=async function(){
-  if(innerWidth<900 && typeof window.v170PrintMobile==='function') return window.v170PrintMobile();
-  const w=window.open('about:blank','_blank','width=1050,height=900');
-  if(!w) return alert('Bitte Pop-ups für Studia erlauben, damit die Druckvorschau geöffnet werden kann.');
-  w.document.write('<p style="font:16px sans-serif;padding:24px">Druckvorschau wird geladen …</p>');
-  try{
-    let clones=[];
-    if(typeof cloneAllPages181==='function') clones=await cloneAllPages181();
-    else if(typeof window.cloneAllPages181==='function') clones=await window.cloneAllPages181();
-    if(!clones.length){w.close();return alert('Keine Lernblatt-Seite gefunden.');}
+ if(innerWidth<900&&typeof window.v170PrintMobile==='function')return window.v170PrintMobile();const w=window.open('about:blank','_blank','width=1050,height=900');if(!w)return alert('Bitte Pop-ups für Studia erlauben, damit die Druckvorschau geöffnet werden kann.');w.document.write('<p style="font:16px sans-serif;padding:24px">Druckvorschau wird geladen …</p>');
+ try{const clones=await window.cloneAllPages181?.();if(!clones?.length){w.close();return alert('Keine Lernblatt-Seite gefunden.')}for(const page of clones)decorateTape(page);const first=clones[0],W=parseFloat(first.style.width),H=parseFloat(first.style.height),faces=[...document.querySelectorAll('style')].map(s=>s.textContent.match(/@font-face\s*\{[^}]*\}/g)||[]).flat().join('\n')+clones.map((c,i)=>{const name='studiaPage'+i;c.style.setProperty('page',name,'important');return '@page '+name+'{size:'+parseFloat(c.style.width)+'px '+parseFloat(c.style.height)+'px;margin:0}'}).join('');
+ const tapeCSS='.tapeSticker{background:transparent!important;border:0!important;outline:0!important;box-shadow:none!important;overflow:visible!important}.tapeSticker:before,.tapeSticker:after{display:none!important;content:none!important}.tapeSticker>.v242TapeArt{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;display:block!important;pointer-events:none!important;overflow:visible!important}';
+ w.document.open();w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Studia · Druckvorschau</title><base href="'+location.href+'"><style>'+faces+'@page{size:'+W+'px '+H+'px;margin:0}*{box-sizing:border-box}html,body{margin:0;padding:0;background:#eee9e6;color:#65514b;font-family:Arial,sans-serif}.toolbar{position:sticky;top:0;z-index:2147483600;display:flex;align-items:center;gap:10px;padding:12px 18px;background:#fffaf8;border-bottom:1px solid #ecd9d6}.toolbar b{margin-right:auto}.toolbar button{border:1px solid #ead5d0;background:#fff;border-radius:12px;padding:10px 16px;color:#65514b;font-weight:700;cursor:pointer}.toolbar button:first-of-type{background:#f9d7d9}.printRoot{display:grid;justify-items:center;gap:24px;padding:24px;overflow:auto}.v181PreviewPage{flex:none;break-after:page;page-break-after:always}.v181PreviewPage:last-child{break-after:auto;page-break-after:auto}.v181PreviewPage,.v181PreviewPage *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;forced-color-adjust:none!important}'+tapeCSS+'@media print{html,body{background:#fff!important}.toolbar{display:none!important}.printRoot{display:block;margin:0;padding:0;overflow:visible}.v181PreviewPage{justify-self:start!important}}</style></head><body><header class="toolbar"><b>Druckvorschau · nur das Lernblatt</b><button id="print">Drucken</button><button id="close">Schließen</button></header><main class="printRoot">'+clones.map(c=>c.outerHTML).join('')+'</main></body></html>');w.document.close();q('#close',w.document).onclick=()=>w.close();q('#print',w.document).onclick=async()=>{try{await w.document.fonts.ready}catch(_){}await Promise.all([...w.document.images].map(img=>img.complete?Promise.resolve():new Promise(r=>{img.onload=r;img.onerror=r})));w.focus();w.print()};w.focus();
+ }catch(e){console.error('[Studia V242 print]',e);try{w.close()}catch(_){}alert('Die Druckvorschau konnte nicht erstellt werden. '+(e?.message?`(${e.message})`:''))}
+};try{printCanvasSheet=window.printCanvasSheet}catch(_){}
 
-    /* Nur die Druckkopie verändern – niemals den echten Editor. */
-    for(const page of clones){
-      page.querySelectorAll('.tapeSticker').forEach(t=>{
-        t.style.setProperty('box-shadow','none','important');
-        t.style.setProperty('border','0','important');
-        t.style.setProperty('opacity','.82','important');
-        t.style.setProperty('border-radius','3px','important');
-      });
-    }
-
-    const first=clones[0],W=parseFloat(first.style.width),H=parseFloat(first.style.height);
-    const faces=[...document.querySelectorAll('style')]
-      .map(s=>s.textContent.match(/@font-face\s*\{[^}]*\}/g)||[]).flat().join('\n')+
-      clones.map((c,i)=>{const name='studiaPage'+i;c.style.setProperty('page',name,'important');return '@page '+name+'{size:'+parseFloat(c.style.width)+'px '+parseFloat(c.style.height)+'px;margin:0}'}).join('');
-
-    w.document.open();
-    w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Studia · Druckvorschau</title><base href="'+location.href+'"><style>'+faces+
-      '@page{size:'+W+'px '+H+'px;margin:0}*{box-sizing:border-box}html,body{margin:0;padding:0;background:#eee9e6;color:#65514b;font-family:Arial,sans-serif}'+
-      '.toolbar{position:sticky;top:0;z-index:2147483600;display:flex;align-items:center;gap:10px;padding:12px 18px;background:#fffaf8;border-bottom:1px solid #ecd9d6}.toolbar b{margin-right:auto}.toolbar button{border:1px solid #ead5d0;background:#fff;border-radius:12px;padding:10px 16px;color:#65514b;font-weight:700;cursor:pointer}.toolbar button:first-of-type{background:#f9d7d9}'+
-      '.printRoot{display:grid;justify-items:center;gap:24px;padding:24px;overflow:auto}.v181PreviewPage{flex:none;break-after:page;page-break-after:always}.v181PreviewPage:last-child{break-after:auto;page-break-after:auto}'+
-      '.v181PreviewPage,.v181PreviewPage *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;forced-color-adjust:none!important}'+
-      /* Klebeband: gleiche Form, aber ohne diagonale Browser-/PDF-Artefakte. */
-      '.v181PreviewPage .tapeSticker{box-shadow:none!important;border:0!important;opacity:.82!important;border-radius:3px!important}'+
-      '.v181PreviewPage .tapeSticker:after{display:none!important;content:none!important}'+
-      '@media print{html,body{background:#fff!important}.toolbar{display:none!important}.printRoot{display:block;margin:0;padding:0;overflow:visible;justify-items:start}.v181PreviewPage{justify-self:start!important}}'+
-      '</style></head><body><header class="toolbar"><b>Druckvorschau · nur das Lernblatt</b><button id="print">Drucken</button><button id="close">Schließen</button></header><main class="printRoot">'+clones.map(c=>c.outerHTML).join('')+'</main></body></html>');
-    w.document.close();
-    w.document.querySelector('#close').onclick=()=>w.close();
-    w.document.querySelector('#print').onclick=async()=>{
-      try{await w.document.fonts.ready}catch(_){ }
-      await Promise.all([...w.document.images].map(img=>img.complete?Promise.resolve():new Promise(r=>{img.onload=r;img.onerror=r})));
-      w.focus();w.print();
-    };
-    w.focus();
-  }catch(e){
-    console.error('[Studia V236 print]',e);
-    try{w.close()}catch(_){ }
-    alert('Die Druckvorschau konnte nicht erstellt werden. '+(e?.message?`(${e.message})`:''));
-  }
-};
-try{printCanvasSheet=window.printCanvasSheet}catch(_){ }
-
-const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 236'};
-[0,300,1000].forEach(t=>setTimeout(setVer,t));
+function maintain(){if(maintainQueued)return;maintainQueued=true;requestAnimationFrame(()=>{maintainQueued=false;ensureSyncUI();decorateTape();const e=q('#headerEyebrow');if(e)e.textContent='VERSION 242'})}
+const obs=new MutationObserver(maintain);obs.observe(document.body,{childList:true,subtree:true});[0,120,450,1200].forEach(t=>setTimeout(maintain,t));
+window.addEventListener('online',()=>setTimeout(()=>window.studiaSyncNow(false).catch(()=>{}),700));
 })();
 </script>
-<!-- ===== /Studia V236 ===== -->
-
-
-<!-- ===== Studia V237 · PRINT PAGE CLONER EXPORT ===== -->
-<script id="studia-v237-print-page-export">
-(()=>{
- const setVer=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 237'};
- [0,250,900,1800].forEach(t=>setTimeout(setVer,t));
-})();
-</script>
-<!-- ===== /Studia V237 ===== -->
-
-
-<!-- ===== Studia V239 · print tape no border ===== -->
-<script id="studia-v239-print-tape-no-border">
-(()=>{
-if(window.__STUDIA_V239_PRINT__)return;window.__STUDIA_V238_PRINT__=true;
-window.printCanvasSheet=async function(){
-  if(innerWidth<900 && typeof window.v170PrintMobile==='function') return window.v170PrintMobile();
-  const w=window.open('about:blank','_blank','width=1050,height=900');
-  if(!w) return alert('Bitte Pop-ups für Studia erlauben, damit die Druckvorschau geöffnet werden kann.');
-  w.document.write('<p style="font:16px sans-serif;padding:24px">Druckvorschau wird geladen …</p>');
-  try{
-    let clones=[];
-    if(typeof cloneAllPages181==='function') clones=await cloneAllPages181();
-    else if(typeof window.cloneAllPages181==='function') clones=await window.cloneAllPages181();
-    if(!clones.length){w.close();return alert('Keine Lernblatt-Seite gefunden.');}
-
-    const first=clones[0],W=parseFloat(first.style.width),H=parseFloat(first.style.height);
-    const faces=[...document.querySelectorAll('style')]
-      .map(s=>s.textContent.match(/@font-face\s*\{[^}]*\}/g)||[]).flat().join('\n')+
-      clones.map((c,i)=>{const name='studiaPage'+i;c.style.setProperty('page',name,'important');return '@page '+name+'{size:'+parseFloat(c.style.width)+'px '+parseFloat(c.style.height)+'px;margin:0}'}).join('');
-
-    const exactTapeCSS = '.tapeSticker{position:absolute;box-sizing:border-box;background:rgba(242,190,178,.62);border:0!important;outline:0!important;transform:rotate(var(--rot,-4deg));box-shadow:0 2px 6px rgba(120,90,80,.08);pointer-events:auto;touch-action:none}.tapeSticker:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent 0 7px,rgba(255,255,255,.18) 7px 9px)}';
-
-    w.document.open();
-    w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Studia · Druckvorschau</title><base href="'+location.href+'"><style>'+faces+
-      '@page{size:'+W+'px '+H+'px;margin:0}*{box-sizing:border-box}html,body{margin:0;padding:0;background:#eee9e6;color:#65514b;font-family:Arial,sans-serif}'+
-      '.toolbar{position:sticky;top:0;z-index:2147483600;display:flex;align-items:center;gap:10px;padding:12px 18px;background:#fffaf8;border-bottom:1px solid #ecd9d6}.toolbar b{margin-right:auto}.toolbar button{border:1px solid #ead5d0;background:#fff;border-radius:12px;padding:10px 16px;color:#65514b;font-weight:700;cursor:pointer}.toolbar button:first-of-type{background:#f9d7d9}'+
-      '.printRoot{display:grid;justify-items:center;gap:24px;padding:24px;overflow:auto}.v181PreviewPage{flex:none;break-after:page;page-break-after:always}.v181PreviewPage:last-child{break-after:auto;page-break-after:auto}'+
-      '.v181PreviewPage,.v181PreviewPage *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;forced-color-adjust:none!important}'+
-      exactTapeCSS+
-      '@media print{html,body{background:#fff!important}.toolbar{display:none!important}.printRoot{display:block;margin:0;padding:0;overflow:visible;justify-items:start}.v181PreviewPage{justify-self:start!important}}'+
-      '</style></head><body><header class="toolbar"><b>Druckvorschau · nur das Lernblatt</b><button id="print">Drucken</button><button id="close">Schließen</button></header><main class="printRoot">'+clones.map(c=>c.outerHTML).join('')+'</main></body></html>');
-    w.document.close();
-    w.document.querySelector('#close').onclick=()=>w.close();
-    w.document.querySelector('#print').onclick=async()=>{
-      try{await w.document.fonts.ready}catch(_){ }
-      await Promise.all([...w.document.images].map(img=>img.complete?Promise.resolve():new Promise(r=>{img.onload=r;img.onerror=r})));
-      w.focus();w.print();
-    };
-    w.focus();
-  }catch(e){
-    console.error('[Studia V239 print]',e);
-    try{w.close()}catch(_){ }
-    alert('Die Druckvorschau konnte nicht erstellt werden. '+(e?.message?`(${e.message})`:''));
-  }
-};
-try{printCanvasSheet=window.printCanvasSheet}catch(_){ }
-})();
-</script>
-<!-- ===== /Studia V238 ===== -->
-
-
-<!-- ===== Studia V241 · exact preview + PDF-only tape edge fix ===== -->
-<script id="studia-v241-print-tape-media-fix">
-(()=>{
-if(window.__STUDIA_V241_PRINT__)return;window.__STUDIA_V241_PRINT__=true;
-window.printCanvasSheet=async function(){
-  if(innerWidth<900 && typeof window.v170PrintMobile==='function') return window.v170PrintMobile();
-  const w=window.open('about:blank','_blank','width=1050,height=900');
-  if(!w) return alert('Bitte Pop-ups für Studia erlauben, damit die Druckvorschau geöffnet werden kann.');
-  w.document.write('<p style="font:16px sans-serif;padding:24px">Druckvorschau wird geladen …</p>');
-  try{
-    let clones=[];
-    if(typeof cloneAllPages181==='function') clones=await cloneAllPages181();
-    else if(typeof window.cloneAllPages181==='function') clones=await window.cloneAllPages181();
-    if(!clones.length){w.close();return alert('Keine Lernblatt-Seite gefunden.');}
-
-    const first=clones[0],W=parseFloat(first.style.width),H=parseFloat(first.style.height);
-    const faces=[...document.querySelectorAll('style')]
-      .map(s=>s.textContent.match(/@font-face\s*\{[^}]*\}/g)||[]).flat().join('\n')+
-      clones.map((c,i)=>{const name='studiaPage'+i;c.style.setProperty('page',name,'important');return '@page '+name+'{size:'+parseFloat(c.style.width)+'px '+parseFloat(c.style.height)+'px;margin:0}'}).join('');
-
-    /* Screen preview uses the EXACT same tape rules as the sheet/editor. */
-    const tapeScreen = '.tapeSticker{position:absolute;box-sizing:border-box;background:rgba(242,190,178,.62);border:1px solid rgba(200,145,135,.18);transform:rotate(var(--rot,-4deg));box-shadow:0 2px 6px rgba(120,90,80,.08);pointer-events:auto;touch-action:none}.tapeSticker:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent 0 7px,rgba(255,255,255,.18) 7px 9px)}';
-
-    /* Only the real print/PDF renderer gets this. Keep appearance, remove the PDF hairline box. */
-    const tapePrint = '@media print{.tapeSticker{border:0!important;outline:0!important;box-shadow:none!important;background-color:rgba(242,190,178,.62)!important;background-clip:padding-box!important;-webkit-box-decoration-break:clone!important;box-decoration-break:clone!important}.tapeSticker:before{display:none!important;content:none!important}.tapeSticker:after{inset:.7px!important;border:0!important;outline:0!important;box-shadow:none!important;background:repeating-linear-gradient(135deg,transparent 0 7px,rgba(255,255,255,.18) 7px 9px)!important}}';
-
-    w.document.open();
-    w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Studia · Druckvorschau</title><base href="'+location.href+'"><style>'+faces+
-      '@page{size:'+W+'px '+H+'px;margin:0}*{box-sizing:border-box}html,body{margin:0;padding:0;background:#eee9e6;color:#65514b;font-family:Arial,sans-serif}'+
-      '.toolbar{position:sticky;top:0;z-index:2147483600;display:flex;align-items:center;gap:10px;padding:12px 18px;background:#fffaf8;border-bottom:1px solid #ecd9d6}.toolbar b{margin-right:auto}.toolbar button{border:1px solid #ead5d0;background:#fff;border-radius:12px;padding:10px 16px;color:#65514b;font-weight:700;cursor:pointer}.toolbar button:first-of-type{background:#f9d7d9}'+
-      '.printRoot{display:grid;justify-items:center;gap:24px;padding:24px;overflow:auto}.v181PreviewPage{flex:none;break-after:page;page-break-after:always}.v181PreviewPage:last-child{break-after:auto;page-break-after:auto}'+
-      '.v181PreviewPage,.v181PreviewPage *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;forced-color-adjust:none!important}'+
-      tapeScreen+tapePrint+
-      '@media print{html,body{background:#fff!important}.toolbar{display:none!important}.printRoot{display:block;margin:0;padding:0;overflow:visible;justify-items:start}.v181PreviewPage{justify-self:start!important}}'+
-      '</style></head><body><header class="toolbar"><b>Druckvorschau · nur das Lernblatt</b><button id="print">Drucken</button><button id="close">Schließen</button></header><main class="printRoot">'+clones.map(c=>c.outerHTML).join('')+'</main></body></html>');
-    w.document.close();
-    w.document.querySelector('#close').onclick=()=>w.close();
-    w.document.querySelector('#print').onclick=async()=>{
-      try{await w.document.fonts.ready}catch(_){ }
-      await Promise.all([...w.document.images].map(img=>img.complete?Promise.resolve():new Promise(r=>{img.onload=r;img.onerror=r})));
-      w.focus();w.print();
-    };
-    w.focus();
-  }catch(e){
-    console.error('[Studia V241 print]',e);
-    try{w.close()}catch(_){ }
-    alert('Die Druckvorschau konnte nicht erstellt werden. '+(e?.message?`(${e.message})`:''));
-  }
-};
-try{printCanvasSheet=window.printCanvasSheet}catch(_){ }
-const setVer=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 241'};[0,300,1100].forEach(t=>setTimeout(setVer,t));
-})();
-</script>
-<!-- ===== /Studia V241 ===== -->
+<!-- ===== /Studia V242 ===== -->
