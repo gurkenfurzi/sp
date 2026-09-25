@@ -1,29 +1,20 @@
 {
   "name": "Studia",
   "short_name": "Studia",
-  "start_url": "./index.html?v=202",
-  "scope": "./",
+  "start_url": "./",
   "display": "standalone",
-  "background_color": "#fff8f5",
-  "theme_color": "#fff8f5",
+  "background_color": "#fffaf8",
+  "theme_color": "#fffaf8",
   "icons": [
     {
-      "src": "./icon-192.png",
+      "src": "icon-192.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     },
     {
-      "src": "./icon-512.png",
+      "src": "icon-512.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "./apple-touch-icon.png",
-      "sizes": "180x180",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "image/png"
     }
   ]
 }
