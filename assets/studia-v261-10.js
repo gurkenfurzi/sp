@@ -1,0 +1,18 @@
+
+(function(){
+if(window.__STUDIA_V129_INPUT__)return;
+
+'use strict';
+const editor=()=>document.body.classList.contains('editorMode')&&!!document.querySelector('#view-sheet-editor.active');
+const root=()=>document.getElementById('canvasObjects');
+const deep=o=>JSON.parse(JSON.stringify(o));
+function bounds(v){if(typeof vectorBounds==='function')return vectorBounds(v);if(v.type==='rect')return{x:v.x,y:v.y,w:v.w,h:v.h,cx:v.x+v.w/2,cy:v.y+v.h/2};if(v.type==='ellipse')return{x:v.cx-v.rx,y:v.cy-v.ry,w:v.rx*2,h:v.ry*2,cx:v.cx,cy:v.cy};const pts=v.points||[];if(!pts.length)return{x:0,y:0,w:1,h:1,cx:0,cy:0};const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]),x=Math.min(...xs),y=Math.min(...ys),w=Math.max(...xs)-x,h=Math.max(...ys)-y;return{x,y,w,h,cx:x+w/2,cy:y+h/2}}
+function installProxies(){const r=root();if(!r||!window.canvasState)return;r.querySelectorAll('.v126VectorDragProxy').forEach(n=>n.remove());const selected=new Set(window.canvasState.selectedVectorIds||[]);for(const v of(window.canvasState.vectors||[])){const b=bounds(v),pad=v.type==='path'?14:2,d=document.createElement('div');d.className='v126VectorDragProxy';d.dataset.v126Vid=v.id;d.dataset.locked=v.locked?'1':'0';d.style.left=(b.x-pad)+'px';d.style.top=(b.y-pad)+'px';d.style.width=Math.max(18,b.w+pad*2)+'px';d.style.height=Math.max(18,b.h+pad*2)+'px';d.style.zIndex=String(selected.has(v.id)?10000:Math.max(31,(v.z||0)+31));if(v.rotation){d.style.transform='rotate('+v.rotation+'deg)';d.style.transformOrigin=(b.cx-(b.x-pad))+'px '+(b.cy-(b.y-pad))+'px'}d.addEventListener('pointerdown',start,{capture:true,passive:false});r.appendChild(d)}}
+let drag=null;
+function start(e){if(!editor()||e.button>0)return;const id=e.currentTarget.dataset.v126Vid,v=(window.canvasState?.vectors||[]).find(x=>x.id===id);if(!v||v.locked)return;e.preventDefault();e.stopImmediatePropagation();if(window.canvasState.multiMode||e.shiftKey){try{toggleVectorInMultiSelection(id)}catch(_){}return}try{selectVector(id)}catch(_){window.canvasState.selectedType='vector';window.canvasState.selectedId=id;window.canvasState.selectedVectorIds=[id];window.canvasState.selectedIds=[]}const sc=Number(document.getElementById('canvasStage')?.dataset.scale||window.canvasZoom||1)||1;drag={id,pid:e.pointerId,x:e.clientX,y:e.clientY,scale:sc,snap:deep(v),moved:false}}
+function move(e){if(!drag||e.pointerId!==drag.pid)return;const v=(window.canvasState?.vectors||[]).find(x=>x.id===drag.id);if(!v){drag=null;return}e.preventDefault();e.stopImmediatePropagation();const dx=(e.clientX-drag.x)/drag.scale,dy=(e.clientY-drag.y)/drag.scale;if(Math.hypot(dx,dy)>0.5)drag.moved=true;const s=drag.snap;if(v.type==='rect'){v.x=s.x+dx;v.y=s.y+dy}else if(v.type==='ellipse'){v.cx=s.cx+dx;v.cy=s.cy+dy}else if(Array.isArray(v.points)){v.points=s.points.map(p=>[p[0]+dx,p[1]+dy])}try{renderVectors()}catch(_){}try{markCanvasDirty(false)}catch(_){}}
+function end(e){if(!drag||e.pointerId!==drag.pid)return;e.preventDefault();e.stopImmediatePropagation();const moved=drag.moved;drag=null;if(moved){try{pushHistory()}catch(_){}}try{renderCanvasInspector();renderLayerList()}catch(_){}installProxies()}
+window.addEventListener('pointermove',move,{capture:true,passive:false});window.addEventListener('pointerup',end,true);window.addEventListener('pointercancel',end,true);
+const oldRender=window.renderVectors||renderVectors;window.renderVectors=function(){const out=oldRender.apply(this,arguments);queueMicrotask(installProxies);return out};try{renderVectors=window.renderVectors}catch(_){}
+setTimeout(()=>{if(editor()){try{renderVectors()}catch(_){}installProxies()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 202'},350);
+})();
