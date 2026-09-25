@@ -16276,6 +16276,8 @@ async function cloneAllPages181(){
  }finally{v96LoadPageData(canvasState.pages[active]);canvasState.activePage=active;Object.assign(canvasState,selection,savedRuntime);renderCanvasObjects();renderVectors();renderCanvasInspector();renderLayerList();updateHistoryButtons();v96RenderPageStrip?.();window.restoreCanvasView?.(camera)}
  return out;
 }
+/* V237: expose the already-working internal page cloner to the print/export layer. */
+window.cloneAllPages181=cloneAllPages181;
 window.v181OpenPreview=async function(){let host=qs('#v181Preview');if(!host){host=document.createElement('div');host.id='v181Preview';host.setAttribute('role','dialog');host.setAttribute('aria-label','Lernblatt-Vorschau');host.innerHTML='<div class="v181PreviewBar"><b>Lernblatt-Vorschau</b><button type="button">Schließen</button></div><div class="v181PreviewPages"></div>';document.body.appendChild(host);host.querySelector('button').onclick=()=>host.classList.remove('open');host.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();host.querySelector('.v181PreviewBar button').click()}});const fitPages=()=>{if(!host.classList.contains('open'))return;host.querySelectorAll('.v181PreviewPage').forEach(c=>{const scale=Math.min(1,(innerWidth-64)/parseFloat(c.style.width),(innerHeight-120)/parseFloat(c.style.height));c.style.setProperty('zoom',String(Math.max(.1,scale)),'important')})};host.fitPages=fitPages;window.addEventListener('resize',fitPages);host.addEventListener('click',e=>{const a=e.target.closest('a[data-studia-target]');if(!a)return;e.preventDefault();const type=a.dataset.studiaType,id=a.dataset.studiaTarget;host.querySelector('.v181PreviewBar button').click();if(type==='sheet'){openStudySheetEditor(id);setTimeout(()=>window.v181OpenPreview?.(),500)}else if(type==='quiz')startQuiz(id);else if(type==='task')openView('tasks')})}const pages=host.querySelector('.v181PreviewPages');pages.innerHTML='<div style="padding:40px">Seiten werden geladen …</div>';host.classList.add('open');const clones=await cloneAllPages181();pages.replaceChildren(...clones);host.fitPages();host.querySelector('.v181PreviewBar button').focus()};
 
 /* Exact-ish multi-page print: clone the real rendered page rather than re-drawing a simplified model. */
@@ -22696,3 +22698,13 @@ const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 236'};
 })();
 </script>
 <!-- ===== /Studia V236 ===== -->
+
+
+<!-- ===== Studia V237 · PRINT PAGE CLONER EXPORT ===== -->
+<script id="studia-v237-print-page-export">
+(()=>{
+ const setVer=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 237'};
+ [0,250,900,1800].forEach(t=>setTimeout(setVer,t));
+})();
+</script>
+<!-- ===== /Studia V237 ===== -->
