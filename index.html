@@ -15982,7 +15982,7 @@ setTimeout(reconcile,980);
 })();
 </script>
 <!-- ===== /Studia V134 ===== -->
-<script src="google-sync-config.js?v=278"></script>
+<script src="google-sync-config.js?v=279"></script>
 <style id="v181-desktop-stability-style">
 @media(min-width:900px){
   /* One desktop interaction surface only. Legacy transparent layers caused text drag/selection conflicts. */
@@ -22037,7 +22037,7 @@ function installCloudMerge(){
         setStatus('Auf diesem Gerät zusammengeführt ✓');
         /* The merged state becomes the next outgoing state instead of letting a stale pull win. */
         try{window.v150MarkDirty?.(120)}catch(_){ }
-      }catch(e){error=e;console.error('[Studia V232] sync',e);if(localBefore){data=localBefore;persistLocal();try{renderAll?.()}catch(_){ }}setStatus('Cloud fehlgeschlagen · lokal sicher');}
+      }catch(e){error=e;console.error('[Studia V232] sync',e);if(localBefore){data=localBefore;persistLocal();try{renderAll?.()}catch(_){ }}setStatus(String(e?.message||'Cloud fehlgeschlagen')+' · lokal sicher');}
       finally{v232SyncBusy=false;setTimeout(()=>{const m=q('#v232PullSync');m?.classList.remove('show','ready','syncing')},900)}
       if(error)throw error;return result;
     }
