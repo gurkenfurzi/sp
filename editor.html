@@ -3026,7 +3026,9 @@ html,body{background:#fff7f4;}
 }
 @media (min-width:900px){.canvasQuickNav .editorNavIcon{display:inline-grid;width:18px;height:18px;vertical-align:middle}.canvasQuickNav .editorNavIcon svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}}
 </style>
-\n<style id="v269-editor-isolation-preload">\nhtml.studia-editor-document,html.studia-editor-document body{background:#fff8f6!important;}\nhtml.studia-editor-document body:not(.v269EditorReady){visibility:hidden!important;}\nhtml.studia-editor-document body.v269EditorReady{visibility:visible!important;}\nhtml.studia-editor-document body.editorMode #nav,\nhtml.studia-editor-document body.editorMode > .nav,\nhtml.studia-editor-document body.editorMode main > .view:not(#view-sheet-editor){display:none!important;}\n</style>\n<script>document.documentElement.classList.add('studia-editor-document');</script>\n
+
+<style id="v270-boot-style">html.v270Boot body{visibility:hidden!important}</style>
+<script>document.documentElement.classList.add('v270Boot');</script>
 </head>
 <body class="v57">
 <script id="v162-safe-runtime">
@@ -7738,107 +7740,6 @@ button.primary,button.ghost,.iconbtn{
 </style>
 
 </head><body><div class="page">${serializedCanvas()}</div><div id="buildVersionBadge" style="position:fixed;right:8px;bottom:8px;z-index:9999;font:800 9px Inter,sans-serif;color:#9b7d74;background:rgba(255,250,247,.88);border:1px solid #ead4cd;border-radius:999px;padding:5px 8px;pointer-events:none">V182</div>
-
-<!-- ===== Studia V269 SINGLE-FILE EDITOR ISOLATION ===== -->
-<style id="v269-single-editor-style">
-/* One editor document, one chrome. Old/alternate chrome must never stack. */
-body.editorMode .v135MenuBar,
-body.editorMode .desktopCommandBar,
-body.editorMode .editorDock,
-body.editorMode .canvasRibbon,
-body.editorMode .wordRibbon,
-body.editorMode .sheetTopbar,
-body.editorMode .sheetActionBar,
-body.editorMode .canvasMobileTools{display:none!important;}
-
-/* The actual modern editor pieces stay visible once only. */
-body.editorMode #view-sheet-editor{display:block!important;position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;margin:0!important;padding:0!important;overflow:hidden!important;z-index:10!important;}
-body.editorMode .canvasEditorShell{width:100vw!important;height:100dvh!important;max-width:none!important;margin:0!important;overflow:hidden!important;}
-
-/* Prevent hidden app surfaces from taking space or flashing on reload. */
-body.editorMode main>.view:not(#view-sheet-editor),
-body.editorMode #nav,
-body.editorMode .nav:not(.canvasQuickNav){display:none!important;visibility:hidden!important;}
-
-/* One left navigation / drawer / right sidebar only. */
-body.editorMode .canvasQuickNav[data-v269-duplicate="1"],
-body.editorMode #canvasQuickDrawer[data-v269-duplicate="1"],
-body.editorMode #desktopEditorSidebar[data-v269-duplicate="1"],
-body.editorMode .v102DesktopLeft[data-v269-duplicate="1"],
-body.editorMode .v134FormatTools[data-v269-duplicate="1"],
-body.editorMode .v134BottomBar[data-v269-duplicate="1"],
-body.editorMode .v132SelectionBar[data-v269-duplicate="1"],
-body.editorMode #v96PageStrip[data-v269-duplicate="1"]{display:none!important;}
-
-/* Desktop left rail must only expose the requested three hubs. */
-@media(min-width:900px){
-  body.editorMode .canvasQuickNav button[data-v138="pages"],
-  body.editorMode .canvasQuickNav button[data-v138="layers"],
-  body.editorMode .canvasQuickNav button[data-v139="pages"],
-  body.editorMode .canvasQuickNav button[data-v139="layers"],
-  body.editorMode .canvasQuickNav button[data-v151="pages"],
-  body.editorMode .canvasQuickNav button[data-v151="layers"]{display:none!important;}
-}
-</style>
-<script>
-(()=>{
-  'use strict';
-  if(window.__STUDIA_V269_SINGLE_EDITOR__) return;
-  window.__STUDIA_V269_SINGLE_EDITOR__=true;
-  const q=(s,r=document)=>r.querySelector(s), qa=(s,r=document)=>[...r.querySelectorAll(s)];
-  const one=(sel)=>{const all=qa(sel);all.slice(1).forEach(n=>{n.dataset.v269Duplicate='1';n.remove()});return all[0]||null};
-  function dedupe(){
-    if(!document.body.classList.contains('editorMode')) return;
-    one('#view-sheet-editor .canvasTopbar');
-    one('#view-sheet-editor .v102DesktopLeft');
-    one('#view-sheet-editor .canvasQuickNav');
-    one('#view-sheet-editor #canvasQuickDrawer');
-    one('#view-sheet-editor #desktopEditorSidebar');
-    one('#view-sheet-editor .v134FormatTools');
-    one('#view-sheet-editor .v134BottomBar');
-    one('#view-sheet-editor .v132SelectionBar');
-    one('#view-sheet-editor #v96PageStrip');
-    qa('#view-sheet-editor .v135MenuBar,#view-sheet-editor .desktopCommandBar,#view-sheet-editor .editorDock,#view-sheet-editor .canvasRibbon,#view-sheet-editor .wordRibbon').forEach(n=>n.remove());
-  }
-  function forceEditorView(){
-    qa('main>.view').forEach(v=>v.classList.toggle('active',v.id==='view-sheet-editor'));
-    document.body.classList.add('editorMode');
-    document.body.classList.remove('v137ViewMode');
-  }
-  function requestedSheet(){
-    const u=new URL(location.href);
-    return u.searchParams.get('sheet')||sessionStorage.getItem('studia-editor-sheet-id')||localStorage.getItem('studia-editor-sheet-id')||'';
-  }
-  function boot(){
-    forceEditorView();
-    const id=requestedSheet();
-    try{
-      if(typeof window.openStudySheetEditor==='function') window.openStudySheetEditor(id||null);
-      else if(typeof window.renderSheetEditor==='function') window.renderSheetEditor();
-    }catch(e){ console.error('Studia editor boot',e); }
-    forceEditorView();
-    dedupe();
-    requestAnimationFrame(()=>{dedupe();forceEditorView();document.body.classList.add('v269EditorReady')});
-    setTimeout(()=>{dedupe();forceEditorView();document.body.classList.add('v269EditorReady')},120);
-    setTimeout(dedupe,500);
-    setTimeout(dedupe,1400);
-  }
-  // Return always goes back to the app file. Save first when possible.
-  const oldClose=window.closeSheetEditor;
-  window.closeSheetEditor=function(){
-    try{ if(typeof window.saveCanvasSheet==='function') window.saveCanvasSheet(); }catch(_){}
-    try{ sessionStorage.removeItem('studia-editor-sheet-id'); }catch(_){}
-    location.href='index.html';
-  };
-  // Keep one UI if legacy code attempts to rebuild editor chrome later.
-  const mo=new MutationObserver(()=>{ if(document.body.classList.contains('editorMode')) requestAnimationFrame(dedupe); });
-  mo.observe(document.documentElement,{subtree:true,childList:true});
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',()=>setTimeout(boot,0),{once:true});
-  else setTimeout(boot,0);
-})();
-</script>
-<!-- ===== /Studia V269 SINGLE-FILE EDITOR ISOLATION ===== -->
-
 </body></html>`;
  const blob=new Blob([html],{type:"text/html"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=title.replace(/[^\wäöüÄÖÜß-]+/g,"_")+".html";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
 }
@@ -15866,7 +15767,7 @@ setTimeout(reconcile,980);
 })();
 </script>
 <!-- ===== /Studia V134 ===== -->
-<style id="studia-editor-bundle-css">
+<style id="v270-editor-css">
 /* v135.css consolidated */
 :root{--v135-pink:#ef9ea7;--v135-pink-soft:#fff0f1;--v135-ink:#3f3834;--v135-line:#ebe2de;--v135-green:#eaf3da}
 .v132Hit{touch-action:none!important;cursor:grab!important}
@@ -16923,7 +16824,7 @@ body.v166RightPan #canvasViewport{cursor:grabbing!important;user-select:none!imp
 
 </style>
 <script src="google-sync-config.js?v=182"></script>
-<script id="studia-editor-bundle-js">
+<script id="v270-editor-js">
 /* v135.js consolidated */
 window.__STUDIA_EDITOR_BUILD__=183;
 /* Studia V135 - stable selection, Word/Canva tools, cloud-ready accounts and cute assets */
@@ -19363,7 +19264,7 @@ async function cloneAllPages181(){try{v96SyncPage?.()}catch(_){};canvasState.pag
 window.v181OpenPreview=async function(){let host=qs('#v181Preview');if(!host){host=document.createElement('div');host.id='v181Preview';host.innerHTML='<div class="v181PreviewBar"><b>Nur ansehen</b><button type="button">✕ Schließen</button></div><div class="v181PreviewPages"></div>';document.body.appendChild(host);host.querySelector('button').onclick=()=>host.classList.remove('open')}const pages=host.querySelector('.v181PreviewPages');pages.innerHTML='<div style="padding:40px">Seiten werden geladen …</div>';host.classList.add('open');const clones=await cloneAllPages181();pages.replaceChildren(...clones);const max=Math.min(1,(innerWidth-80)/Math.max(...clones.map(c=>parseFloat(c.style.width)||c.offsetWidth||794)));clones.forEach(c=>{c.style.zoom=String(max)})};
 
 /* Exact-ish multi-page print: clone the real rendered page rather than re-drawing a simplified model. */
-window.printCanvasSheet=async function(){if(innerWidth<900&&window.v170PrintMobile)return window.v170PrintMobile();const clones=await cloneAllPages181();if(!clones.length)return alert('Keine Lernblatt-Seite gefunden.');const styles=qsa('style').map(x=>x.textContent).join('\n');const cssHref='';const w=window.open('about:blank','_blank');if(!w)return alert('Pop-up wurde blockiert. Bitte Pop-ups für Studia erlauben.');const title='Studia Druck';w.document.open();w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${title}</title><style>${styles}</style><style>@page{margin:0;size:A4 portrait}html,body{margin:0!important;padding:0!important;background:#fff!important}.v181PrintRoot{margin:0!important;padding:0!important}.v181PrintSheet{break-after:page;page-break-after:always;margin:0!important;position:relative!important;box-shadow:none!important;border:0!important;transform:none!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.v181PrintSheet:last-child{break-after:auto;page-break-after:auto}.v181PrintSheet *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.v181PrintToolbar{position:sticky;top:0;z-index:9;display:flex;gap:8px;padding:10px;background:#fff;border-bottom:1px solid #ddd}@media print{.v181PrintToolbar{display:none!important}}</style></head><body class="editorMode"><div class="v181PrintToolbar"><button onclick="print()">Drucken</button><button onclick="close()">Schließen</button></div><div class="v181PrintRoot">${clones.map(c=>{c.classList.add('v181PrintSheet');return c.outerHTML}).join('')}</div>
+window.printCanvasSheet=async function(){if(innerWidth<900&&window.v170PrintMobile)return window.v170PrintMobile();const clones=await cloneAllPages181();if(!clones.length)return alert('Keine Lernblatt-Seite gefunden.');const styles=qsa('style').map(x=>x.textContent).join('\n');const cssHref=new URL('editor.css?v=183',location.href).href;const w=window.open('about:blank','_blank');if(!w)return alert('Pop-up wurde blockiert. Bitte Pop-ups für Studia erlauben.');const title='Studia Druck';w.document.open();w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${title}</title><link rel="stylesheet" href="${cssHref}"><style>${styles}</style><style>@page{margin:0;size:A4 portrait}html,body{margin:0!important;padding:0!important;background:#fff!important}.v181PrintRoot{margin:0!important;padding:0!important}.v181PrintSheet{break-after:page;page-break-after:always;margin:0!important;position:relative!important;box-shadow:none!important;border:0!important;transform:none!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.v181PrintSheet:last-child{break-after:auto;page-break-after:auto}.v181PrintSheet *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.v181PrintToolbar{position:sticky;top:0;z-index:9;display:flex;gap:8px;padding:10px;background:#fff;border-bottom:1px solid #ddd}@media print{.v181PrintToolbar{display:none!important}}</style></head><body class="editorMode"><div class="v181PrintToolbar"><button onclick="print()">Drucken</button><button onclick="close()">Schließen</button></div><div class="v181PrintRoot">${clones.map(c=>{c.classList.add('v181PrintSheet');return c.outerHTML}).join('')}</div>
 
 
 </body></html>`);w.document.close();setTimeout(()=>{try{w.focus();w.print()}catch(_){}},700)};
@@ -20198,3 +20099,110 @@ window.addEventListener('resize',()=>setTimeout(repair,140));window.addEventList
 })();
 </script>
 <!-- ===== /Studia V189 ===== -->
+<style id="v270-single-editor-design">
+/* V270: one visual editor owner. Keep old code as functionality, suppress duplicate chrome only. */
+body.editorMode .v135MenuBar,
+body.editorMode .v128DesktopParityBar,
+body.editorMode .v108MoveHandle,
+body.editorMode .v108VectorMoveHandle,
+body.editorMode .v138TransformHandle,
+body.editorMode #v152TextHitLayer,
+body.editorMode #v168MobileTextLayer,
+body.editorMode .v129ShapeProxy,
+body.editorMode .v126VectorDragProxy{display:none!important}
+
+/* Never show duplicate editor bars/panels. JS also removes extras. */
+body.editorMode .canvasTopbar{z-index:300!important}
+body.editorMode .desktopCommandBar{z-index:290!important}
+body.editorMode .canvasQuickNav{z-index:280!important}
+body.editorMode #desktopEditorSidebar{z-index:270!important}
+body.editorMode .v134BottomBar{z-index:260!important}
+
+/* No Word-style file/edit menu. */
+body.editorMode .v135MenuBar{display:none!important}
+
+/* Left rail = exactly Text / Elemente / Vorlagen on laptop. */
+@media(min-width:900px){
+ body.editorMode .canvasQuickNav button{display:none!important}
+ body.editorMode .canvasQuickNav button[data-v189-mode="text"],
+ body.editorMode .canvasQuickNav button[data-v189-mode="elements"],
+ body.editorMode .canvasQuickNav button[data-v189-mode="templates"],
+ body.editorMode .canvasQuickNav button[data-v139="text"],
+ body.editorMode .canvasQuickNav button[data-v139="elements"],
+ body.editorMode .canvasQuickNav button[data-v139="templates"],
+ body.editorMode .canvasQuickNav button[data-v138="text"],
+ body.editorMode .canvasQuickNav button[data-v138="elements"],
+ body.editorMode .canvasQuickNav button[data-v138="templates"],
+ body.editorMode .canvasQuickNav button[data-v134="text"],
+ body.editorMode .canvasQuickNav button[data-v134="elements"],
+ body.editorMode .canvasQuickNav button[data-v134="templates"]{display:flex!important}
+}
+
+/* One handle system only; latest interaction overlay owns resize/rotate. */
+body.editorMode .cobj>.resizeHandle,
+body.editorMode .cobj>.rotateHandle,
+body.editorMode .vectorObj>.vectorHandle,
+body.editorMode .vectorObj>.vectorRotateLine,
+body.editorMode .vectorObj>.vectorSelectBox{display:none!important;pointer-events:none!important}
+
+/* Formatting stays one line/strip; horizontal scroll instead of overlap. */
+body.editorMode .desktopCommandBar{overflow-x:auto!important;overflow-y:hidden!important;white-space:nowrap!important}
+body.editorMode .v134FormatTools,body.editorMode .v137FormatToolbar{flex-wrap:nowrap!important;min-width:max-content!important}
+
+/* Mobile: selected element tools must stay above canvas and be scrollable, not stacked. */
+@media(max-width:899px){
+ body.editorMode .v132SelectionBar,#mobileSelectionTools{overflow-x:auto!important;overflow-y:hidden!important;white-space:nowrap!important;scrollbar-width:none}
+ body.editorMode #canvasQuickDrawer.open{overflow-y:auto!important;overflow-x:hidden!important}
+}
+</style>
+
+<script id="v270-single-owner">
+(function(){
+ 'use strict';
+ const q=(s,r=document)=>r.querySelector(s), qa=(s,r=document)=>Array.from(r.querySelectorAll(s));
+ const inEditor=()=>document.body.classList.contains('editorMode') && !!q('#view-sheet-editor.active');
+ function keepOne(selector){ const a=qa(selector); a.slice(1).forEach(x=>x.remove()); return a[0]||null; }
+ function dedupe(){
+   if(!inEditor()) return;
+   keepOne('.canvasTopbar');
+   keepOne('.desktopCommandBar');
+   keepOne('.canvasQuickNav');
+   keepOne('#canvasQuickDrawer');
+   keepOne('#desktopEditorSidebar');
+   keepOne('.v134BottomBar');
+   keepOne('.v132SelectionBar');
+   keepOne('#mobileSelectionTools');
+   qa('.v135MenuBar,.v128DesktopParityBar,.v108MoveHandle,.v108VectorMoveHandle,.v138TransformHandle').forEach(x=>x.remove());
+   // Deduplicate repeated toolbars that old patch generations may append.
+   qa('.v134FormatTools').slice(1).forEach(x=>x.remove());
+   qa('.v137FormatToolbar').slice(1).forEach(x=>x.remove());
+   qa('.historyBar').slice(1).forEach(x=>x.remove());
+   // Desktop rail: preserve functionality in Elements panel, but show only the three requested entry points.
+   if(innerWidth>=900){
+     const nav=q('.canvasQuickNav');
+     if(nav){
+       const wanted=['text','elements','templates'];
+       Array.from(nav.querySelectorAll('button')).forEach(b=>{
+         const mode=b.dataset.v189Mode||b.dataset.v139||b.dataset.v138||b.dataset.v134||'';
+         if(mode && !wanted.includes(mode)) b.classList.add('v270HiddenRailItem');
+       });
+     }
+   }
+ }
+ function boot(){
+   const p=new URLSearchParams(location.search);
+   const id=p.get('sheet')||sessionStorage.getItem('studia-editor-sheet-id')||localStorage.getItem('studia-editor-sheet-id')||'';
+   // Use the app's real editor opener; no duplicated editor implementation.
+   try{ window.openStudySheetEditor(id||null); }catch(e){ console.error(e); }
+   [0,80,250,700,1400,2600].forEach(ms=>setTimeout(dedupe,ms));
+   setTimeout(()=>document.documentElement.classList.remove('v270Boot'),160);
+ }
+ const obs=new MutationObserver(()=>requestAnimationFrame(dedupe));
+ obs.observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['class']});
+ window.addEventListener('resize',()=>setTimeout(dedupe,120));
+ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',()=>setTimeout(boot,0),{once:true}); else setTimeout(boot,0);
+})();
+</script>
+
+</body>
+</html>

@@ -3262,6 +3262,165 @@ html,body{background:#fff7f4;}
   </section>
 
 
+  <section class="view" id="view-sheet-editor">
+    <div class="canvasEditorShell">
+      <div class="canvasTopbar">
+        <button class="editorIcon" title="Zurück" onclick="closeSheetEditor()"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg></button>
+        <div class="editorTitle"><b>Lernblatt</b><span class="autosaveState" id="autosaveState">Autosave an</span></div>
+        <div class="historyBar">
+          <button class="historyBtn" id="undoBtn" title="Rückgängig" onclick="undoCanvas()">↶</button>
+          <button class="historyBtn" id="redoBtn" title="Wiederholen" onclick="redoCanvas()">↷</button>
+        </div>
+        <div class="editorActions">
+          <button class="editorIcon viewTopBtn pageTopButton" title="Seite & Ansicht" onclick="toggleTopViewMenu()"><span class="pageTopIcon">▯</span><span class="pageTopLabel">Seite</span></button>
+          <button class="editorIcon" title="Exportieren" onclick="exportCanvasHTML()"><svg viewBox="0 0 24 24"><path d="M12 3v12M8 11l4 4 4-4M4 19h16"/></svg></button>
+          <button class="editorIcon" title="PDF / Drucken" onclick="printCanvasSheet()"><svg viewBox="0 0 24 24"><path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="7" y="14" width="10" height="7"/></svg></button>
+          <button class="editorIcon primaryIcon" title="Speichern" onclick="saveCanvasSheet()"><svg viewBox="0 0 24 24"><path d="M5 3h12l2 2v16H5z"/><path d="M8 3v6h8V3M8 21v-7h8v7"/></svg></button>
+        </div>
+      </div>
+
+      <div class="desktopCommandBar" aria-label="Desktop-Werkzeuge">
+        <div class="desktopCmdGroup">
+          <span class="desktopCmdLabel">Einfügen</span>
+          <div class="desktopCmdButtons">
+            <button onclick="editorOpenGroup('add')" title="Hinzufügen">＋ <span>Hinzufügen</span></button>
+            <button onclick="addCanvasTextBox()" title="Textfeld">T <span>Textfeld</span></button>
+            <button onclick="openFormulaDialog()" title="Formel">∑ <span>Formel</span></button>
+            <button onclick="openGraphDialog()" title="Graph">⌁ <span>Graph</span></button>
+            <button onclick="addCanvasChecklist()" title="Checkliste">☑ <span>Checkliste</span></button>
+            <button onclick="addVectorLine()" title="Linie">— <span>Linie</span></button>
+          </div>
+        </div>
+
+        <div class="desktopCmdGroup">
+          <span class="desktopCmdLabel">Bearbeiten</span>
+          <div class="desktopCmdButtons">
+            <button onclick="duplicateSelected()" title="Duplizieren">⧉ <span>Duplizieren</span></button>
+            <button onclick="groupSelectedItems()" title="Gruppieren">▣ <span>Gruppieren</span></button>
+            <button onclick="ungroupSelectedItems()" title="Gruppierung lösen">▢ <span>Lösen</span></button>
+            <button onclick="toggleSelectedLock()" title="Sperren">🔒 <span>Sperren</span></button>
+          </div>
+        </div>
+
+        <div class="desktopCmdGroup">
+          <span class="desktopCmdLabel">Ebene</span>
+          <div class="desktopCmdButtons">
+            <button onclick="moveSelectedLayer(1)" title="Nach vorne">↑ <span>Vorne</span></button>
+            <button onclick="moveSelectedLayer(-1)" title="Nach hinten">↓ <span>Hinten</span></button>
+          </div>
+        </div>
+
+        <div class="desktopCmdGroup desktopCmdView">
+          <span class="desktopCmdLabel">Ansicht</span>
+          <div class="desktopCmdButtons">
+            <button onclick="fitCanvasStage()" title="An Bildschirm">⊡ <span>Anpassen</span></button>
+            <button onclick="toggleTopViewMenu()" title="Seite & Ansicht">▯ <span>Seite</span></button>
+            <button onclick="openShortcutHelp()" title="Tastenkürzel">⌨ <span>Shortcuts</span></button>
+          </div>
+        </div>
+      </div>
+
+      <div id="topViewMenu" class="topViewMenu">
+        <div class="topViewSection">
+          <b>Ansicht</b>
+          <div class="topViewButtons">
+            <button onclick="fitCanvasStage()">⊡ An Bildschirm</button>
+            <button onclick="v181OpenPreview()">◫ Nur ansehen</button>
+            <button onclick="setCanvasZoom(.5)">50%</button>
+            <button onclick="setCanvasZoom(.75)">75%</button>
+            <button onclick="setCanvasZoom(1)">100%</button>
+          </div>
+        </div>
+        <div class="topViewSection">
+          <b>Seite</b>
+          <div class="topViewButtons orientationButtons">
+            <button id="portraitBtn" onclick="setCanvasOrientation('portrait')">▯ Hochformat</button>
+            <button id="landscapeBtn" onclick="setCanvasOrientation('landscape')">▭ Querformat</button>
+          </div>
+        </div>
+        <div class="topViewSection pageStyleSection">
+          <b>Seitenstil</b>
+          <div class="pageStyleGrid">
+            <label>Farbe<input id="pageColorInput" type="color" value="#ffffff" onchange="setCanvasPageStyle('color',this.value)"></label>
+            <label>Hintergrund
+              <select id="pagePatternSelect" onchange="setCanvasPageStyle('pattern',this.value)">
+                <option value="blank">Leer</option>
+                <option value="lined">Liniert</option>
+                <option value="grid">Kariert</option>
+                <option value="dots">Gepunktet</option>
+              </select>
+            </label>
+            <label id="pageSpacingLabel">Rastergröße<input id="pageSpacingInput" type="range" min="10" max="48" value="24" oninput="setCanvasPageStyle('spacing',+this.value)"><span id="pageSpacingValue">24</span></label>
+            <label>Seitenrand<input id="pageMarginInput" type="number" min="0" max="160" value="55" onchange="setCanvasPageStyle('margin',+this.value)"></label>
+          </div>
+          <div class="topViewButtons">
+            <button onclick="alignSelectedToPageMargin('left')">⇤ An linken Rand</button>
+            <button onclick="alignSelectedToPageMargin('right')">An rechten Rand ⇥</button>
+            <button onclick="fitSelectedToPageMargins()">↔ Breite bis Rand</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="canvasQuickNav" aria-label="Editor-Werkzeuge">
+  <button data-group="textLibrary" onclick="editorOpenGroup('textLibrary',this)" aria-label="Text">
+    <span class="editorNavIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14M12 5v14M8.5 19h7"/></svg></span><span>Text</span>
+  </button>
+  <button data-group="elements" onclick="editorOpenGroup('elements',this)" aria-label="Elemente">
+    <span class="editorNavIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1.4"/><circle cx="17" cy="7" r="3"/><path d="M4.5 19l3.2-5.5L11 19zM14 14h6v6h-6z"/></svg></span><span>Elemente</span>
+  </button>
+  <button data-group="templates" onclick="editorOpenGroup('templates',this)" aria-label="Vorlagen">
+    <span class="editorNavIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="4" width="12" height="15" rx="2"/><path d="M9 8h6M9 11h6M9 14h4"/></svg></span><span>Vorlagen</span>
+  </button>
+  <button data-group="pages" onclick="editorOpenGroup('pages',this)" aria-label="Seiten">
+    <span class="editorNavIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h8l3 3V20H7zM15 3.5V7h3"/></svg></span><span>Seiten</span>
+  </button>
+  <button data-group="layers" onclick="editorOpenGroup('layers',this)" aria-label="Ebenen">
+    <span class="editorNavIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4l8 4-8 4-8-4zM4 12l8 4 8-4M4 16l8 4 8-4"/></svg></span><span>Ebenen</span>
+  </button>
+</div>
+<div id="canvasQuickDrawer" class="canvasQuickDrawer"></div>
+<div id="mobileSelectionTools" class="mobileSelectionTools"></div>
+<div id="multiSelectStatus" class="multiSelectStatus"></div>
+      <input id="canvasImageInput" type="file" accept="image/*" style="display:none" onchange="if(this.files?.[0])addCanvasImage(this.files[0]);this.value=''">
+      <input id="canvasCameraInput" type="file" accept="image/*" capture="environment" style="display:none" onchange="if(this.files?.[0])addCanvasImage(this.files[0]);this.value=''">
+      <input id="canvasAnyFileInput" type="file" accept="image/*,.pdf,.doc,.docx,.ppt,.pptx,.txt" style="display:none" onchange="if(this.files?.[0])addCanvasFile(this.files[0]);this.value=''">
+      <div class="canvasViewport" id="canvasViewport">
+        <div class="canvasStage" id="canvasStage">
+          <div class="canvasPage" id="canvasPage"></div>
+          <svg id="canvasSvg" class="canvasSvg" viewBox="0 0 794 1123"></svg>
+          <div id="canvasObjects" class="canvasObjects"></div><div id="canvasGuides" class="canvasGuides"></div><div id="pathDrawHint" class="pathDrawHint" style="display:none">Mit Finger/Stift ziehen · loslassen = Pfad fertig</div>
+        </div>
+      </div>
+
+      <aside id="desktopEditorSidebar" class="desktopEditorSidebar">
+      <div id="stickerPanel" class="objectPanel" style="display:none">
+        <div class="rowBetween"><b>Sticker</b><button class="ghost" onclick="toggleStickerPanel()">Schließen</button></div>
+        <div class="stickerPicker" id="stickerPicker"></div>
+      </div>
+
+      <div class="objectPanel">
+        <div class="rowBetween"><b>Eigenschaften</b><label class="snapToggle"><input id="snapToggle" type="checkbox" checked onchange="canvasState.snap=this.checked"> Snap</label><div class="row"><button class="miniIcon" title="Sperren/Entsperren" onclick="toggleSelectedLock()"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></button><button class="miniIcon dangerMini" title="Löschen" onclick="deleteSelectedCanvasItem()"><svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M7 7l1 14h8l1-14M10 11v6M14 11v6"/></svg></button></div></div>
+        <div id="canvasInspector" class="small">Wähle einen Text, ein Bild, eine Tabelle, einen Sticker oder eine Form aus.</div>
+      </div>
+
+      <div class="objectPanel">
+        <div class="rowBetween"><b>Ebenen</b><div class="row"><button class="miniIcon" title="Nach vorne" onclick="moveSelectedLayer(1)">↑</button><button class="miniIcon" title="Nach hinten" onclick="moveSelectedLayer(-1)">↓</button></div></div>
+        <div id="layerList" class="layerList"></div>
+      </div>
+
+      <div class="objectPanel pageTemplatesPanel">
+        <div class="rowBetween"><b>Seitenvorlagen</b><div class="row"><button class="miniIcon" title="Aktuelle Seite als Vorlage speichern" onclick="saveCurrentPageTemplate()">＋</button><button class="miniIcon" title="Vorlagen verwalten" onclick="openPageTemplateManager()">⚙</button></div></div>
+        <div class="templatePicker" id="pageTemplatePicker">
+          <button class="templateCard" onclick="applyCanvasTemplate('clean')"><b>Clean Notes</b><span>klare Überschrift + Merkkasten</span></button>
+          <button class="templateCard" onclick="applyCanvasTemplate('cute')"><b>Cute Study</b><span>Pastell + Sticker + Aufgabe</span></button>
+          <button class="templateCard" onclick="applyCanvasTemplate('exam')"><b>Exam Prep</b><span>Definitionen + Aufgaben</span></button>
+          <button class="templateCard" onclick="applyCanvasTemplate('blank')"><b>Leer</b><span>komplett frei gestalten</span></button>
+        </div>
+      </div>
+      </aside>
+    </div>
+  </section>
+
   <section class="view" id="view-quiz-player">
     <div class="sectionHead">
       <button class="ghost backBtn" onclick="openTopic(selectedSubjectId,selectedTopicId)">← Thema</button>
@@ -7578,23 +7737,6 @@ button.primary,button.ghost,.iconbtn{
 </style>
 
 </head><body><div class="page">${serializedCanvas()}</div><div id="buildVersionBadge" style="position:fixed;right:8px;bottom:8px;z-index:9999;font:800 9px Inter,sans-serif;color:#9b7d74;background:rgba(255,250,247,.88);border:1px solid #ead4cd;border-radius:999px;padding:5px 8px;pointer-events:none">V182</div>
-
-<!-- ===== Studia V269 editor route only (no editor DOM in index) ===== -->
-<script>
-(()=>{
-  window.openStudySheetEditor=function(sheetId=null){
-    try{
-      const id=sheetId==null?'':String(sheetId);
-      sessionStorage.setItem('studia-editor-sheet-id',id);
-      localStorage.setItem('studia-editor-sheet-id',id);
-      const target='editor.html'+(id?'?sheet='+encodeURIComponent(id):'');
-      location.href=target;
-    }catch(_){ location.href='editor.html'; }
-  };
-})();
-</script>
-<!-- ===== /Studia V269 editor route only ===== -->
-
 </body></html>`;
  const blob=new Blob([html],{type:"text/html"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=title.replace(/[^\wäöüÄÖÜß-]+/g,"_")+".html";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
 }
@@ -16596,4 +16738,6 @@ window.addEventListener('resize',()=>setTimeout(repair,140));window.addEventList
 [50,350,1000,2400].forEach(ms=>setTimeout(repair,ms));setTimeout(offerRecovery,2800);
 })();
 </script>
-<!-- ===== /Studia V189 ===== -->
+<!-- ===== /Studia V189 ===== -->\n<!-- ===== Studia V270: editor lives in editor.html ===== -->\n<script>\n(function(){\n  function routeToEditor(sheetId){\n    try{\n      var id = sheetId == null ? '' : String(sheetId);\n      if(id){ sessionStorage.setItem('studia-editor-sheet-id', id); localStorage.setItem('studia-editor-sheet-id', id); }\n      location.href = 'editor.html' + (id ? '?sheet=' + encodeURIComponent(id) : '');\n    }catch(e){ location.href='editor.html'; }\n  }\n  window.openStudySheetEditor = routeToEditor;\n  document.addEventListener('click', function(e){\n    var el=e.target && e.target.closest ? e.target.closest('[onclick*="openStudySheetEditor"]') : null;\n    if(!el) return;\n  }, true);\n})();\n</script>\n<!-- ===== /Studia V270 ===== -->\n
+</body>
+</html>
