@@ -104,7 +104,34 @@ function v279Bounce(action,payload={},timeoutMs=45000){
     window.addEventListener('message',onmsg);document.body.append(frame,form);try{form.submit()}catch(e){fail(e)}
   });
 }
-async function v279PullFull(meta){const total=Math.max(0,Number(meta?.transportChunks||0)),expected=Number(meta?.updatedAt||0);if(!total)return {};let encoded='';for(let i=0;i<total;i++){setStatus(`Cloud lädt ${i+1}/${total} …`);const r=await v279Bounce('pull_chunk',{token:config().token,index:i,expectedUpdatedAt:expected},45000);if(Number(r.updatedAt||0)!==expected)throw new Error('Cloud wurde während des Ladens geändert · erneut synchronisieren');encoded+=String(r.chunk||'')}return await v247UngzipText(encoded)}
+function v280DirectBridge(payload={}, timeoutMs=120000){
+  const c=config();if(!c.url)return Promise.reject(new Error('Apps-Script-/exec-URL fehlt'));
+  return new Promise((resolve,reject)=>{
+    const bridgeId='v280-'+v279SecureId(),frameName='studiaV280_'+v279SecureId();let done=false;
+    const frame=document.createElement('iframe');frame.name=frameName;frame.style.cssText='position:fixed;width:1px;height:1px;left:-9999px;top:-9999px;border:0;opacity:0;pointer-events:none';
+    const form=document.createElement('form');form.method='POST';form.action=normalizeUrl(c.url);form.target=frameName;form.enctype='application/x-www-form-urlencoded';form.acceptCharset='UTF-8';form.style.display='none';
+    const add=(k,v)=>{const i=document.createElement('input');i.type='hidden';i.name=k;i.value=String(v??'');form.appendChild(i)};
+    add('action','sync_bridge_v253');add('bridgeId',bridgeId);add('replyGzip','1');
+    for(const[k,v]of Object.entries(payload))if(v!=null)add(k,v);
+    const cleanup=()=>{if(done)return;done=true;clearTimeout(to);window.removeEventListener('message',onmsg);setTimeout(()=>{try{form.remove()}catch(_){}try{frame.remove()}catch(_){}},0)};
+    const fail=e=>{cleanup();reject(e instanceof Error?e:new Error(String(e||'Google-Sync fehlgeschlagen')))};
+    const onmsg=ev=>{const m=ev.data;if(!m||m.type!=='studia-sync-bridge'||m.id!==bridgeId)return;try{cleanup();const r=m.payload;if(!r?.ok)throw new Error(String(r?.error||'Google-Sync fehlgeschlagen'));resolve(r)}catch(e){fail(e)}};
+    const to=setTimeout(()=>fail(new Error('Schneller Cloud-Sync hat zu lange gebraucht')),timeoutMs);
+    window.addEventListener('message',onmsg);document.body.append(frame,form);try{form.submit()}catch(e){fail(e)}
+  });
+}
+async function v280DecodeReply(r){
+  if(r?.data&&typeof r.data==='object')return r.data;
+  if(r?.dataGzip){try{return JSON.parse(await v247UngzipText(String(r.dataGzip))||'{}')}catch(e){throw new Error('Cloud-Daten konnten nicht entpackt werden')}}
+  return {};
+}
+async function v279PullFull(meta){
+  const total=Math.max(0,Number(meta?.transportChunks||0)),expected=Number(meta?.updatedAt||0);if(!total)return {};
+  let encoded='';
+  const concurrency=Math.min(10,total),parts=new Array(total);let next=0,done=0;
+  async function worker(){while(true){const i=next++;if(i>=total)return;const r=await v279Bounce('pull_chunk',{token:config().token,index:i,expectedUpdatedAt:expected},45000);if(Number(r.updatedAt||0)!==expected)throw new Error('Cloud wurde während des Ladens geändert · erneut synchronisieren');parts[i]=String(r.chunk||'');done++;setStatus(`Cloud lädt schnell ${done}/${total} …`)}}
+  await Promise.all(Array.from({length:concurrency},worker));encoded=parts.join('');return await v247UngzipText(encoded)
+}
 async function syncState(data){
   const c=config();if(!c.token)throw new Error('Nicht angemeldet');
   const p={token:c.token,deviceId:v279DeviceId(),deviceName:v279DeviceName()};
@@ -112,12 +139,22 @@ async function syncState(data){
   try{gz=await v247GzipText(raw)}catch(_){};try{bgz=await v247GzipText(baseRaw)}catch(_){};
   if(gz&&gz.length<raw.length)p.dataGzip=gz;else p.data=raw;
   if(bgz&&bgz.length<baseRaw.length)p.baseGzip=bgz;else p.base=baseRaw;
-  setStatus('Google speichert …');
-  const meta=await v279Bounce('sync_push',p,90000);
-  if(Number(meta.version||0)<265)throw new Error('Apps-Script V265 fehlt · Code.gs neu bereitstellen');
-  const merged=await v279PullFull(meta);
-  v279SaveBase(merged);try{localStorage.setItem(V279_CLOUD_AT,String(Number(meta.updatedAt)||0))}catch(_){}
-  return {...meta,data:merged};
+  setStatus('Cloud wird schnell synchronisiert …');
+  try{
+    const r=await v280DirectBridge(p,120000);
+    const merged=await v280DecodeReply(r);
+    v279SaveBase(merged);try{localStorage.setItem(V279_CLOUD_AT,String(Number(r.updatedAt)||Date.now()))}catch(_){}
+    setStatus('Cloud synchronisiert ✓');
+    return {...r,data:merged};
+  }catch(fastErr){
+    console.warn('Studia fast sync fallback:',fastErr);
+    setStatus('Schneller Sync nicht verfügbar · Ersatzweg …');
+    const meta=await v279Bounce('sync_push',p,90000);
+    if(Number(meta.version||0)<265)throw new Error('Apps-Script V265 fehlt · Code.gs neu bereitstellen');
+    const merged=await v279PullFull(meta);
+    v279SaveBase(merged);try{localStorage.setItem(V279_CLOUD_AT,String(Number(meta.updatedAt)||0))}catch(_){}
+    return {...meta,data:merged};
+  }
 }
 async function login(username,password){const r=await v279Bounce('login',{username,password},30000);rememberAuth(r);return r}
 async function register(username,password){const r=await v279Bounce('register',{username,password},30000);rememberAuth(r);return r}
