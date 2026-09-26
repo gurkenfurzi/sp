@@ -125,6 +125,25 @@ window.v171CloudRegister=async function(){
     rememberUrl(url);setStatus('Konto wird erstellt …');await health();const r=await register(username,password);setStatus(`Konto ${r.user?.username||username} erstellt ✓`);if(r.recoveryCode)alert('Wiederherstellungscode — sicher speichern:\n\n'+r.recoveryCode);localStorage.setItem(DIRTY,'1');await window.studiaSyncNow?.(true);return r;
   }catch(e){setStatus(String(e?.message||e),true);throw e}
 };
+
+/* V278 compatibility adapter: the app's merge layer expects window.v171CloudNow.
+   The cloud module above exposes StudiaCloud.syncState(), so bridge the two here. */
+window.v171CloudNow = async function(){
+  if(!window.StudiaCloud || typeof window.StudiaCloud.syncState!=='function'){
+    throw new Error('Google-Sync-Modul ist nicht geladen');
+  }
+  const current = (typeof data!=='undefined' && data && typeof data==='object') ? data : {};
+  const result = await window.StudiaCloud.syncState(current);
+  if(result && result.data && typeof result.data==='object' && typeof data!=='undefined' && data && typeof data==='object'){
+    for(const k of Object.keys(data)) delete data[k];
+    Object.assign(data, result.data);
+    try{ localStorage.setItem('studiaData', JSON.stringify(data)); }catch(_){ }
+    try{ window.v150ClearDirty?.(); }catch(_){ }
+  }
+  return result;
+};
+window.v171CloudNow.__v278Adapter = true;
+
 function hydrate(){const url=scanUrl();if(url)rememberUrl(url);const u=rememberedUser();if(url&&scanToken())setStatus(u?.username?`Angemeldet als ${u.username}`:'Angemeldet · bereit');else setStatus('Noch nicht verbunden.')}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',hydrate,{once:true});else hydrate();
 })();

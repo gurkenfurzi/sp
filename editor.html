@@ -17221,7 +17221,7 @@ body.studiaDedicatedEditor #modalWrap .visualGraphFunctionModal{width:min(1080px
 @media(max-width:899px){body.studiaDedicatedEditor #canvasQuickDrawer.open{overflow-y:auto!important;overflow-x:hidden!important}}
 
 </style>
-<script src="google-sync-config.js?v=275"></script>
+<script src="google-sync-config.js?v=278"></script>
 <script id="studia-editor-bundled-js">
 /* v135.js consolidated */
 window.__STUDIA_EDITOR_BUILD__=183;
@@ -25801,7 +25801,7 @@ function getRawTransport(){
 const rawTransport=getRawTransport();
 
 async function rawCall(){
-  if(typeof rawTransport!=='function')throw new Error('Cloud-Sync-Modul fehlt (google-sync-config.js)');
+  if(typeof rawTransport!=='function')throw new Error('Google-Sync-Transport ist nicht verfügbar');
   return await Promise.resolve(rawTransport.call(window));
 }
 async function backup(){try{await window.v111CreateBackupNow?.(false)}catch(_){ }}
