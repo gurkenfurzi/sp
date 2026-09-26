@@ -1,0 +1,9 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="robots" content="noindex"><title>Studia Sync</title></head><body><script>
+(function(){
+  try{
+    var h=location.hash.slice(1).split('|');
+    var msg={type:'studia-v264-relay',callId:h[0]||'',index:Number(h[1]||0),total:Number(h[2]||0),encoding:h[3]||'raw',chunk:h.slice(4).join('|')};
+    window.top.postMessage(msg,location.origin);
+  }catch(e){}
+})();
+</script></body></html>
