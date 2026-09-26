@@ -49,11 +49,14 @@ function doGet(e) {
   try {
     ensureConfigured_();
     const req = requestData_(e);
-    const action = normalizeAction_(req.action || 'app_v260');
+    const action = normalizeAction_(req.action || 'health');
     const token = String(req.token || '');
     let result;
 
     switch (action) {
+      case 'bridge_v263':
+        return v263BridgePage_(req);
+      case 'app_v262':
       case 'app_v260':
       case 'app':
         return v260AppDirect_();
@@ -61,7 +64,7 @@ function doGet(e) {
         return v259AppShell_();
       case 'health':
       case 'ping':
-        result = { ok: true, service: 'studia-google-account-sync', version: 261, transport: 'google-script-run-external-assets-v261', automatic: true };
+        result = { ok: true, service: 'studia-google-account-sync', version: 265, transport: 'form-bounce-v265', automatic: true, ui: 'github' };
         break;
       case 'me':
       case 'api/me':
@@ -111,6 +114,18 @@ function doPost(e) {
     let result;
 
     switch (action) {
+      case 'bridge_bounce_v265': {
+        let bounceResult;
+        try { bounceResult = v265HandleBounce_(body); }
+        catch (bounceErr) { bounceResult = fromError_(bounceErr); }
+        return v265BounceHtml_(body.callId, bounceResult);
+      }
+      case 'bridge_relay_v264': {
+        let relayResult;
+        try { relayResult = v264HandleRelay_(body); }
+        catch (relayErr) { relayResult = fromError_(relayErr); }
+        return v264RelayHtml_(body.callId, relayResult, String(body.acceptGzip || '') === '1');
+      }
       case 'register':
       case 'api/auth/register':
       case '/api/auth/register':
@@ -1078,6 +1093,8 @@ function v259AppShell_() {
     + '})();<\/script></body></html>';
   return HtmlService.createHtmlOutput(html)
     .setTitle('Studia')
+    .setFaviconUrl('https://gurkenfurzi.github.io/sp/assets/icons/favicon.png')
+    .addMetaTag('viewport','width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 
@@ -1143,12 +1160,12 @@ function v259ClientCall(req) {
 
 
 /* =========================================
-   STUDIA V261 — DIRECT GOOGLE HTML HOST WITH EXTERNAL ASSETS
+   STUDIA V262 — DIRECT GOOGLE HTML HOST WITH EXTERNAL ASSETS
    No nested GitHub iframe. Apps Script fetches the current GitHub HTML server-side
    and serves it as the actual HtmlService page. The page can therefore call
    google.script.run directly while relative assets still resolve to GitHub.
    ========================================= */
-const V260_APP_URL = 'https://gurkenfurzi.github.io/sp/?v=261&googleHost=1';
+const V260_APP_URL = 'https://gurkenfurzi.github.io/sp/?v=262&googleHost=1';
 const V260_BASE_URL = 'https://gurkenfurzi.github.io/sp/';
 
 function v260AppDirect_() {
@@ -1167,13 +1184,15 @@ function v260AppDirect_() {
     html = '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Studia</title></head><body style="font-family:Arial,sans-serif;padding:24px;background:#fff8f6;color:#5f514c"><h2>Studia konnte nicht geladen werden</h2><p>Google erreicht die GitHub-App gerade nicht.</p><pre style="white-space:pre-wrap">'+escapeHtmlV260_(String(err && err.message || err))+'</pre></body></html>';
   }
   const baseTag = '<base href="' + V260_BASE_URL + '" target="_top">';
-  html = html.replace(/<head([^>]*)>/i, '<head$1><meta name="studia-google-host" content="v261">');
+  html = html.replace(/<head([^>]*)>/i, '<head$1><meta name="studia-google-host" content="v262">');
   if (/<head[^>]*>/i.test(html)) html = html.replace(/<head([^>]*)>/i, '<head$1>' + baseTag);
   else html = html.replace(/<html([^>]*)>/i, '<html$1><head>' + baseTag + '</head>');
   // Avoid an old manifest pointing at the Google origin; assets continue to resolve via <base>.
   html = html.replace(/<link\s+rel=["']manifest["'][^>]*>/ig, '');
   return HtmlService.createHtmlOutput(html)
     .setTitle('Studia')
+    .setFaviconUrl('https://gurkenfurzi.github.io/sp/assets/icons/favicon.png')
+    .addMetaTag('viewport','width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 
@@ -1248,3 +1267,162 @@ function v260ClientCall(req) {
     return fromError_(err);
   }
 }
+
+
+/* =========================================
+   STUDIA V263 — HIDDEN GOOGLE BRIDGE
+   Visible UI stays on GitHub Pages. This tiny Apps Script page is embedded invisibly
+   and only exposes google.script.run through postMessage. No Google chrome is visible.
+   ========================================= */
+function v263BridgePage_(req) {
+  const nonce = String((req && req.nonce) || '');
+  const n = JSON.stringify(nonce).replace(/<\//g, '<\\/');
+  const html = '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body>'
+    + '<script>(function(){var N='+n+';function send(x){try{window.top.postMessage(x,"*")}catch(e){}}'
+    + 'function ready(){send({type:"studia-v263-ready",nonce:N,version:263})}'
+    + 'window.addEventListener("message",function(ev){var m=ev.data;if(!m||m.type!=="studia-v263-call"||m.nonce!==N||!m.id)return;'
+    + 'google.script.run.withSuccessHandler(function(r){send({type:"studia-v263-response",nonce:N,id:m.id,result:r})})'
+    + '.withFailureHandler(function(er){send({type:"studia-v263-response",nonce:N,id:m.id,error:String(er&&er.message||er||"Google-Sync fehlgeschlagen")})})'
+    + '.v263ClientCall(m.request||{});});ready();setTimeout(ready,300);setTimeout(ready,1200);})();<\\/script></body></html>';
+  return HtmlService.createHtmlOutput(html)
+    .setTitle('Studia Sync')
+    .addMetaTag('viewport','width=device-width,initial-scale=1')
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+}
+
+function v263ClientCall(req) {
+  try {
+    ensureConfigured_();
+    req = req && typeof req === 'object' ? req : {};
+    const action = normalizeAction_(req.action || 'health');
+    let result;
+    switch (action) {
+      case 'health':
+      case 'ping':
+        result = {ok:true, service:'studia-google-account-sync', version:263, transport:'hidden-google-bridge-v263', automatic:true, ui:'github'};
+        break;
+      case 'register':
+        result = register_(req.username, req.password);
+        break;
+      case 'login':
+        result = login_(req.username, req.password);
+        break;
+      case 'recover':
+        result = recover_(req.username, req.recoveryCode, req.newPassword);
+        break;
+      case 'logout':
+        result = logout_(req.token);
+        break;
+      case 'me': {
+        const user = requireUser_(req.token);
+        result = {ok:true, user:publicUser_(user), version:263};
+        break;
+      }
+      case 'sync': {
+        const user = requireUser_(req.token);
+        const incoming = v249DecodeField_(req, 'data', 'dataGzip');
+        const base = v249DecodeField_(req, 'base', 'baseGzip');
+        result = syncStateV249_(user, incoming, base, String(req.deviceId || ''), String(req.deviceName || ''));
+        result.version = 263;
+        result.transport = 'hidden-google-bridge-v263';
+        break;
+      }
+      default:
+        result = fail_('Unbekannte V263-Aktion: ' + action, 404);
+    }
+    return v259PackResult_(result);
+  } catch (err) {
+    return fromError_(err);
+  }
+}
+
+
+/* =========================================
+   STUDIA V264 — GITHUB RELAY TRANSPORT
+   GitHub stays the visible app. Apps Script processes the request, then emits
+   tiny same-origin GitHub relay iframes. Those relay chunks message the top-level
+   GitHub page, avoiding CORS, JSONP and direct Apps-Script postMessage issues.
+   ========================================= */
+function v264HandleRelay_(body) {
+  body = body && typeof body === 'object' ? body : {};
+  const action = normalizeAction_(body.relayAction || 'health');
+  let result;
+  switch (action) {
+    case 'health':
+    case 'ping':
+      result = {ok:true, service:'studia-google-account-sync', version:264, transport:'github-relay-v264', automatic:true, ui:'github'};
+      break;
+    case 'register':
+      result = register_(body.username, body.password);
+      break;
+    case 'login':
+      result = login_(body.username, body.password);
+      break;
+    case 'recover':
+      result = recover_(body.username, body.recoveryCode, body.newPassword);
+      break;
+    case 'logout':
+      result = logout_(body.token);
+      break;
+    case 'me': {
+      const user = requireUser_(body.token);
+      result = {ok:true, user:publicUser_(user), version:264};
+      break;
+    }
+    case 'sync': {
+      const user = requireUser_(body.token);
+      const incoming = v249DecodeField_(body, 'data', 'dataGzip');
+      const base = v249DecodeField_(body, 'base', 'baseGzip');
+      result = syncStateV249_(user, incoming, base, String(body.deviceId || ''), String(body.deviceName || ''));
+      result.version = 264;
+      result.transport = 'github-relay-v264';
+      break;
+    }
+    default:
+      result = fail_('Unbekannte V264-Aktion: ' + action, 404);
+  }
+  return result;
+}
+
+function v264RelayHtml_(callId, result, gzipReply) {
+  const id = String(callId || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 120);
+  let json = JSON.stringify(result || {ok:false,error:'Leere Cloud-Antwort',version:264});
+  let bytes, enc = 'raw';
+  if (gzipReply) {
+    try {
+      bytes = Utilities.gzip(Utilities.newBlob(json, 'application/json')).getBytes();
+      enc = 'gz';
+    } catch (_) { bytes = Utilities.newBlob(json, 'application/json').getBytes(); }
+  } else {
+    bytes = Utilities.newBlob(json, 'application/json').getBytes();
+  }
+  const b64 = Utilities.base64EncodeWebSafe(bytes);
+  const size = 5200;
+  const parts = [];
+  for (let i=0;i<b64.length;i+=size) parts.push(b64.slice(i,i+size));
+  if (!parts.length) parts.push('');
+  const total = parts.length;
+  const base = 'https://gurkenfurzi.github.io/sp/sync-bridge.html#';
+  let frames = '';
+  for (let i=0;i<total;i++) {
+    const src = base + id + '|' + i + '|' + total + '|' + enc + '|' + parts[i];
+    frames += '<iframe aria-hidden="true" tabindex="-1" style="position:absolute;width:1px;height:1px;border:0;opacity:0;pointer-events:none" src="' + src + '"></iframe>';
+  }
+  const html = '<!doctype html><html><head><meta charset="utf-8"><meta name="robots" content="noindex"></head><body>'
+    + frames
+    + '<script>setTimeout(function(){try{document.body.dataset.done="1"}catch(e){}},1500)<\/script></body></html>';
+  return HtmlService.createHtmlOutput(html)
+    .setTitle('Studia Sync')
+    .addMetaTag('viewport','width=device-width,initial-scale=1')
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+}
+
+
+/* ===== Studia V265 — same-iframe form bounce for Safari/PWA ===== */
+const V265_BRIDGE_URL = 'https://gurkenfurzi.github.io/sp/sync-bridge.html';
+const V265_TRANSPORT_CHUNK = 4500;
+function v265B64UrlJson_(obj){const bytes=Utilities.newBlob(JSON.stringify(obj||{}),'application/json').getBytes();return Utilities.base64EncodeWebSafe(bytes).replace(/=+$/g,'')}
+function v265BounceHtml_(callId,result){const id=String(callId||'').replace(/[^A-Za-z0-9_-]/g,'').slice(0,120),payload=v265B64UrlJson_(result||{ok:false,error:'Leere Google-Antwort',version:265}),action=V265_BRIDGE_URL+'#'+id+'|'+payload,safe=action.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');const html='<!doctype html><html><head><meta charset="utf-8"><meta name="robots" content="noindex"></head><body><form id="studiaBounce" method="get" target="_self" action="'+safe+'"><input type="hidden" name="v" value="265"><input type="hidden" name="c" value="'+id+'"></form><script>document.getElementById("studiaBounce").submit();<\/script></body></html>';return HtmlService.createHtmlOutput(html).setTitle('Studia Sync').addMetaTag('viewport','width=device-width,initial-scale=1').setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)}
+function v265FastMeta_(userId){const sh=fastStateSheet_(),row=fastStateRow_(sh,userId);if(!row)return{updatedAt:0,storageCells:0,transportChunks:0};const meta=sh.getRange(row,1,1,3).getValues()[0],cells=Math.max(0,Number(meta[2]||0));if(!cells)return{updatedAt:Number(meta[1]||0),storageCells:0,transportChunks:0};const last=String(sh.getRange(row,3+cells).getDisplayValue()||''),perCell=Math.ceil(V247_CHUNK/V265_TRANSPORT_CHUNK),transportChunks=Math.max(0,(cells-1)*perCell+Math.ceil(last.length/V265_TRANSPORT_CHUNK));return{updatedAt:Number(meta[1]||0),storageCells:cells,transportChunks}}
+function v265FastChunk_(userId,index,expectedUpdatedAt){const sh=fastStateSheet_(),row=fastStateRow_(sh,userId);if(!row)return{ok:true,version:265,updatedAt:0,index,chunk:'',transportChunks:0};const meta=sh.getRange(row,1,1,3).getValues()[0],updatedAt=Number(meta[1]||0),cells=Math.max(0,Number(meta[2]||0));if(expectedUpdatedAt&&updatedAt!==Number(expectedUpdatedAt))throw appError_('Cloud wurde während des Ladens geändert.',409);const perCell=Math.ceil(V247_CHUNK/V265_TRANSPORT_CHUNK),cellIndex=Math.floor(index/perCell),pieceIndex=index%perCell;if(cellIndex<0||cellIndex>=cells)throw appError_('Cloud-Block außerhalb des Bereichs.',400);const cell=String(sh.getRange(row,4+cellIndex).getDisplayValue()||''),start=pieceIndex*V265_TRANSPORT_CHUNK,chunk=cell.slice(start,start+V265_TRANSPORT_CHUNK),fm=v265FastMeta_(userId);return{ok:true,version:265,updatedAt,index,chunk,transportChunks:fm.transportChunks}}
+function v265HandleBounce_(body){body=body&&typeof body==='object'?body:{};const action=normalizeAction_(body.bounceAction||'health');let user,result;switch(action){case'health':case'ping':return{ok:true,service:'studia-google-account-sync',version:265,transport:'form-bounce-v265',automatic:true,ui:'github'};case'register':result=register_(body.username,body.password);result.version=265;return result;case'login':result=login_(body.username,body.password);result.version=265;return result;case'recover':result=recover_(body.username,body.recoveryCode,body.newPassword);result.version=265;return result;case'logout':result=logout_(body.token);result.version=265;return result;case'me':user=requireUser_(body.token);return{ok:true,user:publicUser_(user),version:265};case'meta':{user=requireUser_(body.token);const m=v265FastMeta_(user.id),deviceCount=v249TouchDevice_(user.id,String(body.deviceId||''),String(body.deviceName||''));return{ok:true,version:265,updatedAt:m.updatedAt,deviceCount,cloudId:v249CloudId_(),account:publicUser_(user)}}case'sync_push':{user=requireUser_(body.token);const incoming=v249DecodeField_(body,'data','dataGzip'),base=v249DecodeField_(body,'base','baseGzip'),merged=syncStateV249_(user,incoming,base,String(body.deviceId||''),String(body.deviceName||'')),m=v265FastMeta_(user.id);return{ok:true,version:265,updatedAt:m.updatedAt,transportChunks:m.transportChunks,storageCells:m.storageCells,deviceCount:merged.deviceCount,cloudId:merged.cloudId,account:merged.account}}case'pull_meta':{user=requireUser_(body.token);const m=v265FastMeta_(user.id);return{ok:true,version:265,updatedAt:m.updatedAt,transportChunks:m.transportChunks,storageCells:m.storageCells,cloudId:v249CloudId_(),account:publicUser_(user)}}case'pull_chunk':user=requireUser_(body.token);return v265FastChunk_(user.id,Math.max(0,Number(body.index||0)),Number(body.expectedUpdatedAt||0));default:throw appError_('Unbekannte V265-Aktion: '+action,404)}}
