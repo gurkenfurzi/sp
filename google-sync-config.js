@@ -104,57 +104,102 @@ function v279Bounce(action,payload={},timeoutMs=45000){
     window.addEventListener('message',onmsg);document.body.append(frame,form);try{form.submit()}catch(e){fail(e)}
   });
 }
-function v280DirectBridge(payload={}, timeoutMs=120000){
+function v281Jsonp(action,params={},timeoutMs=30000){
   const c=config();if(!c.url)return Promise.reject(new Error('Apps-Script-/exec-URL fehlt'));
   return new Promise((resolve,reject)=>{
-    const bridgeId='v280-'+v279SecureId(),frameName='studiaV280_'+v279SecureId();let done=false;
-    const frame=document.createElement('iframe');frame.name=frameName;frame.style.cssText='position:fixed;width:1px;height:1px;left:-9999px;top:-9999px;border:0;opacity:0;pointer-events:none';
-    const form=document.createElement('form');form.method='POST';form.action=normalizeUrl(c.url);form.target=frameName;form.enctype='application/x-www-form-urlencoded';form.acceptCharset='UTF-8';form.style.display='none';
-    const add=(k,v)=>{const i=document.createElement('input');i.type='hidden';i.name=k;i.value=String(v??'');form.appendChild(i)};
-    add('action','sync_bridge_v253');add('bridgeId',bridgeId);add('replyGzip','1');
-    for(const[k,v]of Object.entries(payload))if(v!=null)add(k,v);
-    const cleanup=()=>{if(done)return;done=true;clearTimeout(to);window.removeEventListener('message',onmsg);setTimeout(()=>{try{form.remove()}catch(_){}try{frame.remove()}catch(_){}},0)};
-    const fail=e=>{cleanup();reject(e instanceof Error?e:new Error(String(e||'Google-Sync fehlgeschlagen')))};
-    const onmsg=ev=>{const m=ev.data;if(!m||m.type!=='studia-sync-bridge'||m.id!==bridgeId)return;try{cleanup();const r=m.payload;if(!r?.ok)throw new Error(String(r?.error||'Google-Sync fehlgeschlagen'));resolve(r)}catch(e){fail(e)}};
-    const to=setTimeout(()=>fail(new Error('Schneller Cloud-Sync hat zu lange gebraucht')),timeoutMs);
-    window.addEventListener('message',onmsg);document.body.append(frame,form);try{form.submit()}catch(e){fail(e)}
+    const cb='studiaV281_'+v279SecureId().replace(/[^A-Za-z0-9_$]/g,'_');let done=false;
+    const script=document.createElement('script');
+    const cleanup=()=>{if(done)return;done=true;clearTimeout(to);try{delete window[cb]}catch(_){window[cb]=undefined}try{script.remove()}catch(_){}};
+    const fail=e=>{cleanup();reject(e instanceof Error?e:new Error(String(e||'Cloud laden fehlgeschlagen')))};
+    window[cb]=r=>{try{cleanup();if(!r?.ok)throw new Error(String(r?.error||'Cloud laden fehlgeschlagen'));resolve(r)}catch(e){fail(e)}};
+    script.onerror=()=>fail(new Error('Schneller Cloud-Download ist nicht erreichbar · Code.gs V281 neu bereitstellen'));
+    const u=new URL(normalizeUrl(c.url));u.searchParams.set('action',action);u.searchParams.set('callback',cb);u.searchParams.set('_',String(Date.now()));
+    for(const[k,v]of Object.entries(params))if(v!=null&&v!=='')u.searchParams.set(k,String(v));
+    script.src=u.toString();document.head.appendChild(script);
+    const to=setTimeout(()=>fail(new Error('Schneller Cloud-Download hat zu lange gebraucht')),timeoutMs);
   });
 }
-async function v280DecodeReply(r){
-  if(r?.data&&typeof r.data==='object')return r.data;
-  if(r?.dataGzip){try{return JSON.parse(await v247UngzipText(String(r.dataGzip))||'{}')}catch(e){throw new Error('Cloud-Daten konnten nicht entpackt werden')}}
-  return {};
+function v281Clone(v){return v===undefined?undefined:JSON.parse(JSON.stringify(v))}
+function v281Obj(v){return !!v&&typeof v==='object'&&!Array.isArray(v)}
+function v281IdArray(a){if(!Array.isArray(a)||!a.length)return false;const seen=new Set();for(const x of a){if(!v281Obj(x)||x.id==null)return false;const id=String(x.id);if(seen.has(id))return false;seen.add(id)}return true}
+function v281Same(a,b){if(a===b)return true;if(a===undefined||b===undefined)return false;try{return JSON.stringify(a)===JSON.stringify(b)}catch(_){return false}}
+function v281Diff(base,next){
+  if(v281Same(base,next))return null;
+  if(next===undefined)return{t:'d'};
+  if(base===undefined)return{t:'s',v:v281Clone(next)};
+  if(Array.isArray(base)&&Array.isArray(next)&&v281IdArray(base)&&v281IdArray(next)){
+    const B=new Map(base.map(x=>[String(x.id),x])),N=new Map(next.map(x=>[String(x.id),x])),c={},d=[];
+    for(const [id,n] of N){const z=v281Diff(B.get(id),n);if(z)c[id]=z}
+    for(const id of B.keys())if(!N.has(id))d.push(id);
+    if(!Object.keys(c).length&&!d.length)return null;
+    return{t:'a',c,d};
+  }
+  if(v281Obj(base)&&v281Obj(next)){
+    const c={};for(const k of new Set([...Object.keys(base),...Object.keys(next)])){const z=v281Diff(base[k],next[k]);if(z)c[k]=z}
+    return Object.keys(c).length?{t:'o',c}:null;
+  }
+  return{t:'s',v:v281Clone(next)};
 }
-async function v279PullFull(meta){
-  const total=Math.max(0,Number(meta?.transportChunks||0)),expected=Number(meta?.updatedAt||0);if(!total)return {};
-  let encoded='';
-  const concurrency=Math.min(10,total),parts=new Array(total);let next=0,done=0;
-  async function worker(){while(true){const i=next++;if(i>=total)return;const r=await v279Bounce('pull_chunk',{token:config().token,index:i,expectedUpdatedAt:expected},45000);if(Number(r.updatedAt||0)!==expected)throw new Error('Cloud wurde während des Ladens geändert · erneut synchronisieren');parts[i]=String(r.chunk||'');done++;setStatus(`Cloud lädt schnell ${done}/${total} …`)}}
-  await Promise.all(Array.from({length:concurrency},worker));encoded=parts.join('');return await v247UngzipText(encoded)
+function v281Apply(base,delta){
+  if(!delta)return v281Clone(base);
+  if(delta.t==='d')return undefined;
+  if(delta.t==='s')return v281Clone(delta.v);
+  if(delta.t==='o'){
+    const out=v281Obj(base)?v281Clone(base):{};
+    for(const[k,z]of Object.entries(delta.c||{})){const v=v281Apply(out[k],z);if(v===undefined)delete out[k];else out[k]=v}
+    return out;
+  }
+  if(delta.t==='a'){
+    const arr=Array.isArray(base)?v281Clone(base):[],del=new Set((delta.d||[]).map(String));let out=arr.filter(x=>!(x&&x.id!=null&&del.has(String(x.id))));
+    const pos=new Map();out.forEach((x,i)=>{if(x&&x.id!=null)pos.set(String(x.id),i)});
+    for(const[id,z]of Object.entries(delta.c||{})){if(pos.has(id)){const i=pos.get(id),v=v281Apply(out[i],z);if(v===undefined){out.splice(i,1);pos.clear();out.forEach((x,j)=>{if(x&&x.id!=null)pos.set(String(x.id),j)})}else out[i]=v}else{const v=v281Apply(undefined,z);if(v!==undefined){out.push(v);pos.set(id,out.length-1)}}}
+    return out;
+  }
+  return v281Clone(base);
+}
+async function v281PullAll(){
+  const c=config();if(!c.token)throw new Error('Nicht angemeldet');
+  const r=await v281Jsonp('pull_all_v281',{token:c.token,deviceId:v279DeviceId(),deviceName:v279DeviceName()},45000);
+  let merged={};
+  if(r.data&&typeof r.data==='object')merged=r.data;
+  else if(r.dataGzip){try{merged=JSON.parse(await v247UngzipText(String(r.dataGzip))||'{}')}catch(_){throw new Error('Cloud-Daten konnten nicht entpackt werden')}}
+  v279SaveBase(merged);try{localStorage.setItem(V279_CLOUD_AT,String(Number(r.updatedAt)||0))}catch(_){}
+  return{...r,data:merged};
+}
+async function v281EncodeDelta(delta){const raw=JSON.stringify(delta||null);let gz='';try{gz=await v247GzipText(raw)}catch(_){};return gz&&gz.length<raw.length?{deltaGzip:gz}:{delta:raw}}
+async function v281DecodeDeltaList(r){
+  if(Array.isArray(r?.deltas))return r.deltas;
+  if(r?.deltasGzip){try{return JSON.parse(await v247UngzipText(String(r.deltasGzip))||'[]')}catch(_){throw new Error('Sync-Änderungen konnten nicht entpackt werden')}}
+  return[];
 }
 async function syncState(data){
   const c=config();if(!c.token)throw new Error('Nicht angemeldet');
-  const p={token:c.token,deviceId:v279DeviceId(),deviceName:v279DeviceName()};
-  const raw=JSON.stringify(data||{}),baseRaw=JSON.stringify(v279ReadBase()||{});let gz='',bgz='';
-  try{gz=await v247GzipText(raw)}catch(_){};try{bgz=await v247GzipText(baseRaw)}catch(_){};
-  if(gz&&gz.length<raw.length)p.dataGzip=gz;else p.data=raw;
-  if(bgz&&bgz.length<baseRaw.length)p.baseGzip=bgz;else p.base=baseRaw;
-  setStatus('Cloud wird schnell synchronisiert …');
-  try{
-    const r=await v280DirectBridge(p,120000);
-    const merged=await v280DecodeReply(r);
-    v279SaveBase(merged);try{localStorage.setItem(V279_CLOUD_AT,String(Number(r.updatedAt)||Date.now()))}catch(_){}
-    setStatus('Cloud synchronisiert ✓');
-    return {...r,data:merged};
-  }catch(fastErr){
-    console.warn('Studia fast sync fallback:',fastErr);
-    setStatus('Schneller Sync nicht verfügbar · Ersatzweg …');
-    const meta=await v279Bounce('sync_push',p,90000);
-    if(Number(meta.version||0)<265)throw new Error('Apps-Script V265 fehlt · Code.gs neu bereitstellen');
-    const merged=await v279PullFull(meta);
-    v279SaveBase(merged);try{localStorage.setItem(V279_CLOUD_AT,String(Number(meta.updatedAt)||0))}catch(_){}
-    return {...meta,data:merged};
+  const base=v279ReadBase()||{},baseAt=Number(localStorage.getItem(V279_CLOUD_AT)||0),current=data&&typeof data==='object'?data:{};
+  const delta=v281Diff(base,current);
+  setStatus('Geräte werden zusammengeführt …');
+
+  if(!baseAt){
+    const p={token:c.token,deviceId:v279DeviceId(),deviceName:v279DeviceName()};
+    const raw=JSON.stringify(current),baseRaw=JSON.stringify(base);let gz='',bgz='';
+    try{gz=await v247GzipText(raw)}catch(_){};try{bgz=await v247GzipText(baseRaw)}catch(_){};
+    if(gz&&gz.length<raw.length)p.dataGzip=gz;else p.data=raw;
+    if(bgz&&bgz.length<baseRaw.length)p.baseGzip=bgz;else p.base=baseRaw;
+    const boot=await v279Bounce('sync_push',p,90000);
+    if(Number(boot.version||0)<265)throw new Error('Apps-Script ist zu alt · Code.gs V281 neu bereitstellen');
+    setStatus('Cloud wird einmalig geladen …');
+    const full=await v281PullAll();setStatus('Cloud synchronisiert ✓');return full;
   }
+
+  const payload={token:c.token,deviceId:v279DeviceId(),deviceName:v279DeviceName(),baseUpdatedAt:baseAt};
+  if(delta)Object.assign(payload,await v281EncodeDelta(delta));
+  const r=await v279Bounce('sync_delta_v281',payload,45000);
+  if(Number(r.version||0)<281)throw new Error('Apps-Script V281 fehlt · Code.gs neu bereitstellen');
+  if(r.needFullPull){setStatus('Cloud wird einmalig abgeglichen …');const full=await v281PullAll();setStatus('Cloud synchronisiert ✓');return full}
+  const deltas=await v281DecodeDeltaList(r);let merged=v281Clone(base);
+  for(const d of deltas)merged=v281Apply(merged,d);
+  v279SaveBase(merged);try{localStorage.setItem(V279_CLOUD_AT,String(Number(r.updatedAt)||baseAt))}catch(_){}
+  setStatus(delta||deltas.length?'Cloud synchronisiert ✓':'Alles aktuell ✓');
+  return{...r,data:merged};
 }
 async function login(username,password){const r=await v279Bounce('login',{username,password},30000);rememberAuth(r);return r}
 async function register(username,password){const r=await v279Bounce('register',{username,password},30000);rememberAuth(r);return r}
