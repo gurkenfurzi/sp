@@ -17221,7 +17221,7 @@ body.studiaDedicatedEditor #modalWrap .visualGraphFunctionModal{width:min(1080px
 @media(max-width:899px){body.studiaDedicatedEditor #canvasQuickDrawer.open{overflow-y:auto!important;overflow-x:hidden!important}}
 
 </style>
-<script src="google-sync-config.js?v=283"></script>
+<script src="google-sync-config.js?v=284"></script>
 <script id="studia-editor-bundled-js">
 /* v135.js consolidated */
 window.__STUDIA_EDITOR_BUILD__=183;
@@ -19716,7 +19716,55 @@ window.printCanvasSheet=async function(){
    '.printRoot{display:grid;justify-items:center;gap:24px;padding:24px;overflow:auto}.v181PreviewPage{flex:none;break-after:page;page-break-after:always}.v181PreviewPage:last-child{break-after:auto;page-break-after:auto}'+
    '.v181PreviewPage,.v181PreviewPage *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;forced-color-adjust:none!important}'+
    '@media print{html,body{background:#fff!important}.toolbar{display:none!important}.printRoot{display:block;margin:0;padding:0;overflow:visible;justify-items:start}.v181PreviewPage{justify-self:start!important}}'+
-   '</style></head><body><header class="toolbar"><b>Druckvorschau · nur das Lernblatt</b><button id="print">Drucken</button><button id="close">Schließen</button></header><main class="printRoot">'+clones.map(c=>c.outerHTML).join('')+'</main></body></html>');w.document.close();
+   '</style></head><body><header class="toolbar"><b>Druckvorschau · nur das Lernblatt</b><button id="print">Drucken</button><button id="close">Schließen</button></header><main class="printRoot">'+clones.map(c=>c.outerHTML).join('')+'</main>
+<!-- ===== Studia V284 · FINAL sync owner + current Fächer design lock ===== -->
+<script id="studia-v284-final-runtime">
+(()=>{
+'use strict';
+if(window.__STUDIA_V284_RUNTIME__)return;window.__STUDIA_V284_RUNTIME__=true;
+const q=(s,r=document)=>r?.querySelector?.(s)||null;
+const KEY284=(typeof KEY!=='undefined'?KEY:'schoolhub-v1');let syncing=false,resync=false,timer=0;
+function status(t,bad=false){try{window.StudiaCloudV284?.setStatus?.(t,bad)}catch(_){}try{window.v232SetSyncStatus?.(t,bad?'ok':(/Geräte|Synchron/i.test(t)?'syncing':'ok'))}catch(_){}}
+function persist(){try{localStorage.setItem(KEY284,JSON.stringify(data))}catch(e){console.warn('[V284] local save',e)}}
+function applyCloud(syncData){if(!syncData||typeof syncData!=='object'||typeof data==='undefined')return;const keys=['homework','tests','writtenTests','grades','flashcards','subjects','absences','studySessions','reminders','flashDecks','quizzes','studySheets','missedHours','canvasSheets','lessonExtras','settings','timetable','timetableSubjectColors','economy'];for(const k of keys)if(k in syncData)data[k]=syncData[k];persist();try{renderAll?.()}catch(_){}try{if(q('#view-subjects.active'))renderSubjects?.()}catch(_){}try{if(q('#view-plan.active'))renderPlan?.()}catch(_){}try{if(q('#view-home.active'))renderHome?.()}catch(_){} }
+async function syncNow284(){
+  if(syncing){resync=true;return{busy:true}}if(!navigator.onLine){status('Offline · lokal sicher',true);return{offline:true}}if(!window.StudiaCloudV284?.syncState){status('Google-Sync V284 fehlt · lokal sicher',true);throw new Error('Google-Sync V284 fehlt')}
+  syncing=true;resync=false;status('Geräte werden zusammengeführt …');
+  try{try{if(typeof saveCanvasSheetCore==='function')saveCanvasSheetCore(true)}catch(_){}persist();const r=await window.StudiaCloudV284.syncState(data);applyCloud(r.data);try{window.v150ClearDirty?.()}catch(_){}localStorage.setItem('studia-v284-dirty','0');status('Auf allen Geräten synchronisiert ✓');return r}
+  catch(e){console.error('[V284 sync]',e);persist();status(String(e?.message||'Cloud fehlgeschlagen')+' · lokal sicher',true);throw e}
+  finally{syncing=false;if(resync){resync=false;setTimeout(()=>syncNow284().catch(()=>{}),250)}}
+}
+window.studiaSyncNow=syncNow284;window.v171CloudNow=syncNow284;try{v171CloudNow=syncNow284}catch(_){}
+function schedule(delay=750){localStorage.setItem('studia-v284-dirty','1');clearTimeout(timer);timer=setTimeout(()=>{if(navigator.onLine)syncNow284().catch(()=>{})},Math.max(350,Number(delay)||750))}
+const baseSave=window.save;if(typeof baseSave==='function'&&!baseSave.__v284){const w=function(){const r=baseSave.apply(this,arguments);persist();schedule(850);return r};w.__v284=true;w.__v284Original=baseSave;window.save=w;try{save=w}catch(_){}}
+window.v150MarkDirty=function(delay=700){schedule(delay)};window.v150CloudDirty=()=>localStorage.getItem('studia-v284-dirty')==='1';window.v150ClearDirty=()=>localStorage.setItem('studia-v284-dirty','0');
+function bind(){for(const sel of ['#v232DesktopSync','#v242DesktopSync']){const b=q(sel);if(b)b.onclick=()=>syncNow284().catch(()=>{})}document.querySelectorAll('.v171CloudSettings button').forEach(b=>{if(/synchronisieren|zusammenführen/i.test(b.textContent||'')){b.removeAttribute('onclick');b.onclick=()=>syncNow284().catch(()=>{})}})}
+[0,200,700,1800].forEach(t=>setTimeout(bind,t));new MutationObserver(()=>requestAnimationFrame(bind)).observe(document.documentElement,{childList:true,subtree:true});
+window.addEventListener('online',()=>setTimeout(()=>syncNow284().catch(()=>{}),350));document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&localStorage.getItem('studia-v284-dirty')==='1')setTimeout(()=>syncNow284().catch(()=>{}),350)});
+setTimeout(()=>{if(navigator.onLine&&window.StudiaCloudV284?.scanToken?.())syncNow284().catch(()=>{})},1300);
+
+/* Lock the current compact Fächer design. Cloud data may change content, never the UI generation. */
+function esc284(s){return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function subjectIcon284(s){const n=String(s?.name||'').toLowerCase();if(s?.iconKey)return s.iconKey;if(/math/.test(n))return'calculator';if(/deutsch/.test(n))return'pencil';if(/engl/.test(n))return'chat';if(/bio|phys|chem/.test(n))return'atom';return'book'}
+const pal284=[['#f8e4e7','#b87378','#e7a2a7'],['#e9effc','#7189b8','#9eb4e5'],['#edf4df','#7e9661','#adc98b'],['#f3e8f8','#8d73a0','#c2a5d3'],['#fff0d9','#a57b45','#dfb875'],['#e4f2ef','#5d8d84','#8fc1b7']];
+function icon284(k){try{return window.v133Icon?.(k)||''}catch(_){return''}}
+function modernSubjects284(){
+  const root=q('#subjectList');if(!root||typeof data==='undefined')return;const arr=Array.isArray(data.subjects)?data.subjects:[];
+  const cards=arr.map((s,i)=>{const c=pal284[i%pal284.length],nm=esc284(s.name||'Fach');return `<button class="v102Notebook v103Notebook" data-search="${nm.toLowerCase()}" data-subject-id="${esc284(s.id)}" style="--ring:${s.color||c[2]};--pin:${s.color||c[2]}" onclick="openSubject('${esc284(s.id)}')"><span class="v102NotebookPin"></span><span class="v102NotebookIcon" style="--bubble:${c[0]};color:${c[1]}">${icon284(subjectIcon284(s))}</span><strong>${nm}</strong><small>${(s.topics||[]).length} ${(s.topics||[]).length===1?'Thema':'Themen'}</small><span class="v102Heart">${icon284('heart')}</span></button>`}).join('');
+  root.className='';root.innerHTML=`<div class="v102SubjectsPage v103SubjectsPage"><div class="v102SubjectPageHead"><div><h2>Fächer</h2><p>Deine Fächer</p></div><button class="v102RoundIcon" onclick="openView('settings')" aria-label="Einstellungen">${icon284('settings')}</button></div><div class="v102SubjectTools"><label class="v102Search">${icon284('search')}<input placeholder="Fächer suchen" oninput="document.querySelectorAll('.v102Notebook[data-search]').forEach(c=>c.hidden=!!this.value&&!c.dataset.search.includes(this.value.toLowerCase()))"></label><button class="v102AddSubject" onclick="openAddSubject()">${icon284('plus')}<span>Fach</span></button></div><div class="v102NotebookGrid">${cards||'<div class="v103EmptyState">Noch kein Fach.</div>'}</div></div>`;
+}
+window.renderSubjects=modernSubjects284;try{renderSubjects=modernSubjects284}catch(_){}
+const oldRenderAll=window.renderAll||((typeof renderAll==='function')?renderAll:null);if(typeof oldRenderAll==='function'&&!oldRenderAll.__v284){const rr=function(){const r=oldRenderAll.apply(this,arguments);try{modernSubjects284()}catch(_){}return r};rr.__v284=true;window.renderAll=rr;try{renderAll=rr}catch(_){}}
+setTimeout(()=>{try{modernSubjects284()}catch(_){}},450);
+})();
+</script>
+<style id="studia-v284-ui-lock">
+/* Legacy giant SVG notebooks must never reappear. */
+#view-subjects .newSvgNotebook,#view-subjects .notebookVisual,#view-subjects .notebookArt{display:none!important}
+#view-subjects .v102SubjectsPage{display:block!important}
+</style>
+<!-- ===== /Studia V284 ===== -->
+</body></html>');w.document.close();
   w.document.querySelector('#close').onclick=()=>w.close();w.document.querySelector('#print').onclick=async()=>{await w.document.fonts.ready;await Promise.all([...w.document.images].map(img=>img.complete?Promise.resolve():new Promise(r=>{img.onload=r;img.onerror=r})));w.focus();w.print()};w.focus();
  }catch(e){w.close();console.error(e);alert('Die Druckvorschau konnte nicht erstellt werden. Bitte versuche es erneut.')}
 };
@@ -25856,147 +25904,3 @@ const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 233'};
 })();
 </script>
 <!-- ===== /Studia V233 ===== -->
-
-<!-- ===== Studia V283 · ONE SYNC PATH / FAST DEVICE MERGE ===== -->
-<script id="studia-v283-sync-merge-fix">
-(()=>{
-'use strict';
-if(window.__STUDIA_V283_SYNC__) return;
-window.__STUDIA_V283_SYNC__=true;
-
-const STORAGE_KEY='schoolhub-v1';
-const TRACKED=['homework','tests','writtenTests','grades','flashcards','subjects','absences','studySessions','reminders','flashDecks','quizzes','studySheets'];
-let busy=false,dirtyTimer=0;
-
-const clone=v=>{try{return structuredClone(v)}catch(_){try{return JSON.parse(JSON.stringify(v))}catch(__){return v}}};
-const isObj=v=>!!v&&typeof v==='object'&&!Array.isArray(v);
-const text=v=>String(v??'').trim();
-const meaningful=v=>/[\p{L}\p{N}]/u.test(text(v));
-function stableString(v){
-  if(Array.isArray(v)) return '['+v.map(stableString).join(',')+']';
-  if(isObj(v)) return '{'+Object.keys(v).filter(k=>k!=='id'&&k!=='_updatedAt'&&k!=='__studiaUpdatedAt').sort().map(k=>JSON.stringify(k)+':'+stableString(v[k])).join(',')+'}';
-  return JSON.stringify(v);
-}
-function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0).toString(36)}
-function ensureIds(arr,path){
-  if(!Array.isArray(arr))return arr;
-  const counts=new Map();
-  arr.forEach((x,i)=>{
-    if(!isObj(x)||x.id!=null&&text(x.id))return;
-    const sig=stableString(x),n=(counts.get(sig)||0)+1;counts.set(sig,n);
-    x.id='legacy-'+hash(path+'|'+sig+'|'+n);
-  });
-  return arr;
-}
-function ghostHomework(x){
-  if(!isObj(x))return true;
-  const words=[x.subject,x.text,x.note].some(meaningful);
-  const files=Array.isArray(x.files)&&x.files.length>0;
-  const due=/^\d{4}-\d{2}-\d{2}$/.test(text(x.due));
-  return !words&&!files&&!due;
-}
-function ghostTest(x){
-  if(!isObj(x))return true;
-  const words=[x.subject,x.type,x.text].some(meaningful);
-  const files=Array.isArray(x.files)&&x.files.length>0;
-  const date=/^\d{4}-\d{2}-\d{2}$/.test(text(x.date));
-  return !words&&!files&&!date;
-}
-function normalizeNested(state){
-  ensureIds(state.subjects,'subjects');
-  for(const s of state.subjects||[]){
-    ensureIds(s.topics,`subject:${s.id}:topics`);ensureIds(s.notes,`subject:${s.id}:notes`);ensureIds(s.files,`subject:${s.id}:files`);
-    for(const t of s.topics||[]){ensureIds(t.notes,`topic:${t.id}:notes`);ensureIds(t.files,`topic:${t.id}:files`)}
-  }
-  if(isObj(state.lessonExtras))for(const [k,v] of Object.entries(state.lessonExtras)){if(!isObj(v))continue;ensureIds(v.notes,`lesson:${k}:notes`);ensureIds(v.tasks,`lesson:${k}:tasks`);ensureIds(v.files,`lesson:${k}:files`)}
-}
-function normalizeState(src){
-  const s=isObj(src)?clone(src):{};
-  if(!Array.isArray(s.homework))s.homework=[];
-  if(!Array.isArray(s.tests))s.tests=[];
-  s.homework=s.homework.filter(x=>!ghostHomework(x));
-  s.tests=s.tests.filter(x=>!ghostTest(x));
-  for(const k of TRACKED){if(Array.isArray(s[k]))ensureIds(s[k],k)}
-  normalizeNested(s);
-  return s;
-}
-function equal(a,b){try{return JSON.stringify(a)===JSON.stringify(b)}catch(_){return false}}
-function replaceGlobal(next){
-  if(typeof data==='undefined'||!data||typeof data!=='object')return;
-  for(const k of Object.keys(data))delete data[k];
-  Object.assign(data,next||{});
-}
-function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(data))}catch(e){console.warn('[V283] local save',e)}}
-function render(){try{window.renderAll?.()}catch(_){ }try{window.renderTasks?.()}catch(_){ }try{window.renderHome?.()}catch(_){ }try{window.renderPlan?.()}catch(_){ }}
-function setStatus(t,bad=false){
-  try{window.StudiaCloud?.setStatus?.(t,bad)}catch(_){ }
-  try{window.v232SetSyncStatus?.(t,bad?'error':(/Synchron|zusammen/i.test(t)?'syncing':'ok'))}catch(_){ }
-  const d=document.querySelector('#v232DesktopSync small');if(d)d.textContent=t;
-  const i=document.querySelector('#v232SyncStatusInline');if(i)i.textContent=t;
-}
-function commitEditor(){
-  try{if(typeof saveCanvasSheetCore==='function')saveCanvasSheetCore(true)}catch(_){ }
-  try{if(typeof saveCanvasSheet==='function')saveCanvasSheet()}catch(_){ }
-}
-async function syncNow283(){
-  if(busy)return {busy:true};
-  if(!navigator.onLine){setStatus('Offline · lokal gespeichert',true);return {offline:true}}
-  if(!window.StudiaCloud||typeof window.StudiaCloud.syncState!=='function'){setStatus('Google-Sync-Modul fehlt · lokal sicher',true);throw new Error('Google-Sync-Modul fehlt')}
-  busy=true;
-  try{
-    commitEditor();
-    const local=normalizeState(typeof data!=='undefined'?data:{});
-    replaceGlobal(local);persist();
-    setStatus('Geräte werden zusammengeführt …');
-    let r=await window.StudiaCloud.syncState(local);
-    let raw=isObj(r?.data)?r.data:local;
-    let merged=normalizeState(raw);
-
-    /* If old broken sync versions left empty "." records or legacy objects without IDs,
-       clean them once and immediately push that cleanup back to the cloud. */
-    if(!equal(raw,merged)){
-      replaceGlobal(merged);persist();
-      setStatus('Alte Sync-Reste werden bereinigt …');
-      r=await window.StudiaCloud.syncState(merged);
-      raw=isObj(r?.data)?r.data:merged;
-      merged=normalizeState(raw);
-    }
-
-    replaceGlobal(merged);persist();render();
-    try{window.v150ClearDirty?.()}catch(_){ }
-    setStatus('Auf allen Geräten synchronisiert ✓');
-    return {...(r||{}),data:merged};
-  }catch(e){
-    console.error('[Studia V283] sync',e);
-    persist();setStatus(String(e?.message||'Cloud fehlgeschlagen')+' · lokal sicher',true);throw e;
-  }finally{busy=false}
-}
-syncNow283.__v232MergeSafe=true;
-syncNow283.__v219Guarded=true;
-syncNow283.__v283Direct=true;
-window.studiaSyncNow=syncNow283;
-window.v171CloudNow=syncNow283;
-try{v171CloudNow=syncNow283}catch(_){ }
-
-/* Old save hooks can still call v150MarkDirty. Make that the ONE debounce point
-   instead of creating another sync wrapper. */
-const oldMark=window.v150MarkDirty;
-window.v150MarkDirty=function(delay=900){
-  try{oldMark?.(delay)}catch(_){ }
-  if(busy)return;
-  clearTimeout(dirtyTimer);
-  dirtyTimer=setTimeout(()=>{if(document.visibilityState!=='hidden'&&navigator.onLine)syncNow283().catch(()=>{})},Math.max(650,Number(delay)||900));
-};
-
-function bind(){
-  const d=document.querySelector('#v232DesktopSync');if(d)d.onclick=()=>syncNow283().catch(()=>{});
-  document.querySelectorAll('.v171CloudSettings button').forEach(b=>{if(/synchronisieren|zusammenführen/i.test(b.textContent||'')){b.removeAttribute('onclick');b.onclick=()=>syncNow283().catch(()=>{})}});
-}
-[0,120,500,1500].forEach(t=>setTimeout(bind,t));
-new MutationObserver(()=>requestAnimationFrame(bind)).observe(document.documentElement,{childList:true,subtree:true});
-window.addEventListener('online',()=>setTimeout(()=>syncNow283().catch(()=>{}),450));
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')setTimeout(()=>syncNow283().catch(()=>{}),500)});
-setTimeout(()=>{if(navigator.onLine)syncNow283().catch(()=>{})},1200);
-})();
-</script>
-<!-- ===== /Studia V283 ===== -->
