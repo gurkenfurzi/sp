@@ -1,109 +1,117 @@
-/* Studia V284 — one-request device merge transport.
-   One iframe POST, one merged response. No /550 block loop, no JSONP. */
+/* Studia V287 — one sync engine only: fast delta sync + one-shot bootstrap. */
 (()=>{
 'use strict';
-if(window.__STUDIA_V284_CLOUD__)return;window.__STUDIA_V284_CLOUD__=true;
+if(window.__STUDIA_SYNC_V287__)return;window.__STUDIA_SYNC_V287__=true;
+const KEY='schoolhub-v1';
+const DB='studia-sync-v287', STORE='kv';
+const URL_KEYS=['studia-v287-script-url','studia-v286-script-url','studia-v284-script-url','studia-v281-script-url','studia-v265-script-url','studia-script-url','schoolhub-script-url','google-sync-script-url'];
+const TOKEN_KEYS=['studia-v287-token','studia-v286-token','studia-v284-token','studia-v281-token','studia-v265-token','studia-token','schoolhub-token','cloud-token'];
+const USER_KEYS=['studia-v287-user','studia-v286-user','studia-v284-user','studia-v281-user','studia-v265-user','studia-user','schoolhub-user'];
+let busy=false,pending=false,timer=0,lastSyncAt=0,lastSeenLocal='';
 const $=s=>document.querySelector(s);
-const URL_KEYS=['studia-v284-script-url','studia-v242-script-url','studia-v234-script-url','studia-script-url','schoolhub-script-url','google-sync-script-url'];
-const TOKEN_KEYS=['studia-v284-token','studia-v242-token','studia-v234-token','studia-token','schoolhub-token','cloud-token'];
-const USER_KEYS=['studia-v284-user','studia-v242-user','studia-v234-user','studia-user','schoolhub-user'];
-const HASH_KEY='studia-v284-local-hashes';
-const DIRTY_KEY='studia-v284-dirty';
-const COLLECTIONS=['homework','tests','writtenTests','grades','flashcards','subjects','absences','studySessions','reminders','flashDecks','quizzes','studySheets','missedHours'];
-const MAPS=['canvasSheets','lessonExtras'];
-const FIELDS=['settings','timetable','timetableSubjectColors','economy'];
-let busy=false,pending=false,timer=0;
-const clone=v=>{try{return structuredClone(v)}catch(_){try{return JSON.parse(JSON.stringify(v))}catch(__){return v}}};
-const isObj=v=>!!v&&typeof v==='object'&&!Array.isArray(v);
 const safeJSON=(s,f=null)=>{try{return JSON.parse(s)}catch(_){return f}};
-function scanUrl(){
-  const inp=$('#v150ScriptUrl');if(inp?.value?.trim())return inp.value.trim();
-  if(window.STUDIA_SYNC_CONFIG?.scriptUrl)return String(window.STUDIA_SYNC_CONFIG.scriptUrl).trim();
-  for(const k of URL_KEYS){const v=String(localStorage.getItem(k)||'').trim();if(/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec/i.test(v))return v}
-  for(let i=0;i<localStorage.length;i++){const v=String(localStorage.getItem(localStorage.key(i)||'')||'');const m=v.match(/https:\/\/script\.google\.com\/macros\/s\/[^"'\s]+\/exec/i);if(m)return m[0]}
-  return '';
+const clone=v=>{try{return structuredClone(v)}catch(_){return safeJSON(JSON.stringify(v),v)}};
+const isObj=v=>!!v&&typeof v==='object'&&!Array.isArray(v);
+const rid=()=>{try{return crypto.randomUUID()}catch(_){return Date.now().toString(36)+Math.random().toString(36).slice(2)}};
+function endpoint(){const i=$('#v150ScriptUrl');if(i?.value?.trim())return i.value.trim();for(const k of URL_KEYS){const v=String(localStorage.getItem(k)||'').trim();if(/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec/i.test(v))return v}return ''}
+function token(){for(const k of TOKEN_KEYS){const v=String(localStorage.getItem(k)||'');if(v.length>20)return v}return ''}
+function user(){for(const k of USER_KEYS){const v=safeJSON(localStorage.getItem(k)||'');if(v)return v}return null}
+function rememberUrl(v){v=String(v||'').trim();if(!v)return;URL_KEYS.forEach(k=>localStorage.setItem(k,v));const i=$('#v150ScriptUrl');if(i)i.value=v;window.STUDIA_SYNC_CONFIG={...(window.STUDIA_SYNC_CONFIG||{}),scriptUrl:v}}
+function rememberAuth(r){if(r?.token)TOKEN_KEYS.forEach(k=>localStorage.setItem(k,String(r.token)));if(r?.user)USER_KEYS.forEach(k=>localStorage.setItem(k,JSON.stringify(r.user)))}
+function status(text,state='ok'){const s=String(text||'');const a=$('#v150AccountStatus');if(a){a.textContent=s;a.classList.toggle('error',state==='error')}const d=$('#v232DesktopSync');if(d){d.classList.toggle('syncing',state==='syncing');const sm=d.querySelector('small');if(sm)sm.textContent=s}const i=$('#v232SyncStatusInline');if(i)i.textContent=s}
+function deviceId(){let d=localStorage.getItem('studia-v287-device-id');if(!d){d='dev-'+rid();localStorage.setItem('studia-v287-device-id',d)}return d}
+function deviceName(){return /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)?'Handy':'Laptop'}
+function meaningful(v){return /[\p{L}\p{N}]/u.test(String(v??'').trim())}
+function cleanState(src){
+  const x=clone(src||{});
+  const walk=v=>{if(Array.isArray(v)){v.forEach(walk);return}if(!isObj(v))return;delete v._updatedAt;delete v._syncMeta;delete v._syncV284;delete v._syncV281;delete v.__studiaSyncMeta;Object.values(v).forEach(walk)};walk(x);
+  if(Array.isArray(x.homework))x.homework=x.homework.filter(o=>o&&([o.subject,o.text,o.note].some(meaningful)||(o.files?.length)||/^\d{4}-\d{2}-\d{2}$/.test(String(o.due||''))));
+  if(Array.isArray(x.tests))x.tests=x.tests.filter(o=>o&&([o.subject,o.type,o.text].some(meaningful)||(o.files?.length)||/^\d{4}-\d{2}-\d{2}$/.test(String(o.date||''))));
+  return x;
 }
-function scanToken(){for(const k of TOKEN_KEYS){const v=String(localStorage.getItem(k)||'');if(v.length>20)return v}return ''}
-function rememberUrl(url){url=String(url||'').trim();if(!url)return;for(const k of URL_KEYS)localStorage.setItem(k,url);const i=$('#v150ScriptUrl');if(i)i.value=url}
-function rememberAuth(r){if(r?.token)for(const k of TOKEN_KEYS)localStorage.setItem(k,String(r.token));if(r?.user)for(const k of USER_KEYS)localStorage.setItem(k,JSON.stringify(r.user))}
-function rememberedUser(){for(const k of USER_KEYS){const o=safeJSON(localStorage.getItem(k)||'');if(o)return o}return null}
-function normalizeUrl(url){return String(url||'').trim().replace(/\?.*$/,'')}
-function setStatus(text,bad=false){
-  const s=String(text||'');
-  const a=$('#v150AccountStatus');if(a){a.textContent=s;a.classList.toggle('error',!!bad)}
-  for(const sel of ['#v232DesktopSync small','#v242DesktopSync small','#v232SyncStatusInline','#v242SyncStatus']){const e=$(sel);if(e)e.textContent=s}
-}
-function secureId(){try{const a=new Uint32Array(4);crypto.getRandomValues(a);return [...a].map(x=>x.toString(36)).join('')}catch(_){return Date.now().toString(36)+Math.random().toString(36).slice(2)}}
-function deviceId(){let v=localStorage.getItem('studia-v284-device-id')||localStorage.getItem('studia-v265-device-id')||'';if(!v){v='d-'+secureId();localStorage.setItem('studia-v284-device-id',v)}return v}
-function deviceName(){return /iPhone|iPad|Android|Mobile/i.test(navigator.userAgent)?'Handy':'Laptop'}
-function bytesToB64(bytes){let s='';for(let i=0;i<bytes.length;i+=0x8000)s+=String.fromCharCode(...bytes.subarray(i,i+0x8000));return btoa(s)}
-function b64ToBytes(b64){const s=atob(String(b64||'')),a=new Uint8Array(s.length);for(let i=0;i<s.length;i++)a[i]=s.charCodeAt(i);return a}
-async function gzipText(text){if(typeof CompressionStream!=='function')return '';const cs=new CompressionStream('gzip');const ab=await new Response(new Blob([String(text)]).stream().pipeThrough(cs)).arrayBuffer();return bytesToB64(new Uint8Array(ab))}
-async function ungzipText(b64){if(typeof DecompressionStream!=='function')throw new Error('Browser kann Cloud-Daten nicht entpacken');const ds=new DecompressionStream('gzip');return await new Response(new Blob([b64ToBytes(b64)]).stream().pipeThrough(ds)).text()}
-function stable(v){
-  if(Array.isArray(v))return '['+v.map(stable).join(',')+']';
-  if(isObj(v)){return '{'+Object.keys(v).filter(k=>!/^_v284|^_syncV284$|^_syncMeta$|^__studiaSyncMeta$|^_updatedAt$|^__studiaUpdatedAt$/.test(k)).sort().map(k=>JSON.stringify(k)+':'+stable(v[k])).join(',')+'}'}
-  return JSON.stringify(v);
-}
-function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0).toString(36)}
-function itemId(x,path='item'){if(!isObj(x))return '';if(x.id!=null&&String(x.id).trim())return String(x.id);const id='legacy-'+hash(path+'|'+stable(x));x.id=id;return id}
-function ghost(kind,x){
-  if(!isObj(x))return true;const val=o=>String(o??'').trim();const meaningful=s=>/[\p{L}\p{N}]/u.test(val(s));
-  if(kind==='homework'){const words=[x.subject,x.text,x.note].some(meaningful),files=Array.isArray(x.files)&&x.files.length,hasDue=/^\d{4}-\d{2}-\d{2}$/.test(val(x.due));return !words&&!files&&!hasDue}
-  if(kind==='tests'){const words=[x.subject,x.type,x.text].some(meaningful),files=Array.isArray(x.files)&&x.files.length,hasDate=/^\d{4}-\d{2}-\d{2}$/.test(val(x.date));return !words&&!files&&!hasDate}
-  return false;
-}
-function readHashes(){const o=safeJSON(localStorage.getItem(HASH_KEY)||'{}',{});o.collections||={};o.maps||={};o.fields||={};o.tombstones||={};o.mapTombstones||={};return o}
-function writeHashes(o){try{localStorage.setItem(HASH_KEY,JSON.stringify(o||{}))}catch(_){}}
-function preparePayload(source){
-  const now=Date.now(),h=readHashes(),out={_syncV284:{version:1,tombstones:clone(h.tombstones||{}),mapTombstones:clone(h.mapTombstones||{}),fieldTs:{}}};
-  for(const key of COLLECTIONS){
-    const arr=(Array.isArray(source?.[key])?source[key]:[]).filter(x=>!ghost(key,x));const prev=h.collections[key]||{},next={};out[key]=[];out._syncV284.tombstones[key]||={};
-    for(const raw of arr){const x=clone(raw),id=itemId(x,key),sig=hash(stable(x)),old=prev[id];if(!old||old.hash!==sig)x._v284UpdatedAt=Math.max(Number(x._v284UpdatedAt||0),now);else x._v284UpdatedAt=Math.max(Number(x._v284UpdatedAt||0),Number(old.ts||1));next[id]={hash:sig,ts:Number(x._v284UpdatedAt||1)};delete out._syncV284.tombstones[key][id];out[key].push(x)}
-    for(const id of Object.keys(prev))if(!next[id])out._syncV284.tombstones[key][id]=Math.max(Number(out._syncV284.tombstones[key][id]||0),now);
-    h.collections[key]=next;
+function same(a,b){if(a===b)return true;if(a===undefined||b===undefined)return false;try{return JSON.stringify(a)===JSON.stringify(b)}catch(_){return false}}
+function idArray(a){if(!Array.isArray(a)||!a.length)return false;const seen=new Set();for(const x of a){if(!isObj(x)||x.id==null)return false;const id=String(x.id);if(seen.has(id))return false;seen.add(id)}return true}
+function diff(base,next){
+  if(same(base,next))return null;
+  if(next===undefined)return{t:'d'};
+  if(base===undefined)return{t:'s',v:clone(next)};
+  if(Array.isArray(base)&&Array.isArray(next)&&idArray(base)&&idArray(next)){
+    const B=Object.fromEntries(base.map(x=>[String(x.id),x])),N=Object.fromEntries(next.map(x=>[String(x.id),x])),c={},d=[];
+    Object.keys(N).forEach(id=>{const z=diff(B[id],N[id]);if(z)c[id]=z});Object.keys(B).forEach(id=>{if(!(id in N))d.push(id)});
+    if(!Object.keys(c).length&&!d.length)return null;return{t:'a',c,d};
   }
-  for(const key of MAPS){const src=isObj(source?.[key])?source[key]:{},prev=h.maps[key]||{},next={};out[key]={};out._syncV284.mapTombstones[key]||={};
-    for(const [id,raw] of Object.entries(src)){const x=clone(raw),sig=hash(stable(x)),old=prev[id];if(isObj(x))x._v284UpdatedAt=!old||old.hash!==sig?Math.max(Number(x._v284UpdatedAt||0),now):Math.max(Number(x._v284UpdatedAt||0),Number(old.ts||1));next[id]={hash:sig,ts:Number(x?._v284UpdatedAt||1)};delete out._syncV284.mapTombstones[key][id];out[key][id]=x}
-    for(const id of Object.keys(prev))if(!next[id])out._syncV284.mapTombstones[key][id]=Math.max(Number(out._syncV284.mapTombstones[key][id]||0),now);h.maps[key]=next;
+  if(isObj(base)&&isObj(next)){
+    const c={};for(const k of new Set([...Object.keys(base),...Object.keys(next)])){const z=diff(base[k],next[k]);if(z)c[k]=z}
+    return Object.keys(c).length?{t:'o',c}:null;
   }
-  for(const key of FIELDS){const v=clone(source?.[key]),sig=hash(stable(v)),old=h.fields[key];const ts=!old||old.hash!==sig?now:Number(old.ts||1);out._syncV284.fieldTs[key]=ts;h.fields[key]={hash:sig,ts};if(v!==undefined)out[key]=v}
-  h.tombstones=clone(out._syncV284.tombstones);h.mapTombstones=clone(out._syncV284.mapTombstones);writeHashes(h);return out;
+  return{t:'s',v:clone(next)};
 }
-function acceptMerged(merged){
-  const h={collections:{},maps:{},fields:{},tombstones:clone(merged?._syncV284?.tombstones||{}),mapTombstones:clone(merged?._syncV284?.mapTombstones||{})};
-  for(const key of COLLECTIONS){h.collections[key]={};for(const x of Array.isArray(merged?.[key])?merged[key]:[]){const id=itemId(x,key);h.collections[key][id]={hash:hash(stable(x)),ts:Number(x._v284UpdatedAt||1)}}}
-  for(const key of MAPS){h.maps[key]={};for(const [id,x] of Object.entries(isObj(merged?.[key])?merged[key]:{}))h.maps[key][id]={hash:hash(stable(x)),ts:Number(x?._v284UpdatedAt||1)}}
-  for(const key of FIELDS){if(merged&&key in merged)h.fields[key]={hash:hash(stable(merged[key])),ts:Number(merged?._syncV284?.fieldTs?.[key]||1)}}writeHashes(h);
+function applyDelta(base,delta){
+  if(!delta)return clone(base);if(delta.t==='d')return undefined;if(delta.t==='s')return clone(delta.v);
+  if(delta.t==='o'){const out=isObj(base)?clone(base):{};for(const [k,z] of Object.entries(delta.c||{})){const v=applyDelta(out[k],z);if(v===undefined)delete out[k];else out[k]=v}return out}
+  if(delta.t==='a'){let out=Array.isArray(base)?clone(base):[];const dead=new Set((delta.d||[]).map(String));out=out.filter(x=>!(x&&x.id!=null&&dead.has(String(x.id))));for(const [id,z] of Object.entries(delta.c||{})){const pos=out.findIndex(x=>x&&x.id!=null&&String(x.id)===id);if(pos>=0){const v=applyDelta(out[pos],z);if(v===undefined)out.splice(pos,1);else out[pos]=v}else{const v=applyDelta(undefined,z);if(v!==undefined)out.push(v)}}return out}
+  return clone(base);
 }
-function direct(action,payload={},timeoutMs=70000){
-  const url=scanUrl();if(!url)return Promise.reject(new Error('Apps-Script-/exec-URL fehlt'));
+function b64(bytes){let s='';for(let i=0;i<bytes.length;i+=32768)s+=String.fromCharCode(...bytes.subarray(i,i+32768));return btoa(s)}
+function unb64(v){const s=atob(String(v||'')),a=new Uint8Array(s.length);for(let i=0;i<s.length;i++)a[i]=s.charCodeAt(i);return a}
+async function gzipJSON(v){const raw=JSON.stringify(v);if(typeof CompressionStream!=='function')return{raw};const cs=new CompressionStream('gzip'),ab=await new Response(new Blob([raw]).stream().pipeThrough(cs)).arrayBuffer();return{gz:b64(new Uint8Array(ab)),raw}}
+async function ungzipJSON(v){if(!v)return null;if(typeof DecompressionStream!=='function')throw new Error('Dieser Browser kann die Cloud-Daten nicht entpacken');const ds=new DecompressionStream('gzip');const txt=await new Response(new Blob([unb64(v)]).stream().pipeThrough(ds)).text();return safeJSON(txt,null)}
+function openDB(){return new Promise((resolve,reject)=>{const r=indexedDB.open(DB,1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains(STORE))r.result.createObjectStore(STORE)};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
+async function dbGet(k,f=null){try{const db=await openDB();return await new Promise((res,rej)=>{const t=db.transaction(STORE,'readonly'),r=t.objectStore(STORE).get(k);r.onsuccess=()=>res(r.result===undefined?f:r.result);r.onerror=()=>rej(r.error)})}catch(_){return f}}
+async function dbSet(k,v){const db=await openDB();return await new Promise((res,rej)=>{const t=db.transaction(STORE,'readwrite');t.objectStore(STORE).put(v,k);t.oncomplete=()=>res();t.onerror=()=>rej(t.error)})}
+function postDirect(action,payload={},timeout=30000){
+  const ep=endpoint();if(!ep)return Promise.reject(new Error('Server-Script-Service-URL fehlt'));
   return new Promise((resolve,reject)=>{
-    const callId='v284-'+secureId(),frame=document.createElement('iframe'),form=document.createElement('form');let done=false;
-    frame.name='studiaV284_'+secureId();frame.style.cssText='position:fixed;width:1px;height:1px;left:-9999px;top:-9999px;border:0;opacity:0;pointer-events:none';
-    form.method='POST';form.action=normalizeUrl(url);form.target=frame.name;form.enctype='application/x-www-form-urlencoded';form.acceptCharset='UTF-8';form.style.display='none';
-    const add=(k,v)=>{const i=document.createElement('input');i.type='hidden';i.name=k;i.value=String(v??'');form.appendChild(i)};add('action','bridge_direct_v284');add('directAction',action);add('callId',callId);for(const[k,v]of Object.entries(payload))if(v!=null)add(k,v);
-    const cleanup=()=>{if(done)return;done=true;clearTimeout(to);window.removeEventListener('message',onmsg);setTimeout(()=>{try{form.remove()}catch(_){}try{frame.remove()}catch(_){}},0)};
-    const fail=e=>{cleanup();reject(e instanceof Error?e:new Error(String(e||'Google-Sync fehlgeschlagen')))};
-    const onmsg=ev=>{if(ev.source!==frame.contentWindow)return;const m=ev.data;if(!m||m.type!=='studia-v284-direct'||m.callId!==callId)return;cleanup();const r=m.result||{};if(!r.ok)return reject(new Error(String(r.error||'Google-Sync fehlgeschlagen')));resolve(r)};
-    const to=setTimeout(()=>fail(new Error('Google-Sync dauert zu lange')),timeoutMs);window.addEventListener('message',onmsg);document.body.append(frame,form);try{form.submit()}catch(e){fail(e)}
-  });
+    const callId='v287-'+rid(),frame=document.createElement('iframe'),form=document.createElement('form');let done=false;
+    frame.name='studia_'+rid();frame.style.cssText='position:fixed;left:-10000px;top:-10000px;width:1px;height:1px;border:0;opacity:0';
+    form.method='POST';form.action=ep.replace(/\?.*$/,'');form.target=frame.name;form.style.display='none';form.enctype='application/x-www-form-urlencoded';
+    const add=(k,v)=>{const i=document.createElement('input');i.type='hidden';i.name=k;i.value=String(v??'');form.appendChild(i)};
+    add('action','bridge_direct_v287');add('directAction',action);add('callId',callId);for(const [k,v] of Object.entries(payload))if(v!=null)add(k,v);
+    const cleanup=()=>{if(done)return;done=true;clearTimeout(to);removeEventListener('message',onmsg);setTimeout(()=>{form.remove();frame.remove()},0)};
+    const onmsg=e=>{if(e.source!==frame.contentWindow)return;const m=e.data;if(!m||m.type!=='studia-v287-direct'||m.callId!==callId)return;cleanup();const r=m.result||{};if(!r.ok)return reject(new Error(r.error||'Cloud-Sync fehlgeschlagen'));resolve(r)};
+    const to=setTimeout(()=>{cleanup();reject(new Error('Google-Sync antwortet nicht'))},timeout);
+    addEventListener('message',onmsg);document.body.append(frame,form);form.submit();
+  })
 }
-async function decodeData(r){if(isObj(r?.data))return r.data;if(r?.dataGzip){const txt=await ungzipText(String(r.dataGzip));return safeJSON(txt,{})||{}}return {}}
-async function health(){return direct('health',{},25000)}
-async function login(username,password){const r=await direct('login',{username,password},30000);rememberAuth(r);return r}
-async function register(username,password){const r=await direct('register',{username,password},30000);rememberAuth(r);return r}
-async function me(){const token=scanToken();if(!token)throw new Error('Nicht angemeldet');return direct('me',{token},25000)}
-async function syncState(source){
-  const token=scanToken();if(!token)throw new Error('Nicht angemeldet');const prepared=preparePayload(source||{}),raw=JSON.stringify(prepared);let gz='';try{gz=await gzipText(raw)}catch(_){}
-  const payload={token,deviceId:deviceId(),deviceName:deviceName()};if(gz&&gz.length<raw.length)payload.dataGzip=gz;else payload.data=raw;
-  const r=await direct('sync',payload,90000);if(Number(r.version||0)<284)throw new Error('Apps-Script V284 fehlt · Code.gs neu bereitstellen');const data=await decodeData(r);acceptMerged(data);return {...r,data};
+function jsonp(action,params={},timeout=45000){
+  const ep=endpoint();if(!ep)return Promise.reject(new Error('Server-Script-Service-URL fehlt'));
+  return new Promise((resolve,reject)=>{const cb='__studia287_'+rid().replace(/-/g,'_'),s=document.createElement('script');let done=false;const finish=()=>{if(done)return;done=true;clearTimeout(to);try{delete window[cb]}catch(_){window[cb]=undefined}s.remove()};window[cb]=r=>{finish();if(!r?.ok)return reject(new Error(r?.error||'Cloud konnte nicht geladen werden'));resolve(r)};const q=new URLSearchParams({action,callback:cb,_:String(Date.now())});for(const [k,v] of Object.entries(params))if(v!=null)q.set(k,String(v));s.src=ep+(ep.includes('?')?'&':'?')+q.toString();s.onerror=()=>{finish();reject(new Error('Cloud-Download nicht erreichbar'))};const to=setTimeout(()=>{finish();reject(new Error('Cloud-Download dauert zu lange'))},timeout);document.head.appendChild(s)})
 }
-window.StudiaCloudV284={syncState,health,login,register,me,setStatus,rememberUrl,rememberAuth,rememberedUser,scanUrl,scanToken};
-window.StudiaCloud=window.StudiaCloudV284;
-window.GOOGLE_SYNC_CONFIG=window.GOOGLE_SYNC_CONFIG||{};try{Object.defineProperty(window.GOOGLE_SYNC_CONFIG,'scriptUrl',{configurable:true,get:scanUrl,set:rememberUrl})}catch(_){window.GOOGLE_SYNC_CONFIG.scriptUrl=scanUrl()}
-window.v171CloudLogin=async()=>{try{const url=$('#v150ScriptUrl')?.value?.trim()||scanUrl(),u=$('#v150Username')?.value?.trim()||'',p=$('#v150Password')?.value||'';if(url)rememberUrl(url);setStatus('Verbindung wird geprüft …');await health();const r=await login(u,p);setStatus(`Angemeldet als ${r.user?.username||u} ✓`);localStorage.setItem(DIRTY_KEY,'1');setTimeout(()=>window.studiaSyncNow?.().catch(()=>{}),50);return r}catch(e){setStatus(String(e?.message||e),true);throw e}};
-window.v171CloudRegister=async()=>{try{const url=$('#v150ScriptUrl')?.value?.trim()||scanUrl(),u=$('#v150Username')?.value?.trim()||'',p=$('#v150Password')?.value||'';if(url)rememberUrl(url);setStatus('Konto wird erstellt …');await health();const r=await register(u,p);setStatus(`Konto ${r.user?.username||u} erstellt ✓`);if(r.recoveryCode)alert('Wiederherstellungscode — sicher speichern:\n\n'+r.recoveryCode);localStorage.setItem(DIRTY_KEY,'1');setTimeout(()=>window.studiaSyncNow?.().catch(()=>{}),50);return r}catch(e){setStatus(String(e?.message||e),true);throw e}};
-function hydrate(){const url=scanUrl();if(url)rememberUrl(url);const u=rememberedUser();if(url&&scanToken())setStatus(u?.username?`Angemeldet als ${u.username}`:'Angemeldet · bereit');else setStatus('Noch nicht verbunden.')}
+async function pullFull(){status('Einmaliger erster Abgleich …','syncing');const r=await jsonp('pull_all_v287',{token:token(),deviceId:deviceId(),deviceName:deviceName()},50000);if(Number(r.version)!==287)throw new Error('Google Apps Script V287 ist noch nicht bereitgestellt');const d=r.dataGzip?await ungzipJSON(r.dataGzip):(r.data||{});return{state:cleanState(d||{}),version:Number(r.updatedAt||0)}}
+function applyLocal(state){state=cleanState(state);try{data=state}catch(_){window.data=state}localStorage.setItem(KEY,JSON.stringify(state));lastSeenLocal=localStorage.getItem(KEY)||'';try{renderAll?.()}catch(_){}try{if($('#view-plan.active'))renderPlan?.()}catch(_){}try{if($('#view-subjects.active'))renderSubjects?.()}catch(_){}try{if($('#view-tasks.active'))renderTasks?.()}catch(_){}}
+async function syncNow(opts={}){
+  if(busy){pending=true;return{busy:true}};
+  if(!navigator.onLine){status('Offline · lokal gespeichert','error');return{offline:true}}
+  if(!token()){status('Nicht angemeldet · lokale Daten sicher','error');return{auth:false}}
+  busy=true;status('Synchronisiere Geräte …','syncing');
+  try{
+    try{if(typeof save==='function')save()}catch(_){}
+    let current;try{current=cleanState(data)}catch(_){current=cleanState(safeJSON(localStorage.getItem(KEY)||'{}',{}))}
+    const base=await dbGet('baseState',undefined),baseVersion=Number(await dbGet('baseVersion',0)||0);
+    const delta=diff(base,current);const packed=await gzipJSON(delta);
+    const payload={token:token(),deviceId:deviceId(),deviceName:deviceName(),baseUpdatedAt:baseVersion};
+    if(packed.gz&&packed.gz.length<packed.raw.length)payload.deltaGzip=packed.gz;else payload.delta=packed.raw;
+    const r=await postDirect('sync_delta',payload,35000);
+    if(Number(r.version)!==287)throw new Error('Google Apps Script V287 ist noch nicht bereitgestellt');
+    let latest,version=Number(r.updatedAt||baseVersion||0);
+    if(r.needFullPull||base===undefined){const full=await pullFull();latest=full.state;version=full.version}else{
+      latest=clone(base);let ds=[];if(r.deltasGzip)ds=await ungzipJSON(r.deltasGzip)||[];else if(Array.isArray(r.deltas))ds=r.deltas;for(const d of ds)latest=applyDelta(latest,d);latest=cleanState(latest||{});
+    }
+    applyLocal(latest);await dbSet('baseState',clone(latest));await dbSet('baseVersion',version);lastSyncAt=Date.now();
+    const c={s:latest.subjects?.length||0,h:latest.homework?.length||0,t:latest.tests?.length||0};status(`Synchronisiert ✓ · ${c.s} Fächer · ${c.h} Aufgaben · ${c.t} Tests`,'ok');
+    return{ok:true,version};
+  }catch(e){console.error('[Studia V287 sync]',e);status((e?.message||String(e))+' · lokal sicher','error');throw e}
+  finally{busy=false;if(pending){pending=false;setTimeout(()=>syncNow().catch(()=>{}),700)}}
+}
+async function loginAndSync(){const u=$('#v150Username')?.value?.trim()||'',p=$('#v150Password')?.value||'',ep=$('#v150ScriptUrl')?.value?.trim()||endpoint();if(ep)rememberUrl(ep);status('Anmeldung …','syncing');const r=await postDirect('login',{username:u,password:p},20000);if(Number(r.version)!==287)throw new Error('Google Apps Script V287 ist noch nicht bereitgestellt');rememberAuth(r);status('Angemeldet als '+(r.user?.username||u)+' ✓');return syncNow({manual:true})}
+async function register(){const u=$('#v150Username')?.value?.trim()||'',p=$('#v150Password')?.value||'',ep=$('#v150ScriptUrl')?.value?.trim()||endpoint();if(ep)rememberUrl(ep);status('Konto wird erstellt …','syncing');const r=await postDirect('register',{username:u,password:p},20000);if(Number(r.version)!==287)throw new Error('Google Apps Script V287 ist noch nicht bereitgestellt');rememberAuth(r);if(r.recoveryCode)alert('Wiederherstellungscode — sicher speichern:\n\n'+r.recoveryCode);status('Konto erstellt ✓');return syncNow({manual:true})}
+function ensureButton(){if($('#v232DesktopSync'))return;const b=document.createElement('button');b.id='v232DesktopSync';b.type='button';b.innerHTML='<span class="spin">↻</span><span>Geräte synchronisieren<small>Lokal gespeichert</small></span>';b.onclick=()=>syncNow({manual:true}).catch(()=>{});document.body.appendChild(b)}
+function install(){window.v171CloudNow=syncNow;window.studiaSyncNow=syncNow;window.v171CloudLogin=loginAndSync;window.v171CloudRegister=register;try{v171CloudNow=syncNow}catch(_){};ensureButton()}
+function schedule(){clearTimeout(timer);timer=setTimeout(()=>{if(Date.now()-lastSyncAt<5000)return;syncNow().catch(()=>{})},2200)}
+function watch(){const now=localStorage.getItem(KEY)||'';if(now&&now!==lastSeenLocal){lastSeenLocal=now;schedule()}}
+function hookSave(){const old=window.save;if(typeof old!=='function'||old.__v287)return;const w=function(){const r=old.apply(this,arguments);lastSeenLocal=localStorage.getItem(KEY)||'';schedule();return r};w.__v287=true;window.save=w;try{save=w}catch(_){}}
+async function hydrate(){install();hookSave();const ep=endpoint();if(ep)rememberUrl(ep);const u=user();status(token()?(u?.username?'Angemeldet als '+u.username+' · bereit':'Angemeldet · bereit'):'Noch nicht verbunden.');lastSeenLocal=localStorage.getItem(KEY)||'';setInterval(()=>{install();hookSave();watch()},2200);setTimeout(()=>{if(token()&&navigator.onLine)syncNow().catch(()=>{})},1800)}
+window.StudiaSyncV287={syncNow,loginAndSync,register,status,rememberUrl,version:287,resetBase:async()=>{await dbSet('baseState',undefined);await dbSet('baseVersion',0)}};
+addEventListener('online',()=>setTimeout(()=>syncNow().catch(()=>{}),700));addEventListener('focus',()=>{if(token()&&Date.now()-lastSyncAt>20000)setTimeout(()=>syncNow().catch(()=>{}),900)});document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&token()&&Date.now()-lastSyncAt>20000)setTimeout(()=>syncNow().catch(()=>{}),1000)});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',hydrate,{once:true});else hydrate();
 })();
