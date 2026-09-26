@@ -8,11 +8,11 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Studia">
-<link rel="manifest" href="./manifest.webmanifest?v=264">
-<link rel="icon" type="image/png" sizes="64x64" href="./assets/icons/favicon.png">
-<link rel="icon" type="image/png" sizes="192x192" href="./assets/icons/icon-192.png">
-<link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/apple-touch-icon.png">
-<link rel="apple-touch-icon-precomposed" href="./assets/icons/apple-touch-icon.png">
+<link rel="manifest" href="./manifest.webmanifest?v=202">
+<link rel="icon" type="image/png" sizes="64x64" href="./favicon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+<link rel="apple-touch-icon-precomposed" href="./apple-touch-icon.png">
 <title>Studia</title>
 <!-- Requested font previews: load the three non-system standard fonts used by Studia. -->
 <link id="studia-font-preview-webfonts" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Lato:wght@400;700&family=Playfair+Display:wght@400;600;700&display=swap">
@@ -3124,7 +3124,7 @@ html,body{background:#fff7f4;}
   </section>
 
   <section class="view" id="view-tasks">
-    <div class="sectionHead"><h2>Hausaufgaben</h2><button class="primary" onclick="openAddHomework()">+ Neu</button></div>
+    <div class="sectionHead"><h2>Aufgaben</h2><button class="primary" onclick="openAddHomework()">+ Neu</button></div>
     <div class="daytabs">
       <button class="tab active" data-taskfilter="open">Offen</button>
       <button class="tab" data-taskfilter="done">Erledigt</button>
@@ -3135,11 +3135,6 @@ html,body{background:#fff7f4;}
     <div class="section">
       <div class="sectionHead"><h2>Tests & Arbeiten</h2><button class="primary" onclick="openAddTest()">+ Neu</button></div>
       <div class="stack" id="testList"></div>
-    </div>
-
-    <div class="section" id="v264GradedSection">
-      <div class="sectionHead"><h2>Benotete Abgaben</h2><button class="primary" type="button" onclick="v264OpenGradedSubmission()">+ Neu</button></div>
-      <div class="stack" id="v264GradedList"></div>
     </div>
   </section>
 
@@ -3271,165 +3266,7 @@ html,body{background:#fff7f4;}
   </section>
 
 
-  <section class="view" id="view-sheet-editor">
-    <div class="canvasEditorShell">
-      <div class="canvasTopbar">
-        <button class="editorIcon" title="Zurück" onclick="closeSheetEditor()"><svg viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></svg></button>
-        <div class="editorTitle"><b>Lernblatt</b><span class="autosaveState" id="autosaveState">Autosave an</span></div>
-        <div class="historyBar">
-          <button class="historyBtn" id="undoBtn" title="Rückgängig" onclick="undoCanvas()">↶</button>
-          <button class="historyBtn" id="redoBtn" title="Wiederholen" onclick="redoCanvas()">↷</button>
-        </div>
-        <div class="editorActions">
-          <button class="editorIcon viewTopBtn pageTopButton" title="Seite & Ansicht" onclick="toggleTopViewMenu()"><span class="pageTopIcon">▯</span><span class="pageTopLabel">Seite</span></button>
-          <button class="editorIcon" title="Exportieren" onclick="exportCanvasHTML()"><svg viewBox="0 0 24 24"><path d="M12 3v12M8 11l4 4 4-4M4 19h16"/></svg></button>
-          <button class="editorIcon" title="PDF / Drucken" onclick="printCanvasSheet()"><svg viewBox="0 0 24 24"><path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="7" y="14" width="10" height="7"/></svg></button>
-          <button class="editorIcon primaryIcon" title="Speichern" onclick="saveCanvasSheet()"><svg viewBox="0 0 24 24"><path d="M5 3h12l2 2v16H5z"/><path d="M8 3v6h8V3M8 21v-7h8v7"/></svg></button>
-        </div>
-      </div>
-
-      <div class="desktopCommandBar" aria-label="Desktop-Werkzeuge">
-        <div class="desktopCmdGroup">
-          <span class="desktopCmdLabel">Einfügen</span>
-          <div class="desktopCmdButtons">
-            <button onclick="editorOpenGroup('add')" title="Hinzufügen">＋ <span>Hinzufügen</span></button>
-            <button onclick="addCanvasTextBox()" title="Textfeld">T <span>Textfeld</span></button>
-            <button onclick="openFormulaDialog()" title="Formel">∑ <span>Formel</span></button>
-            <button onclick="openGraphDialog()" title="Graph">⌁ <span>Graph</span></button>
-            <button onclick="addCanvasChecklist()" title="Checkliste">☑ <span>Checkliste</span></button>
-            <button onclick="addVectorLine()" title="Linie">— <span>Linie</span></button>
-          </div>
-        </div>
-
-        <div class="desktopCmdGroup">
-          <span class="desktopCmdLabel">Bearbeiten</span>
-          <div class="desktopCmdButtons">
-            <button onclick="duplicateSelected()" title="Duplizieren">⧉ <span>Duplizieren</span></button>
-            <button onclick="groupSelectedItems()" title="Gruppieren">▣ <span>Gruppieren</span></button>
-            <button onclick="ungroupSelectedItems()" title="Gruppierung lösen">▢ <span>Lösen</span></button>
-            <button onclick="toggleSelectedLock()" title="Sperren">🔒 <span>Sperren</span></button>
-          </div>
-        </div>
-
-        <div class="desktopCmdGroup">
-          <span class="desktopCmdLabel">Ebene</span>
-          <div class="desktopCmdButtons">
-            <button onclick="moveSelectedLayer(1)" title="Nach vorne">↑ <span>Vorne</span></button>
-            <button onclick="moveSelectedLayer(-1)" title="Nach hinten">↓ <span>Hinten</span></button>
-          </div>
-        </div>
-
-        <div class="desktopCmdGroup desktopCmdView">
-          <span class="desktopCmdLabel">Ansicht</span>
-          <div class="desktopCmdButtons">
-            <button onclick="fitCanvasStage()" title="An Bildschirm">⊡ <span>Anpassen</span></button>
-            <button onclick="toggleTopViewMenu()" title="Seite & Ansicht">▯ <span>Seite</span></button>
-            <button onclick="openShortcutHelp()" title="Tastenkürzel">⌨ <span>Shortcuts</span></button>
-          </div>
-        </div>
-      </div>
-
-      <div id="topViewMenu" class="topViewMenu">
-        <div class="topViewSection">
-          <b>Ansicht</b>
-          <div class="topViewButtons">
-            <button onclick="fitCanvasStage()">⊡ An Bildschirm</button>
-            <button onclick="v181OpenPreview()">◫ Nur ansehen</button>
-            <button onclick="setCanvasZoom(.5)">50%</button>
-            <button onclick="setCanvasZoom(.75)">75%</button>
-            <button onclick="setCanvasZoom(1)">100%</button>
-          </div>
-        </div>
-        <div class="topViewSection">
-          <b>Seite</b>
-          <div class="topViewButtons orientationButtons">
-            <button id="portraitBtn" onclick="setCanvasOrientation('portrait')">▯ Hochformat</button>
-            <button id="landscapeBtn" onclick="setCanvasOrientation('landscape')">▭ Querformat</button>
-          </div>
-        </div>
-        <div class="topViewSection pageStyleSection">
-          <b>Seitenstil</b>
-          <div class="pageStyleGrid">
-            <label>Farbe<input id="pageColorInput" type="color" value="#ffffff" onchange="setCanvasPageStyle('color',this.value)"></label>
-            <label>Hintergrund
-              <select id="pagePatternSelect" onchange="setCanvasPageStyle('pattern',this.value)">
-                <option value="blank">Leer</option>
-                <option value="lined">Liniert</option>
-                <option value="grid">Kariert</option>
-                <option value="dots">Gepunktet</option>
-              </select>
-            </label>
-            <label id="pageSpacingLabel">Rastergröße<input id="pageSpacingInput" type="range" min="10" max="48" value="24" oninput="setCanvasPageStyle('spacing',+this.value)"><span id="pageSpacingValue">24</span></label>
-            <label>Seitenrand<input id="pageMarginInput" type="number" min="0" max="160" value="55" onchange="setCanvasPageStyle('margin',+this.value)"></label>
-          </div>
-          <div class="topViewButtons">
-            <button onclick="alignSelectedToPageMargin('left')">⇤ An linken Rand</button>
-            <button onclick="alignSelectedToPageMargin('right')">An rechten Rand ⇥</button>
-            <button onclick="fitSelectedToPageMargins()">↔ Breite bis Rand</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="canvasQuickNav" aria-label="Editor-Werkzeuge">
-  <button data-group="textLibrary" onclick="editorOpenGroup('textLibrary',this)" aria-label="Text">
-    <span class="editorNavIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14M12 5v14M8.5 19h7"/></svg></span><span>Text</span>
-  </button>
-  <button data-group="elements" onclick="editorOpenGroup('elements',this)" aria-label="Elemente">
-    <span class="editorNavIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1.4"/><circle cx="17" cy="7" r="3"/><path d="M4.5 19l3.2-5.5L11 19zM14 14h6v6h-6z"/></svg></span><span>Elemente</span>
-  </button>
-  <button data-group="templates" onclick="editorOpenGroup('templates',this)" aria-label="Vorlagen">
-    <span class="editorNavIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="4" width="12" height="15" rx="2"/><path d="M9 8h6M9 11h6M9 14h4"/></svg></span><span>Vorlagen</span>
-  </button>
-  <button data-group="pages" onclick="editorOpenGroup('pages',this)" aria-label="Seiten">
-    <span class="editorNavIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h8l3 3V20H7zM15 3.5V7h3"/></svg></span><span>Seiten</span>
-  </button>
-  <button data-group="layers" onclick="editorOpenGroup('layers',this)" aria-label="Ebenen">
-    <span class="editorNavIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4l8 4-8 4-8-4zM4 12l8 4 8-4M4 16l8 4 8-4"/></svg></span><span>Ebenen</span>
-  </button>
-</div>
-<div id="canvasQuickDrawer" class="canvasQuickDrawer"></div>
-<div id="mobileSelectionTools" class="mobileSelectionTools"></div>
-<div id="multiSelectStatus" class="multiSelectStatus"></div>
-      <input id="canvasImageInput" type="file" accept="image/*" style="display:none" onchange="if(this.files?.[0])addCanvasImage(this.files[0]);this.value=''">
-      <input id="canvasCameraInput" type="file" accept="image/*" capture="environment" style="display:none" onchange="if(this.files?.[0])addCanvasImage(this.files[0]);this.value=''">
-      <input id="canvasAnyFileInput" type="file" accept="image/*,.pdf,.doc,.docx,.ppt,.pptx,.txt" style="display:none" onchange="if(this.files?.[0])addCanvasFile(this.files[0]);this.value=''">
-      <div class="canvasViewport" id="canvasViewport">
-        <div class="canvasStage" id="canvasStage">
-          <div class="canvasPage" id="canvasPage"></div>
-          <svg id="canvasSvg" class="canvasSvg" viewBox="0 0 794 1123"></svg>
-          <div id="canvasObjects" class="canvasObjects"></div><div id="canvasGuides" class="canvasGuides"></div><div id="pathDrawHint" class="pathDrawHint" style="display:none">Mit Finger/Stift ziehen · loslassen = Pfad fertig</div>
-        </div>
-      </div>
-
-      <aside id="desktopEditorSidebar" class="desktopEditorSidebar">
-      <div id="stickerPanel" class="objectPanel" style="display:none">
-        <div class="rowBetween"><b>Sticker</b><button class="ghost" onclick="toggleStickerPanel()">Schließen</button></div>
-        <div class="stickerPicker" id="stickerPicker"></div>
-      </div>
-
-      <div class="objectPanel">
-        <div class="rowBetween"><b>Eigenschaften</b><label class="snapToggle"><input id="snapToggle" type="checkbox" checked onchange="canvasState.snap=this.checked"> Snap</label><div class="row"><button class="miniIcon" title="Sperren/Entsperren" onclick="toggleSelectedLock()"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></button><button class="miniIcon dangerMini" title="Löschen" onclick="deleteSelectedCanvasItem()"><svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M7 7l1 14h8l1-14M10 11v6M14 11v6"/></svg></button></div></div>
-        <div id="canvasInspector" class="small">Wähle einen Text, ein Bild, eine Tabelle, einen Sticker oder eine Form aus.</div>
-      </div>
-
-      <div class="objectPanel">
-        <div class="rowBetween"><b>Ebenen</b><div class="row"><button class="miniIcon" title="Nach vorne" onclick="moveSelectedLayer(1)">↑</button><button class="miniIcon" title="Nach hinten" onclick="moveSelectedLayer(-1)">↓</button></div></div>
-        <div id="layerList" class="layerList"></div>
-      </div>
-
-      <div class="objectPanel pageTemplatesPanel">
-        <div class="rowBetween"><b>Seitenvorlagen</b><div class="row"><button class="miniIcon" title="Aktuelle Seite als Vorlage speichern" onclick="saveCurrentPageTemplate()">＋</button><button class="miniIcon" title="Vorlagen verwalten" onclick="openPageTemplateManager()">⚙</button></div></div>
-        <div class="templatePicker" id="pageTemplatePicker">
-          <button class="templateCard" onclick="applyCanvasTemplate('clean')"><b>Clean Notes</b><span>klare Überschrift + Merkkasten</span></button>
-          <button class="templateCard" onclick="applyCanvasTemplate('cute')"><b>Cute Study</b><span>Pastell + Sticker + Aufgabe</span></button>
-          <button class="templateCard" onclick="applyCanvasTemplate('exam')"><b>Exam Prep</b><span>Definitionen + Aufgaben</span></button>
-          <button class="templateCard" onclick="applyCanvasTemplate('blank')"><b>Leer</b><span>komplett frei gestalten</span></button>
-        </div>
-      </div>
-      </aside>
-    </div>
-  </section>
-
+  <!-- Editor moved to editor.html -->
   <section class="view" id="view-quiz-player">
     <div class="sectionHead">
       <button class="ghost backBtn" onclick="openTopic(selectedSubjectId,selectedTopicId)">← Thema</button>
@@ -3528,7 +3365,7 @@ html,body{background:#fff7f4;}
         <button class="ghost" type="button" onclick="v171CloudRegister()">Neues Konto erstellen</button>
         <button class="ghost" type="button" onclick="v171CloudNow()">Jetzt synchronisieren</button>
       </div>
-      <div class="v171CloudInfo"><b>Geräte-Sync</b><span>Automatisch: Änderungen werden nach dem Speichern sowie beim Öffnen, Fokus und Onlinekommen zwischen deinen Geräten abgeglichen.</span></div>
+      <div class="v171CloudInfo"><b>Immer automatisch</b><span>Beim Öffnen, direkt nach Änderungen, beim Zurückkehren und regelmäßig im Vordergrund. Fächer, Themen, Lernblätter, Hausaufgaben, Tests, Noten, Karteikarten, Quizze, Editor-Inhalte, Dateien, Bilder, Schriften und Einstellungen werden gemeinsam synchronisiert.</span></div>
     </div>
   </section>
 </div>
@@ -7897,160 +7734,36 @@ button.primary,button.ghost,.iconbtn{
 
 </head><body><div class="page">${serializedCanvas()}</div><div id="buildVersionBadge" style="position:fixed;right:8px;bottom:8px;z-index:9999;font:800 9px Inter,sans-serif;color:#9b7d74;background:rgba(255,250,247,.88);border:1px solid #ead4cd;border-radius:999px;padding:5px 8px;pointer-events:none">V182</div>
 
-
-<!-- ===== Studia V271 · viewport-safe dialogs + full formula editor recovery ===== -->
-<style id="studia-v271-dialog-formula-recovery">
-/*
-  V271 is intentionally based on the known-good V265 build.
-  This block only resolves modal sizing/overflow conflicts introduced by the
-  many older editor layers. It does not replace the rich formula/graph logic.
-*/
-html,body{max-width:100%;overflow-x:hidden}
-#modalWrap.modalWrap.open{
-  display:flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  box-sizing:border-box!important;
-  padding:max(10px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left))!important;
-  overflow:auto!important;
-}
-#modalWrap>.modal{
-  width:min(760px,calc(100vw - 20px))!important;
-  max-width:calc(100vw - 20px)!important;
-  min-width:0!important;
-  max-height:calc(100dvh - 20px)!important;
-  height:auto!important;
-  margin:auto!important;
-  padding:clamp(14px,2vw,22px)!important;
-  box-sizing:border-box!important;
-  overflow-x:hidden!important;
-  overflow-y:auto!important;
-  overscroll-behavior:contain!important;
-  -webkit-overflow-scrolling:touch!important;
-}
-/* Formula and graph editors are allowed to use the wide workspace they were designed for. */
-#modalWrap>.modal:has(.formulaModal),
-#modalWrap>.modal:has(.visualFormulaModal),
-#modalWrap>.modal:has(.graphModal),
-#modalWrap>.modal:has(.visualGraphFunctionModal),
-#modalWrap>.modal:has(.v221GraphFormulaModal){
-  width:min(1180px,calc(100vw - 20px))!important;
-  max-width:min(1180px,calc(100vw - 20px))!important;
-}
-#modalWrap .formulaModal,
-#modalWrap .visualFormulaModal,
-#modalWrap .graphModal,
-#modalWrap .visualGraphFunctionModal,
-#modalWrap .v221GraphFormulaModal{
-  width:100%!important;
-  max-width:100%!important;
-  min-width:0!important;
-  height:auto!important;
-  max-height:none!important;
-  margin:0!important;
-  box-sizing:border-box!important;
-  overflow:visible!important;
-}
-#modalWrap .formulaModal>*,#modalWrap .graphModal>*,
-#modalWrap .visualFormulaModal>*,#modalWrap .visualGraphFunctionModal>*{
-  min-width:0!important;
-  max-width:100%!important;
-  box-sizing:border-box!important;
-}
-#modalWrap input,#modalWrap select,#modalWrap textarea,#modalWrap button{
-  max-width:100%;box-sizing:border-box;
-}
-#modalWrap .presetModalHead{position:sticky;top:-1px;z-index:20;background:rgba(255,250,246,.97);backdrop-filter:blur(12px);padding-bottom:8px}
-#modalWrap .formulaEasyHint{white-space:normal!important;overflow-wrap:anywhere!important}
-#modalWrap .formulaVisualEditor,
-#modalWrap #formulaVisualEditor,
-#modalWrap #graphFunctionVisual{
-  width:100%!important;
-  max-width:100%!important;
-  min-width:0!important;
-  overflow-x:auto!important;
-  overflow-y:visible!important;
-  white-space:normal!important;
-  box-sizing:border-box!important;
-}
-#modalWrap .formulaInlineOps{display:flex!important;flex-wrap:wrap!important;gap:7px!important;max-width:100%!important}
-#modalWrap .formulaInlineOps button{flex:1 1 64px!important;min-width:52px!important}
-#modalWrap .formulaToolSections{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important;width:100%!important;min-width:0!important}
-#modalWrap .formulaToolSection{min-width:0!important;overflow:hidden!important}
-#modalWrap .formulaTemplateGrid,
-#modalWrap .compactFormulaGrid{
-  display:grid!important;
-  grid-template-columns:repeat(auto-fit,minmax(92px,1fr))!important;
-  gap:8px!important;
-  width:100%!important;
-  min-width:0!important;
-}
-#modalWrap .formulaTemplateGrid button,
-#modalWrap .compactFormulaGrid button{min-width:0!important;width:100%!important;overflow:hidden!important}
-#modalWrap .formulaQuickExamples,
-#modalWrap .savedFormulaHead{display:flex!important;flex-wrap:wrap!important;gap:7px!important;min-width:0!important}
-#modalWrap .savedFormulaList{max-width:100%!important;min-width:0!important;overflow-x:hidden!important}
-#modalWrap .graphBuilderLayout{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;min-width:0!important;max-width:100%!important}
-#modalWrap .graphControls,#modalWrap .graphPreviewWrap{min-width:0!important;max-width:100%!important}
-#modalWrap table{max-width:100%!important}
-#modalWrap pre,#modalWrap code{max-width:100%!important;white-space:pre-wrap!important;overflow-wrap:anywhere!important}
-#modalWrap .v135ActionRow,.modalActions,.presetModalActions{flex-wrap:wrap!important;max-width:100%!important}
-
-@media(max-width:760px){
-  #modalWrap.modalWrap.open{align-items:flex-end!important;padding:6px!important}
-  #modalWrap>.modal,
-  #modalWrap>.modal:has(.formulaModal),
-  #modalWrap>.modal:has(.visualFormulaModal),
-  #modalWrap>.modal:has(.graphModal),
-  #modalWrap>.modal:has(.visualGraphFunctionModal),
-  #modalWrap>.modal:has(.v221GraphFormulaModal){
-    width:calc(100vw - 12px)!important;
-    max-width:calc(100vw - 12px)!important;
-    max-height:calc(100dvh - 12px)!important;
-    border-radius:20px 20px 12px 12px!important;
-    padding:14px!important;
+<script id="studia-v274-editor-bridge">
+(function(){
+  'use strict';
+  function openExternalEditor(sheetId){
+    try{
+      const ctx={
+        sheetId:sheetId||null,
+        subjectId:(typeof selectedSubjectId!=='undefined'?selectedSubjectId:null),
+        topicId:(typeof selectedTopicId!=='undefined'?selectedTopicId:null),
+        from:location.pathname+location.search+location.hash,
+        ts:Date.now()
+      };
+      sessionStorage.setItem('studia-editor-context-v274',JSON.stringify(ctx));
+    }catch(_){ }
+    const q=sheetId?'?sheet='+encodeURIComponent(sheetId):'';
+    location.href='editor.html'+q;
   }
-  #modalWrap .formulaToolSections{grid-template-columns:1fr!important}
-  #modalWrap .formulaTemplateGrid,#modalWrap .compactFormulaGrid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
-  #modalWrap .graphBuilderLayout{grid-template-columns:1fr!important}
-  #modalWrap .graphPreviewWrap{min-height:260px!important}
-  #modalWrap .presetModalHead{top:-14px;margin:-14px -14px 6px;padding:14px 14px 8px!important}
-}
-@media(max-width:420px){
-  #modalWrap .formulaTemplateGrid,#modalWrap .compactFormulaGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
-}
-</style>
-<script id="studia-v271-dialog-formula-recovery-script">
-(()=>{
- 'use strict';
- if(window.__STUDIA_V271__)return;window.__STUDIA_V271__=true;
- const q=(s,r=document)=>r?.querySelector?.(s)||null;
- function normalizeModal(){
-   const wrap=q('#modalWrap');if(!wrap||!wrap.classList.contains('open'))return;
-   const modal=q('.modal',wrap);if(!modal)return;
-   modal.scrollLeft=0;
-   // Old layers sometimes leave explicit inline widths/min-widths on rich editors.
-   for(const el of modal.querySelectorAll('.formulaModal,.visualFormulaModal,.graphModal,.visualGraphFunctionModal,.v221GraphFormulaModal,.formulaToolSections,.formulaTemplateGrid,.compactFormulaGrid,.graphBuilderLayout')){
-     el.style.removeProperty('min-width');
-     if(/formulaModal|visualFormulaModal|graphModal|visualGraphFunctionModal|v221GraphFormulaModal/.test(el.className)) el.style.removeProperty('width');
-   }
- }
- const mo=new MutationObserver(()=>requestAnimationFrame(normalizeModal));
- mo.observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['class','style']});
- document.addEventListener('click',()=>setTimeout(normalizeModal,0),true);
- window.addEventListener('resize',()=>setTimeout(normalizeModal,30));
- // Keep the complete V265+ formula editor (advanced brackets, fractions, roots,
- // exponents, indices, period marks, arrows/symbols, examples and favorites).
- const oldOpen=window.openFormulaDialog;
- if(typeof oldOpen==='function'){
-   window.openFormulaDialog=function(){const r=oldOpen.apply(this,arguments);setTimeout(normalizeModal,20);setTimeout(normalizeModal,140);return r};
-   try{openFormulaDialog=window.openFormulaDialog}catch(_){}
- }
- const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 271';
- [50,350,1000].forEach(t=>setTimeout(()=>{normalizeModal();const e=q('#headerEyebrow');if(e)e.textContent='VERSION 271'},t));
+  window.openStudySheetEditor=openExternalEditor;
+  // A few old aliases call the editor directly.
+  window.v97OpenSheet=function(id){try{window.closeModal?.()}catch(_){} openExternalEditor(id)};
+  window.v97NewSheet=function(){try{window.closeModal?.()}catch(_){} openExternalEditor(null)};
+  window.v102StartCanvasResource=(function(old){return function(type){
+    try{
+      const name=String(document.getElementById('v102ResourceName')?.value||'').trim()||({sheet:'Lernblatt',homework:'Hausaufgabe',worksheet:'Arbeitsblatt'}[type]||'Lernblatt');
+      sessionStorage.setItem('studia-editor-new-resource-v274',JSON.stringify({type,name,ts:Date.now()}));
+      window.closeModal?.(); openExternalEditor(null);
+    }catch(e){ if(old) return old.apply(this,arguments); }
+  }})(window.v102StartCanvasResource);
 })();
 </script>
-<!-- ===== /Studia V271 ===== -->
 
 </body></html>`;
  const blob=new Blob([html],{type:"text/html"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=title.replace(/[^\wäöüÄÖÜß-]+/g,"_")+".html";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
@@ -8975,7 +8688,39 @@ button.primary,button.ghost,.iconbtn{
 }
 </style>
 
-</head><body><div class="page">${serializedCanvas()}</div></body></html>`);w.document.close();setTimeout(()=>w.print(),300)
+</head><body><div class="page">${serializedCanvas()}</div>
+<script id="studia-v274-editor-bridge">
+(function(){
+  'use strict';
+  function openExternalEditor(sheetId){
+    try{
+      const ctx={
+        sheetId:sheetId||null,
+        subjectId:(typeof selectedSubjectId!=='undefined'?selectedSubjectId:null),
+        topicId:(typeof selectedTopicId!=='undefined'?selectedTopicId:null),
+        from:location.pathname+location.search+location.hash,
+        ts:Date.now()
+      };
+      sessionStorage.setItem('studia-editor-context-v274',JSON.stringify(ctx));
+    }catch(_){ }
+    const q=sheetId?'?sheet='+encodeURIComponent(sheetId):'';
+    location.href='editor.html'+q;
+  }
+  window.openStudySheetEditor=openExternalEditor;
+  // A few old aliases call the editor directly.
+  window.v97OpenSheet=function(id){try{window.closeModal?.()}catch(_){} openExternalEditor(id)};
+  window.v97NewSheet=function(){try{window.closeModal?.()}catch(_){} openExternalEditor(null)};
+  window.v102StartCanvasResource=(function(old){return function(type){
+    try{
+      const name=String(document.getElementById('v102ResourceName')?.value||'').trim()||({sheet:'Lernblatt',homework:'Hausaufgabe',worksheet:'Arbeitsblatt'}[type]||'Lernblatt');
+      sessionStorage.setItem('studia-editor-new-resource-v274',JSON.stringify({type,name,ts:Date.now()}));
+      window.closeModal?.(); openExternalEditor(null);
+    }catch(e){ if(old) return old.apply(this,arguments); }
+  }})(window.v102StartCanvasResource);
+})();
+</script>
+
+</body></html>`);w.document.close();setTimeout(()=>w.print(),300)
 }
 
 function customPageTemplates(){
@@ -9351,12 +9096,10 @@ function renderHome(){
    return hh*60+mm;
  };
  const minsText=n=>{
-   const sec=Math.max(0,Math.ceil(Number(n||0)*60));
-   const m=Math.floor(sec/60),s=sec%60;
-   return `${m} Min. ${String(s).padStart(2,"0")} Sek.`;
+   n=Math.max(0,Math.round(n));
+   return n===1?"1 Min.":`${n} Min.`;
  };
- const __now=new Date();
- const nowMin=__now.getHours()*60+__now.getMinutes()+__now.getSeconds()/60;
+ const nowMin=new Date().getHours()*60+new Date().getMinutes();
  const todayCode=dayCode(new Date());
  const todayLessons=expandLessonsForCountdown(mergeLessons(stableTimetableDay(
    applyEffectiveDisplayTimes((data.timetable.lessons||[]).filter(x=>x.day===todayCode))
@@ -9364,7 +9107,7 @@ function renderHome(){
  const breaksToday=getActivePauses();
  $("#todayDate").textContent=new Date().toLocaleDateString("de-DE",{weekday:"long",day:"2-digit",month:"long"});
  const today=dayCode(new Date()), lessons=fillCancelledSlots(mergeLessons((data.timetable.lessons||[]).filter(x=>x.day===today)));
- const now=new Date(),min=now.getHours()*60+now.getMinutes()+now.getSeconds()/60;
+ const now=new Date(),min=now.getHours()*60+now.getMinutes();
  let next=todayLessons.find(x=>x.raw!=="__ENTFALL__"&&timeToMin(x.end)>min);
  if(next){
   const raw=String(next.raw||"").replace(/\s+/g," ").trim();
@@ -10323,7 +10066,7 @@ window.enableNotifications=async function(){
  const perm=await Notification.requestPermission(); updateNotificationUI();
  if(perm==="granted"){
    const reg=await navigator.serviceWorker.ready;
-   await reg.showNotification("Studia 🌷",{body:"Erinnerungen sind jetzt aktiviert.",icon:"./assets/icons/icon-192.png"});
+   await reg.showNotification("Studia 🌷",{body:"Erinnerungen sind jetzt aktiviert.",icon:"./icon-192.png"});
  }
 }
 window.testNotification=async function(){
@@ -10331,7 +10074,7 @@ window.testNotification=async function(){
  if(!standalone)return alert("Bitte Studia zuerst zum Home-Bildschirm hinzufügen und von dort öffnen.");
  if(Notification.permission!=="granted")return enableNotifications();
  const reg=await navigator.serviceWorker.ready;
- await reg.showNotification("Studia 🎀",{body:"Die Test-Erinnerung funktioniert!",icon:"./assets/icons/icon-192.png"});
+ await reg.showNotification("Studia 🎀",{body:"Die Test-Erinnerung funktioniert!",icon:"./icon-192.png"});
 }
 function updateNotificationUI(){
  const el=$("#notificationState");if(!el||!("Notification" in window))return;
@@ -12693,6 +12436,38 @@ setTimeout(()=>{if(editor()){try{renderVectors()}catch(_){}installProxies()}cons
 }
 @media(min-width:980px) and (max-width:1180px){.desktopWeekGrid{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
 </style>
+
+
+<script id="studia-v274-editor-bridge">
+(function(){
+  'use strict';
+  function openExternalEditor(sheetId){
+    try{
+      const ctx={
+        sheetId:sheetId||null,
+        subjectId:(typeof selectedSubjectId!=='undefined'?selectedSubjectId:null),
+        topicId:(typeof selectedTopicId!=='undefined'?selectedTopicId:null),
+        from:location.pathname+location.search+location.hash,
+        ts:Date.now()
+      };
+      sessionStorage.setItem('studia-editor-context-v274',JSON.stringify(ctx));
+    }catch(_){ }
+    const q=sheetId?'?sheet='+encodeURIComponent(sheetId):'';
+    location.href='editor.html'+q;
+  }
+  window.openStudySheetEditor=openExternalEditor;
+  // A few old aliases call the editor directly.
+  window.v97OpenSheet=function(id){try{window.closeModal?.()}catch(_){} openExternalEditor(id)};
+  window.v97NewSheet=function(){try{window.closeModal?.()}catch(_){} openExternalEditor(null)};
+  window.v102StartCanvasResource=(function(old){return function(type){
+    try{
+      const name=String(document.getElementById('v102ResourceName')?.value||'').trim()||({sheet:'Lernblatt',homework:'Hausaufgabe',worksheet:'Arbeitsblatt'}[type]||'Lernblatt');
+      sessionStorage.setItem('studia-editor-new-resource-v274',JSON.stringify({type,name,ts:Date.now()}));
+      window.closeModal?.(); openExternalEditor(null);
+    }catch(e){ if(old) return old.apply(this,arguments); }
+  }})(window.v102StartCanvasResource);
+})();
+</script>
 
 </body>
 </html><style id="v93-bottom-nav-stability">
@@ -16283,143 +16058,8 @@ setTimeout(reconcile,980);
 })();
 </script>
 <!-- ===== /Studia V134 ===== -->
-<link rel="stylesheet" href="editor.css?v=202">
-<!-- Studia V243: cloud transport is inlined so GitHub Pages cannot miss google-sync-config.js -->
-<script id="studia-v243-inline-cloud">
-/* Studia V242 — single cloud transport. No stacked wrappers. */
-(()=>{
-'use strict';
-if(window.__STUDIA_V242_CLOUD__) return;
-window.__STUDIA_V242_CLOUD__=true;
-const $=s=>document.querySelector(s);
-const URL_KEYS=['studia-v242-script-url','studia-v234-script-url','studia-script-url','schoolhub-script-url','google-sync-script-url'];
-const TOKEN_KEYS=['studia-v242-token','studia-v234-token','studia-token','schoolhub-token','cloud-token'];
-const USER_KEYS=['studia-v242-user','studia-v234-user','studia-user','schoolhub-user'];
-const DIRTY='studia-v242-dirty';
-let dirtyTimer=0;
-const safeJSON=(s,f=null)=>{try{return JSON.parse(s)}catch(_){return f}};
-function scanUrl(){
-  const inp=$('#v150ScriptUrl'); if(inp?.value?.trim()) return inp.value.trim();
-  for(const k of URL_KEYS){const v=String(localStorage.getItem(k)||'').trim();if(/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec/i.test(v)) return v}
-  for(let i=0;i<localStorage.length;i++){
-    const v=String(localStorage.getItem(localStorage.key(i)||'')||'');
-    const m=v.match(/https:\/\/script\.google\.com\/macros\/s\/[^"'\s]+\/exec/i); if(m) return m[0];
-  }
-  return '';
-}
-function scanToken(){
-  for(const k of TOKEN_KEYS){const v=String(localStorage.getItem(k)||'');if(v.length>20)return v}
-  for(let i=0;i<localStorage.length;i++){
-    const k=String(localStorage.key(i)||''),raw=String(localStorage.getItem(k)||'');
-    if(!/(studia|schoolhub|schoolbloom|cloud).*(token|session)|(token|session).*(studia|schoolhub|schoolbloom|cloud)/i.test(k)) continue;
-    if(raw.length>20&&!raw.startsWith('{')&&!raw.startsWith('[')) return raw;
-    const o=safeJSON(raw); const t=o?.token||o?.sessionToken||o?.session; if(typeof t==='string'&&t.length>20)return t;
-  }
-  return '';
-}
-function config(){return {url:scanUrl(),token:scanToken()}}
-function rememberUrl(url){url=String(url||'').trim();if(!url)return;for(const k of URL_KEYS)localStorage.setItem(k,url);const i=$('#v150ScriptUrl');if(i)i.value=url}
-function rememberAuth(r){if(r?.token)for(const k of TOKEN_KEYS)localStorage.setItem(k,String(r.token));if(r?.user)for(const k of USER_KEYS)localStorage.setItem(k,JSON.stringify(r.user))}
-function rememberedUser(){for(const k of USER_KEYS){const o=safeJSON(localStorage.getItem(k)||'');if(o)return o}return null}
-function normalizeUrl(url){return String(url||'').trim().replace(/\?.*$/,'')}
-function setStatus(text,bad=false){
-  const s=String(text||'');
-  const a=$('#v150AccountStatus'); if(a){a.textContent=s;a.classList.toggle('error',!!bad)}
-  const b=$('#v242DesktopSync small'); if(b)b.textContent=s;
-  const c=$('#v242SyncStatus'); if(c){c.textContent=s;c.classList.toggle('bad',!!bad)}
-  const p=$('#v242PullSync'); if(p&&/Synchron/i.test(s))p.textContent=s;
-}
-function timeout(ms){const c=new AbortController(),id=setTimeout(()=>c.abort(),ms);return {signal:c.signal,done:()=>clearTimeout(id)}}
-async function parse(res){
-  const txt=await res.text(); let out;
-  try{out=JSON.parse(txt)}catch(_){
-    if(/<!doctype|<html/i.test(txt))throw new Error('Cloud-Web-App ist nicht öffentlich erreichbar oder die Deployment-URL ist falsch');
-    throw new Error('Cloud antwortet nicht mit gültigem JSON');
-  }
-  if(!out?.ok){const msg=String(out?.error||`Serverfehler ${res.status}`);const e=new Error(msg);e.status=out?.status||res.status;throw e}
-  return out;
-}
-async function runCloudRequest(makeRequest,ms,label){
-  const t=timeout(ms);
-  try{return await parse(await makeRequest(t.signal))}
-  catch(e){
-    if(e?.name==='AbortError')throw new Error(`${label} dauert zu lange`);
-    if(e instanceof TypeError)throw new Error(`${label} nicht erreichbar`);
-    throw e;
-  }finally{t.done()}
-}
-async function get(action,params={}){
-  const c=config(); if(!c.url)throw new Error('Server-Script-Service-URL fehlt');
-  const u=new URL(normalizeUrl(c.url));u.searchParams.set('action',action);u.searchParams.set('_',String(Date.now()));
-  for(const[k,v]of Object.entries(params))if(v!=null&&v!=='')u.searchParams.set(k,String(v));
-  const label=action==='state'?'Daten laden':action==='me'?'Anmeldung prüfen':action==='health'?'Server prüfen':action;
-  return runCloudRequest(signal=>fetch(u.toString(),{method:'GET',cache:'no-store',redirect:'follow',credentials:'omit',signal}),8000,label);
-}
-async function post(action,payload={}){
-  const c=config(); if(!c.url)throw new Error('Server-Script-Service-URL fehlt');
-  const label=action==='sync'?'Geräte synchronisieren':action==='state_put'?'Daten speichern':action==='login'?'Anmeldung':action==='register'?'Registrierung':action;
-  const ms=action==='sync'?25000:(action==='state_put'?12000:10000);
-  return runCloudRequest(signal=>fetch(normalizeUrl(c.url),{method:'POST',cache:'no-store',redirect:'follow',credentials:'omit',signal,headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action,...payload})}),ms,label);
-}
-async function health(){return get('health')}
-async function me(){const c=config();if(!c.token)throw new Error('Nicht angemeldet');return get('me',{token:c.token})}
-async function getState(){const c=config();if(!c.token)throw new Error('Nicht angemeldet');return get('state',{token:c.token})}
-async function putState(data){const c=config();if(!c.token)throw new Error('Nicht angemeldet');return post('state_put',{token:c.token,data})}
-function v247BytesToB64(bytes){let s='';const step=0x8000;for(let i=0;i<bytes.length;i+=step)s+=String.fromCharCode(...bytes.subarray(i,i+step));return btoa(s)}
-function v247B64ToBytes(b64){const s=atob(String(b64||'')),a=new Uint8Array(s.length);for(let i=0;i<s.length;i++)a[i]=s.charCodeAt(i);return a}
-async function v247GzipText(text){if(typeof CompressionStream!=='function')return '';const cs=new CompressionStream('gzip');const ab=await new Response(new Blob([String(text)]).stream().pipeThrough(cs)).arrayBuffer();return v247BytesToB64(new Uint8Array(ab))}
-async function v247UngzipText(b64){if(typeof DecompressionStream!=='function')throw new Error('Browser kann Cloud-Daten nicht entpacken');const ds=new DecompressionStream('gzip');return await new Response(new Blob([v247B64ToBytes(b64)]).stream().pipeThrough(ds)).text()}
-async function v247BridgeSync(data){
-  const c=config();if(!c.url)throw new Error('Server-Script-Service-URL fehlt');if(!c.token)throw new Error('Nicht angemeldet');
-  const id='v247-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);
-  const name='studiaBridge_'+id.replace(/[^a-z0-9_]/gi,'');
-  const frame=document.createElement('iframe');frame.name=name;frame.style.cssText='position:fixed;width:1px;height:1px;left:-9999px;top:-9999px;border:0;opacity:0;pointer-events:none';
-  const form=document.createElement('form');form.method='POST';form.action=normalizeUrl(c.url);form.target=name;form.enctype='application/x-www-form-urlencoded';form.acceptCharset='UTF-8';form.style.display='none';
-  const add=(k,v)=>{const i=document.createElement('input');i.type='hidden';i.name=k;i.value=String(v??'');form.appendChild(i)};
-  add('action','sync_bridge');add('token',c.token);add('bridgeId',id);add('replyGzip',typeof DecompressionStream==='function'?'1':'0');
-  const raw=JSON.stringify(data||{});let gz='';try{gz=await v247GzipText(raw)}catch(_){}
-  if(gz&&gz.length<raw.length){add('dataGzip',gz);add('encoding','gzip-base64')}else add('data',raw);
-  return await new Promise((resolve,reject)=>{
-    let done=false;const cleanup=()=>{if(done)return;done=true;clearTimeout(timer);window.removeEventListener('message',onmsg);setTimeout(()=>{form.remove();frame.remove()},0)};
-    const finishErr=e=>{cleanup();reject(e instanceof Error?e:new Error(String(e||'Sync fehlgeschlagen')))};
-    const onmsg=async ev=>{if(ev.source!==frame.contentWindow)return;const m=ev.data;if(!m||m.type!=='studia-sync-bridge'||m.id!==id)return;try{const p=m.payload||{};if(!p.ok)throw new Error(String(p.error||'Sync fehlgeschlagen'));if(p.dataGzip){p.data=JSON.parse(await v247UngzipText(p.dataGzip));delete p.dataGzip}cleanup();resolve(p)}catch(e){finishErr(e)}};
-    const timer=setTimeout(()=>finishErr(new Error('Cloud antwortet nicht · Apps-Script-Bereitstellung prüfen')),18000);
-    window.addEventListener('message',onmsg);document.body.append(frame,form);try{form.submit()}catch(e){finishErr(e)}
-  });
-}
-async function syncState(data){return v247BridgeSync(data)}
-async function login(username,password){const r=await post('login',{username,password});rememberAuth(r);return r}
-async function register(username,password){const r=await post('register',{username,password});rememberAuth(r);return r}
-window.StudiaCloud={config,rememberUrl,rememberAuth,rememberedUser,health,me,getState,putState,syncState,login,register,setStatus};
-window.GOOGLE_SYNC_CONFIG=window.GOOGLE_SYNC_CONFIG||{};
-try{Object.defineProperty(window.GOOGLE_SYNC_CONFIG,'scriptUrl',{configurable:true,get:scanUrl,set:rememberUrl})}catch(_){window.GOOGLE_SYNC_CONFIG.scriptUrl=scanUrl()}
-window.v150MarkDirty=function(delay=700){
-  localStorage.setItem(DIRTY,'1');clearTimeout(dirtyTimer);
-  try{document.getElementById('v242DesktopSync')?.classList.add('dirty')}catch(_){}
-};
-window.v150CloudDirty=()=>localStorage.getItem(DIRTY)==='1';
-window.v150ClearDirty=()=>localStorage.setItem(DIRTY,'0');
-window.v171CloudLogin=async function(){
-  try{
-    const url=$('#v150ScriptUrl')?.value?.trim()||scanUrl(),username=$('#v150Username')?.value?.trim()||'',password=$('#v150Password')?.value||'';
-    if(!url)throw new Error('Server-Script-Service-URL fehlt');if(!username||!password)throw new Error('Benutzername und Passwort eingeben');
-    rememberUrl(url);setStatus('Verbindung wird geprüft …');await health();const r=await login(username,password);setStatus(`Angemeldet als ${r.user?.username||username} ✓`);localStorage.setItem(DIRTY,'1');await window.studiaSyncNow?.(true);return r;
-  }catch(e){setStatus(String(e?.message||e),true);try{window.cuteToast?.('Sync: '+String(e?.message||e))}catch(_){}throw e}
-};
-window.v171CloudRegister=async function(){
-  try{
-    const url=$('#v150ScriptUrl')?.value?.trim()||scanUrl(),username=$('#v150Username')?.value?.trim()||'',password=$('#v150Password')?.value||'';
-    if(!url)throw new Error('Server-Script-Service-URL fehlt');if(!username||!password)throw new Error('Benutzername und Passwort eingeben');
-    rememberUrl(url);setStatus('Konto wird erstellt …');await health();const r=await register(username,password);setStatus(`Konto ${r.user?.username||username} erstellt ✓`);if(r.recoveryCode)alert('Wiederherstellungscode — sicher speichern:\n\n'+r.recoveryCode);localStorage.setItem(DIRTY,'1');await window.studiaSyncNow?.(true);return r;
-  }catch(e){setStatus(String(e?.message||e),true);throw e}
-};
-function hydrate(){const url=scanUrl();if(url)rememberUrl(url);const u=rememberedUser();if(url&&scanToken())setStatus(u?.username?`Angemeldet als ${u.username}`:'Angemeldet · bereit');else setStatus('Noch nicht verbunden.')}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',hydrate,{once:true});else hydrate();
-})();
-
-</script>
-<!-- V248: legacy external editor.js disabled; current editor code is inline -->
-
+<script src="google-sync-config.js?v=274"></script>
+<script src="google-sync.js?v=274"></script>
 <style id="v181-desktop-stability-style">
 @media(min-width:900px){
   /* One desktop interaction surface only. Legacy transparent layers caused text drag/selection conflicts. */
@@ -16572,8 +16212,6 @@ async function cloneAllPages181(){
  }finally{v96LoadPageData(canvasState.pages[active]);canvasState.activePage=active;Object.assign(canvasState,selection,savedRuntime);renderCanvasObjects();renderVectors();renderCanvasInspector();renderLayerList();updateHistoryButtons();v96RenderPageStrip?.();window.restoreCanvasView?.(camera)}
  return out;
 }
-/* V237: expose the already-working internal page cloner to the print/export layer. */
-window.cloneAllPages181=cloneAllPages181;
 window.v181OpenPreview=async function(){let host=qs('#v181Preview');if(!host){host=document.createElement('div');host.id='v181Preview';host.setAttribute('role','dialog');host.setAttribute('aria-label','Lernblatt-Vorschau');host.innerHTML='<div class="v181PreviewBar"><b>Lernblatt-Vorschau</b><button type="button">Schließen</button></div><div class="v181PreviewPages"></div>';document.body.appendChild(host);host.querySelector('button').onclick=()=>host.classList.remove('open');host.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();host.querySelector('.v181PreviewBar button').click()}});const fitPages=()=>{if(!host.classList.contains('open'))return;host.querySelectorAll('.v181PreviewPage').forEach(c=>{const scale=Math.min(1,(innerWidth-64)/parseFloat(c.style.width),(innerHeight-120)/parseFloat(c.style.height));c.style.setProperty('zoom',String(Math.max(.1,scale)),'important')})};host.fitPages=fitPages;window.addEventListener('resize',fitPages);host.addEventListener('click',e=>{const a=e.target.closest('a[data-studia-target]');if(!a)return;e.preventDefault();const type=a.dataset.studiaType,id=a.dataset.studiaTarget;host.querySelector('.v181PreviewBar button').click();if(type==='sheet'){openStudySheetEditor(id);setTimeout(()=>window.v181OpenPreview?.(),500)}else if(type==='quiz')startQuiz(id);else if(type==='task')openView('tasks')})}const pages=host.querySelector('.v181PreviewPages');pages.innerHTML='<div style="padding:40px">Seiten werden geladen …</div>';host.classList.add('open');const clones=await cloneAllPages181();pages.replaceChildren(...clones);host.fitPages();host.querySelector('.v181PreviewBar button').focus()};
 
 /* Exact-ish multi-page print: clone the real rendered page rather than re-drawing a simplified model. */
@@ -16590,7 +16228,39 @@ window.printCanvasSheet=async function(){
    '.printRoot{display:grid;justify-items:center;gap:24px;padding:24px;overflow:auto}.v181PreviewPage{flex:none;break-after:page;page-break-after:always}.v181PreviewPage:last-child{break-after:auto;page-break-after:auto}'+
    '.v181PreviewPage,.v181PreviewPage *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;forced-color-adjust:none!important}'+
    '@media print{html,body{background:#fff!important}.toolbar{display:none!important}.printRoot{display:block;margin:0;padding:0;overflow:visible;justify-items:start}.v181PreviewPage{justify-self:start!important}}'+
-   '</style></head><body><header class="toolbar"><b>Druckvorschau · nur das Lernblatt</b><button id="print">Drucken</button><button id="close">Schließen</button></header><main class="printRoot">'+clones.map(c=>c.outerHTML).join('')+'</main></body></html>');w.document.close();
+   '</style></head><body><header class="toolbar"><b>Druckvorschau · nur das Lernblatt</b><button id="print">Drucken</button><button id="close">Schließen</button></header><main class="printRoot">'+clones.map(c=>c.outerHTML).join('')+'</main>
+<script id="studia-v274-editor-bridge">
+(function(){
+  'use strict';
+  function openExternalEditor(sheetId){
+    try{
+      const ctx={
+        sheetId:sheetId||null,
+        subjectId:(typeof selectedSubjectId!=='undefined'?selectedSubjectId:null),
+        topicId:(typeof selectedTopicId!=='undefined'?selectedTopicId:null),
+        from:location.pathname+location.search+location.hash,
+        ts:Date.now()
+      };
+      sessionStorage.setItem('studia-editor-context-v274',JSON.stringify(ctx));
+    }catch(_){ }
+    const q=sheetId?'?sheet='+encodeURIComponent(sheetId):'';
+    location.href='editor.html'+q;
+  }
+  window.openStudySheetEditor=openExternalEditor;
+  // A few old aliases call the editor directly.
+  window.v97OpenSheet=function(id){try{window.closeModal?.()}catch(_){} openExternalEditor(id)};
+  window.v97NewSheet=function(){try{window.closeModal?.()}catch(_){} openExternalEditor(null)};
+  window.v102StartCanvasResource=(function(old){return function(type){
+    try{
+      const name=String(document.getElementById('v102ResourceName')?.value||'').trim()||({sheet:'Lernblatt',homework:'Hausaufgabe',worksheet:'Arbeitsblatt'}[type]||'Lernblatt');
+      sessionStorage.setItem('studia-editor-new-resource-v274',JSON.stringify({type,name,ts:Date.now()}));
+      window.closeModal?.(); openExternalEditor(null);
+    }catch(e){ if(old) return old.apply(this,arguments); }
+  }})(window.v102StartCanvasResource);
+})();
+</script>
+
+</body></html>');w.document.close();
   w.document.querySelector('#close').onclick=()=>w.close();w.document.querySelector('#print').onclick=async()=>{await w.document.fonts.ready;await Promise.all([...w.document.images].map(img=>img.complete?Promise.resolve():new Promise(r=>{img.onload=r;img.onerror=r})));w.focus();w.print()};w.focus();
  }catch(e){w.close();console.error(e);alert('Die Druckvorschau konnte nicht erstellt werden. Bitte versuche es erneut.')}
 };
@@ -17590,7 +17260,15 @@ window.addEventListener('resize',()=>setTimeout(reconcile193,100));document.addE
   // Use the existing safe account-sync controller for pulls/reconciliation.
   // It is throttled so opening/focusing the app is instant without hammering
   // the Apps Script backend.
-  function cloudKick(force){ return; }
+  function cloudKick(force){
+    if(!navigator.onLine||document.visibilityState==='hidden')return;
+    var now=Date.now();
+    if(!force&&now-lastCloudKick<8000)return;
+    // Give a fresh local edit time to reach the dirty queue first.
+    if(now-lastLocalMutation<450)return;
+    lastCloudKick=now;
+    try{ if(typeof window.v171CloudNow==='function')window.v171CloudNow(); }catch(_){ }
+  }
 
   function planNeedsRefresh(){
     var tt=window.data&&window.data.timetable;
@@ -17624,18 +17302,18 @@ window.addEventListener('resize',()=>setTimeout(reconcile193,100));document.addE
     if(d&&d.open&&!d.contains(ev.target))d.open=false;
   },true);
 
-  window.addEventListener('online',function(){setTimeout(function(){maybeRefreshPlan()},120)});
-  window.addEventListener('pageshow',function(){setTimeout(function(){installSyncHooks();maybeRefreshPlan()},220)});
-  window.addEventListener('focus',function(){setTimeout(function(){maybeRefreshPlan()},180)});
-  document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')setTimeout(function(){maybeRefreshPlan()},180)});
+  window.addEventListener('online',function(){setTimeout(function(){cloudKick(true);maybeRefreshPlan()},120)});
+  window.addEventListener('pageshow',function(){setTimeout(function(){installSyncHooks();cloudKick(true);maybeRefreshPlan()},220)});
+  window.addEventListener('focus',function(){setTimeout(function(){cloudKick(false);maybeRefreshPlan()},180)});
+  document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')setTimeout(function(){cloudKick(false);maybeRefreshPlan()},180)});
   window.addEventListener('resize',function(){setTimeout(markPlanView,0)});
 
   // Regular foreground reconciliation. Local edits are pushed immediately by
   // v150MarkDirty; this interval mainly notices edits made on another device.
-  setInterval(function(){installSyncHooks()},8000);
+  setInterval(function(){installSyncHooks();cloudKick(false)},8000);
 
   [0,180,700,1800,4200].forEach(function(t){setTimeout(function(){installSyncHooks();markPlanView();setVersion()},t)});
-  /* V248: no automatic cloud sync on startup */
+  setTimeout(function(){cloudKick(true)},950);
 })();
 </script>
 <!-- ===== /Studia V205 ===== -->
@@ -17841,7 +17519,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
     s.innerHTML=`<div class="v208Brand"><span class="v208BrandIcon">${svg('bunny')}</span><span class="v208BrandText"><b>Studia</b><small>PLAN · LERNEN · ERREICHEN</small></span></div>
       <div class="navList">
         ${sidebarButton('Stundenplan','cal',true,`openView('plan')`,'')}
-        ${sidebarButton('Planer','tasks',view==='tasks',`openView('tasks')`,bubble?String(bubble):'')}
+        ${sidebarButton('Aufgaben','tasks',view==='tasks',`openView('tasks')`,bubble?String(bubble):'')}
         ${sidebarButton('Lernen','learn',view==='study',`openView('study')`,'')}
         ${sidebarButton('Fächer','folder',view==='subjects',`openView('subjects')`,'')}
         ${sidebarButton('Tests','test',false,`openView('tasks')`,'')}
@@ -18083,7 +17761,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
     const app=document.querySelector('.app');if(!app)return;
     let s=document.getElementById('v209Sidebar');if(!s){s=document.createElement('aside');s.id='v209Sidebar';app.insertBefore(s,app.firstChild)}
     const bubble=taskBubble();
-    s.innerHTML=`<div class="brand" onclick="openView('home')"><span class="brandIcon">${svg('bunny')}</span><span class="brandText"><b>Studia</b><small>PLAN · LERNEN · ERREICHEN</small></span></div><div class="navList">${side('Stundenplan','cal','plan',`v210Nav('plan')`,'','plan')}${side('Planer','tasks','tasks',`v210Nav('tasks')`,bubble?String(bubble):'','tasks')}${side('Lernen','learn','study',`openView('study')`,'')}${side('Fächer','folder','subjects',`openView('subjects')`,'')}${side('Tests','test','tasks',`openView('tasks')`,'')}${side('Notizen','notes','subjects',`openView('subjects')`,'')}</div><div class="quoteBox"><span class="quoteIcon">${svg('sprout')}</span><div class="quoteText">Better<br>than<br>yesterday.</div><span class="quoteHeart">${svg('heart')}</span></div>`;
+    s.innerHTML=`<div class="brand" onclick="openView('home')"><span class="brandIcon">${svg('bunny')}</span><span class="brandText"><b>Studia</b><small>PLAN · LERNEN · ERREICHEN</small></span></div><div class="navList">${side('Stundenplan','cal','plan',`v210Nav('plan')`,'','plan')}${side('Aufgaben','tasks','tasks',`v210Nav('tasks')`,bubble?String(bubble):'','tasks')}${side('Lernen','learn','study',`openView('study')`,'')}${side('Fächer','folder','subjects',`openView('subjects')`,'')}${side('Tests','test','tasks',`openView('tasks')`,'')}${side('Notizen','notes','subjects',`openView('subjects')`,'')}</div><div class="quoteBox"><span class="quoteIcon">${svg('sprout')}</span><div class="quoteText">Better<br>than<br>yesterday.</div><span class="quoteHeart">${svg('heart')}</span></div>`;
   }
   function dateInfo(){const d=new Date();const weekday=d.toLocaleDateString('de-DE',{weekday:'long'});const full=d.toLocaleDateString('de-DE',{day:'2-digit',month:'long',year:'numeric'});return{weekday,full}}
   function ensureHomeHead(){
@@ -18306,11 +17984,10 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
     s.innerHTML=`<div class="brand" onclick="openView('home')"><span class="brandIcon">${svg('bunny')}</span><span class="brandText"><b>Studia</b><small>PLAN · LERNEN · ERREICHEN</small></span></div>
       <div class="navList">
         ${side('Stundenplan','cal','plan',`openView('plan')`,'')}
-        ${side('Planer','tasks','tasks',`openView('tasks')`,bubble?String(bubble):'')}
+        ${side('Aufgaben','tasks','tasks',`openView('tasks')`,bubble?String(bubble):'')}
         ${side('Lernen','learn',['study','learnsets'],`v210Nav('study')`,'','study')}
         ${side('Fächer','folder',['subjects','subject-detail','topic-detail','deck-detail'],`v210Nav('subjects')`,'','subjects')}
         ${side('Tests','test','__never__',`v210OpenTests()`,'','tests')}
-        ${side('Noten','test','grades',`v210Nav('grades')`,'','grades')}
         ${side('Notizen','notes','__never__',`v210OpenNotes()`,'','notes')}
         <div class="navDivider"></div>
         ${side('Fehltage','dayoff','absence',`v210Nav('absence')`,'','absence')}
@@ -18643,7 +18320,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
       const rawDay=stableTimetableDay(applyEffectiveDisplayTimes(source.filter(x=>x.day===day))).filter(x=>toMin(x.end)>tl.start&&toMin(x.start)<tl.end);const special=rawDay.filter(x=>x.specialOnly),normal=rawDay.filter(x=>!x.specialOnly);const lines=tl.labels.map(t=>`<div class="v210GridLine" style="top:${pos(t)}px"></div>`).join('');
       const pauses=(typeof getActivePauses==='function'?getActivePauses():[]).filter(p=>toMin(p.end)>tl.start&&toMin(p.start)<tl.end).map(p=>{const n=new Date(),now=n.getHours()*60+n.getMinutes(),active=day===today&&toMin(p.start)<=now&&now<toMin(p.end);return `<div class="v210PauseBand ${active?'current':''}" style="top:${Math.max(0,pos(p.start))}px;height:${Math.max(10,pos(p.end)-pos(p.start))}px">${active?'JETZT · ':''}${esc(p.label||'Pause')}</div>`}).join('');
       if(special.length&&!normal.length){const info=special.map(x=>`<div class="v210Special"><b>Info</b>${esc(cleanPdfCellText(x.raw||''))}</div>`).join('');return `<div class="v210DayBody" style="height:${bodyHeight}px">${lines}${pauses}${info}</div>`}
-      const merged=expandLessonsForVisibleBreaks(mergeLessons(rawDay.filter(x=>timetableViewMode==='basis'?!x.cancelledFromBasis:true)));const cards=merged.map(l=>{const p=splitCell(l.raw||''),altRaw=(Array.isArray(l.duplicates)&&l.duplicates.length?l.duplicates[0]?.raw:'')||l.changedFromRaw||'',alt=altRaw?splitCell(altRaw):{},room=String(p.room||alt.room||l.room||'').trim(),title=planTitle(p.subject||l.raw||''),badge=changeBadge(l,p),cancelled=badge==='ENTFÄLLT',top=Math.max(0,pos(l.start))+4,height=Math.max(44,Math.round((toMin(l.end)-toMin(l.start))*px)-7),compact=height<70,current=!cancelled&&typeof isLessonCurrentNow==='function'&&isLessonCurrentNow(l),teacher=String(p.teacher||p.meta||alt.teacher||alt.meta||'').trim(),color=getColor(title);return `<button class="v210Lesson ${compact?'compact':''} ${current?'current':''} ${cancelled?'cancelled':''} ${badge?'hasBadge':''}" style="top:${top}px;height:${height}px;--lesson-color:${esc(color)}" onclick='openLessonDetails(${JSON.stringify(JSON.stringify(l))})'>${badge?`<span class="v210Badge">${esc(badge)}</span>`:''}<span class="v210LessonIcon" style="font-size:17px">${esc(lessonSvg(title))}</span><span><span class="v210LessonTitle">${esc(title)}</span><span class="v210LessonTime">${esc(l.start)} – ${esc(l.end)}</span>${!cancelled?`<span class="v245LessonRoom">Raum ${esc(room||'—')}</span>`:''}${teacher&&!cancelled?`<span class="v210LessonMeta">${esc(teacher)}</span>`:''}${Number(l.blocks||1)>=2?`<span class="v210LessonMeta">Doppelstunde</span>`:''}</span></button>`}).join('');return `<div class="v210DayBody" style="height:${bodyHeight}px">${lines}${pauses}${cards||'<div class="v210Empty">Kein Unterricht</div>'}</div>`
+      const merged=expandLessonsForVisibleBreaks(mergeLessons(rawDay.filter(x=>timetableViewMode==='basis'?!x.cancelledFromBasis:true)));const cards=merged.map(l=>{const p=splitCell(l.raw||''),title=planTitle(p.subject||l.raw||''),badge=changeBadge(l,p),cancelled=badge==='ENTFÄLLT',top=Math.max(0,pos(l.start))+4,height=Math.max(44,Math.round((toMin(l.end)-toMin(l.start))*px)-7),compact=height<70,current=!cancelled&&typeof isLessonCurrentNow==='function'&&isLessonCurrentNow(l),meta=[p.room?('Raum '+p.room):'',p.teacher||p.meta].filter(Boolean).join(' · '),color=getColor(title);return `<button class="v210Lesson ${compact?'compact':''} ${current?'current':''} ${cancelled?'cancelled':''} ${badge?'hasBadge':''}" style="top:${top}px;height:${height}px;--lesson-color:${esc(color)}" onclick='openLessonDetails(${JSON.stringify(JSON.stringify(l))})'>${badge?`<span class="v210Badge">${esc(badge)}</span>`:''}<span class="v210LessonIcon" style="font-size:17px">${esc(lessonSvg(title))}</span><span><span class="v210LessonTitle">${esc(title)}</span><span class="v210LessonTime">${esc(l.start)} – ${esc(l.end)}</span>${meta&&!cancelled?`<span class="v210LessonMeta">${esc(meta)}</span>`:''}${Number(l.blocks||1)>=2?`<span class="v210LessonMeta">Doppelstunde</span>`:''}</span></button>`}).join('');return `<div class="v210DayBody" style="height:${bodyHeight}px">${lines}${pauses}${cards||'<div class="v210Empty">Kein Unterricht</div>'}</div>`
     }
     const heads=days.map(d=>{const i=dayOrderV212.indexOf(d);return `<div class="v210DayHead ${d===today?'today':''}"><b>${esc(d)}</b><span>${esc(dates[i].toLocaleDateString('de-DE',{day:'2-digit',month:'short'}).replace(/\.$/,''))}</span></div>`}).join('');
     const tabs=mode==='day'?`<div class="v210DayTabs">${dayOrderV212.map((d,i)=>`<button class="v210DayTab ${d===selectedDay?'active':''}" onclick="v210SetPlanDay('${d}')">${d} · ${esc(dates[i].toLocaleDateString('de-DE',{day:'2-digit',month:'short'}).replace(/\.$/,''))}</button>`).join('')}</div>`:'';
@@ -18782,12 +18459,12 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
     const old=room.querySelector('.petAvatarCute');
     if(old){
       const wrap=document.createElement('div');wrap.className='v213PandaWrap';
-      const img=document.createElement('img');img.className='v213PandaPet';img.src='assets/study-pet/panda-study.png';img.alt='StudyPet Panda';img.draggable=false;
+      const img=document.createElement('img');img.className='v213PandaPet';img.src='panda-study.png';img.alt='StudyPet Panda';img.draggable=false;
       wrap.appendChild(img);
       const bow=old.querySelector('.petBow');if(bow)wrap.appendChild(bow.cloneNode(true));
       old.replaceWith(wrap);
     }else if(!room.querySelector('.v213PandaPet')){
-      const img=document.createElement('img');img.className='v213PandaPet';img.src='assets/study-pet/panda-study.png';img.alt='StudyPet Panda';img.draggable=false;room.appendChild(img);
+      const img=document.createElement('img');img.className='v213PandaPet';img.src='panda-study.png';img.alt='StudyPet Panda';img.draggable=false;room.appendChild(img);
     }
   }
   try{
@@ -20227,7 +19904,7 @@ body.editorMode .app > .header{
       window.openView=function(name){
         const leaving=editorActive()&&name!=='sheet-editor';if(leaving)flushBeforeLeave();
         const r=baseOpenView.apply(this,arguments);
-        if(leaving){canvasLive=false;setTimeout(()=>{installCloudGuard();if(pendingCloud){pendingCloud=false;try{window.v150MarkDirty?.(0)}catch(_){}}},120)}
+        if(leaving){canvasLive=false;setTimeout(()=>{installCloudGuard();const g=window.v171CloudNow;if(pendingCloud&&typeof g==='function'){pendingCloud=false;try{g()}catch(_){}}},900)}
         return r;
       };
       try{openView=window.openView}catch(_){}
@@ -22281,353 +21958,445 @@ const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 231'};
 <!-- ===== /Studia V230 ===== -->
 
 
-
-
-
-
-<!-- ===== Studia V242 · CLEAN CORE: one sync + one print + SVG tape ===== -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<style id="studia-v242-clean-style">
-/* Same rounded UI font on phone + laptop. Document object fonts stay user controlled. */
-html,body,.app,.view,.panel,.card,.section,.modal,.nav,button,input,select,textarea,label,.small,.badge,
-#v210Sidebar,#v208Sidebar,#view-plan,.v210Lesson,.v210DayHead,.v210TimeRail,
-body.editorMode .canvasTopbar,body.editorMode .canvasQuickNav,body.editorMode .canvasQuickDrawer,
-body.editorMode #desktopEditorSidebar,body.editorMode .objectPanel,#v242DesktopSync,#v242PullSync{
-  font-family:"Nunito",ui-rounded,"SF Pro Rounded",system-ui,-apple-system,"Segoe UI",sans-serif!important;
-}
-#canvasObjects .cobj:not(.formulaObj){font-family:var(--studia-object-font,inherit)}
-@media(min-width:900px){
- #v242DesktopSync{position:fixed;right:18px;bottom:18px;z-index:10050;display:grid;place-items:center;width:42px;height:42px;padding:0;border-radius:50%;border:1px solid #ead7d1;background:rgba(255,252,249,.97);color:#775f58;box-shadow:0 8px 22px rgba(91,67,59,.10);backdrop-filter:blur(14px);font-size:10px;font-weight:900;cursor:pointer}
- #v242DesktopSync:hover{background:#fff7f5;border-color:#e4c5c1;transform:translateY(-1px)}
- #v242DesktopSync .spin{font-size:17px;line-height:1}#v242DesktopSync.syncing .spin{animation:v242spin .8s linear infinite}
- #v242DesktopSync>span:nth-child(2){display:none!important}#v242DesktopSync small{display:none!important}#v242DesktopSync.dirty{box-shadow:0 0 0 4px rgba(237,166,164,.16),0 8px 22px rgba(91,67,59,.10)}
- @keyframes v242spin{to{transform:rotate(360deg)}}
-}
-@media(max-width:899px){#v242DesktopSync{display:none!important}}
-#v242PullSync{position:fixed;left:50%;top:8px;transform:translate(-50%,-130%);z-index:10080;pointer-events:none;min-width:180px;max-width:84vw;padding:9px 14px;border-radius:999px;border:1px solid #ead8d2;background:rgba(255,252,249,.98);box-shadow:0 8px 25px rgba(91,67,59,.12);color:#826961;font:850 10px/1.2 "Nunito",sans-serif;text-align:center;transition:transform .16s ease,opacity .16s ease;opacity:0}
-#v242PullSync.show{opacity:1}#v242PullSync.ready{background:#fff2f1;border-color:#e7c6c4;color:#ad6f72}#v242PullSync.syncing{background:#f5f9ef;border-color:#dbe5c8;color:#75845b}
-#v242SyncStatus{font-size:8px;color:#8b786f;font-weight:800;margin-top:7px;word-break:break-word}#v242SyncStatus.bad{color:#b05d63}
-
-@media(min-width:900px){
- #view-plan .v245LessonRoom{display:block!important;margin-top:3px!important;font-size:8px!important;line-height:1.15!important;font-weight:850!important;color:#88746d!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
- #view-plan .v210Lesson.compact .v245LessonRoom{display:block!important;font-size:7px!important;margin-top:2px!important}
-}
-/* New tape is real SVG art. No CSS border/pseudo layer => screen and PDF match. */
-.tapeSticker{background:transparent!important;border:0!important;outline:0!important;box-shadow:none!important;overflow:visible!important}
-.tapeSticker:before,.tapeSticker:after{display:none!important;content:none!important}
-.tapeSticker>.v242TapeArt{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;display:block!important;pointer-events:none!important;overflow:visible!important;z-index:0!important}
-.tapeSticker>.rotateHandle,.tapeSticker>.resizeHandle{z-index:3!important}
-</style>
-<script id="studia-v242-clean-core">
-(()=>{
-'use strict';
-if(window.__STUDIA_V242_CORE__)return;window.__STUDIA_V242_CORE__=true;
-const q=(s,r=document)=>r?.querySelector?.(s)||null,qa=(s,r=document)=>r?.querySelectorAll?[...r.querySelectorAll(s)]:[];
-const clone=x=>{try{return structuredClone(x)}catch(_){try{return JSON.parse(JSON.stringify(x))}catch(__){return x}}};
-const getData=()=>{try{return data}catch(_){return window.data||{}}};
-const setData=v=>{try{data=v}catch(_){window.data=v}};
-const storeKey=()=>{try{return KEY}catch(_){return 'schoolhub-v1'}};
-const META='__studiaSyncMeta',UPDATED='__studiaUpdatedAt',BASE='studia-v242-last-synced-state';
-const TRACKED=['homework','tests','writtenTests','grades','flashcards','subjects','absences','studySessions','reminders','flashDecks','quizzes','studySheets'];
-let syncBusy=false,lastSyncAt=0,pullStart=null,pullReady=false,maintainQueued=false;
-function clean(v){if(Array.isArray(v))return v.map(clean);if(v&&typeof v==='object'){const o={};for(const[k,x]of Object.entries(v)){if(k===META||k===UPDATED)continue;o[k]=clean(x)}return o}return v}
-function same(a,b){try{return JSON.stringify(clean(a))===JSON.stringify(clean(b))}catch(_){return false}}
-function idOf(x){return x&&typeof x==='object'&&x.id!=null?String(x.id):''}
-function ensureMeta(d){if(!d||typeof d!=='object')return {version:1,fields:{},tombstones:{}};d[META]||={version:1,fields:{},tombstones:{}};d[META].fields||={};d[META].tombstones||={};d[META].version=1;return d[META]}
-function stamp(cur,base){
- if(!cur||typeof cur!=='object')return;const ts=Date.now(),m=ensureMeta(cur),bm=base?.[META]||{};
- for(const name of TRACKED){
-  const a=Array.isArray(cur[name])?cur[name]:[],b=Array.isArray(base?.[name])?base[name]:[],B=new Map(b.map(x=>[idOf(x),x]).filter(x=>x[0])),A=new Map(a.map(x=>[idOf(x),x]).filter(x=>x[0]));m.tombstones[name]||={};
-  for(const item of a){const id=idOf(item);if(!id)continue;const old=B.get(id);const natural=Number(item.updatedAt||item.modifiedAt||item.v219LocalSavedAt||0);if(!old)item[UPDATED]=Math.max(Number(item[UPDATED])||0,natural,ts);else if(!same(item,old))item[UPDATED]=Math.max(natural,ts);else if(!Number(item[UPDATED]))item[UPDATED]=Math.max(Number(old?.[UPDATED])||0,natural,1);if(Number(item[UPDATED]||0)>Number(m.tombstones[name][id]||0))delete m.tombstones[name][id]}
-  for(const old of b){const id=idOf(old);if(id&&!A.has(id))m.tombstones[name][id]=Math.max(Number(m.tombstones[name][id]||0),ts)}
- }
- for(const k of Object.keys(cur).filter(k=>k!==META&&!TRACKED.includes(k))){if(!same(cur[k],base?.[k]))m.fields[k]=ts;else if(!m.fields[k]&&bm?.fields?.[k])m.fields[k]=bm.fields[k]}
-}
-function mergeMeta(a,b){const A=a||{},B=b||{},o={version:1,fields:{},tombstones:{}};for(const k of new Set([...Object.keys(A.fields||{}),...Object.keys(B.fields||{})]))o.fields[k]=Math.max(Number(A.fields?.[k]||0),Number(B.fields?.[k]||0));for(const n of new Set([...Object.keys(A.tombstones||{}),...Object.keys(B.tombstones||{})])){o.tombstones[n]={};const aa=A.tombstones?.[n]||{},bb=B.tombstones?.[n]||{};for(const id of new Set([...Object.keys(aa),...Object.keys(bb)]))o.tombstones[n][id]=Math.max(Number(aa[id]||0),Number(bb[id]||0))}return o}
-function mergePlain(r,l){if(l==null)return clone(r);if(r==null)return clone(l);if(Array.isArray(l)||Array.isArray(r))return clone(l);if(typeof l==='object'&&typeof r==='object')return {...clone(r),...clone(l)};return clone(l)}
-function mergeCollection(name,larr,rarr,meta){
- const la=Array.isArray(larr)?larr:[],ra=Array.isArray(rarr)?rarr:[],L=new Map(la.map(x=>[idOf(x),x]).filter(x=>x[0])),R=new Map(ra.map(x=>[idOf(x),x]).filter(x=>x[0])),ids=[...new Set([...la.map(idOf),...ra.map(idOf)].filter(Boolean))],out=[];
- for(const id of ids){const l=L.get(id),r=R.get(id);let v;if(l&&r){const lt=Number(l[UPDATED]||l.updatedAt||l.modifiedAt||l.v219LocalSavedAt||0),rt=Number(r[UPDATED]||r.updatedAt||r.modifiedAt||r.v219LocalSavedAt||0);v=rt>lt?clone(r):lt>rt?clone(l):mergePlain(r,l);v[UPDATED]=Math.max(lt,rt,Number(v?.[UPDATED]||0))}else v=clone(l||r);const dead=Number(meta?.tombstones?.[name]?.[id]||0),vt=Number(v?.[UPDATED]||v?.updatedAt||v?.modifiedAt||v?.v219LocalSavedAt||0);if(dead&&dead>=vt)continue;if(v)out.push(v)}
- const seen=new Set(out.map(x=>{try{return JSON.stringify(clean(x))}catch(_){return String(x)}}));for(const x of [...la,...ra]){if(idOf(x))continue;let k;try{k=JSON.stringify(clean(x))}catch(_){k=String(x)}if(!seen.has(k)){seen.add(k);out.push(clone(x))}}return out;
-}
-function mergeState(local,remote){local=local&&typeof local==='object'?local:{};remote=remote&&typeof remote==='object'?remote:{};const meta=mergeMeta(local[META],remote[META]),out={},keys=new Set([...Object.keys(local),...Object.keys(remote)]);keys.delete(META);for(const k of keys){if(TRACKED.includes(k)){out[k]=mergeCollection(k,local[k],remote[k],meta);continue}const lt=Number(local[META]?.fields?.[k]||0),rt=Number(remote[META]?.fields?.[k]||0);out[k]=rt>lt?clone(remote[k]):lt>rt?clone(local[k]):mergePlain(remote[k],local[k])}out[META]=meta;return out}
-function persist(){try{localStorage.setItem(storeKey(),JSON.stringify(getData()))}catch(e){console.warn('[V242 local save]',e)}}
-function readBase(){try{return JSON.parse(localStorage.getItem(BASE)||'{}')}catch(_){return {}}}
-function saveBase(v){try{localStorage.setItem(BASE,JSON.stringify(v||{}))}catch(_){}}
-function editorActive(){return document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active')}
-function commitEditor(){if(editorActive())try{window.saveCanvasSheetCore?.(true)}catch(e){console.warn('[V242 editor commit]',e)}persist()}
-function rerender(){if(editorActive())return;try{window.renderAll?.()}catch(_){ }try{if(q('#view-plan.active'))window.renderPlan?.()}catch(_){ }try{if(q('#view-home.active'))window.renderHome?.()}catch(_){ }}
-async function backup(){try{await window.v111CreateBackupNow?.(false)}catch(_){}}
-function status(text,bad=false){const s=String(text||'');try{window.StudiaCloud?.setStatus?.(s,bad)}catch(_){}const b=q('#v242DesktopSync');if(b){b.title=s;b.classList.toggle('syncing',/Synchron/i.test(s)&&!/✓|Fehler|fehl|nicht|lokal/i.test(s));if(/gespeichert ✓|Lokal gespeichert/i.test(s))b.classList.remove('dirty');const sm=q('small',b);if(sm)sm.textContent=s}const p=q('#v242PullSync');if(p&&p.classList.contains('show'))p.textContent=s;const x=q('#v242SyncStatus');if(x){x.textContent=s;x.classList.toggle('bad',!!bad)}}
-window.studiaSyncNow=async function(force=false){
- const dirty=!!window.v150CloudDirty?.();if(syncBusy)return {busy:true};if(!force&&!dirty&&Date.now()-lastSyncAt<15000)return {skipped:true};syncBusy=true;status('Synchronisiere Geräte …');
- try{
-  const cloud=window.StudiaCloud;if(!cloud)throw new Error('Sync-Modul fehlt');const cfg=cloud.config?.()||{};if(!cfg.url)throw new Error('Server-Script-Service-URL fehlt');if(!cfg.token)throw new Error('Nicht angemeldet');
-  commitEditor();await backup();const d=getData(),base=readBase();stamp(d,base);persist();const local=clone(d);
-  if(typeof cloud.syncState!=='function')throw new Error('Sync-Client V247 fehlt');
-  const res=await cloud.syncState(clone(local));
-  if(Number(res?.version||0)<247)throw new Error('Backend V247 fehlt · Apps Script einmal aktualisieren');
-  const merged=res?.data&&typeof res.data==='object'?res.data:local;setData(merged);persist();rerender();
-  saveBase(merged);window.v150ClearDirty?.();lastSyncAt=Date.now();status('Auf allen Geräten gespeichert ✓');setTimeout(()=>status('Lokal gespeichert'),2200);return {ok:true,updatedAt:res?.updatedAt||lastSyncAt};
- }catch(e){console.error('[Studia V247 sync]',e);persist();let msg=String(e?.message||'Sync fehlgeschlagen');if(/Unbekannte Aktion:\s*sync/i.test(msg))msg='Backend V247 fehlt · Apps Script einmal aktualisieren';status(msg+' · lokal sicher',true);try{window.cuteToast?.('Sync: '+msg)}catch(_){}setTimeout(()=>status('Lokal gespeichert'),3500);throw e}finally{syncBusy=false;setTimeout(()=>q('#v242PullSync')?.classList.remove('show','ready','syncing'),450)}
-};
-window.studiaSyncNow.__v219Guarded=true;
-window.v171CloudNow=function(){return window.studiaSyncNow(false)};window.v171CloudNow.__v219Guarded=true;try{v171CloudNow=window.v171CloudNow}catch(_){}
-
-/* one sync button + one pull gesture */
-function ensureSyncUI(){
- let b=q('#v242DesktopSync');if(!b){b=document.createElement('button');b.id='v242DesktopSync';b.type='button';b.title='Geräte synchronisieren';b.setAttribute('aria-label','Geräte synchronisieren');b.innerHTML='<span class="spin">↻</span><span>Geräte synchronisieren<small>Lokal gespeichert</small></span>';b.onclick=()=>window.studiaSyncNow(true).catch(()=>{});document.body.appendChild(b)}
- let p=q('#v242PullSync');if(!p){p=document.createElement('div');p.id='v242PullSync';p.textContent='Zum Synchronisieren ziehen';document.body.appendChild(p)}
- const card=q('.v171CloudSettings');if(card){let st=q('#v242SyncStatus',card);if(!st){st=document.createElement('div');st.id='v242SyncStatus';st.textContent='Lokal gespeichert';card.appendChild(st)}for(const btn of qa('button',card)){if(/jetzt synchronisieren|zusammenführen|geräte synchronisieren/i.test(btn.textContent||'')){btn.removeAttribute('onclick');btn.onclick=()=>window.studiaSyncNow(true).catch(()=>{});btn.textContent='Jetzt synchronisieren'}}}
-}
-document.addEventListener('touchstart',e=>{if(innerWidth>=900||editorActive()||document.body.classList.contains('modalOpen'))return;const sc=document.scrollingElement||document.documentElement;if((sc.scrollTop||window.scrollY)>3)return;const t=e.touches?.[0];if(!t)return;pullStart=t.clientY;pullReady=false;ensureSyncUI()},{passive:true});
-document.addEventListener('touchmove',e=>{if(pullStart==null)return;const t=e.touches?.[0];if(!t)return;const dy=Math.max(0,t.clientY-pullStart),p=q('#v242PullSync');if(!p)return;if(dy>8){p.classList.add('show');p.style.transform=`translate(-50%, ${Math.min(58,dy*.42)-45}px)`}pullReady=dy>=85;p.classList.toggle('ready',pullReady);p.textContent=pullReady?'Loslassen zum Synchronisieren ↻':'Zum Synchronisieren ziehen'},{passive:true});
-document.addEventListener('touchend',()=>{if(pullStart==null)return;const run=pullReady;pullStart=null;pullReady=false;const p=q('#v242PullSync');if(p)p.style.transform='';if(run)window.studiaSyncNow(true).catch(()=>{});else setTimeout(()=>p?.classList.remove('show','ready'),180)},{passive:true});
-
-/* Subject colors stay authoritative and saved. */
-function canon(name){let x=String(name||'').replace(/\s+/g,' ').trim();try{x=window.prettySubject?.(x)||x}catch(_){}x=x.toUpperCase().trim();const a={M:'MATHEMATIK',MATHE:'MATHEMATIK',MATHEMATIK:'MATHEMATIK',D:'DEUTSCH',DE:'DEUTSCH',DEUTSCH:'DEUTSCH',E:'ENGLISCH',ENG:'ENGLISCH',ENGLISCH:'ENGLISCH',PH:'PHYSIK',PHY:'PHYSIK',PHYSIK:'PHYSIK',BIO:'BIOLOGIE',BI:'BIOLOGIE',BIOLOGIE:'BIOLOGIE',CH:'CHEMIE',CHE:'CHEMIE',CHEMIE:'CHEMIE',G:'GESCHICHTE',GE:'GESCHICHTE',GES:'GESCHICHTE',GESCHICHTE:'GESCHICHTE',ET:'ETHIK',ETHIK:'ETHIK',SP:'SPORT',SPORT:'SPORT',INF:'INFORMATIK',INFORMATIK:'INFORMATIK'};return a[x]||x}
-function subjectColor(name){const d=getData();d.timetableSubjectColors||={};const c=canon(name);for(const[k,v]of Object.entries(d.timetableSubjectColors))if(canon(k)===c&&/^#[0-9a-f]{6}$/i.test(String(v)))return String(v).toLowerCase();const rec=(d.subjects||[]).find(s=>canon(s.name)===c||canon(s.abbr)===c);if(rec?.color)return String(rec.color);try{return window.hashColor?.(c)||'#e9a7a4'}catch(_){return '#e9a7a4'}}
-function setSubjectColor(name,color){color=String(color||'').toLowerCase();if(!/^#[0-9a-f]{6}$/.test(color))return;const d=getData(),c=canon(name);d.timetableSubjectColors||={};d.timetableSubjectColors[c]=color;for(const s of d.subjects||[])if(canon(s.name)===c||canon(s.abbr)===c){s.color=color;if(s.autoFromTimetable)s.cover=color;s[UPDATED]=Date.now()}ensureMeta(d).fields.timetableSubjectColors=Date.now();persist();window.v150MarkDirty?.(500);try{window.renderPlan?.();window.renderHome?.()}catch(_){}}
-window.setTimetableSubjectColor=setSubjectColor;window.v216SetSubjectColor=setSubjectColor;window.timetableSubjectColor=subjectColor;try{timetableSubjectColor=subjectColor}catch(_){}
-document.addEventListener('change',e=>{const inp=e.target instanceof Element?e.target.closest('#v210SubjectColors input[type="color"]'):null;if(!inp)return;const name=inp.closest('.v210ColorRow')?.querySelector('span')?.textContent?.trim();if(name)setSubjectColor(name,inp.value)},true);
-
-/* New tape SVG — same DOM is cloned to print/PDF. */
-function tapeColor(el){return el.dataset.v242TapeColor||el.style.backgroundColor||el.style.background||'#f2beb2'}
-function tapeSVG(color){let lines='';for(let x=-25;x<130;x+=13)lines+=`<line x1="${x}" y1="32" x2="${x+34}" y2="-2" stroke="white" stroke-opacity=".18" stroke-width="3"/>`;return `<svg class="v242TapeArt" viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"><path d="M1.5 2 L98.5 .8 L99 27.5 L1 29 Z" fill="${color}" fill-opacity=".76"/>${lines}</svg>`}
-function decorateTape(root=document){for(const el of qa('.tapeSticker',root)){const color=tapeColor(el);el.dataset.v242TapeColor=color;let art=q(':scope > .v242TapeArt',el);if(!art){el.insertAdjacentHTML('afterbegin',tapeSVG(color));art=q(':scope > .v242TapeArt',el)}else{const path=q('path',art);if(path)path.setAttribute('fill',color)}}}
-window.v242DecorateTape=decorateTape;
-
-/* one print handler */
-window.printCanvasSheet=async function(){
- if(innerWidth<900&&typeof window.v170PrintMobile==='function')return window.v170PrintMobile();const w=window.open('about:blank','_blank','width=1050,height=900');if(!w)return alert('Bitte Pop-ups für Studia erlauben, damit die Druckvorschau geöffnet werden kann.');w.document.write('<p style="font:16px sans-serif;padding:24px">Druckvorschau wird geladen …</p>');
- try{const clones=await window.cloneAllPages181?.();if(!clones?.length){w.close();return alert('Keine Lernblatt-Seite gefunden.')}for(const page of clones)decorateTape(page);const first=clones[0],W=parseFloat(first.style.width),H=parseFloat(first.style.height),faces=[...document.querySelectorAll('style')].map(s=>s.textContent.match(/@font-face\s*\{[^}]*\}/g)||[]).flat().join('\n')+clones.map((c,i)=>{const name='studiaPage'+i;c.style.setProperty('page',name,'important');return '@page '+name+'{size:'+parseFloat(c.style.width)+'px '+parseFloat(c.style.height)+'px;margin:0}'}).join('');
- const tapeCSS='.tapeSticker{background:transparent!important;border:0!important;outline:0!important;box-shadow:none!important;overflow:visible!important}.tapeSticker:before,.tapeSticker:after{display:none!important;content:none!important}.tapeSticker>.v242TapeArt{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;display:block!important;pointer-events:none!important;overflow:visible!important}';
- w.document.open();w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Studia · Druckvorschau</title><base href="'+location.href+'"><style>'+faces+'@page{size:'+W+'px '+H+'px;margin:0}*{box-sizing:border-box}html,body{margin:0;padding:0;background:#eee9e6;color:#65514b;font-family:Arial,sans-serif}.toolbar{position:sticky;top:0;z-index:2147483600;display:flex;align-items:center;gap:10px;padding:12px 18px;background:#fffaf8;border-bottom:1px solid #ecd9d6}.toolbar b{margin-right:auto}.toolbar button{border:1px solid #ead5d0;background:#fff;border-radius:12px;padding:10px 16px;color:#65514b;font-weight:700;cursor:pointer}.toolbar button:first-of-type{background:#f9d7d9}.printRoot{display:grid;justify-items:center;gap:24px;padding:24px;overflow:auto}.v181PreviewPage{flex:none;break-after:page;page-break-after:always}.v181PreviewPage:last-child{break-after:auto;page-break-after:auto}.v181PreviewPage,.v181PreviewPage *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;forced-color-adjust:none!important}'+tapeCSS+'@media print{html,body{background:#fff!important}.toolbar{display:none!important}.printRoot{display:block;margin:0;padding:0;overflow:visible}.v181PreviewPage{justify-self:start!important}}</style></head><body><header class="toolbar"><b>Druckvorschau · nur das Lernblatt</b><button id="print">Drucken</button><button id="close">Schließen</button></header><main class="printRoot">'+clones.map(c=>c.outerHTML).join('')+'</main></body></html>');w.document.close();q('#close',w.document).onclick=()=>w.close();q('#print',w.document).onclick=async()=>{try{await w.document.fonts.ready}catch(_){}await Promise.all([...w.document.images].map(img=>img.complete?Promise.resolve():new Promise(r=>{img.onload=r;img.onerror=r})));w.focus();w.print()};w.focus();
- }catch(e){console.error('[Studia V242 print]',e);try{w.close()}catch(_){}alert('Die Druckvorschau konnte nicht erstellt werden. '+(e?.message?`(${e.message})`:''))}
-};try{printCanvasSheet=window.printCanvasSheet}catch(_){}
-
-if(!window.__STUDIA_V245_HOME_CLOCK__){window.__STUDIA_V245_HOME_CLOCK__=setInterval(()=>{try{if(document.querySelector('#view-home.active')&&!document.body.classList.contains('editorMode'))window.renderHome?.()}catch(_){}},1000)}
-function maintain(){if(maintainQueued)return;maintainQueued=true;requestAnimationFrame(()=>{maintainQueued=false;ensureSyncUI();decorateTape();const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 264')e.textContent='VERSION 264'})}
-[0,120,450,1200].forEach(t=>setTimeout(maintain,t));
-/* V245: no automatic network sync on reconnect; user triggers sync explicitly. */
-})();
-</script>
-<!-- ===== /Studia V242 ===== -->
-
-
-<!-- ===== Studia V243 · inline sync module guarantee ===== -->
-<script id="studia-v243-sync-guarantee">
-(()=>{
-  if(!window.StudiaCloud){
-    console.error('[Studia V243] Inline cloud transport failed to initialize');
-    const show=()=>{const s=document.querySelector('#v242SyncStatus');if(s){s.textContent='Sync-Client konnte nicht initialisiert werden';s.classList.add('bad')}};
-    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',show,{once:true});else show();
-    return;
+<!-- ===== Studia V232 · SAFE MERGE SYNC + PULL TO SYNC + DESKTOP POLISH ===== -->
+<style id="studia-v232-safe-sync-style">
+@media (min-width:900px){
+  html,body,button,input,select,textarea,
+  #v210Sidebar,#v208Sidebar,#view-plan,.v210Lesson,.v210DayHead,.v210TimeRail,
+  .panel,.card,.section,.modal,.canvasTopbar,.canvasQuickNav,.canvasQuickDrawer,#desktopEditorSidebar{
+    font-family:ui-rounded,"SF Pro Rounded","Arial Rounded MT Bold","Avenir Next Rounded","Trebuchet MS",system-ui,sans-serif!important;
   }
-  const mark=()=>{const e=document.querySelector('#headerEyebrow');if(e&&e.textContent!=='VERSION 264')e.textContent='VERSION 264'};
-  [0,250,900,1800].forEach(t=>setTimeout(mark,t));
-})();
-</script>
-<!-- ===== /Studia V243 ===== -->
-
-<!-- Studia V244: cloud transport timeout/retry upgraded in-place; no additional sync handler. -->
-
-<script id="studia-v247-backend-hint">(()=>{function add(){const c=document.querySelector('.v171CloudSettings');if(!c||document.getElementById('v246BackendHint'))return;const p=document.createElement('div');p.id='v246BackendHint';p.className='small';p.style.cssText='margin-top:8px;padding:8px 10px;border-radius:10px;background:#fff7f3;color:#8b7068;font-weight:750';p.textContent='Sync V248: manueller Einmal-Sync über Apps-Script-Bridge. Kein automatischer Retry.';c.appendChild(p)}[0,300,1200].forEach(t=>setTimeout(add,t))})();</script>
-
-
-<!-- ===== Studia V248 · bridge transport + stale-sync purge ===== -->
-<script id="studia-v248-runtime-guard">
+  #v232DesktopSync{
+    position:fixed;right:20px;bottom:20px;z-index:10050;display:flex;align-items:center;gap:9px;
+    min-height:42px;padding:8px 13px;border-radius:15px;border:1px solid #ead7d1;background:rgba(255,252,249,.96);
+    color:#775f58;box-shadow:0 10px 28px rgba(91,67,59,.12);backdrop-filter:blur(14px);font-size:10px;font-weight:900;cursor:pointer
+  }
+  #v232DesktopSync:hover{background:#fff7f5;border-color:#e4c5c1;transform:translateY(-1px)}
+  #v232DesktopSync .spin{font-size:17px;line-height:1;transition:transform .25s ease}
+  #v232DesktopSync.syncing .spin{animation:v232Spin .8s linear infinite}
+  #v232DesktopSync small{display:block;font-size:7px;font-weight:750;color:#a58d85;margin-top:1px;max-width:170px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  @keyframes v232Spin{to{transform:rotate(360deg)}}
+}
+@media(max-width:899px){#v232DesktopSync{display:none!important}}
+#v232PullSync{
+  position:fixed;left:50%;top:8px;transform:translate(-50%,-125%);z-index:10080;pointer-events:none;
+  min-width:170px;max-width:80vw;padding:9px 14px;border-radius:999px;border:1px solid #ead8d2;background:rgba(255,252,249,.97);
+  box-shadow:0 8px 25px rgba(91,67,59,.12);color:#826961;font:850 10px/1.2 ui-rounded,"SF Pro Rounded","Trebuchet MS",sans-serif;text-align:center;
+  transition:transform .18s ease,opacity .18s ease;opacity:0
+}
+#v232PullSync.show{opacity:1}
+#v232PullSync.ready{background:#fff2f1;border-color:#e7c6c4;color:#ad6f72}
+#v232PullSync.syncing{background:#f5f9ef;border-color:#dbe5c8;color:#75845b}
+.v232SizeGroup{display:inline-flex!important;align-items:center!important;gap:3px!important;height:32px!important;padding:2px!important;border:1px solid #ead8d2!important;border-radius:10px!important;background:#fff!important}
+.v232SizeGroup>button{width:25px!important;height:26px!important;min-width:25px!important;padding:0!important;border:0!important;border-radius:7px!important;background:transparent!important;font-size:15px!important;font-weight:900!important;color:#795f57!important;display:grid!important;place-items:center!important}
+.v232SizeGroup>button:hover{background:#fff0ef!important}
+.v232SizeGroup>input.size{width:44px!important;height:26px!important;min-height:26px!important;border:0!important;background:transparent!important;padding:0 2px!important;text-align:center!important;font-size:11px!important;font-weight:900!important;outline:none!important}
+#v232SyncStatusInline{font-size:8px;color:#9c837a;font-weight:800;margin-top:6px}
+.v210LessonMeta .v232RoomLabel{font-weight:900}
+</style>
+<script id="studia-v232-safe-sync-script">
 (()=>{
-  'use strict';
-  window.__STUDIA_VERSION__=264;
-  // Remove legacy retry wording if an old DOM fragment survived navigation/cache.
-  const scrub=()=>{
-    document.querySelectorAll('#v150AccountStatus,#v242SyncStatus,#v242DesktopSync small').forEach(el=>{
-      const s=String(el.textContent||'');
-      if(/versucht es automatisch erneut/i.test(s)) el.textContent='Sync fehlgeschlagen · kein automatischer Retry';
-    });
-    const e=document.querySelector('#headerEyebrow'); if(e&&e.textContent!=='VERSION 264')e.textContent='VERSION 264';
-  };
-  [0,120,500,1500].forEach(ms=>setTimeout(scrub,ms));
-  // V264: no global DOM observer here; the old retry scrub runs only during boot.
-})();
-</script>
-<!-- ===== /Studia V248 ===== -->
-
-<style id="studia-v264-safe-restoration-style">
-/* V264 is intentionally based on V248: this keeps the old laptop AND phone learning-sheet editor intact. */
-@media (min-width:1100px){
-  #view-settings{display:none}
-  #view-settings.active{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}
-  #view-settings.active>.panel,#view-settings.active>.section.panel{margin:0!important;padding:14px!important;border-radius:18px!important;min-width:0}
-  #view-settings.active>.v171CloudSettings,#view-settings.active>.v111BackupPanel{grid-column:1/-1}
-  #view-settings .section{margin-top:10px!important}
-  #view-settings h2{font-size:18px!important}
-  #view-settings label,#view-settings .small{font-size:10px!important}
-  #view-settings input,#view-settings select,#view-settings textarea{min-height:38px!important;padding:8px 10px!important}
-  #view-settings button{min-height:38px!important;padding:8px 11px!important}
-}
-.v264GradedCard{align-items:flex-start!important}.v264GradedMain{flex:1;min-width:0}.v264GradedActions{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
-.v264AttachBox{margin-top:10px;padding:10px;border:1px dashed #ead8d1;border-radius:14px;background:#fffdfb}.v264AttachBox input[type=file]{margin-top:7px}
-.v264CardAttachments{margin-top:10px}.v264CardAttachments .fileChip{margin:3px}
-#v264SyncBadge{margin-top:8px;padding:8px 10px;border-radius:11px;background:#f7fbef;border:1px solid #dce8ca;color:#6f805b;font-size:10px;font-weight:850}
-#v264SyncBadge.bad{background:#fff1f0;border-color:#efccca;color:#a06363}
-</style>
-<script id="studia-v264-safe-restoration-script">
-(function(){
 'use strict';
-if(window.__STUDIA_V264__)return;window.__STUDIA_V264__=true;
-const q=(s,r=document)=>r?.querySelector?.(s)||null,qa=(s,r=document)=>r?.querySelectorAll?[...r.querySelectorAll(s)]:[];
-const html=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-const js=s=>JSON.stringify(String(s??''));
-const BASE_KEY='studia-v242-last-synced-state',DIRTY='studia-v242-dirty';
-let applyingRemote=false,syncBusy=false,autoTimer=0,lastSync=0;
-function clone(x){try{return structuredClone(x)}catch(_){return JSON.parse(JSON.stringify(x))}}
-function getData(){try{return window.data||data}catch(_){return null}}
-function persist(){try{localStorage.setItem('schoolhub-v1',JSON.stringify(getData()))}catch(_){}}
-function readBase(){try{return JSON.parse(localStorage.getItem(BASE_KEY)||'{}')}catch(_){return {}}}
-function saveBase(x){try{localStorage.setItem(BASE_KEY,JSON.stringify(x||{}))}catch(_){}}
-function token(){return String(window.StudiaCloud?.config?.().token||'')}
-function cloudUrl(){return String(window.StudiaCloud?.config?.().url||'').trim().replace(/\?.*$/,'')}
-function status(t,bad=false){const s=String(t||'');try{window.StudiaCloud?.setStatus?.(s,bad)}catch(_){};let x=q('#v264SyncBadge');const card=q('.v171CloudSettings');if(card&&!x){x=document.createElement('div');x.id='v264SyncBadge';card.appendChild(x)}if(x){x.textContent=s;x.classList.toggle('bad',!!bad)}const sm=q('#v242DesktopSync small');if(sm)sm.textContent=s}
-function rememberUrl(url){try{window.StudiaCloud?.rememberUrl?.(url)}catch(_){};for(const k of ['studia-v242-script-url','studia-script-url','schoolhub-script-url'])try{localStorage.setItem(k,url)}catch(_){}}
-function rememberAuth(r){try{window.StudiaCloud?.rememberAuth?.(r)}catch(_){};if(r?.token)for(const k of ['studia-v242-token','studia-token','schoolhub-token'])try{localStorage.setItem(k,String(r.token))}catch(_){}}
-function deviceId(){let v=localStorage.getItem('studia-v264-device-id');if(!v){v='d-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);localStorage.setItem('studia-v264-device-id',v)}return v}
-function deviceName(){return /iPhone|iPad|Android/i.test(navigator.userAgent)?'Handy':'Laptop'}
-function bytesToB64(bytes){let s='';for(let i=0;i<bytes.length;i+=0x8000)s+=String.fromCharCode(...bytes.subarray(i,i+0x8000));return btoa(s)}
-function b64urlToBytes(b64){let s=String(b64||'').replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';const raw=atob(s),a=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)a[i]=raw.charCodeAt(i);return a}
-async function gzipText(text){if(typeof CompressionStream!=='function')return '';const cs=new CompressionStream('gzip');const ab=await new Response(new Blob([String(text)]).stream().pipeThrough(cs)).arrayBuffer();return bytesToB64(new Uint8Array(ab))}
-async function decodeRelay(payload,encoding){const bytes=b64urlToBytes(payload);if(encoding==='gz'){if(typeof DecompressionStream!=='function')throw new Error('Safari kann die Cloud-Antwort nicht entpacken');const ds=new DecompressionStream('gzip');return JSON.parse(await new Response(new Blob([bytes]).stream().pipeThrough(ds)).text())}return JSON.parse(new TextDecoder().decode(bytes))}
-async function relay(action,payload={},timeoutMs=60000){
- const url=cloudUrl();if(!url)throw new Error('Apps-Script-/exec-URL fehlt');
- const callId='v264'+Date.now().toString(36)+Math.random().toString(36).slice(2),frameName='studiaRelay'+callId;
- const frame=document.createElement('iframe');frame.name=frameName;frame.style.cssText='position:fixed;width:1px;height:1px;left:-9999px;top:-9999px;border:0;opacity:0;pointer-events:none';
- const form=document.createElement('form');form.method='POST';form.action=url;form.target=frameName;form.enctype='application/x-www-form-urlencoded';form.acceptCharset='UTF-8';form.style.display='none';
- const add=(k,v)=>{const i=document.createElement('input');i.type='hidden';i.name=k;i.value=String(v??'');form.appendChild(i)};
- add('action','bridge_relay_v264');add('relayAction',action);add('callId',callId);add('acceptGzip',typeof DecompressionStream==='function'?'1':'0');for(const[k,v]of Object.entries(payload))if(v!=null)add(k,v);
- return await new Promise((resolve,reject)=>{let done=false,total=0,enc='',chunks=[];const clean=()=>{if(done)return;done=true;clearTimeout(timer);window.removeEventListener('message',onmsg);setTimeout(()=>{frame.remove();form.remove()},0)};const fail=e=>{clean();reject(e instanceof Error?e:new Error(String(e||'Google-Sync fehlgeschlagen')))};const onmsg=async ev=>{if(ev.origin!==location.origin)return;const m=ev.data;if(!m||m.type!=='studia-v264-relay'||m.callId!==callId)return;total=Number(m.total||0);enc=String(m.encoding||'raw');chunks[Number(m.index||0)]=String(m.chunk||'');if(total>0&&chunks.filter(x=>x!==undefined).length===total){try{const r=await decodeRelay(chunks.join(''),enc);clean();if(!r?.ok)throw new Error(String(r?.error||'Google-Sync fehlgeschlagen'));resolve(r)}catch(e){fail(e)}}};const timer=setTimeout(()=>fail(new Error('Google-Sync-Verbindung konnte nicht aufgebaut werden')),timeoutMs);window.addEventListener('message',onmsg);document.body.append(frame,form);try{form.submit()}catch(e){fail(e)}})
+if(window.__STUDIA_V232__)return;window.__STUDIA_V232__=true;
+const q=(s,r=document)=>r?.querySelector?.(s)||null;
+const qa=(s,r=document)=>r?.querySelectorAll?[...r.querySelectorAll(s)]:[];
+const clone=x=>{try{return structuredClone(x)}catch(_){try{return JSON.parse(JSON.stringify(x))}catch(__){return x}}};
+const now=()=>Date.now();
+const META='_syncMeta',UPDATED='_updatedAt';
+const TRACKED=['homework','tests','grades','flashcards','subjects','absences','studySessions','reminders','flashDecks','quizzes','studySheets'];
+let v232SyncBusy=false,v232Installing=false,v232LastStatus='Lokal gespeichert';
+
+function cleanForCompare(v){
+  if(Array.isArray(v))return v.map(cleanForCompare);
+  if(v&&typeof v==='object'){
+    const out={};for(const [k,val] of Object.entries(v)){if(k===UPDATED||k===META)continue;out[k]=cleanForCompare(val)}return out;
+  }
+  return v;
 }
-async function encodeStateField(obj,name,out){const raw=JSON.stringify(obj||{});let gz='';try{gz=await gzipText(raw)}catch(_){};if(gz&&gz.length<raw.length){out[name+'Gzip']=gz}else out[name]=raw}
-async function syncNow(reason='auto'){
- if(syncBusy)return;const t=token();if(!t)return;syncBusy=true;status('Synchronisiere automatisch …');
- try{try{if(document.body.classList.contains('editorMode'))window.saveCanvasSheetCore?.(true)}catch(_){}persist();const local=clone(getData()),base=readBase(),p={token:t,deviceId:deviceId(),deviceName:deviceName()};await encodeStateField(local,'data',p);await encodeStateField(base,'base',p);const r=await relay('sync',p,90000);if(Number(r.version||0)<264)throw new Error('Apps-Script V264 fehlt');if(r.data&&typeof r.data==='object'){applyingRemote=true;try{window.data=r.data;try{data=r.data}catch(_){}persist();saveBase(r.data);window.v150ClearDirty?.();window.renderAll?.();if(q('#view-plan.active'))window.renderPlan?.();if(q('#view-tasks.active'))window.renderTasks?.();if(q('#view-grades.active'))window.renderGrades?.();if(q('#view-deck-detail.active'))window.renderDeckDetail?.()}finally{setTimeout(()=>applyingRemote=false,50)}}lastSync=Date.now();status(`Synchronisiert ✓${Number(r.deviceCount||0)>=2?' · '+r.deviceCount+' Geräte':''}`);return r}catch(e){status(String(e?.message||e)+' · lokal sicher',true);throw e}finally{syncBusy=false}
+function same(a,b){try{return JSON.stringify(cleanForCompare(a))===JSON.stringify(cleanForCompare(b))}catch(_){return false}}
+function ensureMeta(d){
+  if(!d||typeof d!=='object')return {fields:{},tombstones:{}};
+  d[META] ||= {version:1,fields:{},tombstones:{}};
+  d[META].fields ||= {};d[META].tombstones ||= {};d[META].version=1;return d[META];
 }
-function scheduleSync(delay=1400){return;} /* V265 owns automatic sync */
-const oldDirty=window.v150MarkDirty;window.v150MarkDirty=function(delay=700){try{oldDirty?.(delay)}catch(_){};if(!applyingRemote)scheduleSync(Math.max(900,Number(delay)||700))};
-window.studiaSyncNow=()=>syncNow('manual');window.v171CloudNow=()=>syncNow('manual');try{v171CloudNow=window.v171CloudNow}catch(_){}
-window.v171CloudLogin=async function(){try{const url=(q('#v150ScriptUrl')?.value||cloudUrl()).trim(),username=(q('#v150Username')?.value||'').trim(),password=q('#v150Password')?.value||'';if(!url||!username||!password)throw new Error('URL, Benutzername und Passwort eingeben');rememberUrl(url);status('Verbinde mit Google …');const h=await relay('health',{},30000);if(Number(h.version||0)<264)throw new Error('Apps-Script V264 fehlt');const r=await relay('login',{username,password},30000);rememberAuth(r);localStorage.setItem(DIRTY,'1');await syncNow('login');return r}catch(e){status(String(e?.message||e),true);throw e}};
-window.v171CloudRegister=async function(){try{const url=(q('#v150ScriptUrl')?.value||cloudUrl()).trim(),username=(q('#v150Username')?.value||'').trim(),password=q('#v150Password')?.value||'';if(!url||!username||!password)throw new Error('URL, Benutzername und Passwort eingeben');rememberUrl(url);status('Konto wird erstellt …');const r=await relay('register',{username,password},30000);rememberAuth(r);if(r.recoveryCode)alert('Wiederherstellungscode — sicher speichern:\n\n'+r.recoveryCode);localStorage.setItem(DIRTY,'1');await syncNow('register');return r}catch(e){status(String(e?.message||e),true);throw e}};
-if(window.StudiaCloud){window.StudiaCloud.health=()=>relay('health',{},30000);window.StudiaCloud.login=(u,p)=>relay('login',{username:u,password:p},30000);window.StudiaCloud.register=(u,p)=>relay('register',{username:u,password:p},30000);window.StudiaCloud.me=()=>relay('me',{token:token()},30000);window.StudiaCloud.syncState=async d=>{const p={token:token(),deviceId:deviceId(),deviceName:deviceName()};await encodeStateField(d,'data',p);await encodeStateField(readBase(),'base',p);return relay('sync',p,90000)}}
-window.addEventListener('online',()=>scheduleSync(500));window.addEventListener('focus',()=>scheduleSync(700));window.addEventListener('pageshow',()=>scheduleSync(900));document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')scheduleSync(700)});setInterval(()=>{if(document.visibilityState==='visible'&&navigator.onLine&&token()&&(window.v150CloudDirty?.()||Date.now()-lastSync>60000))scheduleSync(700)},30000);
+function objectId(x){return x&&typeof x==='object'&&x.id!=null?String(x.id):''}
+function stampChanges(cur,old){
+  if(!cur||typeof cur!=='object')return;
+  const ts=now(),meta=ensureMeta(cur),oldMeta=old?.[META]||{};
+  for(const key of TRACKED){
+    const a=Array.isArray(cur[key])?cur[key]:[],b=Array.isArray(old?.[key])?old[key]:[];
+    const bm=new Map(b.map(x=>[objectId(x),x]).filter(x=>x[0]));
+    const am=new Map(a.map(x=>[objectId(x),x]).filter(x=>x[0]));
+    meta.tombstones[key] ||= {};
+    for(const item of a){
+      const id=objectId(item);if(!id)continue;const prev=bm.get(id);
+      if(!prev)item[UPDATED]=Number(item[UPDATED])||ts;
+      else if(!same(item,prev))item[UPDATED]=ts;
+      else if(!Number(item[UPDATED]))item[UPDATED]=Number(prev?.[UPDATED])||1;
+      const dead=Number(meta.tombstones[key][id]||0);if(dead&&Number(item[UPDATED]||0)>dead)delete meta.tombstones[key][id];
+    }
+    for(const prev of b){const id=objectId(prev);if(id&&!am.has(id))meta.tombstones[key][id]=Math.max(Number(meta.tombstones[key][id]||0),ts)}
+  }
+  const fields=Object.keys(cur).filter(k=>k!==META&&!TRACKED.includes(k));
+  for(const key of fields){
+    if(!same(cur[key],old?.[key]))meta.fields[key]=ts;
+    else if(!meta.fields[key]&&oldMeta?.fields?.[key])meta.fields[key]=oldMeta.fields[key];
+  }
+}
+function mergedMeta(a,b){
+  const A=a||{},B=b||{},out={version:1,fields:{},tombstones:{}};
+  for(const k of new Set([...Object.keys(A.fields||{}),...Object.keys(B.fields||{})]))out.fields[k]=Math.max(Number(A.fields?.[k]||0),Number(B.fields?.[k]||0));
+  for(const col of new Set([...Object.keys(A.tombstones||{}),...Object.keys(B.tombstones||{})])){
+    out.tombstones[col]={};const aa=A.tombstones?.[col]||{},bb=B.tombstones?.[col]||{};
+    for(const id of new Set([...Object.keys(aa),...Object.keys(bb)]))out.tombstones[col][id]=Math.max(Number(aa[id]||0),Number(bb[id]||0));
+  }
+  return out;
+}
+function mergePlain(remote,local){
+  if(local==null)return clone(remote);if(remote==null)return clone(local);
+  if(Array.isArray(local)||Array.isArray(remote))return clone(local);
+  if(typeof local==='object'&&typeof remote==='object'){
+    const out={...clone(remote)};for(const [k,v] of Object.entries(local))out[k]=clone(v);return out;
+  }
+  return clone(local);
+}
+function mergeCollection(name,localArr,remoteArr,meta){
+  const la=Array.isArray(localArr)?localArr:[],ra=Array.isArray(remoteArr)?remoteArr:[];
+  const lmap=new Map(la.map(x=>[objectId(x),x]).filter(x=>x[0])),rmap=new Map(ra.map(x=>[objectId(x),x]).filter(x=>x[0]));
+  const order=[...la.map(objectId),...ra.map(objectId)].filter(Boolean),ids=[...new Set(order)],out=[];
+  for(const id of ids){
+    const l=lmap.get(id),r=rmap.get(id);let item;
+    if(l&&r){
+      const lt=Number(l[UPDATED]||0),rt=Number(r[UPDATED]||0);
+      if(rt>lt)item=clone(r);else if(lt>rt)item=clone(l);else item=mergePlain(r,l);
+      item[UPDATED]=Math.max(lt,rt,Number(item[UPDATED]||0));
+    }else item=clone(l||r);
+    const dead=Number(meta?.tombstones?.[name]?.[id]||0),it=Number(item?.[UPDATED]||0);
+    if(dead&&dead>=it)continue;
+    if(item)out.push(item);
+  }
+  /* objects without IDs: keep both without duplicates instead of dropping data */
+  const seen=new Set(out.map(x=>{try{return JSON.stringify(cleanForCompare(x))}catch(_){return String(x)}}));
+  for(const x of [...la,...ra]){if(objectId(x))continue;let k='';try{k=JSON.stringify(cleanForCompare(x))}catch(_){k=String(x)}if(!seen.has(k)){seen.add(k);out.push(clone(x))}}
+  return out;
+}
+function mergeState(local,remote){
+  local=local&&typeof local==='object'?local:{};remote=remote&&typeof remote==='object'?remote:{};
+  const meta=mergedMeta(local[META],remote[META]),out={};
+  const keys=new Set([...Object.keys(remote),...Object.keys(local)]);keys.delete(META);
+  for(const key of keys){
+    if(TRACKED.includes(key)){out[key]=mergeCollection(key,local[key],remote[key],meta);continue}
+    const lt=Number(local[META]?.fields?.[key]||0),rt=Number(remote[META]?.fields?.[key]||0);
+    if(rt>lt)out[key]=clone(remote[key]);
+    else if(lt>rt)out[key]=clone(local[key]);
+    else out[key]=mergePlain(remote[key],local[key]);
+  }
+  out[META]=meta;return out;
+}
+function readStored(){try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(_){return {}}}
+function persistLocal(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){console.warn('[Studia V232] local save failed',e)}}
+function editorActive(){return document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active')}
+function commitEditor(){
+  if(!editorActive())return;
+  try{if(typeof saveCanvasSheetCore==='function')saveCanvasSheetCore(true)}catch(e){console.warn('[Studia V232] editor commit',e)}
+  try{persistLocal()}catch(_){ }
+}
+function setStatus(text,state='ok'){
+  v232LastStatus=text;const b=q('#v232DesktopSync'),m=q('#v232PullSync'),inline=q('#v232SyncStatusInline');
+  if(b){b.classList.toggle('syncing',state==='syncing');const s=b.querySelector('small');if(s)s.textContent=text}
+  if(m&&state==='syncing'){m.textContent=text;m.classList.add('show','syncing')}
+  if(inline)inline.textContent=text;
+}
+window.v232SetSyncStatus=setStatus;
 
-/* ---- Planer: one native section, no duplicate page/UI layer. ---- */
-function ensureModel(){const d=getData();d.gradedSubmissions=Array.isArray(d.gradedSubmissions)?d.gradedSubmissions:[];for(const c of d.flashcards||[])c.attachments=Array.isArray(c.attachments)?c.attachments:[];for(const quiz of d.quizzes||[])for(const x of quiz.questions||[])x.attachments=Array.isArray(x.attachments)?x.attachments:[]}
-function canon(s){return String(s||'').trim().toUpperCase().replace(/Ä/g,'AE').replace(/Ö/g,'OE').replace(/Ü/g,'UE').replace(/[^A-Z0-9]/g,'')}
-function dayCode(d){return ['So','Mo','Di','Mi','Do','Fr','Sa'][d.getDay()]||''}
-function subjectOfLesson(l){try{const p=splitCell(l?.raw||'');return (typeof prettySubject==='function'?prettySubject(p.subject||''):p.subject)||''}catch(_){return String(l?.subject||'')}}
-function dueFromLessons(subject,count){let left=Math.max(1,Number(count)||1),list=[];const cls=getData().timetable?.selectedClass||getData().settings?.className||'M U1';try{list=(typeof currentScheduleForClass==='function'?currentScheduleForClass(cls):getData().timetable?.lessons||[])||[]}catch(_){list=getData().timetable?.lessons||[]}list=list.filter(l=>!l.specialOnly&&!l.cancelledFromBasis&&canon(subjectOfLesson(l))===canon(subject));if(!list.length)return '';const now=new Date();for(let off=0;off<190;off++){const d=new Date(now.getFullYear(),now.getMonth(),now.getDate()+off,12);for(const l of list.filter(x=>String(x.day||'')===dayCode(d)).sort((a,b)=>String(a.start||'').localeCompare(String(b.start||'')))){if(off===0&&l.end){const [h,m]=String(l.end).split(':').map(Number);if(new Date(now.getFullYear(),now.getMonth(),now.getDate(),h||0,m||0)<=now)continue}let blocks=Number(l.blocks||0);if(!blocks){try{const [sh,sm]=String(l.start||'').split(':').map(Number),[eh,em]=String(l.end||'').split(':').map(Number);blocks=Math.max(1,Math.round((((eh||0)*60+(em||0))-((sh||0)*60+(sm||0)))/45))}catch(_){blocks=1}}left-=Math.max(1,blocks);if(left<=0)return typeof localISODate==='function'?localISODate(d):d.toISOString().slice(0,10)}}return ''}
-window.v264ToggleDueMode=function(){const m=q('#v264DueMode')?.value||'date';if(q('#v264DueDateWrap'))q('#v264DueDateWrap').style.display=m==='date'?'':'none';if(q('#v264DueLessonsWrap'))q('#v264DueLessonsWrap').style.display=m==='lessons'?'':'none'};
-window.v264OpenGradedSubmission=function(idv=''){ensureModel();const x=getData().gradedSubmissions.find(a=>String(a.id)===String(idv));openModal(`<div class="compactPresetModal"><div class="presetModalHead"><div><span class="eyebrow">PLANER</span><h2>${x?'Benotete Abgabe bearbeiten':'Benotete Abgabe'}</h2></div><button type="button" class="miniIcon" onclick="closeModal()">×</button></div><div class="formGrid"><div><label>Fach</label><select id="v264SubSubject">${subjectOptions()}</select></div><div><label>Abgabe</label><select id="v264DueMode" onchange="v264ToggleDueMode()"><option value="date" ${x?.dueMode!=='lessons'?'selected':''}>Bestimmter Tag</option><option value="lessons" ${x?.dueMode==='lessons'?'selected':''}>In Unterrichtsstunden</option></select></div><div class="full"><label>Titel</label><input id="v264SubTitle" value="${html(x?.title||'')}" placeholder="z. B. Portfolio abgeben"></div><div id="v264DueDateWrap"><label>Tag</label><input id="v264SubDate" type="date" value="${html(x?.dueDate||todayISO())}"></div><div id="v264DueLessonsWrap"><label>In wie vielen Unterrichtsstunden?</label><input id="v264SubLessons" type="number" min="1" max="100" value="${Number(x?.dueLessons||1)}"></div><div class="full"><label>Notiz</label><textarea id="v264SubNote">${html(x?.note||'')}</textarea></div><div class="full"><label>Dateien</label><input id="v264SubFiles" type="file" multiple accept="image/*,.pdf,.doc,.docx,.ppt,.pptx"></div></div><button type="button" class="primary" style="margin-top:10px" onclick="v264SaveGradedSubmission(${js(x?.id||'')})">Speichern</button></div>`);const sel=q('#v264SubSubject');if(sel&&x?.subject)sel.value=x.subject;v264ToggleDueMode()};
-window.v264SaveGradedSubmission=async function(idv=''){ensureModel();const d=getData(),subject=q('#v264SubSubject')?.value||'',title=(q('#v264SubTitle')?.value||'').trim(),mode=q('#v264DueMode')?.value||'date',lessons=Math.max(1,Number(q('#v264SubLessons')?.value||1));if(!title)return alert('Bitte einen Titel eingeben.');const due=mode==='lessons'?dueFromLessons(subject,lessons):(q('#v264SubDate')?.value||'');if(!due)return alert(mode==='lessons'?'Für dieses Fach wurde kein zukünftiger Unterricht gefunden.':'Bitte einen Tag auswählen.');let x=d.gradedSubmissions.find(a=>String(a.id)===String(idv));if(!x){x={id:typeof id==='function'?id():'submission-'+Date.now(),files:[],done:false,created:Date.now()};d.gradedSubmissions.push(x)}Object.assign(x,{subject,title,dueMode:mode,dueDate:due,dueLessons:mode==='lessons'?lessons:null,note:(q('#v264SubNote')?.value||'').trim()});try{await storeEntityFiles(x,q('#v264SubFiles')?.files||[])}catch(_){}save();closeModal();renderGraded()};
-window.v264ToggleGraded=function(idv){const x=getData().gradedSubmissions?.find(a=>String(a.id)===String(idv));if(!x)return;x.done=!x.done;save();renderGraded()};
-window.v264DeleteGraded=function(idv){if(!confirm('Benotete Abgabe wirklich löschen?'))return;getData().gradedSubmissions=getData().gradedSubmissions.filter(a=>String(a.id)!==String(idv));save();renderGraded()};
-function renderGraded(){ensureModel();const root=q('#v264GradedList');if(!root)return;const arr=[...getData().gradedSubmissions].sort((a,b)=>String(a.dueDate||'9999').localeCompare(String(b.dueDate||'9999')));root.innerHTML=arr.length?arr.map(x=>`<div class="card row v264GradedCard"><button class="checkbox ${x.done?'done':''}" onclick="v264ToggleGraded(${js(x.id)})">${x.done?'✓':''}</button><div class="v264GradedMain"><b class="${x.done?'doneText':''}">${html(x.subject)} · ${html(x.title)}</b><div class="small">Benotete Abgabe · ${html(fmtDate(x.dueDate))}${x.dueMode==='lessons'?` · in ${Number(x.dueLessons||1)} Unterrichtsstunde${Number(x.dueLessons||1)===1?'':'n'} geplant`:''}${x.note?' · '+html(x.note):''}</div>${typeof fileChips==='function'?fileChips(x.files):''}</div><div class="v264GradedActions"><button class="ghost" onclick="v264OpenGradedSubmission(${js(x.id)})">Bearbeiten</button><button class="dangerBtn" onclick="v264DeleteGraded(${js(x.id)})">×</button></div></div>`).join(''):'<div class="empty">Noch keine benotete Abgabe.</div>'}
-const oldRenderTasks=window.renderTasks||(()=>{});if(!oldRenderTasks.__v264){const w=function(){const r=oldRenderTasks.apply(this,arguments);renderGraded();return r};w.__v264=true;window.renderTasks=w;try{renderTasks=w}catch(_){}}
-const oldOpenTest=window.openAddTest;if(typeof oldOpenTest==='function'){window.openAddTest=function(){const r=oldOpenTest.apply(this,arguments);setTimeout(()=>{const s=q('#tType');if(s&&![...s.options].some(o=>o.textContent==='Klausur')){const o=document.createElement('option');o.textContent='Klausur';s.appendChild(o)}},0);return r};try{openAddTest=window.openAddTest}catch(_){}}
+/* Local-first: stamp changed records BEFORE any cloud dirty/push layer sees them. */
+function installSave(){
+  const fn=window.save||(()=>{});if(typeof fn!=='function'||fn.__v232LocalFirst)return;
+  function wrappedSave(){
+    const old=readStored();if(!v232SyncBusy)stampChanges(data,old);persistLocal();setStatus('Lokal gespeichert ✓');
+    const r=fn.apply(this,arguments);persistLocal();return r;
+  }
+  wrappedSave.__v232LocalFirst=true;wrappedSave.__v232Original=fn;window.save=wrappedSave;try{save=wrappedSave}catch(_){ }
+}
 
-/* ---- Karteikarten + Quiz attachments without touching the established learning UI. ---- */
-let pendingCardFiles=[],pendingQuizFiles=[];
-function pendingNames(list){return list.length?`<div class="small" style="margin-top:6px">${list.map(x=>html(x.name)).join(' · ')}</div>`:''}
-window.v264PickCardFiles=function(inp){pendingCardFiles=[...(inp?.files||[])];const x=q('#v264CardFileNames');if(x)x.innerHTML=pendingNames(pendingCardFiles)};
-window.openAddCardToDeck=function(did){const d=getData().flashDecks?.find(x=>String(x.id)===String(did));if(!d)return alert('Karteikarten-Ordner nicht gefunden.');pendingCardFiles=[];openModal(`<h2>Karte hinzufügen</h2><label>Frage</label><textarea id="v264DeckQ"></textarea><label style="margin-top:10px">Antwort</label><textarea id="v264DeckA"></textarea><div class="v264AttachBox"><b>Bild / Datei</b><input type="file" multiple accept="image/*,.pdf,.doc,.docx,.ppt,.pptx" onchange="v264PickCardFiles(this)"><div id="v264CardFileNames"></div></div><div class="row" style="margin-top:10px;flex-wrap:wrap"><button type="button" class="primary" onclick="v264SaveCard(${js(d.id)},false)">Speichern</button><button type="button" class="ghost" onclick="v264SaveCard(${js(d.id)},true)">Speichern & nächste Karte</button></div>`)};
-window.v264SaveCard=async function(did,again){const d=getData().flashDecks?.find(x=>String(x.id)===String(did)),question=(q('#v264DeckQ')?.value||'').trim(),answer=(q('#v264DeckA')?.value||'').trim();if(!d||!question||!answer)return alert('Bitte Frage und Antwort ausfüllen.');const c={id:typeof id==='function'?id():'card-'+Date.now(),subject:d.subject,deckId:d.id,q:question,a:answer,created:Date.now(),attachments:[]};getData().flashcards.push(c);try{await storeEntityFiles(c,pendingCardFiles)}catch(_){}save();try{renderDeckDetail()}catch(_){};if(again){pendingCardFiles=[];q('#v264DeckQ').value='';q('#v264DeckA').value='';q('#v264CardFileNames').innerHTML='';q('#v264DeckQ').focus()}else closeModal()};
-window.saveCardToDeck=function(did){return v264SaveCard(did,false)};
-const oldEditCard=window.editDeckCard;window.editDeckCard=function(cid){const c=getData().flashcards?.find(x=>String(x.id)===String(cid));if(!c)return;pendingCardFiles=[];openModal(`<h2>Karte bearbeiten</h2><label>Frage</label><textarea id="editCardQ">${html(c.q)}</textarea><label style="margin-top:10px">Antwort</label><textarea id="editCardA">${html(c.a)}</textarea><div class="v264AttachBox"><b>Bild / Datei hinzufügen</b><input type="file" multiple accept="image/*,.pdf,.doc,.docx,.ppt,.pptx" onchange="v264PickCardFiles(this)"><div id="v264CardFileNames"></div>${typeof fileChips==='function'?fileChips(c.attachments):''}</div><button type="button" class="primary" style="margin-top:10px" onclick="v264SaveCardEdit(${js(c.id)})">Speichern</button>`)};
-window.v264SaveCardEdit=async function(cid){const c=getData().flashcards?.find(x=>String(x.id)===String(cid));if(!c)return;c.q=(q('#editCardQ')?.value||'').trim();c.a=(q('#editCardA')?.value||'').trim();c.attachments=Array.isArray(c.attachments)?c.attachments:[];try{await storeEntityFiles(c,pendingCardFiles)}catch(_){}save();closeModal();renderDeckDetail()};window.saveDeckCardEdit=window.v264SaveCardEdit;
-function currentCard(){try{const did=selectedDeckId,cards=getData().flashcards.filter(c=>String(c.deckId)===String(did));const qids=window.v102DeckQueue||[];return getData().flashcards.find(c=>String(c.id)===String(qids[window.v102DeckIndex||0]))||cards[window.currentFlash||0]||cards[0]}catch(_){return null}}
-const oldDeckRender=window.renderDeckDetail||(()=>{});if(!oldDeckRender.__v264){const w=function(){const r=oldDeckRender.apply(this,arguments);setTimeout(()=>{const c=currentCard(),root=q('#deckDetail .section');if(root&&c?.attachments?.length&&!q('.v264CardAttachments',root)){const d=document.createElement('div');d.className='v264CardAttachments';d.innerHTML='<div class="small"><b>Anhänge</b></div>'+fileChips(c.attachments);root.appendChild(d)}},0);return r};w.__v264=true;window.renderDeckDetail=w;try{renderDeckDetail=w}catch(_){}}
-const oldEditQuiz=window.editQuiz;window.editQuiz=function(qid){pendingQuizFiles=[];const r=oldEditQuiz.apply(this,arguments);setTimeout(()=>{const a=q('#newQuizA');if(a&&!q('#v264QuizFiles')){const box=document.createElement('div');box.id='v264QuizFiles';box.className='v264AttachBox';box.innerHTML='<b>Bild / Datei zur Frage</b><input type="file" multiple accept="image/*,.pdf,.doc,.docx,.ppt,.pptx" onchange="pendingQuizFiles=[...this.files];document.getElementById(\'v264QuizFileNames\').innerHTML=pendingNames(pendingQuizFiles)"><div id="v264QuizFileNames"></div>';a.insertAdjacentElement('afterend',box)}},0);return r};try{editQuiz=window.editQuiz}catch(_){}
-const baseQuizSave=window.v217SaveQuizQuestion||window.addQuizQuestion;window.v264SaveQuizQuestion=async function(qid){const before=(getData().quizzes?.find(x=>String(x.id)===String(qid))?.questions||[]).length;await Promise.resolve(baseQuizSave.call(this,qid));const quiz=getData().quizzes?.find(x=>String(x.id)===String(qid)),item=quiz?.questions?.[before];if(item&&pendingQuizFiles.length){item.attachments=[];try{await storeEntityFiles(item,pendingQuizFiles)}catch(_){}pendingQuizFiles=[];save();window.editQuiz(qid)}};window.addQuizQuestion=window.v264SaveQuizQuestion;window.v217SaveQuizQuestion=window.v264SaveQuizQuestion;try{addQuizQuestion=window.addQuizQuestion}catch(_){}
-const oldQuizRender=window.renderQuizPlayer||(()=>{});if(!oldQuizRender.__v264){const w=function(){const r=oldQuizRender.apply(this,arguments);setTimeout(()=>{try{const quiz=getData().quizzes.find(x=>String(x.id)===String(selectedQuizId)),item=quiz?.questions?.[quizSession?.index],box=q('#quizPlayerRoot .quizQuestion');if(box&&item?.attachments?.length&&!q('.v264QuizAttach',box)){const d=document.createElement('div');d.className='v264QuizAttach v264AttachBox';d.innerHTML='<b>Anhänge</b>'+fileChips(item.attachments);box.appendChild(d)}}catch(_){}},0);return r};w.__v264=true;window.renderQuizPlayer=w;try{renderQuizPlayer=w}catch(_){}}
+async function preSyncSafety(){
+  commitEditor();const old=readStored();stampChanges(data,old);persistLocal();
+  try{if(typeof window.v111CreateBackupNow==='function')await window.v111CreateBackupNow(false)}catch(_){ }
+}
+function installCloudMerge(){
+  if(v232Installing)return;v232Installing=true;
+  try{
+    const fn=window.v171CloudNow;if(typeof fn!=='function'||fn.__v232MergeSafe)return;
+    async function safeSync(){
+      if(v232SyncBusy)return {busy:true};
+      if(editorActive()){
+        commitEditor();persistLocal();setStatus('Lokal sicher · Sync nach Editor');
+        try{window.v150MarkDirty?.(0)}catch(_){ }
+        return {deferred:true};
+      }
+      v232SyncBusy=true;setStatus('Geräte werden zusammengeführt …','syncing');
+      let localBefore=null,result=null,error=null;
+      try{
+        await preSyncSafety();localBefore=clone(data);
+        result=await Promise.resolve(fn.apply(this,arguments));
+        const remoteAfter=clone(data),merged=mergeState(localBefore,remoteAfter);
+        data=merged;persistLocal();
+        try{renderAll?.()}catch(_){ }
+        try{if(q('#view-plan.active'))renderPlan?.()}catch(_){ }
+        setStatus('Auf diesem Gerät zusammengeführt ✓');
+        /* The merged state becomes the next outgoing state instead of letting a stale pull win. */
+        try{window.v150MarkDirty?.(120)}catch(_){ }
+      }catch(e){error=e;console.error('[Studia V232] sync',e);if(localBefore){data=localBefore;persistLocal();try{renderAll?.()}catch(_){ }}setStatus('Cloud fehlgeschlagen · lokal sicher');}
+      finally{v232SyncBusy=false;setTimeout(()=>{const m=q('#v232PullSync');m?.classList.remove('show','ready','syncing')},900)}
+      if(error)throw error;return result;
+    }
+    safeSync.__v232MergeSafe=true;safeSync.__v219Guarded=true;safeSync.__v232Original=fn;window.v171CloudNow=safeSync;
+  }finally{v232Installing=false}
+}
+window.studiaSyncNow=async function(){installSave();installCloudMerge();const fn=window.v171CloudNow;if(typeof fn!=='function'){setStatus('Sync noch nicht verbunden');return}try{return await fn()}catch(_){ }};
 
-/* ---- Sticker folder change: only frame/sticker assets move from sources -> stickers. ---- */
-window.STUDIA_STICKER_ROOT='https://gurkenfurzi.github.io/sp/assets/stickers/';
-function repairStickerPaths(root=document){qa('img[src*="assets/sources/"]',root).forEach(el=>{const raw=el.getAttribute('src')||'',hint=(raw+' '+el.className+' '+(el.alt||'')).toLowerCase();if(/rahmen|frame|border|sticker/.test(hint))el.src=raw.replace(/assets\/sources\//i,'assets/stickers/')})}
-const oldSticker=window.toggleStickerPanel;if(typeof oldSticker==='function'){window.toggleStickerPanel=function(){const r=oldSticker.apply(this,arguments);setTimeout(()=>repairStickerPaths(document),30);return r};try{toggleStickerPanel=window.toggleStickerPanel}catch(_){}}
+/* Desktop sync control. */
+function ensureDesktopSyncButton(){
+  if(q('#v232DesktopSync'))return;const b=document.createElement('button');b.id='v232DesktopSync';b.type='button';b.innerHTML='<span class="spin">↻</span><span>Geräte synchronisieren<small>Lokal gespeichert</small></span>';b.onclick=()=>window.studiaSyncNow();document.body.appendChild(b);
+}
 
-/* ---- Delete guards requested earlier. ---- */
-for(const [name,msg] of Object.entries({deleteStudySheet:'Lernblatt wirklich löschen?',deleteHomework:'Hausaufgabe wirklich löschen?',deleteTest:'Test/Klausur wirklich löschen?',deleteGrade:'Note wirklich löschen?',deleteDeckCard:'Karteikarte wirklich löschen?',deleteQuizQuestion:'Quizfrage wirklich löschen?',deleteQuiz:'Quiz wirklich löschen?',deleteTopicFile:'Datei wirklich löschen?',deleteSubjectFile:'Datei wirklich löschen?'})){const old=window[name];if(typeof old!=='function'||old.__v264Guard)continue;const w=function(...args){if(!confirm(msg+' Diese Aktion kann nicht rückgängig gemacht werden.'))return;return old.apply(this,args)};w.__v264Guard=true;window[name]=w;try{if(name==='deleteHomework')deleteHomework=w;if(name==='deleteTest')deleteTest=w;if(name==='deleteGrade')deleteGrade=w}catch(_){}}
+/* Mobile pull-to-sync: drag down from the top. */
+let pullStart=null,pullY=0,pullReady=false;
+function ensurePull(){if(q('#v232PullSync'))return;const e=document.createElement('div');e.id='v232PullSync';e.textContent='Zum Synchronisieren ziehen';document.body.appendChild(e)}
+document.addEventListener('touchstart',e=>{
+  if(innerWidth>=900||editorActive()||document.body.classList.contains('modalOpen'))return;
+  const sc=document.scrollingElement||document.documentElement;if((sc.scrollTop||window.scrollY)>3)return;
+  const t=e.touches?.[0];if(!t)return;pullStart=t.clientY;pullY=0;pullReady=false;ensurePull();
+},{passive:true});
+document.addEventListener('touchmove',e=>{
+  if(pullStart==null)return;const t=e.touches?.[0];if(!t)return;pullY=Math.max(0,t.clientY-pullStart);const el=q('#v232PullSync');if(!el)return;
+  if(pullY>8){el.classList.add('show');el.style.transform=`translate(-50%, ${Math.min(58,pullY*.42)-45}px)`}
+  pullReady=pullY>=85;el.classList.toggle('ready',pullReady);el.textContent=pullReady?'Loslassen zum Synchronisieren ↻':'Zum Synchronisieren ziehen';
+},{passive:true});
+document.addEventListener('touchend',()=>{
+  if(pullStart==null)return;const run=pullReady;pullStart=null;pullReady=false;const el=q('#v232PullSync');if(el)el.style.transform='';if(run)window.studiaSyncNow();else setTimeout(()=>el?.classList.remove('show','ready'),180);
+},{passive:true});
 
-const oldCanvasRender264=window.renderCanvasObjects||((typeof renderCanvasObjects==='function')?renderCanvasObjects:null);if(typeof oldCanvasRender264==='function'&&!oldCanvasRender264.__v264Tape){const wr=function(){const r=oldCanvasRender264.apply(this,arguments);setTimeout(()=>window.v242DecorateTape?.(),0);return r};wr.__v264Tape=true;window.renderCanvasObjects=wr;try{renderCanvasObjects=wr}catch(_){}}
-function boot(){ensureModel();renderGraded();repairStickerPaths(document);const e=q('#headerEyebrow');if(e)e.textContent='VERSION 264';const hint=q('#v246BackendHint');if(hint)hint.textContent='Google Auto-Sync V264 · Studia bleibt auf GitHub · kein Google-Balken.';if(token())scheduleSync(1800)}
-[0,200,800,1800].forEach(t=>setTimeout(boot,t));
+/* ---------- Text size in the desktop top toolbar: own +/- and direct formatting ---------- */
+let sizeRange=null,sizeObjectId=null;
+function selectedTextObj(){
+  try{const ids=[canvasState?.selectedId,...(canvasState?.selectedIds||[])].filter(Boolean),o=(canvasState?.objects||[]).find(x=>ids.some(id=>String(id)===String(x.id)));return o&&['text','block','task','merke'].includes(o.kind)&&!o.isChecklist?o:null}catch(_){return null}
+}
+function textEl(o){return o?q(`#canvasObjects .cobj[data-id="${CSS.escape(String(o.id))}"]`):null}
+function rememberSizeSelection(){
+  const o=selectedTextObj();sizeObjectId=o?.id||null;sizeRange=null;const el=textEl(o),s=getSelection();if(!el||!s?.rangeCount)return;
+  const r=s.getRangeAt(0),n=r.commonAncestorContainer.nodeType===1?r.commonAncestorContainer:r.commonAncestorContainer.parentElement;
+  if(n&&(n===el||el.contains(n))&&!r.collapsed)try{sizeRange=r.cloneRange()}catch(_){ }
+}
+document.addEventListener('selectionchange',()=>{const s=getSelection(),o=selectedTextObj(),el=textEl(o);if(!s?.rangeCount||!el)return;const r=s.getRangeAt(0),n=r.commonAncestorContainer.nodeType===1?r.commonAncestorContainer:r.commonAncestorContainer.parentElement;if(n&&(n===el||el.contains(n))&&!r.collapsed){sizeObjectId=o.id;try{sizeRange=r.cloneRange()}catch(_){ }} });
+function applySizeDirect(px){
+  px=Math.max(6,Math.min(180,Math.round(Number(px)||16)));let o=selectedTextObj();if(!o&&sizeObjectId)try{o=(canvasState.objects||[]).find(x=>String(x.id)===String(sizeObjectId))}catch(_){ }
+  if(!o)return;
+  const el=textEl(o);let ranged=false;
+  if(sizeRange&&el){
+    try{const n=sizeRange.commonAncestorContainer.nodeType===1?sizeRange.commonAncestorContainer:sizeRange.commonAncestorContainer.parentElement;if(n&&(n===el||el.contains(n))){el.focus({preventScroll:true});const s=getSelection();s.removeAllRanges();s.addRange(sizeRange.cloneRange());document.execCommand('styleWithCSS',false,false);document.execCommand('fontSize',false,'7');qa('font[size="7"]',el).forEach(f=>{f.removeAttribute('size');f.style.fontSize=px+'px'});o.text=el.innerHTML;ranged=true;sizeRange=s.rangeCount?s.getRangeAt(0).cloneRange():sizeRange}}catch(_){ }
+  }
+  if(!ranged){o.style||={};o.style.fontSize=px;if(el)el.style.fontSize=px+'px'}
+  qa('.v134FormatTools input.size').forEach(i=>i.value=String(px));
+  try{markCanvasDirty?.(false)}catch(_){ }try{pushHistory?.()}catch(_){ }try{renderCanvasInspector?.()}catch(_){ }
+}
+window.v232FontStep=function(delta){rememberSizeSelection();const inp=q('.v134FormatTools input.size');const o=selectedTextObj();const cur=Number(inp?.value)||Number(o?.style?.fontSize)||16;applySizeDirect(cur+Number(delta||0))};
+function ensureSizeControls(){
+  const inp=q('.v134FormatTools input.size');if(!inp||inp.closest('.v232SizeGroup'))return;
+  inp.removeAttribute('onchange');const g=document.createElement('span');g.className='v232SizeGroup';const minus=document.createElement('button'),plus=document.createElement('button');minus.type=plus.type='button';minus.textContent='−';plus.textContent='+';minus.title='Text kleiner';plus.title='Text größer';inp.parentNode.insertBefore(g,inp);g.append(minus,inp,plus);
+  const keep=e=>{rememberSizeSelection();e.preventDefault()};minus.addEventListener('pointerdown',keep);plus.addEventListener('pointerdown',keep);inp.addEventListener('pointerdown',rememberSizeSelection,true);
+  minus.addEventListener('click',()=>window.v232FontStep(-1));plus.addEventListener('click',()=>window.v232FontStep(1));
+  inp.addEventListener('input',()=>applySizeDirect(inp.value));inp.addEventListener('change',()=>applySizeDirect(inp.value));inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();applySizeDirect(inp.value);inp.blur()}});
+}
+
+/* ---------- Timetable colors: one authoritative setter/resolver ---------- */
+function canonSubject(name){
+  let x=String(name||'').replace(/\s+/g,' ').trim();try{x=prettySubject(x)}catch(_){ }x=String(x||'').toUpperCase().replace(/\s+/g,' ').trim();
+  const a={M:'MATHEMATIK',MATHE:'MATHEMATIK',MATHEMATIK:'MATHEMATIK',D:'DEUTSCH',DE:'DEUTSCH',DEUTSCH:'DEUTSCH',E:'ENGLISCH',ENG:'ENGLISCH',ENGLISCH:'ENGLISCH',PH:'PHYSIK',PHY:'PHYSIK',PHYSIK:'PHYSIK',BIO:'BIOLOGIE',BI:'BIOLOGIE',BIOLOGIE:'BIOLOGIE',CH:'CHEMIE',CHE:'CHEMIE',CHEMIE:'CHEMIE',G:'GESCHICHTE',GE:'GESCHICHTE',GES:'GESCHICHTE',GESCHICHTE:'GESCHICHTE',ET:'ETHIK',ETHIK:'ETHIK',SP:'SPORT',SPORT:'SPORT',INF:'INFORMATIK',INFORMATIK:'INFORMATIK'};
+  return a[x]||x;
+}
+function subjectColor232(name){
+  data.timetableSubjectColors ||= {};const c=canonSubject(name);
+  for(const [k,v] of Object.entries(data.timetableSubjectColors)){if(canonSubject(k)===c&&/^#[0-9a-f]{6}$/i.test(String(v)))return String(v).toLowerCase()}
+  const rec=(data.subjects||[]).find(s=>canonSubject(s.name)===c||canonSubject(s.abbr)===c);if(rec?.color)return String(rec.color);
+  try{return hashColor(c)}catch(_){return '#e9a7a4'}
+}
+function setSubjectColor232(name,color){
+  color=String(color||'').toLowerCase();if(!/^#[0-9a-f]{6}$/.test(color))return;const c=canonSubject(name);if(!c)return;
+  data.timetableSubjectColors ||= {};data.timetableSubjectColors[c]=color;
+  try{const k=timetableSubjectKey(name);if(k)data.timetableSubjectColors[k]=color}catch(_){ }
+  for(const s of data.subjects||[]){if(canonSubject(s.name)===c||canonSubject(s.abbr)===c){s.color=color;if(s.autoFromTimetable)s.cover=color;s[UPDATED]=now()}}
+  ensureMeta(data).fields.timetableSubjectColors=now();
+  try{save()}catch(_){persistLocal()}
+  try{renderPlan?.();renderHome?.();if(q('#view-subjects.active'))renderSubjects?.()}catch(_){ }
+  setTimeout(()=>{try{renderPlan?.()}catch(_){ }},30);
+}
+window.setTimetableSubjectColor=setSubjectColor232;window.v216SetSubjectColor=setSubjectColor232;window.v232SetSubjectColor=setSubjectColor232;
+try{timetableSubjectColor=subjectColor232}catch(_){ }window.timetableSubjectColor=subjectColor232;
+document.addEventListener('change',e=>{const inp=e.target instanceof Element?e.target.closest('#v210SubjectColors input[type="color"]'):null;if(!inp)return;const name=inp.closest('.v210ColorRow')?.querySelector('span')?.textContent?.trim();if(name)setSubjectColor232(name,inp.value)},true);
+
+function ensureSyncInfoSettings(){
+  const card=q('.v171CloudSettings');if(!card||q('#v232SyncStatusInline',card))return;const e=document.createElement('div');e.id='v232SyncStatusInline';e.textContent=v232LastStatus;card.appendChild(e);
+  const btn=qa('button',card).find(b=>/Jetzt synchronisieren/i.test(b.textContent||''));if(btn){btn.removeAttribute('onclick');btn.onclick=()=>window.studiaSyncNow();btn.textContent='Jetzt zusammenführen & synchronisieren'}
+}
+function maintain(){installSave();installCloudMerge();ensureDesktopSyncButton();ensurePull();ensureSizeControls();ensureSyncInfoSettings()}
+const obs=new MutationObserver(()=>requestAnimationFrame(maintain));obs.observe(document.documentElement,{childList:true,subtree:true});
+[0,120,450,1200,2500].forEach(t=>setTimeout(maintain,t));
+window.addEventListener('online',()=>setTimeout(()=>window.studiaSyncNow(),350));
+
+const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 232'};[0,250,900,1800].forEach(t=>setTimeout(setVer,t));
 })();
 </script>
+<!-- ===== /Studia V232 ===== -->
 
-<!-- ===== Studia V265 — Safari/PWA Google form-bounce auto sync ONLY ===== -->
-<style id="studia-v265-sync-style">
-#v265SyncState{margin-top:8px;padding:8px 10px;border-radius:11px;background:#f7fbef;border:1px solid #dce8ca;color:#6f805b;font-size:10px;font-weight:850;line-height:1.4}
-#v265SyncState.bad{background:#fff1f0;border-color:#efccca;color:#a06363}
+
+<!-- ===== Studia V233 · two-phase cloud sync transport fix ===== -->
+<style id="studia-v233-sync-style">
+#v232DesktopSync.v233Error small,#v232SyncStatusInline.v233Error{color:#b55d61!important}
+#v232DesktopSync.v233Ok small,#v232SyncStatusInline.v233Ok{color:#71845f!important}
 </style>
-<script id="studia-v265-sync-script">
-(function(){
+<script id="studia-v233-sync-script">
+(()=>{
 'use strict';
-if(window.__STUDIA_V265__)return;window.__STUDIA_V265__=true;
-const q=(s,r=document)=>r?.querySelector?.(s)||null,qa=(s,r=document)=>r?.querySelectorAll?[...r.querySelectorAll(s)]:[];
-const BASE_KEY='studia-v242-last-synced-state',DIRTY='studia-v242-dirty',CLOUD_AT='studia-v265-cloud-updated-at';
-let busy=false,applying=false,timer=0,lastCheck=0;
-function clone(x){try{return structuredClone(x)}catch(_){return JSON.parse(JSON.stringify(x==null?{}:x))}}
-function getData(){try{return window.data||data}catch(_){return {}}}
-function setData(v){try{window.data=v;data=v}catch(_){window.data=v}}
-function persist(){try{localStorage.setItem('schoolhub-v1',JSON.stringify(getData()))}catch(_){try{window.save?.()}catch(__){}}}
-function readBase(){try{return JSON.parse(localStorage.getItem(BASE_KEY)||'{}')}catch(_){return {}}}
-function saveBase(v){try{localStorage.setItem(BASE_KEY,JSON.stringify(v||{}))}catch(_){}}
-function token(){return String(window.StudiaCloud?.config?.().token||'')}
-function cloudUrl(){return String(window.StudiaCloud?.config?.().url||'').trim().replace(/\?.*$/,'')}
-function rememberUrl(url){try{window.StudiaCloud?.rememberUrl?.(url)}catch(_){};for(const k of ['studia-v242-script-url','studia-script-url','schoolhub-script-url'])try{localStorage.setItem(k,url)}catch(_){}}
-function rememberAuth(r){try{window.StudiaCloud?.rememberAuth?.(r)}catch(_){};if(r?.token)for(const k of ['studia-v242-token','studia-token','schoolhub-token'])try{localStorage.setItem(k,String(r.token))}catch(_){}}
-function status(t,bad=false){const s=String(t||'');try{window.StudiaCloud?.setStatus?.(s,bad)}catch(_){};const card=q('.v171CloudSettings');let x=q('#v265SyncState');if(card&&!x){x=document.createElement('div');x.id='v265SyncState';card.appendChild(x)}if(x){x.textContent=s;x.classList.toggle('bad',!!bad)}const sm=q('#v242DesktopSync small');if(sm)sm.textContent=s;const old=q('#v264SyncBadge');if(old)old.style.display='none'}
-function secureId(){try{const a=new Uint32Array(4);crypto.getRandomValues(a);return [...a].map(x=>x.toString(36)).join('')}catch(_){return Date.now().toString(36)+Math.random().toString(36).slice(2)}}
-function deviceId(){let v='';try{v=localStorage.getItem('studia-v265-device-id')||localStorage.getItem('studia-v264-device-id')||''}catch(_){}if(!v){v='d-'+secureId()}try{localStorage.setItem('studia-v265-device-id',v)}catch(_){}return v}
-function deviceName(){return /iPhone|iPad|Android|Mobile/i.test(navigator.userAgent)?'Handy':'Laptop'}
-function bytesToB64(bytes){let s='';for(let i=0;i<bytes.length;i+=0x8000)s+=String.fromCharCode(...bytes.subarray(i,i+0x8000));return btoa(s)}
-function b64ToBytes(s){const raw=atob(String(s||'')),a=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)a[i]=raw.charCodeAt(i);return a}
-function decodeB64UrlJson(s){let b=String(s||'').replace(/-/g,'+').replace(/_/g,'/');while(b.length%4)b+='=';const raw=atob(b),bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);return JSON.parse(new TextDecoder().decode(bytes)||'{}')}
-async function gzipText(s){if(typeof CompressionStream!=='function')return '';const cs=new CompressionStream('gzip');const ab=await new Response(new Blob([String(s)]).stream().pipeThrough(cs)).arrayBuffer();return bytesToB64(new Uint8Array(ab))}
-async function decodeFastState(encoded){if(!encoded)return {};if(typeof DecompressionStream!=='function')throw new Error('Safari-Version unterstützt Cloud-Entpackung nicht');const ds=new DecompressionStream('gzip');const txt=await new Response(new Blob([b64ToBytes(encoded)]).stream().pipeThrough(ds)).text();return JSON.parse(txt||'{}')}
-async function addState(payload,name,obj){const raw=JSON.stringify(obj||{});let gz='';try{gz=await gzipText(raw)}catch(_){};if(gz&&gz.length<raw.length)payload[name+'Gzip']=gz;else payload[name]=raw}
-function bounce(action,payload={},timeoutMs=45000){
- const url=cloudUrl();if(!url)return Promise.reject(new Error('Apps-Script-/exec-URL fehlt'));
- return new Promise((resolve,reject)=>{
-   const callId='v265-'+secureId(),frameName='studiaV265_'+secureId();let done=false;
-   const frame=document.createElement('iframe');frame.name=frameName;frame.style.cssText='position:fixed;width:1px;height:1px;left:-9999px;top:-9999px;border:0;opacity:0;pointer-events:none';
-   const form=document.createElement('form');form.method='POST';form.action=url;form.target=frameName;form.enctype='application/x-www-form-urlencoded';form.acceptCharset='UTF-8';form.style.display='none';
-   const add=(k,v)=>{const i=document.createElement('input');i.type='hidden';i.name=k;i.value=String(v??'');form.appendChild(i)};
-   add('action','bridge_bounce_v265');add('bounceAction',action);add('callId',callId);for(const[k,v]of Object.entries(payload))if(v!=null)add(k,v);
-   const cleanup=()=>{if(done)return;done=true;clearTimeout(to);window.removeEventListener('message',onmsg);setTimeout(()=>{try{form.remove()}catch(_){}try{frame.remove()}catch(_){}},0)};
-   const fail=e=>{cleanup();reject(e instanceof Error?e:new Error(String(e||'Google-Sync fehlgeschlagen')))};
-   const onmsg=ev=>{if(ev.origin!==location.origin)return;const m=ev.data;if(!m||m.type!=='studia-v265-bounce'||m.callId!==callId)return;try{const r=decodeB64UrlJson(m.payload);cleanup();if(!r?.ok)throw new Error(String(r?.error||'Google-Sync fehlgeschlagen'));resolve(r)}catch(e){fail(e)}};
-   const to=setTimeout(()=>fail(new Error('Google-Sync-Antwort kam nicht zurück · sync-bridge.html prüfen')),timeoutMs);
-   window.addEventListener('message',onmsg);document.body.append(frame,form);try{form.submit()}catch(e){fail(e)}
- })
+if(window.__STUDIA_V233__)return;window.__STUDIA_V233__=true;
+const q=(s,r=document)=>r?.querySelector?.(s)||null;
+const clone=x=>{try{return structuredClone(x)}catch(_){try{return JSON.parse(JSON.stringify(x))}catch(__){return x}}};
+const TRACKED=['homework','tests','grades','flashcards','subjects','absences','studySessions','reminders','flashDecks','quizzes','studySheets'];
+const META='_syncMeta',UPDATED='_updatedAt';
+let busy=false;
+
+function status(t,state='ok'){
+  try{window.v232SetSyncStatus?.(t,state==='syncing'?'syncing':'ok')}catch(_){ }
+  const b=q('#v232DesktopSync'),i=q('#v232SyncStatusInline');
+  for(const el of [b,i]){if(!el)continue;el.classList.toggle('v233Error',state==='error');el.classList.toggle('v233Ok',state==='ok')}
 }
-async function pullFull(meta){const total=Math.max(0,Number(meta?.transportChunks||0)),expected=Number(meta?.updatedAt||0);if(!total)return {};let encoded='';for(let i=0;i<total;i++){status(`Cloud lädt ${i+1}/${total} …`);const r=await bounce('pull_chunk',{token:token(),index:i,expectedUpdatedAt:expected},45000);if(Number(r.updatedAt||0)!==expected)throw new Error('Cloud wurde während des Ladens geändert · synchronisiere erneut');encoded+=String(r.chunk||'')}return await decodeFastState(encoded)}
-function cloudAt(){return Number(localStorage.getItem(CLOUD_AT)||0)||0}
-function saveCloudAt(v){try{localStorage.setItem(CLOUD_AT,String(Number(v)||0))}catch(_){}}
-function dirty(){try{return !!window.v150CloudDirty?.()}catch(_){return localStorage.getItem(DIRTY)==='1'}}
-async function applyCloud(meta){const merged=await pullFull(meta);try{await window.v111CreateBackupNow?.(true)}catch(_){}applying=true;try{setData(merged);persist();saveBase(merged);saveCloudAt(meta.updatedAt);try{window.v150ClearDirty?.()}catch(_){};try{window.renderAll?.();if(q('#view-plan.active'))window.renderPlan?.();if(q('#view-home.active'))window.renderHome?.();if(q('#view-tasks.active'))window.renderTasks?.();if(q('#view-grades.active'))window.renderGrades?.();if(q('#view-subjects.active'))window.renderSubjects?.();if(q('#view-subject-detail.active'))window.renderSubjectDetail?.();if(q('#view-topic-detail.active'))window.renderTopicDetail?.();if(q('#view-deck-detail.active'))window.renderDeckDetail?.()}catch(_){}}finally{setTimeout(()=>applying=false,80)}}
-async function syncNow(reason='auto'){if(busy||applying||!navigator.onLine)return;const t=token();if(!t)return;busy=true;try{const forcePush=reason==='manual'||reason==='login'||reason==='register'||dirty();let meta;if(forcePush){status('Google speichert …');try{if(document.body.classList.contains('editorMode'))window.saveCanvasSheetCore?.(true)}catch(_){}persist();const p={token:t,deviceId:deviceId(),deviceName:deviceName()};await addState(p,'data',clone(getData()));await addState(p,'base',readBase());meta=await bounce('sync_push',p,90000)}else{status('Google prüft Änderungen …');meta=await bounce('meta',{token:t,deviceId:deviceId(),deviceName:deviceName()},30000)}if(Number(meta.version||0)<265)throw new Error('Apps-Script V265 fehlt');const remoteAt=Number(meta.updatedAt||0);if(forcePush||remoteAt!==cloudAt()){const pm=meta.transportChunks!=null?meta:await bounce('pull_meta',{token:t},30000);await applyCloud(pm)}else saveCloudAt(remoteAt);lastCheck=Date.now();const n=Number(meta.deviceCount||0);status(`Synchronisiert ✓${n>=2?' · '+n+' Geräte':''}`);return meta}catch(e){console.error('[Studia V265 sync]',e);persist();status(String(e?.message||'Google-Sync fehlgeschlagen')+' · lokal sicher',true);throw e}finally{busy=false}}
-function schedule(delay=1100){clearTimeout(timer);if(applying||!navigator.onLine||!token())return;timer=setTimeout(()=>syncNow('auto').catch(()=>{}),Math.max(500,Number(delay)||1100))}
-const priorDirty=window.v150MarkDirty;window.v150MarkDirty=function(delay=700){try{priorDirty?.(delay)}catch(_){};if(!applying)schedule(Math.max(850,Number(delay)||700))};
-window.studiaSyncNow=()=>syncNow('manual');window.v171CloudNow=()=>syncNow('manual');try{v171CloudNow=window.v171CloudNow}catch(_){}
-window.v171CloudLogin=async function(){try{const url=(q('#v150ScriptUrl')?.value||cloudUrl()).trim(),username=(q('#v150Username')?.value||'').trim(),password=q('#v150Password')?.value||'';if(!url||!username||!password)throw new Error('URL, Benutzername und Passwort eingeben');rememberUrl(url);status('Google-Verbindung wird geprüft …');const h=await bounce('health',{},30000);if(Number(h.version||0)<265)throw new Error('Apps-Script V265 fehlt');const r=await bounce('login',{username,password},30000);rememberAuth(r);localStorage.setItem(DIRTY,'1');await syncNow('login');return r}catch(e){status(String(e?.message||e),true);throw e}};
-window.v171CloudRegister=async function(){try{const url=(q('#v150ScriptUrl')?.value||cloudUrl()).trim(),username=(q('#v150Username')?.value||'').trim(),password=q('#v150Password')?.value||'';if(!url||!username||!password)throw new Error('URL, Benutzername und Passwort eingeben');rememberUrl(url);status('Google-Konto wird erstellt …');const r=await bounce('register',{username,password},30000);rememberAuth(r);if(r.recoveryCode)alert('Wiederherstellungscode — sicher speichern:\n\n'+r.recoveryCode);localStorage.setItem(DIRTY,'1');await syncNow('register');return r}catch(e){status(String(e?.message||e),true);throw e}};
-if(window.StudiaCloud){window.StudiaCloud.health=()=>bounce('health',{},30000);window.StudiaCloud.login=(u,p)=>bounce('login',{username:u,password:p},30000);window.StudiaCloud.register=(u,p)=>bounce('register',{username:u,password:p},30000);window.StudiaCloud.me=()=>bounce('me',{token:token()},30000);window.StudiaCloud.syncState=async d=>{const p={token:token(),deviceId:deviceId(),deviceName:deviceName()};await addState(p,'data',d);await addState(p,'base',readBase());const m=await bounce('sync_push',p,90000);m.data=await pullFull(m);return m}}
-function bind(){const b=q('#v242DesktopSync');if(b)b.onclick=e=>{e.preventDefault();syncNow('manual').catch(()=>{})};qa('.v171CloudSettings button').forEach(b=>{if(/jetzt synchronisieren|geräte synchronisieren/i.test(b.textContent||'')){b.removeAttribute('onclick');b.onclick=e=>{e.preventDefault();syncNow('manual').catch(()=>{})}}});const hint=q('#v246BackendHint');if(hint)hint.textContent='Google Auto-Sync aktiv · GitHub bleibt die App.';const e=q('#headerEyebrow');if(e)e.textContent='VERSION 265'}
-window.addEventListener('online',()=>schedule(350));window.addEventListener('focus',()=>schedule(500));window.addEventListener('pageshow',()=>schedule(650));document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')schedule(500)});setInterval(()=>{if(document.visibilityState==='visible'&&navigator.onLine&&token()&&(dirty()||Date.now()-lastCheck>20000))schedule(400)},10000);
-[0,100,500,1500].forEach(t=>setTimeout(bind,t));setTimeout(()=>schedule(700),1100);
+function localPersist(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){console.warn('[V233] persist',e)}}
+function objectId(x){return x&&typeof x==='object'&&x.id!=null?String(x.id):''}
+function clean(v){
+  if(Array.isArray(v))return v.map(clean);
+  if(v&&typeof v==='object'){const o={};for(const [k,val] of Object.entries(v)){if(k===UPDATED||k===META)continue;o[k]=clean(val)}return o}
+  return v;
+}
+function same(a,b){try{return JSON.stringify(clean(a))===JSON.stringify(clean(b))}catch(_){return false}}
+function ensureMeta(d){
+  if(!d||typeof d!=='object')return {version:1,fields:{},tombstones:{}};
+  d[META] ||= {version:1,fields:{},tombstones:{}};d[META].fields ||= {};d[META].tombstones ||= {};return d[META];
+}
+function stampState(cur,old){
+  if(!cur||typeof cur!=='object')return;const ts=Date.now(),m=ensureMeta(cur),om=old?.[META]||{};
+  for(const key of TRACKED){
+    const a=Array.isArray(cur[key])?cur[key]:[],b=Array.isArray(old?.[key])?old[key]:[];
+    const bm=new Map(b.map(x=>[objectId(x),x]).filter(x=>x[0])),am=new Map(a.map(x=>[objectId(x),x]).filter(x=>x[0]));
+    m.tombstones[key] ||= {};
+    for(const item of a){const id=objectId(item);if(!id)continue;const prev=bm.get(id);if(!prev)item[UPDATED]=Number(item[UPDATED])||ts;else if(!same(item,prev))item[UPDATED]=ts;else if(!Number(item[UPDATED]))item[UPDATED]=Number(prev?.[UPDATED])||1;const dead=Number(m.tombstones[key][id]||0);if(dead&&Number(item[UPDATED]||0)>dead)delete m.tombstones[key][id]}
+    for(const prev of b){const id=objectId(prev);if(id&&!am.has(id))m.tombstones[key][id]=Math.max(Number(m.tombstones[key][id]||0),ts)}
+  }
+  for(const key of Object.keys(cur).filter(k=>k!==META&&!TRACKED.includes(k))){if(!same(cur[key],old?.[key]))m.fields[key]=ts;else if(!m.fields[key]&&om?.fields?.[key])m.fields[key]=om.fields[key]}
+}
+function combineMeta(a,b){
+  const A=a||{},B=b||{},o={version:1,fields:{},tombstones:{}};
+  for(const k of new Set([...Object.keys(A.fields||{}),...Object.keys(B.fields||{})]))o.fields[k]=Math.max(Number(A.fields?.[k]||0),Number(B.fields?.[k]||0));
+  for(const c of new Set([...Object.keys(A.tombstones||{}),...Object.keys(B.tombstones||{})])){o.tombstones[c]={};const aa=A.tombstones?.[c]||{},bb=B.tombstones?.[c]||{};for(const id of new Set([...Object.keys(aa),...Object.keys(bb)]))o.tombstones[c][id]=Math.max(Number(aa[id]||0),Number(bb[id]||0))}
+  return o;
+}
+function mergePlain(r,l){
+  if(l==null)return clone(r);if(r==null)return clone(l);
+  if(Array.isArray(l)||Array.isArray(r))return clone(l);
+  if(typeof l==='object'&&typeof r==='object')return {...clone(r),...clone(l)};
+  return clone(l);
+}
+function mergeCollection(name,larr,rarr,meta){
+  const la=Array.isArray(larr)?larr:[],ra=Array.isArray(rarr)?rarr:[];
+  const lm=new Map(la.map(x=>[objectId(x),x]).filter(x=>x[0])),rm=new Map(ra.map(x=>[objectId(x),x]).filter(x=>x[0]));
+  const ids=[...new Set([...la.map(objectId),...ra.map(objectId)].filter(Boolean))],out=[];
+  for(const id of ids){
+    const l=lm.get(id),r=rm.get(id);let v;
+    if(l&&r){const lt=Number(l[UPDATED]||0),rt=Number(r[UPDATED]||0);v=rt>lt?clone(r):lt>rt?clone(l):mergePlain(r,l);v[UPDATED]=Math.max(lt,rt,Number(v?.[UPDATED]||0))}else v=clone(l||r);
+    const dead=Number(meta?.tombstones?.[name]?.[id]||0),vt=Number(v?.[UPDATED]||0);if(dead&&dead>=vt)continue;if(v)out.push(v);
+  }
+  const seen=new Set(out.map(x=>{try{return JSON.stringify(clean(x))}catch(_){return String(x)}}));
+  for(const x of [...la,...ra]){if(objectId(x))continue;let k;try{k=JSON.stringify(clean(x))}catch(_){k=String(x)}if(!seen.has(k)){seen.add(k);out.push(clone(x))}}
+  return out;
+}
+function mergeState(local,remote){
+  local=local&&typeof local==='object'?local:{};remote=remote&&typeof remote==='object'?remote:{};
+  const meta=combineMeta(local[META],remote[META]),out={},keys=new Set([...Object.keys(local),...Object.keys(remote)]);keys.delete(META);
+  for(const k of keys){
+    if(TRACKED.includes(k)){out[k]=mergeCollection(k,local[k],remote[k],meta);continue}
+    const lt=Number(local[META]?.fields?.[k]||0),rt=Number(remote[META]?.fields?.[k]||0);
+    out[k]=rt>lt?clone(remote[k]):lt>rt?clone(local[k]):mergePlain(remote[k],local[k]);
+  }
+  out[META]=meta;return out;
+}
+function commitOpenEditor(){
+  try{if(document.body.classList.contains('editorMode')&&q('#view-sheet-editor.active')&&typeof saveCanvasSheetCore==='function')saveCanvasSheetCore(true)}catch(e){console.warn('[V233] editor commit',e)}
+  localPersist();
+}
+function getRawTransport(){
+  let fn=window.v171CloudNow,seen=new Set();
+  while(typeof fn==='function'&&!seen.has(fn)){
+    seen.add(fn);
+    const next=fn.__v232Original||fn.__v219Original||fn.__v205Original;
+    if(typeof next!=='function'||next===fn)break;
+    fn=next;
+  }
+  return typeof fn==='function'?fn:null;
+}
+const rawTransport=getRawTransport();
+
+async function rawCall(){
+  if(typeof rawTransport!=='function')throw new Error('Cloud-Sync-Modul fehlt (google-sync-config.js)');
+  return await Promise.resolve(rawTransport.call(window));
+}
+async function backup(){try{await window.v111CreateBackupNow?.(false)}catch(_){ }}
+function rerender(){try{renderAll?.()}catch(_){ }try{if(q('#view-plan.active'))renderPlan?.()}catch(_){ }try{if(q('#view-home.active'))renderHome?.()}catch(_){ }}
+
+window.studiaSyncNow=async function(){
+  if(busy)return {busy:true};
+  busy=true;status('Synchronisiere Geräte …','syncing');
+  try{
+    commitOpenEditor();await backup();
+    let before={};try{before=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(_){ }
+    stampState(data,before);localPersist();
+    const local1=clone(data);
+
+    /* Phase 1: existing server transport. It may pull, push, or do both. */
+    await rawCall();
+    const server1=clone(data);
+    data=mergeState(local1,server1);localPersist();rerender();
+
+    /* IMPORTANT: the merged state must actually be sent back to the server. */
+    try{window.v150MarkDirty?.(0)}catch(_){ }
+    try{window.save?.()}catch(_){ localPersist() }
+    await new Promise(r=>setTimeout(r,180));
+    await rawCall();
+
+    /* Phase 2 confirmation: merge whatever server returned with our outgoing merged state. */
+    const server2=clone(data),merged2=mergeState(mergeState(local1,server1),server2);
+    data=merged2;localPersist();rerender();
+    try{window.v150MarkDirty?.(20)}catch(_){ }
+    status('Auf allen Geräten synchronisiert ✓','ok');
+    return {ok:true};
+  }catch(e){
+    console.error('[Studia V233] Sync fehlgeschlagen',e);localPersist();status(String(e?.message||'Sync fehlgeschlagen')+' · lokale Daten bleiben gespeichert','error');
+    throw e;
+  }finally{busy=false;setTimeout(()=>q('#v232PullSync')?.classList.remove('show','ready','syncing'),900)}
+};
+
+/* All automatic old cloud kicks now use the same reliable two-phase path. */
+window.v171CloudNow=window.studiaSyncNow;
+try{v171CloudNow=window.v171CloudNow}catch(_){ }
+
+/* Rebind visible controls because older handlers may still point at wrappers. */
+function bindButtons(){
+  const d=q('#v232DesktopSync');if(d)d.onclick=()=>window.studiaSyncNow();
+  const card=q('.v171CloudSettings');if(card){const b=[...card.querySelectorAll('button')].find(x=>/synchronisieren|zusammenführen/i.test(x.textContent||''));if(b){b.removeAttribute('onclick');b.onclick=()=>window.studiaSyncNow()}}
+}
+[0,150,500,1500].forEach(t=>setTimeout(bindButtons,t));
+new MutationObserver(()=>requestAnimationFrame(bindButtons)).observe(document.documentElement,{childList:true,subtree:true});
+window.addEventListener('online',()=>setTimeout(()=>window.studiaSyncNow().catch(()=>{}),500));
+
+const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 233'};[0,250,900,1800].forEach(t=>setTimeout(setVer,t));
 })();
 </script>
-<!-- ===== /Studia V265 ===== -->
+<!-- ===== /Studia V233 ===== -->
