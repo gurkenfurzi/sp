@@ -3266,7 +3266,7 @@ html,body{background:#fff7f4;}
   </section>
 
 
-  <!-- Editor moved to editor.html -->
+  <!-- Dedicated editor lives in editor.html -->
   <section class="view" id="view-quiz-player">
     <div class="sectionHead">
       <button class="ghost backBtn" onclick="openTopic(selectedSubjectId,selectedTopicId)">← Thema</button>
@@ -7733,38 +7733,6 @@ button.primary,button.ghost,.iconbtn{
 </style>
 
 </head><body><div class="page">${serializedCanvas()}</div><div id="buildVersionBadge" style="position:fixed;right:8px;bottom:8px;z-index:9999;font:800 9px Inter,sans-serif;color:#9b7d74;background:rgba(255,250,247,.88);border:1px solid #ead4cd;border-radius:999px;padding:5px 8px;pointer-events:none">V182</div>
-
-<script id="studia-v274-editor-bridge">
-(function(){
-  'use strict';
-  function openExternalEditor(sheetId){
-    try{
-      const ctx={
-        sheetId:sheetId||null,
-        subjectId:(typeof selectedSubjectId!=='undefined'?selectedSubjectId:null),
-        topicId:(typeof selectedTopicId!=='undefined'?selectedTopicId:null),
-        from:location.pathname+location.search+location.hash,
-        ts:Date.now()
-      };
-      sessionStorage.setItem('studia-editor-context-v274',JSON.stringify(ctx));
-    }catch(_){ }
-    const q=sheetId?'?sheet='+encodeURIComponent(sheetId):'';
-    location.href='editor.html'+q;
-  }
-  window.openStudySheetEditor=openExternalEditor;
-  // A few old aliases call the editor directly.
-  window.v97OpenSheet=function(id){try{window.closeModal?.()}catch(_){} openExternalEditor(id)};
-  window.v97NewSheet=function(){try{window.closeModal?.()}catch(_){} openExternalEditor(null)};
-  window.v102StartCanvasResource=(function(old){return function(type){
-    try{
-      const name=String(document.getElementById('v102ResourceName')?.value||'').trim()||({sheet:'Lernblatt',homework:'Hausaufgabe',worksheet:'Arbeitsblatt'}[type]||'Lernblatt');
-      sessionStorage.setItem('studia-editor-new-resource-v274',JSON.stringify({type,name,ts:Date.now()}));
-      window.closeModal?.(); openExternalEditor(null);
-    }catch(e){ if(old) return old.apply(this,arguments); }
-  }})(window.v102StartCanvasResource);
-})();
-</script>
-
 </body></html>`;
  const blob=new Blob([html],{type:"text/html"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=title.replace(/[^\wäöüÄÖÜß-]+/g,"_")+".html";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
 }
@@ -8688,39 +8656,7 @@ button.primary,button.ghost,.iconbtn{
 }
 </style>
 
-</head><body><div class="page">${serializedCanvas()}</div>
-<script id="studia-v274-editor-bridge">
-(function(){
-  'use strict';
-  function openExternalEditor(sheetId){
-    try{
-      const ctx={
-        sheetId:sheetId||null,
-        subjectId:(typeof selectedSubjectId!=='undefined'?selectedSubjectId:null),
-        topicId:(typeof selectedTopicId!=='undefined'?selectedTopicId:null),
-        from:location.pathname+location.search+location.hash,
-        ts:Date.now()
-      };
-      sessionStorage.setItem('studia-editor-context-v274',JSON.stringify(ctx));
-    }catch(_){ }
-    const q=sheetId?'?sheet='+encodeURIComponent(sheetId):'';
-    location.href='editor.html'+q;
-  }
-  window.openStudySheetEditor=openExternalEditor;
-  // A few old aliases call the editor directly.
-  window.v97OpenSheet=function(id){try{window.closeModal?.()}catch(_){} openExternalEditor(id)};
-  window.v97NewSheet=function(){try{window.closeModal?.()}catch(_){} openExternalEditor(null)};
-  window.v102StartCanvasResource=(function(old){return function(type){
-    try{
-      const name=String(document.getElementById('v102ResourceName')?.value||'').trim()||({sheet:'Lernblatt',homework:'Hausaufgabe',worksheet:'Arbeitsblatt'}[type]||'Lernblatt');
-      sessionStorage.setItem('studia-editor-new-resource-v274',JSON.stringify({type,name,ts:Date.now()}));
-      window.closeModal?.(); openExternalEditor(null);
-    }catch(e){ if(old) return old.apply(this,arguments); }
-  }})(window.v102StartCanvasResource);
-})();
-</script>
-
-</body></html>`);w.document.close();setTimeout(()=>w.print(),300)
+</head><body><div class="page">${serializedCanvas()}</div></body></html>`);w.document.close();setTimeout(()=>w.print(),300)
 }
 
 function customPageTemplates(){
@@ -12438,37 +12374,25 @@ setTimeout(()=>{if(editor()){try{renderVectors()}catch(_){}installProxies()}cons
 </style>
 
 
-<script id="studia-v274-editor-bridge">
-(function(){
-  'use strict';
-  function openExternalEditor(sheetId){
-    try{
-      const ctx={
-        sheetId:sheetId||null,
-        subjectId:(typeof selectedSubjectId!=='undefined'?selectedSubjectId:null),
-        topicId:(typeof selectedTopicId!=='undefined'?selectedTopicId:null),
-        from:location.pathname+location.search+location.hash,
-        ts:Date.now()
-      };
-      sessionStorage.setItem('studia-editor-context-v274',JSON.stringify(ctx));
-    }catch(_){ }
-    const q=sheetId?'?sheet='+encodeURIComponent(sheetId):'';
-    location.href='editor.html'+q;
-  }
-  window.openStudySheetEditor=openExternalEditor;
-  // A few old aliases call the editor directly.
-  window.v97OpenSheet=function(id){try{window.closeModal?.()}catch(_){} openExternalEditor(id)};
-  window.v97NewSheet=function(){try{window.closeModal?.()}catch(_){} openExternalEditor(null)};
-  window.v102StartCanvasResource=(function(old){return function(type){
-    try{
-      const name=String(document.getElementById('v102ResourceName')?.value||'').trim()||({sheet:'Lernblatt',homework:'Hausaufgabe',worksheet:'Arbeitsblatt'}[type]||'Lernblatt');
-      sessionStorage.setItem('studia-editor-new-resource-v274',JSON.stringify({type,name,ts:Date.now()}));
-      window.closeModal?.(); openExternalEditor(null);
-    }catch(e){ if(old) return old.apply(this,arguments); }
-  }})(window.v102StartCanvasResource);
+<script id="studia-v275-editor-launcher">
+(()=>{
+'use strict';
+function goEditor(sheetId){
+  try{
+    sessionStorage.setItem('studia-editor-context-v275',JSON.stringify({
+      sheetId:sheetId||null,
+      subjectId:(typeof selectedSubjectId!=='undefined'?selectedSubjectId:null),
+      topicId:(typeof selectedTopicId!=='undefined'?selectedTopicId:null),
+      ts:Date.now()
+    }));
+  }catch(_){}
+  location.href='editor.html'+(sheetId?'?sheet='+encodeURIComponent(sheetId):'');
+}
+window.openStudySheetEditor=goEditor;
+window.v97OpenSheet=id=>{try{window.closeModal?.()}catch(_){};goEditor(id)};
+window.v97NewSheet=()=>{try{window.closeModal?.()}catch(_){};goEditor(null)};
 })();
 </script>
-
 </body>
 </html><style id="v93-bottom-nav-stability">
 @media (max-width:899px){
@@ -16058,8 +15982,7 @@ setTimeout(reconcile,980);
 })();
 </script>
 <!-- ===== /Studia V134 ===== -->
-<script src="google-sync-config.js?v=274"></script>
-<script src="google-sync.js?v=274"></script>
+<script src="google-sync-config.js?v=275"></script>
 <style id="v181-desktop-stability-style">
 @media(min-width:900px){
   /* One desktop interaction surface only. Legacy transparent layers caused text drag/selection conflicts. */
@@ -16228,39 +16151,7 @@ window.printCanvasSheet=async function(){
    '.printRoot{display:grid;justify-items:center;gap:24px;padding:24px;overflow:auto}.v181PreviewPage{flex:none;break-after:page;page-break-after:always}.v181PreviewPage:last-child{break-after:auto;page-break-after:auto}'+
    '.v181PreviewPage,.v181PreviewPage *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;forced-color-adjust:none!important}'+
    '@media print{html,body{background:#fff!important}.toolbar{display:none!important}.printRoot{display:block;margin:0;padding:0;overflow:visible;justify-items:start}.v181PreviewPage{justify-self:start!important}}'+
-   '</style></head><body><header class="toolbar"><b>Druckvorschau · nur das Lernblatt</b><button id="print">Drucken</button><button id="close">Schließen</button></header><main class="printRoot">'+clones.map(c=>c.outerHTML).join('')+'</main>
-<script id="studia-v274-editor-bridge">
-(function(){
-  'use strict';
-  function openExternalEditor(sheetId){
-    try{
-      const ctx={
-        sheetId:sheetId||null,
-        subjectId:(typeof selectedSubjectId!=='undefined'?selectedSubjectId:null),
-        topicId:(typeof selectedTopicId!=='undefined'?selectedTopicId:null),
-        from:location.pathname+location.search+location.hash,
-        ts:Date.now()
-      };
-      sessionStorage.setItem('studia-editor-context-v274',JSON.stringify(ctx));
-    }catch(_){ }
-    const q=sheetId?'?sheet='+encodeURIComponent(sheetId):'';
-    location.href='editor.html'+q;
-  }
-  window.openStudySheetEditor=openExternalEditor;
-  // A few old aliases call the editor directly.
-  window.v97OpenSheet=function(id){try{window.closeModal?.()}catch(_){} openExternalEditor(id)};
-  window.v97NewSheet=function(){try{window.closeModal?.()}catch(_){} openExternalEditor(null)};
-  window.v102StartCanvasResource=(function(old){return function(type){
-    try{
-      const name=String(document.getElementById('v102ResourceName')?.value||'').trim()||({sheet:'Lernblatt',homework:'Hausaufgabe',worksheet:'Arbeitsblatt'}[type]||'Lernblatt');
-      sessionStorage.setItem('studia-editor-new-resource-v274',JSON.stringify({type,name,ts:Date.now()}));
-      window.closeModal?.(); openExternalEditor(null);
-    }catch(e){ if(old) return old.apply(this,arguments); }
-  }})(window.v102StartCanvasResource);
-})();
-</script>
-
-</body></html>');w.document.close();
+   '</style></head><body><header class="toolbar"><b>Druckvorschau · nur das Lernblatt</b><button id="print">Drucken</button><button id="close">Schließen</button></header><main class="printRoot">'+clones.map(c=>c.outerHTML).join('')+'</main></body></html>');w.document.close();
   w.document.querySelector('#close').onclick=()=>w.close();w.document.querySelector('#print').onclick=async()=>{await w.document.fonts.ready;await Promise.all([...w.document.images].map(img=>img.complete?Promise.resolve():new Promise(r=>{img.onload=r;img.onerror=r})));w.focus();w.print()};w.focus();
  }catch(e){w.close();console.error(e);alert('Die Druckvorschau konnte nicht erstellt werden. Bitte versuche es erneut.')}
 };

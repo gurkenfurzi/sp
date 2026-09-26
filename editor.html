@@ -3027,10 +3027,10 @@ html,body{background:#fff7f4;}
 }
 @media (min-width:900px){.canvasQuickNav .editorNavIcon{display:inline-grid;width:18px;height:18px;vertical-align:middle}.canvasQuickNav .editorNavIcon svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}}
 </style>
-
-<style id="studia-editor-page-boot-style">
-html.studia-editor-boot,html.studia-editor-boot body{background:#fffaf7!important}
-html.studia-editor-boot body{visibility:hidden!important}
+<style id="studia-v275-editor-boot-css">
+html.studia-editor-boot body{visibility:hidden!important;background:#fffaf7!important}
+body.studiaDedicatedEditor .header,body.studiaDedicatedEditor #nav{display:none!important}
+body.studiaDedicatedEditor #view-sheet-editor.active{display:block!important}
 </style>
 <script>document.documentElement.classList.add('studia-editor-boot');</script>
 </head>
@@ -7896,59 +7896,7 @@ button.primary,button.ghost,.iconbtn{
 }
 </style>
 
-
-<style id="studia-editor-page-boot-style">
-html.studia-editor-boot,html.studia-editor-boot body{background:#fffaf7!important}
-html.studia-editor-boot body{visibility:hidden!important}
-</style>
-<script>document.documentElement.classList.add('studia-editor-boot');</script>
 </head><body><div class="page">${serializedCanvas()}</div><div id="buildVersionBadge" style="position:fixed;right:8px;bottom:8px;z-index:9999;font:800 9px Inter,sans-serif;color:#9b7d74;background:rgba(255,250,247,.88);border:1px solid #ead4cd;border-radius:999px;padding:5px 8px;pointer-events:none">V182</div>
-
-<script id="studia-v274-dedicated-editor-bootstrap">
-(function(){
- 'use strict';
- function readCtx(){try{return JSON.parse(sessionStorage.getItem('studia-editor-context-v274')||'{}')||{}}catch(_){return{}}}
- function boot(){
-   const ctx=readCtx();
-   const qs=new URLSearchParams(location.search);
-   const sid=qs.get('sheet')||ctx.sheetId||null;
-   try{if(typeof selectedSubjectId!=='undefined'&&ctx.subjectId)selectedSubjectId=ctx.subjectId}catch(_){}
-   try{if(typeof selectedTopicId!=='undefined'&&ctx.topicId)selectedTopicId=ctx.topicId}catch(_){}
-   const original=window.openStudySheetEditor;
-   if(typeof original==='function'){
-     try{original(sid)}catch(e){console.error('[Studia V274 editor boot]',e)}
-   }
-   // New resources still use the original resource creation path, but only inside editor.html.
-   try{
-     const raw=sessionStorage.getItem('studia-editor-new-resource-v274');
-     if(raw){
-       sessionStorage.removeItem('studia-editor-new-resource-v274');
-       const p=JSON.parse(raw);
-       if(p&&p.name&&typeof canvasState!=='undefined'){
-         window.v102PendingResource={type:p.type||'sheet',name:p.name};
-         setTimeout(()=>{const h=canvasState.objects?.find(o=>['text','block'].includes(o.kind)&&(o.style?.fontSize||0)>=28);if(h){h.text=p.name;window.renderCanvasObjects?.();window.markCanvasDirty?.(false)}},120);
-       }
-     }
-   }catch(_){}
-   // This page is editor-only. Returning always goes back to the app page.
-   window.closeSheetEditor=function(){
-     try{window.saveCanvasSheetCore?.(true)}catch(_){}
-     try{window.save?.()}catch(_){}
-     try{window.v171CloudNow?.()}catch(_){}
-     sessionStorage.removeItem('studia-editor-context-v274');
-     location.href='index.html';
-   };
-   window.leaveSubjectNotebook=window.closeSheetEditor;
-   window.backToNotebook=window.closeSheetEditor;
-   document.documentElement.classList.remove('studia-editor-boot');
-   document.body.classList.add('studiaDedicatedEditor');
-   document.body.style.visibility='visible';
-   setTimeout(()=>{try{window.fitCanvasStage?.()}catch(_){}},180);
- }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(boot,0),{once:true});else setTimeout(boot,0);
-})();
-</script>
-
 </body></html>`;
  const blob=new Blob([html],{type:"text/html"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=title.replace(/[^\wäöüÄÖÜß-]+/g,"_")+".html";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
 }
@@ -8872,59 +8820,7 @@ button.primary,button.ghost,.iconbtn{
 }
 </style>
 
-
-<style id="studia-editor-page-boot-style">
-html.studia-editor-boot,html.studia-editor-boot body{background:#fffaf7!important}
-html.studia-editor-boot body{visibility:hidden!important}
-</style>
-<script>document.documentElement.classList.add('studia-editor-boot');</script>
-</head><body><div class="page">${serializedCanvas()}</div>
-<script id="studia-v274-dedicated-editor-bootstrap">
-(function(){
- 'use strict';
- function readCtx(){try{return JSON.parse(sessionStorage.getItem('studia-editor-context-v274')||'{}')||{}}catch(_){return{}}}
- function boot(){
-   const ctx=readCtx();
-   const qs=new URLSearchParams(location.search);
-   const sid=qs.get('sheet')||ctx.sheetId||null;
-   try{if(typeof selectedSubjectId!=='undefined'&&ctx.subjectId)selectedSubjectId=ctx.subjectId}catch(_){}
-   try{if(typeof selectedTopicId!=='undefined'&&ctx.topicId)selectedTopicId=ctx.topicId}catch(_){}
-   const original=window.openStudySheetEditor;
-   if(typeof original==='function'){
-     try{original(sid)}catch(e){console.error('[Studia V274 editor boot]',e)}
-   }
-   // New resources still use the original resource creation path, but only inside editor.html.
-   try{
-     const raw=sessionStorage.getItem('studia-editor-new-resource-v274');
-     if(raw){
-       sessionStorage.removeItem('studia-editor-new-resource-v274');
-       const p=JSON.parse(raw);
-       if(p&&p.name&&typeof canvasState!=='undefined'){
-         window.v102PendingResource={type:p.type||'sheet',name:p.name};
-         setTimeout(()=>{const h=canvasState.objects?.find(o=>['text','block'].includes(o.kind)&&(o.style?.fontSize||0)>=28);if(h){h.text=p.name;window.renderCanvasObjects?.();window.markCanvasDirty?.(false)}},120);
-       }
-     }
-   }catch(_){}
-   // This page is editor-only. Returning always goes back to the app page.
-   window.closeSheetEditor=function(){
-     try{window.saveCanvasSheetCore?.(true)}catch(_){}
-     try{window.save?.()}catch(_){}
-     try{window.v171CloudNow?.()}catch(_){}
-     sessionStorage.removeItem('studia-editor-context-v274');
-     location.href='index.html';
-   };
-   window.leaveSubjectNotebook=window.closeSheetEditor;
-   window.backToNotebook=window.closeSheetEditor;
-   document.documentElement.classList.remove('studia-editor-boot');
-   document.body.classList.add('studiaDedicatedEditor');
-   document.body.style.visibility='visible';
-   setTimeout(()=>{try{window.fitCanvasStage?.()}catch(_){}},180);
- }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(boot,0),{once:true});else setTimeout(boot,0);
-})();
-</script>
-
-</body></html>`);w.document.close();setTimeout(()=>w.print(),300)
+</head><body><div class="page">${serializedCanvas()}</div></body></html>`);w.document.close();setTimeout(()=>w.print(),300)
 }
 
 function customPageTemplates(){
@@ -12642,51 +12538,32 @@ setTimeout(()=>{if(editor()){try{renderVectors()}catch(_){}installProxies()}cons
 </style>
 
 
-<script id="studia-v274-dedicated-editor-bootstrap">
-(function(){
- 'use strict';
- function readCtx(){try{return JSON.parse(sessionStorage.getItem('studia-editor-context-v274')||'{}')||{}}catch(_){return{}}}
- function boot(){
-   const ctx=readCtx();
-   const qs=new URLSearchParams(location.search);
-   const sid=qs.get('sheet')||ctx.sheetId||null;
-   try{if(typeof selectedSubjectId!=='undefined'&&ctx.subjectId)selectedSubjectId=ctx.subjectId}catch(_){}
-   try{if(typeof selectedTopicId!=='undefined'&&ctx.topicId)selectedTopicId=ctx.topicId}catch(_){}
-   const original=window.openStudySheetEditor;
-   if(typeof original==='function'){
-     try{original(sid)}catch(e){console.error('[Studia V274 editor boot]',e)}
-   }
-   // New resources still use the original resource creation path, but only inside editor.html.
-   try{
-     const raw=sessionStorage.getItem('studia-editor-new-resource-v274');
-     if(raw){
-       sessionStorage.removeItem('studia-editor-new-resource-v274');
-       const p=JSON.parse(raw);
-       if(p&&p.name&&typeof canvasState!=='undefined'){
-         window.v102PendingResource={type:p.type||'sheet',name:p.name};
-         setTimeout(()=>{const h=canvasState.objects?.find(o=>['text','block'].includes(o.kind)&&(o.style?.fontSize||0)>=28);if(h){h.text=p.name;window.renderCanvasObjects?.();window.markCanvasDirty?.(false)}},120);
-       }
-     }
-   }catch(_){}
-   // This page is editor-only. Returning always goes back to the app page.
-   window.closeSheetEditor=function(){
-     try{window.saveCanvasSheetCore?.(true)}catch(_){}
-     try{window.save?.()}catch(_){}
-     try{window.v171CloudNow?.()}catch(_){}
-     sessionStorage.removeItem('studia-editor-context-v274');
-     location.href='index.html';
-   };
-   window.leaveSubjectNotebook=window.closeSheetEditor;
-   window.backToNotebook=window.closeSheetEditor;
-   document.documentElement.classList.remove('studia-editor-boot');
-   document.body.classList.add('studiaDedicatedEditor');
-   document.body.style.visibility='visible';
-   setTimeout(()=>{try{window.fitCanvasStage?.()}catch(_){}},180);
- }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(boot,0),{once:true});else setTimeout(boot,0);
+<script id="studia-v275-editor-bootstrap">
+(()=>{
+'use strict';
+function ctx(){try{return JSON.parse(sessionStorage.getItem('studia-editor-context-v275')||'{}')||{}}catch(_){return{}}}
+function start(){
+  const c=ctx(),qs=new URLSearchParams(location.search),sid=qs.get('sheet')||c.sheetId||null;
+  try{if(c.subjectId&&typeof selectedSubjectId!=='undefined')selectedSubjectId=c.subjectId}catch(_){}
+  try{if(c.topicId&&typeof selectedTopicId!=='undefined')selectedTopicId=c.topicId}catch(_){}
+  try{
+    if(typeof window.openStudySheetEditor==='function')window.openStudySheetEditor(sid);
+  }catch(e){console.error('[Studia V275 editor start]',e)}
+  window.closeSheetEditor=function(){
+    try{window.saveCanvasSheetCore?.(true)}catch(_){}
+    try{window.save?.()}catch(_){}
+    try{window.studiaSyncNow?.()}catch(_){}
+    sessionStorage.removeItem('studia-editor-context-v275');
+    location.href='index.html';
+  };
+  document.body.classList.add('studiaDedicatedEditor');
+  document.documentElement.classList.remove('studia-editor-boot');
+  document.body.style.visibility='visible';
+  setTimeout(()=>{try{window.fitCanvasStage?.()}catch(_){}},150);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(start,0),{once:true});else setTimeout(start,0);
 })();
 </script>
-
 </body>
 </html><style id="v93-bottom-nav-stability">
 @media (max-width:899px){
@@ -16276,9 +16153,9 @@ setTimeout(reconcile,980);
 })();
 </script>
 <!-- ===== /Studia V134 ===== -->
-<link rel="stylesheet" href="editor.css?v=274">
-<script src="google-sync-config.js?v=274"></script>
-<script src="editor.js?v=274"></script>
+<link rel="stylesheet" href="editor.css?v=275">
+<script src="google-sync-config.js?v=275"></script>
+<script src="editor.js?v=275"></script>
 
 <style id="v181-desktop-stability-style">
 @media(min-width:900px){
@@ -16448,59 +16325,7 @@ window.printCanvasSheet=async function(){
    '.printRoot{display:grid;justify-items:center;gap:24px;padding:24px;overflow:auto}.v181PreviewPage{flex:none;break-after:page;page-break-after:always}.v181PreviewPage:last-child{break-after:auto;page-break-after:auto}'+
    '.v181PreviewPage,.v181PreviewPage *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;forced-color-adjust:none!important}'+
    '@media print{html,body{background:#fff!important}.toolbar{display:none!important}.printRoot{display:block;margin:0;padding:0;overflow:visible;justify-items:start}.v181PreviewPage{justify-self:start!important}}'+
-   '</style>
-<style id="studia-editor-page-boot-style">
-html.studia-editor-boot,html.studia-editor-boot body{background:#fffaf7!important}
-html.studia-editor-boot body{visibility:hidden!important}
-</style>
-<script>document.documentElement.classList.add('studia-editor-boot');</script>
-</head><body><header class="toolbar"><b>Druckvorschau · nur das Lernblatt</b><button id="print">Drucken</button><button id="close">Schließen</button></header><main class="printRoot">'+clones.map(c=>c.outerHTML).join('')+'</main>
-<script id="studia-v274-dedicated-editor-bootstrap">
-(function(){
- 'use strict';
- function readCtx(){try{return JSON.parse(sessionStorage.getItem('studia-editor-context-v274')||'{}')||{}}catch(_){return{}}}
- function boot(){
-   const ctx=readCtx();
-   const qs=new URLSearchParams(location.search);
-   const sid=qs.get('sheet')||ctx.sheetId||null;
-   try{if(typeof selectedSubjectId!=='undefined'&&ctx.subjectId)selectedSubjectId=ctx.subjectId}catch(_){}
-   try{if(typeof selectedTopicId!=='undefined'&&ctx.topicId)selectedTopicId=ctx.topicId}catch(_){}
-   const original=window.openStudySheetEditor;
-   if(typeof original==='function'){
-     try{original(sid)}catch(e){console.error('[Studia V274 editor boot]',e)}
-   }
-   // New resources still use the original resource creation path, but only inside editor.html.
-   try{
-     const raw=sessionStorage.getItem('studia-editor-new-resource-v274');
-     if(raw){
-       sessionStorage.removeItem('studia-editor-new-resource-v274');
-       const p=JSON.parse(raw);
-       if(p&&p.name&&typeof canvasState!=='undefined'){
-         window.v102PendingResource={type:p.type||'sheet',name:p.name};
-         setTimeout(()=>{const h=canvasState.objects?.find(o=>['text','block'].includes(o.kind)&&(o.style?.fontSize||0)>=28);if(h){h.text=p.name;window.renderCanvasObjects?.();window.markCanvasDirty?.(false)}},120);
-       }
-     }
-   }catch(_){}
-   // This page is editor-only. Returning always goes back to the app page.
-   window.closeSheetEditor=function(){
-     try{window.saveCanvasSheetCore?.(true)}catch(_){}
-     try{window.save?.()}catch(_){}
-     try{window.v171CloudNow?.()}catch(_){}
-     sessionStorage.removeItem('studia-editor-context-v274');
-     location.href='index.html';
-   };
-   window.leaveSubjectNotebook=window.closeSheetEditor;
-   window.backToNotebook=window.closeSheetEditor;
-   document.documentElement.classList.remove('studia-editor-boot');
-   document.body.classList.add('studiaDedicatedEditor');
-   document.body.style.visibility='visible';
-   setTimeout(()=>{try{window.fitCanvasStage?.()}catch(_){}},180);
- }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(boot,0),{once:true});else setTimeout(boot,0);
-})();
-</script>
-
-</body></html>');w.document.close();
+   '</style></head><body><header class="toolbar"><b>Druckvorschau · nur das Lernblatt</b><button id="print">Drucken</button><button id="close">Schließen</button></header><main class="printRoot">'+clones.map(c=>c.outerHTML).join('')+'</main></body></html>');w.document.close();
   w.document.querySelector('#close').onclick=()=>w.close();w.document.querySelector('#print').onclick=async()=>{await w.document.fonts.ready;await Promise.all([...w.document.images].map(img=>img.complete?Promise.resolve():new Promise(r=>{img.onload=r;img.onerror=r})));w.focus();w.print()};w.focus();
  }catch(e){w.close();console.error(e);alert('Die Druckvorschau konnte nicht erstellt werden. Bitte versuche es erneut.')}
 };
