@@ -22291,3 +22291,28 @@ const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 233'};
 })();
 </script>
 <!-- ===== /Studia V233 ===== -->
+
+<!-- ===== Studia V276 FINAL dedicated-editor launcher ===== -->
+<script id="studia-v276-final-editor-launcher">
+(()=>{
+  'use strict';
+  function launchDedicatedEditor(sheetId=null){
+    try{
+      sessionStorage.setItem('studia-editor-context-v275', JSON.stringify({
+        sheetId: sheetId || null,
+        subjectId: (typeof selectedSubjectId !== 'undefined' ? selectedSubjectId : null),
+        topicId: (typeof selectedTopicId !== 'undefined' ? selectedTopicId : null),
+        ts: Date.now()
+      }));
+    }catch(_){ }
+    const url = new URL('./editor.html', window.location.href);
+    if(sheetId) url.searchParams.set('sheet', String(sheetId));
+    window.location.assign(url.href);
+  }
+  window.openStudySheetEditor = launchDedicatedEditor;
+  window.v97OpenSheet = function(id){ try{window.closeModal?.()}catch(_){} launchDedicatedEditor(id); };
+  window.v97NewSheet = function(){ try{window.closeModal?.()}catch(_){} launchDedicatedEditor(null); };
+  try{ openStudySheetEditor = window.openStudySheetEditor; }catch(_){ }
+})();
+</script>
+<!-- ===== /Studia V276 ===== -->
