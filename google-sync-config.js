@@ -81,8 +81,8 @@ function v247BytesToB64(bytes){let s='';const step=0x8000;for(let i=0;i<bytes.le
 function v247B64ToBytes(b64){const s=atob(String(b64||'')),a=new Uint8Array(s.length);for(let i=0;i<s.length;i++)a[i]=s.charCodeAt(i);return a}
 async function v247GzipText(text){if(typeof CompressionStream!=='function')return '';const cs=new CompressionStream('gzip');const ab=await new Response(new Blob([String(text)]).stream().pipeThrough(cs)).arrayBuffer();return v247BytesToB64(new Uint8Array(ab))}
 async function v247UngzipText(b64){if(typeof DecompressionStream!=='function')throw new Error('Browser kann Cloud-Daten nicht entpacken');const ds=new DecompressionStream('gzip');return await new Response(new Blob([v247B64ToBytes(b64)]).stream().pipeThrough(ds)).text()}
-const V279_BASE_KEY='studia-v242-last-synced-state';
-const V279_CLOUD_AT='studia-v265-cloud-updated-at';
+const V279_BASE_KEY='studia-v283-last-synced-state';
+const V279_CLOUD_AT='studia-v283-cloud-updated-at';
 function v279SecureId(){try{const a=new Uint32Array(4);crypto.getRandomValues(a);return [...a].map(x=>x.toString(36)).join('')}catch(_){return Date.now().toString(36)+Math.random().toString(36).slice(2)}}
 function v279DeviceId(){let v='';try{v=localStorage.getItem('studia-v265-device-id')||localStorage.getItem('studia-v264-device-id')||''}catch(_){}if(!v){v='d-'+v279SecureId()}try{localStorage.setItem('studia-v265-device-id',v)}catch(_){}return v}
 function v279DeviceName(){return /iPhone|iPad|Android|Mobile/i.test(navigator.userAgent)?'Handy':'Laptop'}
@@ -238,7 +238,7 @@ window.v171CloudNow = async function(){
   if(result && result.data && typeof result.data==='object' && typeof data!=='undefined' && data && typeof data==='object'){
     for(const k of Object.keys(data)) delete data[k];
     Object.assign(data, result.data);
-    try{ localStorage.setItem('studiaData', JSON.stringify(data)); }catch(_){ }
+    try{ localStorage.setItem('schoolhub-v1', JSON.stringify(data)); }catch(_){ }
     try{ window.v150ClearDirty?.(); }catch(_){ }
   }
   return result;

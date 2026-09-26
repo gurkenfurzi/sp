@@ -15982,7 +15982,7 @@ setTimeout(reconcile,980);
 })();
 </script>
 <!-- ===== /Studia V134 ===== -->
-<script src="google-sync-config.js?v=281"></script>
+<script src="google-sync-config.js?v=283"></script>
 <style id="v181-desktop-stability-style">
 @media(min-width:900px){
   /* One desktop interaction surface only. Legacy transparent layers caused text drag/selection conflicts. */
@@ -22316,3 +22316,147 @@ const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 233'};
 })();
 </script>
 <!-- ===== /Studia V276 ===== -->
+
+<!-- ===== Studia V283 · ONE SYNC PATH / FAST DEVICE MERGE ===== -->
+<script id="studia-v283-sync-merge-fix">
+(()=>{
+'use strict';
+if(window.__STUDIA_V283_SYNC__) return;
+window.__STUDIA_V283_SYNC__=true;
+
+const STORAGE_KEY='schoolhub-v1';
+const TRACKED=['homework','tests','writtenTests','grades','flashcards','subjects','absences','studySessions','reminders','flashDecks','quizzes','studySheets'];
+let busy=false,dirtyTimer=0;
+
+const clone=v=>{try{return structuredClone(v)}catch(_){try{return JSON.parse(JSON.stringify(v))}catch(__){return v}}};
+const isObj=v=>!!v&&typeof v==='object'&&!Array.isArray(v);
+const text=v=>String(v??'').trim();
+const meaningful=v=>/[\p{L}\p{N}]/u.test(text(v));
+function stableString(v){
+  if(Array.isArray(v)) return '['+v.map(stableString).join(',')+']';
+  if(isObj(v)) return '{'+Object.keys(v).filter(k=>k!=='id'&&k!=='_updatedAt'&&k!=='__studiaUpdatedAt').sort().map(k=>JSON.stringify(k)+':'+stableString(v[k])).join(',')+'}';
+  return JSON.stringify(v);
+}
+function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0).toString(36)}
+function ensureIds(arr,path){
+  if(!Array.isArray(arr))return arr;
+  const counts=new Map();
+  arr.forEach((x,i)=>{
+    if(!isObj(x)||x.id!=null&&text(x.id))return;
+    const sig=stableString(x),n=(counts.get(sig)||0)+1;counts.set(sig,n);
+    x.id='legacy-'+hash(path+'|'+sig+'|'+n);
+  });
+  return arr;
+}
+function ghostHomework(x){
+  if(!isObj(x))return true;
+  const words=[x.subject,x.text,x.note].some(meaningful);
+  const files=Array.isArray(x.files)&&x.files.length>0;
+  const due=/^\d{4}-\d{2}-\d{2}$/.test(text(x.due));
+  return !words&&!files&&!due;
+}
+function ghostTest(x){
+  if(!isObj(x))return true;
+  const words=[x.subject,x.type,x.text].some(meaningful);
+  const files=Array.isArray(x.files)&&x.files.length>0;
+  const date=/^\d{4}-\d{2}-\d{2}$/.test(text(x.date));
+  return !words&&!files&&!date;
+}
+function normalizeNested(state){
+  ensureIds(state.subjects,'subjects');
+  for(const s of state.subjects||[]){
+    ensureIds(s.topics,`subject:${s.id}:topics`);ensureIds(s.notes,`subject:${s.id}:notes`);ensureIds(s.files,`subject:${s.id}:files`);
+    for(const t of s.topics||[]){ensureIds(t.notes,`topic:${t.id}:notes`);ensureIds(t.files,`topic:${t.id}:files`)}
+  }
+  if(isObj(state.lessonExtras))for(const [k,v] of Object.entries(state.lessonExtras)){if(!isObj(v))continue;ensureIds(v.notes,`lesson:${k}:notes`);ensureIds(v.tasks,`lesson:${k}:tasks`);ensureIds(v.files,`lesson:${k}:files`)}
+}
+function normalizeState(src){
+  const s=isObj(src)?clone(src):{};
+  if(!Array.isArray(s.homework))s.homework=[];
+  if(!Array.isArray(s.tests))s.tests=[];
+  s.homework=s.homework.filter(x=>!ghostHomework(x));
+  s.tests=s.tests.filter(x=>!ghostTest(x));
+  for(const k of TRACKED){if(Array.isArray(s[k]))ensureIds(s[k],k)}
+  normalizeNested(s);
+  return s;
+}
+function equal(a,b){try{return JSON.stringify(a)===JSON.stringify(b)}catch(_){return false}}
+function replaceGlobal(next){
+  if(typeof data==='undefined'||!data||typeof data!=='object')return;
+  for(const k of Object.keys(data))delete data[k];
+  Object.assign(data,next||{});
+}
+function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(data))}catch(e){console.warn('[V283] local save',e)}}
+function render(){try{window.renderAll?.()}catch(_){ }try{window.renderTasks?.()}catch(_){ }try{window.renderHome?.()}catch(_){ }try{window.renderPlan?.()}catch(_){ }}
+function setStatus(t,bad=false){
+  try{window.StudiaCloud?.setStatus?.(t,bad)}catch(_){ }
+  try{window.v232SetSyncStatus?.(t,bad?'error':(/Synchron|zusammen/i.test(t)?'syncing':'ok'))}catch(_){ }
+  const d=document.querySelector('#v232DesktopSync small');if(d)d.textContent=t;
+  const i=document.querySelector('#v232SyncStatusInline');if(i)i.textContent=t;
+}
+function commitEditor(){
+  try{if(typeof saveCanvasSheetCore==='function')saveCanvasSheetCore(true)}catch(_){ }
+  try{if(typeof saveCanvasSheet==='function')saveCanvasSheet()}catch(_){ }
+}
+async function syncNow283(){
+  if(busy)return {busy:true};
+  if(!navigator.onLine){setStatus('Offline · lokal gespeichert',true);return {offline:true}}
+  if(!window.StudiaCloud||typeof window.StudiaCloud.syncState!=='function'){setStatus('Google-Sync-Modul fehlt · lokal sicher',true);throw new Error('Google-Sync-Modul fehlt')}
+  busy=true;
+  try{
+    commitEditor();
+    const local=normalizeState(typeof data!=='undefined'?data:{});
+    replaceGlobal(local);persist();
+    setStatus('Geräte werden zusammengeführt …');
+    let r=await window.StudiaCloud.syncState(local);
+    let raw=isObj(r?.data)?r.data:local;
+    let merged=normalizeState(raw);
+
+    /* If old broken sync versions left empty "." records or legacy objects without IDs,
+       clean them once and immediately push that cleanup back to the cloud. */
+    if(!equal(raw,merged)){
+      replaceGlobal(merged);persist();
+      setStatus('Alte Sync-Reste werden bereinigt …');
+      r=await window.StudiaCloud.syncState(merged);
+      raw=isObj(r?.data)?r.data:merged;
+      merged=normalizeState(raw);
+    }
+
+    replaceGlobal(merged);persist();render();
+    try{window.v150ClearDirty?.()}catch(_){ }
+    setStatus('Auf allen Geräten synchronisiert ✓');
+    return {...(r||{}),data:merged};
+  }catch(e){
+    console.error('[Studia V283] sync',e);
+    persist();setStatus(String(e?.message||'Cloud fehlgeschlagen')+' · lokal sicher',true);throw e;
+  }finally{busy=false}
+}
+syncNow283.__v232MergeSafe=true;
+syncNow283.__v219Guarded=true;
+syncNow283.__v283Direct=true;
+window.studiaSyncNow=syncNow283;
+window.v171CloudNow=syncNow283;
+try{v171CloudNow=syncNow283}catch(_){ }
+
+/* Old save hooks can still call v150MarkDirty. Make that the ONE debounce point
+   instead of creating another sync wrapper. */
+const oldMark=window.v150MarkDirty;
+window.v150MarkDirty=function(delay=900){
+  try{oldMark?.(delay)}catch(_){ }
+  if(busy)return;
+  clearTimeout(dirtyTimer);
+  dirtyTimer=setTimeout(()=>{if(document.visibilityState!=='hidden'&&navigator.onLine)syncNow283().catch(()=>{})},Math.max(650,Number(delay)||900));
+};
+
+function bind(){
+  const d=document.querySelector('#v232DesktopSync');if(d)d.onclick=()=>syncNow283().catch(()=>{});
+  document.querySelectorAll('.v171CloudSettings button').forEach(b=>{if(/synchronisieren|zusammenführen/i.test(b.textContent||'')){b.removeAttribute('onclick');b.onclick=()=>syncNow283().catch(()=>{})}});
+}
+[0,120,500,1500].forEach(t=>setTimeout(bind,t));
+new MutationObserver(()=>requestAnimationFrame(bind)).observe(document.documentElement,{childList:true,subtree:true});
+window.addEventListener('online',()=>setTimeout(()=>syncNow283().catch(()=>{}),450));
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')setTimeout(()=>syncNow283().catch(()=>{}),500)});
+setTimeout(()=>{if(navigator.onLine)syncNow283().catch(()=>{})},1200);
+})();
+</script>
+<!-- ===== /Studia V283 ===== -->
