@@ -16767,7 +16767,7 @@ body.editorMode #canvasObjects .cobj.v152EditingText[contenteditable="true"] *{u
 #v152SelectionBar{position:fixed;z-index:2147483300;display:flex;align-items:center;gap:4px;min-height:42px;padding:5px;border:1px solid #efcfd0;border-radius:14px;background:rgba(255,252,250,.98);box-shadow:0 10px 30px rgba(79,54,50,.16);backdrop-filter:blur(12px);opacity:0;visibility:hidden;transform:translateY(4px) scale(.97);transition:opacity .12s ease,transform .12s ease,visibility .12s;pointer-events:none}
 #v152SelectionBar.show{opacity:1;visibility:visible;transform:none;pointer-events:auto}
 #v152SelectionBar button,#v152SelectionBar label{height:31px;min-width:32px;border:0;border-radius:9px;background:#fff5f4;color:#805e5d;display:flex;align-items:center;justify-content:center;gap:4px;padding:0 8px;font:900 10px/1 inherit}
-#v152SelectionBar button span{font-size:8px}#v152SelectionBar .v152SelectionColor{position:relative;width:32px;padding:0}#v152SelectionBar .v152SelectionColor span{font-size:17px;color:#e68e98}#v152SelectionBar .v152SelectionColor input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+#v152SelectionBar button span{font-size:8px}#v152SelectionBar .v152SelectionFont{height:31px;min-width:88px;max-width:112px;border:0;border-radius:9px;background:#fff5f4;color:#805e5d;padding:0 7px;font:800 9px/1 Inter,Arial,sans-serif;outline:0}#v152SelectionBar .v152SelectionColor{position:relative;width:32px;padding:0}#v152SelectionBar .v152SelectionColor span{font-size:13px;font-weight:950;color:#805e5d;border-bottom:3px solid #e68e98;line-height:18px}#v152SelectionBar .v152SelectionColor input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
 #v152FormatPopover{position:fixed;z-index:2147483301;width:min(290px,calc(100vw - 16px));max-height:240px;overflow:auto;padding:7px;border:1px solid #efcfce;border-radius:14px;background:#fffdfb;box-shadow:0 14px 34px rgba(73,51,47,.18);-webkit-overflow-scrolling:touch}
 .v152PopHead{padding:4px 6px 7px;font-size:8px;font-weight:950;letter-spacing:.1em;color:#b16f76}
 #v152FormatPopover button{display:grid;grid-template-columns:38px minmax(0,1fr);align-items:center;gap:8px;width:100%;min-height:44px;padding:5px 7px;border:0;border-radius:10px;background:transparent;color:#5e514b;text-align:left}
@@ -18288,7 +18288,7 @@ function elementsPanel(){
  const sections=[
   ['Basis',[['Textfeld','text','addCanvasTextBox()'],['Bild / Foto','image','openCanvasMediaPicker()'],['Datei','file',"document.getElementById('canvasAnyFileInput')?.click()"],['Checkliste','check','addCanvasChecklist()']]],
   ['Formen',[['Rechteck','rect',"addVectorShape('rect')"],['Kreis','circle',"addVectorShape('ellipse')"],['Dreieck','triangle',"addVectorShape('triangle')"],['Linie','line',"window.addVectorLine?window.addVectorLine():addCanvasDivider()"],['Kurve','curve',"window.addVectorCurve?window.addVectorCurve():window.setVectorTool?.('pen')"],['Stern','star','window.addRoundedStar?.()']]],
-  ['Lernen & Mathe',[['Formel','formula','openFormulaDialog()'],['Graph','graph','openGraphDialog()'],['Tabelle','table','openTableDialog()']]],
+  ['Lernen & Mathe',[['Formel','formula','openFormulaDialog()'],['Graph','graph','openGraphDialog()'],['Diagramm','graph','openChartDialog()'],['Timeline','curve','openTimelineDialog()'],['Tabelle','table','openTableDialog()']]],
   ['Deko',[['Sticker','sticker','toggleStickerPanel()'],['Klebeband','tape','addTapeSticker()'],['Kariert','grid',"addPaperSticker('grid')"],['Liniert','lined',"addPaperSticker('line')"]]]
  ];
  const body=`<label class="v152Search">${v152PanelIcon('search')}<input type="search" placeholder="Elemente suchen" oninput="v152FilterElements(this.value)"></label>${sections.map(([title,items])=>`<section class="v152ElementSection"><div class="v152SectionTitle"><b>${title}</b></div><div class="v152ElementGrid">${items.map(x=>tile(...x)).join('')}</div></section>`).join('')}<div class="v152Empty v152ElementEmpty" hidden>Keine passenden Elemente.</div>`;
@@ -18380,9 +18380,9 @@ const b137t=window.v137Text;window.v137Text=function(prop,value){if(rich(prop,va
 /* ---------- Mobile selection toolbar ---------- */
 let bar=null,pop=null;
 function rangeInfo(){if(!mobile())return null;const s=getSelection?.();if(!s||!s.rangeCount||s.isCollapsed)return null;const r=s.getRangeAt(0),n=r.commonAncestorContainer.nodeType===1?r.commonAncestorContainer:r.commonAncestorContainer.parentElement,el=n?.closest?.('.cobj[contenteditable="true"]');return el?{r,el}:null}
-function ensureBar(){if(bar)return bar;bar=document.createElement('div');bar.id='v152SelectionBar';bar.innerHTML=`<button type="button" data-a="bold"><b>B</b></button><button type="button" data-a="italic"><i>I</i></button><button type="button" data-a="underline"><u>U</u></button><label class="v152SelectionColor" title="Farbe"><span>●</span><input type="color" value="#333333"></label><button type="button" data-a="format"><b>Aa</b><span>Format</span></button>`;document.body.appendChild(bar);bar.addEventListener('pointerdown',e=>{rememberRange();if(e.target.closest('button'))e.preventDefault()},true);bar.querySelector('[data-a="bold"]').onclick=()=>{restoreRange();window.formatSelectedText?.('bold');updateMobileBar()};bar.querySelector('[data-a="italic"]').onclick=()=>{restoreRange();window.formatSelectedText?.('italic');updateMobileBar()};bar.querySelector('[data-a="underline"]').onclick=()=>{restoreRange();window.formatSelectedText?.('underline');updateMobileBar()};bar.querySelector('input[type=color]').addEventListener('input',e=>{restoreRange();window.applyTextProperty?.('color',e.target.value);updateMobileBar()});bar.querySelector('[data-a="format"]').onclick=togglePop;return bar}
+function ensureBar(){if(bar)return bar;bar=document.createElement('div');bar.id='v152SelectionBar';bar.innerHTML=`<button type="button" data-a="bold" title="Fett"><b>B</b></button><button type="button" data-a="italic" title="Kursiv"><i>I</i></button><button type="button" data-a="underline" title="Unterstrichen"><u>U</u></button><button type="button" data-a="strike" title="Durchgestrichen"><s>S</s></button><select class="v152SelectionFont" data-a="font" title="Schriftart"><option value="Inter">Inter</option><option value="Arial">Arial</option><option value="Trebuchet MS">Trebuchet</option><option value="Verdana">Verdana</option><option value="Georgia">Georgia</option><option value="Times New Roman">Times</option><option value="Courier New">Courier</option></select><label class="v152SelectionColor" title="Textfarbe"><span>A</span><input type="color" value="#333333"></label>`;document.body.appendChild(bar);bar.addEventListener('pointerdown',e=>{rememberRange();if(e.target.closest('button'))e.preventDefault()},true);bar.querySelector('[data-a="bold"]').onclick=()=>{restoreRange();window.formatSelectedText?.('bold');updateMobileBar()};bar.querySelector('[data-a="italic"]').onclick=()=>{restoreRange();window.formatSelectedText?.('italic');updateMobileBar()};bar.querySelector('[data-a="underline"]').onclick=()=>{restoreRange();window.formatSelectedText?.('underline');updateMobileBar()};bar.querySelector('[data-a="strike"]').onclick=()=>{restoreRange();window.formatSelectedText?.('strikeThrough');updateMobileBar()};bar.querySelector('[data-a="font"]').addEventListener('pointerdown',()=>rememberRange(),true);bar.querySelector('[data-a="font"]').addEventListener('change',e=>{restoreRange();window.applyTextProperty?.('fontFamily',e.target.value);updateMobileBar()});bar.querySelector('input[type=color]').addEventListener('input',e=>{restoreRange();window.applyTextProperty?.('color',e.target.value);updateMobileBar()});return bar}
 function hideBar(){bar?.classList.remove('show');pop?.remove();pop=null}
-function updateMobileBar(){const info=rangeInfo();if(!info){hideBar();return}rememberRange();const b=ensureBar(),rect=info.r.getBoundingClientRect(),bw=b.offsetWidth||230,bh=b.offsetHeight||42;let left=(rect.left+rect.right)/2-bw/2;left=Math.max(8,Math.min(innerWidth-bw-8,left));let top=rect.top-bh-9;if(top<58)top=Math.min(innerHeight-bh-8,rect.bottom+9);b.style.left=left+'px';b.style.top=top+'px';b.classList.add('show');if(pop){pop.style.left=Math.max(8,Math.min(innerWidth-pop.offsetWidth-8,left))+'px';pop.style.top=Math.min(innerHeight-pop.offsetHeight-8,top+bh+6)+'px'}}
+function updateMobileBar(){const info=rangeInfo();if(!info){hideBar();return}rememberRange();const b=ensureBar(),rect=info.r.getBoundingClientRect();b.classList.add('show');const bw=Math.min(innerWidth-16,b.scrollWidth||b.offsetWidth||310),bh=b.offsetHeight||42;let left=(rect.left+rect.right)/2-bw/2;left=Math.max(8,Math.min(innerWidth-bw-8,left));let top=rect.top-bh-9;if(top<58)top=Math.min(innerHeight-bh-8,rect.bottom+9);b.style.maxWidth='calc(100vw - 16px)';b.style.overflowX='auto';b.style.left=left+'px';b.style.top=top+'px';if(pop){pop.style.left=Math.max(8,Math.min(innerWidth-pop.offsetWidth-8,left))+'px';pop.style.top=Math.min(innerHeight-pop.offsetHeight-8,top+bh+6)+'px'}}
 function applyPreset(id){const p=(window.canvasPresets?.()||[]).find(x=>x.id===id);if(!p)return;restoreRange();if(p.fontFamily)window.applyTextProperty?.('fontFamily',p.fontFamily);if(p.fontSize)window.applyTextProperty?.('fontSize',p.fontSize);if(p.color)window.applyTextProperty?.('color',p.color);if(p.fontWeight)window.applyTextProperty?.('fontWeight',p.fontWeight);if(p.fontStyle)window.applyTextProperty?.('fontStyle',p.fontStyle);updateMobileBar()}
 function togglePop(){rememberRange();if(pop){pop.remove();pop=null;return}const presets=window.canvasPresets?.()||[];pop=document.createElement('div');pop.id='v152FormatPopover';pop.innerHTML=`<div class="v152PopHead">TEXTFORMAT</div>${presets.map(p=>`<button type="button" data-id="${esc(p.id)}"><span style="font-family:${esc(p.fontFamily||'Arial')};font-weight:${esc(p.fontWeight||700)};color:${esc(p.color||'#725b53')}">Aa</span><b>${esc(p.name||'Format')}</b></button>`).join('')}`;document.body.appendChild(pop);pop.addEventListener('pointerdown',e=>{rememberRange();e.preventDefault()},true);pop.onclick=e=>{const b=e.target.closest('button[data-id]');if(!b)return;applyPreset(b.dataset.id);pop.remove();pop=null};updateMobileBar()}
 window.v152ApplyPresetToSelection=applyPreset;
@@ -25373,75 +25373,7 @@ const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 231'};
 </script>
 
 
-<!-- ===== Studia V292 · single mobile text formatter ===== -->
-<style id="studia-v292-editor-style">
-/* Diagramm + Timeline now live in the normal Elemente palette. Hide historical injected duplicate panels. */
-#canvasQuickDrawer .v137ElementExtras,#canvasQuickDrawer .v138ElementTools,#canvasQuickDrawer .v139InsertTools,#canvasQuickDrawer .v140InsertTools{display:none!important}
-@media(max-width:899px){
-  #v152SelectionBar{display:none!important;visibility:hidden!important;pointer-events:none!important}
-  #v292MobileTextBar{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:2147483600;display:none;align-items:center;gap:4px;max-width:calc(100vw - 16px);padding:6px;border:1px solid #ead8d3;border-radius:16px;background:rgba(255,253,251,.98);box-shadow:0 13px 38px rgba(74,52,46,.20);backdrop-filter:blur(16px);overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none}
-  #v292MobileTextBar.show{display:flex!important}
-  #v292MobileTextBar::-webkit-scrollbar{display:none}
-  #v292MobileTextBar button,#v292MobileTextBar select,#v292MobileTextBar label{flex:0 0 auto;height:38px;min-width:38px;border:1px solid #eee0db;border-radius:11px;background:#fff;color:#5e504b;display:grid;place-items:center;padding:0 9px;font:800 13px/1 Inter,Arial,sans-serif;box-sizing:border-box}
-  #v292MobileTextBar button:active{background:#fff0f1;color:#a45f67}
-  #v292MobileTextBar select{display:block;min-width:112px;max-width:140px;padding:0 8px;font-size:11px;font-weight:750}
-  #v292MobileTextBar .v292Color{position:relative;width:40px;padding:0;font-weight:900}
-  #v292MobileTextBar .v292Color:after{content:"";position:absolute;left:10px;right:10px;bottom:7px;height:3px;border-radius:8px;background:var(--v292-text-color,#333)}
-  #v292MobileTextBar .v292Color input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
-}
-</style>
-<script id="studia-v292-editor-script">
-(()=>{
-'use strict';
-if(window.__STUDIA_V292_EDITOR__)return;window.__STUDIA_V292_EDITOR__=true;
-const q=(s,r=document)=>r?.querySelector?.(s)||null;
-const qa=(s,r=document)=>r?.querySelectorAll?[...r.querySelectorAll(s)]:[];
-const mobile=()=>innerWidth<900&&document.body.classList.contains('editorMode');
-let savedRange=null,savedId=null,bar=null;
-function editingBoxFromNode(node){const el=node?.nodeType===1?node:node?.parentElement;return el?.closest?.('#canvasObjects .cobj[contenteditable="true"][data-id]')||null}
-function validSelection(){
-  if(!mobile())return null;const s=getSelection();if(!s?.rangeCount||s.isCollapsed)return null;const r=s.getRangeAt(0),box=editingBoxFromNode(r.commonAncestorContainer);if(!box||!box.contains(r.startContainer)||!box.contains(r.endContainer))return null;return{r,box};
-}
-function remember(){const hit=validSelection();if(!hit)return false;try{savedRange=hit.r.cloneRange();savedId=hit.box.dataset.id;return true}catch(_){return false}}
-function ensureBar(){
-  if(bar?.isConnected)return bar;bar=document.createElement('div');bar.id='v292MobileTextBar';bar.setAttribute('role','toolbar');bar.setAttribute('aria-label','Text formatieren');
-  bar.innerHTML='<button type="button" data-cmd="bold" title="Fett"><b>B</b></button><button type="button" data-cmd="italic" title="Kursiv"><i>I</i></button><button type="button" data-cmd="underline" title="Unterstrichen"><u>U</u></button><button type="button" data-cmd="strikeThrough" title="Durchgestrichen"><s>S</s></button><select data-font title="Schrift"><option value="Inter">Inter</option><option value="Arial">Arial</option><option value="Georgia">Georgia</option><option value="Trebuchet MS">Trebuchet</option><option value="Verdana">Verdana</option><option value="Times New Roman">Times</option><option value="Courier New">Courier</option></select><label class="v292Color" title="Textfarbe">A<input data-color type="color" value="#333333"></label>';
-  document.body.appendChild(bar);
-  bar.addEventListener('pointerdown',e=>{if(e.target.closest('button'))e.preventDefault()},true);
-  bar.addEventListener('click',e=>{const b=e.target.closest('[data-cmd]');if(!b)return;e.preventDefault();applyCommand(b.dataset.cmd)});
-  q('[data-font]',bar).addEventListener('change',e=>applyCommand('fontName',e.target.value));
-  q('[data-color]',bar).addEventListener('input',e=>{bar.style.setProperty('--v292-text-color',e.target.value);applyCommand('foreColor',e.target.value)});
-  return bar;
-}
-function selectedObject(){try{return (canvasState?.objects||[]).find(o=>String(o.id)===String(savedId))||null}catch(_){return null}}
-function restore(){
-  if(!savedRange||!savedId)return null;const box=q(`#canvasObjects .cobj[data-id="${CSS.escape(String(savedId))}"]`);if(!box||!box.isConnected)return null;
-  box.contentEditable='true';try{box.focus({preventScroll:true})}catch(_){box.focus()}
-  try{const s=getSelection();s.removeAllRanges();s.addRange(savedRange.cloneRange());return box}catch(_){return null}
-}
-function cleanHTML(box){const c=box.cloneNode(true);qa('.resizeHandle,.rotateHandle,.v135LinkBadge,.v138TransformHandle,.v116ShapeMoveHandle,.v108VectorMoveHandle',c).forEach(x=>x.remove());return c.innerHTML}
-function commit(box){const o=selectedObject();if(!o||!box)return;o.text=cleanHTML(box);try{markCanvasDirty?.();pushHistory?.();renderCanvasInspector?.()}catch(_){}}
-function applyCommand(cmd,value=null){
-  const box=restore();if(!box)return;try{document.execCommand('styleWithCSS',false,true)}catch(_){ }
-  try{document.execCommand(cmd,false,value)}catch(err){console.warn('Studia mobile text format',cmd,err)}
-  const s=getSelection();if(s?.rangeCount)try{savedRange=s.getRangeAt(0).cloneRange()}catch(_){ }
-  commit(box);ensureBar().classList.add('show');
-}
-function updateBar(){
-  const b=ensureBar();if(!mobile()){b.classList.remove('show');return}
-  if(remember())b.classList.add('show');
-  else if(!document.activeElement?.closest?.('#v292MobileTextBar'))b.classList.remove('show');
-}
-document.addEventListener('selectionchange',()=>setTimeout(updateBar,0));
-document.addEventListener('pointerup',e=>{if(e.target instanceof Element&&e.target.closest('#canvasObjects .cobj[contenteditable="true"]'))setTimeout(updateBar,30)},true);
-document.addEventListener('keyup',e=>{if(e.target instanceof Element&&e.target.closest('#canvasObjects .cobj[contenteditable="true"]'))setTimeout(updateBar,0)},true);
-document.addEventListener('pointerdown',e=>{if(e.target instanceof Element&&e.target.closest('#v292MobileTextBar'))return;if(!(e.target instanceof Element&&e.target.closest('#canvasObjects .cobj[contenteditable="true"]')))setTimeout(()=>ensureBar().classList.remove('show'),0)},true);
-window.addEventListener('resize',()=>{if(innerWidth>=900)ensureBar().classList.remove('show')},{passive:true});
 
-/* The existing top font menu is the single desktop font picker. Make its trigger deterministic without adding another menu. */
-document.addEventListener('click',e=>{if(innerWidth<900)return;const b=e.target instanceof Element?e.target.closest('.v187TopFontButton'):null;if(!b)return;e.preventDefault();e.stopImmediatePropagation();window.v165ToggleFontMenu?.(b)},true);
+<!-- ===== Studia V293 · clean editor fixes: uses existing V152 mobile formatter only ===== -->
+<script id="studia-v293-version">(()=>{const set=()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 293'};[0,250,900].forEach(t=>setTimeout(set,t))})();</script>
 
-const setVersion=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 292'};[0,250,900,1800].forEach(t=>setTimeout(setVersion,t));
-})();
-</script>
-<!-- ===== /Studia V292 ===== -->
