@@ -3052,10 +3052,10 @@ html,body{background:#fff7f4;}
 
   <section class="view active" id="view-home">
     <div class="homeMiniActions">
-      <button onclick="openAddHomework()">＋ Aufgabe</button>
-      <button onclick="openAddTest()">✦ Test</button>
-      <button onclick="openView('subjects')">📝 Notiz</button>
-      <button onclick="openView('study')">⏱ Lernen</button>
+      <button onclick="openAddHomework()"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="14" height="16" rx="2"/><path d="M9 4V2h6v2M9 9h6M9 13h6M9 17h4"/></svg><span>Aufgabe</span></button>
+      <button onclick="openAddTest()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v5h5M9 12h6M9 16h4"/></svg><span>Test</span></button>
+      <button onclick="openView('subjects')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H20v16H7.5A3.5 3.5 0 0 0 4 21.5z"/><path d="M4 5.5v16"/></svg><span>Fächer</span></button>
+      <button onclick="openView('study')"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Lernen</span></button>
     </div>
     <div class="panel" id="nextPanel"></div>
 
@@ -3124,7 +3124,7 @@ html,body{background:#fff7f4;}
   </section>
 
   <section class="view" id="view-tasks">
-    <div class="sectionHead"><h2>Aufgaben</h2><button class="primary" onclick="openAddHomework()">+ Neu</button></div>
+    <div class="sectionHead"><h2>Planer</h2><button class="primary" onclick="openAddHomework()">+ Neu</button></div>
     <div class="daytabs">
       <button class="tab active" data-taskfilter="open">Offen</button>
       <button class="tab" data-taskfilter="done">Erledigt</button>
@@ -3531,7 +3531,7 @@ html,body{background:#fff7f4;}
 <nav class="nav" id="nav">
   <button class="active" data-view="home"><svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/><path d="M9.5 20v-6h5v6"/></svg><span class="navLabel">Heute</span></button>
   <button data-view="plan"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M8 14h2M14 14h2M8 18h2M14 18h2"/></svg><span class="navLabel">Plan</span></button>
-  <button data-view="tasks"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg><span class="navLabel">Aufgaben</span></button>
+  <button data-view="tasks"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h5M8 17h7"/></svg><span class="navLabel">Planer</span></button>
   <button data-view="study"><svg viewBox="0 0 24 24"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H20v16H7.5A3.5 3.5 0 0 0 4 21.5z"/><path d="M4 5.5v16"/></svg><span class="navLabel">Lernen</span></button>
   <button data-view="more"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg><span class="navLabel">Mehr</span></button>
 </nav>
@@ -4099,7 +4099,7 @@ window.openView=function(name){
  document.body.classList.toggle("editorMode",name==="sheet-editor");
  if(name!=="sheet-editor"){document.body.classList.remove("editorDrawerOpen");const q=$("#canvasQuickDrawer");if(q){q.classList.remove("open");q.innerHTML=""}const mt=$("#mobileSelectionTools");if(mt){mt.classList.remove("show");mt.innerHTML=""}}
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
- const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Aufgaben.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
+ const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Planer.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"Studia.";
  $("#headerEyebrow").textContent="VERSION 202";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
@@ -4220,7 +4220,7 @@ window.openAddTest=function(){
  openModal(`<h2>Test / Klassenarbeit</h2><div class="formGrid">
  <div><label>Fach</label><select id="tSubject">${subjectOptions()}</select></div>
  <div><label>Datum</label><input id="tDate" type="date" value="${todayISO()}"></div>
- <div><label>Art</label><select id="tType"><option>Test</option><option>Klassenarbeit</option><option>Präsentation</option><option>Prüfung</option></select></div>
+ <div><label>Art</label><select id="tType"><option>Test</option><option>Klassenarbeit</option><option>Präsentation</option><option>Prüfung</option><option>Benotete Abgabe</option></select></div>
  <div><label>Erinnerung</label><select id="tReminder"><option value="1">1 Tag vorher</option><option value="3">3 Tage vorher</option><option value="7">7 Tage vorher</option></select></div>
  <div class="full"><label>Beschreibung / Themen</label><textarea id="tText"></textarea></div>
  <div class="full"><label>Fotos / Dateien</label><input id="testFiles" type="file" multiple accept="image/*,.pdf,.doc,.docx,.ppt,.pptx"></div></div>
@@ -11858,8 +11858,8 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
   window.v102RenameQuiz=function(idv){const q=(data.quizzes||[]).find(x=>x.id===idv);if(!q)return;const n=prompt('Neuer Name',q.name);if(!n?.trim())return;q.name=n.trim();save();v102OpenTopicHub('quiz')};
   window.v102DeleteDeck=function(idv){if(!confirm('Karteikarten-Ordner löschen?'))return;data.flashDecks=(data.flashDecks||[]).filter(x=>x.id!==idv);data.flashcards=(data.flashcards||[]).filter(x=>x.deckId!==idv);save();v102OpenTopicHub('cards')};
 
-  window.v102AddWrittenTest=function(){const {s,t}=currentTopic();if(!s||!t)return;openModal(`<h2>Geschriebenen Test eintragen</h2><div class="formGrid"><div class="full"><label>Name</label><input id="v102TestName" placeholder="z. B. Klassenarbeit 2"></div><div><label>Datum</label><input id="v102TestDate" type="date" value="${todayISO()}"></div><div><label>Note (optional)</label><input id="v102TestGrade" placeholder="z. B. 2+"></div><div class="full"><label>Notiz</label><textarea id="v102TestNote" placeholder="Themen, Feedback …"></textarea></div></div><button class="primary" style="margin-top:12px" onclick="v102SaveWrittenTest()">Speichern</button>`)};
-  window.v102SaveWrittenTest=function(){const {s,t}=currentTopic(),name=String($('#v102TestName')?.value||'').trim();if(!s||!t||!name)return;data.writtenTests.push({id:id(),subject:s.name,topicId:t.id,name,date:$('#v102TestDate')?.value||todayISO(),grade:String($('#v102TestGrade')?.value||'').trim(),note:String($('#v102TestNote')?.value||'').trim()});save();closeModal();v102OpenTopicHub('test')};
+  window.v102AddWrittenTest=function(){const {s,t}=currentTopic();if(!s||!t)return;openModal(`<h2>Test / Klassenarbeit / Abgabe</h2><div class="formGrid"><div class="full"><label>Name</label><input id="v102TestName" placeholder="z. B. Klassenarbeit 2"></div><div><label>Art</label><select id="v102TestType"><option>Test</option><option>Klassenarbeit</option><option>Präsentation</option><option>Prüfung</option><option>Benotete Abgabe</option></select></div><div><label>Datum</label><input id="v102TestDate" type="date" value="${todayISO()}"></div><div><label>Note (optional)</label><input id="v102TestGrade" placeholder="z. B. 2+"></div><div class="full"><label>Notiz</label><textarea id="v102TestNote" placeholder="Themen, Feedback …"></textarea></div></div><button class="primary" style="margin-top:12px" onclick="v102SaveWrittenTest()">Speichern</button>`)};
+  window.v102SaveWrittenTest=function(){const {s,t}=currentTopic(),name=String($('#v102TestName')?.value||'').trim();if(!s||!t||!name)return;data.writtenTests.push({id:id(),subject:s.name,topicId:t.id,name,type:$('#v102TestType')?.value||'Test',date:$('#v102TestDate')?.value||todayISO(),grade:String($('#v102TestGrade')?.value||'').trim(),note:String($('#v102TestNote')?.value||'').trim()});save();closeModal();v102OpenTopicHub('test')};
   window.v102RenameWrittenTest=function(idv){const x=data.writtenTests.find(x=>x.id===idv);if(!x)return;const n=prompt('Neuer Name',x.name);if(!n?.trim())return;x.name=n.trim();save();v102OpenTopicHub('test')};
   window.v102DeleteWrittenTest=function(idv){if(!confirm('Test löschen?'))return;data.writtenTests=data.writtenTests.filter(x=>x.id!==idv);save();v102OpenTopicHub('test')};
 
@@ -11867,7 +11867,7 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
     if(['sheet','homework','worksheet'].includes(kind)){title={sheet:'Lernblätter',homework:'Hausaufgaben',worksheet:'Arbeitsblätter'}[kind];items=st[kind];add=`<button class="primary" onclick="closeModal();setTimeout(()=>v102CreateCanvasResource('${kind}'),20)">＋ ${title.slice(0,-1)}</button>`;items=items.map(x=>`<div class="v102HubItem"><span class="v102HubIcon">${v102Icon(kind==='sheet'?'sheet':kind)}</span><div><b>${esc(x.title||title.slice(0,-1))}</b><small>${x.canvasData?.pages?.length||1} Seite(n)</small></div><div class="v102HubActions"><button class="v102Mini" onclick="closeModal();openStudySheetEditor('${x.id}')">Öffnen</button><button class="v102Mini" onclick="v102RenameSheet('${x.id}')">Umbenennen</button><button class="v102Mini danger" onclick="deleteStudySheet('${x.id}');v102OpenTopicHub('${kind}')">Löschen</button></div></div>`).join('')}
     if(kind==='cards'){title='Karteikarten';add=`<button class="primary" onclick="closeModal();setTimeout(createDeckPrompt,20)">＋ Ordner</button>`;items=st.decks.map(d=>`<div class="v102HubItem"><span class="v102HubIcon">${v102Icon('cards')}</span><div><b>${esc(d.name)}</b><small>${(data.flashcards||[]).filter(c=>c.deckId===d.id).length} Karten</small></div><div class="v102HubActions"><button class="v102Mini" onclick="closeModal();openDeck('${d.id}')">Lernen</button><button class="v102Mini" onclick="v102RenameDeck('${d.id}')">Umbenennen</button><button class="v102Mini danger" onclick="v102DeleteDeck('${d.id}')">Löschen</button></div></div>`).join('')}
     if(kind==='quiz'){title='Quizze';add=`<button class="primary" onclick="closeModal();setTimeout(createQuizPrompt,20)">＋ Quiz</button>`;items=st.quizzes.map(q=>`<div class="v102HubItem"><span class="v102HubIcon">${v102Icon('quiz')}</span><div><b>${esc(q.name)}</b><small>${(q.questions||[]).length} Fragen</small></div><div class="v102HubActions"><button class="v102Mini" onclick="closeModal();startQuiz('${q.id}')">Starten</button><button class="v102Mini" onclick="editQuiz('${q.id}')">Bearbeiten</button><button class="v102Mini" onclick="v102RenameQuiz('${q.id}')">Umbenennen</button><button class="v102Mini danger" onclick="deleteQuiz('${q.id}');v102OpenTopicHub('quiz')">Löschen</button></div></div>`).join('')}
-    if(kind==='test'){title='Tests & Klassenarbeiten';add=`<button class="primary" onclick="v102AddWrittenTest()">＋ Test</button>`;items=st.tests.map(x=>`<div class="v102HubItem"><span class="v102HubIcon">${v102Icon('test')}</span><div><b>${esc(x.name)}</b><small>${esc(x.date||'')} ${x.grade?'· Note '+esc(x.grade):''}</small></div><div class="v102HubActions"><button class="v102Mini" onclick="v102RenameWrittenTest('${x.id}')">Umbenennen</button><button class="v102Mini danger" onclick="v102DeleteWrittenTest('${x.id}')">Löschen</button></div></div>`).join('')}
+    if(kind==='test'){title='Tests & Klassenarbeiten';add=`<button class="primary" onclick="v102AddWrittenTest()">＋ Test</button>`;items=st.tests.map(x=>`<div class="v102HubItem"><span class="v102HubIcon">${v102Icon('test')}</span><div><b>${esc(x.name)}</b><small>${x.type?esc(x.type)+' · ':''}${esc(x.date||'')} ${x.grade?'· Note '+esc(x.grade):''}</small></div><div class="v102HubActions"><button class="v102Mini" onclick="v102RenameWrittenTest('${x.id}')">Umbenennen</button><button class="v102Mini danger" onclick="v102DeleteWrittenTest('${x.id}')">Löschen</button></div></div>`).join('')}
     openModal(`<div class="v102ResourceModal"><div class="rowBetween"><div><div class="eyebrow">${esc(t.title)}</div><h2>${title}</h2></div>${add}</div><div class="v102HubList">${items||'<div class="empty">Noch nichts hier.</div>'}</div></div>`)
   };
 
@@ -12006,13 +12006,13 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
     if(['sheet','homework','worksheet'].includes(kind)){title={sheet:'Lernblätter',homework:'Hausaufgaben',worksheet:'Arbeitsblätter'}[kind];const singular={sheet:'Lernblatt',homework:'Hausaufgabe',worksheet:'Arbeitsblatt'}[kind];add=`<button class="primary v103HubAdd" onclick="closeModal();setTimeout(()=>v102CreateCanvasResource('${kind}'),20)">${icon('plus')} ${singular}</button>`;items=st[kind].map(x=>item(kind==='sheet'?'sheet':kind,x.title||singular,`${x.canvasData?.pages?.length||1} Seite(n)`,`<button class="v102Mini" onclick="closeModal();openStudySheetEditor('${x.id}')">Öffnen</button><button class="v102Mini" onclick="v102RenameSheet('${x.id}')">Umbenennen</button><button class="v102Mini danger" onclick="deleteStudySheet('${x.id}');v102OpenTopicHub('${kind}')">Löschen</button>`)).join('')}
     if(kind==='cards'){title='Karteikarten';add=`<button class="primary v103HubAdd" onclick="closeModal();setTimeout(createDeckPrompt,20)">${icon('plus')} Ordner</button>`;items=st.decks.map(d=>item('cards',d.name,`${(data.flashcards||[]).filter(c=>c.deckId===d.id).length} Karten`,`<button class="v102Mini" onclick="closeModal();openDeck('${d.id}')">Lernen</button><button class="v102Mini" onclick="v102RenameDeck('${d.id}')">Umbenennen</button><button class="v102Mini danger" onclick="v102DeleteDeck('${d.id}')">Löschen</button>`)).join('')}
     if(kind==='quiz'){title='Quizze';add=`<button class="primary v103HubAdd" onclick="closeModal();setTimeout(createQuizPrompt,20)">${icon('plus')} Quiz</button>`;items=st.quizzes.map(q=>item('quiz',q.name,`${(q.questions||[]).length} Fragen`,`<button class="v102Mini" onclick="closeModal();startQuiz('${q.id}')">Starten</button><button class="v102Mini" onclick="editQuiz('${q.id}')">Bearbeiten</button><button class="v102Mini" onclick="v102RenameQuiz('${q.id}')">Umbenennen</button><button class="v102Mini danger" onclick="deleteQuiz('${q.id}');v102OpenTopicHub('quiz')">Löschen</button>`)).join('')}
-    if(kind==='test'){title='Tests & Klassenarbeiten';add=`<button class="primary v103HubAdd" onclick="v103AddWrittenTest()">${icon('plus')} Test</button>`;items=st.tests.map(x=>item('test',x.name,`${esc(x.date||'ohne Datum')}${x.grade?' · Note '+esc(x.grade):''}${x.attachmentName?' · '+esc(x.attachmentName):''}`,`<button class="v102Mini" onclick="v102RenameWrittenTest('${x.id}')">Umbenennen</button>${x.attachmentData?`<button class="v102Mini" onclick="v103OpenTestAttachment('${x.id}')">Datei</button>`:''}<button class="v102Mini danger" onclick="v102DeleteWrittenTest('${x.id}')">Löschen</button>`)).join('')}
+    if(kind==='test'){title='Tests & Klassenarbeiten';add=`<button class="primary v103HubAdd" onclick="v103AddWrittenTest()">${icon('plus')} Test</button>`;items=st.tests.map(x=>item('test',x.name,`${x.type?esc(x.type)+' · ':''}${esc(x.date||'ohne Datum')}${x.grade?' · Note '+esc(x.grade):''}${x.attachmentName?' · '+esc(x.attachmentName):''}`,`<button class="v102Mini" onclick="v102RenameWrittenTest('${x.id}')">Umbenennen</button>${x.attachmentData?`<button class="v102Mini" onclick="v103OpenTestAttachment('${x.id}')">Datei</button>`:''}<button class="v102Mini danger" onclick="v102DeleteWrittenTest('${x.id}')">Löschen</button>`)).join('')}
     openModal(`<div class="v102ResourceModal v103ResourceModal"><div class="rowBetween v103HubHeader"><div><div class="eyebrow">${esc(t.title)}</div><h2>${title}</h2></div>${add}</div><div class="v102HubList">${items||'<div class="v103EmptyState">Noch nichts hier.</div>'}</div></div>`)
   };
 
   /* Written tests can optionally keep a scan/photo/PDF as a data URL. */
-  window.v103AddWrittenTest=function(){const {s,t}=currentTopic();if(!s||!t)return;openModal(`<div class="v103TestModal"><h2>Test / Klassenarbeit</h2><div class="formGrid"><div class="full"><label>Name</label><input id="v103TestName" placeholder="z. B. Klassenarbeit 2"></div><div><label>Datum</label><input id="v103TestDate" type="date" value="${todayISO()}"></div><div><label>Note (optional)</label><input id="v103TestGrade" placeholder="z. B. 2+"></div><div class="full"><label>Scan / Foto / PDF (optional)</label><input id="v103TestFile" type="file" accept="image/*,application/pdf"></div><div class="full"><label>Notiz</label><textarea id="v103TestNote" placeholder="Themen, Feedback …"></textarea></div></div><button class="primary" style="margin-top:12px" onclick="v103SaveWrittenTest()">Speichern</button></div>`)};
-  window.v103SaveWrittenTest=function(){const {s,t}=currentTopic(),name=String($('#v103TestName')?.value||'').trim();if(!s||!t||!name)return;const file=$('#v103TestFile')?.files?.[0];const finish=(url='')=>{data.writtenTests.push({id:id(),subject:s.name,topicId:t.id,name,date:$('#v103TestDate')?.value||todayISO(),grade:String($('#v103TestGrade')?.value||'').trim(),note:String($('#v103TestNote')?.value||'').trim(),attachmentName:file?.name||'',attachmentType:file?.type||'',attachmentData:url});save();closeModal();v102OpenTopicHub('test')};if(file){if(file.size>7*1024*1024&&!confirm('Die Datei ist größer als 7 MB und kann den lokalen Speicher stark füllen. Trotzdem speichern?'))return;const r=new FileReader();r.onload=()=>finish(String(r.result||''));r.readAsDataURL(file)}else finish()};
+  window.v103AddWrittenTest=function(){const {s,t}=currentTopic();if(!s||!t)return;openModal(`<div class="v103TestModal"><h2>Test / Klassenarbeit / Abgabe</h2><div class="formGrid"><div class="full"><label>Name</label><input id="v103TestName" placeholder="z. B. Klassenarbeit 2"></div><div><label>Art</label><select id="v103TestType"><option>Test</option><option>Klassenarbeit</option><option>Präsentation</option><option>Prüfung</option><option>Benotete Abgabe</option></select></div><div><label>Datum</label><input id="v103TestDate" type="date" value="${todayISO()}"></div><div><label>Note (optional)</label><input id="v103TestGrade" placeholder="z. B. 2+"></div><div class="full"><label>Scan / Foto / PDF (optional)</label><input id="v103TestFile" type="file" accept="image/*,application/pdf"></div><div class="full"><label>Notiz</label><textarea id="v103TestNote" placeholder="Themen, Feedback …"></textarea></div></div><button class="primary" style="margin-top:12px" onclick="v103SaveWrittenTest()">Speichern</button></div>`)};
+  window.v103SaveWrittenTest=function(){const {s,t}=currentTopic(),name=String($('#v103TestName')?.value||'').trim();if(!s||!t||!name)return;const file=$('#v103TestFile')?.files?.[0];const finish=(url='')=>{data.writtenTests.push({id:id(),subject:s.name,topicId:t.id,name,type:$('#v103TestType')?.value||'Test',date:$('#v103TestDate')?.value||todayISO(),grade:String($('#v103TestGrade')?.value||'').trim(),note:String($('#v103TestNote')?.value||'').trim(),attachmentName:file?.name||'',attachmentType:file?.type||'',attachmentData:url});save();closeModal();v102OpenTopicHub('test')};if(file){if(file.size>7*1024*1024&&!confirm('Die Datei ist größer als 7 MB und kann den lokalen Speicher stark füllen. Trotzdem speichern?'))return;const r=new FileReader();r.onload=()=>finish(String(r.result||''));r.readAsDataURL(file)}else finish()};
   window.v103OpenTestAttachment=function(idv){const x=(data.writtenTests||[]).find(v=>v.id===idv);if(!x?.attachmentData)return;const w=window.open('','_blank');if(w)w.location.href=x.attachmentData};
 
   /* SVG-only layers: cleaner drag/drop and no emoji locks. */
@@ -17869,7 +17869,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
     position:sticky!important;top:28px!important;height:calc(100vh - 56px)!important;max-height:960px!important
   }
   #v210Sidebar .brand{display:flex!important;align-items:center!important;gap:12px!important;padding:7px 9px 8px!important;cursor:pointer!important}
-  #v210Sidebar .brandIcon{width:42px!important;height:42px!important;display:grid!important;place-items:center!important;color:#d78f8e!important;flex:0 0 42px!important}
+  #v210Sidebar .brandIcon{width:42px!important;height:42px!important;display:grid!important;place-items:center!important;color:#c7747c!important;flex:0 0 42px!important;background:#fde9e9!important;border:1px solid #f0d2d3!important;border-radius:14px!important;padding:9px!important;box-sizing:border-box!important}
   #v210Sidebar svg,#v210PlanHead svg,.v210Lesson svg{width:100%!important;height:100%!important;stroke:currentColor!important;fill:none!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
   #v210Sidebar .brandText b{display:block!important;font-size:20px!important;line-height:1!important;letter-spacing:-.03em!important;color:#2f2927!important}
   #v210Sidebar .brandText small{display:block!important;margin-top:5px!important;font-size:8.5px!important;font-weight:800!important;letter-spacing:.16em!important;color:#b19992!important;white-space:nowrap!important}
@@ -18013,12 +18013,13 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
     const app=document.querySelector('.app');if(!app)return;
     let s=document.getElementById('v210Sidebar');if(!s){s=document.createElement('aside');s.id='v210Sidebar';app.insertBefore(s,app.firstChild)}
     const bubble=taskBubble();
-    s.innerHTML=`<div class="brand" onclick="openView('home')"><span class="brandIcon">${svg('bunny')}</span><span class="brandText"><b>Studia</b><small>PLAN · LERNEN · ERREICHEN</small></span></div>
+    s.innerHTML=`<div class="brand" onclick="openView('home')"><span class="brandIcon">${svg('book')}</span><span class="brandText"><b>Studia</b><small>PLAN · LERNEN · ERREICHEN</small></span></div>
       <div class="navList">
         ${side('Stundenplan','cal','plan',`openView('plan')`,'')}
-        ${side('Aufgaben','tasks','tasks',`openView('tasks')`,bubble?String(bubble):'')}
+        ${side('Planer','tasks','tasks',`openView('tasks')`,bubble?String(bubble):'')}
         ${side('Lernen','learn',['study','learnsets'],`v210Nav('study')`,'','study')}
         ${side('Fächer','folder',['subjects','subject-detail','topic-detail','deck-detail'],`v210Nav('subjects')`,'','subjects')}
+        ${side('Noten','test','grades',`v210Nav('grades')`,'','grades')}
         ${side('Tests','test','__never__',`v210OpenTests()`,'','tests')}
         ${side('Notizen','notes','__never__',`v210OpenNotes()`,'','notes')}
         <div class="navDivider"></div>
@@ -18196,7 +18197,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
 </style>
 <script id="v212-subject-folder-plan-script">
 (function(){
-  const DESKTOP_MIN=1100;
+  const DESKTOP_MIN=900;
   const dayOrderV212=['Mo','Di','Mi','Do','Fr'];
   const aliasMap={
     PH:'Physik',PHY:'Physik',PHYS:'Physik',PHYSIK:'Physik',
@@ -19017,9 +19018,9 @@ body.editorMode #view-sheet-editor.active[aria-hidden="true"]{visibility:visible
 <!-- ===== Studia V216 — interaction + color + editor reliability fixes ===== -->
 <style id="v216-reliability-fixes-style">
 @media (min-width:1100px){
-  /* No mascot/animal beside the Studia wordmark. */
-  #v210Sidebar .brandIcon{display:none!important}
-  #v210Sidebar .brand{gap:0!important;padding-left:11px!important}
+  /* Keep the intentional Studia app icon visible. */
+  #v210Sidebar .brandIcon{display:grid!important}
+  #v210Sidebar .brand{gap:12px!important;padding-left:9px!important}
 
   /* A Doppel-/Mehrfachstunde is one clean card. Grid lines must never shine through it. */
   #view-plan .v210Lesson.v216LongLesson{
@@ -19296,7 +19297,7 @@ body.editorMode #view-sheet-editor.active[aria-hidden="true"]{visibility:visible
   };
   window.openEditTest=function(tid){
     const x=(data.tests||[]).find(v=>String(v.id)===String(tid));if(!x)return;
-    openModal(`<h2>Test bearbeiten</h2><div class="formGrid"><div><label>Fach</label><select id="v216TestSubject">${subjectOptions()}</select></div><div><label>Datum</label><input id="v216TestDate" type="date" value="${esc216(x.date||todayISO())}"></div><div><label>Art</label><select id="v216TestType"><option>Test</option><option>Klassenarbeit</option><option>Präsentation</option><option>Prüfung</option></select></div><div><label>Erinnerung</label><select id="v216TestReminder"><option value="1">1 Tag vorher</option><option value="3">3 Tage vorher</option><option value="7">7 Tage vorher</option></select></div><div class="full"><label>Beschreibung / Themen</label><textarea id="v216TestText">${esc216(x.text||'')}</textarea></div><div class="full"><label>Weitere Fotos / Dateien</label><input id="v216TestFiles" type="file" multiple accept="image/*,.pdf,.doc,.docx,.ppt,.pptx"></div></div><button class="primary" style="margin-top:12px" onclick="saveTestEdit('${esc216(x.id)}')">Änderungen speichern</button>`);
+    openModal(`<h2>Test bearbeiten</h2><div class="formGrid"><div><label>Fach</label><select id="v216TestSubject">${subjectOptions()}</select></div><div><label>Datum</label><input id="v216TestDate" type="date" value="${esc216(x.date||todayISO())}"></div><div><label>Art</label><select id="v216TestType"><option>Test</option><option>Klassenarbeit</option><option>Präsentation</option><option>Prüfung</option><option>Benotete Abgabe</option></select></div><div><label>Erinnerung</label><select id="v216TestReminder"><option value="1">1 Tag vorher</option><option value="3">3 Tage vorher</option><option value="7">7 Tage vorher</option></select></div><div class="full"><label>Beschreibung / Themen</label><textarea id="v216TestText">${esc216(x.text||'')}</textarea></div><div class="full"><label>Weitere Fotos / Dateien</label><input id="v216TestFiles" type="file" multiple accept="image/*,.pdf,.doc,.docx,.ppt,.pptx"></div></div><button class="primary" style="margin-top:12px" onclick="saveTestEdit('${esc216(x.id)}')">Änderungen speichern</button>`);
     const s=q('#v216TestSubject');if(s)s.value=x.subject||'';const t=q('#v216TestType');if(t)t.value=x.type||'Test';const r=q('#v216TestReminder');if(r)r.value=String(x.reminder||1);
   };
   window.saveTestEdit=async function(tid){
@@ -19317,8 +19318,8 @@ body.editorMode #view-sheet-editor.active[aria-hidden="true"]{visibility:visible
     window.renderTasks=renderTasks216;try{renderTasks=renderTasks216}catch(_){}
   }
   function decorateHomeCountdowns216(){
-    const items=[...(data.homework||[]).filter(x=>!x.done).map(x=>({kind:'hw',date:x.due,id:x.id})),...(data.tests||[]).filter(x=>x.date>=todayISO()).map(x=>({kind:'test',date:x.date,id:x.id}))].sort((a,b)=>String(a.date||'').localeCompare(String(b.date||''))).slice(0,5);
-    const cards=qa('#homeOpen .card');cards.forEach((card,i)=>{const item=items[i];if(!item)return;const small=card.querySelector('.small');if(item.kind==='hw'&&small&&!small.dataset.v216Countdown){const left=daysUntilLabel(item.date);if(left){small.insertAdjacentHTML('beforeend',` · <span class="v216DueCountdown">${esc216(left)}</span>`)}small.dataset.v216Countdown='1'}if(!card.querySelector('.v216HomeEdit')){const b=document.createElement('button');b.className='ghost v216EditBtn v216HomeEdit';b.textContent='Bearbeiten';b.onclick=e=>{e.preventDefault();e.stopPropagation();item.kind==='hw'?openEditHomework(item.id):openEditTest(item.id)};card.appendChild(b)}});
+    /* V291: final V217 code owns Heute/Open. Only clear stale legacy action buttons. */
+    qa('#homeOpen .v216HomeEdit,#homeOpen .v217HomeEdit').forEach(x=>x.remove());
   }
   const renderHomeBefore216=window.renderHome||((typeof renderHome==='function')?renderHome:null);
   if(typeof renderHomeBefore216==='function'){
@@ -19362,7 +19363,7 @@ body.editorMode #view-sheet-editor.active[aria-hidden="true"]{visibility:visible
   try{openStudySheetEditor=window.openStudySheetEditor}catch(_){}
 
   /* ---- Keep all generated UI fixed after normal app rerenders. ---- */
-  function removeSidebarCreature216(){const icon=q('#v210Sidebar .brandIcon');if(icon)icon.remove()}
+  function removeSidebarCreature216(){/* V291: the Studia app icon is intentional. */}
   function reconcile216(){removeSidebarCreature216();untrapLearningMode216();bindModeSwitches216();paintAllSubjectColors216();decorateHomeCountdowns216();try{document.body.classList.toggle('v216MobileMulti',innerWidth<900&&!!canvasState?.multiMode)}catch(_){}}
   const obs=new MutationObserver(()=>{clearTimeout(window.__v216ReconTimer);window.__v216ReconTimer=setTimeout(reconcile216,0)});obs.observe(document.body,{childList:true,subtree:true});
   window.addEventListener('resize',()=>setTimeout(reconcile216,50));
@@ -19381,9 +19382,10 @@ body.editorMode #view-sheet-editor.active[aria-hidden="true"]{visibility:visible
   body.planViewActive #view-plan .desktopWeekBody .lesson>.time{display:none!important}
   body.planViewActive #view-plan .desktopWeekBody .lesson{grid-template-columns:minmax(0,1fr) auto!important}
 }
-/* No animal/mascot beside the Studia wordmark on laptop. */
-#v210Sidebar .brandIcon,#v210Sidebar .brand>svg:first-child{display:none!important}
-#v210Sidebar .brand{gap:0!important}
+/* One intentional Studia app icon beside the wordmark. */
+#v210Sidebar .brandIcon{display:grid!important}
+#v210Sidebar .brand>svg:first-child{display:none!important}
+#v210Sidebar .brand{gap:12px!important}
 
 /* Always keep the learning/edit switch reachable. */
 #view-deck-detail .v217DeckModeSwitch{margin-left:auto;margin-right:8px;display:flex;gap:5px;padding:3px;background:#f8eeea;border:1px solid #ead5d0;border-radius:13px}
@@ -19397,7 +19399,16 @@ body:not(.v214LearningReadOnly) #view-deck-detail #addCardToDeckBtn{display:inli
 .v217Countdown{font-weight:900;color:#a76f70}
 @media(max-width:699px){
   .v217ItemActions{width:100%;justify-content:flex-end;margin-top:7px}
-  #homeworkList>.card{flex-wrap:wrap}
+  #homeworkList>.card{flex-wrap:wrap;max-width:100%;overflow:hidden}
+  #view-home .homeMiniActions button{min-width:0!important;display:grid!important;grid-template-rows:22px auto!important;place-items:center!important;gap:5px!important;overflow:hidden!important}
+  #view-home .homeMiniActions button svg{width:20px!important;height:20px!important;display:block!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+  #view-home .homeMiniActions button span{min-width:0!important;max-width:100%!important;font-size:9px!important;line-height:1!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  #view-home #homeOpen{width:100%!important;max-width:100%!important;min-width:0!important;overflow:hidden!important}
+  #view-home #homeOpen>.card{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important;overflow:hidden!important;display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:8px!important;align-items:center!important}
+  #view-home #homeOpen>.card>div{min-width:0!important;max-width:100%!important;overflow:hidden!important}
+  #view-home #homeOpen>.card b,#view-home #homeOpen>.card .small{overflow-wrap:anywhere!important;word-break:break-word!important}
+  #view-home #homeOpen .badge{max-width:92px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  #view-home .v216HomeEdit,#view-home .v217HomeEdit{display:none!important}
 }
 
 /* iPhone: selected objects must visibly stay selected in multi-select mode. */
@@ -19418,7 +19429,7 @@ body:not(.v214LearningReadOnly) #view-deck-detail #addCardToDeckBtn{display:inli
 
   /* ---------- Desktop Studia wordmark ---------- */
   function removeSidebarMascot217(){
-    qa('#v210Sidebar .brandIcon').forEach(x=>x.remove());
+    /* V291: keep the single Studia app icon. */
   }
 
   /* ---------- Correct subject colors on laptop Today ---------- */
@@ -19485,7 +19496,7 @@ body:not(.v214LearningReadOnly) #view-deck-detail #addCardToDeckBtn{display:inli
     openModal(`<h2>Test bearbeiten</h2><div class="formGrid">
       <div><label>Fach</label><select id="v217TestSubject">${subjectOptions()}</select></div>
       <div><label>Datum</label><input id="v217TestDate" type="date" value="${html(x.date||todayISO())}"></div>
-      <div><label>Art</label><select id="v217TestType"><option>Test</option><option>Klassenarbeit</option><option>Präsentation</option><option>Prüfung</option></select></div>
+      <div><label>Art</label><select id="v217TestType"><option>Test</option><option>Klassenarbeit</option><option>Präsentation</option><option>Prüfung</option><option>Benotete Abgabe</option></select></div>
       <div><label>Erinnerung</label><select id="v217TestReminder"><option value="1">1 Tag vorher</option><option value="3">3 Tage vorher</option><option value="7">7 Tage vorher</option></select></div>
       <div class="full"><label>Beschreibung / Themen</label><textarea id="v217TestText">${html(x.text||'')}</textarea></div>
       <div class="full"><label>Weitere Fotos / Dateien</label><input id="v217TestFiles" type="file" multiple accept="image/*,.pdf,.doc,.docx,.ppt,.pptx"></div>
@@ -19526,6 +19537,7 @@ body:not(.v214LearningReadOnly) #view-deck-detail #addCardToDeckBtn{display:inli
 
   function decorateHome217(){
     const root=q('#homeOpen');if(!root)return;
+    qa('.v216HomeEdit,.v217HomeEdit',root).forEach(x=>x.remove());
     const items=[
       ...(data.homework||[]).filter(x=>!x.done).map(x=>({kind:'hw',date:x.due,subject:x.subject,text:x.text,id:x.id})),
       ...(data.tests||[]).filter(x=>x.date>=todayISO()).map(x=>({kind:'test',date:x.date,subject:x.subject,text:x.type,id:x.id}))
@@ -19536,11 +19548,6 @@ body:not(.v214LearningReadOnly) #view-deck-detail #addCardToDeckBtn{display:inli
       const small=card.querySelector('.small');
       if(item.kind==='hw'&&small&&!small.querySelector('.v217Countdown')){
         const left=countdown217(item.date);if(left)small.insertAdjacentHTML('beforeend',` · <span class="v217Countdown">${html(left)}</span>`);
-      }
-      if(!card.querySelector('.v217HomeEdit')){
-        const b=document.createElement('button');b.type='button';b.className='ghost v217EditBtn v217HomeEdit';b.textContent='Bearbeiten';
-        b.onclick=e=>{e.preventDefault();e.stopPropagation();item.kind==='hw'?openEditHomework(item.id):openEditTest(item.id)};
-        card.appendChild(b);
       }
     });
   }
@@ -19565,7 +19572,9 @@ body:not(.v214LearningReadOnly) #view-deck-detail #addCardToDeckBtn{display:inli
 
   function safeEditLabel217(){return 'Bearbe\u200biten'}
   function ensureLearningSwitch217(){
-    qa('.v214LearnModeSwitch').forEach(sw=>{
+    const hero=q('#view-learnsets .learnsetsHero');
+    if(hero){const duplicates=qa(':scope > .v214LearnModeSwitch',hero);duplicates.slice(1).forEach(x=>x.remove())}
+    qa('#view-learnsets .learnsetsHero > .v214LearnModeSwitch,#view-deck-detail .v217DeckModeSwitch').forEach(sw=>{
       const bs=qa('button',sw);if(bs.length<2)return;
       const learn=bs.find(b=>(b.textContent||'').replace(/\u200b/g,'').trim()==='Lernen');
       const edit=bs.find(b=>(b.textContent||'').replace(/\u200b/g,'').trim()==='Bearbeiten');
@@ -19576,8 +19585,10 @@ body:not(.v214LearningReadOnly) #view-deck-detail #addCardToDeckBtn{display:inli
   function ensureDeckSwitch217(){
     const view=q('#view-deck-detail');if(!view)return;
     const head=q(':scope > .sectionHead',view);if(!head)return;
-    let sw=q('.v217DeckModeSwitch',head)||q('.v215DeckModeSwitch',head);
-    if(!sw){sw=document.createElement('div');sw.className='v217DeckModeSwitch';head.insertBefore(sw,q('#addCardToDeckBtn',head)||null)}else sw.classList.add('v217DeckModeSwitch');
+    const switches=qa(':scope > .v214LearnModeSwitch,:scope > .v215DeckModeSwitch,:scope > .v217DeckModeSwitch',head);
+    let sw=switches[0]||null;switches.slice(1).forEach(x=>x.remove());
+    if(!sw){sw=document.createElement('div');head.insertBefore(sw,q('#addCardToDeckBtn',head)||null)}
+    sw.className='v214LearnModeSwitch v217DeckModeSwitch';
     const readOnly=document.body.classList.contains('v214LearningReadOnly');
     sw.innerHTML=`<button type="button" class="${readOnly?'active':''}" onclick="v217SetLearnMode('learn')">Lernen</button><button type="button" class="${readOnly?'':'active'}" onclick="v217SetLearnMode('edit')">${safeEditLabel217()}</button>`;
     const add=q('#addCardToDeckBtn',view);
@@ -22000,5 +22011,5 @@ const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 231'};
 </script>
 <!-- ===== /Studia V288 ===== -->
 <script id="studia-v288-version-marker">
-(()=>{const set=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 289'};[0,250,900,1800].forEach(t=>setTimeout(set,t))})();
+(()=>{const set=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 291'};[0,250,900,1800].forEach(t=>setTimeout(set,t))})();
 </script>
