@@ -6860,7 +6860,7 @@ window.editorOpenGroup=function(group,btn){
  }else if(group==="elements"){
    title="Elemente";
    html=`<div class="mobileDrawerSection"><div class="mobileDrawerTitle">Einfügen</div>${grid([
-    item("Textfeld","addCanvasTextBox()","T"),item("Formel","openFormulaDialog()","∑"),item("Graph","openGraphDialog()","⌁"),item("Tabelle","openTableDialog()","▦"),
+    item("Textfeld","addCanvasTextBox()","T"),item("Formel","openFormulaDialog()","∑"),item("Graph","openGraphDialog()","⌁"),item("Diagramm","openChartDialog()","▥"),item("Timeline","openTimelineDialog()","↝"),item("Tabelle","openTableDialog()","▦"),
     item("Checkliste","addCanvasChecklist()","☑"),item("Bild / Foto","openCanvasMediaPicker()","▧"),item("Datei","document.getElementById('canvasAnyFileInput').click()","📎"),item("Trennlinie","addVectorLine()","—"),
     item("Rechteck","addVectorShape('rect')","□"),item("Kreis","addVectorShape('ellipse')","○"),item("Dreieck","addVectorShape('triangle')","△"),item("Freier Pfad","setVectorTool('pen')","〰"),
     item("Zettel kariert","addPaperSticker('grid')","▩"),item("Zettel liniert","addPaperSticker('line')","≡"),item("Klebeband","addTapeSticker()","▰"),item("Sticker","toggleStickerPanel()","✿")
@@ -21850,12 +21850,12 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
     const old=room.querySelector('.petAvatarCute');
     if(old){
       const wrap=document.createElement('div');wrap.className='v213PandaWrap';
-      const img=document.createElement('img');img.className='v213PandaPet';img.src='panda-study.png';img.alt='StudyPet Panda';img.draggable=false;
+      const img=document.createElement('img');img.className='v213PandaPet';img.src='assets/study-pet/pets/panda-study.png';img.alt='StudyPet Panda';img.draggable=false;
       wrap.appendChild(img);
       const bow=old.querySelector('.petBow');if(bow)wrap.appendChild(bow.cloneNode(true));
       old.replaceWith(wrap);
     }else if(!room.querySelector('.v213PandaPet')){
-      const img=document.createElement('img');img.className='v213PandaPet';img.src='panda-study.png';img.alt='StudyPet Panda';img.draggable=false;room.appendChild(img);
+      const img=document.createElement('img');img.className='v213PandaPet';img.src='assets/study-pet/pets/panda-study.png';img.alt='StudyPet Panda';img.draggable=false;room.appendChild(img);
     }
   }
   try{
@@ -25371,3 +25371,77 @@ const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 231'};
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(boot,0),{once:true});else setTimeout(boot,0);
 })();
 </script>
+
+
+<!-- ===== Studia V292 · single mobile text formatter ===== -->
+<style id="studia-v292-editor-style">
+/* Diagramm + Timeline now live in the normal Elemente palette. Hide historical injected duplicate panels. */
+#canvasQuickDrawer .v137ElementExtras,#canvasQuickDrawer .v138ElementTools,#canvasQuickDrawer .v139InsertTools,#canvasQuickDrawer .v140InsertTools{display:none!important}
+@media(max-width:899px){
+  #v152SelectionBar{display:none!important;visibility:hidden!important;pointer-events:none!important}
+  #v292MobileTextBar{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:2147483600;display:none;align-items:center;gap:4px;max-width:calc(100vw - 16px);padding:6px;border:1px solid #ead8d3;border-radius:16px;background:rgba(255,253,251,.98);box-shadow:0 13px 38px rgba(74,52,46,.20);backdrop-filter:blur(16px);overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none}
+  #v292MobileTextBar.show{display:flex!important}
+  #v292MobileTextBar::-webkit-scrollbar{display:none}
+  #v292MobileTextBar button,#v292MobileTextBar select,#v292MobileTextBar label{flex:0 0 auto;height:38px;min-width:38px;border:1px solid #eee0db;border-radius:11px;background:#fff;color:#5e504b;display:grid;place-items:center;padding:0 9px;font:800 13px/1 Inter,Arial,sans-serif;box-sizing:border-box}
+  #v292MobileTextBar button:active{background:#fff0f1;color:#a45f67}
+  #v292MobileTextBar select{display:block;min-width:112px;max-width:140px;padding:0 8px;font-size:11px;font-weight:750}
+  #v292MobileTextBar .v292Color{position:relative;width:40px;padding:0;font-weight:900}
+  #v292MobileTextBar .v292Color:after{content:"";position:absolute;left:10px;right:10px;bottom:7px;height:3px;border-radius:8px;background:var(--v292-text-color,#333)}
+  #v292MobileTextBar .v292Color input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+}
+</style>
+<script id="studia-v292-editor-script">
+(()=>{
+'use strict';
+if(window.__STUDIA_V292_EDITOR__)return;window.__STUDIA_V292_EDITOR__=true;
+const q=(s,r=document)=>r?.querySelector?.(s)||null;
+const qa=(s,r=document)=>r?.querySelectorAll?[...r.querySelectorAll(s)]:[];
+const mobile=()=>innerWidth<900&&document.body.classList.contains('editorMode');
+let savedRange=null,savedId=null,bar=null;
+function editingBoxFromNode(node){const el=node?.nodeType===1?node:node?.parentElement;return el?.closest?.('#canvasObjects .cobj[contenteditable="true"][data-id]')||null}
+function validSelection(){
+  if(!mobile())return null;const s=getSelection();if(!s?.rangeCount||s.isCollapsed)return null;const r=s.getRangeAt(0),box=editingBoxFromNode(r.commonAncestorContainer);if(!box||!box.contains(r.startContainer)||!box.contains(r.endContainer))return null;return{r,box};
+}
+function remember(){const hit=validSelection();if(!hit)return false;try{savedRange=hit.r.cloneRange();savedId=hit.box.dataset.id;return true}catch(_){return false}}
+function ensureBar(){
+  if(bar?.isConnected)return bar;bar=document.createElement('div');bar.id='v292MobileTextBar';bar.setAttribute('role','toolbar');bar.setAttribute('aria-label','Text formatieren');
+  bar.innerHTML='<button type="button" data-cmd="bold" title="Fett"><b>B</b></button><button type="button" data-cmd="italic" title="Kursiv"><i>I</i></button><button type="button" data-cmd="underline" title="Unterstrichen"><u>U</u></button><button type="button" data-cmd="strikeThrough" title="Durchgestrichen"><s>S</s></button><select data-font title="Schrift"><option value="Inter">Inter</option><option value="Arial">Arial</option><option value="Georgia">Georgia</option><option value="Trebuchet MS">Trebuchet</option><option value="Verdana">Verdana</option><option value="Times New Roman">Times</option><option value="Courier New">Courier</option></select><label class="v292Color" title="Textfarbe">A<input data-color type="color" value="#333333"></label>';
+  document.body.appendChild(bar);
+  bar.addEventListener('pointerdown',e=>{if(e.target.closest('button'))e.preventDefault()},true);
+  bar.addEventListener('click',e=>{const b=e.target.closest('[data-cmd]');if(!b)return;e.preventDefault();applyCommand(b.dataset.cmd)});
+  q('[data-font]',bar).addEventListener('change',e=>applyCommand('fontName',e.target.value));
+  q('[data-color]',bar).addEventListener('input',e=>{bar.style.setProperty('--v292-text-color',e.target.value);applyCommand('foreColor',e.target.value)});
+  return bar;
+}
+function selectedObject(){try{return (canvasState?.objects||[]).find(o=>String(o.id)===String(savedId))||null}catch(_){return null}}
+function restore(){
+  if(!savedRange||!savedId)return null;const box=q(`#canvasObjects .cobj[data-id="${CSS.escape(String(savedId))}"]`);if(!box||!box.isConnected)return null;
+  box.contentEditable='true';try{box.focus({preventScroll:true})}catch(_){box.focus()}
+  try{const s=getSelection();s.removeAllRanges();s.addRange(savedRange.cloneRange());return box}catch(_){return null}
+}
+function cleanHTML(box){const c=box.cloneNode(true);qa('.resizeHandle,.rotateHandle,.v135LinkBadge,.v138TransformHandle,.v116ShapeMoveHandle,.v108VectorMoveHandle',c).forEach(x=>x.remove());return c.innerHTML}
+function commit(box){const o=selectedObject();if(!o||!box)return;o.text=cleanHTML(box);try{markCanvasDirty?.();pushHistory?.();renderCanvasInspector?.()}catch(_){}}
+function applyCommand(cmd,value=null){
+  const box=restore();if(!box)return;try{document.execCommand('styleWithCSS',false,true)}catch(_){ }
+  try{document.execCommand(cmd,false,value)}catch(err){console.warn('Studia mobile text format',cmd,err)}
+  const s=getSelection();if(s?.rangeCount)try{savedRange=s.getRangeAt(0).cloneRange()}catch(_){ }
+  commit(box);ensureBar().classList.add('show');
+}
+function updateBar(){
+  const b=ensureBar();if(!mobile()){b.classList.remove('show');return}
+  if(remember())b.classList.add('show');
+  else if(!document.activeElement?.closest?.('#v292MobileTextBar'))b.classList.remove('show');
+}
+document.addEventListener('selectionchange',()=>setTimeout(updateBar,0));
+document.addEventListener('pointerup',e=>{if(e.target instanceof Element&&e.target.closest('#canvasObjects .cobj[contenteditable="true"]'))setTimeout(updateBar,30)},true);
+document.addEventListener('keyup',e=>{if(e.target instanceof Element&&e.target.closest('#canvasObjects .cobj[contenteditable="true"]'))setTimeout(updateBar,0)},true);
+document.addEventListener('pointerdown',e=>{if(e.target instanceof Element&&e.target.closest('#v292MobileTextBar'))return;if(!(e.target instanceof Element&&e.target.closest('#canvasObjects .cobj[contenteditable="true"]')))setTimeout(()=>ensureBar().classList.remove('show'),0)},true);
+window.addEventListener('resize',()=>{if(innerWidth>=900)ensureBar().classList.remove('show')},{passive:true});
+
+/* The existing top font menu is the single desktop font picker. Make its trigger deterministic without adding another menu. */
+document.addEventListener('click',e=>{if(innerWidth<900)return;const b=e.target instanceof Element?e.target.closest('.v187TopFontButton'):null;if(!b)return;e.preventDefault();e.stopImmediatePropagation();window.v165ToggleFontMenu?.(b)},true);
+
+const setVersion=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 292'};[0,250,900,1800].forEach(t=>setTimeout(setVersion,t));
+})();
+</script>
+<!-- ===== /Studia V292 ===== -->

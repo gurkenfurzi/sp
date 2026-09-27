@@ -11108,7 +11108,14 @@ async function parsePdfDocument(pdf){
      .replace(/\bN(?:Ä|AE)CHSTE\s+SEITE\s*:?\s*(?:NEUER\s+)?BASISPLAN\b/ig," ")
      .replace(/\bBASISPLAN\s+AB\b[^.]{0,120}\b(?:SIEHE\s+)?SEITE\s+\d+\b/ig," ");
    const pageDeclaresBasis=/\b1\.\s*BASISPLAN\b|\bBASISPLAN\s+UW\b|\bNEUER\s+BASISPLAN\b|\bBASISPLAN\b/i.test(pageWithoutBasisReferences);
-   const pageIsBasis=nextPageIsBasis||pageDeclaresBasis;
+   // PHS publishes a complete replacement timetable as a single page without the word BASISPLAN.
+   // Example footer: "Stundenplan · Achtung: Ansicht aktualisieren! · ab 28. September 2026".
+   // That page is the new normal plan, not dozens of substitutions against an old retained basis.
+   const standalonePublishedPlan=pdf.numPages===1
+     && /\bStundenplan\b/i.test(pageText)
+     && /\bab\s+\d{1,2}\.?\s*(?:Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)\s+20\d{2}\b/i.test(pageText)
+     && !/\b(?:Vertretungsplan|Vertretung(?:en)?|Entfall|entfällt|Änderungen?)\b/i.test(pageText);
+   const pageIsBasis=nextPageIsBasis||pageDeclaresBasis||standalonePublishedPlan;
    if(pageIsBasis)sawReliableBasis=true;
 
    const parsed=parsePageItems(content.items,raster);
@@ -17312,7 +17319,7 @@ window.addEventListener('resize',()=>setTimeout(reconcile193,100));document.addE
   function maybeRefreshPlan(){
     if(planBusy||!navigator.onLine||!document.querySelector('#view-plan.active'))return;
     var now=Date.now();
-    if(now-lastPlanAttempt<5*60*1000||!planNeedsRefresh())return;
+    if(now-lastPlanAttempt<2*60*1000)return;
     if(typeof window.loadRemotePlan!=='function')return;
     lastPlanAttempt=now;planBusy=true;
     Promise.resolve(window.loadRemotePlan(false)).catch(function(){}).finally(function(){planBusy=false});
@@ -17614,7 +17621,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
         const card=specialOnly.map(x=>{const raw=cleanPdfCellText(x.raw||''); const tm=raw.match(/^(\d{1,2}(?::\d{2})?\s*Uhr)\s*(.*)$/i); return `<div class="v208Special"><b>${esc(tm?tm[1]:'Info')}</b>${esc(tm?tm[2]:raw)}</div>`;}).join('');
         return `<div class="v208DayBody" style="height:${bodyHeight}px">${guides}${card}</div>`;
       }
-      const merged=expandLessonsForVisibleBreaks(mergeLessons(rawDay.filter(x=>timetableViewMode==='basis'?!x.cancelledFromBasis:true)));
+      const merged=mergeLessons(rawDay.filter(x=>timetableViewMode==='basis'?!x.cancelledFromBasis:true));
       const lessons=merged.map(l=>{
         const raw=(Array.isArray(l.duplicates)&&l.duplicates.length?l.duplicates[0].raw:l.raw)||''; const p=splitCell(raw); const title=prettySubject(p.subject); const meta=[p.room?('Raum '+p.room):'',p.teacher||p.meta].filter(Boolean).join(' · ');
         const top=Math.max(0,timePos(l.start))+6; const height=Math.max(72, Math.round((toMin(l.end)-toMin(l.start))*px)-8); const compact=height<86;
@@ -17793,7 +17800,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
     const app=document.querySelector('.app');if(!app)return;
     let s=document.getElementById('v209Sidebar');if(!s){s=document.createElement('aside');s.id='v209Sidebar';app.insertBefore(s,app.firstChild)}
     const bubble=taskBubble();
-    s.innerHTML=`<div class="brand" onclick="openView('home')"><span class="brandIcon">${svg('bunny')}</span><span class="brandText"><b>Studia</b><small>PLAN · LERNEN · ERREICHEN</small></span></div><div class="navList">${side('Stundenplan','cal','plan',`v210Nav('plan')`,'','plan')}${side('Aufgaben','tasks','tasks',`v210Nav('tasks')`,bubble?String(bubble):'','tasks')}${side('Lernen','learn','study',`openView('study')`,'')}${side('Fächer','folder','subjects',`openView('subjects')`,'')}${side('Tests','test','tasks',`openView('tasks')`,'')}${side('Notizen','notes','subjects',`openView('subjects')`,'')}</div><div class="quoteBox"><span class="quoteIcon">${svg('sprout')}</span><div class="quoteText">Better<br>than<br>yesterday.</div><span class="quoteHeart">${svg('heart')}</span></div>`;
+    s.innerHTML=`<div class="brand" onclick="openView('home')"><span class="brandIcon">${svg('bunny')}</span><span class="brandText"><b>Studia</b><small>PLAN · LERNEN · ERREICHEN</small></span></div><div class="navList">${side('Stundenplan','cal','plan',`v210Nav('plan')`,'','plan')}${side('Aufgaben','tasks','tasks',`v292OpenTaskSection('homework')`,bubble?String(bubble):'','homework')}${side('Lernen','learn','study',`openView('study')`,'')}${side('Fächer','folder','subjects',`openView('subjects')`,'')}${side('Tests','test','__never__',`v292OpenTaskSection('tests')`,'','tests')}${side('Notizen','notes','subjects',`openView('subjects')`,'')}</div><div class="quoteBox"><span class="quoteIcon">${svg('sprout')}</span><div class="quoteText">Better<br>than<br>yesterday.</div><span class="quoteHeart">${svg('heart')}</span></div>`;
   }
   function dateInfo(){const d=new Date();const weekday=d.toLocaleDateString('de-DE',{weekday:'long'});const full=d.toLocaleDateString('de-DE',{day:'2-digit',month:'long',year:'numeric'});return{weekday,full}}
   function ensureHomeHead(){
@@ -17928,7 +17935,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
   .v210TimeLabel{position:absolute!important;right:12px!important;transform:translateY(-50%)!important;font-size:10px!important;font-weight:650!important;color:#a49892!important;white-space:nowrap!important}
   .v210DayBody{grid-row:2!important;position:relative!important;min-width:0!important;background:linear-gradient(180deg,rgba(255,253,251,.72),rgba(255,251,248,.88))!important;border-left:1px solid #f2e6e2!important;overflow:hidden!important}
   .v210GridLine{position:absolute!important;left:0!important;right:0!important;height:1px!important;background:#f1e7e3!important;pointer-events:none!important;z-index:0!important}
-  .v210PauseBand{position:absolute!important;left:0!important;right:0!important;background:rgba(248,245,239,.82)!important;border-top:1px dashed #ecdfda!important;border-bottom:1px dashed #ecdfda!important;z-index:1!important;display:flex!important;align-items:center!important;justify-content:center!important;color:#aa9a93!important;font-size:8px!important;font-weight:750!important;letter-spacing:.02em!important;pointer-events:none!important}
+  .v210PauseBand{position:absolute!important;left:0!important;right:0!important;background:rgba(248,245,239,.90)!important;border-top:1px dashed #ecdfda!important;border-bottom:1px dashed #ecdfda!important;z-index:6!important;display:flex!important;align-items:center!important;justify-content:center!important;color:#aa9a93!important;font-size:8px!important;font-weight:750!important;letter-spacing:.02em!important;pointer-events:none!important}
   .v210PauseBand.current{background:#fff0ef!important;border-color:#e7b8b6!important;color:#ad6d6e!important;box-shadow:inset 0 0 0 1px rgba(232,168,166,.08)!important}
   .v210Lesson{appearance:none!important;position:absolute!important;left:7px!important;right:7px!important;z-index:3!important;border:1px solid color-mix(in srgb,var(--lesson-color,#e9a7a4) 22%,#eaded9)!important;border-radius:14px!important;background:color-mix(in srgb,var(--lesson-color,#e9a7a4) 25%,#fffaf8)!important;color:#514440!important;display:grid!important;grid-template-columns:25px minmax(0,1fr)!important;gap:10px!important;align-items:center!important;padding:10px 11px!important;text-align:left!important;box-shadow:0 3px 10px rgba(103,75,68,.025)!important;overflow:hidden!important}
   .v210Lesson:hover{filter:saturate(1.03)!important;box-shadow:0 5px 14px rgba(103,75,68,.05)!important}
@@ -18016,11 +18023,11 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
     s.innerHTML=`<div class="brand" onclick="openView('home')"><span class="brandIcon">${svg('book')}</span><span class="brandText"><b>Studia</b><small>PLAN · LERNEN · ERREICHEN</small></span></div>
       <div class="navList">
         ${side('Stundenplan','cal','plan',`openView('plan')`,'')}
-        ${side('Planer','tasks','tasks',`openView('tasks')`,bubble?String(bubble):'')}
+        ${side('Aufgaben','tasks','tasks',`v292OpenTaskSection('homework')`,bubble?String(bubble):'','homework')}
         ${side('Lernen','learn',['study','learnsets'],`v210Nav('study')`,'','study')}
         ${side('Fächer','folder',['subjects','subject-detail','topic-detail','deck-detail'],`v210Nav('subjects')`,'','subjects')}
         ${side('Noten','test','grades',`v210Nav('grades')`,'','grades')}
-        ${side('Tests','test','__never__',`v210OpenTests()`,'','tests')}
+        ${side('Tests','test','__never__',`v292OpenTaskSection('tests')`,'','tests')}
         ${side('Notizen','notes','__never__',`v210OpenNotes()`,'','notes')}
         <div class="navDivider"></div>
         ${side('Fehltage','dayoff','absence',`v210Nav('absence')`,'','absence')}
@@ -18492,12 +18499,12 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
     const old=room.querySelector('.petAvatarCute');
     if(old){
       const wrap=document.createElement('div');wrap.className='v213PandaWrap';
-      const img=document.createElement('img');img.className='v213PandaPet';img.src='panda-study.png';img.alt='StudyPet Panda';img.draggable=false;
+      const img=document.createElement('img');img.className='v213PandaPet';img.src='assets/study-pet/pets/panda-study.png';img.alt='StudyPet Panda';img.draggable=false;
       wrap.appendChild(img);
       const bow=old.querySelector('.petBow');if(bow)wrap.appendChild(bow.cloneNode(true));
       old.replaceWith(wrap);
     }else if(!room.querySelector('.v213PandaPet')){
-      const img=document.createElement('img');img.className='v213PandaPet';img.src='panda-study.png';img.alt='StudyPet Panda';img.draggable=false;room.appendChild(img);
+      const img=document.createElement('img');img.className='v213PandaPet';img.src='assets/study-pet/pets/panda-study.png';img.alt='StudyPet Panda';img.draggable=false;room.appendChild(img);
     }
   }
   try{
@@ -22013,3 +22020,120 @@ const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 231'};
 <script id="studia-v288-version-marker">
 (()=>{const set=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 291'};[0,250,900,1800].forEach(t=>setTimeout(set,t))})();
 </script>
+
+
+<!-- ===== Studia V292 · timetable + planner + learning cleanup ===== -->
+<style id="studia-v292-app-style">
+@media(min-width:1100px){
+  #view-tasks.v292HomeworkOnly > .section{display:none!important}
+  #view-tasks.v292TestsOnly > .sectionHead:first-child,
+  #view-tasks.v292TestsOnly > .daytabs,
+  #view-tasks.v292TestsOnly > #homeworkList{display:none!important}
+  #view-tasks.v292TestsOnly > .section{display:block!important;margin-top:0!important}
+  #v210Sidebar .brandIcon{display:grid!important;place-items:center!important;overflow:visible!important;opacity:1!important;visibility:visible!important}
+  #v210Sidebar .brandIcon .v292AppMark{display:block!important;width:25px!important;height:25px!important;stroke:currentColor!important;fill:none!important;stroke-width:1.75!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+}
+#petRoomMini .v213PandaPet,#petRoomMini .v292PandaPet{display:block!important;opacity:1!important;visibility:visible!important;object-fit:contain!important}
+/* Exactly one learn/edit switch. Legacy generated copies are removed by the final owner below. */
+#view-deck-detail .v292DeckModeSwitch{margin-left:auto;margin-right:8px;display:flex;gap:5px;padding:3px;background:#f8eeea;border:1px solid #ead5d0;border-radius:13px}
+#view-deck-detail .v292DeckModeSwitch button{border:0;background:transparent;color:#8a746d;border-radius:10px;padding:7px 10px;font-size:11px;font-weight:850;cursor:pointer}
+#view-deck-detail .v292DeckModeSwitch button.active{background:#fff;color:#665650;box-shadow:0 1px 5px rgba(100,70,60,.08)}
+body.v292DeckLearn #view-deck-detail #addCardToDeckBtn{display:none!important}
+</style>
+<script id="studia-v292-app-script">
+(()=>{
+'use strict';
+if(window.__STUDIA_V292_APP__)return;window.__STUDIA_V292_APP__=true;
+const q=(s,r=document)=>r?.querySelector?.(s)||null;
+const qa=(s,r=document)=>r?.querySelectorAll?[...r.querySelectorAll(s)]:[];
+const desktop=()=>innerWidth>=1100&&!document.body.classList.contains('editorMode');
+let taskMode=localStorage.getItem('studia-v292-task-mode')==='tests'?'tests':'homework';
+let deckMode=localStorage.getItem('studia-v292-deck-mode')==='edit'?'edit':'learn';
+
+/* Laptop: Aufgaben and Tests are two clear destinations, backed by the existing data/renderers. */
+window.v292OpenTaskSection=function(mode){
+  taskMode=mode==='tests'?'tests':'homework';
+  localStorage.setItem('studia-v292-task-mode',taskMode);
+  try{openView('tasks')}catch(_){ }
+  try{renderTasks?.()}catch(_){ }
+  requestAnimationFrame(normalizeTaskPage);
+};
+function normalizeTaskPage(){
+  const view=q('#view-tasks');if(!view)return;
+  if(!desktop()){
+    view.classList.remove('v292HomeworkOnly','v292TestsOnly');
+    return;
+  }
+  view.classList.toggle('v292HomeworkOnly',taskMode==='homework');
+  view.classList.toggle('v292TestsOnly',taskMode==='tests');
+  const firstHead=q(':scope > .sectionHead:first-child',view),firstTitle=q('h2',firstHead);
+  if(firstTitle)firstTitle.textContent='Aufgaben';
+  const testTitle=q('#testList',view)?.closest('.section')?.querySelector('.sectionHead h2');
+  if(testTitle)testTitle.textContent='Tests & Arbeiten';
+}
+
+/* One cute app mark. It is inline, so it cannot disappear because of a missing asset path. */
+const appMark='<svg class="v292AppMark" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 5.2A3.2 3.2 0 0 1 7.7 2.5H12v16H7.7a3.2 3.2 0 0 0-3.2 3.2z"/><path d="M19.5 5.2a3.2 3.2 0 0 0-3.2-2.7H12v16h4.3a3.2 3.2 0 0 1 3.2 3.2z"/><path d="M7.8 7.4h1.7M14.5 7.4h1.7"/><path d="M12 10.2c.8-1.1 2.7-.6 2.7.8 0 1.2-1.4 2.1-2.7 3.2-1.3-1.1-2.7-2-2.7-3.2 0-1.4 1.9-1.9 2.7-.8z"/></svg>';
+function normalizeSidebar(){
+  const side=q('#v210Sidebar');if(!side)return;
+  const icon=q('.brandIcon',side);if(icon&&icon.dataset.v292!=='1'){icon.dataset.v292='1';icon.innerHTML=appMark}
+  for(const b of qa('.navItem',side)){
+    const label=q('.navLabel',b),txt=(label?.textContent||'').trim();
+    if(txt==='Planer'||txt==='Aufgaben'){
+      if(label)label.textContent='Aufgaben';b.setAttribute('onclick',"v292OpenTaskSection('homework')");
+      if(q('#view-tasks.active'))b.classList.toggle('active',taskMode==='homework');
+    }else if(txt==='Tests'){
+      b.setAttribute('onclick',"v292OpenTaskSection('tests')");
+      if(q('#view-tasks.active'))b.classList.toggle('active',taskMode==='tests');
+    }
+  }
+}
+
+/* StudyPet: existing V213 owner now points at this asset; keep a fallback if a browser cached old markup. */
+function normalizePanda(){
+  const room=q('#petRoomMini');if(!room)return;
+  for(const im of qa('img.v213PandaPet,img.v292PandaPet',room)){
+    if(!/assets\/study-pet\/pets\//.test(im.getAttribute('src')||''))im.src='assets/study-pet/pets/panda-study.png';
+    im.onerror=()=>{if(!im.dataset.v292Fallback){im.dataset.v292Fallback='1';im.src='assets/study-pet/pets/panda-study.png'}};
+  }
+}
+
+/* Karteikarten: one mode switch only; all historical copies converge here. */
+window.v292SetDeckMode=function(mode){
+  deckMode=mode==='edit'?'edit':'learn';localStorage.setItem('studia-v292-deck-mode',deckMode);
+  document.body.classList.toggle('v292DeckLearn',deckMode==='learn');
+  document.body.classList.toggle('v214LearningReadOnly',deckMode==='learn');
+  requestAnimationFrame(normalizeDeckMode);
+};
+window.v214SetLearningMode=window.v215SetDeckMode=window.v216SetLearningMode=window.v217SetLearnMode=window.v292SetDeckMode;
+function normalizeDeckMode(){
+  const view=q('#view-deck-detail');if(!view)return;
+  document.body.classList.toggle('v292DeckLearn',deckMode==='learn');
+  document.body.classList.toggle('v214LearningReadOnly',deckMode==='learn');
+  const head=q(':scope > .sectionHead',view);if(!head)return;
+  qa('.v214LearnModeSwitch,.v215DeckModeSwitch,.v217DeckModeSwitch',head).forEach(x=>x.remove());
+  let sw=q(':scope > .v292DeckModeSwitch',head);
+  if(!sw){
+    sw=document.createElement('div');sw.className='v292DeckModeSwitch';
+    sw.innerHTML='<button type="button" data-v292-mode="learn">Lernen</button><button type="button" data-v292-mode="edit">Bearbeiten</button>';
+    sw.addEventListener('click',e=>{const b=e.target.closest('[data-v292-mode]');if(b)window.v292SetDeckMode(b.dataset.v292Mode)});
+    head.insertBefore(sw,q('#addCardToDeckBtn',head)||null);
+  }
+  for(const b of qa('[data-v292-mode]',sw))b.classList.toggle('active',b.dataset.v292Mode===deckMode);
+  const add=q('#addCardToDeckBtn',view);if(add)add.style.display=deckMode==='edit'?'':'none';
+  for(const b of qa('#deckDetail button',view)){
+    const t=(b.textContent||'').replace(/\u200b/g,'').trim().toLowerCase();
+    if(['bearbeiten','löschen','umbenennen'].includes(t))b.style.display=deckMode==='edit'?'':'none';
+  }
+}
+
+let queued=false;
+function normalize(){if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;normalizeSidebar();normalizeTaskPage();normalizePanda();if(q('#view-deck-detail'))normalizeDeckMode()})}
+const observer=new MutationObserver(normalize);observer.observe(document.body,{childList:true,subtree:true});
+window.addEventListener('resize',normalize,{passive:true});
+document.addEventListener('click',()=>setTimeout(normalize,0),false);
+[0,100,350,900,1800].forEach(t=>setTimeout(normalize,t));
+const setVersion=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 292'};[0,250,900,1800].forEach(t=>setTimeout(setVersion,t));
+})();
+</script>
+<!-- ===== /Studia V292 ===== -->
