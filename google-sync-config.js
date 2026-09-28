@@ -55,6 +55,9 @@ function watch(){const now=localStorage.getItem(KEY)||'';if(now&&now!==lastSeenL
 function hookSave(){const old=window.save;if(typeof old!=='function'||old.__v289)return;const w=function(){const r=old.apply(this,arguments);lastSeenLocal=localStorage.getItem(KEY)||'';schedule();return r};w.__v289=true;window.save=w;try{save=w}catch(_){}}
 async function hydrate(){install();hookSave();const ep=endpoint();if(ep)rememberUrl(ep);const u=user();status(token()?(u?.username?'Angemeldet als '+u.username+' · bereit':'Angemeldet · bereit'):'Noch nicht verbunden.');lastSeenLocal=localStorage.getItem(KEY)||'';setInterval(()=>{install();hookSave();watch()},2500);setTimeout(()=>{if(token()&&navigator.onLine)syncNow().catch(()=>{})},1800)}
 window.StudiaSyncV290={syncNow,loginAndSync,register,status,rememberUrl,clientVersion:290,serverProtocol:289,resetBase:async()=>{await dbSet('baseState',undefined);await dbSet('baseVersion',0)}};
+// V294 compatibility: older UI launchers may still ask for the former controller names.
+window.StudiaSyncV289=window.StudiaSyncV290;
+window.StudiaSyncV288=window.StudiaSyncV290;
 addEventListener('online',()=>setTimeout(()=>syncNow().catch(()=>{}),1200));addEventListener('focus',()=>{if(token()&&Date.now()-lastSyncAt>20000&&Date.now()>=cooldownUntil)setTimeout(()=>syncNow().catch(()=>{}),1200)});document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&token()&&Date.now()-lastSyncAt>20000&&Date.now()>=cooldownUntil)setTimeout(()=>syncNow().catch(()=>{}),1300)});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',hydrate,{once:true});else hydrate();
 })();
