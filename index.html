@@ -22002,19 +22002,19 @@ const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 231'};
 <style id="studia-v288-sync-style">
 @media(min-width:900px){#v232DesktopSync{position:fixed;right:20px;bottom:20px;z-index:10050;display:flex;align-items:center;gap:9px;min-height:42px;padding:8px 13px;border-radius:15px;border:1px solid #ead7d1;background:rgba(255,252,249,.97);color:#775f58;box-shadow:0 10px 28px rgba(91,67,59,.12);backdrop-filter:blur(14px);font-size:10px;font-weight:900;cursor:pointer}#v232DesktopSync .spin{font-size:17px;line-height:1}#v232DesktopSync.syncing .spin{animation:v287spin .8s linear infinite}#v232DesktopSync small{display:block;font-size:7px;font-weight:750;color:#a58d85;margin-top:1px;max-width:190px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}@keyframes v287spin{to{transform:rotate(360deg)}}}@media(max-width:899px){#v232DesktopSync{display:none!important}}#v232SyncStatusInline{font-size:8px;color:#9c837a;font-weight:800;margin-top:6px}
 </style>
-<script src="google-sync-config.js?v=294"></script>
+<script src="google-sync-config.js?v=295"></script>
 <script id="studia-v288-launcher">
 (function(){
  'use strict';
  function goEditor(sheetId){try{if(typeof save==='function')save()}catch(_){}const qs=sheetId?('?sheet='+encodeURIComponent(String(sheetId))):'';location.href='editor.html'+qs}
  window.openStudySheetEditor=goEditor;window.v97OpenSheet=goEditor;window.v97NewSheet=function(){goEditor(null)};try{openStudySheetEditor=goEditor}catch(_){}
  function controller(){return window.StudiaSyncV290||window.StudiaSyncV289||window.StudiaSyncV288||null}
- function run(method,args){const c=controller();if(!c||typeof c[method]!=='function'){const msg='Sync-Modul lädt noch – Seite einmal neu laden.';try{window.v171CloudStatus?.(msg,'error')}catch(_){}const st=document.querySelector('#v150AccountStatus');if(st)st.textContent=msg;return}Promise.resolve(c[method](...(args||[]))).catch(err=>{const msg=(err&&err.message)||String(err||'Anmeldung fehlgeschlagen');try{c.status?.(msg+' · lokale Daten sicher','error')}catch(_){};console.error('[Studia V294 '+method+']',err)})}
+ function run(method,args){const c=controller();if(!c||typeof c[method]!=='function'){const msg='Sync-Modul lädt noch – Seite einmal neu laden.';try{window.v171CloudStatus?.(msg,'error')}catch(_){}const st=document.querySelector('#v150AccountStatus');if(st)st.textContent=msg;return}Promise.resolve(c[method](...(args||[]))).catch(err=>{const msg=(err&&err.message)||String(err||'Anmeldung fehlgeschlagen');try{c.status?.(msg+' · lokale Daten sicher','error')}catch(_){};console.error('[Studia V295 '+method+']',err)})}
  function bind(){
    const card=document.querySelector('.v171CloudSettings');
    if(card){const bs=[...card.querySelectorAll('button')];const login=bs.find(b=>/Anmelden.*Sync/i.test(b.textContent||''));const reg=bs.find(b=>/Konto erstellen/i.test(b.textContent||''));const sync=bs.find(b=>/zusammenführen|synchronisieren/i.test(b.textContent||''));if(login){login.removeAttribute('onclick');login.onclick=()=>run('loginAndSync')}if(reg){reg.removeAttribute('onclick');reg.onclick=()=>run('register')}if(sync){sync.removeAttribute('onclick');sync.onclick=()=>run('syncNow',[{manual:true}])}
      const user=card.querySelector('#v150Username'),pass=card.querySelector('#v150Password');
-     for(const input of [user,pass])if(input&&!input.dataset.v294Enter){input.dataset.v294Enter='1';input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();run('loginAndSync')}})}
+     for(const input of [user,pass])if(input&&!input.dataset.v295Enter){input.dataset.v295Enter='1';input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();run('loginAndSync')}})}
    }
    const d=document.querySelector('#v232DesktopSync');if(d)d.onclick=()=>run('syncNow',[{manual:true}]);
  }
@@ -22023,7 +22023,7 @@ const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 231'};
 </script>
 <!-- ===== /Studia V288 ===== -->
 <script id="studia-v288-version-marker">
-(()=>{const set=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 294'};[0,250,900,1800].forEach(t=>setTimeout(set,t))})();
+(()=>{const set=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 295'};[0,250,900,1800].forEach(t=>setTimeout(set,t))})();
 </script>
 
 
