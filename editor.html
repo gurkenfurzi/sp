@@ -20310,7 +20310,7 @@ for(const name of ['addVectorLine','addVectorCurve']){
 
 /* Visible, editable HEX values beside the existing color controls. */
 function normalizedHex(value){const m=String(value||'').trim().match(/^#?([0-9a-f]{3}|[0-9a-f]{6})$/i);if(!m)return null;let h=m[1];if(h.length===3)h=[...h].map(c=>c+c).join('');return '#'+h.toUpperCase()}
-window.v193EnhanceHexColors=function(){if(!laptop())return;qa('.v134FormatTools input[type="color"],#canvasInspector input[type="color"],.modal input[type="color"],#modal input[type="color"]').forEach(color=>{
+window.v193EnhanceHexColors=function(){if(!laptop())return;qa('#canvasInspector input[type="color"],.modal input[type="color"],#modal input[type="color"]').forEach(color=>{
  if(color.dataset.v193Hex==='1')return;color.dataset.v193Hex='1';
  const hex=document.createElement('input');hex.type='text';hex.className='v193HexColor';hex.inputMode='text';hex.maxLength=7;hex.setAttribute('aria-label','HEX-Farbe');hex.title='HEX-Farbe, z. B. #8D7369';hex.value=String(color.value||'#000000').toUpperCase();color.insertAdjacentElement('afterend',hex);
  const sync=()=>{const v=normalizedHex(color.value);if(v&&document.activeElement!==hex)hex.value=v};
@@ -25375,5 +25375,47 @@ const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 231'};
 
 
 <!-- ===== Studia V293 · clean editor fixes: uses existing V152 mobile formatter only ===== -->
-<script id="studia-v293-version">(()=>{const set=()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 293'};[0,250,900].forEach(t=>setTimeout(set,t))})();</script>
+<style id="studia-v299-editor-typography-style">
+/* V299 owns the two desktop typography controls only: font + text color. */
+#v299FontButton,#v299TextColorButton{height:31px;border:0;border-radius:9px;background:transparent;color:#504844;display:flex;align-items:center;justify-content:center;gap:6px;padding:0 9px;font:800 10px/1 Inter,Arial,sans-serif;cursor:pointer}
+#v299FontButton:hover,#v299TextColorButton:hover,#v299FontButton.open,#v299TextColorButton.open{background:#fff0f1;color:#a26068}
+#v299FontButton{min-width:112px;max-width:160px;justify-content:space-between}#v299FontButton .v299FontName{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#v299TextColorButton{width:34px;min-width:34px;padding:0;position:relative;font-size:13px}#v299TextColorButton:after{content:"";position:absolute;left:8px;right:8px;bottom:4px;height:3px;border-radius:4px;background:var(--v299-text-color,#333)}
+.v299TypePopover{position:fixed;z-index:2147483600;width:min(286px,calc(100vw - 16px));max-height:min(430px,70dvh);overflow:auto;border:1px solid #eadbd6;border-radius:17px;background:#fffdfb;box-shadow:0 18px 50px rgba(72,50,45,.18);padding:10px;color:#574b46}
+.v299TypePopoverHead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:3px 4px 9px}.v299TypePopoverHead b{font-size:12px}.v299TypePopoverHead small{font-size:8px;color:#a28b83;text-transform:uppercase;letter-spacing:.08em}
+.v299FontList{display:grid;gap:5px}.v299FontList button{min-height:48px;border:1px solid #eee1dc;border-radius:12px;background:#fff;color:#5f514b;display:grid;grid-template-columns:42px minmax(0,1fr);align-items:center;gap:9px;text-align:left;padding:6px 9px;cursor:pointer}.v299FontList button:hover{background:#fff4f4;border-color:#edc9cc}.v299FontList .aa{display:grid;place-items:center;width:38px;height:34px;border-radius:9px;background:#fff0f1;color:#a45f67;font-size:16px;font-weight:700}.v299FontList .name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px}
+.v299ColorPanel{display:grid;gap:10px}.v299ColorPreview{display:grid;grid-template-columns:54px minmax(0,1fr);gap:9px;align-items:center}.v299ColorPreview input[type=color]{width:54px;height:44px;border:1px solid #eadbd6;border-radius:12px;background:#fff;padding:4px}.v299ColorPreview input[type=text]{width:100%;height:44px;border:1px solid #eadbd6;border-radius:12px;background:#fff;color:#594d48;padding:0 11px;font:800 11px ui-monospace,SFMono-Regular,Consolas,monospace;text-transform:uppercase}.v299ColorHint{font-size:9px;color:#9c857e;line-height:1.4}
+</style>
+<script id="studia-v299-editor-typography-owner">
+(()=>{
+'use strict';
+if(window.__STUDIA_V299_EDITOR_TYPE__)return;window.__STUDIA_V299_EDITOR_TYPE__=true;
+const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const isDesktop=()=>innerWidth>=900&&document.body.classList.contains('editorMode');
+function remember(){try{window.v152RememberRange?.()}catch(_){}}
+function restore(){try{window.v152RestoreRange?.()}catch(_){}}
+function selectedText(){try{return canvasState?.objects?.find(x=>String(x.id)===String(canvasState.selectedId)&&['text','block','task','merke','file'].includes(x.kind))}catch(_){return null}}
+function currentFont(){const o=selectedText();return String(o?.style?.fontFamily||'Inter').split(',')[0].replace(/["']/g,'').trim()||'Inter'}
+function currentColor(){const c=String(selectedText()?.style?.color||'#333333');return /^#[0-9a-f]{6}$/i.test(c)?c:'#333333'}
+function customFonts(){const out=[];for(const k of ['schoolbloom-v91-custom-fonts','schoolbloom-custom-fonts']){try{for(const f of JSON.parse(localStorage.getItem(k)||'[]')){const n=typeof f==='string'?f:f?.name;if(n&&!out.includes(n))out.push(n)}}catch(_){}}return out}
+function fonts(){return [...new Set(['Inter','Arial','Trebuchet MS','Verdana','Georgia','Times New Roman','Playfair Display','Lato',...customFonts()])]}
+function close(){q('#v299FontPopover')?.remove();q('#v299ColorPopover')?.remove();q('#v299FontButton')?.classList.remove('open');q('#v299TextColorButton')?.classList.remove('open')}
+function place(pop,btn){const r=btn.getBoundingClientRect(),w=Math.min(286,innerWidth-16);pop.style.left=Math.max(8,Math.min(innerWidth-w-8,r.left))+'px';pop.style.top=Math.min(innerHeight-pop.offsetHeight-8,r.bottom+7)+'px'}
+window.v299OpenFontMenu=function(btn){remember();if(q('#v299FontPopover')){close();return}close();const pop=document.createElement('div');pop.id='v299FontPopover';pop.className='v299TypePopover';pop.innerHTML=`<div class="v299TypePopoverHead"><b>Schriftart</b><small>Vorschau</small></div><div class="v299FontList">${fonts().map(f=>`<button type="button" data-font="${esc(f)}" style="font-family:'${esc(f)}',sans-serif"><span class="aa">Aa</span><span class="name">${esc(f)}</span></button>`).join('')}</div>`;document.body.appendChild(pop);btn.classList.add('open');place(pop,btn);pop.addEventListener('pointerdown',e=>{if(e.target.closest('button')){remember();e.preventDefault()}},true);pop.addEventListener('click',e=>{const b=e.target.closest('[data-font]');if(!b)return;restore();window.applyTextProperty?.('fontFamily',b.dataset.font);btn.querySelector('.v299FontName').textContent=b.dataset.font;btn.querySelector('.v299FontName').style.fontFamily=`"${b.dataset.font}",sans-serif`;close()})};
+function normHex(v){let h=String(v||'').trim().replace(/^#/,'');if(/^[0-9a-f]{3}$/i.test(h))h=[...h].map(c=>c+c).join('');return /^[0-9a-f]{6}$/i.test(h)?'#'+h.toUpperCase():null}
+window.v299OpenColorMenu=function(btn){remember();if(q('#v299ColorPopover')){close();return}close();const c=currentColor().toUpperCase(),pop=document.createElement('div');pop.id='v299ColorPopover';pop.className='v299TypePopover';pop.innerHTML=`<div class="v299TypePopoverHead"><b>Textfarbe</b><small>Farbe & HEX</small></div><div class="v299ColorPanel"><div class="v299ColorPreview"><input id="v299ColorPick" type="color" value="${c.toLowerCase()}"><input id="v299ColorHex" type="text" value="${c}" maxlength="7" spellcheck="false" aria-label="HEX-Farbe"></div><div class="v299ColorHint">HEX kannst du hier direkt eingeben, z. B. #8D7369.</div></div>`;document.body.appendChild(pop);btn.classList.add('open');place(pop,btn);const pick=q('#v299ColorPick',pop),hex=q('#v299ColorHex',pop);const apply=v=>{const n=normHex(v);if(!n)return false;restore();window.applyTextProperty?.('color',n);pick.value=n.toLowerCase();hex.value=n;btn.style.setProperty('--v299-text-color',n);return true};pick.oninput=()=>apply(pick.value);hex.addEventListener('input',()=>{const n=normHex(hex.value);hex.setCustomValidity(n?'':'HEX wie #8D7369');if(n)apply(n)});hex.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();if(apply(hex.value))hex.blur()}})};
+function install(){if(!isDesktop())return;const tools=q('.v134FormatTools');if(!tools)return;qa('.v193HexColor',tools).forEach(x=>x.remove());
+ let fb=q('#v299FontButton',tools);if(!fb){const old=q('.v187TopFontButton,.v165FontMenuBtn,select.font,[title="Schriftart"]',tools);if(old){fb=document.createElement('button');fb.type='button';fb.id='v299FontButton';fb.title='Schriftart';fb.innerHTML='<span class="v299FontName"></span><span aria-hidden="true">⌄</span>';fb.onpointerdown=remember;fb.onclick=e=>{e.preventDefault();e.stopPropagation();v299OpenFontMenu(fb)};old.replaceWith(fb)}}if(fb){const f=currentFont();const n=q('.v299FontName',fb);if(n){n.textContent=f;n.style.fontFamily=`"${f}",sans-serif`}}
+ let cb=q('#v299TextColorButton',tools);if(!cb){const old=q('label[title="Textfarbe"],button[title="Textfarbe"]',tools);if(old){cb=document.createElement('button');cb.type='button';cb.id='v299TextColorButton';cb.title='Textfarbe';cb.textContent='A';cb.onpointerdown=remember;cb.onclick=e=>{e.preventDefault();e.stopPropagation();v299OpenColorMenu(cb)};old.replaceWith(cb)}}if(cb)cb.style.setProperty('--v299-text-color',currentColor());
+}
+document.addEventListener('pointerdown',e=>{if((q('#v299FontPopover')||q('#v299ColorPopover'))&&!e.target.closest?.('#v299FontPopover,#v299ColorPopover,#v299FontButton,#v299TextColorButton'))close()},true);
+document.addEventListener('selectionchange',()=>setTimeout(install,0));
+let queued=false;const schedule=()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;install()})};
+const shell=q('.canvasEditorShell')||document.body;new MutationObserver(schedule).observe(shell,{childList:true,subtree:true});
+window.addEventListener('resize',()=>{close();schedule()},{passive:true});
+[0,120,450,1100,2200].forEach(t=>setTimeout(install,t));
+const setVersion=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 299'};[0,300,1000].forEach(t=>setTimeout(setVersion,t));
+})();
+</script>
 
