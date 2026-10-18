@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Studia">
-<link rel="manifest" href="./manifest.webmanifest?v=202">
+<link rel="manifest" href="./manifest.webmanifest?v=299">
 <link rel="icon" type="image/png" sizes="64x64" href="./favicon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
@@ -998,7 +998,7 @@ body.editorMode .view#view-sheet-editor{padding-bottom:20px}
 }
 .heatModeButtons button{
  border:0;
- background:transparent;
+background:transparent;
  color:#947d60;
  border-radius:8px;
  min-width:36px;
@@ -3044,7 +3044,7 @@ html,body{background:#fff7f4;}
 <div class="app">
   <div class="header">
     <div>
-      <div class="eyebrow" id="headerEyebrow">VERSION 298</div>
+      <div class="eyebrow" id="headerEyebrow">VERSION 299</div>
       <h1 id="headerTitle">Heute.</h1>
     </div>
     <button class="iconbtn" onclick="openView('settings')">⚙︎</button>
@@ -3998,7 +3998,7 @@ function mergeLessons(ls){
 
      if(!separatedByBreak && last.end===item.start){
        const qTeacher=String(q.teacherCode||q.meta||"").trim().toUpperCase();
-       const pTeacher=String(p.teacherCode||p.meta||"").trim().toUpperCase();
+const pTeacher=String(p.teacherCode||p.meta||"").trim().toUpperCase();
        const qRoom=String(q.room||"").trim().toUpperCase();
        const pRoom=String(p.room||"").trim().toUpperCase();
        const qSubject=String(prettySubject(q.subject||"")).replace(/\s+/g," ").trim().toUpperCase();
@@ -4109,7 +4109,7 @@ window.openView=function(name){
  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));
  const titles={home:"Heute.",plan:"Stundenplan.",tasks:"Planer.",grades:"Noten.",study:"Lernen.",learnsets:"Lernsets.",more:"Mehr.",subjects:"Fächer.","subject-detail":"Notizbuch.","topic-detail":"Thema.","deck-detail":"Karteikarten.","sheet-editor":"Lernblatt.","quiz-player":"Quiz.",absence:"Abwesenheit.",settings:"Einstellungen."};
  $("#headerTitle").textContent=titles[name]||"Studia.";
- $("#headerEyebrow").textContent="VERSION 298";
+ $("#headerEyebrow").textContent="VERSION 299";
  window.scrollTo({top:0,behavior:"smooth"}); renderAll(); if(name==="learnsets"){renderLearnsetsLists();switchLearnsetsTab(currentLearnsetsTab);} if(name==="subject-detail")renderSubjectDetail(); if(name==="topic-detail")renderTopicDetail(); if(name==="deck-detail")renderDeckDetail(); if(name==="sheet-editor")renderSheetEditor(); if(name==="quiz-player")renderQuizPlayer();
 }
 $$("#nav button").forEach(b=>b.onclick=()=>openView(b.dataset.view));
@@ -4998,7 +4998,7 @@ window.useFormulaFavorite=function(fid){
  ed.innerHTML=f.html;placeCaretAtEnd(ed);installFormulaSlotProtection(ed);cuteToast("Formel eingesetzt ♡");
 }
 window.deleteFormulaFavorite=function(fid){
- confirmDanger({title:"Formel löschen?",text:"Die gespeicherte eigene Formel wird entfernt.",confirmText:"Löschen",onConfirm:`performDeleteFormulaFavorite('${fid}')`});
+confirmDanger({title:"Formel löschen?",text:"Die gespeicherte eigene Formel wird entfernt.",confirmText:"Löschen",onConfirm:`performDeleteFormulaFavorite('${fid}')`});
 }
 window.performDeleteFormulaFavorite=function(fid){
  saveFormulaFavorites(formulaFavorites().filter(x=>x.id!==fid));closeModal();cuteToast("Formel gelöscht");
@@ -8998,7 +8998,7 @@ function renderQuizPlayer(){
    $("#quizScoreBadge").textContent=`${quizSession.score}/${q.questions.length}`;return;
  }
  const x=q.questions[quizSession.index],progress=((quizSession.index)/q.questions.length)*100;
- $("#quizScoreBadge").textContent=`${quizSession.score} Punkte`;
+$("#quizScoreBadge").textContent=`${quizSession.score} Punkte`;
  let answerUI="";
  if(x.type==="mc"){
    answerUI=`<div class="choiceList">${(x.options||[]).map(o=>`<button class="choiceBtn ${quizSession.selected===o?"selected":""}" onclick="selectQuizChoice(${JSON.stringify(o)})">${esc(o)}</button>`).join("")}</div>`;
@@ -9998,7 +9998,7 @@ button{touch-action:manipulation}
 .launcherGrid b{font-size:11px}
 .launcherGrid small{
  font-size:8px;
- line-height:1.2;
+line-height:1.2;
  color:var(--sb-muted);
 }
 
@@ -10998,7 +10998,7 @@ function rowTimeFromMaps(rowNum,rowMaps,heat){
 
 function compareLessonIdentity(l){
  const p=splitCell(String(l?.raw||""));
- const subject=String(p.subject||"")
+const subject=String(p.subject||"")
    .replace(/^M\s+/i,"")
    .replace(/^W\s+/i,"")
    .replace(/\s+/g," ")
@@ -11979,7 +11979,7 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
   window.addEventListener('resize',()=>{if(document.body.classList.contains('editorMode'))setTimeout(v102DesktopEditorInit,80)});
 
   /* refresh version + title */
-  const eyebrow=$('#headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 298';document.title='Studia';
+  const eyebrow=$('#headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 299';document.title='Studia';
 })();
 
 
@@ -11998,7 +11998,7 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
     print:`<svg viewBox="0 0 24 24"><path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="7" y="14" width="10" height="7"/></svg>`,
     save:`<svg viewBox="0 0 24 24"><path d="M5 3h12l2 2v16H5z"/><path d="M8 3v6h8V3M8 21v-7h8v7"/></svg>`,
     undo:`<svg viewBox="0 0 24 24"><path d="M9 8 5 12l4 4"/><path d="M6 12h7a6 6 0 0 1 6 6"/></svg>`,
-    redo:`<svg viewBox="0 0 24 24"><path d="m15 8 4 4-4 4"/><path d="M18 12h-7a6 6 0 0 0-6 6"/></svg>`,
+redo:`<svg viewBox="0 0 24 24"><path d="m15 8 4 4-4 4"/><path d="M18 12h-7a6 6 0 0 0-6 6"/></svg>`,
     eye:`<svg viewBox="0 0 24 24"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z"/><circle cx="12" cy="12" r="2.5"/></svg>`,
     close:`<svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg>`
   };
@@ -12106,7 +12106,7 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
   openView=function(name,...args){const out=v103OpenViewBase(name,...args);try{sessionStorage.setItem('studia-last-view',name);sessionStorage.setItem('studia-last-subject',selectedSubjectId||'');sessionStorage.setItem('studia-last-topic',selectedTopicId||'');sessionStorage.setItem('studia-last-sheet',selectedSheetId||'')}catch(_){}return out};
   window.addEventListener('beforeunload',()=>{try{sessionStorage.setItem('studia-last-view',document.querySelector('.view.active')?.id?.replace('view-','')||'home');sessionStorage.setItem('studia-last-subject',selectedSubjectId||'');sessionStorage.setItem('studia-last-topic',selectedTopicId||'');sessionStorage.setItem('studia-last-sheet',selectedSheetId||'')}catch(_){}});
 
-  setTimeout(()=>{const e=$('#headerEyebrow');if(e)e.textContent='VERSION 298';document.title='Studia';if(document.body.classList.contains('editorMode')){v103Topbar();v96RenderPageStrip()}},60);
+  setTimeout(()=>{const e=$('#headerEyebrow');if(e)e.textContent='VERSION 299';document.title='Studia';if(document.body.classList.contains('editorMode')){v103Topbar();v96RenderPageStrip()}},60);
   /* Space shows a grab hand; middle mouse or Space+drag pans. */
   window.addEventListener('keydown',e=>{const a=e.target instanceof Element?e.target:document.activeElement,typing=/INPUT|TEXTAREA|SELECT/.test(a?.tagName)||a?.isContentEditable||!!a?.closest?.('[contenteditable="true"]');if(e.code==='Space'&&document.body.classList.contains('editorMode')&&!typing)$('#canvasViewport')?.classList.add('v103Hand')});
   window.addEventListener('keyup',e=>{if(e.code==='Space')$('#canvasViewport')?.classList.remove('v103Hand')});
@@ -12228,7 +12228,7 @@ setTimeout(()=>{if(!window.__schoolBloomBooted){document.documentElement.style.b
   if(drawer)new MutationObserver(()=>requestAnimationFrame(()=>{syncTextPanel();patchLayers()})).observe(drawer,{subtree:true,childList:true,attributes:true});
   document.addEventListener('click',()=>requestAnimationFrame(()=>{syncTextPanel();patchLayers()}),true);
   window.addEventListener('resize',()=>setTimeout(syncTextPanel,60));
-  setTimeout(()=>{cleanShapeHandles();patchLayers();syncTextPanel();const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 298';document.title='Studia'},260);
+  setTimeout(()=>{cleanShapeHandles();patchLayers();syncTextPanel();const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 299';document.title='Studia'},260);
 })();
 </script>
 <!-- ===== /Studia V117 ===== -->
@@ -12434,7 +12434,7 @@ body.editorMode.v122ShapeDragging{user-select:none!important;-webkit-user-select
   window.canvasZoomBy=d=>window.setCanvasZoom(scale()+Number(d||0));
   try{setCanvasZoom=window.setCanvasZoom;canvasZoomBy=window.canvasZoomBy}catch(_){ }
 
-  const eyebrow=document.getElementById('headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 298';
+  const eyebrow=document.getElementById('headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 299';
 })();
 
 }</script>
@@ -12523,7 +12523,7 @@ if(window.__STUDIA_V129_INPUT__)return;
   /* Remove the V122 blocker at runtime too, so stale/injected style order cannot win. */
   function enforce(){document.querySelectorAll('#canvasObjects .vectorTouchProxy,#canvasObjects .shapeHit').forEach(el=>{el.style.setProperty('pointer-events','all','important');el.style.setProperty('touch-action','none','important')})}
   const oldRV=window.renderVectors;if(typeof oldRV==='function')window.renderVectors=function(){const r=oldRV.apply(this,arguments);enforce();return r};
-  setTimeout(()=>{enforce();const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 298'},80);
+  setTimeout(()=>{enforce();const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 299'},80);
 })();
 </script>
 <!-- ===== /Studia V125 ===== -->
@@ -12552,7 +12552,7 @@ function move(e){if(!drag||e.pointerId!==drag.pid)return;const v=(window.canvasS
 function end(e){if(!drag||e.pointerId!==drag.pid)return;e.preventDefault();e.stopImmediatePropagation();const moved=drag.moved;drag=null;if(moved){try{pushHistory()}catch(_){}}try{renderCanvasInspector();renderLayerList()}catch(_){}installProxies()}
 window.addEventListener('pointermove',move,{capture:true,passive:false});window.addEventListener('pointerup',end,true);window.addEventListener('pointercancel',end,true);
 const oldRender=window.renderVectors||renderVectors;window.renderVectors=function(){const out=oldRender.apply(this,arguments);queueMicrotask(installProxies);return out};try{renderVectors=window.renderVectors}catch(_){}
-setTimeout(()=>{if(editor()){try{renderVectors()}catch(_){}installProxies()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 298'},350);
+setTimeout(()=>{if(editor()){try{renderVectors()}catch(_){}installProxies()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 299'},350);
 })();
 </script>
 <!-- ===== /Studia V126 ===== -->
@@ -12813,7 +12813,7 @@ html,body,button,input,select,textarea{font-family:ui-rounded,"SF Pro Rounded","
 
 
 <style id="v100-subjects-desktop-editor">
-/* ===== VERSION 298 — subjects reference + desktop editor reference ===== */
+/* ===== VERSION 299 — subjects reference + desktop editor reference ===== */
 @media (max-width:899px){
   body:has(#view-subjects.active)>.app>.header,
   body:has(#view-subject-detail.active)>.app>.header,
@@ -12998,7 +12998,7 @@ body:has(#view-subjects.active)>.app>.header,body:has(#view-subject-detail.activ
  body.editorMode .canvasTopbar .primaryIcon{background:#eba1a6!important;color:white!important;border-color:#e6979d!important}
  body.editorMode .canvasTopbar svg{width:20px!important;height:20px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
  body.editorMode .historyBar,.canvasTopbar .editorActions{display:flex!important;gap:6px!important;align-items:center!important}
- body.editorMode .v102DesktopLeft{margin:10px 0 10px 10px!important;border-radius:20px!important}
+body.editorMode .v102DesktopLeft{margin:10px 0 10px 10px!important;border-radius:20px!important}
  body.editorMode .canvasQuickNav{grid-template-columns:repeat(4,minmax(0,1fr))!important;padding:8px!important;gap:4px!important}
  body.editorMode .canvasQuickNav button{height:58px!important;min-height:58px!important;border-radius:13px!important;font-size:10px!important;gap:1px!important;padding:5px 2px!important}
  body.editorMode .canvasQuickNav button svg{width:21px!important;height:21px!important}
@@ -13900,7 +13900,7 @@ body.editorMode .cobj table{max-width:100%!important}
   window.renderCanvasInspector=function(){oldInspector();if(document.querySelector('#canvasQuickDrawer.open .mobileLayerList'))requestAnimationFrame(renderLayerList)};
 
   // Version marker.
-  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 298';document.title='Studia'},40);
+  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 299';document.title='Studia'},40);
 })();
 </script>
 
@@ -13998,7 +13998,6 @@ body.editorMode .cobj.textObj,body.editorMode .cobj.calloutObj,body.editorMode .
 body.editorMode .cobj[contenteditable="true"]{overflow:auto!important;-webkit-overflow-scrolling:touch!important}
 body.editorMode #canvasStage{touch-action:none!important;-webkit-touch-callout:none!important;user-select:none!important;-webkit-user-select:none!important}
 body.editorMode .cobj[contenteditable="true"],body.editorMode td[contenteditable="true"]{user-select:text!important;-webkit-user-select:text!important;-webkit-touch-callout:default!important}
-
 /* Resource/topic pages really use the whole phone width. */
 @media(max-width:899px){
   #view-topic-detail.active,#view-subjects.active,#view-subject-detail.active{
@@ -14246,7 +14245,7 @@ body.editorMode .cobj[contenteditable="true"],body.editorMode td[contenteditable
   window.renderLayerList=function(){baseLayers();const m=document.querySelector('#canvasQuickDrawer.open .mobileLayerList');if(m){m.querySelectorAll('button').forEach(b=>{b.style.minWidth='0';b.style.maxWidth='none'})}};
   try{renderLayerList=window.renderLayerList}catch(_){}
 
-  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 298';document.title='Studia'},40);
+  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 299';document.title='Studia'},40);
 })();
 </script>
 <!-- ===== /Studia V112 hard stabilization ===== -->
@@ -14542,7 +14541,7 @@ html,body{overflow-x:hidden!important}
   try{renderSheetEditor=window.renderSheetEditor}catch(_){ }
   window.addEventListener('resize',()=>setTimeout(()=>{topicLock();if(inEditor()){desktopInit();reconcileMobileChrome()}},100));
 
-  setTimeout(()=>{topicLock();if(inEditor()){desktopInit();reconcileMobileChrome()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 298';document.title='Studia'},120);
+  setTimeout(()=>{topicLock();if(inEditor()){desktopInit();reconcileMobileChrome()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 299';document.title='Studia'},120);
 })();
 </script>
 
@@ -14677,7 +14676,7 @@ html,body{max-width:100%!important;overflow-x:hidden!important}
   const oldRender=window.renderSheetEditor||renderSheetEditor;window.renderSheetEditor=function(){const r=oldRender.apply(this,arguments);setTimeout(()=>init(true),360);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){ }
   const mo=new MutationObserver(()=>requestAnimationFrame(syncDrawerState));setTimeout(()=>{const d=document.getElementById('canvasQuickDrawer');if(d)mo.observe(d,{attributes:true,childList:true,subtree:true});if(editor())init(true)},180);
   window.addEventListener('resize',()=>{if(!editor())return;setTimeout(()=>{bindViewport();mobile()?fitMobile(false):fitDesktop()},100)});
-  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 298';document.title='Studia'},80);
+  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 299';document.title='Studia'},80);
 })();
 </script>
 <!-- ===== /Studia V115 ===== -->
@@ -14829,7 +14828,7 @@ html,body{max-width:100%!important;overflow-x:hidden!important}
   window.addEventListener('resize',()=>setTimeout(sweep,40));
   setTimeout(()=>{
     sweep();
-    const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 298';
+    const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 299';
     document.title='Studia';
   },220);
 })();
@@ -14998,7 +14997,7 @@ if(window.__STUDIA_V129_INPUT__)return;
 
   window.attachVectorEvents=function(){
     const root=document.getElementById('canvasObjects');if(!root)return;
-    root.querySelectorAll('.vectorTouchProxy,.shapeHit').forEach(el=>{
+root.querySelectorAll('.vectorTouchProxy,.shapeHit').forEach(el=>{
       if(el.dataset.v121Bound)return;el.dataset.v121Bound='1';
       el.addEventListener('pointerdown',e=>{const vid=el.dataset.vid,v=canvasState.vectors.find(x=>x.id===vid);if(!v)return;if(canvasState.multiMode||e.shiftKey){e.preventDefault();e.stopPropagation();toggleVectorInMultiSelection(vid);return}canvasState.selectedType='vector';canvasState.selectedId=vid;canvasState.selectedIds=[];canvasState.selectedVectorIds=[vid];renderCanvasInspector();renderLayerList();v121StartVectorDrag(e,vid)},{passive:false});
     });
@@ -15039,7 +15038,7 @@ if(window.__STUDIA_V129_INPUT__)return;
 
   function init(){if(!editor())return;document.body.classList.remove('layerDragging');ensureSurface();v121ApplyZoom(scaleNow(),false);renderCanvasObjects();renderVectors();renderLayerList();if(!mobile()){const mode=localStorage.getItem('studia-v113-desktop-panel')||'elements',btn=document.querySelector(`.canvasQuickNav [data-v113-mode="${mode}"]`)||document.querySelector('.canvasQuickNav button');if(btn)v113DesktopPanel(mode,btn)}}
   setTimeout(init,280);window.addEventListener('resize',()=>setTimeout(()=>{if(editor())v121ApplyZoom(scaleNow(),false)},70));
-  const eyebrow=document.getElementById('headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 298';
+  const eyebrow=document.getElementById('headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 299';
 })();
 </script>
 <!-- ===== /Studia V121 ===== -->
@@ -15191,7 +15190,7 @@ if(window.__STUDIA_V129_INPUT__)return;
  const oldOpenStudy=window.openStudySheetEditor;if(typeof oldOpenStudy==='function')window.openStudySheetEditor=function(){const r=oldOpenStudy.apply(this,arguments);setTimeout(sync,120);return r};
  window.addEventListener('resize',()=>setTimeout(()=>{if(isEditor()&&!isMobile())desktopNav()},100));
  setTimeout(sync,350);
- const eyebrow=document.getElementById('headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 298';
+ const eyebrow=document.getElementById('headerEyebrow');if(eyebrow)eyebrow.textContent='VERSION 299';
 })();
 </script>
 <!-- ===== /Studia V123 ===== -->
@@ -15265,7 +15264,7 @@ function onUp(e){
 document.addEventListener('pointerdown',onDown,true);
 window.addEventListener('pointermove',onMove,{capture:true,passive:false});
 window.addEventListener('pointerup',onUp,true);window.addEventListener('pointercancel',onUp,true);
-setTimeout(()=>{document.querySelectorAll('.v126VectorDragProxy').forEach(n=>n.remove());const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 298'},250);
+setTimeout(()=>{document.querySelectorAll('.v126VectorDragProxy').forEach(n=>n.remove());const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 299'},250);
 })();
 </script>
 
@@ -15321,7 +15320,7 @@ function installDesktopParity(){if(window.__STUDIA_V134_REFERENCE_ONLY__&&innerW
 const oldRender=window.renderSheetEditor;window.renderSheetEditor=function(){const r=oldRender.apply(this,arguments);setTimeout(()=>{fit();installDesktopParity()},160);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){}
 const oldOpen=window.openStudySheetEditor;if(oldOpen)window.openStudySheetEditor=function(){const r=oldOpen.apply(this,arguments);setTimeout(()=>{fit();installDesktopParity()},200);return r};
 /* V178: retired V128 desktop parity watcher removed. */
-window.addEventListener('resize',()=>setTimeout(()=>{if(isEditor()){fit();installDesktopParity()}},120));setTimeout(()=>{if(isEditor()){fit();installDesktopParity()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 298'},400);
+window.addEventListener('resize',()=>setTimeout(()=>{if(isEditor()){fit();installDesktopParity()}},120));setTimeout(()=>{if(isEditor()){fit();installDesktopParity()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 299'},400);
 })();
 </script>
 <!-- ===== /Studia V128 ===== -->
@@ -15384,7 +15383,7 @@ const oldRO=window.renderCanvasObjects||renderCanvasObjects;window.renderCanvasO
 const oldOpen=window.editorOpenGroup;window.editorOpenGroup=function(){const r=oldOpen.apply(this,arguments);requestAnimationFrame(()=>{renderShapeProxies();if(innerWidth>=900)desktopParity()});return r};try{editorOpenGroup=window.editorOpenGroup}catch(_){}
 /* V178: retired V129 desktop parity observer removed. */
 window.addEventListener('resize',()=>setTimeout(()=>{if(editor()){fit129();desktopParity();renderShapeProxies()}},120));
-setTimeout(()=>{if(editor()){fit129();desktopParity();renderShapeProxies()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 298';document.title='Studia'},500);
+setTimeout(()=>{if(editor()){fit129();desktopParity();renderShapeProxies()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 299';document.title='Studia'},500);
 })();
 </script>
 <!-- ===== /Studia V129 ===== -->
@@ -15566,7 +15565,7 @@ window.editorOpenGroup=function(){if(innerWidth>=900)openEditorGroup=null;const 
 try{editorOpenGroup=window.editorOpenGroup}catch(_){}
 const observer=new MutationObserver(()=>requestAnimationFrame(()=>{if(innerWidth>=900&&window.__STUDIA_V180_DESKTOP__)return;if(!inEditor())return;addStarButton();addTransparentChoices(document);polishRoundedVectors()}));
 observer.observe(document.body,{subtree:true,childList:true});
-setTimeout(()=>{if(inEditor()){renderVectors();renderLayerList();enhanceInspector();addStarButton()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 298';document.title='Studia'},650);
+setTimeout(()=>{if(inEditor()){renderVectors();renderLayerList();enhanceInspector();addStarButton()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 299';document.title='Studia'},650);
 })();
 </script>
 <!-- ===== /Studia V130 ===== -->
@@ -15732,7 +15731,7 @@ window.renderLayerList=function(){const html=layerHTML(),a=document.getElementBy
 
 function quickStrip(){return '<div class="v131QuickStrip"><button onclick="undoCanvas()"><b>↶</b>Rückgängig</button><button onclick="redoCanvas()"><b>↷</b>Wiederholen</button><button onclick="fitCanvasStage()"><b>⊡</b>Einpassen</button><button onclick="canvasZoomBy(.1)"><b>＋</b>Zoom</button><button onclick="canvasZoomBy(-.1)"><b>−</b>Zoom</button><button onclick="duplicateSelected()"><b>⧉</b>Duplizieren</button></div>'}
 function decorateDrawer(){const d=document.getElementById('canvasQuickDrawer');if(!d||!d.classList.contains('open')||d.querySelector('.v131QuickStrip'))return;const head=d.querySelector('.mobileDrawerHead');if(head)head.insertAdjacentHTML('afterend',quickStrip());else d.insertAdjacentHTML('afterbegin',quickStrip())}
-function ensureChrome(){const top=document.querySelector('.canvasTopbar');if(top&&!top.querySelector('.v131VersionBadge')){const badge=document.createElement('span');badge.className='v131VersionBadge';badge.textContent='STUDIA · V181';const title=top.querySelector('.editorTitle');title?.after(badge)}const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 298'}
+function ensureChrome(){const top=document.querySelector('.canvasTopbar');if(top&&!top.querySelector('.v131VersionBadge')){const badge=document.createElement('span');badge.className='v131VersionBadge';badge.textContent='STUDIA · V181';const title=top.querySelector('.editorTitle');title?.after(badge)}const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 299'}
 const oldOpen=window.editorOpenGroup;window.editorOpenGroup=function(){openEditorGroup=null;const r=oldOpen.apply(this,arguments);requestAnimationFrame(()=>{decorateDrawer();if(arguments[0]==='layers')renderLayerList()});return r};try{editorOpenGroup=window.editorOpenGroup}catch(_){}
 const oldObjects=window.renderCanvasObjects;window.renderCanvasObjects=function(){const r=oldObjects.apply(this,arguments);requestAnimationFrame(syncMoveProxies);return r};try{renderCanvasObjects=window.renderCanvasObjects}catch(_){}
 const oldVectors=window.renderVectors;window.renderVectors=function(){const r=oldVectors.apply(this,arguments);requestAnimationFrame(syncMoveProxies);return r};try{renderVectors=window.renderVectors}catch(_){}
@@ -15987,7 +15986,7 @@ function polishChrome(){const topMap={Rückgängig:'undo',Wiederholen:'redo','Se
 function decorateGroup(group){document.querySelectorAll('.v131QuickStrip').forEach(x=>x.remove());if(group==='elements')replaceDrawerBody(elementGroupsHTML());if(group==='pages')decoratePages();if(group==='layers')renderLayerList();polishChrome()}
 window.v132Open=function(mode,btn){const map={text:'textLibrary',elements:'elements',templates:'templates',pages:'pages',layers:'layers'},group=mode==='text'&&typeof mobileSelectedText==='function'&&mobileSelectedText()?'textEdit':map[mode];try{openEditorGroup=null}catch(_){}editorOpenGroup(group,btn);requestAnimationFrame(()=>{const d=document.getElementById('canvasQuickDrawer');if(mode==='text'&&d&&innerWidth>=900&&!d.querySelector('.v132DesktopTextExtras')){const x=document.createElement('div');x.className='v129DesktopTextExtras v132DesktopTextExtras';x.innerHTML=`<button onclick="v91PickFont()">${ic('textformat')} Eigene Schrift</button><button onclick="createCustomStylePreset()">${ic('plus')} Textformat</button><button onclick="openTextFormatManager()">${ic('edit')} Textformate verwalten</button>`;d.prepend(x)}decorateGroup(group)})};
 function buildNav(){if(window.__STUDIA_V134_REFERENCE_ONLY__&&innerWidth>=900)return;const nav=document.querySelector('.canvasQuickNav');if(!nav)return;if(!nav.querySelector('[data-v133]'))nav.innerHTML=navHTML();nav.querySelectorAll('[data-v133]').forEach(b=>b.onclick=()=>v132Open(b.dataset.v133,b))}
-function init(forceFit=true){if(!editor())return;if(canvasState.multiMode){multiObjects=new Set(canvasState.selectedIds||[]);multiVectors=new Set(canvasState.selectedVectorIds||[])}document.querySelectorAll('.v131VersionBadge,.v131QuickStrip').forEach(x=>x.remove());buildTop();buildNav();bindViewport();syncHits();polishChrome();if(!(window.__STUDIA_V134_REFERENCE_ONLY__&&innerWidth>=900)&&document.getElementById('canvasQuickDrawer')?.classList.contains('open'))decorateGroup('elements');if(forceFit)setTimeout(()=>fit(true),80);const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 298'}
+function init(forceFit=true){if(!editor())return;if(canvasState.multiMode){multiObjects=new Set(canvasState.selectedIds||[]);multiVectors=new Set(canvasState.selectedVectorIds||[])}document.querySelectorAll('.v131VersionBadge,.v131QuickStrip').forEach(x=>x.remove());buildTop();buildNav();bindViewport();syncHits();polishChrome();if(!(window.__STUDIA_V134_REFERENCE_ONLY__&&innerWidth>=900)&&document.getElementById('canvasQuickDrawer')?.classList.contains('open'))decorateGroup('elements');if(forceFit)setTimeout(()=>fit(true),80);const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 299'}
 const oldGroup=window.editorOpenGroup;window.editorOpenGroup=function(){const args=arguments,r=oldGroup.apply(this,args);requestAnimationFrame(()=>{buildNav();decorateGroup(args[0])});return r};try{editorOpenGroup=window.editorOpenGroup}catch(_){}
 const oldObjects=window.renderCanvasObjects;window.renderCanvasObjects=function(){const r=oldObjects.apply(this,arguments);queueHits();return r};try{renderCanvasObjects=window.renderCanvasObjects}catch(_){}
 const oldVectors=window.renderVectors;window.renderVectors=function(){const r=oldVectors.apply(this,arguments);queueHits();return r};try{renderVectors=window.renderVectors}catch(_){}
@@ -15996,7 +15995,7 @@ const oldSheet=window.renderSheetEditor;window.renderSheetEditor=function(){cons
 const oldOpenSheet=window.openStudySheetEditor;if(oldOpenSheet)window.openStudySheetEditor=function(){const r=oldOpenSheet.apply(this,arguments);setTimeout(()=>init(true),560);return r};
 window.addEventListener('resize',()=>setTimeout(()=>{if(editor()){buildNav();fit(false);syncHits();polishChrome()}},180));
 let v133WasEditor=editor();const v133Observer=new MutationObserver(()=>{const now=editor();if(now&&!v133WasEditor)requestAnimationFrame(()=>{buildNav();polishChrome()});v133WasEditor=now});v133Observer.observe(document.body,{attributes:true,attributeFilter:['class']});
-setTimeout(()=>{buildTop();if(editor())init(true);const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 298';document.title='Studia'},750);
+setTimeout(()=>{buildTop();if(editor())init(true);const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 299';document.title='Studia'},750);
 })();
 </script>
 <!-- ===== /Studia V133 ===== -->
@@ -16356,7 +16355,7 @@ window.printCanvasSheet=async function(){
 };
 try{printCanvasSheet=window.printCanvasSheet}catch(_){}
 
-function install(){window.__STUDIA_V180_DESKTOP__=innerWidth>=900;const eye=qs('#headerEyebrow');if(eye)eye.textContent='VERSION 298';document.title='Studia';try{window.v132SyncHits?.();window.v138RefreshHandles?.()}catch(_){}}
+function install(){window.__STUDIA_V180_DESKTOP__=innerWidth>=900;const eye=qs('#headerEyebrow');if(eye)eye.textContent='VERSION 299';document.title='Studia';try{window.v132SyncHits?.();window.v138RefreshHandles?.()}catch(_){}}
 const oldSheet=window.renderSheetEditor;window.renderSheetEditor=function(){const r=oldSheet.apply(this,arguments);setTimeout(install,900);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){}
 const oldOpen=window.openStudySheetEditor;if(oldOpen)window.openStudySheetEditor=function(){const r=oldOpen.apply(this,arguments);setTimeout(install,1050);return r};
 window.addEventListener('resize',()=>{if(desktop())requestAnimationFrame(()=>{paintOverlay();attach181()})});
@@ -16376,7 +16375,7 @@ setTimeout(install,1300);
 <script id="v182-selection-recovery-script">
 (()=>{
  const active=()=>false; /* V183 desktop repair owns laptop interaction; disable V182 recovery layer. */
- function revive(){if(!active())return;window.__STUDIA_V180_DESKTOP__=innerWidth>=900;document.getElementById('v181SelectionOverlay')?.remove();try{window.v132SyncHits?.();window.v138RefreshHandles?.()}catch(_){}const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 298'}
+ function revive(){if(!active())return;window.__STUDIA_V180_DESKTOP__=innerWidth>=900;document.getElementById('v181SelectionOverlay')?.remove();try{window.v132SyncHits?.();window.v138RefreshHandles?.()}catch(_){}const eye=document.getElementById('headerEyebrow');if(eye)eye.textContent='VERSION 299'}
  const oldSheet=window.renderSheetEditor;if(typeof oldSheet==='function')window.renderSheetEditor=function(){const r=oldSheet.apply(this,arguments);requestAnimationFrame(()=>requestAnimationFrame(revive));return r};
  const oldOpen=window.openStudySheetEditor;if(typeof oldOpen==='function')window.openStudySheetEditor=function(){const r=oldOpen.apply(this,arguments);setTimeout(revive,120);return r};
  window.addEventListener('resize',()=>setTimeout(revive,60));setTimeout(revive,1000);
@@ -16610,7 +16609,7 @@ const oldPreview=window.v181OpenPreview;window.v181OpenPreview=async function(){
  const close=host.querySelector('.v181PreviewBar button');if(close){close.onclick=()=>{host.classList.remove('open');document.body.classList.add('editorMode');document.body.classList.remove('v184PreviewOpen','v137ViewMode');if(editor){editor.inert=false;editor.removeAttribute('aria-hidden')}host.scrollTop=0;q('.canvasQuickNav')?.style.removeProperty('display');q('#canvasQuickDrawer')?.style.removeProperty('display');requestAnimationFrame(()=>{bindObjects();bindVectors();paintFrame()})}}
 };
 
-function install(){if(!desktop())return;disableLegacy();document.body.classList.remove('v137ViewMode');q('.v137ViewerBar')?.remove();/* recreate object DOM once so old body-drag listeners disappear */try{renderCanvasObjects?.();renderVectors?.()}catch(_){}bindObjects();bindVectors();paintFrame();const view=q('.v137ViewButton');if(view){view.title='Lernblatt nur ansehen';view.onclick=()=>window.v181OpenPreview?.();const label=view.querySelector('span');if(label)label.textContent='Ansicht'}const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 298'}
+function install(){if(!desktop())return;disableLegacy();document.body.classList.remove('v137ViewMode');q('.v137ViewerBar')?.remove();/* recreate object DOM once so old body-drag listeners disappear */try{renderCanvasObjects?.();renderVectors?.()}catch(_){}bindObjects();bindVectors();paintFrame();const view=q('.v137ViewButton');if(view){view.title='Lernblatt nur ansehen';view.onclick=()=>window.v181OpenPreview?.();const label=view.querySelector('span');if(label)label.textContent='Ansicht'}const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 299'}
 const prevSheet=window.renderSheetEditor;if(prevSheet)window.renderSheetEditor=function(){const r=prevSheet.apply(this,arguments);setTimeout(install,90);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){}
 const prevOpen=window.openStudySheetEditor;if(prevOpen)window.openStudySheetEditor=function(){const r=prevOpen.apply(this,arguments);setTimeout(install,120);return r};
 document.addEventListener('click',e=>{const view=e.target.closest?.('.v137ViewButton');if(!view||!desktop())return;e.preventDefault();e.stopImmediatePropagation();window.v181OpenPreview?.()},true);
@@ -17037,7 +17036,7 @@ try{insertSavedTextFormat=window.insertSavedTextFormat}catch(_){}
 const oldRender193=window.renderCanvasObjects;if(typeof oldRender193==='function')window.renderCanvasObjects=function(){const r=oldRender193.apply(this,arguments);requestAnimationFrame(window.v193PaintGroupFrame);return r};
 try{renderCanvasObjects=window.renderCanvasObjects}catch(_){}
 
-function reconcile193(){const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 298';if(!laptop())return;window.v193EnhanceHexColors();window.v193PaintGroupFrame()}
+function reconcile193(){const eye=q('#headerEyebrow');if(eye)eye.textContent='VERSION 299';if(!laptop())return;window.v193EnhanceHexColors();window.v193PaintGroupFrame()}
 window.addEventListener('resize',()=>setTimeout(reconcile193,100));document.addEventListener('click',()=>setTimeout(reconcile193,0),true);[500,1800,9200].forEach(t=>setTimeout(reconcile193,t));
 })();
 /* ===== /Studia V193 ===== */
@@ -17313,7 +17312,7 @@ window.addEventListener('resize',()=>setTimeout(reconcile193,100));document.addE
   'use strict';
   var dirtyTimer=0,lastLocalMutation=0,lastCloudKick=0,lastPlanAttempt=0,planBusy=false;
 
-  function setVersion(){var e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 298'}
+  function setVersion(){var e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 299'}
   function markPlanView(){
     var active=document.querySelector('#view-plan.active');
     document.body.classList.toggle('planViewActive',!!active&&!document.body.classList.contains('editorMode'));
@@ -17998,7 +17997,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
   body.v210Desktop .view.active:not(#view-plan){overflow:visible!important}
   body.v210Desktop .view.active:not(#view-plan)>.sectionHead:first-child h2,
   body.v210Desktop .view.active:not(#view-plan)>.panel:first-child h2{color:#3b3330!important}
-  .v210PageHead{display:flex!important;align-items:end!important;justify-content:space-between!important;gap:16px!important;margin-bottom:18px!important;padding:2px 2px 10px!important;border-bottom:1px solid #f1e5e1!important}.v210PageHead h1{font-size:38px!important;line-height:1!important;margin:0!important;color:#352e2c!important}.v210PageHead p{margin:6px 0 0!important;color:#a08b84!important;font-size:13px!important}
+.v210PageHead{display:flex!important;align-items:end!important;justify-content:space-between!important;gap:16px!important;margin-bottom:18px!important;padding:2px 2px 10px!important;border-bottom:1px solid #f1e5e1!important}.v210PageHead h1{font-size:38px!important;line-height:1!important;margin:0!important;color:#352e2c!important}.v210PageHead p{margin:6px 0 0!important;color:#a08b84!important;font-size:13px!important}
 
   /* Desktop-only timetable settings. Existing mobile plan controls are untouched. */
   #v210TimetableSettings{display:block!important;margin:0 0 16px!important;border:1px solid #efe0db!important;background:#fffaf8!important;box-shadow:none!important}
@@ -18997,8 +18996,7 @@ body.editorMode #view-sheet-editor.active[aria-hidden="true"]{visibility:visible
     window.createQuizPrompt=function(){setLearningMode('edit');return oldCreateQuizPrompt.apply(this,arguments)};
     try{createQuizPrompt=window.createQuizPrompt}catch(_){}
   }
-
-  /* Laptop learning-sheet editor recovery. Keep all existing editor wrappers when
+/* Laptop learning-sheet editor recovery. Keep all existing editor wrappers when
      they work; only force the existing sheet view active if that chain fails. */
   function clearPreviewLock(){
     document.body.classList.remove('v184PreviewOpen','v137ViewMode');
@@ -19998,7 +19996,7 @@ body.editorMode .app > .header{
     const payload={ts:Date.now(),html:ed.innerHTML,align:formulaAlign,editId:String(formulaEditId||'')};
     try{sessionStorage.setItem(formulaDraftKey(),JSON.stringify(payload));localStorage.setItem(formulaDraftKey(),JSON.stringify(payload))}catch(_){}
   }
-  function readFormulaDraft(editId){
+function readFormulaDraft(editId){
     let raw='';try{raw=sessionStorage.getItem(formulaDraftKey(editId))||localStorage.getItem(formulaDraftKey(editId))||''}catch(_){}
     if(!raw)return null;try{const d=JSON.parse(raw);return Date.now()-Number(d.ts||0)<24*60*60*1000?d:null}catch(_){return null}
   }
@@ -22167,7 +22165,7 @@ const observer=new MutationObserver(normalize);observer.observe(document.body,{c
 window.addEventListener('resize',normalize,{passive:true});
 document.addEventListener('click',()=>setTimeout(normalize,0),false);
 [0,100,350,900,1800].forEach(t=>setTimeout(normalize,t));
-const setVersion=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 298'};[0,250,900,1800].forEach(t=>setTimeout(setVersion,t));
+const setVersion=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 299'};[0,250,900,1800].forEach(t=>setTimeout(setVersion,t));
 })();
 </script>
 <!-- ===== /Studia V292 ===== -->
@@ -22866,7 +22864,7 @@ const boot=()=>{
  if(q('#view-deck-detail.active')){document.body.classList.toggle('v214LearningReadOnly',deckMode==='learn');renderDeckDetail298()}
  if(q('#view-settings.active'))wireThemeControls();
  if(cleaned)try{save()}catch(_){}
- const e=q('#headerEyebrow');if(e)e.textContent='VERSION 298';
+ const e=q('#headerEyebrow');if(e)e.textContent='VERSION 299';
 };
 [0,120,600,1600,2400,4200].forEach(ms=>setTimeout(boot,ms));
 window.addEventListener('pageshow',()=>setTimeout(boot,50));
@@ -22874,4 +22872,268 @@ const oldOpen298=window.openView;if(typeof oldOpen298==='function'&&!oldOpen298.
  const wrapped=function(){const r=oldOpen298.apply(this,arguments);setTimeout(boot,0);return r};wrapped.__v298=true;window.openView=wrapped;try{openView=wrapped}catch(_){}
 }
 })();
+</script>
+
+<!-- ===== Studia V299 usability fixes ===== -->
+<style id="studia-v299-final-css">
+/* Studia V299: one consistent component palette, adaptive to selected design. */
+:root{--v299-soft:color-mix(in srgb,var(--studia-theme-accent) 19%,var(--studia-theme-paper));--v299-border:color-mix(in srgb,var(--studia-theme-accent) 43%,var(--studia-theme-line));--v299-ink:var(--studia-theme-text)}
+body:not(.editorMode) .v102SubjectDetail,body:not(.editorMode) .v102TopicDetail,body:not(.editorMode) #view-learnsets,body:not(.editorMode) #view-home{min-width:0!important;max-width:100%!important}
+body:not(.editorMode) button{touch-action:manipulation}
+body:not(.editorMode) .primary,body:not(.editorMode) .v102AddTopic,body:not(.editorMode) .v102OnlyPlus,body:not(.editorMode) .v102AddSubject{
+ background:var(--studia-theme-accent)!important;border-color:var(--v299-border)!important;color:var(--studia-theme-text)!important;
+}
+body:not(.editorMode) .ghost,body:not(.editorMode) .v102RoundIcon,body:not(.editorMode) .v102Back,body:not(.editorMode) .v102Mini,
+body:not(.editorMode) .v297IconBtn,body:not(.editorMode) .v297DeckEditCard,body:not(.editorMode) .v297DeckModeSwitch,
+body:not(.editorMode) .v299DeckModeSwitch,body:not(.editorMode) .v102Search,
+body:not(.editorMode) .v297PlannerModal .v297PlannerHead,body:not(.editorMode) .v297PlannerActionsSticky{
+ background:var(--studia-theme-paper)!important;border-color:var(--studia-theme-line)!important;color:var(--studia-theme-text)!important;
+}
+body:not(.editorMode) .tab.active,body:not(.editorMode) .profileType button.active,
+body:not(.editorMode) .v298LearnHub button.active,body:not(.editorMode) .v299DeckModeSwitch button.active,
+body:not(.editorMode) .v298DeckModeSwitch button.active{
+ background:var(--v299-soft)!important;border-color:var(--v299-border)!important;color:var(--studia-theme-text)!important;
+}
+body:not(.editorMode) .v102ResourceCard,body:not(.editorMode) .v102ActionCard,body:not(.editorMode) .v102HubItem,
+body:not(.editorMode) .v102Notebook,body:not(.editorMode) .v298LearnHub button,
+body:not(.editorMode) .v297PlannerCard,body:not(.editorMode) .v297StudyCard{
+ background:var(--studia-theme-paper)!important;border-color:var(--studia-theme-line)!important;color:var(--studia-theme-text)!important;
+}
+body:not(.editorMode) .v102ResourceIcon,body:not(.editorMode) .v102HubIcon,
+body:not(.editorMode) .v298HubIcon,body:not(.editorMode) .learnsetRowIcon,
+body:not(.editorMode) .v297QuickIcon{background:var(--v299-soft)!important;color:var(--v299-ink)!important}
+body:not(.editorMode) .v102Chevron,body:not(.editorMode) .v102TopicTop i{color:var(--studia-theme-text)!important}
+
+/* A folder is a folder, not a rectangle with a small folder pictogram. The tab and face are drawn in CSS. */
+#view-subject-detail .v102TopicGrid{align-items:stretch;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 15px!important;padding-top:16px!important}
+#view-subject-detail .v102TopicFolder{
+ position:relative!important;display:flex!important;flex-direction:column!important;justify-content:flex-start!important;
+ min-width:0!important;max-width:100%!important;min-height:166px!important;
+ padding:50px 16px 16px!important;border:0!important;border-radius:0!important;
+ background:transparent!important;color:var(--studia-theme-text)!important;
+ box-shadow:none!important;text-align:left!important;isolation:isolate;
+ overflow:visible!important;transform:none!important;transition:filter .18s ease!important;
+}
+#view-subject-detail .v102TopicFolder:before{
+ content:""!important;position:absolute!important;z-index:-2!important;
+ top:0!important;left:7px!important;width:45%!important;height:54px!important;
+ background:color-mix(in srgb,var(--studia-theme-accent) 46%,white)!important;
+ border:1px solid var(--v299-border)!important;border-bottom:0!important;
+ border-radius:16px 25px 0 0!important;box-shadow:none!important;
+}
+#view-subject-detail .v102TopicFolder:after{
+ content:""!important;position:absolute!important;z-index:-1!important;inset:22px 0 0!important;
+ background:linear-gradient(160deg,color-mix(in srgb,var(--studia-theme-accent) 24%,white),color-mix(in srgb,var(--studia-theme-accent) 32%,white))!important;
+ border:1px solid var(--v299-border)!important;border-radius:22px!important;
+ box-shadow:0 9px 20px color-mix(in srgb,var(--studia-theme-accent) 16%,transparent)!important;
+}
+#view-subject-detail .v102TopicFolder:active{filter:brightness(.975)!important}
+#view-subject-detail .v102TopicTop{display:flex!important;align-items:center!important;width:100%!important;gap:8px!important;min-width:0!important;margin:0!important}
+#view-subject-detail .v102FolderIcon{display:none!important}
+#view-subject-detail .v102TopicTop b{min-width:0!important;max-width:100%!important;flex:1!important;white-space:normal!important;overflow:hidden!important;display:-webkit-box!important;-webkit-line-clamp:2!important;-webkit-box-orient:vertical!important;line-height:1.2!important;font-size:clamp(15px,3.8vw,19px)!important;overflow-wrap:anywhere}
+#view-subject-detail .v102TopicTop i{flex:0 0 auto!important;font-size:23px!important;font-weight:500!important}
+#view-subject-detail .v102TopicStats{margin-top:12px!important;min-width:0!important;gap:4px!important;font-size:10px!important;line-height:1.2!important;color:var(--studia-theme-muted)!important}
+#view-subject-detail .v102TopicStats span{min-width:0!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#view-subject-detail .v102TopicStats svg{flex:none!important}
+
+/* Topic toolbar: pencil and a lone plus, with titles allowed to shrink. */
+#view-topic-detail .v102TopicPageHead{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:10px!important;align-items:center!important;max-width:100%!important}
+#view-topic-detail .v102SubjectIdentity{display:flex!important;align-items:center!important;gap:9px!important;min-width:0!important;max-width:100%!important}
+#view-topic-detail .v102SubjectIdentity>div{min-width:0!important;overflow:hidden!important}
+#view-topic-detail .v102SubjectIdentity h2{white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;max-width:100%!important;font-size:clamp(29px,7vw,46px)!important}
+#view-topic-detail .v102SubjectIdentity p{overflow:hidden!important;white-space:normal!important;font-size:clamp(11px,2.8vw,14px)!important}
+#view-topic-detail .v102TopicPageHead>.row{display:flex!important;align-items:center!important;gap:8px!important;min-width:0!important;flex-wrap:nowrap!important}
+#view-topic-detail .v102TopicEdit{width:48px!important;height:48px!important;min-width:48px!important;display:grid!important;place-items:center!important;padding:0!important;border-radius:16px!important}
+#view-topic-detail .v102TopicEdit svg{width:21px!important;height:21px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round;stroke-linejoin:round}
+#view-topic-detail .v102OnlyPlus.v299OnlyPlus{width:49px!important;height:49px!important;min-width:49px!important;max-width:49px!important;display:grid!important;place-items:center!important;padding:0!important;font-size:27px!important;line-height:1!important;border-radius:16px!important;white-space:nowrap!important;box-shadow:0 5px 0 color-mix(in srgb,var(--studia-theme-accent) 23%,transparent)!important}
+#view-topic-detail .v102OnlyPlus.v299OnlyPlus>span{display:grid!important;place-items:center!important;width:100%;height:100%}
+#view-topic-detail .v102ResourceList,#view-topic-detail .v102TopicDetail,#view-topic-detail .v102ResourceCard{min-width:0!important;max-width:100%!important}
+#view-topic-detail .v102ResourceCard{box-sizing:border-box!important;grid-template-columns:56px minmax(0,1fr) 20px!important;gap:10px!important}
+#view-topic-detail .v102ResourceCard>span:nth-child(2){min-width:0!important;overflow:hidden!important}
+#view-topic-detail .v102ResourceCard b,#view-topic-detail .v102ResourceCard small{overflow-wrap:anywhere!important}
+
+/* One single click-safe learning switch, independent of legacy render hooks. */
+#view-deck-detail .v298DeckModeSwitch{display:none!important}
+#view-deck-detail .v299DeckModeSwitch{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:4px!important;max-width:100%!important;min-width:0!important;padding:4px!important;border:1px solid var(--studia-theme-line)!important;border-radius:15px!important;margin-left:auto!important;position:relative!important;z-index:8!important;pointer-events:auto!important;isolation:isolate!important}
+#view-deck-detail .v299DeckModeSwitch button{display:grid!important;place-items:center!important;min-width:0!important;min-height:43px!important;padding:7px 14px!important;border:1px solid transparent!important;border-radius:11px!important;background:transparent!important;color:var(--studia-theme-muted)!important;font-size:13px!important;font-weight:850!important;pointer-events:auto!important;cursor:pointer!important}
+#view-deck-detail .v299DeckModeSwitch button.active{box-shadow:0 1px 7px color-mix(in srgb,var(--studia-theme-accent) 16%,transparent)!important}
+#view-deck-detail .sectionHead{min-width:0!important;max-width:100%!important;flex-wrap:wrap!important}
+#view-deck-detail #deckDetail{min-width:0!important;max-width:100%!important}
+#view-deck-detail .v297DeckEditCard{min-width:0!important;max-width:100%!important;grid-template-columns:minmax(0,1fr) auto!important}
+#view-deck-detail .v297DeckEditText{min-width:0!important;overflow-wrap:anywhere!important}
+
+/* Strictly centred icon containers: Heute, Lernen and Lernsets. */
+#view-home .homeMiniActions button,#view-study .v298LearnHub button{display:grid!important;justify-items:center!important;align-items:center!important}
+#view-home .v297QuickIcon,#view-study .v298HubIcon,#view-learnsets .learnsetRowIcon,#view-learnsets .v298HubIcon,
+#view-study .v298HubIcon,#view-home .homeMiniActions button svg{
+ position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
+ transform:none!important;align-self:center!important;justify-self:center!important;margin-inline:auto!important;
+}
+#view-home .v297QuickIcon,#view-study .v298HubIcon,#view-learnsets .learnsetRowIcon,#view-learnsets .v298HubIcon{display:grid!important;place-items:center!important;text-align:center!important;flex:0 0 auto!important}
+#view-home .v297QuickIcon svg,#view-study .v298HubIcon svg,#view-learnsets .v298HubIcon svg{display:block!important;position:static!important;margin:auto!important;transform:none!important;flex:none!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+#view-learnsets .learnsetRowIcon{line-height:1!important;font-size:19px!important}
+
+/* Viewport-safety for narrow phones and overlays. */
+@media(max-width:700px){
+ body:not(.editorMode) .app{overflow-x:clip!important;width:100%!important;max-width:100%!important}
+ body:not(.editorMode) .view.active,body:not(.editorMode) .section,body:not(.editorMode) .card{max-width:100%!important;min-width:0!important}
+ #view-subject-detail .v102SubjectDetail{padding-left:0!important;padding-right:0!important;max-width:100%!important}
+ #view-subject-detail .v102SubjectTools{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:9px!important;max-width:100%!important}
+ #view-subject-detail .v102Search{min-width:0!important;width:100%!important}
+ #view-subject-detail .v102Search input{min-width:0!important;max-width:100%!important}
+ #view-subject-detail .v102AddTopic{width:auto!important;min-width:52px!important;padding:0 12px!important}
+ #view-subject-detail .v102TopicGrid{gap:12px!important}
+ #view-subject-detail .v102TopicFolder{min-height:144px!important;padding:51px 13px 14px!important}
+ #view-subject-detail .v102TopicStats{display:none!important}
+ #view-topic-detail .v102TopicPageHead>.row{gap:6px!important}
+ #view-topic-detail .v102TopicEdit,#view-topic-detail .v102OnlyPlus.v299OnlyPlus{width:44px!important;height:44px!important;min-width:44px!important;max-width:44px!important}
+ #view-topic-detail .v102SubjectIdentity .v102Back{width:42px!important;height:46px!important;min-width:42px!important}
+ #view-deck-detail .v299DeckModeSwitch{order:3!important;width:100%!important;margin:8px 0 0!important}
+ #view-deck-detail .v297DeckEditCard{padding:12px!important;gap:8px!important}
+ #view-deck-detail .v297DeckEditActions{display:flex!important;gap:5px!important;flex:none!important}
+ #view-deck-detail .v297IconBtn{width:35px!important;min-width:35px!important;height:35px!important}
+ #homeworkList .v297PlannerCard,#testList .v297PlannerCard{grid-template-columns:minmax(0,1fr) 88px!important;gap:8px!important}
+ #homeworkList .v297PlannerActions,#testList .v297PlannerActions{min-width:0!important;gap:5px!important}
+ #homeworkList .v297PlannerMain .row{min-width:0!important}
+ #homeworkList .v297PlannerMain .row>div{min-width:0!important;max-width:100%!important}
+ #homeworkList .v297PlannerTitle,#testList .v297PlannerTitle{font-size:clamp(12px,3.3vw,16px)!important}
+}
+@media(max-width:355px){
+ #view-subject-detail .v102TopicGrid{grid-template-columns:1fr!important}
+ #view-topic-detail .v102SubjectIdentity h2{font-size:27px!important}
+ #view-topic-detail .v102ResourceCard{grid-template-columns:48px minmax(0,1fr) 16px!important;padding:12px!important}
+ #view-topic-detail .v102ResourceIcon{width:48px!important;height:48px!important}
+}
+
+</style>
+<script id="studia-v299-final-js">
+(()=>{
+ 'use strict';
+ if(window.__STUDIA_V299__)return;
+ window.__STUDIA_V299__=true;
+ const q=(s,r=document)=>r?.querySelector?.(s)||null;
+ const qa=(s,r=document)=>r?.querySelectorAll?[...r.querySelectorAll(s)]:[];
+ const pencil='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 20 4.1-1.1 10.8-10.8a2.2 2.2 0 0 0-3.1-3.1L5 15.8z"/><path d="m14.2 6.6 3.2 3.2"/></svg>';
+ const allCards=()=>q('#view-deck-detail.active');
+ const version=()=>{const e=q('#headerEyebrow');if(e&&e.textContent!=='VERSION 299')e.textContent='VERSION 299'};
+ function currentMode(){return localStorage.getItem('studia-v298-deck-mode')==='edit'?'edit':'learn'}
+ function fixDeckChrome(){
+   const view=q('#view-deck-detail');if(!view)return;
+   const head=q(':scope > .sectionHead',view);if(!head)return;
+   qa('.v299DeckModeSwitch',head).slice(1).forEach(x=>x.remove());
+   let sw=q('.v299DeckModeSwitch',head);
+   if(!sw){
+     sw=document.createElement('div');sw.className='v299DeckModeSwitch';sw.setAttribute('role','group');sw.setAttribute('aria-label','Karteikartenansicht');
+     sw.innerHTML='<button type="button" data-v299-mode="learn">Lernen</button><button type="button" data-v299-mode="edit">Bearbeiten</button>';
+     head.insertBefore(sw,q('#addCardToDeckBtn',head)||null);
+   }
+   const mode=currentMode();
+   qa('[data-v299-mode]',sw).forEach(b=>{b.classList.toggle('active',b.dataset.v299Mode===mode);b.setAttribute('aria-pressed',String(b.dataset.v299Mode===mode))});
+ }
+ function changeMode(mode){
+   if(mode!=='edit'&&mode!=='learn')return;
+   localStorage.setItem('studia-v298-deck-mode',mode);
+   try{window.v298SetDeckMode(mode)}catch(err){console.error('Studia Umschalter',err)}
+   requestAnimationFrame(fixDeckChrome);
+ }
+ /* Capture-phase delegation precedes old click handlers and ensures the edit tab is always usable. */
+ document.addEventListener('click',e=>{
+   const target=e.target instanceof Element?e.target.closest('[data-v299-mode]'):null;
+   if(!target||!target.closest('#view-deck-detail'))return;
+   e.preventDefault();e.stopImmediatePropagation();changeMode(target.dataset.v299Mode);
+ },true);
+ function fixTopicControls(){
+   const pane=q('#topicDetail');if(!pane)return;
+   const head=q('.v102TopicPageHead',pane);if(!head)return;
+   const edit=q('.v102TopicPageHead .v102RoundIcon',pane);
+   if(edit&&!edit.classList.contains('v102TopicEdit')){
+     edit.classList.add('v102TopicEdit');edit.innerHTML=pencil;edit.title='Thema bearbeiten';edit.setAttribute('aria-label','Thema bearbeiten');
+     edit.setAttribute('type','button');
+   }
+   const add=q('.v102TopicPageHead .v102OnlyPlus',pane);
+   if(add&&!add.classList.contains('v299OnlyPlus')){
+     add.classList.add('v299OnlyPlus');add.innerHTML='<span aria-hidden="true">＋</span>';
+     add.title='Hinzufügen';add.setAttribute('aria-label','Inhalt hinzufügen');add.setAttribute('type','button');
+   }
+ }
+ const prevTopic=window.renderTopicDetail||((typeof renderTopicDetail==='function')?renderTopicDetail:null);
+ if(typeof prevTopic==='function'&&!prevTopic.__v299){
+   const replacement=function(){const ret=prevTopic.apply(this,arguments);fixTopicControls();return ret};
+   replacement.__v299=true;window.renderTopicDetail=replacement;
+   try{renderTopicDetail=replacement}catch(_){}
+ }
+ const oldSaveTopic=window.saveTopicEdit;
+ if(typeof oldSaveTopic==='function'&&!oldSaveTopic.__v299){
+   const editSaved=function(){const ret=oldSaveTopic.apply(this,arguments);try{renderTopicDetail()}catch(_){}return ret};
+   editSaved.__v299=true;window.saveTopicEdit=editSaved;
+ }
+ /* Selecting photos must not trigger old form upload/create actions; the file input retains selected files. */
+ document.addEventListener('change',e=>{
+   if(e.target?.id==='v297HwFiles')e.stopImmediatePropagation();
+ },true);
+ /* One in-place homework transaction. Existing file references stay on the very same homework ID. */
+ let savingHomework=false;
+ window.v297SaveHomework=async function(editId=''){
+   if(savingHomework)return;
+   const prefix='v297Hw';
+   const description=(q('#'+prefix+'Text')?.value||'').trim();
+   if(!/[\p{L}\p{N}]/u.test(description)){alert('Bitte eine Aufgabe eintragen.');return}
+   savingHomework=true;
+   const saveButton=q('#modalWrap .v297PlannerActionsSticky .primary');
+   if(saveButton){saveButton.disabled=true;saveButton.setAttribute('aria-busy','true')}
+   try{
+     const sid=String(editId||'');
+     let existing=sid?(data.homework||[]).find(x=>String(x.id)===sid):null;
+     const item=existing||{id:(typeof id==='function'?id():'hw-'+Date.now()),done:false,created:Date.now(),files:[]};
+     item.subject=q('#'+prefix+'Subject')?.value||item.subject||'';
+     item.due=q('#'+prefix+'Date')?.value||item.due||(typeof todayISO==='function'?todayISO():'');
+     item.text=description;
+     item.note=(q('#'+prefix+'Note')?.value||'').trim();
+     const offsets=qa('#'+prefix+'ReminderRows .v298ReminderInput').map(x=>String(x.value||'').trim()).filter(Boolean).map(Number).filter(Number.isFinite).map(x=>Math.max(0,Math.min(60,Math.round(x))));
+     item.reminderOffsets=[...new Set(offsets)].sort((a,b)=>b-a).slice(0,5);
+     item.reminderDays=item.reminderOffsets[0]??0;item.reminderCount=item.reminderOffsets.length;
+     const selected=[...(q('#'+prefix+'Files')?.files||[])];
+     if(selected.length){
+       await storeEntityFiles(item,selected);
+       const attachmentNames=new Set(selected.map(f=>f.name));
+       // Repair phantom file-only tasks made by an earlier uploader, without touching real tasks.
+       for(const phantom of [...(data.homework||[])]){
+         if(phantom===item||String(phantom.id)===String(item.id)||/[\p{L}\p{N}]/u.test(String(phantom.text||'')+String(phantom.note||'')+String(phantom.subject||'')))continue;
+         const matched=(phantom.files||[]).filter(f=>attachmentNames.has(String(f.name||'')));
+         if(!matched.length)continue;
+         item.files ||= [];
+         const savedIds=new Set(item.files.map(f=>String(f.id)));
+         for(const f of matched)if(!savedIds.has(String(f.id)))item.files.push(f);
+         data.homework=data.homework.filter(x=>x!==phantom);
+       }
+       item.files=[...new Map((item.files||[]).map(f=>[String(f.id),f])).values()];
+     }
+     if(!existing)data.homework.push(item);
+     save();closeModal();
+     try{renderTasks()}catch(_){};
+     try{renderHome()}catch(_){};
+   }catch(err){
+     console.error('Studia: Hausaufgabe mit Datei speichern',err);
+     alert('Speichern fehlgeschlagen. Die Aufgabe wurde nicht als neue leere Aufgabe angelegt. Bitte erneut versuchen.');
+   }finally{
+     savingHomework=false;
+     if(saveButton){saveButton.disabled=false;saveButton.removeAttribute('aria-busy')}
+   }
+ };
+ window.addHomework=()=>window.v297SaveHomework();
+ window.saveHomeworkEdit=key=>window.v297SaveHomework(key);
+ function tidy(){version();if(q('#view-deck-detail.active'))fixDeckChrome();if(q('#view-topic-detail.active'))fixTopicControls()}
+ let queued=false;
+ const queue=()=>{if(queued)return;queued=true;setTimeout(()=>{queued=false;tidy()},20)};
+ const beforeOpen=window.openView;
+ if(typeof beforeOpen==='function'&&!beforeOpen.__v299){
+   const wrapped=function(){const result=beforeOpen.apply(this,arguments);queue();return result};
+   wrapped.__v299=true;window.openView=wrapped;try{openView=wrapped}catch(_){}
+ }
+ document.addEventListener('click',queue,false);
+ window.addEventListener('pageshow',queue);
+ window.addEventListener('resize',queue,{passive:true});
+ [0,120,500,1200,2600,4600,7000].forEach(n=>setTimeout(queue,n));
+})();
+
 </script>
