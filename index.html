@@ -3051,11 +3051,11 @@ html,body{background:#fff7f4;}
   </div>
 
   <section class="view active" id="view-home">
-    <div class="homeMiniActions">
-      <button onclick="openAddHomework()"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="14" height="16" rx="2"/><path d="M9 4V2h6v2M9 9h6M9 13h6M9 17h4"/></svg><span>Aufgabe</span></button>
-      <button onclick="openAddTest()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v5h5M9 12h6M9 16h4"/></svg><span>Test</span></button>
-      <button onclick="openView('subjects')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H20v16H7.5A3.5 3.5 0 0 0 4 21.5z"/><path d="M4 5.5v16"/></svg><span>Fächer</span></button>
-      <button onclick="openView('study')"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Lernen</span></button>
+    <div class="homeMiniActions v297HomeActions">
+      <button onclick="openAddHomework()" aria-label="Aufgabe hinzufügen"><span class="v297QuickIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="14" height="16" rx="3"/><path d="M9 4V2.5h6V4M8.5 10.5l1.7 1.7 4-4M8.5 16h7"/></svg></span><span>Aufgabe</span></button>
+      <button onclick="openAddTest()" aria-label="Test hinzufügen"><span class="v297QuickIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v5h5M10 12h5M10 16h5"/><path d="M4.5 7.5h4"/></svg></span><span>Test</span></button>
+      <button onclick="openView('subjects')" aria-label="Fächer öffnen"><span class="v297QuickIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 5.5A3.5 3.5 0 0 1 8 2.5h4v16H8a3.5 3.5 0 0 0-3.5 3z"/><path d="M19.5 5.5A3.5 3.5 0 0 0 16 2.5h-4v16h4a3.5 3.5 0 0 1 3.5 3z"/></svg></span><span>Fächer</span></button>
+      <button onclick="openView('study')" aria-label="Lernen öffnen"><span class="v297QuickIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7.5 12 3l8 4.5-8 4.5z"/><path d="M7 10.5v5c2.8 2 7.2 2 10 0v-5M20 8v6"/></svg></span><span>Lernen</span></button>
     </div>
     <div class="panel" id="nextPanel"></div>
 
@@ -3464,10 +3464,15 @@ html,body{background:#fff7f4;}
       <h2>Design anpassen 🎨</h2>
       <p class="small">Wähle deinen Look. Deine Inhalte bleiben gleich.</p>
       <div class="themeSwatches" id="themeSwatches">
-        <button class="themeSwatch" data-theme="blossom" style="background:linear-gradient(135deg,#fff5f4,#efaaa6)"></button>
-        <button class="themeSwatch" data-theme="matcha" style="background:linear-gradient(135deg,#f6f7e9,#a8c687)"></button>
-        <button class="themeSwatch" data-theme="lavender" style="background:linear-gradient(135deg,#f8f2ff,#c5addf)"></button>
-        <button class="themeSwatch" data-theme="sky" style="background:linear-gradient(135deg,#f1f8ff,#9fc6e8)"></button>
+        <button type="button" class="themeSwatch" data-theme="blossom" aria-label="Blütenrosa" style="background:linear-gradient(135deg,#fff5f4,#efaaa6)"></button>
+        <button type="button" class="themeSwatch" data-theme="matcha" aria-label="Matcha" style="background:linear-gradient(135deg,#f6f7e9,#a8c687)"></button>
+        <button type="button" class="themeSwatch" data-theme="lavender" aria-label="Lavendel" style="background:linear-gradient(135deg,#f8f2ff,#c5addf)"></button>
+        <button type="button" class="themeSwatch" data-theme="sky" aria-label="Himmelblau" style="background:linear-gradient(135deg,#f1f8ff,#9fc6e8)"></button>
+        <button type="button" class="themeSwatch v297CustomSwatch" data-theme="custom" id="customThemeSwatch" aria-label="Eigene Farbe"><span>＋</span></button>
+      </div>
+      <div class="v297CustomThemeRow">
+        <label for="customThemeColor"><span>Eigene Farbe</span><small>Akzent und Hintergrund werden passend daraus erzeugt.</small></label>
+        <input id="customThemeColor" type="color" value="#efaaa6" aria-label="Eigene Designfarbe">
       </div>
       <label style="margin-top:12px"><input id="compactToggle" type="checkbox" style="width:auto;margin-right:8px"> Kompaktere Karten & Abstände</label>
       <button class="ghost" style="margin-top:10px" onclick="saveCustomization()">Design speichern</button>
@@ -10178,21 +10183,27 @@ function updateNotificationUI(){
  el.textContent=p==="granted"?"✓ Benachrichtigungen sind aktiviert.":p==="denied"?"Benachrichtigungen wurden blockiert.":"Benachrichtigungen können jetzt aktiviert werden.";
 }
 function reminderKey(type,id,date){return `${type}|${id}|${date}`}
+function reminderOffsets(item,fallbackDays=0){
+ const start=Math.max(0,Math.min(60,Number(item?.reminderDays ?? item?.reminder ?? fallbackDays)||0));
+ const count=Math.max(0,Math.min(7,Number(item?.reminderCount ?? 1)||0));
+ const out=[];for(let i=0;i<count;i++)out.push(Math.max(0,start-i));
+ return [...new Set(out)];
+}
 function checkReminders(){
  if(!("Notification" in window)||Notification.permission!=="granted")return;
- const now=new Date(), today=todayISO();
+ const now=new Date(),today=todayISO();
  const sent=JSON.parse(localStorage.getItem("schoolbloom-sent-reminders")||"{}");
- for(const t of data.tests){
-   const days=calendarDaysUntil(t.date,now);
-   if(days!=null && days>=0 && days<=Number(t.reminder||1)){
-     const k=reminderKey("test",t.id,today);
-     if(!sent[k]){new Notification(`📚 ${t.subject}: ${t.type}`,{body:days===0?"Heute!":`In ${days} Tag${days===1?"":"en"}${t.text?" · "+t.text:""}`});sent[k]=1}
+ const send=(key,title,body)=>{if(sent[key])return;new Notification(title,{body});sent[key]=1};
+ for(const t of data.tests||[]){
+   const days=calendarDaysUntil(t.date,now);if(days==null||days<0)continue;
+   if(reminderOffsets(t,Number(t.reminder||1)).includes(days)){
+     send(reminderKey("test",t.id,today),`📚 ${t.subject}: ${t.type}`,days===0?"Heute!":`In ${days} Tag${days===1?"":"en"}${t.text?" · "+t.text:""}`);
    }
  }
- for(const x of data.homework.filter(x=>!x.done)){
-   if(x.due===today){
-     const k=reminderKey("hw",x.id,today);
-     if(!sent[k]){new Notification(`📝 Hausaufgabe: ${x.subject}`,{body:x.text});sent[k]=1}
+ for(const x of (data.homework||[]).filter(x=>!x.done)){
+   const days=calendarDaysUntil(x.due,now);if(days==null||days<0)continue;
+   if(reminderOffsets(x,0).includes(days)){
+     send(reminderKey("hw",x.id,today),`📝 Hausaufgabe: ${x.subject}`,days===0?x.text:`In ${days} Tag${days===1?"":"en"} · ${x.text}`);
    }
  }
  localStorage.setItem("schoolbloom-sent-reminders",JSON.stringify(sent));
@@ -10207,24 +10218,59 @@ const themes={
  lavender:{bg:"#faf5ff",accent:"#bca5dc",text:"#61586b"},
  sky:{bg:"#f3f9ff",accent:"#94bfe3",text:"#516373"}
 };
+function normalizeHexColor(c){
+ c=String(c||"").trim();if(/^#[0-9a-f]{6}$/i.test(c))return c.toLowerCase();return "#efaaa6";
+}
+function mixHex(a,b,t){
+ a=normalizeHexColor(a).slice(1);b=normalizeHexColor(b).slice(1);t=Math.max(0,Math.min(1,Number(t)||0));
+ const A=[0,2,4].map(i=>parseInt(a.slice(i,i+2),16)),B=[0,2,4].map(i=>parseInt(b.slice(i,i+2),16));
+ return "#"+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,"0")).join("");
+}
+function currentTheme(){
+ const key=data.customization?.theme||"blossom";
+ if(key==="custom"){
+   const accent=normalizeHexColor(data.customization?.customColor||"#efaaa6");
+   return {bg:mixHex(accent,"#ffffff",.91),accent,text:mixHex(accent,"#3f332f",.7)};
+ }
+ return themes[key]||themes.blossom;
+}
+function contrastInk(hex){
+ const h=normalizeHexColor(hex).slice(1),rgb=[0,2,4].map(i=>parseInt(h.slice(i,i+2),16));
+ const lum=(rgb[0]*299+rgb[1]*587+rgb[2]*114)/1000;
+ return lum>172?"#594d48":"#ffffff";
+}
 function applyCustomization(){
- const t=themes[data.customization?.theme||"blossom"]||themes.blossom;
- document.documentElement.style.setProperty("--bg",t.bg);
- document.documentElement.style.setProperty("--accent",t.accent);
- document.documentElement.style.setProperty("--text",t.text);
+ data.customization ||= {theme:"blossom",compact:false,customColor:"#efaaa6"};
+ const t=currentTheme(),root=document.documentElement;
+ root.style.setProperty("--bg",t.bg);root.style.setProperty("--accent",t.accent);root.style.setProperty("--text",t.text);
+ root.style.setProperty("--studia-theme-bg",t.bg);root.style.setProperty("--studia-theme-accent",t.accent);root.style.setProperty("--studia-theme-text",t.text);
+ root.style.setProperty("--studia-theme-soft",mixHex(t.accent,"#ffffff",.84));
+ root.style.setProperty("--studia-theme-line",mixHex(t.accent,"#ffffff",.63));
+ root.style.setProperty("--studia-accent-ink",contrastInk(t.accent));
+ document.body.style.background=`radial-gradient(circle at 10% 4%,${mixHex(t.accent,"#ffffff",.73)} 0,transparent 26rem),radial-gradient(circle at 92% 18%,${mixHex(t.accent,"#ffffff",.84)} 0,transparent 25rem),linear-gradient(180deg,${t.bg},${mixHex(t.bg,"#fffdf8",.55)})`;
  document.body.classList.toggle("compact",!!data.customization?.compact);
+ const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=t.bg;
 }
+window.previewCustomTheme=function(color){
+ data.customization ||= {};data.customization.customColor=normalizeHexColor(color);data.customization.theme="custom";applyCustomization();
+ const sw=document.querySelector("#customThemeSwatch");if(sw)sw.style.background=`linear-gradient(135deg,${mixHex(data.customization.customColor,"#ffffff",.78)},${data.customization.customColor})`;
+ document.querySelectorAll("#themeSwatches .themeSwatch").forEach(x=>x.classList.toggle("active",x.dataset.theme==="custom"));
+};
 window.saveCustomization=function(){
- data.customization.theme=$("#themeSwatches .active")?.dataset.theme||data.customization.theme||"blossom";
- data.customization.compact=$("#compactToggle").checked;save();applyCustomization();alert("Design gespeichert 🌷")
-}
+ data.customization ||= {};
+ data.customization.theme=document.querySelector("#themeSwatches .active")?.dataset.theme||data.customization.theme||"blossom";
+ data.customization.customColor=normalizeHexColor(document.querySelector("#customThemeColor")?.value||data.customization.customColor||"#efaaa6");
+ data.customization.compact=!!document.querySelector("#compactToggle")?.checked;
+ save();applyCustomization();try{cuteToast?.("Design gespeichert ✓")}catch(_){alert("Design gespeichert 🌷")}
+};
 
 function renderSettings(){
  updateNotificationUI();updateAIStatus();
  $("#setName").value=data.settings.name||"";$("#setClass").value=data.settings.className||"";$("#setSchool").value=data.settings.school||"";$("#setPet").value=data.settings.pet||"on";$("#setPdf").value=data.settings.pdf||"";
  $$("#profileType button").forEach(b=>b.classList.toggle("active",b.dataset.type===data.settings.type));
  $$("#profileType button").forEach(b=>b.onclick=()=>{$$("#profileType button").forEach(x=>x.classList.remove("active"));b.classList.add("active");data.settings.type=b.dataset.type});
- $$("#themeSwatches .themeSwatch").forEach(b=>{b.classList.toggle("active",b.dataset.theme===(data.customization?.theme||"blossom"));b.onclick=()=>{$$("#themeSwatches .themeSwatch").forEach(x=>x.classList.remove("active"));b.classList.add("active")}});
+ $$("#themeSwatches .themeSwatch").forEach(b=>{b.classList.toggle("active",b.dataset.theme===(data.customization?.theme||"blossom"));b.onclick=()=>{$$("#themeSwatches .themeSwatch").forEach(x=>x.classList.remove("active"));b.classList.add("active");if(b.dataset.theme==="custom"){const c=$("#customThemeColor")?.value||data.customization?.customColor||"#efaaa6";previewCustomTheme(c)}}});
+ const custom=$("#customThemeColor");if(custom){custom.value=normalizeHexColor(data.customization?.customColor||"#efaaa6");custom.oninput=()=>previewCustomTheme(custom.value);const sw=$("#customThemeSwatch");if(sw)sw.style.background=`linear-gradient(135deg,${mixHex(custom.value,"#ffffff",.78)},${custom.value})`}
  if($("#compactToggle"))$("#compactToggle").checked=!!data.customization?.compact;
 }
 window.saveSettings=function(){data.settings.name=$("#setName").value.trim();data.settings.className=$("#setClass").value.trim()||"M U1";data.settings.school=$("#setSchool").value.trim();data.settings.pet=$("#setPet").value;data.settings.pdf=$("#setPdf").value.trim();data.timetable.selectedClass=data.settings.className;
@@ -22112,24 +22158,9 @@ window.v292SetDeckMode=function(mode){
 };
 window.v214SetLearningMode=window.v215SetDeckMode=window.v216SetLearningMode=window.v217SetLearnMode=window.v292SetDeckMode;
 function normalizeDeckMode(){
-  const view=q('#view-deck-detail');if(!view)return;
-  document.body.classList.toggle('v292DeckLearn',deckMode==='learn');
-  document.body.classList.toggle('v214LearningReadOnly',deckMode==='learn');
-  const head=q(':scope > .sectionHead',view);if(!head)return;
-  qa('.v214LearnModeSwitch,.v215DeckModeSwitch,.v217DeckModeSwitch',head).forEach(x=>x.remove());
-  let sw=q(':scope > .v292DeckModeSwitch',head);
-  if(!sw){
-    sw=document.createElement('div');sw.className='v292DeckModeSwitch';
-    sw.innerHTML='<button type="button" data-v292-mode="learn">Lernen</button><button type="button" data-v292-mode="edit">Bearbeiten</button>';
-    sw.addEventListener('click',e=>{const b=e.target.closest('[data-v292-mode]');if(b)window.v292SetDeckMode(b.dataset.v292Mode)});
-    head.insertBefore(sw,q('#addCardToDeckBtn',head)||null);
-  }
-  for(const b of qa('[data-v292-mode]',sw))b.classList.toggle('active',b.dataset.v292Mode===deckMode);
-  const add=q('#addCardToDeckBtn',view);if(add)add.style.display=deckMode==='edit'?'':'none';
-  for(const b of qa('#deckDetail button',view)){
-    const t=(b.textContent||'').replace(/\u200b/g,'').trim().toLowerCase();
-    if(['bearbeiten','löschen','umbenennen'].includes(t))b.style.display=deckMode==='edit'?'':'none';
-  }
+  /* V297 is the single owner of the deck mode UI. */
+  const head=q('#view-deck-detail > .sectionHead');if(!head)return;
+  qa('.v214LearnModeSwitch,.v215DeckModeSwitch,.v217DeckModeSwitch,.v292DeckModeSwitch',head).forEach(x=>x.remove());
 }
 
 let queued=false;
@@ -22142,3 +22173,391 @@ const setVersion=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 29
 })();
 </script>
 <!-- ===== /Studia V292 ===== -->
+<style id="studia-v297-ui-owner">
+/* V297 owns only planner/home/theme/flashcard presentation. Legacy flashcard switches stay hidden. */
+#view-deck-detail .v214LearnModeSwitch,
+#view-deck-detail .v215DeckModeSwitch,
+#view-deck-detail .v217DeckModeSwitch,
+#view-deck-detail .v292DeckModeSwitch{display:none!important}
+
+:root{
+  --studia-theme-bg:#fff5f4;
+  --studia-theme-accent:#efaaa6;
+  --studia-theme-text:#66584f;
+  --studia-theme-soft:#fff0ef;
+  --studia-theme-line:#efc8c1;
+  --studia-accent-ink:#fff;
+}
+
+/* One consistent quick-action icon language. */
+.v297HomeActions button{min-width:0!important;overflow:hidden}
+.v297HomeActions .v297QuickIcon{
+  display:grid;place-items:center;width:30px;height:30px;margin:0 auto 5px;border-radius:10px;
+  background:var(--studia-theme-soft);color:var(--studia-theme-text)
+}
+.v297HomeActions .v297QuickIcon svg{
+  width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round
+}
+.v297HomeActions button>span:last-child{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Theme selection really affects the active UI instead of only old variables. */
+body .primary,
+body .nav button.active,
+body .tab.active,
+body .profileType button.active{
+  background:var(--studia-theme-accent)!important;
+  border-color:var(--studia-theme-accent)!important;
+  color:var(--studia-accent-ink)!important;
+}
+body .homeMiniActions button:active,
+body .homeMiniActions button:hover{border-color:var(--studia-theme-line)!important}
+body .kawaiiSticker,
+body .v297QuickIcon{background:var(--studia-theme-soft)!important}
+body .themeSwatch.active{border-color:var(--studia-theme-text)!important;box-shadow:0 0 0 3px color-mix(in srgb,var(--studia-theme-accent) 20%,transparent)}
+.v297CustomSwatch{display:grid;place-items:center;color:var(--studia-theme-text);font-size:22px;font-weight:700}
+.v297CustomThemeRow{
+  display:grid;grid-template-columns:minmax(0,1fr) 58px;gap:12px;align-items:center;margin-top:12px;
+  padding:11px 12px;border:1px solid var(--line);border-radius:16px;background:#fffdfa
+}
+.v297CustomThemeRow label{margin:0;display:grid;gap:2px}
+.v297CustomThemeRow label span{font-size:12px;color:#725f56;font-weight:900}
+.v297CustomThemeRow label small{font-size:9px;color:#a18a82;line-height:1.35}
+.v297CustomThemeRow input[type=color]{width:58px;height:44px;padding:4px;border-radius:12px;background:#fff}
+
+/* Planner cards: never spill outside the viewport. */
+.v297PlannerCard{
+  display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:12px!important;align-items:center!important;
+  width:100%!important;min-width:0!important;overflow:hidden!important
+}
+.v297PlannerMain{min-width:0!important;overflow:hidden}
+.v297PlannerTitle{display:block;min-width:0;overflow-wrap:anywhere;word-break:break-word;font-weight:900;color:#65564f}
+.v297PlannerMeta{margin-top:4px;overflow-wrap:anywhere;word-break:break-word}
+.v297PlannerActions{display:flex;align-items:center;justify-content:flex-end;gap:7px;min-width:max-content}
+.v297IconBtn{
+  display:grid!important;place-items:center!important;width:38px!important;height:38px!important;min-width:38px!important;padding:0!important;
+  border:1px solid #ecd1cb!important;border-radius:12px!important;background:#fffaf6!important;color:#8e6f68!important
+}
+.v297IconBtn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.v297IconBtn.danger{background:#fff2f1!important;color:#bd6e73!important;border-color:#efc8c8!important}
+.v297ReminderText{display:inline-flex;gap:4px;align-items:center}
+
+/* One stable modal layout for homework/tests. */
+#modalWrap .modal.v297PlannerModal{
+  width:min(680px,calc(100vw - 24px))!important;max-width:680px!important;
+  max-height:min(88dvh,820px)!important;overflow-x:hidden!important;overflow-y:auto!important;
+  overscroll-behavior:contain!important;touch-action:pan-y!important;padding:0!important
+}
+.v297PlannerModal .v297PlannerBody{display:grid;gap:14px;padding:18px 18px 0;min-width:0}
+.v297PlannerModal .v297PlannerHead{
+  position:sticky;top:0;z-index:5;margin:0 -18px;padding:16px 18px 12px;
+  background:rgba(255,250,246,.97);backdrop-filter:blur(12px);border-bottom:1px solid #f0dfda
+}
+.v297PlannerModal .v297PlannerHead h2{margin:0}
+.v297PlannerModal .formGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:11px!important;min-width:0!important}
+.v297PlannerModal .formGrid>*{min-width:0!important}
+.v297PlannerModal input,.v297PlannerModal select,.v297PlannerModal textarea{
+  width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important
+}
+.v297PlannerModal textarea{min-height:105px;resize:vertical}
+.v297ReminderGrid{
+  grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;
+  padding:11px;border:1px solid #eed9d3;border-radius:15px;background:#fff9f7
+}
+.v297ReminderGrid label{margin:0}
+.v297ReminderHint{grid-column:1/-1;font-size:9px;color:#9d857d;line-height:1.4}
+.v297PlannerActionsSticky{
+  position:sticky;bottom:0;z-index:6;display:flex;justify-content:flex-end;gap:8px;
+  margin:2px -18px 0;padding:12px 18px calc(14px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg,rgba(255,250,246,.75),#fffaf6 22%);border-top:1px solid #f0dfda
+}
+.v297PlannerActionsSticky button{min-height:44px}
+
+/* Exactly one flashcard mode switch + one deck UI. */
+#view-deck-detail .sectionHead{align-items:center;gap:8px;flex-wrap:wrap}
+.v297DeckModeSwitch{
+  display:flex;gap:4px;padding:4px;margin-left:auto;border:1px solid #ecd8d2;border-radius:14px;background:#f8efec
+}
+.v297DeckModeSwitch button{
+  min-height:38px;border:0;border-radius:10px;background:transparent;color:#8b746c;padding:0 13px;font-weight:900;font-size:11px
+}
+.v297DeckModeSwitch button.active{background:#fff;color:#655650;box-shadow:0 2px 8px rgba(93,65,57,.08)}
+.v297DeckHero{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+.v297DeckHero h2{margin:3px 0 0;font-size:clamp(26px,5vw,40px)}
+.v297StudyWrap{display:grid;gap:12px;max-width:760px;margin:0 auto}
+.v297StudyCard{
+  position:relative;min-height:360px;border:1px solid #e8cbc7;border-radius:28px;background:linear-gradient(145deg,#fffdf9,#fff3f2);
+  box-shadow:0 16px 35px rgba(122,84,76,.08);display:grid;place-items:center;padding:28px;text-align:center;cursor:pointer;overflow:hidden
+}
+.v297StudyCard:before{content:"";position:absolute;right:-45px;top:-45px;width:130px;height:130px;border-radius:50%;background:var(--studia-theme-soft)}
+.v297StudyCard .badge{position:relative}
+.v297StudyCardText{position:relative;margin-top:18px;font-size:clamp(24px,5vw,38px);line-height:1.16;font-weight:950;color:#526048;overflow-wrap:anywhere}
+.v297StudyCard.answer .v297StudyCardText{color:#655650}
+.v297StudyHint{position:relative;margin-top:18px;color:#a18b83;font-size:12px}
+.v297RateRow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.v297RateRow button{min-height:52px;border-radius:14px;border:1px solid #e8d4cf;background:#fff;font-weight:900;color:#695953}
+.v297RateRow .good{background:#f1f7e8;border-color:#d7e5c2;color:#67824f}
+.v297RateRow .meh{background:#fff7e4;border-color:#ecd9a9;color:#9a7744}
+.v297RateRow .bad{background:#fff0ef;border-color:#efc7c6;color:#aa666a}
+.v297DeckProgress{text-align:center;color:#9b837b;font-size:11px}
+.v297RoundDone{padding:34px 20px;text-align:center;border:1px dashed #e3c9c3;border-radius:22px;background:#fffaf6}
+.v297RoundDone h3{font-size:24px;margin:0 0 6px}
+.v297DeckEditList{display:grid;gap:9px}
+.v297DeckEditCard{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:13px;
+  border:1px solid #ead6d0;border-radius:17px;background:#fffdf9;min-width:0
+}
+.v297DeckEditText{min-width:0}
+.v297DeckEditText b,.v297DeckEditText small{display:block;overflow-wrap:anywhere;word-break:break-word}
+.v297DeckEditText small{margin-top:4px;color:#9b837a;line-height:1.4}
+.v297DeckEditActions{display:flex;gap:6px}
+.v297DeckEmpty{padding:28px;text-align:center;border:1px dashed #e4cfca;border-radius:18px;color:#9c857c}
+
+@media(max-width:700px){
+  #modalWrap.modalWrap.open{align-items:center!important;padding:max(10px,env(safe-area-inset-top)) 10px max(10px,env(safe-area-inset-bottom))!important}
+  #modalWrap .modal.v297PlannerModal{
+    width:calc(100vw - 20px)!important;max-height:calc(100dvh - max(20px,env(safe-area-inset-top)) - max(20px,env(safe-area-inset-bottom)))!important;
+    border-radius:24px!important
+  }
+  .v297PlannerModal .v297PlannerBody{padding:14px 14px 0}
+  .v297PlannerModal .v297PlannerHead{margin:0 -14px;padding:14px}
+  .v297PlannerModal .formGrid{grid-template-columns:1fr!important}
+  .v297ReminderGrid{grid-template-columns:1fr!important}
+  .v297PlannerActionsSticky{margin:2px -14px 0;padding:10px 14px calc(12px + env(safe-area-inset-bottom))}
+  .v297PlannerCard{grid-template-columns:minmax(0,1fr)!important}
+  .v297PlannerActions{justify-content:flex-start;min-width:0;flex-wrap:wrap}
+  .v297PlannerActions .badge{max-width:100%!important}
+  .v297StudyCard{min-height:330px;padding:22px 16px}
+  .v297RateRow{grid-template-columns:1fr!important}
+  .v297DeckEditCard{grid-template-columns:minmax(0,1fr)!important}
+  .v297DeckEditActions{justify-content:flex-end}
+  .v297DeckModeSwitch{order:3;width:100%;margin:4px 0 0}
+  .v297DeckModeSwitch button{flex:1}
+  #view-deck-detail #addCardToDeckBtn{margin-left:auto}
+}
+</style>
+<script id="studia-v297-single-owner">
+(()=>{
+'use strict';
+if(window.__STUDIA_V297__)return;window.__STUDIA_V297__=true;
+const q=(s,r=document)=>r?.querySelector?.(s)||null;
+const qa=(s,r=document)=>r?.querySelectorAll?[...r.querySelectorAll(s)]:[];
+const html=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const js=v=>JSON.stringify(String(v??'')).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+const pencil=`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 20 4.2-1 10.7-10.7a2.3 2.3 0 0 0-3.2-3.2L5 15.8z"/><path d="m14.7 6.1 3.2 3.2"/></svg>`;
+const trash=`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M9 7V4h6v3M8 10v8M12 10v8M16 10v8M7 7l1 14h8l1-14"/></svg>`;
+const repeatIcon=`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h11a5 5 0 0 1 0 10H8"/><path d="m7 4-3 3 3 3"/></svg>`;
+
+function markPlannerModal(){
+ const m=q('#modalWrap .modal');if(m)m.classList.add('v297PlannerModal');
+}
+function reminderFields(prefix,item,defaultDays){
+ const days=Math.max(0,Number(item?.reminderDays ?? item?.reminder ?? defaultDays)||0);
+ const count=Math.max(0,Number(item?.reminderCount ?? 1)||0);
+ return `<div class="v297ReminderGrid">
+   <label>Erste Erinnerung<input id="${prefix}ReminderDays" type="number" min="0" max="60" inputmode="numeric" value="${days}"><small>Tage vorher</small></label>
+   <label>Anzahl Erinnerungen<input id="${prefix}ReminderCount" type="number" min="0" max="7" inputmode="numeric" value="${count}"><small>0 = aus</small></label>
+   <div class="v297ReminderHint">Bei mehreren Erinnerungen erinnert Studia täglich weiter bis zum Termin bzw. bis die gewünschte Anzahl erreicht ist.</div>
+ </div>`;
+}
+function plannerModal(kind,item=null){
+ const edit=!!item,hw=kind==='homework',prefix=hw?'v297Hw':'v297Test';
+ const title=hw?(edit?'Hausaufgabe bearbeiten':'Hausaufgabe hinzufügen'):(edit?'Test / Prüfung bearbeiten':'Test / Prüfung hinzufügen');
+ const subject=item?.subject||'',date=(hw?item?.due:item?.date)||todayISO(),text=item?.text||'',note=item?.note||'';
+ openModal(`<div class="v297PlannerBody">
+   <div class="v297PlannerHead"><div class="eyebrow">${hw?'AUFGABE':'TERMIN'}</div><h2>${title}</h2></div>
+   <div class="formGrid">
+     <div><label>Fach</label><select id="${prefix}Subject">${subjectOptions()}</select></div>
+     <div><label>${hw?'Fällig':'Datum'}</label><input id="${prefix}Date" type="date" value="${html(date)}"></div>
+     ${hw?'':`<div class="full"><label>Art</label><select id="${prefix}Type"><option>Test</option><option>Klassenarbeit</option><option>Präsentation</option><option>Prüfung</option><option>Benotete Abgabe</option></select></div>`}
+     <div class="full"><label>${hw?'Aufgabe':'Beschreibung / Themen'}</label><textarea id="${prefix}Text" placeholder="${hw?'z. B. Seite 42, Aufgabe 3–5':'Was kommt dran?'}">${html(text)}</textarea></div>
+     ${hw?`<div class="full"><label>Notiz</label><input id="${prefix}Note" value="${html(note)}" placeholder="optional"></div>`:''}
+     ${reminderFields(prefix,item,hw?1:Number(item?.reminder||3)||3)}
+     <div class="full"><label>Fotos / Dateien</label><input id="${prefix}Files" type="file" multiple accept="image/*,.pdf,.doc,.docx,.ppt,.pptx"></div>
+   </div>
+   <div class="v297PlannerActionsSticky">
+     <button type="button" class="ghost" onclick="closeModal()">Abbrechen</button>
+     <button type="button" class="primary" onclick="${hw?(edit?`v297SaveHomework(${js(item.id)})`:'v297SaveHomework()'):(edit?`v297SaveTest(${js(item.id)})`:'v297SaveTest()')}">Speichern</button>
+   </div>
+ </div>`);
+ markPlannerModal();
+ const s=q(`#${prefix}Subject`);if(s&&subject)s.value=subject;
+ if(!hw){const ty=q(`#${prefix}Type`);if(ty)ty.value=item?.type||'Test'}
+}
+window.openAddHomework=()=>plannerModal('homework');
+window.openEditHomework=idv=>{const x=(data.homework||[]).find(v=>String(v.id)===String(idv));if(x)plannerModal('homework',x)};
+window.openAddTest=()=>plannerModal('test');
+window.openEditTest=idv=>{const x=(data.tests||[]).find(v=>String(v.id)===String(idv));if(x)plannerModal('test',x)};
+
+window.v297SaveHomework=async function(idv=''){
+ const prefix='v297Hw',text=(q(`#${prefix}Text`)?.value||'').trim();if(!text)return alert('Bitte eine Aufgabe eintragen.');
+ let x=idv?(data.homework||[]).find(v=>String(v.id)===String(idv)):null;
+ if(!x){x={id:typeof id==='function'?id():'hw-'+Date.now(),done:false,created:Date.now(),files:[]};data.homework.push(x)}
+ x.subject=q(`#${prefix}Subject`)?.value||x.subject||'';
+ x.due=q(`#${prefix}Date`)?.value||x.due||todayISO();x.text=text;x.note=(q(`#${prefix}Note`)?.value||'').trim();
+ x.reminderDays=Math.max(0,Math.min(60,Number(q(`#${prefix}ReminderDays`)?.value)||0));
+ x.reminderCount=Math.max(0,Math.min(7,Number(q(`#${prefix}ReminderCount`)?.value)||0));
+ try{await storeEntityFiles(x,q(`#${prefix}Files`)?.files||[])}catch(err){console.warn('Studia Datei',err)}
+ save();closeModal();try{renderTasks()}catch(_){};try{renderHome()}catch(_){}
+};
+window.addHomework=()=>window.v297SaveHomework();
+window.saveHomeworkEdit=idv=>window.v297SaveHomework(idv);
+
+window.v297SaveTest=async function(idv=''){
+ const prefix='v297Test';
+ let x=idv?(data.tests||[]).find(v=>String(v.id)===String(idv)):null;
+ if(!x){x={id:typeof id==='function'?id():'test-'+Date.now(),files:[]};data.tests.push(x)}
+ x.subject=q(`#${prefix}Subject`)?.value||x.subject||'';
+ x.date=q(`#${prefix}Date`)?.value||x.date||todayISO();
+ x.type=q(`#${prefix}Type`)?.value||x.type||'Test';
+ x.text=(q(`#${prefix}Text`)?.value||'').trim();
+ x.reminderDays=Math.max(0,Math.min(60,Number(q(`#${prefix}ReminderDays`)?.value)||0));
+ x.reminderCount=Math.max(0,Math.min(7,Number(q(`#${prefix}ReminderCount`)?.value)||0));
+ x.reminder=x.reminderDays;
+ try{await storeEntityFiles(x,q(`#${prefix}Files`)?.files||[])}catch(err){console.warn('Studia Datei',err)}
+ save();closeModal();try{renderTasks()}catch(_){};try{renderHome()}catch(_){}
+};
+window.addTest=()=>window.v297SaveTest();
+window.saveTestEdit=idv=>window.v297SaveTest(idv);
+
+function reminderLabel(item,fallback=0){
+ const d=Math.max(0,Number(item?.reminderDays ?? item?.reminder ?? fallback)||0),c=Math.max(0,Number(item?.reminderCount ?? 1)||0);
+ if(!c)return 'Erinnerungen aus';
+ return `${d} T vorher · ${c}×`;
+}
+function plannerEditButton(kind,idv){
+ const fn=kind==='hw'?'openEditHomework':'openEditTest';
+ return `<button type="button" class="v297IconBtn" title="Bearbeiten" aria-label="Bearbeiten" onclick="${fn}(${js(idv)})">${pencil}</button>`;
+}
+function plannerDeleteButton(kind,idv){
+ const fn=kind==='hw'?'deleteHomework':'deleteTest';
+ return `<button type="button" class="v297IconBtn danger" title="Löschen" aria-label="Löschen" onclick="${fn}(${js(idv)})">${trash}</button>`;
+}
+function renderTasks297(){
+ try{
+   qa('[data-taskfilter]').forEach(b=>{b.classList.toggle('active',b.dataset.taskfilter===taskFilter);b.onclick=()=>{taskFilter=b.dataset.taskfilter;renderTasks297()}});
+ }catch(_){}
+ const filter=typeof taskFilter==='string'?taskFilter:'open';
+ const hw=(data.homework||[]).filter(x=>filter==='all'||(filter==='open'?!x.done:x.done)).sort((a,b)=>String(a.due||'').localeCompare(String(b.due||'')));
+ const h=q('#homeworkList');
+ if(h)h.innerHTML=hw.length?hw.map(x=>{
+   let left='';try{left=daysUntilLabel(x.due)||''}catch(_){}
+   return `<div class="card v297PlannerCard">
+     <div class="v297PlannerMain">
+       <div class="row" style="align-items:flex-start"><button class="checkbox ${x.done?'done':''}" onclick="toggleHomework(${js(x.id)})">${x.done?'✓':''}</button>
+       <div style="min-width:0"><span class="v297PlannerTitle ${x.done?'doneText':''}">${html(x.subject)} · ${html(x.text)}</span>
+       <div class="small v297PlannerMeta">Fällig ${html(fmtDate(x.due))}${left?` · <b>${html(left)}</b>`:''}${x.note?' · '+html(x.note):''} · <span class="v297ReminderText">${repeatIcon}${html(reminderLabel(x,0))}</span></div>${fileChips(x.files)}</div></div>
+     </div>
+     <div class="v297PlannerActions">${plannerEditButton('hw',x.id)}${plannerDeleteButton('hw',x.id)}</div>
+   </div>`;
+ }).join(''):'<div class="empty">Keine Aufgaben.</div>';
+ const tests=[...(data.tests||[])].sort((a,b)=>String(a.date||'').localeCompare(String(b.date||'')));
+ const tr=q('#testList');
+ if(tr)tr.innerHTML=tests.length?tests.map(x=>{
+   let left='',days=null;try{left=daysUntilLabel(x.date)||'';days=calendarDaysUntil(x.date)}catch(_){}
+   return `<div class="card v297PlannerCard">
+     <div class="v297PlannerMain"><span class="v297PlannerTitle">${html(x.subject)} · ${html(x.type)}</span>
+     <div class="small v297PlannerMeta">${html(fmtDate(x.date))}${left?` · ${html(left)}`:''}${x.text?' · '+html(x.text):''} · <span class="v297ReminderText">${repeatIcon}${html(reminderLabel(x,Number(x.reminder||1)))}</span></div>${fileChips(x.files)}</div>
+     <div class="v297PlannerActions">${left?`<span class="badge ${days!=null&&days>=0?'warn':''}">${html(left)}</span>`:''}${plannerEditButton('test',x.id)}${plannerDeleteButton('test',x.id)}</div>
+   </div>`;
+ }).join(''):'<div class="empty">Noch keine Tests eingetragen.</div>';
+}
+window.renderTasks=renderTasks297;try{renderTasks=renderTasks297}catch(_){}
+
+/* ----- One flashcard owner: learn mode and edit mode share the same data, no duplicate controls. ----- */
+let deckMode=localStorage.getItem('studia-v297-deck-mode')||localStorage.getItem('studia-v292-deck-mode')||'learn';
+let study={deckId:null,queue:[],initialTotal:0};
+function deckIdNow(){try{return selectedDeckId}catch(_){return window.selectedDeckId}}
+function cardsForDeck(did){return (data.flashcards||[]).filter(c=>String(c.deckId)===String(did))}
+function resetStudy(did){
+ const ids=cardsForDeck(did).map(c=>c.id);study={deckId:String(did||''),queue:ids,initialTotal:ids.length};flashFlipped=false;
+}
+function ensureDeckChrome(){
+ const view=q('#view-deck-detail');if(!view)return;
+ const head=q(':scope > .sectionHead',view);if(!head)return;
+ qa('.v214LearnModeSwitch,.v215DeckModeSwitch,.v217DeckModeSwitch,.v292DeckModeSwitch',head).forEach(x=>x.remove());
+ let sw=q('.v297DeckModeSwitch',head);
+ if(!sw){sw=document.createElement('div');sw.className='v297DeckModeSwitch';sw.innerHTML='<button type="button" data-mode="learn">Lernen</button><button type="button" data-mode="edit">Bearbeiten</button>';sw.onclick=e=>{const b=e.target.closest('[data-mode]');if(b)v297SetDeckMode(b.dataset.mode)};head.insertBefore(sw,q('#addCardToDeckBtn',head)||null)}
+ qa('[data-mode]',sw).forEach(b=>b.classList.toggle('active',b.dataset.mode===deckMode));
+ const add=q('#addCardToDeckBtn',view);if(add){add.style.display=deckMode==='edit'?'inline-flex':'none';const did=deckIdNow();add.onclick=()=>openAddCardToDeck(did)}
+}
+window.v297SetDeckMode=function(mode){
+ deckMode=mode==='edit'?'edit':'learn';localStorage.setItem('studia-v297-deck-mode',deckMode);localStorage.setItem('studia-v292-deck-mode',deckMode);
+ document.body.classList.toggle('v214LearningReadOnly',deckMode==='learn');document.body.classList.toggle('v292DeckLearn',deckMode==='learn');
+ flashFlipped=false;if(deckMode==='learn'&&String(study.deckId)!==String(deckIdNow()))resetStudy(deckIdNow());
+ renderDeckDetail297();
+};
+window.v214SetLearningMode=window.v215SetDeckMode=window.v216SetLearningMode=window.v217SetLearnMode=window.v292SetDeckMode=window.v297SetDeckMode;
+
+window.openDeck=function(did){
+ try{selectedDeckId=did}catch(_){window.selectedDeckId=did}
+ resetStudy(did);currentFlash=0;flashFlipped=false;
+ openView('deck-detail');requestAnimationFrame(()=>window.v297SetDeckMode(deckMode));
+};
+function renderDeckDetail297(){
+ const root=q('#deckDetail');if(!root)return;
+ const did=deckIdNow(),d=(data.flashDecks||[]).find(x=>String(x.id)===String(did));
+ ensureDeckChrome();
+ if(!d){root.innerHTML='<div class="empty">Ordner nicht gefunden.</div>';return}
+ const all=cardsForDeck(did);
+ if(deckMode==='edit'){
+   root.innerHTML=`<div class="v297DeckHero"><div><div class="eyebrow">KARTEIKARTEN</div><h2>${html(d.name)}</h2><div class="small">${all.length} Karten · Bearbeitungsmodus</div></div><button type="button" class="v297IconBtn" title="Ordner umbenennen" aria-label="Ordner umbenennen" onclick="v102RenameDeck(${js(d.id)});renderDeckDetail()">${pencil}</button></div>
+     <div class="v297DeckEditList">${all.length?all.map(c=>`<div class="v297DeckEditCard"><div class="v297DeckEditText"><b>${html(c.q)}</b><small>${html(c.a)}</small></div><div class="v297DeckEditActions"><button type="button" class="v297IconBtn" title="Karte bearbeiten" aria-label="Karte bearbeiten" onclick="editDeckCard(${js(c.id)})">${pencil}</button><button type="button" class="v297IconBtn danger" title="Karte löschen" aria-label="Karte löschen" onclick="v297DeleteDeckCard(${js(c.id)})">${trash}</button></div></div>`).join(''):'<div class="v297DeckEmpty">Noch keine Karten. Tippe oben auf „+ Karte“.</div>'}</div>`;
+   return;
+ }
+ if(String(study.deckId)!==String(did))resetStudy(did);
+ const cid=study.queue[0],c=all.find(x=>String(x.id)===String(cid));
+ if(!c){
+   root.innerHTML=`<div class="v297DeckHero"><div><div class="eyebrow">KARTEIKARTEN</div><h2>${html(d.name)}</h2><div class="small">${all.length} Karten</div></div></div>
+   <div class="v297RoundDone"><h3>Runde geschafft ♡</h3><p class="small">Alle Karten dieser Runde sind durch.</p><button type="button" class="primary" onclick="v297RestartDeck()">Nochmal lernen</button></div>`;
+   return;
+ }
+ const done=Math.max(0,study.initialTotal-study.queue.length);
+ root.innerHTML=`<div class="v297DeckHero"><div><div class="eyebrow">KARTEIKARTEN</div><h2>${html(d.name)}</h2><div class="small">${all.length} Karten · Lernmodus</div></div></div>
+   <div class="v297StudyWrap">
+     <div class="v297StudyCard ${flashFlipped?'answer':''}" role="button" tabindex="0" onclick="flipDeckCard()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();flipDeckCard()}">
+       <div><span class="badge">${flashFlipped?'Antwort':'Frage'}</span><div class="v297StudyCardText">${html(flashFlipped?c.a:c.q)}</div><div class="v297StudyHint">${flashFlipped?'Wie gut wusstest du es?':'Antippen zum Umdrehen'}</div></div>
+     </div>
+     ${flashFlipped?`<div class="v297RateRow"><button type="button" class="good" onclick="event.stopPropagation();v297RateCard('good')">✓ Gut gewusst</button><button type="button" class="meh" onclick="event.stopPropagation();v297RateCard('meh')">≈ Meh</button><button type="button" class="bad" onclick="event.stopPropagation();v297RateCard('bad')">× Gar nicht</button></div>`:''}
+     <div class="v297DeckProgress">${study.queue.length} Karte${study.queue.length===1?'':'n'} noch in dieser Runde${done?` · ${done} geschafft`:''}</div>
+   </div>`;
+}
+window.renderDeckDetail=renderDeckDetail297;try{renderDeckDetail=renderDeckDetail297}catch(_){}
+window.flipDeckCard=function(){if(deckMode!=='learn')return;flashFlipped=!flashFlipped;renderDeckDetail297()};
+window.v297RateCard=function(rating){
+ const cid=study.queue.shift();if(!cid)return;
+ const c=(data.flashcards||[]).find(x=>String(x.id)===String(cid));
+ if(c){
+   c.memoryStatus=rating==='good'?'known':rating==='meh'?'meh':'no';c.lastRated=Date.now();
+   c.reviewStats ||= {good:0,meh:0,bad:0};c.reviewStats[rating]=(c.reviewStats[rating]||0)+1;
+ }
+ const otherCount=study.queue.length;
+ if(rating==='bad'){const at=Math.min(1,otherCount);study.queue.splice(at,0,cid)}
+ else if(rating==='meh'){const at=Math.min(2,otherCount);study.queue.splice(at,0,cid)}
+ flashFlipped=false;save();renderDeckDetail297();
+};
+window.v102RateCard=r=>window.v297RateCard(r==='known'?'good':r==='no'?'bad':'meh');
+window.v297RestartDeck=function(){resetStudy(deckIdNow());renderDeckDetail297()};
+window.v297DeleteDeckCard=function(cid){
+ data.flashcards=(data.flashcards||[]).filter(x=>String(x.id)!==String(cid));
+ study.queue=study.queue.filter(x=>String(x)!==String(cid));study.initialTotal=cardsForDeck(deckIdNow()).length;
+ save();renderDeckDetail297();
+};
+window.deleteDeckCard=window.v297DeleteDeckCard;
+
+/* Keep theme controls alive after settings rerenders. */
+const baseSettings=window.renderSettings||((typeof renderSettings==='function')?renderSettings:null);
+if(typeof baseSettings==='function'){
+ const wrapped=function(){const r=baseSettings.apply(this,arguments);setTimeout(()=>{const input=q('#customThemeColor');if(input){input.value=data.customization?.customColor||'#efaaa6';input.oninput=()=>previewCustomTheme(input.value)}applyCustomization()},0);return r};
+ window.renderSettings=wrapped;try{renderSettings=wrapped}catch(_){}
+}
+
+/* Start clean: use this owner once, no extra generated toolbars/switches. */
+const boot=()=>{
+ try{applyCustomization()}catch(_){}
+ try{renderTasks297()}catch(_){}
+ if(q('#view-deck-detail.active')){document.body.classList.toggle('v214LearningReadOnly',deckMode==='learn');renderDeckDetail297()}
+ const e=q('#headerEyebrow');if(e)e.textContent='VERSION 297';
+};
+[0,120,600,1600].forEach(ms=>setTimeout(boot,ms));
+})();
+</script>
