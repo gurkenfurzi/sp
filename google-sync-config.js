@@ -1,7 +1,7 @@
-/* Studia V290 — one-time full reconciliation + mobile-safe V289 transport. Fresh baseline prevents partially synced subjects/homework/tests from being skipped. */
+/* Studia V298 — stable V289 transport + ghost cleanup + IndexedDB quota fallback. */
 (()=>{
 'use strict';
-if(window.__STUDIA_SYNC_V290__)return;window.__STUDIA_SYNC_V290__=true;
+if(window.__STUDIA_SYNC_V298__)return;window.__STUDIA_SYNC_V298__=true;
 const KEY='schoolhub-v1',DB='studia-sync-v290',STORE='kv';
 const URL_KEYS=['studia-v289-script-url','studia-v288-script-url','studia-v287-script-url','studia-v286-script-url','studia-v284-script-url','studia-v281-script-url','studia-v265-script-url','studia-script-url','schoolhub-script-url','google-sync-script-url'];
 const TOKEN_KEYS=['studia-v289-token','studia-v288-token','studia-v287-token','studia-v286-token','studia-v284-token','studia-v281-token','studia-v265-token','studia-token','schoolhub-token','cloud-token'];
@@ -13,16 +13,40 @@ const safeJSON=(s,f=null)=>{try{return JSON.parse(s)}catch(_){return f}};
 const clone=v=>{try{return structuredClone(v)}catch(_){return safeJSON(JSON.stringify(v),v)}};
 const isObj=v=>!!v&&typeof v==='object'&&!Array.isArray(v);
 const rid=()=>{try{return crypto.randomUUID()}catch(_){return Date.now().toString(36)+Math.random().toString(36).slice(2)}};
+function safeSet(k,v){try{localStorage.setItem(k,String(v));return true}catch(e){if(e?.name==='QuotaExceededError'||/quota/i.test(String(e?.message||e))){window.__STUDIA_LOCAL_QUOTA__=true;return false}throw e}}
+
 function endpoint(){const i=$('#v150ScriptUrl');if(i?.value?.trim())return i.value.trim();for(const k of URL_KEYS){const v=String(localStorage.getItem(k)||'').trim();if(/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec/i.test(v))return v}return String(window.STUDIA_SYNC_CONFIG?.scriptUrl||'').trim()}
 function token(){for(const k of TOKEN_KEYS){const v=String(localStorage.getItem(k)||'');if(v.length>20)return v}return ''}
 function user(){for(const k of USER_KEYS){const v=safeJSON(localStorage.getItem(k)||'');if(v)return v}return null}
-function rememberUrl(v){v=String(v||'').trim();if(!v)return;URL_KEYS.forEach(k=>localStorage.setItem(k,v));const i=$('#v150ScriptUrl');if(i)i.value=v;window.STUDIA_SYNC_CONFIG={...(window.STUDIA_SYNC_CONFIG||{}),scriptUrl:v}}
-function rememberAuth(r){if(r?.token)TOKEN_KEYS.forEach(k=>localStorage.setItem(k,String(r.token)));if(r?.user)USER_KEYS.forEach(k=>localStorage.setItem(k,JSON.stringify(r.user)))}
+function rememberUrl(v){v=String(v||'').trim();if(!v)return;URL_KEYS.forEach(k=>safeSet(k,v));const i=$('#v150ScriptUrl');if(i)i.value=v;window.STUDIA_SYNC_CONFIG={...(window.STUDIA_SYNC_CONFIG||{}),scriptUrl:v}}
+function rememberAuth(r){if(r?.token)TOKEN_KEYS.forEach(k=>safeSet(k,String(r.token)));if(r?.user)USER_KEYS.forEach(k=>safeSet(k,JSON.stringify(r.user)))}
 function status(text,state='ok'){const s=String(text||'');const a=$('#v150AccountStatus');if(a){a.textContent=s;a.classList.toggle('error',state==='error')}const d=$('#v232DesktopSync');if(d){d.classList.toggle('syncing',state==='syncing');const sm=d.querySelector('small');if(sm)sm.textContent=s}const i=$('#v232SyncStatusInline');if(i)i.textContent=s}
-function deviceId(){let d=localStorage.getItem('studia-v288-device-id');if(!d){d='dev-'+rid();localStorage.setItem('studia-v288-device-id',d)}return d}
+function deviceId(){let d=localStorage.getItem('studia-v288-device-id');if(!d){d='dev-'+rid();safeSet('studia-v288-device-id',d)}return d}
 function deviceName(){return /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)?'Handy':'Laptop'}
 function meaningful(v){return /[\p{L}\p{N}]/u.test(String(v??'').trim())}
-function cleanState(src){const x=clone(src||{});const walk=v=>{if(Array.isArray(v)){v.forEach(walk);return}if(!isObj(v))return;delete v._updatedAt;delete v._syncMeta;delete v._syncV284;delete v._syncV281;delete v.__studiaSyncMeta;Object.values(v).forEach(walk)};walk(x);if(Array.isArray(x.homework))x.homework=x.homework.filter(o=>o&&([o.subject,o.text,o.note].some(meaningful)||(o.files?.length)||/^\d{4}-\d{2}-\d{2}$/.test(String(o.due||''))));if(Array.isArray(x.tests))x.tests=x.tests.filter(o=>o&&([o.subject,o.type,o.text].some(meaningful)||(o.files?.length)||/^\d{4}-\d{2}-\d{2}$/.test(String(o.date||''))));return x}
+function cleanState(src){
+ const x=clone(src||{});
+ const walk=v=>{if(Array.isArray(v)){v.forEach(walk);return}if(!isObj(v))return;delete v._updatedAt;delete v._syncMeta;delete v._syncV284;delete v._syncV281;delete v.__studiaSyncMeta;Object.values(v).forEach(walk)};walk(x);
+ const dedupe=(arr,kind)=>{
+   const out=[],ids=new Set(),sig=new Set();
+   for(const o of Array.isArray(arr)?arr:[]){
+     if(!o||!isObj(o))continue;
+     const ok=kind==='homework'?([o.subject,o.text,o.note].some(meaningful)||(o.files?.length)):([o.subject,o.text].some(meaningful)||(o.files?.length));
+     if(!ok)continue;
+     const idv=String(o.id||'').trim();
+     if(idv&&ids.has(idv))continue;
+     const s=(kind==='homework'
+       ?[o.subject,o.text,o.note,o.due,!!o.done]
+       :[o.subject,o.type,o.text,o.date]).map(v=>String(v??'').trim().toLowerCase()).join('|');
+     if(sig.has(s))continue;
+     if(idv)ids.add(idv);sig.add(s);out.push(o);
+   }
+   return out;
+ };
+ if(Array.isArray(x.homework))x.homework=dedupe(x.homework,'homework');
+ if(Array.isArray(x.tests))x.tests=dedupe(x.tests,'tests');
+ return x
+}
 function addMissingIds(x){let changed=false;const add=a=>{if(!Array.isArray(a))return;a.forEach(o=>{if(isObj(o)&&!String(o.id??'').trim()){o.id='sync-'+rid();changed=true}})};['subjects','homework','tests','grades','flashcards','absences','studySessions','reminders','flashDecks','quizzes','studySheets','writtenTests'].forEach(k=>add(x?.[k]));(x?.subjects||[]).forEach(s=>{add(s?.topics);add(s?.files);(s?.topics||[]).forEach(t=>add(t?.files))});(x?.quizzes||[]).forEach(q=>add(q?.questions));(x?.homework||[]).forEach(h=>add(h?.files));(x?.tests||[]).forEach(t=>add(t?.files));return changed}
 function stable(v){if(Array.isArray(v))return '['+v.map(stable).join(',')+']';if(isObj(v))return'{'+Object.keys(v).sort().map(k=>JSON.stringify(k)+':'+stable(v[k])).join(',')+'}';return JSON.stringify(v)}
 function empty(v){return v==null||v===''||(Array.isArray(v)&&!v.length)||(isObj(v)&&!Object.keys(v).length)}
@@ -44,20 +68,58 @@ function submitFire(directAction,payload,requestId){const ep=endpoint();if(!ep)t
 async function fireAndAck(action,payload={},timeout=20000){const requestId='v289-'+rid(),cleanup=submitFire(action,payload,requestId),started=Date.now();let lastNetworkError=null;try{await sleep(260);while(Date.now()-started<timeout){try{const r=await jsonpRaw('ack_v289',{requestId},4500);if(r?.pending){await sleep(300);continue}if(!r?.ok)throw new Error(r?.error||'Cloud-Sync fehlgeschlagen');return r}catch(e){lastNetworkError=e;await sleep(450)}}throw lastNetworkError||new Error('Google-Sync dauert zu lange')}finally{setTimeout(cleanup,0)}}
 async function pullFull(label='Cloud-Stand laden …'){status(label,'syncing');const plain=typeof DecompressionStream!=='function'?'1':'0',r=await jsonp('pull_all_v289',{token:token(),plain,deviceId:deviceId(),deviceName:deviceName()},18000);if(Number(r.version)!==289)throw new Error('Google Apps Script V289 ist noch nicht bereitgestellt');const state=r.dataGzip?await ungzipJSON(r.dataGzip):(r.data||{}),clean=cleanState(state||{});addMissingIds(clean);return{state:clean,version:Number(r.updatedAt||0)}}
 async function pullChanges(fromVersion){const plain=typeof DecompressionStream!=='function'?'1':'0',r=await jsonp('changes_v289',{token:token(),from:fromVersion,plain},12000);if(Number(r.version)!==289)throw new Error('Google Apps Script V289 ist noch nicht bereitgestellt');if(r.needFullPull)return{needFullPull:true,updatedAt:Number(r.updatedAt||0)};let ds=[];if(r.deltasGzip)ds=await ungzipJSON(r.deltasGzip)||[];else if(Array.isArray(r.deltas))ds=r.deltas;return{deltas:ds,updatedAt:Number(r.updatedAt||fromVersion||0)}}
-function applyLocal(state){state=cleanState(state);addMissingIds(state);try{data=state}catch(_){window.data=state}localStorage.setItem(KEY,JSON.stringify(state));lastSeenLocal=localStorage.getItem(KEY)||'';try{renderAll?.()}catch(_){}try{if($('#view-plan.active'))renderPlan?.()}catch(_){}try{if($('#view-subjects.active'))renderSubjects?.()}catch(_){}try{if($('#view-tasks.active'))renderTasks?.()}catch(_){}}
-async function syncNow(opts={}){const manual=!!opts.manual;if(busy){pending=true;return{busy:true}}if(!manual&&Date.now()<cooldownUntil)return{cooldown:true};if(!manual&&Date.now()-lastSyncAt<10000)return{recent:true};if(!navigator.onLine){status('Offline · lokal gespeichert','error');return{offline:true}}if(!token()){status('Nicht angemeldet · lokale Daten sicher','error');return{auth:false}}busy=true;status('Synchronisiere Geräte …','syncing');let ok=false;try{try{if(typeof save==='function')save()}catch(_){}let current;try{current=cleanState(data)}catch(_){current=cleanState(safeJSON(localStorage.getItem(KEY)||'{}',{}))}if(addMissingIds(current))localStorage.setItem(KEY,JSON.stringify(current));let base=await dbGet('baseState',undefined),baseVersion=Number(await dbGet('baseVersion',0)||0);if(base===undefined){const full=await pullFull('Vollständiger Geräteabgleich …');base=full.state;baseVersion=full.version;current=cleanState(mergeBootstrap(base,current));addMissingIds(current);applyLocal(current);await dbSet('baseState',clone(base));await dbSet('baseVersion',baseVersion)}const delta=diff(base,current);if(!delta){const ch=await pullChanges(baseVersion);if(ch.needFullPull){const full=await pullFull('Neue Daten vom anderen Gerät …');current=full.state;baseVersion=full.version}else if(ch.deltas?.length){for(const d of ch.deltas)current=applyDelta(current,d);baseVersion=ch.updatedAt;current=cleanState(current||{});addMissingIds(current)}applyLocal(current);await dbSet('baseState',clone(current));await dbSet('baseVersion',baseVersion);lastSyncAt=Date.now();cooldownUntil=0;status(ch.deltas?.length?'Synchronisiert ✓ · andere Geräte übernommen':'Synchronisiert ✓ · keine Änderungen','ok');ok=true;return{ok:true,version:baseVersion}}const packed=await gzipJSON(delta),payload={token:token(),deviceId:deviceId(),deviceName:deviceName(),baseUpdatedAt:baseVersion};if(packed.gz&&packed.gz.length<packed.raw.length)payload.deltaGzip=packed.gz;else payload.delta=packed.raw;const ack=await fireAndAck('sync_delta',payload,22000);if(Number(ack.version)!==289)throw new Error('Google Apps Script V289 ist noch nicht bereitgestellt');let latest=clone(base),version=Number(ack.updatedAt||baseVersion||0);if(ack.needFullPull){const full=await pullFull('Aktuellen gemeinsamen Stand laden …');latest=full.state;version=full.version}else{const ch=await pullChanges(baseVersion);if(ch.needFullPull){const full=await pullFull('Aktuellen gemeinsamen Stand laden …');latest=full.state;version=full.version}else{for(const d of ch.deltas||[])latest=applyDelta(latest,d);version=ch.updatedAt;latest=cleanState(latest||{});addMissingIds(latest)}}applyLocal(latest);await dbSet('baseState',clone(latest));await dbSet('baseVersion',version);lastSyncAt=Date.now();cooldownUntil=0;ok=true;const c={s:latest.subjects?.length||0,h:latest.homework?.length||0,t:latest.tests?.length||0};status(`Synchronisiert ✓ · ${c.s} Fächer · ${c.h} Aufgaben · ${c.t} Tests`,'ok');return{ok:true,version}}catch(e){console.error('[Studia V289 sync]',e);cooldownUntil=Date.now()+45000;pending=false;status((e?.message||String(e))+' · lokal sicher','error');if(manual)throw e;return{ok:false,error:e}}finally{busy=false;if(ok&&pending){pending=false;setTimeout(()=>syncNow().catch(()=>{}),1400)}}}
+async function applyLocal(state){
+ state=cleanState(state);addMissingIds(state);
+ try{data=state}catch(_){window.data=state}
+ await dbSet('localState',{state:clone(state),ts:Date.now()});
+ const raw=JSON.stringify(state);
+ const ok=safeSet(KEY,raw);
+ if(ok)lastSeenLocal=raw;else lastSeenLocal='';
+ try{renderAll?.()}catch(_){}
+ try{if($('#view-plan.active'))renderPlan?.()}catch(_){}
+ try{if($('#view-subjects.active'))renderSubjects?.()}catch(_){}
+ try{if($('#view-tasks.active'))renderTasks?.()}catch(_){}
+ return state
+}
+async function syncNow(opts={}){const manual=!!opts.manual;if(busy){pending=true;return{busy:true}}if(!manual&&Date.now()<cooldownUntil)return{cooldown:true};if(!manual&&Date.now()-lastSyncAt<10000)return{recent:true};if(!navigator.onLine){status('Offline · lokal gespeichert','error');return{offline:true}}if(!token()){status('Nicht angemeldet · lokale Daten sicher','error');return{auth:false}}busy=true;status('Synchronisiere Geräte …','syncing');let ok=false;try{try{if(typeof save==='function')save()}catch(_){}let current;try{current=cleanState(data)}catch(_){current=cleanState(safeJSON(localStorage.getItem(KEY)||'{}',{}))}if(addMissingIds(current)){await dbSet('localState',{state:clone(current),ts:Date.now()});safeSet(KEY,JSON.stringify(current));}let base=await dbGet('baseState',undefined),baseVersion=Number(await dbGet('baseVersion',0)||0);if(base===undefined){const full=await pullFull('Vollständiger Geräteabgleich …');base=full.state;baseVersion=full.version;current=cleanState(mergeBootstrap(base,current));addMissingIds(current);await applyLocal(current);await dbSet('baseState',clone(base));await dbSet('baseVersion',baseVersion)}const delta=diff(base,current);if(!delta){const ch=await pullChanges(baseVersion);if(ch.needFullPull){const full=await pullFull('Neue Daten vom anderen Gerät …');current=full.state;baseVersion=full.version}else if(ch.deltas?.length){for(const d of ch.deltas)current=applyDelta(current,d);baseVersion=ch.updatedAt;current=cleanState(current||{});addMissingIds(current)}await applyLocal(current);await dbSet('baseState',clone(current));await dbSet('baseVersion',baseVersion);lastSyncAt=Date.now();cooldownUntil=0;status(ch.deltas?.length?'Synchronisiert ✓ · andere Geräte übernommen':'Synchronisiert ✓ · keine Änderungen','ok');ok=true;return{ok:true,version:baseVersion}}const packed=await gzipJSON(delta),payload={token:token(),deviceId:deviceId(),deviceName:deviceName(),baseUpdatedAt:baseVersion};if(packed.gz&&packed.gz.length<packed.raw.length)payload.deltaGzip=packed.gz;else payload.delta=packed.raw;const ack=await fireAndAck('sync_delta',payload,22000);if(Number(ack.version)!==289)throw new Error('Google Apps Script V289 ist noch nicht bereitgestellt');let latest=clone(base),version=Number(ack.updatedAt||baseVersion||0);if(ack.needFullPull){const full=await pullFull('Aktuellen gemeinsamen Stand laden …');latest=full.state;version=full.version}else{const ch=await pullChanges(baseVersion);if(ch.needFullPull){const full=await pullFull('Aktuellen gemeinsamen Stand laden …');latest=full.state;version=full.version}else{for(const d of ch.deltas||[])latest=applyDelta(latest,d);version=ch.updatedAt;latest=cleanState(latest||{});addMissingIds(latest)}}await applyLocal(latest);await dbSet('baseState',clone(latest));await dbSet('baseVersion',version);lastSyncAt=Date.now();cooldownUntil=0;ok=true;const c={s:latest.subjects?.length||0,h:latest.homework?.length||0,t:latest.tests?.length||0};status(`Synchronisiert ✓ · ${c.s} Fächer · ${c.h} Aufgaben · ${c.t} Tests`,'ok');return{ok:true,version}}catch(e){console.error('[Studia V289 sync]',e);cooldownUntil=Date.now()+45000;pending=false;status(((e?.name==='QuotaExceededError'||/quota/i.test(String(e?.message||e)))?'Gerätespeicher voll – Studia nutzt sicheren App-Speicher':(e?.message||String(e)))+' · lokal sicher','error');if(manual)throw e;return{ok:false,error:e}}finally{busy=false;if(ok&&pending){pending=false;setTimeout(()=>syncNow().catch(()=>{}),1400)}}}
 async function loginAndSync(){const u=$('#v150Username')?.value?.trim()||'',p=$('#v150Password')?.value||'',ep=$('#v150ScriptUrl')?.value?.trim()||endpoint();if(ep)rememberUrl(ep);status('Anmeldung …','syncing');const r=await fireAndAck('login',{username:u,password:p},18000);if(Number(r.version)!==289)throw new Error('Google Apps Script V289 ist noch nicht bereitgestellt');rememberAuth(r);status('Angemeldet als '+(r.user?.username||u)+' ✓');return syncNow({manual:true})}
 async function register(){const u=$('#v150Username')?.value?.trim()||'',p=$('#v150Password')?.value||'',ep=$('#v150ScriptUrl')?.value?.trim()||endpoint();if(ep)rememberUrl(ep);status('Konto wird erstellt …','syncing');const r=await fireAndAck('register',{username:u,password:p},18000);if(Number(r.version)!==289)throw new Error('Google Apps Script V289 ist noch nicht bereitgestellt');rememberAuth(r);if(r.recoveryCode)alert('Wiederherstellungscode — sicher speichern:\n\n'+r.recoveryCode);status('Konto erstellt ✓');return syncNow({manual:true})}
 function ensureButton(){if($('#v232DesktopSync'))return;const b=document.createElement('button');b.id='v232DesktopSync';b.type='button';b.innerHTML='<span class="spin">↻</span><span>Geräte synchronisieren<small>Lokal gespeichert</small></span>';b.onclick=()=>syncNow({manual:true}).catch(()=>{});document.body.appendChild(b)}
 function install(){window.v171CloudNow=syncNow;window.studiaSyncNow=syncNow;window.v171CloudLogin=loginAndSync;window.v171CloudRegister=register;try{v171CloudNow=syncNow}catch(_){}ensureButton()}
 function schedule(){clearTimeout(timer);timer=setTimeout(()=>{if(Date.now()<cooldownUntil||Date.now()-lastSyncAt<6000)return;syncNow().catch(()=>{})},1800)}
 function watch(){const now=localStorage.getItem(KEY)||'';if(now&&now!==lastSeenLocal){lastSeenLocal=now;schedule()}}
-function hookSave(){const old=window.save;if(typeof old!=='function'||old.__v289)return;const w=function(){const r=old.apply(this,arguments);lastSeenLocal=localStorage.getItem(KEY)||'';schedule();return r};w.__v289=true;window.save=w;try{save=w}catch(_){}}
-async function hydrate(){install();hookSave();const ep=endpoint();if(ep)rememberUrl(ep);const u=user();status(token()?(u?.username?'Angemeldet als '+u.username+' · bereit':'Angemeldet · bereit'):'Noch nicht verbunden.');lastSeenLocal=localStorage.getItem(KEY)||'';setInterval(()=>{install();hookSave();watch()},2500);setTimeout(()=>{if(token()&&navigator.onLine)syncNow().catch(()=>{})},1800)}
-window.StudiaSyncV290={syncNow,loginAndSync,register,status,rememberUrl,clientVersion:290,serverProtocol:289,resetBase:async()=>{await dbSet('baseState',undefined);await dbSet('baseVersion',0)}};
+function hookSave(){
+ const old=window.save;if(typeof old!=='function'||old.__v298)return;
+ const w=function(){
+   const r=old.apply(this,arguments);
+   let snapshot=null;try{snapshot=cleanState(data)}catch(_){snapshot=cleanState(safeJSON(localStorage.getItem(KEY)||'{}',{}))}
+   dbSet('localState',{state:clone(snapshot),ts:Date.now()});
+   const raw=JSON.stringify(snapshot);if(!window.__STUDIA_LOCAL_QUOTA__)safeSet(KEY,raw);
+   lastSeenLocal=safeSet(KEY,raw)?raw:'';
+   schedule();return r
+ };
+ w.__v298=true;window.save=w;try{save=w}catch(_){}
+}
+async function hydrate(){
+ install();hookSave();const ep=endpoint();if(ep)rememberUrl(ep);
+ const cached=await dbGet('localState',null);
+ if(cached?.state){
+   let current={};try{current=cleanState(data)}catch(_){current=cleanState(safeJSON(localStorage.getItem(KEY)||'{}',{}))}
+   const restored=cleanState(mergeBootstrap(cached.state,current));addMissingIds(restored);
+   try{data=restored}catch(_){window.data=restored}
+   await dbSet('localState',{state:clone(restored),ts:Date.now()});
+   try{renderAll?.()}catch(_){}
+ }
+ const u=user();status(token()?(u?.username?'Angemeldet als '+u.username+' · bereit':'Angemeldet · bereit'):'Noch nicht verbunden.');
+ lastSeenLocal=localStorage.getItem(KEY)||'';
+ setInterval(()=>{install();hookSave();watch()},2500);
+ setTimeout(()=>{if(token()&&navigator.onLine)syncNow().catch(()=>{})},1800)
+}
+window.StudiaSyncV298={syncNow,loginAndSync,register,status,rememberUrl,clientVersion:298,serverProtocol:289,resetBase:async()=>{await dbSet('baseState',undefined);await dbSet('baseVersion',0)}};
 // V294 compatibility: older UI launchers may still ask for the former controller names.
-window.StudiaSyncV289=window.StudiaSyncV290;
-window.StudiaSyncV288=window.StudiaSyncV290;
+window.StudiaSyncV290=window.StudiaSyncV298;
+window.StudiaSyncV289=window.StudiaSyncV298;
+window.StudiaSyncV288=window.StudiaSyncV298;
 addEventListener('online',()=>setTimeout(()=>syncNow().catch(()=>{}),1200));addEventListener('focus',()=>{if(token()&&Date.now()-lastSyncAt>20000&&Date.now()>=cooldownUntil)setTimeout(()=>syncNow().catch(()=>{}),1200)});document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&token()&&Date.now()-lastSyncAt>20000&&Date.now()>=cooldownUntil)setTimeout(()=>syncNow().catch(()=>{}),1300)});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',hydrate,{once:true});else hydrate();
 })();
