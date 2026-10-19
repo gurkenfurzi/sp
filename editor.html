@@ -2967,6 +2967,7 @@ button.cutePop{animation:cutePop .34s cubic-bezier(.22,1.4,.36,1)}
   .mobilePropertyTabs{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;padding-top:7px;border-top:1px solid #f0e4df}.mobilePropertyTabs button{min-height:54px!important;border:1px solid #eadbd6!important;border-radius:13px!important;background:white!important;color:#725b53!important;padding:7px 3px!important;display:grid!important;place-items:center!important;gap:3px!important}.mobilePropertyTabs b{font-size:17px}.mobilePropertyTabs span{font-size:8px;font-weight:850}
   .mobileSubGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;padding-top:8px}.mobileSubGrid label{display:grid;gap:4px;font-size:8px;font-weight:850;color:#9a8077}.mobileSubGrid input,.mobileSubGrid select,.mobileSubGrid>button{width:100%;height:38px;border:1px solid #eadbd6;border-radius:11px;background:white;color:#725b53;padding:0 9px;font-size:10px;font-weight:800}.mobileSubGrid input[type=color]{padding:4px}.mobileSubGrid input[type=range]{padding:0}.mobileSubGrid>button{margin-top:14px}
   .mobileTemplateGrid .templatePicker,.mobileTemplateGrid{display:grid!important;grid-template-columns:1fr 1fr!important;gap:7px!important}.mobileTemplateGrid .templateCard{min-height:64px!important;border:1px solid #eadbd6!important;border-radius:14px!important;background:#fff!important;padding:9px!important;text-align:left!important}.mobileTemplateGrid .templateCard b{font-size:10px!important}.mobileTemplateGrid .templateCard span{font-size:8px!important}
+  .mobilePagePanel{display:grid!important;gap:10px!important}.mobilePageChoices{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important}.mobilePageChoice{min-width:0!important;min-height:58px!important;border:1px solid #eadbd6!important;border-radius:14px!important;background:#fff!important;color:#725b53!important;padding:7px 4px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:3px!important}.mobilePageChoice b{font-size:14px!important}.mobilePageChoice span{font-size:8px!important;font-weight:900!important}.mobilePageChoice.active{background:#f7dfde!important;border-color:#eabfbe!important;color:#9f686e!important;box-shadow:inset 0 0 0 1px #efcfcd!important}.mobilePageChoice.add{border-style:dashed!important;background:#fffaf8!important}
   .mobileLayerList{display:grid;gap:6px}.mobileLayerList .layerRow{border:1px solid #eadbd6!important;border-radius:12px!important;background:#fff!important}
 
   body.editorMode #mobileSelectionTools{display:none;position:fixed;left:50%;top:84px;transform:translateX(-50%);z-index:630;padding:6px;gap:6px;background:rgba(255,252,250,.98);border:1px solid #eadbd6;border-radius:999px;box-shadow:0 12px 28px rgba(89,65,58,.12)}
@@ -6037,28 +6038,39 @@ function renderCanvasInspector(){
    const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(!o){el.textContent="Keine Auswahl";return}
    if(["text","block","task","merke"].includes(o.kind)){
      const s=o.style||{};
-     el.innerHTML=`<div class="editorHintStrong"><b>1× tippen:</b> auswählen/verschieben · <b>2× tippen:</b> Text bearbeiten.</div>
-       ${o.formatId?`<div class="editRow"><span class="badge">${esc(canvasPresets().find(x=>x.id===o.formatId)?.name||"Textformat")}</span>${String(o.formatId).startsWith("custom-")?`<button class="miniIcon" title="Format bearbeiten" onclick="createCustomStylePreset('${o.formatId}')">✎</button>`:""}</div>`:""}
-       <div class="inlineFormatBar" style="margin:8px 0">
-         <button onclick="formatSelectedText('bold')"><b>B</b></button>
-         <button onclick="formatSelectedText('italic')"><i>I</i></button>
-         <button onclick="formatSelectedText('underline')"><u>U</u></button>
-         <button onclick="formatSelectedText('insertUnorderedList')">• Liste</button>
-         <button onclick="formatSelectedText('insertOrderedList')">1. Liste</button>
-       </div>
-       <div class="objectPanelGrid">
-       <div><label>Schriftgröße</label><input id="insFontSize" type="number" min="8" max="72" value="${s.fontSize||16}" onchange="applyTextProperty('fontSize',+this.value)"></div>
-       <div><label>Schriftfarbe</label><input id="insColor" type="color" value="${s.color||"#333333"}" onchange="applyTextProperty('color',this.value)"></div>
-       <div><label>Schrift</label><select class="fontSelect" onchange="applyTextProperty('fontFamily',this.value)"><option value="Arial" ${String(s.fontFamily).includes("Arial")?"selected":""}>Arial</option><option value="Georgia" ${String(s.fontFamily).includes("Georgia")?"selected":""}>Georgia</option><option value="Trebuchet MS" ${String(s.fontFamily).includes("Trebuchet")?"selected":""}>Trebuchet</option><option value="Verdana" ${String(s.fontFamily).includes("Verdana")?"selected":""}>Verdana</option><option value="Times New Roman" ${String(s.fontFamily).includes("Times")?"selected":""}>Times</option><option value="Courier New" ${String(s.fontFamily).includes("Courier")?"selected":""}>Courier</option></select></div>
-       <div><label>Ausrichtung</label><select onchange="updateObjStyle('textAlign',this.value)"><option value="left" ${s.textAlign==="left"?"selected":""}>Links</option><option value="center" ${s.textAlign==="center"?"selected":""}>Mitte</option><option value="right" ${s.textAlign==="right"?"selected":""}>Rechts</option></select></div>
-       <div><label>Fett</label><select onchange="applyTextProperty('fontWeight',this.value)"><option value="400">Normal</option><option value="700" ${s.fontWeight=="700"?"selected":""}>Fett</option><option value="900" ${s.fontWeight=="900"?"selected":""}>Sehr fett</option></select></div>
-       <div><label>Hintergrund</label><input type="color" value="${s.background&&s.background!=="transparent"?s.background:"#ffffff"}" onchange="updateObjStyle('background',this.value)"></div>
-       <div><label>Kontur</label><input type="color" value="${s.borderColor&&s.borderColor!=="transparent"?s.borderColor:"#ffffff"}" onchange="updateObjStyle('borderColor',this.value)"></div>
-       <div><label>Ecken</label><input type="number" min="0" max="80" value="${s.borderRadius||0}" onchange="updateObjStyle('borderRadius',+this.value)"></div>
-       <div><label>Konturdicke</label><input type="number" min="0" max="15" value="${s.borderWidth||0}" onchange="updateObjStyle('borderWidth',+this.value)"></div>
-     </div>
-     <div class="positionGrid" style="margin-top:8px"><div><label>X</label><input type="number" value="${Math.round(o.x)}" onchange="setSelectedGeometry('x',+this.value)"></div><div><label>Y</label><input type="number" value="${Math.round(o.y)}" onchange="setSelectedGeometry('y',+this.value)"></div><div><label>W</label><input type="number" value="${Math.round(o.w)}" onchange="setSelectedGeometry('w',+this.value)"></div><div><label>H</label><input type="number" value="${Math.round(o.h)}" onchange="setSelectedGeometry('h',+this.value)"></div></div>
-     <div class="alignRow" style="margin-top:8px"><button onclick="alignSelected('centerX')">↔ Mitte</button><button onclick="alignSelected('centerY')">↕ Mitte</button><button onclick="duplicateSelected()">⧉ Duplizieren</button></div>`;
+     el.innerHTML=`<div class="v302InspectorNote"><b>Text ausgewählt</b><span>2× auf den Text tippen, um ihn direkt zu bearbeiten.</span></div>
+       ${o.formatId?`<div class="v302PresetBadge"><span>${esc(canvasPresets().find(x=>x.id===o.formatId)?.name||"Textformat")}</span>${String(o.formatId).startsWith("custom-")?`<button class="miniIcon" title="Format bearbeiten" onclick="createCustomStylePreset('${o.formatId}')">✎</button>`:""}</div>`:""}
+       <section class="v302InspectorSection">
+         <div class="v302InspectorSectionHead"><b>Text</b><span>Schrift & Absatz</span></div>
+         <div class="v302FormatRow">
+           <button title="Fett" onclick="formatSelectedText('bold')"><b>B</b></button>
+           <button title="Kursiv" onclick="formatSelectedText('italic')"><i>I</i></button>
+           <button title="Unterstrichen" onclick="formatSelectedText('underline')"><u>U</u></button>
+           <button title="Durchgestrichen" onclick="formatSelectedText('strikeThrough')"><s>S</s></button>
+           <button title="Aufzählung" onclick="formatSelectedText('insertUnorderedList')">•≡</button>
+           <button title="Nummerierte Liste" onclick="formatSelectedText('insertOrderedList')">1≡</button>
+         </div>
+         <div class="v302TextGrid">
+           <div class="v302Wide"><label>Schriftart</label><select class="fontSelect" onchange="applyTextProperty('fontFamily',this.value)"><option value="Arial" ${String(s.fontFamily).includes("Arial")?"selected":""}>Arial</option><option value="Georgia" ${String(s.fontFamily).includes("Georgia")?"selected":""}>Georgia</option><option value="Trebuchet MS" ${String(s.fontFamily).includes("Trebuchet")?"selected":""}>Trebuchet</option><option value="Verdana" ${String(s.fontFamily).includes("Verdana")?"selected":""}>Verdana</option><option value="Times New Roman" ${String(s.fontFamily).includes("Times")?"selected":""}>Times</option><option value="Courier New" ${String(s.fontFamily).includes("Courier")?"selected":""}>Courier</option></select></div>
+           <div><label>Größe</label><input id="insFontSize" type="number" min="8" max="72" value="${s.fontSize||16}" onchange="applyTextProperty('fontSize',+this.value)"></div>
+           <div><label>Farbe</label><input id="insColor" type="color" value="${s.color||"#333333"}" onchange="applyTextProperty('color',this.value)"></div>
+           <div class="v302Wide"><label>Ausrichtung</label><select onchange="updateObjStyle('textAlign',this.value)"><option value="left" ${s.textAlign==="left"?"selected":""}>Links</option><option value="center" ${s.textAlign==="center"?"selected":""}>Mitte</option><option value="right" ${s.textAlign==="right"?"selected":""}>Rechts</option></select></div>
+         </div>
+       </section>
+       <section class="v302InspectorSection">
+         <div class="v302InspectorSectionHead"><b>Fläche & Kontur</b><span>Aussehen</span></div>
+         <div class="v302StyleGrid">
+           <div><label>Hintergrund</label><input type="color" value="${s.background&&s.background!=="transparent"?s.background:"#ffffff"}" onchange="updateObjStyle('background',this.value)"></div>
+           <div><label>Kontur</label><input type="color" value="${s.borderColor&&s.borderColor!=="transparent"?s.borderColor:"#ffffff"}" onchange="updateObjStyle('borderColor',this.value)"></div>
+           <div><label>Konturdicke</label><input type="number" min="0" max="15" value="${s.borderWidth||0}" onchange="updateObjStyle('borderWidth',+this.value)"></div>
+           <div><label>Ecken rund</label><input type="number" min="0" max="80" value="${s.borderRadius||0}" onchange="updateObjStyle('borderRadius',+this.value)"></div>
+         </div>
+       </section>
+       <section class="v302InspectorSection">
+         <div class="v302InspectorSectionHead"><b>Position & Größe</b><span>px</span></div>
+         <div class="v302GeometryGrid"><div><label>X</label><input type="number" value="${Math.round(o.x)}" onchange="setSelectedGeometry('x',+this.value)"></div><div><label>Y</label><input type="number" value="${Math.round(o.y)}" onchange="setSelectedGeometry('y',+this.value)"></div><div><label>Breite</label><input type="number" value="${Math.round(o.w)}" onchange="setSelectedGeometry('w',+this.value)"></div><div><label>Höhe</label><input type="number" value="${Math.round(o.h)}" onchange="setSelectedGeometry('h',+this.value)"></div></div>
+         <button class="v302DuplicateButton" onclick="duplicateSelected()">⧉ Duplizieren</button>
+       </section>`;
    }else if(o.kind==="graph"){
      const count=(o.graph?.curves||[]).length;
      el.innerHTML=`<div class="graphInspector">
@@ -6112,15 +6124,26 @@ function renderCanvasInspector(){
    }else el.innerHTML=`${o.kind==="image"?"Bild":"Sticker"} ausgewählt. Ziehen zum Verschieben, Punkt unten rechts zum Skalieren.`;
  }else if(canvasState.selectedType==="vector"){
    const v=canvasState.vectors.find(x=>x.id===canvasState.selectedId);if(!v){el.textContent="Keine Auswahl";return}
-   el.innerHTML=`<div class="vectorControls">
-     <div><label>Füllung</label><input type="color" value="${v.fill||"#f7d2cf"}" onchange="updateVectorStyle('fill',this.value)"></div>
-     <div><label>Kontur</label><input type="color" value="${v.stroke||"#8d7369"}" onchange="updateVectorStyle('stroke',this.value)"></div>
-     <div><label>Dicke</label><input type="number" min="0" max="30" value="${v.strokeWidth||2}" onchange="updateVectorStyle('strokeWidth',+this.value)"></div>
-     <div><label>Drehung</label><input type="number" min="-180" max="180" value="${Math.round(v.rotation||0)}" onchange="updateVectorStyle('rotation',+this.value)"></div>
-     ${v.type==="rect"?`<div><label>Ecken rund</label><input type="number" min="0" max="100" value="${v.rx||0}" onchange="updateVectorStyle('rx',+this.value)"></div>`:""}
-     <div><label>Linie</label><select onchange="updateVectorStyle('dash',this.value)"><option value="solid">Durchgezogen</option><option value="dashed" ${v.dash==="dashed"?"selected":""}>Gestrichelt</option><option value="dotted" ${v.dash==="dotted"?"selected":""}>Gepunktet</option></select></div>
-     <div class="full vectorToolbar"><button onclick="duplicateSelectedVector()">Duplizieren</button><button onclick="pathfinderSubtract()">Subtrahieren</button><button onclick="toggleNodeEdit()">Ankerpunkte</button><button class="vectorDeleteBtn" onclick="deleteSelectedCanvasItem()">⌫ Löschen</button></div>
-   </div>`;
+   el.innerHTML=`<section class="v302InspectorSection">
+     <div class="v302InspectorSectionHead"><b>Aussehen</b><span>Form</span></div>
+     <div class="v302StyleGrid">
+       <div><label>Füllfarbe</label><input type="color" value="${v.fill||"#f7d2cf"}" onchange="updateVectorStyle('fill',this.value)"></div>
+       <div><label>Kontur</label><input type="color" value="${v.stroke||"#8d7369"}" onchange="updateVectorStyle('stroke',this.value)"></div>
+       <div><label>Konturstärke</label><input type="number" min="0" max="30" value="${v.strokeWidth||2}" onchange="updateVectorStyle('strokeWidth',+this.value)"></div>
+       <div><label>Linienart</label><select onchange="updateVectorStyle('dash',this.value)"><option value="solid">Durchgezogen</option><option value="dashed" ${v.dash==="dashed"?"selected":""}>Gestrichelt</option><option value="dotted" ${v.dash==="dotted"?"selected":""}>Gepunktet</option></select></div>
+       <div><label>Drehung</label><input type="number" min="-180" max="180" value="${Math.round(v.rotation||0)}" onchange="updateVectorStyle('rotation',+this.value)"></div>
+       ${v.type==="rect"?`<div><label>Ecken rund</label><input type="number" min="0" max="100" value="${v.rx||0}" onchange="updateVectorStyle('rx',+this.value)"></div>`:""}
+     </div>
+   </section>
+   <section class="v302InspectorSection">
+     <div class="v302InspectorSectionHead"><b>Form bearbeiten</b><span>Aktionen</span></div>
+     <div class="v302ActionGrid">
+       <button onclick="duplicateSelectedVector()">⧉ Duplizieren</button>
+       <button onclick="pathfinderSubtract()">− Subtrahieren</button>
+       <button onclick="toggleNodeEdit()">◇ Ankerpunkte</button>
+       <button class="danger" onclick="deleteSelectedCanvasItem()">⌫ Löschen</button>
+     </div>
+   </section>`;
  }else el.textContent="Wähle ein Element aus.";
 }
 
@@ -6875,8 +6898,16 @@ window.editorOpenGroup=function(group,btn){
    html=`<div class="mobileDrawerSection"><div class="mobileTemplateGrid">${$("#pageTemplatePicker")?.innerHTML||""}</div><div class="mobileDrawerActions"><button onclick="saveCurrentPageTemplate()">＋ Aktuelle Seite als Vorlage</button><button onclick="openPageTemplateManager()">⚙ Vorlagen verwalten</button></div></div>`;
  }else if(group==="pages"){
    title="Seiten";const ps=canvasState.pageStyle||{};
+   canvasState.pages ||= [typeof v96CurrentPageData==='function'?v96CurrentPageData():{objects:[],vectors:[],orientation:canvasState.orientation,pageStyle:canvasState.pageStyle}];
+   canvasState.activePage=Math.max(0,Math.min(canvasState.pages.length-1,Number(canvasState.activePage)||0));
+   const pageButtons=canvasState.pages.map((p,i)=>`<button class="mobilePageChoice ${i===canvasState.activePage?'active':''}" onclick="v96SwitchPage(${i})"><b>${i+1}</b><span>Seite ${i+1}</span></button>`).join('');
    html=`<div class="mobilePagePanel">
+    <div class="mobileDrawerTitle">Seite wechseln</div>
+    <div class="mobilePageChoices">${pageButtons}<button class="mobilePageChoice add" onclick="v96AddPage()"><b>＋</b><span>Neue Seite</span></button></div>
+    <div class="mobileDrawerActions rowish"><button onclick="v96DuplicatePage()">⧉ Duplizieren</button><button onclick="v96DeletePage()">⌫ Löschen</button></div>
+    <div class="mobileDrawerTitle">Ansicht</div>
     <div class="mobileDrawerActions rowish"><button onclick="fitCanvasStage()">⊡ An Bildschirm</button><button onclick="setCanvasZoom(.5)">50%</button><button onclick="setCanvasZoom(.75)">75%</button><button onclick="setCanvasZoom(1)">100%</button></div>
+    <div class="mobileDrawerTitle">Seitenstil</div>
     <div class="mobileSubGrid"><label>Ausrichtung<select onchange="setCanvasOrientation(this.value)"><option value="portrait" ${canvasState.orientation==='portrait'?'selected':''}>Hochformat</option><option value="landscape" ${canvasState.orientation==='landscape'?'selected':''}>Querformat</option></select></label><label>Seitenfarbe<input type="color" value="${ps.color||'#ffffff'}" onchange="setCanvasPageStyle('color',this.value)"></label><label>Muster<select onchange="setCanvasPageStyle('pattern',this.value)"><option value="blank" ${ps.pattern==='blank'?'selected':''}>Leer</option><option value="lined" ${ps.pattern==='lined'?'selected':''}>Liniert</option><option value="grid" ${ps.pattern==='grid'?'selected':''}>Kariert</option><option value="dots" ${ps.pattern==='dots'?'selected':''}>Gepunktet</option></select></label><label>Rastergröße<input type="number" min="10" max="48" value="${ps.spacing||24}" onchange="setCanvasPageStyle('spacing',+this.value)"></label><label>Layout-Rand<input type="number" min="0" max="160" value="${ps.margin??55}" onchange="setCanvasPageStyle('margin',+this.value)"></label></div>
     <div class="mobileDrawerActions rowish"><button onclick="alignSelectedToPageMargin('left')">⇤ Linker Rand</button><button onclick="alignSelectedToPageMargin('right')">Rechter Rand ⇥</button><button onclick="fitSelectedToPageMargins()">↔ Bis Rand</button></div>
    </div>`;
@@ -11518,20 +11549,25 @@ function v96RenderPageStrip(){
   canvasState.pages ||= [v96CurrentPageData()];
   strip.innerHTML=`<div class="v96PageThumbs">${canvasState.pages.map((p,i)=>`<button class="v96PageThumb ${i===canvasState.activePage?'active':''}" onclick="v96SwitchPage(${i})"><span>${i+1}</span><small>Seite</small></button>`).join('')}<button class="v96PageAdd" onclick="v96AddPage()"><b>＋</b><small>Seite</small></button></div><div class="v96PageActions"><button onclick="v96DuplicatePage()">⧉</button><button onclick="v96DeletePage()">⌫</button></div>`;
 }
+function v96RefreshOpenMobilePages(){
+  if(window.innerWidth>=900||openEditorGroup!=="pages"||!$("#canvasQuickDrawer")?.classList.contains("open"))return;
+  openEditorGroup=null;
+  setTimeout(()=>editorOpenGroup("pages",document.querySelector('.canvasQuickNav button[data-group="pages"]')),0);
+}
 window.v96SwitchPage=function(index){
   index=Number(index);if(index===canvasState.activePage||!canvasState.pages?.[index])return;
-  v96SyncPage();canvasState.activePage=index;v96LoadPageData(canvasState.pages[index]);v96RenderPageStrip();markCanvasDirty();setTimeout(()=>v96FitCanvas(false),30);
+  v96SyncPage();canvasState.activePage=index;v96LoadPageData(canvasState.pages[index]);v96RenderPageStrip();markCanvasDirty();setTimeout(()=>v96FitCanvas(false),30);v96RefreshOpenMobilePages();
 };
 window.v96AddPage=function(){
-  v96SyncPage();canvasState.pages.push(v96BlankPage());canvasState.activePage=canvasState.pages.length-1;v96LoadPageData(canvasState.pages[canvasState.activePage]);v96RenderPageStrip();markCanvasDirty();cuteToast('Neue Seite hinzugefügt ♡');setTimeout(()=>v96FitCanvas(false),30);
+  v96SyncPage();canvasState.pages.push(v96BlankPage());canvasState.activePage=canvasState.pages.length-1;v96LoadPageData(canvasState.pages[canvasState.activePage]);v96RenderPageStrip();markCanvasDirty();cuteToast('Neue Seite hinzugefügt ♡');setTimeout(()=>v96FitCanvas(false),30);v96RefreshOpenMobilePages();
 };
 window.v96DuplicatePage=function(){
-  v96SyncPage();const copy=v96Deep(canvasState.pages[canvasState.activePage]);copy.objects.forEach(o=>o.id=id());copy.vectors.forEach(v=>v.id=id());canvasState.pages.splice(canvasState.activePage+1,0,copy);canvasState.activePage++;v96LoadPageData(copy);v96RenderPageStrip();markCanvasDirty();cuteToast('Seite dupliziert ✦');
+  v96SyncPage();const copy=v96Deep(canvasState.pages[canvasState.activePage]);copy.objects.forEach(o=>o.id=id());copy.vectors.forEach(v=>v.id=id());canvasState.pages.splice(canvasState.activePage+1,0,copy);canvasState.activePage++;v96LoadPageData(copy);v96RenderPageStrip();markCanvasDirty();cuteToast('Seite dupliziert ✦');v96RefreshOpenMobilePages();
 };
 window.v96DeletePage=function(){
   if((canvasState.pages||[]).length<=1)return cuteToast('Mindestens eine Seite bleibt ♡');
   if(!confirm('Diese Seite wirklich löschen?'))return;
-  canvasState.pages.splice(canvasState.activePage,1);canvasState.activePage=Math.max(0,canvasState.activePage-1);v96LoadPageData(canvasState.pages[canvasState.activePage]);v96RenderPageStrip();markCanvasDirty();
+  canvasState.pages.splice(canvasState.activePage,1);canvasState.activePage=Math.max(0,canvasState.activePage-1);v96LoadPageData(canvasState.pages[canvasState.activePage]);v96RenderPageStrip();markCanvasDirty();v96RefreshOpenMobilePages();
 };
 
 const v96BaseRenderSheetEditor=renderSheetEditor;
@@ -20035,6 +20071,105 @@ setTimeout(install,1100);setTimeout(install,2600);
   #v165FontMenu .v165FontAa{font-family:inherit!important}
   body.editorMode .v187PaletteTimeline{min-height:68px}
   body.editorMode .v187WholeTextBadge{position:absolute;right:8px;top:8px;z-index:3;padding:3px 6px;border-radius:999px;background:#fff5f3;border:1px solid #edcfca;color:#9a6668;font-size:8px;font-weight:850;pointer-events:none}
+
+  /* V302: one orderly Design inspector. Existing controls, only grouped once. */
+  body.editorMode #desktopEditorSidebar .objectPanel:has(>#canvasInspector){
+    padding:13px!important;background:transparent!important;border:0!important
+  }
+  body.editorMode #desktopEditorSidebar .objectPanel:has(>#canvasInspector)>.rowBetween{
+    margin:0 0 10px!important;padding:0 1px 10px!important;border-bottom:1px solid #f0e3df!important
+  }
+  body.editorMode #desktopEditorSidebar .objectPanel:has(>#canvasInspector)>.rowBetween>b{
+    font-size:13px!important;color:#554944!important
+  }
+  body.editorMode #desktopEditorSidebar .snapToggle{
+    min-width:0!important;font-size:9px!important;color:#8f7971!important;gap:5px!important
+  }
+  body.editorMode #desktopEditorSidebar .snapToggle input{
+    appearance:auto!important;-webkit-appearance:checkbox!important;width:15px!important;height:15px!important;min-width:15px!important;max-width:15px!important;margin:0!important;padding:0!important;accent-color:#df8f98!important
+  }
+  body.editorMode #canvasInspector{display:grid!important;gap:10px!important;color:#5d504b!important}
+  body.editorMode #canvasInspector>.v302InspectorNote{
+    display:grid;gap:2px;padding:9px 10px;border:1px solid #e3eacb;border-radius:11px;background:#f6faed;color:#6f7f55
+  }
+  body.editorMode #canvasInspector>.v302InspectorNote b{font-size:10px}
+  body.editorMode #canvasInspector>.v302InspectorNote span{font-size:8px;line-height:1.35}
+  body.editorMode #canvasInspector>.v302PresetBadge{
+    display:flex;align-items:center;justify-content:space-between;gap:7px;min-height:34px;padding:5px 8px;border:1px solid #eadbd6;border-radius:10px;background:#fff8f6;color:#7d645d;font-size:9px;font-weight:850
+  }
+  body.editorMode #canvasInspector .v302InspectorSection,
+  body.editorMode #canvasInspector>.v187ArrangePanel{
+    margin:0!important;padding:11px!important;border:1px solid #ede1dc!important;border-radius:14px!important;background:#fffdfb!important;box-shadow:none!important
+  }
+  body.editorMode #canvasInspector .v302InspectorSectionHead,
+  body.editorMode #canvasInspector .v187ArrangeHead{
+    display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important;margin:0 0 9px!important
+  }
+  body.editorMode #canvasInspector .v302InspectorSectionHead b,
+  body.editorMode #canvasInspector .v187ArrangeHead b{font-size:11px!important;color:#554944!important}
+  body.editorMode #canvasInspector .v302InspectorSectionHead span{
+    font-size:7px!important;text-transform:uppercase!important;letter-spacing:.08em!important;color:#ad9188!important;font-weight:900!important
+  }
+  body.editorMode #canvasInspector .v302FormatRow{
+    display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:5px!important;margin-bottom:9px!important
+  }
+  body.editorMode #canvasInspector .v302FormatRow button{
+    min-width:0!important;height:34px!important;padding:0!important;border:1px solid #eadbd6!important;border-radius:9px!important;background:#fff!important;color:#5e514c!important;font-size:10px!important;font-weight:900!important
+  }
+  body.editorMode #canvasInspector .v302FormatRow button:hover{background:#fff3f2!important;border-color:#efc9c6!important;color:#9b6064!important}
+  body.editorMode #canvasInspector .v302TextGrid,
+  body.editorMode #canvasInspector .v302StyleGrid,
+  body.editorMode #canvasInspector .v302GeometryGrid{
+    display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important
+  }
+  body.editorMode #canvasInspector .v302Wide{grid-column:1/-1!important}
+  body.editorMode #canvasInspector :is(.v302TextGrid,.v302StyleGrid,.v302GeometryGrid)>div{min-width:0!important}
+  body.editorMode #canvasInspector :is(.v302TextGrid,.v302StyleGrid,.v302GeometryGrid) label{
+    display:block!important;margin:0 0 4px!important;font-size:8px!important;font-weight:850!important;color:#927b73!important
+  }
+  body.editorMode #canvasInspector :is(.v302TextGrid,.v302StyleGrid,.v302GeometryGrid) :is(input,select,.v187InspectorFontButton){
+    width:100%!important;min-width:0!important;height:35px!important;box-sizing:border-box!important;border:1px solid #eadbd6!important;border-radius:9px!important;background:#fff!important;color:#5d504b!important;padding:0 8px!important;font-size:9px!important
+  }
+  body.editorMode #canvasInspector :is(.v302TextGrid,.v302StyleGrid) input[type="color"]{
+    padding:4px!important
+  }
+  body.editorMode #canvasInspector .v302DuplicateButton{
+    width:100%!important;min-height:34px!important;margin-top:7px!important;border:1px solid #eadbd6!important;border-radius:9px!important;background:#fff!important;color:#6d5952!important;font-size:9px!important;font-weight:850!important
+  }
+  body.editorMode #canvasInspector>.v187ArrangePanel{order:99!important}
+  body.editorMode #canvasInspector>.v187ArrangePanel .v187ArrangeHead select{
+    height:30px!important;border-radius:9px!important
+  }
+  body.editorMode #canvasInspector>.v187ArrangePanel .v187ArrangeGrid button,
+  body.editorMode #canvasInspector>.v187ArrangePanel .v187ArrangeExtra button{
+    min-height:33px!important;border-radius:9px!important;background:#fff!important
+  }
+  body.editorMode #desktopEditorSidebar .v102RightTabs{
+    grid-template-columns:repeat(3,1fr)!important;gap:5px!important;padding:8px!important;background:rgba(255,251,248,.97)!important
+  }
+  body.editorMode #desktopEditorSidebar .v102RightTabs button{
+    height:34px!important;border:1px solid transparent!important;border-radius:10px!important;font-size:9px!important;color:#8a7169!important
+  }
+  body.editorMode #desktopEditorSidebar .v102RightTabs button.active{
+    background:#f9e3e3!important;border-color:#efccca!important;color:#9d5f64!important
+  }
+  body.editorMode #canvasInspector .v302StyleGrid>div:has(input[type="color"]){
+    display:grid!important;grid-template-columns:minmax(0,1fr) 30px!important;grid-template-rows:auto 35px!important;gap:4px 5px!important
+  }
+  body.editorMode #canvasInspector .v302StyleGrid>div:has(input[type="color"])>label{grid-column:1/-1!important;grid-row:1!important}
+  body.editorMode #canvasInspector .v302StyleGrid>div:has(input[type="color"])>input[type="color"]{grid-column:1!important;grid-row:2!important}
+  body.editorMode #canvasInspector .v302StyleGrid>div:has(input[type="color"])>.v187NoneBtn{
+    grid-column:2!important;grid-row:2!important;width:30px!important;height:35px!important;min-height:35px!important;margin:0!important;padding:0!important;
+    border:1px solid #eadbd6!important;border-radius:9px!important;background:#fff7f5!important;color:#b46b70!important
+  }
+  body.editorMode #canvasInspector .v302StyleGrid>div:has(input[type="color"])>.v187NoneBtn svg{width:15px!important;height:15px!important}
+  body.editorMode #canvasInspector .v302ActionGrid{
+    display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important
+  }
+  body.editorMode #canvasInspector .v302ActionGrid button{
+    min-height:34px!important;border:1px solid #eadbd6!important;border-radius:9px!important;background:#fff!important;color:#6c5851!important;font-size:9px!important;font-weight:850!important;padding:6px!important
+  }
+  body.editorMode #canvasInspector .v302ActionGrid button.danger{background:#fff5f4!important;color:#a65e64!important;border-color:#efd2cf!important}
 }
 </style>
 <script id="v187-laptop-fixes-script">
@@ -20111,7 +20246,7 @@ window.v187Arrange=function(mode){const its=items();if(!its.length)return;const 
 window.v187Distribute=function(axis){const its=items();if(its.length<3)return;const arr=its.map(x=>({x,b:itemBox(x)})).sort((a,b)=>axis==='x'?a.b.x-b.b.x:a.b.y-b.b.y);if(axis==='x'){const start=arr[0].b.x,end=arr.at(-1).b.x+arr.at(-1).b.w,total=arr.reduce((n,z)=>n+z.b.w,0),gap=(end-start-total)/(arr.length-1);let cur=start;arr.forEach(z=>{shiftItem(z.x,cur-z.b.x,0);cur+=z.b.w+gap})}else{const start=arr[0].b.y,end=arr.at(-1).b.y+arr.at(-1).b.h,total=arr.reduce((n,z)=>n+z.b.h,0),gap=(end-start-total)/(arr.length-1);let cur=start;arr.forEach(z=>{shiftItem(z.x,0,cur-z.b.y);cur+=z.b.h+gap})}try{renderCanvasObjects?.();renderVectors?.();renderCanvasInspector?.();markCanvasDirty?.();pushHistory?.()}catch(_){}};
 window.v187SetNone=function(which){window.v137Appearance?.(which==='fill'?'fill':'stroke','transparent')};
 function addNoneButtons(host){if(!host)return;qa('label',host).forEach(l=>{const txt=(l.textContent||'').trim().toLowerCase();const wrap=q('input[type="color"]',l)?l:l.parentElement;if(!wrap||q('.v187NoneBtn',wrap)||q('.v141TransparentIcon',wrap))return;if(/füll|hintergrund/.test(txt)&&q('input[type="color"]',wrap)){const b=document.createElement('button');b.type='button';b.className='v187NoneBtn';b.title='Keine Füllung';b.setAttribute('aria-label',b.title);b.innerHTML='<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8"/><path d="m6 6 12 12"/></svg>';b.onclick=()=>v187SetNone('fill');wrap.appendChild(b)}else if(/kontur|linienfarbe/.test(txt)&&q('input[type="color"]',wrap)){const b=document.createElement('button');b.type='button';b.className='v187NoneBtn';b.title='Keine Kontur';b.setAttribute('aria-label',b.title);b.innerHTML='<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8"/><path d="m6 6 12 12"/></svg>';b.onclick=()=>v187SetNone('stroke');wrap.appendChild(b)}})}
-function enhanceInspector(){if(!desktop())return;const host=q('#canvasInspector');if(!host)return;qa('.v131ArrangePanel',host).forEach(x=>x.remove());const key=JSON.stringify(selectionIds());const existing=q('.v187ArrangePanel',host);if(existing?.dataset.selection===key){addNoneButtons(host);ensureInspectorFontButton();return}existing?.remove();const count=selectionCount();if(!count){addNoneButtons(host);ensureInspectorFontButton();return}const panel=document.createElement('div');panel.className='v187ArrangePanel';panel.dataset.selection=key;panel.innerHTML=`<div class="v187ArrangeHead"><b>Anordnen</b><select id="v187ArrangeTarget" title="Ausrichten an"><option value="${count>1?'selection':'page'}">${count>1?'Auswahl':'Blatt'}</option>${count>1?'<option value="page">Blatt</option>':''}</select></div><div class="v187ArrangeGrid"><button onclick="v187Arrange('left')">⇤ Links</button><button onclick="v187Arrange('centerX')">↔ Mitte</button><button onclick="v187Arrange('right')">Rechts ⇥</button><button onclick="v187Arrange('top')">⇡ Oben</button><button onclick="v187Arrange('centerY')">↕ Mitte</button><button onclick="v187Arrange('bottom')">Unten ⇣</button></div><div class="v187ArrangeExtra">${count>=3?'<button onclick="v187Distribute(\'x\')">Horizontal verteilen</button><button onclick="v187Distribute(\'y\')">Vertikal verteilen</button>':''}<button onclick="moveSelectedLayer(1)">↑ Nach vorn</button><button onclick="moveSelectedLayer(-1)">↓ Nach hinten</button></div>`;host.prepend(panel);addNoneButtons(host);ensureInspectorFontButton()}
+function enhanceInspector(){if(!desktop())return;const host=q('#canvasInspector');if(!host)return;qa('.v131ArrangePanel',host).forEach(x=>x.remove());const key=JSON.stringify(selectionIds());const existing=q('.v187ArrangePanel',host);if(existing?.dataset.selection===key){addNoneButtons(host);ensureInspectorFontButton();return}existing?.remove();const count=selectionCount();if(!count){addNoneButtons(host);ensureInspectorFontButton();return}const panel=document.createElement('div');panel.className='v187ArrangePanel';panel.dataset.selection=key;panel.innerHTML=`<div class="v187ArrangeHead"><b>Anordnen</b><select id="v187ArrangeTarget" title="Ausrichten an"><option value="${count>1?'selection':'page'}">${count>1?'Auswahl':'Blatt'}</option>${count>1?'<option value="page">Blatt</option>':''}</select></div><div class="v187ArrangeGrid"><button onclick="v187Arrange('left')">⇤ Links</button><button onclick="v187Arrange('centerX')">↔ Mitte</button><button onclick="v187Arrange('right')">Rechts ⇥</button><button onclick="v187Arrange('top')">⇡ Oben</button><button onclick="v187Arrange('centerY')">↕ Mitte</button><button onclick="v187Arrange('bottom')">Unten ⇣</button></div><div class="v187ArrangeExtra">${count>=3?'<button onclick="v187Distribute(\'x\')">Horizontal verteilen</button><button onclick="v187Distribute(\'y\')">Vertikal verteilen</button>':''}<button onclick="moveSelectedLayer(1)">↑ Nach vorn</button><button onclick="moveSelectedLayer(-1)">↓ Nach hinten</button></div>`;host.append(panel);addNoneButtons(host);ensureInspectorFontButton()}
 const oldInspector=window.renderCanvasInspector;if(typeof oldInspector==='function'){window.renderCanvasInspector=function(){const r=oldInspector.apply(this,arguments);requestAnimationFrame(enhanceInspector);return r};try{renderCanvasInspector=window.renderCanvasInspector}catch(_){}}
 
 /* ---------- one font chooser everywhere ---------- */

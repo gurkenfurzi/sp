@@ -9205,12 +9205,19 @@ function renderHome(){
  };
  const nowMin=new Date().getHours()*60+new Date().getMinutes();
  const todayCode=dayCode(new Date());
+ // "Heute" zeigt nur Unterricht, der wirklich stattfindet. Entfall bleibt im Plan sichtbar,
+ // wird aber weder als nächste Stunde noch in der Tagesliste angezeigt.
+ const isCancelledTodayLesson=l=>{
+   if(!l)return false;
+   if(l.cancelledFromBasis||String(l.raw||'').trim()==='__ENTFALL__')return true;
+   return /\b(entfall|entfällt|ausfall|fällt\s+aus)\b/i.test(String(l.raw||''));
+ };
  const todayLessons=expandLessonsForCountdown(mergeLessons(stableTimetableDay(
-   applyEffectiveDisplayTimes((data.timetable.lessons||[]).filter(x=>x.day===todayCode))
- ))).sort((a,b)=>a.start.localeCompare(b.start));
+   applyEffectiveDisplayTimes((data.timetable.lessons||[]).filter(x=>x.day===todayCode&&!isCancelledTodayLesson(x)))
+ ))).filter(x=>!isCancelledTodayLesson(x)).sort((a,b)=>a.start.localeCompare(b.start));
  const breaksToday=getActivePauses();
  $("#todayDate").textContent=new Date().toLocaleDateString("de-DE",{weekday:"long",day:"2-digit",month:"long"});
- const today=dayCode(new Date()), lessons=fillCancelledSlots(mergeLessons((data.timetable.lessons||[]).filter(x=>x.day===today)));
+ const today=dayCode(new Date()), lessons=fillCancelledSlots(mergeLessons((data.timetable.lessons||[]).filter(x=>x.day===today&&!isCancelledTodayLesson(x)))).filter(x=>!isCancelledTodayLesson(x));
  const now=new Date(),min=now.getHours()*60+now.getMinutes();
  let next=todayLessons.find(x=>x.raw!=="__ENTFALL__"&&timeToMin(x.end)>min);
  if(next){
@@ -9256,7 +9263,12 @@ function renderHome(){
       <div class="muted" style="margin-top:6px">${diff>0?`in ${minsText(diff)} · `:""}${next.start} Uhr${p.room?" · "+esc(p.room):""}</div>`;
    }
   }
- }else $("#nextPanel").innerHTML=`<div class="eyebrow">Heute</div><div style="font-size:25px;font-weight:900;margin-top:5px">Kein weiterer Unterricht.</div>`;
+ }else{
+   const hadClassToday=todayLessons.length>0;
+   $("#nextPanel").innerHTML=hadClassToday
+     ? `<div class="eyebrow">Geschafft ♡</div><div style="font-size:25px;font-weight:900;margin-top:5px">Für heute bist du durch 🌷</div><div class="muted" style="margin-top:6px">Du hast deinen Schultag geschafft – gönn dir jetzt etwas Schönes.</div>`
+     : `<div class="eyebrow">Heute</div><div style="font-size:25px;font-weight:900;margin-top:5px">Heute ist frei 🌷</div><div class="muted" style="margin-top:6px">Mach dir einen schönen Tag und lade ein bisschen auf ♡</div>`;
+ }
  $("#todayLessons").innerHTML=lessons.length?renderLessonsWithPauses(lessons):'<div class="empty">Heute kein Unterricht.</div>';
  const openHW=data.homework.filter(x=>!x.done).length, upcoming=data.tests.filter(x=>x.date>=todayISO()).length;
  const avg=gradeAverage(data.grades);
@@ -10136,23 +10148,13 @@ button.primary,button.ghost,.iconbtn{
 </svg>`;
 function renderSubjects(){
  data.subjects.forEach(ensureSubjectShape);
- $("#subjectList").className="notebookGrid";
- $("#subjectList").innerHTML=data.subjects.length?data.subjects.map(s=>{
-   ensureSubjectShape(s);
-   const light=s.cover||"#f4acc5";
-   const dark=s.color||"#c8568e";
-   const abbr=s.abbr||defaultSubjectAbbr(s.name);
-   return `<button class="notebook newSvgNotebook" style="--nb-light:${light};--nb-dark:${dark}" onclick="openSubject('${s.id}')">
-     <span class="notebookVisual">
-       <span class="notebookArt">${SUBJECT_NOTEBOOK_SVG}</span>
-       <span class="notebookAbbr">${esc(abbr)}</span>
-     </span>
-     <span class="notebookBelow">
-       <strong>${esc(s.name)}</strong>
-       <small>${(s.topics||[]).length} Themen · ${(s.files||[]).length} Dateien</small>
-     </span>
-   </button>`;
- }).join(""):'<div class="empty">Noch keine Fächer.</div>';
+ const bookSvg=`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5A2.5 2.5 0 0 1 7.5 2H12v17H7.5A2.5 2.5 0 0 0 5 21.5z"/><path d="M19 4.5A2.5 2.5 0 0 0 16.5 2H12v17h4.5a2.5 2.5 0 0 1 2.5 2.5z"/></svg>`;
+ $("#subjectList").className="";
+ const cards=(data.subjects||[]).map(s=>{
+   const light=s.cover||"#f7dfe1",dark=s.color||"#c77f84",count=(s.topics||[]).length;
+   return `<button class="v102Notebook v103Notebook v299SubjectNotebook v302SubjectCard" data-search="${esc(String(s.name||'').toLowerCase())}" data-subject-id="${esc(s.id)}" style="--book-soft:${light};--book-accent:${dark}" onclick="openSubject('${s.id}')"><span class="v302SubjectBinding" aria-hidden="true"><i></i><i></i><i></i></span><span class="v302SubjectTop"><span class="v302SubjectIcon">${bookSvg}</span><span class="v302SubjectBadge">Notizfach</span></span><strong class="v302SubjectName">${esc(s.name)}</strong><span class="v302SubjectFoot"><small class="v302SubjectCount">${count} ${count===1?'Thema':'Themen'}</small><span class="v302SubjectArrow" aria-hidden="true">›</span></span></button>`;
+ }).join("");
+ $("#subjectList").innerHTML=`<div class="v102SubjectsPage v103SubjectsPage"><div class="v102SubjectPageHead"><div><h2>Fächer</h2><p>Deine Fächer</p></div></div><div class="v102NotebookGrid v299SubjectGrid">${cards||'<div class="empty">Noch keine Fächer.</div>'}</div></div>`;
 }
 function daysBetween(a,b){return Math.max(1,Math.round((new Date(b)-new Date(a))/86400000)+1)}
 function renderAbsence(){
@@ -11913,6 +11915,8 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
     window.openSubjectSettings=function(sid=selectedSubjectId){const s=data.subjects.find(x=>x.id===sid);if(!s)return;ensureSubjectShape(s);openModal(`<h2>Fach bearbeiten</h2><div class="formGrid"><div class="full"><label>Name</label><input id="v102SubjectName" value="${esc(s.name)}"></div><div><label>Abkürzung</label><input id="v102SubjectAbbr" value="${esc(s.abbr||defaultSubjectAbbr(s.name))}"></div><div><label>Symbol</label><select id="v102SubjectIcon"><option value="book" ${subjectIconKey(s)==='book'?'selected':''}>Buch</option><option value="pencil" ${subjectIconKey(s)==='pencil'?'selected':''}>Stift</option><option value="calculator" ${subjectIconKey(s)==='calculator'?'selected':''}>Rechner</option><option value="chat" ${subjectIconKey(s)==='chat'?'selected':''}>Sprache</option><option value="atom" ${subjectIconKey(s)==='atom'?'selected':''}>Naturwissenschaft</option><option value="palette" ${subjectIconKey(s)==='palette'?'selected':''}>Kunst</option></select></div><div><label>Akzent</label><input id="v102SubjectColor" type="color" value="${s.color||'#c77f84'}"></div><div><label>Cover</label><input id="v102SubjectCover" type="color" value="${s.cover||'#f7dfe1'}"></div></div><div class="row" style="margin-top:12px"><button class="primary" onclick="v102SaveSubjectSettings('${s.id}')">Speichern</button><button class="dangerBtn" onclick="deleteSubjectFromSettings('${s.id}')">Fach löschen</button></div>`)};
   window.v102SaveSubjectSettings=function(sid){const s=data.subjects.find(x=>x.id===sid);if(!s)return;const old=s.name,n=String($('#v102SubjectName')?.value||'').trim();if(!n)return;s.name=n;s.abbr=String($('#v102SubjectAbbr')?.value||'').trim()||defaultSubjectAbbr(n);s.iconKey=$('#v102SubjectIcon')?.value||'book';s.color=$('#v102SubjectColor')?.value||s.color;s.cover=$('#v102SubjectCover')?.value||s.cover;[data.flashDecks,data.flashcards,data.studySheets,data.quizzes,data.tests,data.homework,data.grades,data.writtenTests].forEach(arr=>(arr||[]).forEach(x=>{if(x.subject===old)x.subject=n}));save();closeModal();renderSubjectDetail()};
 
+  window.renderSubjects=renderSubjects;
+
   renderSubjectDetail=function(){const root=$('#subjectDetail');if(!root)return;const s=data.subjects.find(x=>x.id===selectedSubjectId);if(!s){root.innerHTML='<div class="empty">Fach nicht gefunden.</div>';return}ensureSubjectShape(s);const topics=s.topics||[];const cards=topics.map((t,i)=>{const decks=(data.flashDecks||[]).filter(d=>d.subject===s.name&&d.topicId===t.id),cardCount=decks.reduce((n,d)=>n+(data.flashcards||[]).filter(c=>c.deckId===d.id).length,0),sheets=typedSheets(s,t,'sheet').length,works=typedSheets(s,t,'worksheet').length,home=typedSheets(s,t,'homework').length,quiz=(data.quizzes||[]).filter(q=>q.subject===s.name&&q.topicId===t.id).length,tests=(data.writtenTests||[]).filter(x=>x.subject===s.name&&x.topicId===t.id).length,c=colorAt(i);return `<button class="v102TopicFolder" data-search="${esc(String(t.title||'').toLowerCase())}" onclick="openTopic('${s.id}','${t.id}')"><div class="v102TopicTop"><span class="v102FolderIcon" style="--bubble:${c[0]};color:${c[1]}">${v102Icon('folder')}</span><b>${esc(t.title)}</b><i>›</i></div><div class="v102TopicStats"><span>${v102Icon('sheet')}${sheets} Lernblätter</span><span>${v102Icon('worksheet')}${home+works} Aufgaben/Arbeitsblätter</span><span>${v102Icon('cards')}${cardCount} Karteikarten</span><span>${v102Icon('quiz')}${quiz} Quizze · ${tests} Tests</span></div></button>`}).join('')||'<div class="empty">Noch keine Themen.</div>';root.innerHTML=`<div class="v102SubjectDetail"><div class="v102SubjectPageHead"><div class="v102SubjectIdentity"><button class="v102Back" onclick="leaveSubjectNotebook()">${v102Icon('back')}</button><div><h2>${esc(s.name)}</h2><p>Themenordner</p></div></div><button class="v102RoundIcon" onclick="openSubjectSettings('${s.id}')">${v102Icon('settings')}</button></div><div class="v102SubjectTools"><label class="v102Search">${v102Icon('search')}<input placeholder="Themen suchen …" oninput="v102FilterTopics(this.value)"></label><button class="v102AddTopic" onclick="openNewTopic('${s.id}')">＋ Thema</button></div><div class="v102TopicGrid">${cards}</div></div>`};
 
   function topicCounts(s,t){const decks=(data.flashDecks||[]).filter(d=>d.subject===s.name&&d.topicId===t.id);return {sheet:typedSheets(s,t,'sheet'),homework:typedSheets(s,t,'homework'),worksheet:typedSheets(s,t,'worksheet'),decks,cardCount:decks.reduce((n,d)=>n+(data.flashcards||[]).filter(c=>c.deckId===d.id).length,0),quizzes:(data.quizzes||[]).filter(q=>q.subject===s.name&&q.topicId===t.id),tests:(data.writtenTests||[]).filter(x=>x.subject===s.name&&x.topicId===t.id)}}
@@ -12056,7 +12060,7 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
   /* V299: one simple subject notebook + one outlined theme-folder system. */
   renderSubjects=function(){
     const root=$('#subjectList');if(!root)return;data.subjects.forEach(ensureSubjectShape);
-    const cards=(data.subjects||[]).map((sub,i)=>{const c=colorAt(i),accent=sub.color||c[1],soft=sub.cover||c[0];return `<button class="v102Notebook v103Notebook v299SubjectNotebook" data-search="${esc(sub.name.toLowerCase())}" style="--book-soft:${soft};--book-accent:${accent}" onclick="openSubject('${sub.id}')"><span class="v301SubjectAccent"></span><span class="v299BookGlyph">${icon(sIcon(sub))}</span><span class="v299BookCopy"><small class="v301SubjectKicker">FACH</small><strong>${esc(sub.name)}</strong><small>${(sub.topics||[]).length} ${(sub.topics||[]).length===1?'Thema':'Themen'}</small></span></button>`}).join('');
+    const cards=(data.subjects||[]).map((sub,i)=>{const c=colorAt(i),accent=sub.color||c[1],soft=sub.cover||c[0],count=(sub.topics||[]).length;return `<button class="v102Notebook v103Notebook v299SubjectNotebook v302SubjectCard" data-search="${esc(sub.name.toLowerCase())}" data-subject-id="${esc(sub.id)}" style="--book-soft:${soft};--book-accent:${accent}" onclick="openSubject('${sub.id}')"><span class="v302SubjectBinding" aria-hidden="true"><i></i><i></i><i></i></span><span class="v302SubjectTop"><span class="v302SubjectIcon">${icon(sIcon(sub))}</span><span class="v302SubjectBadge">Notizfach</span></span><strong class="v302SubjectName">${esc(sub.name)}</strong><span class="v302SubjectFoot"><small class="v302SubjectCount">${count} ${count===1?'Thema':'Themen'}</small><span class="v302SubjectArrow" aria-hidden="true">›</span></span></button>`}).join('');
     root.className='';root.innerHTML=`<div class="v102SubjectsPage v103SubjectsPage"><div class="v102SubjectPageHead"><div><h2>Fächer</h2><p>Deine Fächer</p></div><button class="v102RoundIcon" onclick="openView('settings')" aria-label="Einstellungen">${icon('settings')}</button></div><div class="v102SubjectTools"><label class="v102Search">${icon('search')}<input placeholder="Fächer suchen" oninput="v102FilterSubjects(this.value)"></label><button class="v102AddSubject v299PlusOnly" onclick="openAddSubject()" aria-label="Fach hinzufügen" title="Fach hinzufügen">${icon('plus')}</button></div><div class="v102NotebookGrid v299SubjectGrid">${cards||'<div class="v103EmptyState">Noch kein Fach. Erstelle dein erstes Fach.</div>'}</div></div>`;
   };
 
@@ -22637,25 +22641,105 @@ body:not(.editorMode) #v210Sidebar .navItem.active{background:var(--studia-theme
 #view-home .v297QuickIcon,#view-study .v298HubIcon{margin:auto!important;align-self:center!important;justify-self:center!important;display:grid!important;place-items:center!important}
 #view-home .v297QuickIcon svg,#view-study .v298HubIcon svg{display:block!important;margin:auto!important}
 
-/* Subject cards: compact pastel Studia note blocks — one owner, no decorative notebook chrome. */
-.v299SubjectGrid{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(170px,1fr))!important;gap:11px!important}
-.v102Notebook.v103Notebook.v299SubjectNotebook{
-  position:relative!important;min-height:92px!important;height:auto!important;padding:13px 13px 13px 17px!important;
-  border:1px solid color-mix(in srgb,var(--book-accent) 20%,var(--studia-theme-line))!important;border-radius:18px!important;
-  background:linear-gradient(145deg,color-mix(in srgb,var(--book-soft) 26%,var(--studia-theme-paper)),var(--studia-theme-paper) 68%)!important;
-  box-shadow:0 5px 14px color-mix(in srgb,var(--book-accent) 7%,transparent)!important;
-  display:grid!important;grid-template-columns:36px minmax(0,1fr)!important;align-items:center!important;gap:10px!important;
-  text-align:left!important;color:var(--studia-theme-text)!important;overflow:hidden!important
+/* Subject cards: one compact Studia notebook-card owner. No old illustrated cover. */
+.v299SubjectGrid{
+  display:grid!important;
+  grid-template-columns:repeat(auto-fill,minmax(205px,1fr))!important;
+  gap:14px!important;
+  align-items:stretch!important
 }
-.v102Notebook.v103Notebook.v299SubjectNotebook:before,.v102Notebook.v103Notebook.v299SubjectNotebook:after{display:none!important;content:none!important}
-.v301SubjectAccent{position:absolute;left:0;top:14px;bottom:14px;width:3px;border-radius:0 999px 999px 0;background:color-mix(in srgb,var(--book-accent) 72%,var(--studia-theme-text))}
-.v299SubjectNotebook .v102NotebookPin,.v299SubjectNotebook .v102Heart,.v299SubjectNotebook .v102NotebookIcon,.v300NotebookBinding,.v299BookArrow{display:none!important}
-.v299BookGlyph{width:36px;height:36px;border:1px solid color-mix(in srgb,var(--book-accent) 18%,var(--studia-theme-line));border-radius:12px;background:color-mix(in srgb,var(--book-soft) 32%,var(--studia-theme-paper));color:color-mix(in srgb,var(--book-accent) 78%,var(--studia-theme-text));display:grid;place-items:center}
-.v299BookGlyph svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.v299BookCopy{display:grid;grid-template-rows:auto auto auto;gap:2px;min-width:0}
-.v299BookCopy .v301SubjectKicker{font-size:7px!important;line-height:1!important;letter-spacing:.14em!important;font-weight:950!important;color:color-mix(in srgb,var(--book-accent) 62%,var(--studia-theme-muted))!important}
-.v299BookCopy strong{font-size:14px!important;line-height:1.18!important;color:var(--studia-theme-text)!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
-.v299BookCopy>small:last-child{font-size:8.5px!important;color:var(--studia-theme-muted)!important}
+#view-subjects .v102Notebook.v103Notebook.v299SubjectNotebook.v302SubjectCard{
+  position:relative!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:none!important;
+  min-height:126px!important;
+  height:auto!important;
+  aspect-ratio:auto!important;
+  padding:16px 16px 14px 25px!important;
+  border:1px solid color-mix(in srgb,var(--book-accent) 20%,var(--studia-theme-line))!important;
+  border-radius:22px!important;
+  background:
+    linear-gradient(180deg,color-mix(in srgb,var(--book-soft) 20%,var(--studia-theme-paper)) 0 34px,var(--studia-theme-paper) 34px 100%)!important;
+  box-shadow:0 8px 22px color-mix(in srgb,var(--book-accent) 8%,transparent)!important;
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  grid-template-rows:auto auto auto!important;
+  align-content:start!important;
+  justify-items:stretch!important;
+  gap:7px!important;
+  text-align:left!important;
+  color:var(--studia-theme-text)!important;
+  overflow:hidden!important;
+  transform:none!important
+}
+#view-subjects .v302SubjectCard:before,
+#view-subjects .v302SubjectCard:after,
+#view-subjects .v302SubjectCard>.v102NotebookPin,
+#view-subjects .v302SubjectCard>.v102NotebookIcon,
+#view-subjects .v302SubjectCard>.v102Heart,
+#view-subjects .v302SubjectCard>.notebookVisual,
+#view-subjects .v302SubjectCard>.notebookArt,
+#view-subjects .v302SubjectCard>.notebookBelow,
+#view-subjects .v302SubjectCard>.v301SubjectAccent{display:none!important;content:none!important}
+.v302SubjectBinding{
+  position:absolute;left:8px;top:16px;bottom:16px;width:8px;
+  display:flex;flex-direction:column;align-items:center;justify-content:space-around;
+  pointer-events:none
+}
+.v302SubjectBinding i{
+  display:block;width:6px;height:6px;border-radius:99px;
+  border:1px solid color-mix(in srgb,var(--book-accent) 42%,var(--studia-theme-line));
+  background:color-mix(in srgb,var(--book-soft) 55%,var(--studia-theme-paper))
+}
+.v302SubjectTop{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0}
+.v302SubjectIcon{
+  width:34px;height:34px;flex:0 0 34px;border-radius:12px;
+  border:1px solid color-mix(in srgb,var(--book-accent) 20%,var(--studia-theme-line));
+  background:color-mix(in srgb,var(--book-soft) 42%,var(--studia-theme-paper));
+  color:color-mix(in srgb,var(--book-accent) 76%,var(--studia-theme-text));
+  display:grid;place-items:center
+}
+.v302SubjectIcon svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+.v302SubjectBadge{
+  min-width:0;padding:5px 8px;border:1px solid var(--studia-theme-line);border-radius:999px;
+  background:color-mix(in srgb,var(--book-soft) 20%,var(--studia-theme-paper));
+  color:var(--studia-theme-muted);font-size:7.5px!important;font-weight:950!important;letter-spacing:.10em!important;
+  text-transform:uppercase;white-space:nowrap
+}
+.v302SubjectName{
+  display:block;min-width:0;margin-top:2px;
+  font-size:17px!important;line-height:1.18!important;font-weight:950!important;
+  color:var(--studia-theme-text)!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important
+}
+.v302SubjectFoot{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0}
+.v302SubjectCount{font-size:9px!important;line-height:1.2!important;color:var(--studia-theme-muted)!important;font-weight:780!important}
+.v302SubjectArrow{
+  width:25px;height:25px;flex:0 0 25px;border-radius:9px;
+  display:grid;place-items:center;color:color-mix(in srgb,var(--book-accent) 72%,var(--studia-theme-muted));
+  background:color-mix(in srgb,var(--book-soft) 26%,var(--studia-theme-paper))
+}
+.v302SubjectArrow svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#view-subjects .v302SubjectCard:hover{
+  border-color:color-mix(in srgb,var(--book-accent) 36%,var(--studia-theme-line))!important;
+  box-shadow:0 10px 24px color-mix(in srgb,var(--book-accent) 11%,transparent)!important;
+  transform:translateY(-1px)!important
+}
+@media(min-width:900px){
+  .v299SubjectGrid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+}
+@media(min-width:900px) and (max-width:1180px){
+  .v299SubjectGrid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+}
+@media(max-width:899px){
+  .v299SubjectGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+  #view-subjects .v302SubjectCard{min-height:116px!important;padding:14px 12px 12px 22px!important;border-radius:19px!important}
+  .v302SubjectName{font-size:15px!important}
+  .v302SubjectBadge{font-size:7px!important}
+}
+@media(max-width:360px){
+  .v299SubjectGrid{grid-template-columns:1fr!important}
+}
 
 /* Topics: compact folder tiles, multiple next to each other on phone and desktop. */
 .v299TopicList{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(160px,1fr))!important;gap:11px!important;align-items:stretch!important}
@@ -23003,7 +23087,7 @@ const boot=()=>{
  if(q('#view-deck-detail.active')){document.body.classList.toggle('v214LearningReadOnly',deckMode==='learn');renderDeckDetail298()}
  if(q('#view-settings.active'))wireThemeControls();
  if(cleaned)try{save()}catch(_){}
- const e=q('#headerEyebrow');if(e)e.textContent='VERSION 301';
+ const e=q('#headerEyebrow');if(e)e.textContent='VERSION 303';
 };
 [0,120,600,1600,2400,4200].forEach(ms=>setTimeout(boot,ms));
 window.addEventListener('pageshow',()=>setTimeout(boot,50));
