@@ -3385,7 +3385,7 @@ html,body{background:#fff7f4;}
   </button>
 </div>
 <div id="canvasQuickDrawer" class="canvasQuickDrawer"></div>
-<div id="mobileSelectionTools" class="mobileSelectionTools"></div>
+
 <div id="multiSelectStatus" class="multiSelectStatus"></div>
       <input id="canvasImageInput" type="file" accept="image/*" style="display:none" onchange="if(this.files?.[0])addCanvasImage(this.files[0]);this.value=''">
       <input id="canvasCameraInput" type="file" accept="image/*" capture="environment" style="display:none" onchange="if(this.files?.[0])addCanvasImage(this.files[0]);this.value=''">
@@ -6847,9 +6847,11 @@ function mobileTextLibraryHTML(){
 
 window.editorOpenGroup=function(group,btn){
  const d=$("#canvasQuickDrawer");if(!d)return;
+ const navGroup=(group==="textEdit"||group==="text")?"textLibrary":group;
+ const activeBtn=btn||document.querySelector(`.canvasQuickNav button[data-group="${navGroup}"]`);
  if(openEditorGroup===group && d.classList.contains("open")){closeEditorDrawer();return}
  openEditorGroup=group;d.classList.add("open");document.body.classList.add("editorDrawerOpen");
- $$(".canvasQuickNav button").forEach(x=>x.classList.remove("active"));btn?.classList.add("active");
+ $$(".canvasQuickNav button").forEach(x=>x.classList.remove("active"));activeBtn?.classList.add("active");
  const item=(label,action,icon="•")=>`<button onclick="${action}"><b>${icon}</b><span>${label}</span></button>`;
  const grid=items=>`<div class="mobileToolGrid">${items.join("")}</div>`;
  let title="Werkzeuge",html="";

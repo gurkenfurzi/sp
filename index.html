@@ -3133,7 +3133,7 @@ html,body{background:#fff7f4;}
     <div class="stack" id="homeworkList"></div>
 
     <div class="section">
-      <div class="sectionHead"><h2>Tests & Arbeiten</h2><button class="primary" onclick="openAddTest()">+ Neu</button></div>
+      <div class="sectionHead"><h2>Leistungsnachweise</h2><button class="primary" onclick="openAddTest()">+ Neu</button></div>
       <div class="stack" id="testList"></div>
     </div>
   </section>
@@ -3383,7 +3383,7 @@ html,body{background:#fff7f4;}
   </button>
 </div>
 <div id="canvasQuickDrawer" class="canvasQuickDrawer"></div>
-<div id="mobileSelectionTools" class="mobileSelectionTools"></div>
+
 <div id="multiSelectStatus" class="multiSelectStatus"></div>
       <input id="canvasImageInput" type="file" accept="image/*" style="display:none" onchange="if(this.files?.[0])addCanvasImage(this.files[0]);this.value=''">
       <input id="canvasCameraInput" type="file" accept="image/*" capture="environment" style="display:none" onchange="if(this.files?.[0])addCanvasImage(this.files[0]);this.value=''">
@@ -6853,9 +6853,11 @@ function mobileTextLibraryHTML(){
 
 window.editorOpenGroup=function(group,btn){
  const d=$("#canvasQuickDrawer");if(!d)return;
+ const navGroup=(group==="textEdit"||group==="text")?"textLibrary":group;
+ const activeBtn=btn||document.querySelector(`.canvasQuickNav button[data-group="${navGroup}"]`);
  if(openEditorGroup===group && d.classList.contains("open")){closeEditorDrawer();return}
  openEditorGroup=group;d.classList.add("open");document.body.classList.add("editorDrawerOpen");
- $$(".canvasQuickNav button").forEach(x=>x.classList.remove("active"));btn?.classList.add("active");
+ $$(".canvasQuickNav button").forEach(x=>x.classList.remove("active"));activeBtn?.classList.add("active");
  const item=(label,action,icon="•")=>`<button onclick="${action}"><b>${icon}</b><span>${label}</span></button>`;
  const grid=items=>`<div class="mobileToolGrid">${items.join("")}</div>`;
  let title="Werkzeuge",html="";
@@ -12054,7 +12056,7 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
   /* V299: one simple subject notebook + one outlined theme-folder system. */
   renderSubjects=function(){
     const root=$('#subjectList');if(!root)return;data.subjects.forEach(ensureSubjectShape);
-    const cards=(data.subjects||[]).map((sub,i)=>{const c=colorAt(i),accent=sub.color||c[1],soft=sub.cover||c[0];return `<button class="v102Notebook v103Notebook v299SubjectNotebook" data-search="${esc(sub.name.toLowerCase())}" style="--book-soft:${soft};--book-accent:${accent}" onclick="openSubject('${sub.id}')"><span class="v300NotebookBinding"><i></i><i></i><i></i></span><span class="v299BookGlyph">${icon(sIcon(sub))}</span><span class="v299BookCopy"><strong>${esc(sub.name)}</strong><small>${(sub.topics||[]).length} ${(sub.topics||[]).length===1?'Thema':'Themen'}</small></span><span class="v299BookArrow">›</span></button>`}).join('');
+    const cards=(data.subjects||[]).map((sub,i)=>{const c=colorAt(i),accent=sub.color||c[1],soft=sub.cover||c[0];return `<button class="v102Notebook v103Notebook v299SubjectNotebook" data-search="${esc(sub.name.toLowerCase())}" style="--book-soft:${soft};--book-accent:${accent}" onclick="openSubject('${sub.id}')"><span class="v301SubjectAccent"></span><span class="v299BookGlyph">${icon(sIcon(sub))}</span><span class="v299BookCopy"><small class="v301SubjectKicker">FACH</small><strong>${esc(sub.name)}</strong><small>${(sub.topics||[]).length} ${(sub.topics||[]).length===1?'Thema':'Themen'}</small></span></button>`}).join('');
     root.className='';root.innerHTML=`<div class="v102SubjectsPage v103SubjectsPage"><div class="v102SubjectPageHead"><div><h2>Fächer</h2><p>Deine Fächer</p></div><button class="v102RoundIcon" onclick="openView('settings')" aria-label="Einstellungen">${icon('settings')}</button></div><div class="v102SubjectTools"><label class="v102Search">${icon('search')}<input placeholder="Fächer suchen" oninput="v102FilterSubjects(this.value)"></label><button class="v102AddSubject v299PlusOnly" onclick="openAddSubject()" aria-label="Fach hinzufügen" title="Fach hinzufügen">${icon('plus')}</button></div><div class="v102NotebookGrid v299SubjectGrid">${cards||'<div class="v103EmptyState">Noch kein Fach. Erstelle dein erstes Fach.</div>'}</div></div>`;
   };
 
@@ -17847,7 +17849,11 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
   function subjectIcon(s){s=String(s||'').toLowerCase();if(s.includes('mathe'))return svg('math');if(s.includes('bio'))return svg('bio');if(s.includes('engl'))return svg('globe');if(s.includes('geschichte'))return svg('hist');if(s.includes('chem'))return svg('chem');if(s.includes('deutsch'))return svg('book');if(s.includes('phys'))return svg('atom');return svg('cal')}
   function colorClass(s){s=String(s||'').toLowerCase();if(s.includes('bio'))return'green';if(s.includes('engl'))return'blue';if(s.includes('geschichte'))return'gold';if(s.includes('chem'))return'purple';if(s.includes('deutsch'))return'peach';return'pink'}
   function currentView(){return document.querySelector('.view.active')?.id?.replace('view-','')||'home'}
-  function taskCounts(){const homework=(data.homework||[]).filter(x=>!x.done).length;const tests=(data.tests||[]).filter(x=>{try{const n=calendarDaysUntil(x.date);return n!=null&&n>=0}catch(_){return false}}).length;return{homework,tests}}
+  function taskCounts(){
+  const homework=(data.homework||[]).filter(x=>x&&!x.done&&String(x.text||x.subject||'').trim()).length;
+  const tests=(data.tests||[]).filter(x=>x&&String(x.type||x.text||x.subject||'').trim()).length;
+  return{homework,tests}
+}
   function side(label,icon,view,action,bubble){return `<button class="navItem ${currentView()===view?'active':''} ${bubble?'hasBubble':''}" onclick="${action}"><span class="navIcon">${svg(icon)}</span><span class="navLabel">${esc(label)}</span><span class="navBubble">${bubble||''}</span></button>`}
   function shellActive(){return window.innerWidth>=MIN&&!document.body.classList.contains('editorMode')&&!!document.querySelector('#view-home.active,#view-plan.active')}
   function ensureShell(){
@@ -17856,7 +17862,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
     const app=document.querySelector('.app');if(!app)return;
     let s=document.getElementById('v209Sidebar');if(!s){s=document.createElement('aside');s.id='v209Sidebar';app.insertBefore(s,app.firstChild)}
     const counts=taskCounts();
-    s.innerHTML=`<div class="brand" onclick="openView('home')"><span class="brandIcon">${svg('bunny')}</span><span class="brandText"><b>Studia</b><small>PLAN · LERNEN · ERREICHEN</small></span></div><div class="navList">${side('Stundenplan','cal','plan',`v210Nav('plan')`,'','plan')}${side('Aufgaben','tasks','tasks',`v292OpenTaskSection('homework')`,counts.homework?String(counts.homework):'','homework')}${side('Lernen','learn','study',`openView('study')`,'')}${side('Fächer','folder','subjects',`openView('subjects')`,'')}${side('Tests','test','__never__',`v292OpenTaskSection('tests')`,counts.tests?String(counts.tests):'','tests')}${side('Notizen','notes','subjects',`openView('subjects')`,'')}</div><div class="quoteBox"><span class="quoteIcon">${svg('sprout')}</span><div class="quoteText">Better<br>than<br>yesterday.</div><span class="quoteHeart">${svg('heart')}</span></div>`;
+    s.innerHTML=`<div class="brand" onclick="openView('home')"><span class="brandIcon">${svg('bunny')}</span><span class="brandText"><b>Studia</b><small>PLAN · LERNEN · ERREICHEN</small></span></div><div class="navList">${side('Stundenplan','cal','plan',`v210Nav('plan')`,'','plan')}${side('Aufgaben','tasks','tasks',`v292OpenTaskSection('homework')`,counts.homework?String(counts.homework):'','homework')}${side('Lernen','learn','study',`openView('study')`,'')}${side('Fächer','folder','subjects',`openView('subjects')`,'')}${side('Leistungsnachweise','test','__never__',`v292OpenTaskSection('tests')`,counts.tests?String(counts.tests):'','tests')}${side('Notizen','notes','subjects',`openView('subjects')`,'')}</div><div class="quoteBox"><span class="quoteIcon">${svg('sprout')}</span><div class="quoteText">Better<br>than<br>yesterday.</div><span class="quoteHeart">${svg('heart')}</span></div>`;
   }
   function dateInfo(){const d=new Date();const weekday=d.toLocaleDateString('de-DE',{weekday:'long'});const full=d.toLocaleDateString('de-DE',{day:'2-digit',month:'long',year:'numeric'});return{weekday,full}}
   function ensureHomeHead(){
@@ -18083,7 +18089,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
         ${side('Lernen','learn',['study','learnsets'],`v210Nav('study')`,'','study')}
         ${side('Fächer','folder',['subjects','subject-detail','topic-detail','deck-detail'],`v210Nav('subjects')`,'','subjects')}
         ${side('Noten','test','grades',`v210Nav('grades')`,'','grades')}
-        ${side('Tests','test','__never__',`v292OpenTaskSection('tests')`,counts.tests?String(counts.tests):'','tests')}
+        ${side('Leistungsnachweise','test','__never__',`v292OpenTaskSection('tests')`,counts.tests?String(counts.tests):'','tests')}
         ${side('Notizen','notes','__never__',`v210OpenNotes()`,'','notes')}
         <div class="navDivider"></div>
         ${side('Fehltage','dayoff','absence',`v210Nav('absence')`,'','absence')}
@@ -18170,11 +18176,67 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
     const settings=document.getElementById('view-settings');if(!settings)return;
     const v=document.createElement('section');v.className='view';v.id='view-missed-hours';v.innerHTML=`<div class="sectionHead"><h2>Fehlstunden</h2><button class="primary" onclick="openAddMissedHour()">+ Eintragen</button></div><div class="v210MissingSummary" id="missedHoursSummary"></div><div class="v210MissingList" id="missedHoursList"></div>`;settings.parentNode.insertBefore(v,settings)
   }
-  window.openAddMissedHour=function(){data.missedHours ||= [];openModal(`<h2>Fehlstunde eintragen</h2><div class="formGrid"><div><label>Datum</label><input id="mhDate" type="date" value="${todayISO()}"></div><div><label>Fach</label><input id="mhSubject" placeholder="z. B. Mathematik"></div><div><label>Von</label><input id="mhStart" type="time" value="08:00"></div><div><label>Bis</label><input id="mhEnd" type="time" value="08:45"></div><div><label>Status</label><select id="mhStatus"><option>Entschuldigung offen</option><option>Entschuldigt</option></select></div><div><label>Grund</label><input id="mhReason" placeholder="z. B. Arzttermin"></div><div class="full"><label>Notiz</label><input id="mhNote" placeholder="Optional"></div></div><button class="primary" style="margin-top:12px" onclick="addMissedHour()">Speichern</button>`)};
-  window.addMissedHour=function(){data.missedHours ||= [];const date=document.getElementById('mhDate')?.value||todayISO(),subject=document.getElementById('mhSubject')?.value.trim()||'Unterricht',start=document.getElementById('mhStart')?.value||'',end=document.getElementById('mhEnd')?.value||'',status=document.getElementById('mhStatus')?.value||'Entschuldigung offen',reason=document.getElementById('mhReason')?.value.trim()||'Fehlstunde',note=document.getElementById('mhNote')?.value.trim()||'';data.missedHours.push({id:id(),date,subject,start,end,status,reason,note});save();closeModal();setTimeout(renderMissedHours,0)};
+  window.openAddMissedHour=function(){
+    data.missedHours ||= [];
+    openModal(`<h2>Fehlzeit eintragen</h2>
+      <div class="formGrid">
+        <div class="full"><label>Art</label><select id="mhMode" onchange="v301ToggleMissedMode(this.value)"><option value="hour">Unterrichtsstunde(n)</option><option value="day">Ganzer / mehrere Tage</option></select></div>
+        <div><label>Von / Datum</label><input id="mhDate" type="date" value="${todayISO()}"></div>
+        <div id="mhToWrap" style="display:none"><label>Bis einschließlich</label><input id="mhTo" type="date" value="${todayISO()}"></div>
+        <div id="mhSubjectWrap"><label>Fach</label><input id="mhSubject" placeholder="z. B. Mathematik"></div>
+        <div id="mhStartWrap"><label>Von</label><input id="mhStart" type="time" value="08:00"></div>
+        <div id="mhEndWrap"><label>Bis</label><input id="mhEnd" type="time" value="08:45"></div>
+        <div><label>Status</label><select id="mhStatus"><option>Entschuldigung offen</option><option>Entschuldigt</option></select></div>
+        <div><label>Grund</label><input id="mhReason" placeholder="z. B. Arzttermin"></div>
+        <div class="full"><label>Notiz</label><input id="mhNote" placeholder="Optional"></div>
+      </div>
+      <button class="primary" style="margin-top:12px" onclick="addMissedHour()">Speichern</button>`)
+  };
+  window.v301ToggleMissedMode=function(mode){
+    const day=mode==='day';
+    const to=document.getElementById('mhToWrap'),sub=document.getElementById('mhSubjectWrap'),st=document.getElementById('mhStartWrap'),en=document.getElementById('mhEndWrap');
+    if(to)to.style.display=day?'block':'none';
+    if(sub)sub.style.display=day?'none':'block';
+    if(st)st.style.display=day?'none':'block';
+    if(en)en.style.display=day?'none':'block';
+    const from=document.getElementById('mhDate'),until=document.getElementById('mhTo');if(day&&from&&until&&!until.value)until.value=from.value||todayISO()
+  };
+  window.addMissedHour=function(){
+    data.missedHours ||= [];
+    const mode=document.getElementById('mhMode')?.value==='day'?'day':'hour';
+    const date=document.getElementById('mhDate')?.value||todayISO();
+    const to=mode==='day'?(document.getElementById('mhTo')?.value||date):date;
+    const subject=mode==='day'?'':(document.getElementById('mhSubject')?.value.trim()||'Unterricht');
+    const start=mode==='day'?'':(document.getElementById('mhStart')?.value||'');
+    const end=mode==='day'?'':(document.getElementById('mhEnd')?.value||'');
+    const status=document.getElementById('mhStatus')?.value||'Entschuldigung offen';
+    const reason=document.getElementById('mhReason')?.value.trim()||(mode==='day'?'Fehltag':'Fehlstunde');
+    const note=document.getElementById('mhNote')?.value.trim()||'';
+    data.missedHours.push({id:id(),mode,date,to,subject,start,end,status,reason,note});
+    save();closeModal();setTimeout(renderMissedHours,0)
+  };
   window.toggleMissedHour=function(mid){data.missedHours ||= [];const x=data.missedHours.find(x=>x.id===mid);if(x){x.status=x.status==='Entschuldigt'?'Entschuldigung offen':'Entschuldigt';save();setTimeout(renderMissedHours,0)}};
   window.deleteMissedHour=function(mid){data.missedHours ||= [];data.missedHours=data.missedHours.filter(x=>x.id!==mid);save();setTimeout(renderMissedHours,0)};
-  function renderMissedHours(){ensureMissedHoursView();data.missedHours ||= [];const sum=document.getElementById('missedHoursSummary'),list=document.getElementById('missedHoursList');if(!sum||!list)return;const total=data.missedHours.length,open=data.missedHours.filter(x=>x.status!=='Entschuldigt').length;sum.innerHTML=`<div class="kpi"><div class="big">${total}</div><div class="small">Fehlstunden eingetragen</div></div><div class="kpi"><div class="big">${open}</div><div class="small">Entschuldigungen offen</div></div>`;list.innerHTML=total?data.missedHours.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date))).map(x=>`<div class="card rowBetween"><div><b>${esc2(x.subject)}</b><div class="small">${esc2(fmtDate(x.date))}${x.start?` · ${esc2(x.start)}${x.end?'–'+esc2(x.end):''}`:''}${x.reason?' · '+esc2(x.reason):''}${x.note?' · '+esc2(x.note):''}</div></div><div class="row"><button class="badge ${x.status==='Entschuldigt'?'good':'warn'}" onclick="toggleMissedHour('${esc2(x.id)}')">${esc2(x.status)}</button><button class="dangerBtn" onclick="deleteMissedHour('${esc2(x.id)}')">×</button></div></div>`).join(''):'<div class="empty">Keine Fehlstunden eingetragen.</div>'}
+  function v301MissedDays(x){
+    if((x.mode||'hour')!=='day')return 0;
+    const a=new Date((x.date||todayISO())+'T12:00:00'),b=new Date((x.to||x.date||todayISO())+'T12:00:00');
+    if(Number.isNaN(+a)||Number.isNaN(+b))return 1;
+    return Math.max(1,Math.round((b-a)/86400000)+1)
+  }
+  function renderMissedHours(){
+    ensureMissedHoursView();data.missedHours ||= [];
+    const sum=document.getElementById('missedHoursSummary'),list=document.getElementById('missedHoursList');if(!sum||!list)return;
+    const rows=data.missedHours.slice().sort((a,b)=>String(b.date||'').localeCompare(String(a.date||'')));
+    const hours=rows.filter(x=>(x.mode||'hour')!=='day').length,days=rows.reduce((n,x)=>n+v301MissedDays(x),0),open=rows.filter(x=>x.status!=='Entschuldigt').length;
+    sum.innerHTML=`<div class="kpi"><div class="big">${hours} / ${days}</div><div class="small">Fehlstunden / Fehltage</div></div><div class="kpi"><div class="big">${open}</div><div class="small">Entschuldigungen offen</div></div>`;
+    list.innerHTML=rows.length?rows.map(x=>{
+      const day=(x.mode||'hour')==='day';
+      const title=day?(x.reason||'Fehltag'):(x.subject||'Unterricht');
+      const when=day?`${esc2(fmtDate(x.date))}${x.to&&x.to!==x.date?' – '+esc2(fmtDate(x.to)):''}`:`${esc2(fmtDate(x.date))}${x.start?` · ${esc2(x.start)}${x.end?'–'+esc2(x.end):''}`:''}`;
+      const extra=day?'':(x.reason?' · '+esc2(x.reason):'');
+      return `<div class="card rowBetween"><div><b>${esc2(title)}</b><div class="small">${when}${extra}${x.note?' · '+esc2(x.note):''}</div></div><div class="row"><button class="badge ${x.status==='Entschuldigt'?'good':'warn'}" onclick="toggleMissedHour('${esc2(x.id)}')">${esc2(x.status)}</button><button class="dangerBtn" onclick="deleteMissedHour('${esc2(x.id)}')">×</button></div></div>`
+    }).join(''):'<div class="empty">Keine Fehlzeiten eingetragen.</div>'
+  }
   window.renderMissedHours=renderMissedHours;
 
   function uniquePlanSubjects(){const cls=data.timetable.selectedClass||data.settings.className||'M U1',ls=(typeof currentScheduleForClass==='function'?currentScheduleForClass(cls):(data.timetable.lessons||[]))||[],set=new Map();for(const l of ls){if(l.specialOnly||l.cancelledFromBasis)continue;try{const p=splitCell(l.raw||'');const t=desktopPretty(p.subject);if(t&&!set.has(t))set.set(t,timetableSubjectColor(t))}catch(_){ }}return[...set.entries()].slice(0,18)}
@@ -18184,7 +18246,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
   }
   window.v210RefreshDesktopSettings=function(){ensureTimetableSettings();ensureSidebar();if(document.getElementById('view-plan')?.classList.contains('active')){ensurePlanHead();renderPlan()}};
 
-  function ensurePageHead(){if(!desktop())return;const v=currentView();const labels={absence:['Fehltage','Ganze versäumte Schultage & Entschuldigungen'],'missed-hours':['Fehlstunden','Einzelne versäumte Unterrichtsstunden']};const view=document.getElementById('view-'+v);if(!view||!labels[v])return;let h=view.querySelector(':scope > .v210PageHead');if(!h){h=document.createElement('div');h.className='v210PageHead';view.insertBefore(h,view.firstChild)}h.innerHTML=`<div><h1>${labels[v][0]}</h1><p>${labels[v][1]}</p></div>`}
+  function ensurePageHead(){if(!desktop())return;const v=currentView();const labels={absence:['Fehltage','Ganze versäumte Schultage & Entschuldigungen'],'missed-hours':['Fehlzeiten','Einzelne Fehlstunden oder ganze Fehltage']};const view=document.getElementById('view-'+v);if(!view||!labels[v])return;let h=view.querySelector(':scope > .v210PageHead');if(!h){h=document.createElement('div');h.className='v210PageHead';view.insertBefore(h,view.firstChild)}h.innerHTML=`<div><h1>${labels[v][0]}</h1><p>${labels[v][1]}</p></div>`}
 
   function reconcile(){ensureMissedHoursView();ensureSidebar();if(!desktop())return;ensurePlanHead();ensureTimetableSettings();renderMissedHours();ensurePageHead()}
   const oldOpen=window.openView;if(typeof oldOpen==='function'&&!oldOpen.__v210){window.openView=function(){if(!specialNavInFlight)navFocus='';const r=oldOpen.apply(this,arguments);setTimeout(reconcile,0);return r};window.openView.__v210=true;try{openView=window.openView}catch(_){ }}
@@ -22130,7 +22192,7 @@ function normalizeTaskPage(){
   const firstHead=q(':scope > .sectionHead:first-child',view),firstTitle=q('h2',firstHead);
   if(firstTitle)firstTitle.textContent='Aufgaben';
   const testTitle=q('#testList',view)?.closest('.section')?.querySelector('.sectionHead h2');
-  if(testTitle)testTitle.textContent='Tests & Arbeiten';
+  if(testTitle)testTitle.textContent='Leistungsnachweise';
 }
 
 /* One cute app mark. It is inline, so it cannot disappear because of a missing asset path. */
@@ -22138,13 +22200,19 @@ const appMark='<svg class="v292AppMark" viewBox="0 0 24 24" aria-hidden="true"><
 function normalizeSidebar(){
   const side=q('#v210Sidebar');if(!side)return;
   const icon=q('.brandIcon',side);if(icon&&icon.dataset.v292!=='1'){icon.dataset.v292='1';icon.innerHTML=appMark}
+  const homeworkCount=(data.homework||[]).filter(x=>x&&!x.done&&String(x.text||x.subject||'').trim()).length;
+  const testCount=(data.tests||[]).filter(x=>x&&String(x.type||x.text||x.subject||'').trim()).length;
   for(const b of qa('.navItem',side)){
-    const label=q('.navLabel',b),txt=(label?.textContent||'').trim();
+    const label=q('.navLabel',b),txt=(label?.textContent||'').trim(),bubble=q('.navBubble',b);
     if(txt==='Planer'||txt==='Aufgaben'){
       if(label)label.textContent='Aufgaben';b.setAttribute('onclick',"v292OpenTaskSection('homework')");
+      if(bubble)bubble.textContent=homeworkCount?String(homeworkCount):'';
+      b.classList.toggle('hasBubble',homeworkCount>0);
       if(q('#view-tasks.active'))b.classList.toggle('active',taskMode==='homework');
-    }else if(txt==='Tests'){
-      b.setAttribute('onclick',"v292OpenTaskSection('tests')");
+    }else if(txt==='Tests'||txt==='Prüfungen & Abgaben'||txt==='Leistungsnachweise'){
+      if(label)label.textContent='Leistungsnachweise';b.setAttribute('onclick',"v292OpenTaskSection('tests')");
+      if(bubble)bubble.textContent=testCount?String(testCount):'';
+      b.classList.toggle('hasBubble',testCount>0);
       if(q('#view-tasks.active'))b.classList.toggle('active',taskMode==='tests');
     }
   }
@@ -22569,14 +22637,25 @@ body:not(.editorMode) #v210Sidebar .navItem.active{background:var(--studia-theme
 #view-home .v297QuickIcon,#view-study .v298HubIcon{margin:auto!important;align-self:center!important;justify-self:center!important;display:grid!important;place-items:center!important}
 #view-home .v297QuickIcon svg,#view-study .v298HubIcon svg{display:block!important;margin:auto!important}
 
-/* Subject notebooks: small, sweet Studia note blocks instead of large decorative books. */
-.v299SubjectGrid{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(180px,1fr))!important;gap:12px!important}
-.v102Notebook.v103Notebook.v299SubjectNotebook{position:relative!important;min-height:108px!important;height:auto!important;padding:14px 14px 14px 29px!important;border:1px solid var(--studia-theme-line)!important;border-radius:20px!important;background:var(--studia-theme-paper)!important;box-shadow:0 7px 18px color-mix(in srgb,var(--studia-theme-accent) 8%,transparent)!important;display:grid!important;grid-template-columns:42px minmax(0,1fr) 15px!important;align-items:center!important;gap:10px!important;text-align:left!important;color:var(--studia-theme-text)!important;overflow:hidden!important}
-.v102Notebook.v103Notebook.v299SubjectNotebook:before{content:""!important;display:block!important;position:absolute!important;left:16px!important;top:12px!important;bottom:12px!important;width:1px!important;background:color-mix(in srgb,var(--book-accent) 55%,var(--studia-theme-line))!important}
-.v102Notebook.v103Notebook.v299SubjectNotebook:after,.v299SubjectNotebook .v102NotebookPin,.v299SubjectNotebook .v102Heart,.v299SubjectNotebook .v102NotebookIcon{display:none!important;content:none!important}
-.v300NotebookBinding{position:absolute;left:10px;top:21px;bottom:21px;display:flex;flex-direction:column;justify-content:space-between;z-index:2}.v300NotebookBinding i{display:block;width:12px;height:5px;border:1px solid color-mix(in srgb,var(--book-accent) 55%,var(--studia-theme-line));border-radius:999px;background:var(--studia-theme-paper)}
-.v299BookGlyph{width:42px;height:42px;border:1px solid var(--studia-theme-line);border-radius:14px;background:color-mix(in srgb,var(--book-soft) 30%,var(--studia-theme-paper));color:var(--book-accent);display:grid;place-items:center}
-.v299BookGlyph svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.v299BookCopy{display:grid;gap:3px;min-width:0}.v299BookCopy strong{font-size:15px!important;line-height:1.15!important;color:var(--studia-theme-text)!important;overflow:hidden;text-overflow:ellipsis}.v299BookCopy small{font-size:9px!important;color:var(--studia-theme-muted)!important}.v299BookArrow{font-size:18px;color:var(--studia-theme-muted)}
+/* Subject cards: compact pastel Studia note blocks — one owner, no decorative notebook chrome. */
+.v299SubjectGrid{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(170px,1fr))!important;gap:11px!important}
+.v102Notebook.v103Notebook.v299SubjectNotebook{
+  position:relative!important;min-height:92px!important;height:auto!important;padding:13px 13px 13px 17px!important;
+  border:1px solid color-mix(in srgb,var(--book-accent) 20%,var(--studia-theme-line))!important;border-radius:18px!important;
+  background:linear-gradient(145deg,color-mix(in srgb,var(--book-soft) 26%,var(--studia-theme-paper)),var(--studia-theme-paper) 68%)!important;
+  box-shadow:0 5px 14px color-mix(in srgb,var(--book-accent) 7%,transparent)!important;
+  display:grid!important;grid-template-columns:36px minmax(0,1fr)!important;align-items:center!important;gap:10px!important;
+  text-align:left!important;color:var(--studia-theme-text)!important;overflow:hidden!important
+}
+.v102Notebook.v103Notebook.v299SubjectNotebook:before,.v102Notebook.v103Notebook.v299SubjectNotebook:after{display:none!important;content:none!important}
+.v301SubjectAccent{position:absolute;left:0;top:14px;bottom:14px;width:3px;border-radius:0 999px 999px 0;background:color-mix(in srgb,var(--book-accent) 72%,var(--studia-theme-text))}
+.v299SubjectNotebook .v102NotebookPin,.v299SubjectNotebook .v102Heart,.v299SubjectNotebook .v102NotebookIcon,.v300NotebookBinding,.v299BookArrow{display:none!important}
+.v299BookGlyph{width:36px;height:36px;border:1px solid color-mix(in srgb,var(--book-accent) 18%,var(--studia-theme-line));border-radius:12px;background:color-mix(in srgb,var(--book-soft) 32%,var(--studia-theme-paper));color:color-mix(in srgb,var(--book-accent) 78%,var(--studia-theme-text));display:grid;place-items:center}
+.v299BookGlyph svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.v299BookCopy{display:grid;grid-template-rows:auto auto auto;gap:2px;min-width:0}
+.v299BookCopy .v301SubjectKicker{font-size:7px!important;line-height:1!important;letter-spacing:.14em!important;font-weight:950!important;color:color-mix(in srgb,var(--book-accent) 62%,var(--studia-theme-muted))!important}
+.v299BookCopy strong{font-size:14px!important;line-height:1.18!important;color:var(--studia-theme-text)!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+.v299BookCopy>small:last-child{font-size:8.5px!important;color:var(--studia-theme-muted)!important}
 
 /* Topics: compact folder tiles, multiple next to each other on phone and desktop. */
 .v299TopicList{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(160px,1fr))!important;gap:11px!important;align-items:stretch!important}
@@ -22601,8 +22680,17 @@ body:not(.editorMode) :is(h1,h2,h3,.subject,.navLabel,.brandText b){color:var(--
 
 /* Responsive guardrails. */
 .v297PlannerCard,.v297PlannerMain,.v297PlannerMain .row,.v297PlannerMain .row>div,.v102ResourceCard,.v103HubItem,.v102SubjectsPage,.v102SubjectDetail{min-width:0!important;max-width:100%!important;box-sizing:border-box!important}.v297PlannerTitle,.v297PlannerMeta,.v103ResourceText,.v103ResourceText>*{overflow-wrap:anywhere!important;word-break:break-word!important}
-@media(max-width:700px){.v299SubjectGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}.v102Notebook.v103Notebook.v299SubjectNotebook{min-height:104px!important;padding:12px 10px 12px 25px!important;grid-template-columns:36px minmax(0,1fr)!important;gap:8px!important}.v299BookGlyph{width:36px;height:36px}.v299BookArrow{display:none!important}.v300NotebookBinding{left:8px;top:18px;bottom:18px}.v300NotebookBinding i{width:10px}.v102Notebook.v103Notebook.v299SubjectNotebook:before{left:13px!important}.v299TopicList{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}.v103FolderRow.v299TopicFolder{min-height:100px!important;padding:18px 9px 10px!important;grid-template-columns:30px minmax(0,1fr)!important;gap:7px!important}.v299FolderGlyph{width:30px;height:30px}.v299DeckModeSwitch{width:100%!important}.v299DeckHero{align-items:center}.v299DeckHeroActions{flex-shrink:0}.v299AddCard{font-size:10px;padding:0 9px}#view-home .homeMiniActions.v297HomeActions>button,#view-study .v298LearnHub>button{min-width:0!important}}
-@media(max-width:390px){.v299SubjectGrid,.v299TopicList{grid-template-columns:repeat(2,minmax(0,1fr))!important}.v299BookCopy strong{font-size:13px!important}.v299BookCopy small,.v299TopicFolder .v103FolderText small{font-size:8px!important}}
+@media(max-width:700px){
+ .v299SubjectGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+ .v102Notebook.v103Notebook.v299SubjectNotebook{min-height:88px!important;padding:11px 9px 11px 14px!important;grid-template-columns:32px minmax(0,1fr)!important;gap:8px!important;border-radius:16px!important}
+ .v299BookGlyph{width:32px;height:32px;border-radius:10px}.v299BookGlyph svg{width:16px;height:16px}
+ .v301SubjectAccent{top:13px;bottom:13px;width:3px}
+ .v299TopicList{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+ .v103FolderRow.v299TopicFolder{min-height:94px!important;padding:17px 9px 9px!important;grid-template-columns:28px minmax(0,1fr)!important;gap:7px!important}
+ .v299FolderGlyph{width:28px;height:28px}.v299DeckModeSwitch{width:100%!important}.v299DeckHero{align-items:center}.v299DeckHeroActions{flex-shrink:0}.v299AddCard{font-size:10px;padding:0 9px}
+ #view-home .homeMiniActions.v297HomeActions>button,#view-study .v298LearnHub>button{min-width:0!important}
+}
+@media(max-width:390px){.v299SubjectGrid,.v299TopicList{grid-template-columns:repeat(2,minmax(0,1fr))!important}.v299BookCopy strong{font-size:12.5px!important}.v299BookCopy small,.v299TopicFolder .v103FolderText small{font-size:7.8px!important}}
 /* ===== /V300 ===== */
 </style>
 <script id="studia-v299-single-owner">
@@ -22915,7 +23003,7 @@ const boot=()=>{
  if(q('#view-deck-detail.active')){document.body.classList.toggle('v214LearningReadOnly',deckMode==='learn');renderDeckDetail298()}
  if(q('#view-settings.active'))wireThemeControls();
  if(cleaned)try{save()}catch(_){}
- const e=q('#headerEyebrow');if(e)e.textContent='VERSION 300';
+ const e=q('#headerEyebrow');if(e)e.textContent='VERSION 301';
 };
 [0,120,600,1600,2400,4200].forEach(ms=>setTimeout(boot,ms));
 window.addEventListener('pageshow',()=>setTimeout(boot,50));
