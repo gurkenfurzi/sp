@@ -10244,15 +10244,26 @@ function contrastInk(hex){
  const lum=(rgb[0]*299+rgb[1]*587+rgb[2]*114)/1000;
  return lum>172?"#594d48":"#ffffff";
 }
+const STUDIA_THEME_STORAGE='studia-ui-theme-v300';
+function syncStoredCustomization(){
+ data.customization ||= {theme:"blossom",compact:false,customColor:"#efaaa6",updatedAt:0};
+ let local=null;try{local=JSON.parse(localStorage.getItem(STUDIA_THEME_STORAGE)||'null')}catch(_){local=null}
+ if(local&&Number(local.updatedAt||0)>Number(data.customization.updatedAt||0))data.customization={...data.customization,...local};
+ else if(data.customization.theme){try{localStorage.setItem(STUDIA_THEME_STORAGE,JSON.stringify(data.customization))}catch(_){}}
+}
+function persistCustomizationLocal(){
+ data.customization ||= {};data.customization.updatedAt=Date.now();
+ try{localStorage.setItem(STUDIA_THEME_STORAGE,JSON.stringify(data.customization))}catch(_){}
+}
 function applyCustomization(){
- data.customization ||= {theme:"blossom",compact:false,customColor:"#efaaa6"};
+ syncStoredCustomization();
  const t=currentTheme(),root=document.documentElement;
- const soft=mixHex(t.accent,"#ffffff",.84),line=mixHex(t.accent,"#ffffff",.58),paper=mixHex(t.bg,"#ffffff",.42),muted=mixHex(t.text,"#ffffff",.42);
+ const soft=mixHex(t.accent,"#ffffff",.86),soft2=mixHex(t.accent,"#ffffff",.76),line=mixHex(t.accent,"#ffffff",.60),paper=mixHex(t.bg,"#ffffff",.38),muted=mixHex(t.text,"#ffffff",.42);
  root.style.setProperty("--bg",t.bg);root.style.setProperty("--panel",paper);root.style.setProperty("--panel2",soft);root.style.setProperty("--accent",t.accent);root.style.setProperty("--text",t.text);root.style.setProperty("--muted",muted);root.style.setProperty("--line",line);
  root.style.setProperty("--studia-theme-bg",t.bg);root.style.setProperty("--studia-theme-accent",t.accent);root.style.setProperty("--studia-theme-text",t.text);
- root.style.setProperty("--studia-theme-paper",paper);root.style.setProperty("--studia-theme-soft",soft);root.style.setProperty("--studia-theme-line",line);root.style.setProperty("--studia-theme-muted",muted);
+ root.style.setProperty("--studia-theme-paper",paper);root.style.setProperty("--studia-theme-soft",soft);root.style.setProperty("--studia-theme-soft-strong",soft2);root.style.setProperty("--studia-theme-line",line);root.style.setProperty("--studia-theme-muted",muted);
  root.style.setProperty("--studia-accent-ink",contrastInk(t.accent));
- document.body.style.background=`radial-gradient(circle at 10% 4%,${mixHex(t.accent,"#ffffff",.73)} 0,transparent 26rem),radial-gradient(circle at 92% 18%,${mixHex(t.accent,"#ffffff",.84)} 0,transparent 25rem),linear-gradient(180deg,${t.bg},${mixHex(t.bg,"#fffdf8",.55)})`;
+ document.body.style.background=`radial-gradient(circle at 10% 4%,${mixHex(t.accent,"#ffffff",.76)} 0,transparent 26rem),radial-gradient(circle at 92% 18%,${mixHex(t.accent,"#ffffff",.86)} 0,transparent 25rem),linear-gradient(180deg,${t.bg},${mixHex(t.bg,"#fffdf8",.55)})`;
  document.body.classList.toggle("compact",!!data.customization?.compact);
  const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=t.bg;
 }
@@ -10266,7 +10277,7 @@ window.saveCustomization=function(){
  data.customization.theme=document.querySelector("#themeSwatches .active")?.dataset.theme||data.customization.theme||"blossom";
  data.customization.customColor=normalizeHexColor(document.querySelector("#customThemeColor")?.value||data.customization.customColor||"#efaaa6");
  data.customization.compact=!!document.querySelector("#compactToggle")?.checked;
- save();applyCustomization();try{cuteToast?.("Design gespeichert ✓")}catch(_){alert("Design gespeichert 🌷")}
+ persistCustomizationLocal();save();applyCustomization();try{cuteToast?.("Design gespeichert ✓")}catch(_){alert("Design gespeichert 🌷")}
 };
 
 function renderSettings(){
@@ -12043,13 +12054,13 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
   /* V299: one simple subject notebook + one outlined theme-folder system. */
   renderSubjects=function(){
     const root=$('#subjectList');if(!root)return;data.subjects.forEach(ensureSubjectShape);
-    const cards=(data.subjects||[]).map((sub,i)=>{const c=colorAt(i);return `<button class="v102Notebook v103Notebook v299SubjectNotebook" data-search="${esc(sub.name.toLowerCase())}" style="--book-soft:${c[0]};--book-ink:${c[1]}" onclick="openSubject('${sub.id}')"><span class="v299BookGlyph">${icon(sIcon(sub))}</span><span class="v299BookCopy"><strong>${esc(sub.name)}</strong><small>${(sub.topics||[]).length} ${(sub.topics||[]).length===1?'Thema':'Themen'}</small></span><span class="v299BookArrow">›</span></button>`}).join('');
+    const cards=(data.subjects||[]).map((sub,i)=>{const c=colorAt(i),accent=sub.color||c[1],soft=sub.cover||c[0];return `<button class="v102Notebook v103Notebook v299SubjectNotebook" data-search="${esc(sub.name.toLowerCase())}" style="--book-soft:${soft};--book-accent:${accent}" onclick="openSubject('${sub.id}')"><span class="v300NotebookBinding"><i></i><i></i><i></i></span><span class="v299BookGlyph">${icon(sIcon(sub))}</span><span class="v299BookCopy"><strong>${esc(sub.name)}</strong><small>${(sub.topics||[]).length} ${(sub.topics||[]).length===1?'Thema':'Themen'}</small></span><span class="v299BookArrow">›</span></button>`}).join('');
     root.className='';root.innerHTML=`<div class="v102SubjectsPage v103SubjectsPage"><div class="v102SubjectPageHead"><div><h2>Fächer</h2><p>Deine Fächer</p></div><button class="v102RoundIcon" onclick="openView('settings')" aria-label="Einstellungen">${icon('settings')}</button></div><div class="v102SubjectTools"><label class="v102Search">${icon('search')}<input placeholder="Fächer suchen" oninput="v102FilterSubjects(this.value)"></label><button class="v102AddSubject v299PlusOnly" onclick="openAddSubject()" aria-label="Fach hinzufügen" title="Fach hinzufügen">${icon('plus')}</button></div><div class="v102NotebookGrid v299SubjectGrid">${cards||'<div class="v103EmptyState">Noch kein Fach. Erstelle dein erstes Fach.</div>'}</div></div>`;
   };
 
   renderSubjectDetail=function(){
     const root=$('#subjectDetail');if(!root)return;const sub=data.subjects.find(x=>x.id===selectedSubjectId);if(!sub){root.innerHTML='<div class="empty">Fach nicht gefunden.</div>';return}ensureSubjectShape(sub);
-    const folders=(sub.topics||[]).map((t,i)=>{const st=topicStats(sub,t),c=colorAt(i);return `<button class="v103FolderRow v299TopicFolder" data-search="${esc(String(t.title||'').toLowerCase())}" onclick="openTopic('${sub.id}','${t.id}')" style="--folder-soft:${c[0]};--folder-ink:${c[1]}"><span class="v299FolderTab"></span><span class="v299FolderGlyph">${icon('folder')}</span><span class="v103FolderText"><b>${esc(t.title)}</b><small>${st.sheets} Lernblätter · ${st.hw+st.ws} Aufgaben · ${st.cards} Karten · ${st.quizzes} Quizze · ${st.tests} Tests</small></span><span class="v103Chevron">›</span></button>`}).join('');
+    const folders=(sub.topics||[]).map((t,i)=>{const st=topicStats(sub,t),c=colorAt(i),total=st.sheets+st.hw+st.ws+st.cards+st.quizzes+st.tests;return `<button class="v103FolderRow v299TopicFolder" data-search="${esc(String(t.title||'').toLowerCase())}" onclick="openTopic('${sub.id}','${t.id}')" style="--folder-soft:${c[0]};--folder-ink:${c[1]}"><span class="v299FolderTab"></span><span class="v299FolderGlyph">${icon('folder')}</span><span class="v103FolderText"><b>${esc(t.title)}</b><small>${total} ${total===1?'Inhalt':'Inhalte'}</small></span></button>`}).join('');
     root.innerHTML=`<div class="v102SubjectDetail v103SubjectDetail"><div class="v102SubjectPageHead"><div class="v102SubjectIdentity"><button class="v102Back" onclick="leaveSubjectNotebook()">${icon('back')}</button><div><h2>${esc(sub.name)}</h2><p>Themen</p></div></div><button class="v102RoundIcon" onclick="openSubjectSettings('${sub.id}')" aria-label="Fach bearbeiten">${icon('edit')}</button></div><div class="v102SubjectTools"><label class="v102Search">${icon('search')}<input placeholder="Themen suchen …" oninput="v102FilterTopics(this.value)"></label><button class="v102AddTopic v299PlusOnly" onclick="openNewTopic('${sub.id}')" aria-label="Thema hinzufügen" title="Thema hinzufügen">${icon('plus')}</button></div><div class="v103TopicList v299TopicList">${folders||'<div class="v103EmptyState">Noch kein Thema.</div>'}</div></div>`;
   };
 
@@ -17836,7 +17847,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
   function subjectIcon(s){s=String(s||'').toLowerCase();if(s.includes('mathe'))return svg('math');if(s.includes('bio'))return svg('bio');if(s.includes('engl'))return svg('globe');if(s.includes('geschichte'))return svg('hist');if(s.includes('chem'))return svg('chem');if(s.includes('deutsch'))return svg('book');if(s.includes('phys'))return svg('atom');return svg('cal')}
   function colorClass(s){s=String(s||'').toLowerCase();if(s.includes('bio'))return'green';if(s.includes('engl'))return'blue';if(s.includes('geschichte'))return'gold';if(s.includes('chem'))return'purple';if(s.includes('deutsch'))return'peach';return'pink'}
   function currentView(){return document.querySelector('.view.active')?.id?.replace('view-','')||'home'}
-  function taskBubble(){const h=(data.homework||[]).filter(x=>!x.done).length;const t=(data.tests||[]).filter(x=>{try{const n=calendarDaysUntil(x.date);return n!=null&&n>=0}catch(_){return false}}).length;return h+t}
+  function taskCounts(){const homework=(data.homework||[]).filter(x=>!x.done).length;const tests=(data.tests||[]).filter(x=>{try{const n=calendarDaysUntil(x.date);return n!=null&&n>=0}catch(_){return false}}).length;return{homework,tests}}
   function side(label,icon,view,action,bubble){return `<button class="navItem ${currentView()===view?'active':''} ${bubble?'hasBubble':''}" onclick="${action}"><span class="navIcon">${svg(icon)}</span><span class="navLabel">${esc(label)}</span><span class="navBubble">${bubble||''}</span></button>`}
   function shellActive(){return window.innerWidth>=MIN&&!document.body.classList.contains('editorMode')&&!!document.querySelector('#view-home.active,#view-plan.active')}
   function ensureShell(){
@@ -17844,8 +17855,8 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
     if(!shellActive())return;
     const app=document.querySelector('.app');if(!app)return;
     let s=document.getElementById('v209Sidebar');if(!s){s=document.createElement('aside');s.id='v209Sidebar';app.insertBefore(s,app.firstChild)}
-    const bubble=taskBubble();
-    s.innerHTML=`<div class="brand" onclick="openView('home')"><span class="brandIcon">${svg('bunny')}</span><span class="brandText"><b>Studia</b><small>PLAN · LERNEN · ERREICHEN</small></span></div><div class="navList">${side('Stundenplan','cal','plan',`v210Nav('plan')`,'','plan')}${side('Aufgaben','tasks','tasks',`v292OpenTaskSection('homework')`,bubble?String(bubble):'','homework')}${side('Lernen','learn','study',`openView('study')`,'')}${side('Fächer','folder','subjects',`openView('subjects')`,'')}${side('Tests','test','__never__',`v292OpenTaskSection('tests')`,'','tests')}${side('Notizen','notes','subjects',`openView('subjects')`,'')}</div><div class="quoteBox"><span class="quoteIcon">${svg('sprout')}</span><div class="quoteText">Better<br>than<br>yesterday.</div><span class="quoteHeart">${svg('heart')}</span></div>`;
+    const counts=taskCounts();
+    s.innerHTML=`<div class="brand" onclick="openView('home')"><span class="brandIcon">${svg('bunny')}</span><span class="brandText"><b>Studia</b><small>PLAN · LERNEN · ERREICHEN</small></span></div><div class="navList">${side('Stundenplan','cal','plan',`v210Nav('plan')`,'','plan')}${side('Aufgaben','tasks','tasks',`v292OpenTaskSection('homework')`,counts.homework?String(counts.homework):'','homework')}${side('Lernen','learn','study',`openView('study')`,'')}${side('Fächer','folder','subjects',`openView('subjects')`,'')}${side('Tests','test','__never__',`v292OpenTaskSection('tests')`,counts.tests?String(counts.tests):'','tests')}${side('Notizen','notes','subjects',`openView('subjects')`,'')}</div><div class="quoteBox"><span class="quoteIcon">${svg('sprout')}</span><div class="quoteText">Better<br>than<br>yesterday.</div><span class="quoteHeart">${svg('heart')}</span></div>`;
   }
   function dateInfo(){const d=new Date();const weekday=d.toLocaleDateString('de-DE',{weekday:'long'});const full=d.toLocaleDateString('de-DE',{day:'2-digit',month:'long',year:'numeric'});return{weekday,full}}
   function ensureHomeHead(){
@@ -18051,7 +18062,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
   function lessonIcon(subject){const s=String(subject||'').toLowerCase();if(s.includes('mathe'))return svg('math');if(s.includes('bio'))return svg('bio');if(s.includes('engl'))return svg('globe');if(s.includes('geschichte'))return svg('hist');if(s.includes('chem'))return svg('chem');if(s.includes('deutsch'))return svg('book');if(s.includes('phys'))return svg('atom');return svg('cal')}
   function desktop(){return innerWidth>=MIN&&!document.body.classList.contains('editorMode')}
   function currentView(){return document.querySelector('.view.active')?.id?.replace('view-','')||'home'}
-  function taskBubble(){const h=(data.homework||[]).filter(x=>!x.done).length;const t=(data.tests||[]).filter(x=>{try{const n=calendarDaysUntil(x.date);return n!=null&&n>=0}catch(_){return false}}).length;return h+t}
+  function taskCounts(){const homework=(data.homework||[]).filter(x=>!x.done).length;const tests=(data.tests||[]).filter(x=>{try{const n=calendarDaysUntil(x.date);return n!=null&&n>=0}catch(_){return false}}).length;return{homework,tests}}
   function side(label,icon,views,action,bubble,key=''){const matched=(Array.isArray(views)?views:[views]).includes(currentView());const active=navFocus?navFocus===key:matched;return `<button class="navItem ${active?'active':''} ${bubble?'hasBubble':''}" onclick="${action}"><span class="navIcon">${svg(icon)}</span><span class="navLabel">${esc2(label)}</span><span class="navBubble">${bubble||''}</span></button>`}
 
   window.v210Nav=function(view){navFocus='';openView(view)};
@@ -18064,15 +18075,15 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
     if(!desktop())return;
     const app=document.querySelector('.app');if(!app)return;
     let s=document.getElementById('v210Sidebar');if(!s){s=document.createElement('aside');s.id='v210Sidebar';app.insertBefore(s,app.firstChild)}
-    const bubble=taskBubble();
+    const counts=taskCounts();
     s.innerHTML=`<div class="brand" onclick="openView('home')"><span class="brandIcon">${svg('book')}</span><span class="brandText"><b>Studia</b><small>PLAN · LERNEN · ERREICHEN</small></span></div>
       <div class="navList">
         ${side('Stundenplan','cal','plan',`openView('plan')`,'')}
-        ${side('Aufgaben','tasks','tasks',`v292OpenTaskSection('homework')`,bubble?String(bubble):'','homework')}
+        ${side('Aufgaben','tasks','tasks',`v292OpenTaskSection('homework')`,counts.homework?String(counts.homework):'','homework')}
         ${side('Lernen','learn',['study','learnsets'],`v210Nav('study')`,'','study')}
         ${side('Fächer','folder',['subjects','subject-detail','topic-detail','deck-detail'],`v210Nav('subjects')`,'','subjects')}
         ${side('Noten','test','grades',`v210Nav('grades')`,'','grades')}
-        ${side('Tests','test','__never__',`v292OpenTaskSection('tests')`,'','tests')}
+        ${side('Tests','test','__never__',`v292OpenTaskSection('tests')`,counts.tests?String(counts.tests):'','tests')}
         ${side('Notizen','notes','__never__',`v210OpenNotes()`,'','notes')}
         <div class="navDivider"></div>
         ${side('Fehltage','dayoff','absence',`v210Nav('absence')`,'','absence')}
@@ -22552,67 +22563,47 @@ body:not(.editorMode) #v210Sidebar .navItem.active{background:var(--studia-theme
 }
 
 
-/* ===== V299 direct cleanup inside the single UI owner ===== */
-/* Center the quick actions and learning hub icons precisely. */
-#view-home .homeMiniActions.v297HomeActions>button,
-#view-study .v298LearnHub>button{
-  display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;text-align:center!important
-}
-#view-home .v297QuickIcon,#view-study .v298HubIcon{margin-left:auto!important;margin-right:auto!important;align-self:center!important;justify-self:center!important}
+/* ===== V300 direct cleanup inside the single UI owner ===== */
+/* Precisely centered quick-action icons. */
+#view-home .homeMiniActions.v297HomeActions>button,#view-study .v298LearnHub>button{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;text-align:center!important}
+#view-home .v297QuickIcon,#view-study .v298HubIcon{margin:auto!important;align-self:center!important;justify-self:center!important;display:grid!important;place-items:center!important}
+#view-home .v297QuickIcon svg,#view-study .v298HubIcon svg{display:block!important;margin:auto!important}
 
-/* Simple cute subject cards; old rings/pins/hearts are not part of this design. */
-.v299SubjectGrid{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))!important;gap:12px!important}
-.v102Notebook.v103Notebook.v299SubjectNotebook{
-  min-height:112px!important;height:auto!important;padding:16px!important;border:1px solid var(--studia-theme-line)!important;
-  border-radius:20px!important;background:var(--studia-theme-paper)!important;box-shadow:0 8px 20px color-mix(in srgb,var(--studia-theme-accent) 9%,transparent)!important;
-  display:grid!important;grid-template-columns:48px minmax(0,1fr) 20px!important;align-items:center!important;gap:12px!important;text-align:left!important;color:var(--studia-theme-text)!important
-}
-.v102Notebook.v103Notebook.v299SubjectNotebook:before,.v102Notebook.v103Notebook.v299SubjectNotebook:after,.v299SubjectNotebook .v102NotebookPin,.v299SubjectNotebook .v102Heart,.v299SubjectNotebook .v102NotebookIcon{display:none!important;content:none!important}
-.v299BookGlyph{width:48px;height:48px;border:1px solid var(--studia-theme-line);border-radius:15px;background:var(--book-soft,var(--studia-theme-soft));color:var(--book-ink,var(--studia-theme-text));display:grid;place-items:center}
-.v299BookGlyph svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.v299BookCopy{display:grid;gap:3px;min-width:0}.v299BookCopy strong{font-size:16px!important;color:var(--studia-theme-text)!important}.v299BookCopy small{font-size:10px!important;color:var(--studia-theme-muted)!important}.v299BookArrow{font-size:22px;color:var(--studia-theme-muted)}
+/* Subject notebooks: small, sweet Studia note blocks instead of large decorative books. */
+.v299SubjectGrid{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(180px,1fr))!important;gap:12px!important}
+.v102Notebook.v103Notebook.v299SubjectNotebook{position:relative!important;min-height:108px!important;height:auto!important;padding:14px 14px 14px 29px!important;border:1px solid var(--studia-theme-line)!important;border-radius:20px!important;background:var(--studia-theme-paper)!important;box-shadow:0 7px 18px color-mix(in srgb,var(--studia-theme-accent) 8%,transparent)!important;display:grid!important;grid-template-columns:42px minmax(0,1fr) 15px!important;align-items:center!important;gap:10px!important;text-align:left!important;color:var(--studia-theme-text)!important;overflow:hidden!important}
+.v102Notebook.v103Notebook.v299SubjectNotebook:before{content:""!important;display:block!important;position:absolute!important;left:16px!important;top:12px!important;bottom:12px!important;width:1px!important;background:color-mix(in srgb,var(--book-accent) 55%,var(--studia-theme-line))!important}
+.v102Notebook.v103Notebook.v299SubjectNotebook:after,.v299SubjectNotebook .v102NotebookPin,.v299SubjectNotebook .v102Heart,.v299SubjectNotebook .v102NotebookIcon{display:none!important;content:none!important}
+.v300NotebookBinding{position:absolute;left:10px;top:21px;bottom:21px;display:flex;flex-direction:column;justify-content:space-between;z-index:2}.v300NotebookBinding i{display:block;width:12px;height:5px;border:1px solid color-mix(in srgb,var(--book-accent) 55%,var(--studia-theme-line));border-radius:999px;background:var(--studia-theme-paper)}
+.v299BookGlyph{width:42px;height:42px;border:1px solid var(--studia-theme-line);border-radius:14px;background:color-mix(in srgb,var(--book-soft) 30%,var(--studia-theme-paper));color:var(--book-accent);display:grid;place-items:center}
+.v299BookGlyph svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.v299BookCopy{display:grid;gap:3px;min-width:0}.v299BookCopy strong{font-size:15px!important;line-height:1.15!important;color:var(--studia-theme-text)!important;overflow:hidden;text-overflow:ellipsis}.v299BookCopy small{font-size:9px!important;color:var(--studia-theme-muted)!important}.v299BookArrow{font-size:18px;color:var(--studia-theme-muted)}
 
-/* Theme cards are real outlined folders with a subtle tab, matching Studia. */
-.v299TopicList{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))!important;gap:12px!important}
-.v103FolderRow.v299TopicFolder{
-  position:relative!important;min-height:94px!important;padding:18px 14px 13px!important;border:1px solid var(--studia-theme-line)!important;
-  border-radius:10px 18px 18px 18px!important;background:color-mix(in srgb,var(--folder-soft,var(--studia-theme-soft)) 34%,var(--studia-theme-paper))!important;
-  box-shadow:0 6px 16px color-mix(in srgb,var(--studia-theme-accent) 7%,transparent)!important;display:grid!important;grid-template-columns:42px minmax(0,1fr) 18px!important;gap:10px!important;align-items:center!important;text-align:left!important;color:var(--studia-theme-text)!important;overflow:visible!important
-}
-.v103FolderRow.v299TopicFolder:before,.v103FolderRow.v299TopicFolder:after{display:none!important;content:none!important}
-.v299FolderTab{position:absolute;left:10px;top:-10px;width:78px;height:11px;border:1px solid var(--studia-theme-line);border-bottom:0;border-radius:10px 10px 0 0;background:color-mix(in srgb,var(--folder-soft,var(--studia-theme-soft)) 42%,var(--studia-theme-paper))}
-.v299FolderGlyph{width:42px;height:42px;border-radius:13px;border:1px solid var(--studia-theme-line);background:var(--studia-theme-paper);color:var(--folder-ink,var(--studia-theme-text));display:grid;place-items:center}
-.v299FolderGlyph svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7}.v299TopicFolder .v103FolderText b{font-size:14px!important}.v299TopicFolder .v103FolderText small{display:block;margin-top:3px;font-size:8.5px!important;line-height:1.35!important;color:var(--studia-theme-muted)!important;white-space:normal!important}
+/* Topics: compact folder tiles, multiple next to each other on phone and desktop. */
+.v299TopicList{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(160px,1fr))!important;gap:11px!important;align-items:stretch!important}
+.v103FolderRow.v299TopicFolder{position:relative!important;min-height:104px!important;height:100%!important;padding:20px 12px 12px!important;border:1px solid var(--studia-theme-line)!important;border-radius:11px 17px 17px 17px!important;background:color-mix(in srgb,var(--folder-soft) 24%,var(--studia-theme-paper))!important;box-shadow:0 5px 14px color-mix(in srgb,var(--studia-theme-accent) 6%,transparent)!important;display:grid!important;grid-template-columns:34px minmax(0,1fr)!important;grid-template-rows:1fr!important;gap:9px!important;align-items:center!important;text-align:left!important;color:var(--studia-theme-text)!important;overflow:visible!important}
+.v103FolderRow.v299TopicFolder:before,.v103FolderRow.v299TopicFolder:after{display:none!important;content:none!important}.v299FolderTab{position:absolute;left:9px;top:-8px;width:58px;height:9px;border:1px solid var(--studia-theme-line);border-bottom:0;border-radius:9px 9px 0 0;background:color-mix(in srgb,var(--folder-soft) 33%,var(--studia-theme-paper))}.v299FolderGlyph{width:34px;height:34px;border-radius:11px;border:1px solid var(--studia-theme-line);background:var(--studia-theme-paper);color:var(--folder-ink,var(--studia-theme-text));display:grid;place-items:center}.v299FolderGlyph svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.7}.v299TopicFolder .v103FolderText{min-width:0;display:grid;gap:4px}.v299TopicFolder .v103FolderText b{font-size:13px!important;line-height:1.18!important;white-space:normal!important;overflow-wrap:anywhere!important}.v299TopicFolder .v103FolderText small{font-size:8.5px!important;line-height:1.25!important;color:var(--studia-theme-muted)!important;white-space:normal!important}.v299TopicFolder .v103Chevron{display:none!important}
 
-.v299PlusOnly,.v299TopicPlus,.v299TopicEdit{width:42px!important;height:42px!important;min-width:42px!important;padding:0!important;display:grid!important;place-items:center!important;border-radius:13px!important;border:1px solid var(--studia-theme-line)!important;background:var(--studia-theme-paper)!important;color:var(--studia-theme-text)!important}
-.v299PlusOnly span,.v299TopicPlus span{display:none!important}.v299PlusOnly svg,.v299TopicPlus svg,.v299TopicEdit svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8}
-.v299TopicActions{display:flex;gap:7px;align-items:center}
+.v299PlusOnly,.v299TopicPlus,.v299TopicEdit{width:42px!important;height:42px!important;min-width:42px!important;padding:0!important;display:grid!important;place-items:center!important;border-radius:13px!important;border:1px solid var(--studia-theme-line)!important;background:var(--studia-theme-paper)!important;color:var(--studia-theme-text)!important}.v299PlusOnly span,.v299TopicPlus span{display:none!important}.v299PlusOnly svg,.v299TopicPlus svg,.v299TopicEdit svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8}.v299TopicActions{display:flex;gap:7px;align-items:center}
 
-/* Exactly one deck switch, placed inside the deck content. */
-#view-deck-detail>.sectionHead .v214LearnModeSwitch,#view-deck-detail>.sectionHead .v215DeckModeSwitch,#view-deck-detail>.sectionHead .v216DeckModeSwitch,#view-deck-detail>.sectionHead .v217DeckModeSwitch,#view-deck-detail>.sectionHead .v292DeckModeSwitch,#view-deck-detail>.sectionHead .v297DeckModeSwitch,#view-deck-detail>.sectionHead .v298DeckModeSwitch{display:none!important}
-.v299DeckModeSwitch{width:min(100%,360px);display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;margin:0 0 16px;border:1px solid var(--studia-theme-line);border-radius:16px;background:color-mix(in srgb,var(--studia-theme-soft) 60%,white)}
-.v299DeckModeSwitch button{min-height:42px;border:0;border-radius:12px;background:transparent;color:var(--studia-theme-muted);font-weight:900}.v299DeckModeSwitch button.active{background:var(--studia-theme-paper);color:var(--studia-theme-text);box-shadow:0 2px 9px rgba(80,56,50,.08)}
-.v299DeckHero{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:14px}.v299DeckHero h2{margin:3px 0 0}.v299DeckHeroActions{display:flex;gap:7px;align-items:center}.v299AddCard{min-height:38px;border:1px solid var(--studia-theme-line);border-radius:12px;background:var(--studia-theme-accent);color:var(--studia-accent-ink);font-weight:900;padding:0 12px}.v299StudyInner{position:relative;display:grid;justify-items:center}
-.v297StudyCard{width:100%!important;color:inherit!important;font:inherit!important}
+/* One deck switch only. */
+#view-deck-detail>.sectionHead .v214LearnModeSwitch,#view-deck-detail>.sectionHead .v215DeckModeSwitch,#view-deck-detail>.sectionHead .v216DeckModeSwitch,#view-deck-detail>.sectionHead .v217DeckModeSwitch,#view-deck-detail>.sectionHead .v292DeckModeSwitch,#view-deck-detail>.sectionHead .v297DeckModeSwitch,#view-deck-detail>.sectionHead .v298DeckModeSwitch{display:none!important}.v299DeckModeSwitch{width:min(100%,360px);display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;margin:0 0 16px;border:1px solid var(--studia-theme-line);border-radius:16px;background:var(--studia-theme-soft)}.v299DeckModeSwitch button{min-height:42px;border:0;border-radius:12px;background:transparent;color:var(--studia-theme-muted);font-weight:900}.v299DeckModeSwitch button.active{background:var(--studia-theme-paper);color:var(--studia-theme-text);box-shadow:0 2px 9px rgba(80,56,50,.08)}.v299DeckHero{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:14px}.v299DeckHero h2{margin:3px 0 0}.v299DeckHeroActions{display:flex;gap:7px;align-items:center}.v299AddCard{min-height:38px;border:1px solid var(--studia-theme-line);border-radius:12px;background:var(--studia-theme-accent);color:var(--studia-accent-ink);font-weight:900;padding:0 12px}.v299StudyInner{position:relative;display:grid;justify-items:center}.v297StudyCard{width:100%!important;color:inherit!important;font:inherit!important}
 
-/* All themeable controls use the active pastel/custom palette. */
-body:not(.editorMode) :is(.primary,.nav button.active,.tab.active,.profileType button.active,.v102AddSubject,.v102AddTopic,.v103HubAdd){background:var(--studia-theme-accent)!important;border-color:var(--studia-theme-accent)!important;color:var(--studia-accent-ink)!important}
-body:not(.editorMode) :is(.ghost,.iconbtn,.v102RoundIcon,.v102OnlyPlus,.v102Mini,.quick button,.homeMiniActions button,.v298LearnHub button,.v297IconBtn,.v299AddCard){border-color:var(--studia-theme-line)!important}
-body:not(.editorMode) :is(.v102ResourceCard,.v103HubItem,.v297DeckEditCard,.v297PlannerCard,.v299SubjectNotebook,.v299TopicFolder){border-color:var(--studia-theme-line)!important;background:var(--studia-theme-paper)!important}
+/* One palette controls the whole application, including desktop sidebar and modal controls. */
+body:not(.editorMode){color:var(--studia-theme-text)!important}
+body:not(.editorMode) :is(.panel,.card,.kpi,.resourceSection,.materialCard,.sheetCard,.quizCard,.flashFace,.modal,.v102ResourceCard,.v103HubItem,.v297DeckEditCard,.v297PlannerCard,.v299SubjectNotebook,.v299TopicFolder,.v141GoogleSyncCard,.v171CloudCard){border-color:var(--studia-theme-line)!important;background-color:var(--studia-theme-paper)!important}
+body:not(.editorMode) :is(input,select,textarea){border-color:var(--studia-theme-line)!important;background:var(--studia-theme-paper)!important;color:var(--studia-theme-text)!important}
+body:not(.editorMode) :is(.primary,.nav button.active,.tab.active,.profileType button.active,.v102AddSubject,.v102AddTopic,.v103HubAdd,#v210Sidebar .navItem.active,#v208Sidebar .navItem.active){background:var(--studia-theme-accent)!important;border-color:var(--studia-theme-accent)!important;color:var(--studia-accent-ink)!important}
+body:not(.editorMode) :is(.ghost,.iconbtn,.v102RoundIcon,.v102OnlyPlus,.v102Mini,.quick button,.homeMiniActions button,.v298LearnHub button,.v297IconBtn,.v299AddCard,.navItem){border-color:var(--studia-theme-line)!important;color:var(--studia-theme-text)!important}
+body:not(.editorMode) :is(.ghost,.iconbtn,.v102RoundIcon,.v102OnlyPlus,.v102Mini,.quick button,.homeMiniActions button,.v298LearnHub button,.v297IconBtn,.navItem){background:var(--studia-theme-paper)!important}
+body:not(.editorMode) :is(#nav,#v210Sidebar,#v208Sidebar,.modalWrap .modal){border-color:var(--studia-theme-line)!important;background:color-mix(in srgb,var(--studia-theme-paper) 94%,transparent)!important}
+body:not(.editorMode) :is(.navBubble,.badge.good){background:var(--studia-theme-soft-strong)!important;border-color:var(--studia-theme-line)!important;color:var(--studia-theme-text)!important}
+body:not(.editorMode) :is(h1,h2,h3,.subject,.navLabel,.brandText b){color:var(--studia-theme-text)!important}
 
-/* Planner + every responsive card stays inside the actual phone viewport. */
-.v297PlannerCard,.v297PlannerMain,.v297PlannerMain .row,.v297PlannerMain .row>div,.v102ResourceCard,.v103HubItem{min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
-.v297PlannerTitle,.v297PlannerMeta,.v103ResourceText,.v103ResourceText>*{overflow-wrap:anywhere!important;word-break:break-word!important}
-
-@media(max-width:700px){
-  .v299SubjectGrid,.v299TopicList{grid-template-columns:1fr!important}
-  .v102Notebook.v103Notebook.v299SubjectNotebook{min-height:90px!important;padding:13px!important;grid-template-columns:42px minmax(0,1fr) 16px!important}.v299BookGlyph{width:42px;height:42px}
-  .v103FolderRow.v299TopicFolder{min-height:88px!important;grid-template-columns:38px minmax(0,1fr) 15px!important;padding:17px 12px 11px!important}.v299FolderGlyph{width:38px;height:38px}
-  .v299DeckModeSwitch{width:100%!important}
-  .v299DeckHero{align-items:center}.v299DeckHeroActions{flex-shrink:0}.v299AddCard{font-size:10px;padding:0 9px}
-  #view-home .homeMiniActions.v297HomeActions>button,#view-study .v298LearnHub>button{min-width:0!important}
-}
-/* ===== /V299 ===== */
+/* Responsive guardrails. */
+.v297PlannerCard,.v297PlannerMain,.v297PlannerMain .row,.v297PlannerMain .row>div,.v102ResourceCard,.v103HubItem,.v102SubjectsPage,.v102SubjectDetail{min-width:0!important;max-width:100%!important;box-sizing:border-box!important}.v297PlannerTitle,.v297PlannerMeta,.v103ResourceText,.v103ResourceText>*{overflow-wrap:anywhere!important;word-break:break-word!important}
+@media(max-width:700px){.v299SubjectGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}.v102Notebook.v103Notebook.v299SubjectNotebook{min-height:104px!important;padding:12px 10px 12px 25px!important;grid-template-columns:36px minmax(0,1fr)!important;gap:8px!important}.v299BookGlyph{width:36px;height:36px}.v299BookArrow{display:none!important}.v300NotebookBinding{left:8px;top:18px;bottom:18px}.v300NotebookBinding i{width:10px}.v102Notebook.v103Notebook.v299SubjectNotebook:before{left:13px!important}.v299TopicList{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}.v103FolderRow.v299TopicFolder{min-height:100px!important;padding:18px 9px 10px!important;grid-template-columns:30px minmax(0,1fr)!important;gap:7px!important}.v299FolderGlyph{width:30px;height:30px}.v299DeckModeSwitch{width:100%!important}.v299DeckHero{align-items:center}.v299DeckHeroActions{flex-shrink:0}.v299AddCard{font-size:10px;padding:0 9px}#view-home .homeMiniActions.v297HomeActions>button,#view-study .v298LearnHub>button{min-width:0!important}}
+@media(max-width:390px){.v299SubjectGrid,.v299TopicList{grid-template-columns:repeat(2,minmax(0,1fr))!important}.v299BookCopy strong{font-size:13px!important}.v299BookCopy small,.v299TopicFolder .v103FolderText small{font-size:8px!important}}
+/* ===== /V300 ===== */
 </style>
 <script id="studia-v299-single-owner">
 (()=>{
@@ -22847,28 +22838,28 @@ window.v297DeleteDeckCard=window.v298DeleteDeckCard;window.deleteDeckCard=window
 function meaningfulPlanner(v){return /[\p{L}\p{N}]/u.test(String(v??'').trim())}
 function cleanPlannerData(){
  let changed=false;
+ const sourceHw=Array.isArray(data.homework)?data.homework:[];
+ const realHw=sourceHw.filter(o=>o&&typeof o==='object'&&meaningfulPlanner(o.text));
+ for(const ghost of sourceHw){
+   if(!ghost||typeof ghost!=='object'||meaningfulPlanner(ghost.text)||!Array.isArray(ghost.files)||!ghost.files.length)continue;
+   const candidates=realHw.filter(x=>String(x.subject||'').trim()===String(ghost.subject||'').trim()&&String(x.due||'')===String(ghost.due||''));
+   const target=candidates.sort((a,b)=>Math.abs(Number(a.created||0)-Number(ghost.created||0))-Math.abs(Number(b.created||0)-Number(ghost.created||0)))[0];
+   if(target){target.files=Array.isArray(target.files)?target.files:[];const ids=new Set(target.files.map(f=>String(f?.id||f?.name||'')));for(const f of ghost.files){const k=String(f?.id||f?.name||'');if(!ids.has(k)){target.files.push(f);ids.add(k)}}changed=true}
+ }
  const dedupe=(arr,kind)=>{
    const seenIds=new Set(),seenSig=new Set(),out=[];
    for(const o of Array.isArray(arr)?arr:[]){
      if(!o||typeof o!=='object'){changed=true;continue}
-     const hasContent=kind==='hw'
-       ? meaningfulPlanner(o.text)
-       : (meaningfulPlanner(o.subject)&&meaningfulPlanner(o.type||'Test'));
+     const hasContent=kind==='hw'?meaningfulPlanner(o.text):(meaningfulPlanner(o.subject)&&meaningfulPlanner(o.type||'Test'));
      if(!hasContent){changed=true;continue}
-     const iid=String(o.id||'').trim();
-     if(iid&&seenIds.has(iid)){changed=true;continue}
-     const sig=kind==='hw'
-       ?[String(o.subject||'').trim(),String(o.text||'').trim(),String(o.note||'').trim(),String(o.due||''),!!o.done].join('|').toLowerCase()
-       :[String(o.subject||'').trim(),String(o.type||'').trim(),String(o.text||'').trim(),String(o.date||'')].join('|').toLowerCase();
-     if(seenSig.has(sig)){changed=true;continue}
-     if(iid)seenIds.add(iid);seenSig.add(sig);out.push(o);
+     const iid=String(o.id||'').trim();if(iid&&seenIds.has(iid)){changed=true;continue}
+     const sig=kind==='hw'?[String(o.subject||'').trim(),String(o.text||'').trim(),String(o.note||'').trim(),String(o.due||''),!!o.done].join('|').toLowerCase():[String(o.subject||'').trim(),String(o.type||'').trim(),String(o.text||'').trim(),String(o.date||'')].join('|').toLowerCase();
+     if(seenSig.has(sig)){changed=true;continue}if(iid)seenIds.add(iid);seenSig.add(sig);out.push(o);
    }
    return out;
  };
- const hw=dedupe(data.homework,'hw'),tests=dedupe(data.tests,'test');
- if(hw.length!==(data.homework||[]).length||tests.length!==(data.tests||[]).length)changed=true;
- data.homework=hw;data.tests=tests;
- return changed;
+ const hw=dedupe(sourceHw,'hw'),tests=dedupe(data.tests,'test');
+ if(hw.length!==sourceHw.length||tests.length!==(data.tests||[]).length)changed=true;data.homework=hw;data.tests=tests;return changed;
 }
 const baseSave298=window.save||((typeof save==='function')?save:null);
 if(typeof baseSave298==='function'&&!baseSave298.__v298Clean){
@@ -22888,7 +22879,7 @@ function normalizeHomeQuickIcons(){
  b.slice(0,4).forEach((btn,i)=>{const d=defs[i];if(!d)return;btn.setAttribute('onclick',d.onclick);btn.setAttribute('aria-label',d.aria);btn.innerHTML=`<span class="v297QuickIcon">${d.icon}</span><span>${d.label}</span>`});
 }
 let v299ThemeSaveTimer=0;
-function v299PersistTheme(){clearTimeout(v299ThemeSaveTimer);v299ThemeSaveTimer=setTimeout(()=>{try{save();applyCustomization()}catch(_){}},120)}
+function v299PersistTheme(){clearTimeout(v299ThemeSaveTimer);v299ThemeSaveTimer=setTimeout(()=>{try{persistCustomizationLocal();save();applyCustomization()}catch(_){}},70)}
 function wireThemeControls(){
  data.customization ||= {theme:'blossom',compact:false,customColor:'#f3b8bf'};
  qa('#themeSwatches .themeSwatch').forEach(b=>{
@@ -22924,7 +22915,7 @@ const boot=()=>{
  if(q('#view-deck-detail.active')){document.body.classList.toggle('v214LearningReadOnly',deckMode==='learn');renderDeckDetail298()}
  if(q('#view-settings.active'))wireThemeControls();
  if(cleaned)try{save()}catch(_){}
- const e=q('#headerEyebrow');if(e)e.textContent='VERSION 299';
+ const e=q('#headerEyebrow');if(e)e.textContent='VERSION 300';
 };
 [0,120,600,1600,2400,4200].forEach(ms=>setTimeout(boot,ms));
 window.addEventListener('pageshow',()=>setTimeout(boot,50));
