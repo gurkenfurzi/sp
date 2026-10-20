@@ -11891,7 +11891,15 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
   window.v102CreateCanvasResource=function(type){const {t}=currentTopic();if(!t)return;const label={sheet:'Lernblatt',homework:'Hausaufgabe',worksheet:'Arbeitsblatt'}[type]||'Lernblatt';openModal(`<h2>${label} erstellen</h2><label>Name</label><input id="v102ResourceName" value="${esc(label)}" placeholder="Name"><button class="primary" style="margin-top:12px" onclick="v102StartCanvasResource('${type}')">Im Editor öffnen</button>`)};
   window.v102StartCanvasResource=function(type){const name=String($('#v102ResourceName')?.value||'').trim()||({sheet:'Lernblatt',homework:'Hausaufgabe',worksheet:'Arbeitsblatt'}[type]||'Lernblatt');v102PendingResource={type,name};selectedSheetId=null;closeModal();openStudySheetEditor(null);setTimeout(()=>{const h=canvasState.objects.find(o=>['text','block'].includes(o.kind)&&(o.style?.fontSize||0)>=28);if(h){h.text=name;renderCanvasObjects();markCanvasDirty(false)}},80)};
   const v102BaseSaveCanvasSheetCore=saveCanvasSheetCore;
-  saveCanvasSheetCore=function(auto=false){v102BaseSaveCanvasSheetCore(auto);const sh=(data.studySheets||[]).find(x=>x.id===selectedSheetId);if(sh){if(v102PendingResource){sh.resourceType=v102PendingResource.type;sh.title=v102PendingResource.name}else sh.resourceType=sh.resourceType||'sheet';save()}if(!auto)v102PendingResource=null};
+  saveCanvasSheetCore=function(auto=false){
+    v102BaseSaveCanvasSheetCore(auto);
+    const sh=(data.studySheets||[]).find(x=>x.id===selectedSheetId),pending=v102PendingResource||window.__STUDIA_EDITOR_PENDING_RESOURCE||null;
+    if(sh){
+      if(pending){sh.resourceType=pending.type||'sheet';sh.title=pending.name||sh.title||'Lernblatt';v102PendingResource=null;window.__STUDIA_EDITOR_PENDING_RESOURCE=null}
+      else sh.resourceType=sh.resourceType||'sheet';
+      save();
+    }
+  };
 
   window.v102RenameSheet=function(idv){const sh=(data.studySheets||[]).find(x=>x.id===idv);if(!sh)return;const n=prompt('Neuer Name',sh.title||'Lernblatt');if(!n?.trim())return;sh.title=n.trim();save();v102OpenTopicHub(sh.resourceType||'sheet')};
   window.v102RenameDeck=function(idv){const d=(data.flashDecks||[]).find(x=>x.id===idv);if(!d)return;const n=prompt('Neuer Name',d.name);if(!n?.trim())return;d.name=n.trim();save();v102OpenTopicHub('cards')};
@@ -16149,7 +16157,7 @@ function labelHeaderButtons(){const map={'Seite & Ansicht':['pages','Seiten'],Ex
 function ensureBottom(shell){let bar=shell.querySelector('.v134BottomBar');if(!bar){bar=document.createElement('div');bar.className='v134BottomBar';bar.innerHTML=`<button class="notes" onclick="cuteToast('Notizen kannst du als Textfeld einfügen ♡')">▤ Notizen</button><span class="spacer"></span><button class="icon" onclick="canvasZoomBy(-.1)">−</button><input type="range" min=".25" max="2" step=".05" value="1" oninput="setCanvasZoom(+this.value);this.nextElementSibling.value=Math.round(this.value*100)+'%'"><output>100%</output><button class="icon" onclick="canvasZoomBy(.1)">＋</button><button class="icon" title="Einpassen" onclick="fitCanvasStage()">${I('fit')}</button>`;shell.appendChild(bar)}return bar}
 function polishRightPanel(){const add=document.querySelector('#v102PagePanel .rowBetween .miniIcon');if(add)add.innerHTML='+ Seite hinzufügen'}
 function makeSelectionBar(){const bar=document.createElement('div');bar.className='v132SelectionBar';bar.setAttribute('aria-label','Auswahlwerkzeuge');bar.innerHTML=`<button class="v132SelectTool active" title="Auswahlwerkzeug" aria-label="Auswahlwerkzeug" onclick="v132ToggleSelection()">${I('select')}<span>Auswahl</span></button><button class="v132MultiTool" title="Mehrere auswählen" aria-label="Mehrfachauswahl" onclick="v132ToggleMulti()">${I('multi')}</button><button title="Gruppieren" aria-label="Gruppieren" onclick="groupSelectedItems();requestAnimationFrame(v132SyncHits)">${I('group')}</button><button title="Duplizieren" aria-label="Duplizieren" onclick="duplicateSelected();requestAnimationFrame(v132SyncHits)">${I('duplicate')}</button><button title="Textformat erstellen" aria-label="Textformat erstellen" onclick="v132TextFormat()">${I('textformat')}</button>`;return bar}
-function ensureDesktop(){if(!desktop())return;const shell=document.querySelector('.canvasEditorShell'),top=document.querySelector('.canvasTopbar'),command=document.querySelector('.desktopCommandBar'),nav=document.querySelector('.canvasQuickNav'),drawer=document.getElementById('canvasQuickDrawer'),actions=top?.querySelector('.editorActions');if(!shell||!top||!command||!nav||!drawer||!actions)return;command.querySelectorAll('.desktopCmdGroup').forEach(x=>x.remove());let brand=top.querySelector('.v134Brand');if(!brand){brand=document.createElement('div');brand.className='v134Brand';brand.innerHTML=`<span class="v134BrandMark">${bunny}</span><b>Studia</b>`;top.prepend(brand)}const history=top.querySelector('.historyBar')||document.querySelector('.desktopCommandBar .historyBar');let selection=top.querySelector('.v132SelectionBar')||document.querySelector('.desktopCommandBar .v132SelectionBar');if(!selection)selection=makeSelectionBar();if(history&&history.parentElement!==actions)actions.prepend(history);if(selection.parentElement!==command)command.prepend(selection);if(!command.querySelector('.v134FormatTools'))command.insertAdjacentHTML('beforeend',formatTools());labelHeaderButtons();buildDesktopNav();ensureBottom(shell);const any=document.getElementById('canvasAnyFileInput');if(any)any.accept='image/*,audio/*,.mp3,.wav,.m4a,.ogg,.pdf,.doc,.docx,.ppt,.pptx,.txt';const custom=['elements','images','shapes','stickers','charts','tables','formulas','files','audio'];if(custom.includes(currentDesktopMode)&&drawer.dataset.v134Mode!==currentDesktopMode)setDrawerHTML(currentDesktopMode==='elements'?elementsPalette():customPalette(currentDesktopMode),currentDesktopMode);if(!drawer.querySelector('.v134Palette')&&!drawer.querySelector('.mobileTextLibrary,.mobileTemplateGrid,.v152Panel'))setDrawerHTML(elementsPalette(),'elements');if(!shell.dataset.v134PageOpened){shell.dataset.v134PageOpened='1';try{v102RightTab('page')}catch(_){}}polishRightPanel();document.body.classList.add('v134Desktop')}
+function ensureDesktop(){if(!desktop())return;const shell=document.querySelector('.canvasEditorShell'),top=document.querySelector('.canvasTopbar'),command=document.querySelector('.desktopCommandBar'),nav=document.querySelector('.canvasQuickNav'),drawer=document.getElementById('canvasQuickDrawer'),actions=top?.querySelector('.editorActions');if(!shell||!top||!command||!nav||!drawer||!actions)return;command.querySelectorAll('.desktopCmdGroup').forEach(x=>x.remove());let brand=top.querySelector('.v134Brand');if(!brand){brand=document.createElement('div');brand.className='v134Brand';brand.innerHTML=`<b>Studia</b>`;top.prepend(brand)}const history=top.querySelector('.historyBar')||document.querySelector('.desktopCommandBar .historyBar');let selection=top.querySelector('.v132SelectionBar')||document.querySelector('.desktopCommandBar .v132SelectionBar');if(!selection)selection=makeSelectionBar();if(history&&history.parentElement!==actions)actions.prepend(history);if(selection.parentElement!==command)command.prepend(selection);if(!command.querySelector('.v134FormatTools'))command.insertAdjacentHTML('beforeend',formatTools());labelHeaderButtons();buildDesktopNav();ensureBottom(shell);const any=document.getElementById('canvasAnyFileInput');if(any)any.accept='image/*,audio/*,.mp3,.wav,.m4a,.ogg,.pdf,.doc,.docx,.ppt,.pptx,.txt';const custom=['elements','images','shapes','stickers','charts','tables','formulas','files','audio'];if(custom.includes(currentDesktopMode)&&drawer.dataset.v134Mode!==currentDesktopMode)setDrawerHTML(currentDesktopMode==='elements'?elementsPalette():customPalette(currentDesktopMode),currentDesktopMode);if(!drawer.querySelector('.v134Palette')&&!drawer.querySelector('.mobileTextLibrary,.mobileTemplateGrid,.v152Panel'))setDrawerHTML(elementsPalette(),'elements');if(!shell.dataset.v134PageOpened){shell.dataset.v134PageOpened='1';try{v102RightTab('page')}catch(_){}}polishRightPanel();document.body.classList.add('v134Desktop')}
 function restoreMobile(){document.body.classList.remove('v134Desktop');const top=document.querySelector('.canvasTopbar'),actions=top?.querySelector('.editorActions'),history=document.querySelector('.desktopCommandBar .historyBar'),selection=document.querySelector('.desktopCommandBar .v132SelectionBar');top?.querySelector('.v134Brand')?.remove();if(selection&&top)top.insertBefore(selection,history&&history.parentElement===top?history:actions);if(history&&top)top.insertBefore(history,actions);document.querySelector('.v134BottomBar')?.remove();const nav=document.querySelector('.canvasQuickNav');if(nav?.querySelector('[data-v134="audio"]'))buildMobileNav()}
 function reconcile(){desktop()?ensureDesktop():restoreMobile()}
 const oldRender=window.renderSheetEditor;window.renderSheetEditor=function(){const r=oldRender.apply(this,arguments);setTimeout(reconcile,820);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){}
@@ -25475,13 +25483,25 @@ const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 231'};
 
 
 
-<script id="v287-standalone-boot">
+<script id="v304-standalone-boot">
 (function(){
  'use strict';
- const sheetId=new URLSearchParams(location.search).get('sheet');
+ const params=new URLSearchParams(location.search),sheetId=params.get('sheet'),subjectId=params.get('subject'),topicId=params.get('topic'),resourceType=params.get('resourceType'),resourceName=params.get('resourceName');
  let tries=0;
- function localOnly(){return Promise.resolve({deferred:true,editor:true})}
  function finish(){document.documentElement.classList.remove('v286-editor-boot');document.body.style.visibility='visible'}
+ function restoreContext(){
+   try{
+     if(sheetId){const sh=(data.studySheets||[]).find(x=>String(x.id)===String(sheetId));if(sh){const s=(data.subjects||[]).find(x=>String(x.name)===String(sh.subject));if(s){selectedSubjectId=s.id;selectedTopicId=sh.topicId||null}}}
+     if(subjectId)selectedSubjectId=subjectId;if(topicId)selectedTopicId=topicId;
+     if(resourceType||resourceName)window.__STUDIA_EDITOR_PENDING_RESOURCE={type:resourceType||'sheet',name:resourceName||'Lernblatt'};
+   }catch(err){console.warn('[Studia V304 editor context]',err)}
+ }
+ async function persistAndSync(){
+   try{if(typeof saveCanvasSheetCore==='function')saveCanvasSheetCore(true)}catch(_){}
+   try{if(typeof saveCanvasSheet==='function')saveCanvasSheet()}catch(_){}
+   try{localStorage.setItem('schoolhub-v1',JSON.stringify(data))}catch(_){}
+   try{if(typeof window.studiaSyncNow==='function')await Promise.race([Promise.resolve(window.studiaSyncNow({manual:true})),new Promise(r=>setTimeout(r,2600))])}catch(err){console.warn('[Studia V304 editor sync]',err)}
+ }
  function boot(){
    tries++;
    if(typeof window.openStudySheetEditor!=='function'||typeof window.openView!=='function'){
@@ -25489,21 +25509,12 @@ const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 231'};
      finish();document.body.innerHTML='<main style="padding:30px;font-family:Inter,sans-serif">Editor konnte nicht initialisiert werden.</main>';return;
    }
    try{
-     window.studiaSyncNow=localOnly;window.v171CloudNow=localOnly;
-     try{v171CloudNow=window.v171CloudNow}catch(_){ }
-     window.openStudySheetEditor(sheetId||null);
-     document.body.classList.add('v287StandaloneEditor');
-     const leave=function(){
-       try{if(typeof saveCanvasSheetCore==='function')saveCanvasSheetCore(true)}catch(_){ }
-       try{if(typeof saveCanvasSheet==='function')saveCanvasSheet()}catch(_){ }
-       try{localStorage.setItem('schoolhub-v1',JSON.stringify(data))}catch(_){ }
-       location.href='index.html#subjects';
-     };
-     window.closeSheetEditor=leave;
-     window.leaveSubjectNotebook=leave;
-     window.backToNotebook=leave;
+     restoreContext();window.openStudySheetEditor(sheetId||null);document.body.classList.add('v287StandaloneEditor');
+     const leave=async function(){await persistAndSync();location.href='index.html#subjects'};
+     window.closeSheetEditor=leave;window.leaveSubjectNotebook=leave;window.backToNotebook=leave;
+     if(!window.__STUDIA_V304_PAGEHIDE__){window.__STUDIA_V304_PAGEHIDE__=true;addEventListener('pagehide',()=>{try{saveCanvasSheetCore?.(true)}catch(_){}try{localStorage.setItem('schoolhub-v1',JSON.stringify(data))}catch(_){}})}
      finish();
-   }catch(err){console.error('[V287 editor boot]',err);if(tries<120)return setTimeout(boot,60);finish()}
+   }catch(err){console.error('[V304 editor boot]',err);if(tries<120)return setTimeout(boot,60);finish()}
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(boot,0),{once:true});else setTimeout(boot,0);
 })();
@@ -25552,7 +25563,11 @@ let queued=false;const schedule=()=>{if(queued)return;queued=true;requestAnimati
 const shell=q('.canvasEditorShell')||document.body;new MutationObserver(schedule).observe(shell,{childList:true,subtree:true});
 window.addEventListener('resize',()=>{close();schedule()},{passive:true});
 [0,120,450,1100,2200].forEach(t=>setTimeout(install,t));
-const setVersion=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 299'};[0,300,1000].forEach(t=>setTimeout(setVersion,t));
+const setVersion=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 304'};[0,300,1000].forEach(t=>setTimeout(setVersion,t));
 })();
 </script>
-
+<style id="studia-v304-editor-clean">
+@media(min-width:900px){body.editorMode .v134BrandMark{display:none!important}body.editorMode .v134Brand{gap:0!important;padding-left:4px!important;flex-basis:120px!important}}
+</style>
+<script src="google-sync-config.js?v=304"></script>
+<script id="studia-v304-version">(()=>{const f=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 304'};[0,200,800].forEach(t=>setTimeout(f,t))})();</script>

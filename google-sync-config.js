@@ -1,8 +1,8 @@
-/* Studia V300 — stable V289 transport + remote ghost cleanup + IndexedDB quota fallback. */
+/* Studia V304 — stable V289 transport + remote ghost cleanup + IndexedDB quota fallback. */
 (()=>{
 'use strict';
 if(window.__STUDIA_SYNC_V298__)return;window.__STUDIA_SYNC_V298__=true;
-const KEY='schoolhub-v1',DB='studia-sync-v290',STORE='kv';
+const KEY='schoolhub-v1',DB='studia-sync-v290',STORE='kv',IS_EDITOR=/\/editor\.html$/i.test(location.pathname);
 const URL_KEYS=['studia-v289-script-url','studia-v288-script-url','studia-v287-script-url','studia-v286-script-url','studia-v284-script-url','studia-v281-script-url','studia-v265-script-url','studia-script-url','schoolhub-script-url','google-sync-script-url'];
 const TOKEN_KEYS=['studia-v289-token','studia-v288-token','studia-v287-token','studia-v286-token','studia-v284-token','studia-v281-token','studia-v265-token','studia-token','schoolhub-token','cloud-token'];
 const USER_KEYS=['studia-v289-user','studia-v288-user','studia-v287-user','studia-v286-user','studia-v284-user','studia-v281-user','studia-v265-user','studia-user','schoolhub-user'];
@@ -76,16 +76,18 @@ async function applyLocal(state){
  const raw=JSON.stringify(state);
  const ok=safeSet(KEY,raw);
  if(ok)lastSeenLocal=raw;else lastSeenLocal='';
- try{renderAll?.()}catch(_){}
- try{if($('#view-plan.active'))renderPlan?.()}catch(_){}
- try{if($('#view-subjects.active'))renderSubjects?.()}catch(_){}
- try{if($('#view-tasks.active'))renderTasks?.()}catch(_){}
+ if(!IS_EDITOR){
+   try{renderAll?.()}catch(_){}
+   try{if($('#view-plan.active'))renderPlan?.()}catch(_){}
+   try{if($('#view-subjects.active'))renderSubjects?.()}catch(_){}
+   try{if($('#view-tasks.active'))renderTasks?.()}catch(_){}
+ }
  return state
 }
 async function syncNow(opts={}){const manual=!!opts.manual;if(busy){pending=true;return{busy:true}}if(!manual&&Date.now()<cooldownUntil)return{cooldown:true};if(!manual&&Date.now()-lastSyncAt<10000)return{recent:true};if(!navigator.onLine){status('Offline · lokal gespeichert','error');return{offline:true}}if(!token()){status('Nicht angemeldet · lokale Daten sicher','error');return{auth:false}}busy=true;status('Synchronisiere Geräte …','syncing');let ok=false;try{try{if(typeof save==='function')save()}catch(_){}let current;try{current=cleanState(data)}catch(_){current=cleanState(safeJSON(localStorage.getItem(KEY)||'{}',{}))}if(addMissingIds(current)){await dbSet('localState',{state:clone(current),ts:Date.now()});safeSet(KEY,JSON.stringify(current));}let base=await dbGet('baseState',undefined),baseVersion=Number(await dbGet('baseVersion',0)||0);if(base===undefined){const full=await pullFull('Vollständiger Geräteabgleich …');base=full.state;baseVersion=full.version;current=cleanState(mergeBootstrap(base,current));addMissingIds(current);await applyLocal(current);await dbSet('baseState',clone(base));await dbSet('baseVersion',baseVersion)}const delta=diff(injectGhostDeletes(base),current);if(!delta){const ch=await pullChanges(baseVersion);if(ch.needFullPull){const full=await pullFull('Neue Daten vom anderen Gerät …');current=full.state;baseVersion=full.version}else if(ch.deltas?.length){for(const d of ch.deltas)current=applyDelta(current,d);baseVersion=ch.updatedAt;current=cleanState(current||{});addMissingIds(current)}await applyLocal(current);await dbSet('baseState',clone(current));await dbSet('baseVersion',baseVersion);lastSyncAt=Date.now();cooldownUntil=0;ghostDeletes.homework.clear();ghostDeletes.tests.clear();status(ch.deltas?.length?'Synchronisiert ✓ · andere Geräte übernommen':'Synchronisiert ✓ · keine Änderungen','ok');ok=true;return{ok:true,version:baseVersion}}const packed=await gzipJSON(delta),payload={token:token(),deviceId:deviceId(),deviceName:deviceName(),baseUpdatedAt:baseVersion};if(packed.gz&&packed.gz.length<packed.raw.length)payload.deltaGzip=packed.gz;else payload.delta=packed.raw;const ack=await fireAndAck('sync_delta',payload,22000);if(Number(ack.version)!==289)throw new Error('Google Apps Script V289 ist noch nicht bereitgestellt');let latest=clone(base),version=Number(ack.updatedAt||baseVersion||0);if(ack.needFullPull){const full=await pullFull('Aktuellen gemeinsamen Stand laden …');latest=full.state;version=full.version}else{const ch=await pullChanges(baseVersion);if(ch.needFullPull){const full=await pullFull('Aktuellen gemeinsamen Stand laden …');latest=full.state;version=full.version}else{for(const d of ch.deltas||[])latest=applyDelta(latest,d);version=ch.updatedAt;latest=cleanState(latest||{});addMissingIds(latest)}}await applyLocal(latest);await dbSet('baseState',clone(latest));await dbSet('baseVersion',version);lastSyncAt=Date.now();cooldownUntil=0;ok=true;const c={s:latest.subjects?.length||0,h:latest.homework?.length||0,t:latest.tests?.length||0};ghostDeletes.homework.clear();ghostDeletes.tests.clear();status(`Synchronisiert ✓ · ${c.s} Fächer · ${c.h} Aufgaben · ${c.t} Tests`,'ok');return{ok:true,version}}catch(e){console.error('[Studia V289 sync]',e);cooldownUntil=Date.now()+45000;pending=false;status(((e?.name==='QuotaExceededError'||/quota/i.test(String(e?.message||e)))?'Gerätespeicher voll – Studia nutzt sicheren App-Speicher':(e?.message||String(e)))+' · lokal sicher','error');if(manual)throw e;return{ok:false,error:e}}finally{busy=false;if(ok&&pending){pending=false;setTimeout(()=>syncNow().catch(()=>{}),1400)}}}
 async function loginAndSync(){const u=$('#v150Username')?.value?.trim()||'',p=$('#v150Password')?.value||'',ep=$('#v150ScriptUrl')?.value?.trim()||endpoint();if(ep)rememberUrl(ep);status('Anmeldung …','syncing');const r=await fireAndAck('login',{username:u,password:p},18000);if(Number(r.version)!==289)throw new Error('Google Apps Script V289 ist noch nicht bereitgestellt');rememberAuth(r);status('Angemeldet als '+(r.user?.username||u)+' ✓');return syncNow({manual:true})}
 async function register(){const u=$('#v150Username')?.value?.trim()||'',p=$('#v150Password')?.value||'',ep=$('#v150ScriptUrl')?.value?.trim()||endpoint();if(ep)rememberUrl(ep);status('Konto wird erstellt …','syncing');const r=await fireAndAck('register',{username:u,password:p},18000);if(Number(r.version)!==289)throw new Error('Google Apps Script V289 ist noch nicht bereitgestellt');rememberAuth(r);if(r.recoveryCode)alert('Wiederherstellungscode — sicher speichern:\n\n'+r.recoveryCode);status('Konto erstellt ✓');return syncNow({manual:true})}
-function ensureButton(){if($('#v232DesktopSync'))return;const b=document.createElement('button');b.id='v232DesktopSync';b.type='button';b.innerHTML='<span class="spin">↻</span><span>Geräte synchronisieren<small>Lokal gespeichert</small></span>';b.onclick=()=>syncNow({manual:true}).catch(()=>{});document.body.appendChild(b)}
+function ensureButton(){if(IS_EDITOR||$('#v232DesktopSync'))return;const b=document.createElement('button');b.id='v232DesktopSync';b.type='button';b.innerHTML='<span class="spin">↻</span><span>Geräte synchronisieren<small>Lokal gespeichert</small></span>';b.onclick=()=>syncNow({manual:true}).catch(()=>{});document.body.appendChild(b)}
 function install(){window.v171CloudNow=syncNow;window.studiaSyncNow=syncNow;window.v171CloudLogin=loginAndSync;window.v171CloudRegister=register;try{v171CloudNow=syncNow}catch(_){}ensureButton()}
 function schedule(){clearTimeout(timer);timer=setTimeout(()=>{if(Date.now()<cooldownUntil||Date.now()-lastSyncAt<6000)return;syncNow().catch(()=>{})},1800)}
 function watch(){const now=localStorage.getItem(KEY)||'';if(now&&now!==lastSeenLocal){lastSeenLocal=now;schedule()}}
@@ -109,14 +111,14 @@ async function hydrate(){
    const restored=cleanState(mergeBootstrap(cached.state,current));addMissingIds(restored);
    try{data=restored}catch(_){window.data=restored}
    await dbSet('localState',{state:clone(restored),ts:Date.now()});
-   try{renderAll?.()}catch(_){}
+   if(!IS_EDITOR)try{renderAll?.()}catch(_){}
  }
  const u=user();status(token()?(u?.username?'Angemeldet als '+u.username+' · bereit':'Angemeldet · bereit'):'Noch nicht verbunden.');
  lastSeenLocal=localStorage.getItem(KEY)||'';
  setInterval(()=>{install();hookSave();watch()},2500);
  setTimeout(()=>{if(token()&&navigator.onLine)syncNow().catch(()=>{})},1800)
 }
-window.StudiaSyncV298={syncNow,loginAndSync,register,status,rememberUrl,clientVersion:300,serverProtocol:289,resetBase:async()=>{await dbSet('baseState',undefined);await dbSet('baseVersion',0)}};
+window.StudiaSyncV298={syncNow,loginAndSync,register,status,rememberUrl,clientVersion:304,serverProtocol:289,resetBase:async()=>{await dbSet('baseState',undefined);await dbSet('baseVersion',0)}};
 // V294 compatibility: older UI launchers may still ask for the former controller names.
 window.StudiaSyncV290=window.StudiaSyncV298;
 window.StudiaSyncV289=window.StudiaSyncV298;

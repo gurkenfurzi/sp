@@ -3155,7 +3155,7 @@ html,body{background:#fff7f4;}
     <div class="panel">
       <div class="rowBetween"><div><div class="eyebrow">Focus</div><h2>Lernzeit</h2></div><span class="badge" id="studyTodayBadge">0 min heute</span></div>
       <div class="rowBetween" style="margin-top:12px"><span class="badge coin" id="coinBadge">🪙 0</span><button class="ghost" onclick="openPetShop()">Shop & Zimmer</button></div>
-      <div id="petRoomMini" class="petRoom" style="margin-top:12px"><div class="window"></div><div class="rug"></div><div class="petShelf">📚</div><div class="petPlant">🌷</div><div class="petAvatarCute"><div class="petEar left"></div><div class="petEar right"></div><div class="petFace">• ᴥ •</div><div class="petBlush left"></div><div class="petBlush right"></div></div></div>
+      <div id="petRoomMini" class="petRoom" style="margin-top:12px"><div class="window"></div><div class="rug"></div><div class="petAvatarCute"><div class="petEar left"></div><div class="petEar right"></div><div class="petFace">• ᴥ •</div><div class="petBlush left"></div><div class="petBlush right"></div></div></div>
       <div class="durationControls">
         <div class="mini"><label>Lernzeit (Minuten)</label><input id="focusMinutes" type="number" min="1" max="240" value="25"></div>
         <div class="mini"><label>Pause (Minuten)</label><input id="breakMinutes" type="number" min="1" max="60" value="5"></div>
@@ -4011,6 +4011,8 @@ function mergeLessons(ls){
        // V205: contiguous rows with the same subject are a Doppel-/Mehrfachstunde
        // even when PDF.js puts teacher/room fragments into only one of the rows.
        if(!p.special&&!q.special && sameSubject && ((teacherCompatible&&roomCompatible)||sequentialRows)){
+         if(!q.room&&p.room)last.raw=(String(last.raw||'').trim()+' '+String(p.room).trim()).trim();
+         last.room=last.room||item.room||p.room||q.room||'';
          last.end=item.end;
          last.blocks=(last.blocks||1)+(item.blocks||1);
          last.isDouble=last.blocks>=2;
@@ -9318,7 +9320,7 @@ function lessonHtml(l){
    </div>`;
  }
 
- const p=splitCell(rawText),teacher=p.teacher||p.meta||"",key=lessonKey(l),extra=data.lessonExtras[key]||{};
+ const p=splitCell(rawText),teacher=p.teacher||p.meta||"",room=String(p.room||l.room||l.newRoom||l.originalRoom||'').trim(),key=lessonKey(l),extra=data.lessonExtras[key]||{};
  const count=(extra.notes?.length||0)+(extra.tasks?.length||0)+(extra.files?.length||0);
  const double=(l.isDouble||Number(l.blocks)>=2);
  const splitMulti=!!l.splitFromMulti && Number(l.originalBlocks||1)>=2;
@@ -9345,7 +9347,7 @@ function lessonHtml(l){
      ${double?`<div class="doubleBadge">▥ ${(l.blocks||2)>2?(l.blocks+" Stunden"):"Doppelstunde"}</div>`:splitMulti?`<div class="doubleBadge splitMultiBadge">▥ ${Number(l.originalBlocks)===2?"Doppelstunde":l.originalBlocks+" Stunden"} · ${l.splitIndex}/${l.originalBlocks}</div>`:""}
      ${count?`<div class="lessonBadge"><span class="lessonExtraDot">✿ ${count} Eintrag${count===1?"":"e"}</span></div>`:""}
    </div>
-   ${p.room?`<div class="room">${esc(p.room)}</div>`:""}
+   ${room?`<div class="room">${esc(room)}</div>`:`<div class="room">—</div>`}
  </div>`;
 }
 
@@ -9500,7 +9502,7 @@ function renderPetRoom(){
  const room=$("#petRoomMini");if(!room)return;
  const owned=data.economy.owned||[],equipped=data.economy.equipped||[],pink=owned.includes("room-pink");
  room.style.background=pink?"linear-gradient(#f7d9df 0 65%,#e0c298 65%)":"linear-gradient(#f8e6e4 0 65%,#e3c99e 65%)";
- room.innerHTML=`<div class="window"></div><div class="rug"></div><div class="petShelf">📚</div><div class="petPlant">🌷</div><div class="petAvatarCute"><div class="petEar left"></div><div class="petEar right"></div>${owned.includes("bow")?'<div class="petBow">🎀</div>':""}<div class="petFace">• ᴥ •</div><div class="petBlush left"></div><div class="petBlush right"></div></div>`+
+ room.innerHTML=`<div class="window"></div><div class="rug"></div><div class="petAvatarCute"><div class="petEar left"></div><div class="petEar right"></div>${owned.includes("bow")?'<div class="petBow">🎀</div>':""}<div class="petFace">• ᴥ •</div><div class="petBlush left"></div><div class="petBlush right"></div></div>`+
  shopItems.filter(x=>x.type==="decor"&&equipped.includes(x.id)).map(x=>`<span class="roomItem" style="left:${x.x};top:${x.y}">${x.emoji}</span>`).join("");
 }
 window.openPetShop=function(){
@@ -11924,7 +11926,7 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
 
   let v102PendingResource=null;
   window.v102CreateCanvasResource=function(type){const {t}=currentTopic();if(!t)return;const label={sheet:'Lernblatt',homework:'Hausaufgabe',worksheet:'Arbeitsblatt'}[type]||'Lernblatt';openModal(`<h2>${label} erstellen</h2><label>Name</label><input id="v102ResourceName" value="${esc(label)}" placeholder="Name"><button class="primary" style="margin-top:12px" onclick="v102StartCanvasResource('${type}')">Im Editor öffnen</button>`)};
-  window.v102StartCanvasResource=function(type){const name=String($('#v102ResourceName')?.value||'').trim()||({sheet:'Lernblatt',homework:'Hausaufgabe',worksheet:'Arbeitsblatt'}[type]||'Lernblatt');v102PendingResource={type,name};selectedSheetId=null;closeModal();openStudySheetEditor(null);setTimeout(()=>{const h=canvasState.objects.find(o=>['text','block'].includes(o.kind)&&(o.style?.fontSize||0)>=28);if(h){h.text=name;renderCanvasObjects();markCanvasDirty(false)}},80)};
+  window.v102StartCanvasResource=function(type){const name=String($('#v102ResourceName')?.value||'').trim()||({sheet:'Lernblatt',homework:'Hausaufgabe',worksheet:'Arbeitsblatt'}[type]||'Lernblatt');v102PendingResource={type,name};window.__STUDIA_EDITOR_PENDING_RESOURCE={type,name};selectedSheetId=null;closeModal();openStudySheetEditor(null)};
   const v102BaseSaveCanvasSheetCore=saveCanvasSheetCore;
   saveCanvasSheetCore=function(auto=false){v102BaseSaveCanvasSheetCore(auto);const sh=(data.studySheets||[]).find(x=>x.id===selectedSheetId);if(sh){if(v102PendingResource){sh.resourceType=v102PendingResource.type;sh.title=v102PendingResource.name}else sh.resourceType=sh.resourceType||'sheet';save()}if(!auto)v102PendingResource=null};
 
@@ -12124,7 +12126,7 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
   openView=function(name,...args){const out=v103OpenViewBase(name,...args);try{sessionStorage.setItem('studia-last-view',name);sessionStorage.setItem('studia-last-subject',selectedSubjectId||'');sessionStorage.setItem('studia-last-topic',selectedTopicId||'');sessionStorage.setItem('studia-last-sheet',selectedSheetId||'')}catch(_){}return out};
   window.addEventListener('beforeunload',()=>{try{sessionStorage.setItem('studia-last-view',document.querySelector('.view.active')?.id?.replace('view-','')||'home');sessionStorage.setItem('studia-last-subject',selectedSubjectId||'');sessionStorage.setItem('studia-last-topic',selectedTopicId||'');sessionStorage.setItem('studia-last-sheet',selectedSheetId||'')}catch(_){}});
 
-  setTimeout(()=>{const e=$('#headerEyebrow');if(e)e.textContent='VERSION 298';document.title='Studia';if(document.body.classList.contains('editorMode')){v103Topbar();v96RenderPageStrip()}},60);
+  setTimeout(()=>{const e=$('#headerEyebrow');if(e)e.textContent='VERSION 304';document.title='Studia';if(document.body.classList.contains('editorMode')){v103Topbar();v96RenderPageStrip()}},60);
   /* Space shows a grab hand; middle mouse or Space+drag pans. */
   window.addEventListener('keydown',e=>{const a=e.target instanceof Element?e.target:document.activeElement,typing=/INPUT|TEXTAREA|SELECT/.test(a?.tagName)||a?.isContentEditable||!!a?.closest?.('[contenteditable="true"]');if(e.code==='Space'&&document.body.classList.contains('editorMode')&&!typing)$('#canvasViewport')?.classList.add('v103Hand')});
   window.addEventListener('keyup',e=>{if(e.code==='Space')$('#canvasViewport')?.classList.remove('v103Hand')});
@@ -12246,7 +12248,7 @@ setTimeout(()=>{if(!window.__schoolBloomBooted){document.documentElement.style.b
   if(drawer)new MutationObserver(()=>requestAnimationFrame(()=>{syncTextPanel();patchLayers()})).observe(drawer,{subtree:true,childList:true,attributes:true});
   document.addEventListener('click',()=>requestAnimationFrame(()=>{syncTextPanel();patchLayers()}),true);
   window.addEventListener('resize',()=>setTimeout(syncTextPanel,60));
-  setTimeout(()=>{cleanShapeHandles();patchLayers();syncTextPanel();const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 298';document.title='Studia'},260);
+  setTimeout(()=>{cleanShapeHandles();patchLayers();syncTextPanel();const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 304';document.title='Studia'},260);
 })();
 </script>
 <!-- ===== /Studia V117 ===== -->
@@ -12541,7 +12543,7 @@ if(window.__STUDIA_V129_INPUT__)return;
   /* Remove the V122 blocker at runtime too, so stale/injected style order cannot win. */
   function enforce(){document.querySelectorAll('#canvasObjects .vectorTouchProxy,#canvasObjects .shapeHit').forEach(el=>{el.style.setProperty('pointer-events','all','important');el.style.setProperty('touch-action','none','important')})}
   const oldRV=window.renderVectors;if(typeof oldRV==='function')window.renderVectors=function(){const r=oldRV.apply(this,arguments);enforce();return r};
-  setTimeout(()=>{enforce();const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 298'},80);
+  setTimeout(()=>{enforce();const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 304'},80);
 })();
 </script>
 <!-- ===== /Studia V125 ===== -->
@@ -12570,7 +12572,7 @@ function move(e){if(!drag||e.pointerId!==drag.pid)return;const v=(window.canvasS
 function end(e){if(!drag||e.pointerId!==drag.pid)return;e.preventDefault();e.stopImmediatePropagation();const moved=drag.moved;drag=null;if(moved){try{pushHistory()}catch(_){}}try{renderCanvasInspector();renderLayerList()}catch(_){}installProxies()}
 window.addEventListener('pointermove',move,{capture:true,passive:false});window.addEventListener('pointerup',end,true);window.addEventListener('pointercancel',end,true);
 const oldRender=window.renderVectors||renderVectors;window.renderVectors=function(){const out=oldRender.apply(this,arguments);queueMicrotask(installProxies);return out};try{renderVectors=window.renderVectors}catch(_){}
-setTimeout(()=>{if(editor()){try{renderVectors()}catch(_){}installProxies()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 298'},350);
+setTimeout(()=>{if(editor()){try{renderVectors()}catch(_){}installProxies()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 304'},350);
 })();
 </script>
 <!-- ===== /Studia V126 ===== -->
@@ -13918,7 +13920,7 @@ body.editorMode .cobj table{max-width:100%!important}
   window.renderCanvasInspector=function(){oldInspector();if(document.querySelector('#canvasQuickDrawer.open .mobileLayerList'))requestAnimationFrame(renderLayerList)};
 
   // Version marker.
-  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 298';document.title='Studia'},40);
+  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 304';document.title='Studia'},40);
 })();
 </script>
 
@@ -14264,7 +14266,7 @@ body.editorMode .cobj[contenteditable="true"],body.editorMode td[contenteditable
   window.renderLayerList=function(){baseLayers();const m=document.querySelector('#canvasQuickDrawer.open .mobileLayerList');if(m){m.querySelectorAll('button').forEach(b=>{b.style.minWidth='0';b.style.maxWidth='none'})}};
   try{renderLayerList=window.renderLayerList}catch(_){}
 
-  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 298';document.title='Studia'},40);
+  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 304';document.title='Studia'},40);
 })();
 </script>
 <!-- ===== /Studia V112 hard stabilization ===== -->
@@ -14560,7 +14562,7 @@ html,body{overflow-x:hidden!important}
   try{renderSheetEditor=window.renderSheetEditor}catch(_){ }
   window.addEventListener('resize',()=>setTimeout(()=>{topicLock();if(inEditor()){desktopInit();reconcileMobileChrome()}},100));
 
-  setTimeout(()=>{topicLock();if(inEditor()){desktopInit();reconcileMobileChrome()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 298';document.title='Studia'},120);
+  setTimeout(()=>{topicLock();if(inEditor()){desktopInit();reconcileMobileChrome()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 304';document.title='Studia'},120);
 })();
 </script>
 
@@ -14695,7 +14697,7 @@ html,body{max-width:100%!important;overflow-x:hidden!important}
   const oldRender=window.renderSheetEditor||renderSheetEditor;window.renderSheetEditor=function(){const r=oldRender.apply(this,arguments);setTimeout(()=>init(true),360);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){ }
   const mo=new MutationObserver(()=>requestAnimationFrame(syncDrawerState));setTimeout(()=>{const d=document.getElementById('canvasQuickDrawer');if(d)mo.observe(d,{attributes:true,childList:true,subtree:true});if(editor())init(true)},180);
   window.addEventListener('resize',()=>{if(!editor())return;setTimeout(()=>{bindViewport();mobile()?fitMobile(false):fitDesktop()},100)});
-  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 298';document.title='Studia'},80);
+  setTimeout(()=>{const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 304';document.title='Studia'},80);
 })();
 </script>
 <!-- ===== /Studia V115 ===== -->
@@ -14847,7 +14849,7 @@ html,body{max-width:100%!important;overflow-x:hidden!important}
   window.addEventListener('resize',()=>setTimeout(sweep,40));
   setTimeout(()=>{
     sweep();
-    const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 298';
+    const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 304';
     document.title='Studia';
   },220);
 })();
@@ -15283,7 +15285,7 @@ function onUp(e){
 document.addEventListener('pointerdown',onDown,true);
 window.addEventListener('pointermove',onMove,{capture:true,passive:false});
 window.addEventListener('pointerup',onUp,true);window.addEventListener('pointercancel',onUp,true);
-setTimeout(()=>{document.querySelectorAll('.v126VectorDragProxy').forEach(n=>n.remove());const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 298'},250);
+setTimeout(()=>{document.querySelectorAll('.v126VectorDragProxy').forEach(n=>n.remove());const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 304'},250);
 })();
 </script>
 
@@ -15339,7 +15341,7 @@ function installDesktopParity(){if(window.__STUDIA_V134_REFERENCE_ONLY__&&innerW
 const oldRender=window.renderSheetEditor;window.renderSheetEditor=function(){const r=oldRender.apply(this,arguments);setTimeout(()=>{fit();installDesktopParity()},160);return r};try{renderSheetEditor=window.renderSheetEditor}catch(_){}
 const oldOpen=window.openStudySheetEditor;if(oldOpen)window.openStudySheetEditor=function(){const r=oldOpen.apply(this,arguments);setTimeout(()=>{fit();installDesktopParity()},200);return r};
 /* V178: retired V128 desktop parity watcher removed. */
-window.addEventListener('resize',()=>setTimeout(()=>{if(isEditor()){fit();installDesktopParity()}},120));setTimeout(()=>{if(isEditor()){fit();installDesktopParity()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 298'},400);
+window.addEventListener('resize',()=>setTimeout(()=>{if(isEditor()){fit();installDesktopParity()}},120));setTimeout(()=>{if(isEditor()){fit();installDesktopParity()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 304'},400);
 })();
 </script>
 <!-- ===== /Studia V128 ===== -->
@@ -15402,7 +15404,7 @@ const oldRO=window.renderCanvasObjects||renderCanvasObjects;window.renderCanvasO
 const oldOpen=window.editorOpenGroup;window.editorOpenGroup=function(){const r=oldOpen.apply(this,arguments);requestAnimationFrame(()=>{renderShapeProxies();if(innerWidth>=900)desktopParity()});return r};try{editorOpenGroup=window.editorOpenGroup}catch(_){}
 /* V178: retired V129 desktop parity observer removed. */
 window.addEventListener('resize',()=>setTimeout(()=>{if(editor()){fit129();desktopParity();renderShapeProxies()}},120));
-setTimeout(()=>{if(editor()){fit129();desktopParity();renderShapeProxies()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 298';document.title='Studia'},500);
+setTimeout(()=>{if(editor()){fit129();desktopParity();renderShapeProxies()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 304';document.title='Studia'},500);
 })();
 </script>
 <!-- ===== /Studia V129 ===== -->
@@ -15584,7 +15586,7 @@ window.editorOpenGroup=function(){if(innerWidth>=900)openEditorGroup=null;const 
 try{editorOpenGroup=window.editorOpenGroup}catch(_){}
 const observer=new MutationObserver(()=>requestAnimationFrame(()=>{if(innerWidth>=900&&window.__STUDIA_V180_DESKTOP__)return;if(!inEditor())return;addStarButton();addTransparentChoices(document);polishRoundedVectors()}));
 observer.observe(document.body,{subtree:true,childList:true});
-setTimeout(()=>{if(inEditor()){renderVectors();renderLayerList();enhanceInspector();addStarButton()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 298';document.title='Studia'},650);
+setTimeout(()=>{if(inEditor()){renderVectors();renderLayerList();enhanceInspector();addStarButton()}const e=document.getElementById('headerEyebrow');if(e)e.textContent='VERSION 304';document.title='Studia'},650);
 })();
 </script>
 <!-- ===== /Studia V130 ===== -->
@@ -17331,7 +17333,7 @@ window.addEventListener('resize',()=>setTimeout(reconcile193,100));document.addE
   'use strict';
   var dirtyTimer=0,lastLocalMutation=0,lastCloudKick=0,lastPlanAttempt=0,planBusy=false;
 
-  function setVersion(){var e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 298'}
+  function setVersion(){var e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 304'}
   function markPlanView(){
     var active=document.querySelector('#view-plan.active');
     document.body.classList.toggle('planViewActive',!!active&&!document.body.classList.contains('editorMode'));
@@ -22128,7 +22130,16 @@ const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 231'};
 <script id="studia-v288-launcher">
 (function(){
  'use strict';
- function goEditor(sheetId){try{if(typeof save==='function')save()}catch(_){}const qs=sheetId?('?sheet='+encodeURIComponent(String(sheetId))):'';location.href='editor.html'+qs}
+ function goEditor(sheetId){
+   try{if(typeof save==='function')save()}catch(_){}
+   const p=new URLSearchParams();
+   if(sheetId)p.set('sheet',String(sheetId));
+   try{if(selectedSubjectId)p.set('subject',String(selectedSubjectId))}catch(_){}
+   try{if(selectedTopicId)p.set('topic',String(selectedTopicId))}catch(_){}
+   const pending=window.__STUDIA_EDITOR_PENDING_RESOURCE||null;
+   if(pending){if(pending.type)p.set('resourceType',String(pending.type));if(pending.name)p.set('resourceName',String(pending.name))}
+   location.href='editor.html'+(p.toString()?('?'+p.toString()):'')
+ }
  window.openStudySheetEditor=goEditor;window.v97OpenSheet=goEditor;window.v97NewSheet=function(){goEditor(null)};try{openStudySheetEditor=goEditor}catch(_){}
  function controller(){return window.StudiaSyncV290||window.StudiaSyncV289||window.StudiaSyncV288||null}
  function run(method,args){const c=controller();if(!c||typeof c[method]!=='function'){const msg='Sync-Modul lädt noch – Seite einmal neu laden.';try{window.v171CloudStatus?.(msg,'error')}catch(_){}const st=document.querySelector('#v150AccountStatus');if(st)st.textContent=msg;return}Promise.resolve(c[method](...(args||[]))).catch(err=>{const msg=(err&&err.message)||String(err||'Anmeldung fehlgeschlagen');try{c.status?.(msg+' · lokale Daten sicher','error')}catch(_){};console.error('[Studia V294 '+method+']',err)})}
@@ -22225,6 +22236,7 @@ function normalizeSidebar(){
 /* StudyPet: existing V213 owner now points at this asset; keep a fallback if a browser cached old markup. */
 function normalizePanda(){
   const room=q('#petRoomMini');if(!room)return;
+  qa('.petShelf,.petPlant',room).forEach(x=>x.remove());
   for(const im of qa('img.v213PandaPet,img.v292PandaPet',room)){
     if(!/assets\/study-pet\/pets\//.test(im.getAttribute('src')||''))im.src='assets/study-pet/pets/panda-study.png';
     im.onerror=()=>{if(!im.dataset.v292Fallback){im.dataset.v292Fallback='1';im.src='assets/study-pet/pets/panda-study.png'}};
@@ -22251,7 +22263,7 @@ const observer=new MutationObserver(normalize);observer.observe(document.body,{c
 window.addEventListener('resize',normalize,{passive:true});
 document.addEventListener('click',()=>setTimeout(normalize,0),false);
 [0,100,350,900,1800].forEach(t=>setTimeout(normalize,t));
-const setVersion=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 298'};[0,250,900,1800].forEach(t=>setTimeout(setVersion,t));
+const setVersion=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 304'};[0,250,900,1800].forEach(t=>setTimeout(setVersion,t));
 })();
 </script>
 <!-- ===== /Studia V292 ===== -->
