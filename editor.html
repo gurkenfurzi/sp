@@ -3280,7 +3280,7 @@ html,body{background:#fff7f4;}
         </div>
         <div class="editorActions">
           <button class="editorIcon viewTopBtn pageTopButton" title="Seite & Ansicht" onclick="toggleTopViewMenu()"><span class="pageTopIcon">▯</span><span class="pageTopLabel">Seite</span></button>
-          <button class="editorIcon" title="Exportieren" onclick="exportCanvasHTML()"><svg viewBox="0 0 24 24"><path d="M12 3v12M8 11l4 4 4-4M4 19h16"/></svg></button>
+          <button class="editorIcon" title="Exportieren" onclick="v314OpenExportMenu()"><svg viewBox="0 0 24 24"><path d="M12 3v12M8 11l4 4 4-4M4 19h16"/></svg></button>
           <button class="editorIcon" title="PDF / Drucken" onclick="printCanvasSheet()"><svg viewBox="0 0 24 24"><path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="7" y="14" width="10" height="7"/></svg></button>
           <button class="editorIcon primaryIcon" title="Speichern" onclick="saveCanvasSheet()"><svg viewBox="0 0 24 24"><path d="M5 3h12l2 2v16H5z"/><path d="M8 3v6h8V3M8 21v-7h8v7"/></svg></button>
         </div>
@@ -25634,54 +25634,87 @@ const setVersion=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 30
 </style>
 <script id="studia-v305-version">(()=>{const f=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 310'};[0,200,800].forEach(t=>setTimeout(f,t))})();</script>
 
-
-
-<style id="studia-v313-export-style">
-.v313Export{display:grid;gap:15px}.v313ExportHead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.v313ExportHead h2{margin:2px 0 0}.v313ExportClose{width:38px;height:38px;border:1px solid #eadbd6;border-radius:12px;background:#fff;color:#6b5952;display:grid;place-items:center}.v313ExportGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.v313ExportChoice{min-height:96px;border:1px solid #eadbd6;border-radius:18px;background:#fff;color:#5c504b;padding:14px;display:grid;grid-template-columns:34px minmax(0,1fr);grid-template-rows:auto auto;column-gap:11px;align-items:center;text-align:left;cursor:pointer}.v313ExportChoice:hover{background:#fff5f5;border-color:#e7c7c9}.v313ExportChoice svg{grid-row:1/3;width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;color:#a86e72}.v313ExportChoice b{font-size:14px}.v313ExportChoice small{font-size:10px;color:#968079;line-height:1.35}.v313ExportChoice.busy{opacity:.58;pointer-events:none}.v313ExportStatus{min-height:18px;font-size:11px;color:#8d786f}.v313ExportStatus.err{color:#b35f63}@media(max-width:600px){.v313ExportGrid{grid-template-columns:1fr}.v313ExportChoice{min-height:78px}}
+<style id="studia-v314-export-style">
+.v314Export{display:grid;gap:15px}.v314ExportHead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.v314ExportHead h2{margin:2px 0 0}.v314ExportClose{width:38px;height:38px;border:1px solid #eadbd6;border-radius:12px;background:#fff;color:#6b5952;display:grid;place-items:center}.v314ExportGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.v314ExportChoice{min-height:96px;border:1px solid #eadbd6;border-radius:18px;background:#fff;color:#5c504b;padding:14px;display:grid;grid-template-columns:34px minmax(0,1fr);grid-template-rows:auto auto;column-gap:11px;align-items:center;text-align:left;cursor:pointer}.v314ExportChoice:hover{background:#fff5f5;border-color:#e7c7c9}.v314ExportChoice svg{grid-row:1/3;width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;color:#a86e72}.v314ExportChoice b{font-size:14px}.v314ExportChoice small{font-size:10px;color:#968079;line-height:1.35}.v314ExportChoice.busy{opacity:.58;pointer-events:none}.v314ExportStatus{min-height:18px;font-size:11px;color:#8d786f}.v314ExportStatus.err{color:#b35f63}@media(max-width:600px){.v314ExportGrid{grid-template-columns:1fr}.v314ExportChoice{min-height:78px}}
 </style>
-<script id="studia-v313-export-owner">
+<script id="studia-v314-export-owner">
 (()=>{
 'use strict';
-if(window.__STUDIA_V313_EXPORT__)return;window.__STUDIA_V313_EXPORT__=true;
+if(window.__STUDIA_V314_EXPORT__)return;window.__STUDIA_V314_EXPORT__=true;
 const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
 const svg={
  pdf:'<svg viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v6h6"/><path d="M9 16h2a2 2 0 0 0 0-4H9v6M14 18v-6h3M14 15h2.5"/></svg>',
  image:'<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="M4 17l5-5 3 3 3-3 5 5"/></svg>',
  html:'<svg viewBox="0 0 24 24"><path d="M8 7l-4 5 4 5M16 7l4 5-4 5M13 5l-2 14"/></svg>',
  close:'<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>'};
-function title(ext){let t='Studia-Lernblatt';try{t=(data.studySheets||[]).find(x=>x.id===selectedSheetId)?.title||q('.editorTitle b')?.textContent||t}catch(_){}t=String(t).replace(/[^a-z0-9äöüÄÖÜß _-]/gi,'_').trim()||'Studia-Lernblatt';return t+'.'+ext}
-function bytesFromDataUrl(url){const raw=atob(String(url).split(',')[1]||''),u=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)u[i]=raw.charCodeAt(i);return u}
-async function deliver(blob,filename){
- const file=new File([blob],filename,{type:blob.type||'application/octet-stream'});
- if(innerWidth<900&&navigator.share&&navigator.canShare){try{if(navigator.canShare({files:[file]})){await navigator.share({files:[file],title:filename});return true}}catch(e){if(e?.name==='AbortError')return true}}
- const url=URL.createObjectURL(blob);let ok=false;
- try{const a=document.createElement('a');a.href=url;a.download=filename;a.rel='noopener';a.style.display='none';document.body.appendChild(a);a.click();a.remove();ok=true}catch(_){ }
- if(!ok){try{window.open(url,'_blank');ok=true}catch(_){}}
- setTimeout(()=>URL.revokeObjectURL(url),120000);return ok;
+function cleanName(){let t='Studia-Lernblatt';try{t=(data.studySheets||[]).find(x=>x.id===selectedSheetId)?.title||q('.editorTitle b')?.textContent||t}catch(_){}return String(t).replace(/[^a-z0-9äöüÄÖÜß _-]/gi,'_').trim()||'Studia-Lernblatt'}
+function filename(ext){return cleanName()+'.'+ext}
+function pageW(){try{return typeof canvasPageWidth==='function'?canvasPageWidth():794}catch(_){return 794}}
+function pageH(){try{return typeof canvasPageHeight==='function'?canvasPageHeight():1123}catch(_){return 1123}}
+function blobToDataURL(blob){return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>res(String(fr.result));fr.onerror=rej;fr.readAsDataURL(blob)})}
+async function inlineUrl(raw){
+ if(!raw||/^data:/i.test(raw))return raw;
+ try{const u=new URL(raw,location.href);const r=await fetch(u.href,{cache:'force-cache',mode:'cors'});if(!r.ok)throw new Error('HTTP '+r.status);return await blobToDataURL(await r.blob())}catch(_){return raw}
 }
-async function renderCanvas(){
+function copyComputedTree(source,clone){
+ const src=[source,...qa('*',source)],dst=[clone,...qa('*',clone)],n=Math.min(src.length,dst.length);
+ for(let i=0;i<n;i++){
+   const from=src[i],to=dst[i];let cs;try{cs=getComputedStyle(from)}catch(_){continue}
+   for(let j=0;j<cs.length;j++){const prop=cs[j];try{to.style.setProperty(prop,cs.getPropertyValue(prop),cs.getPropertyPriority(prop))}catch(_){}}
+   if(from instanceof HTMLInputElement){to.value=from.value;if(from.checked)to.setAttribute('checked','')}
+   if(from instanceof HTMLTextAreaElement)to.textContent=from.value;
+ }
+}
+async function exactPageCanvas(){
  try{window.v96SyncPage?.()}catch(_){}
- if(document.fonts?.ready){try{await Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,900))])}catch(_){}}
- const fn=window.__studiaV170PageCanvas;if(typeof fn!=='function')throw new Error('Der Bild-Renderer ist nicht verfügbar.');
- return await fn();
+ if(document.fonts?.ready){try{await Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,1200))])}catch(_){}}
+ const source=q('#canvasStage');if(!source)throw new Error('Die Lernblatt-Seite wurde nicht gefunden.');
+ const W=pageW(),H=pageH(),clone=source.cloneNode(true);
+ copyComputedTree(source,clone);
+ clone.id='v314ExportStage';
+ clone.querySelectorAll('#v132InteractionLayer,#v152TextHitLayer,#v168MobileTextLayer,#canvasGuides,#pathDrawHint,.resizeHandle,.rotateHandle,.v138TransformHandle,.vectorSelectBox,.vectorHandle,.vectorRotateLine,.pathNode,.shapeHit,.vectorTouchProxy,.v135LinkBadge,.tableMoveHandle,.v108MoveHandle,.v108VectorMoveHandle,.v137Marquee,.selectionBox,.selectionOutline').forEach(x=>x.remove());
+ clone.querySelectorAll('[contenteditable]').forEach(x=>{x.removeAttribute('contenteditable');x.removeAttribute('spellcheck')});
+ clone.querySelectorAll('.selected,.editing,.locked,.showPageMargins').forEach(x=>x.classList.remove('selected','editing','locked','showPageMargins'));
+ clone.style.setProperty('position','relative','important');clone.style.setProperty('left','0','important');clone.style.setProperty('top','0','important');clone.style.setProperty('width',W+'px','important');clone.style.setProperty('height',H+'px','important');clone.style.setProperty('min-width',W+'px','important');clone.style.setProperty('min-height',H+'px','important');clone.style.setProperty('max-width',W+'px','important');clone.style.setProperty('max-height',H+'px','important');clone.style.setProperty('transform','none','important');clone.style.setProperty('transform-origin','0 0','important');clone.style.setProperty('margin','0','important');clone.style.setProperty('border','0','important');clone.style.setProperty('border-radius','0','important');clone.style.setProperty('box-shadow','none','important');clone.style.setProperty('overflow','hidden','important');
+ const images=qa('img',clone);for(const im of images){const src=await inlineUrl(im.getAttribute('src'));if(src)im.setAttribute('src',src)}
+ const svgImages=qa('image',clone);for(const im of svgImages){const raw=im.getAttribute('href')||im.getAttribute('xlink:href');if(!raw)continue;const src=await inlineUrl(raw);if(src){im.setAttribute('href',src);im.setAttributeNS('http://www.w3.org/1999/xlink','href',src)}}
+ const wrap=document.createElement('div');wrap.setAttribute('xmlns','http://www.w3.org/1999/xhtml');wrap.style.cssText=`position:relative;width:${W}px;height:${H}px;margin:0;padding:0;overflow:hidden;background:#fff;box-sizing:border-box;`;wrap.appendChild(clone);
+ const xhtml=new XMLSerializer().serializeToString(wrap);
+ const markup=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><foreignObject x="0" y="0" width="${W}" height="${H}">${xhtml}</foreignObject></svg>`;
+ const url=URL.createObjectURL(new Blob([markup],{type:'image/svg+xml;charset=utf-8'})),img=new Image();
+ try{
+   await new Promise((res,rej)=>{const tm=setTimeout(()=>rej(new Error('Die Seite hat beim Rendern zu lange gebraucht.')),15000);img.onload=()=>{clearTimeout(tm);res()};img.onerror=()=>{clearTimeout(tm);rej(new Error('Die Seite konnte nicht als Bild gerendert werden.'))};img.src=url});
+   const scale=Math.min(3,Math.max(2,window.devicePixelRatio||2));const c=document.createElement('canvas');c.width=Math.round(W*scale);c.height=Math.round(H*scale);const ctx=c.getContext('2d',{alpha:false});ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);ctx.drawImage(img,0,0,c.width,c.height);return c;
+ }finally{URL.revokeObjectURL(url)}
 }
-async function exportImage(kind){const c=await renderCanvas(),mime=kind==='jpeg'?'image/jpeg':'image/png',ext=kind==='jpeg'?'jpg':'png';const blob=await new Promise((res,rej)=>c.toBlob(b=>b?res(b):rej(new Error('Bild konnte nicht erzeugt werden.')),mime,kind==='jpeg'?.94:1));await deliver(blob,title(ext))}
-async function exportPdf(){const c=await renderCanvas(),pdfFn=window.__studiaV170Pdf;if(typeof pdfFn!=='function')throw new Error('Der PDF-Renderer ist nicht verfügbar.');const jpg=c.toDataURL('image/jpeg',.97),blob=pdfFn(bytesFromDataUrl(jpg),c.width,c.height,c.width>c.height);await deliver(blob,title('pdf'))}
-async function exportHtml(){
- const oldCreate=HTMLAnchorElement.prototype.click;let produced=false;
- try{HTMLAnchorElement.prototype.click=function(){produced=true;return oldCreate.call(this)};window.exportCanvasHTML?.()}finally{HTMLAnchorElement.prototype.click=oldCreate}
- if(!produced&&typeof window.exportCanvasHTML!=='function')throw new Error('HTML-Export ist nicht verfügbar.');
+function bytesFromDataUrl(url){const raw=atob(String(url).split(',')[1]||''),u=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)u[i]=raw.charCodeAt(i);return u}
+function makePdf(jpeg,w,h,land){
+ if(typeof window.__studiaV170Pdf==='function')return window.__studiaV170Pdf(jpeg,w,h,land);
+ throw new Error('Der PDF-Renderer ist nicht verfügbar.');
 }
-function status(text,error=false){const el=q('.v313ExportStatus');if(el){el.textContent=text||'';el.classList.toggle('err',!!error)}}
-async function run(kind,btn){status('Wird vorbereitet …');qa('.v313ExportChoice').forEach(x=>x.classList.add('busy'));try{if(kind==='pdf')await exportPdf();else if(kind==='png')await exportImage('png');else if(kind==='jpg')await exportImage('jpeg');else if(kind==='html')await exportHtml();status('Gespeichert ✓');setTimeout(()=>window.closeModal?.(),250)}catch(err){console.error('[Studia export]',err);status(String(err?.message||err),true);qa('.v313ExportChoice').forEach(x=>x.classList.remove('busy'))}}
-window.v313OpenExportMenu=function(){
- const html=`<div class="v313Export"><div class="v313ExportHead"><div><div class="eyebrow">EXPORT</div><h2>Speichern als</h2></div><button type="button" class="v313ExportClose" aria-label="Schließen">${svg.close}</button></div><div class="v313ExportGrid"><button type="button" class="v313ExportChoice" data-export="pdf">${svg.pdf}<b>PDF</b><small>Aktuelle Seite als PDF-Datei</small></button><button type="button" class="v313ExportChoice" data-export="png">${svg.image}<b>PNG</b><small>Hohe Qualität mit scharfer Schrift</small></button><button type="button" class="v313ExportChoice" data-export="jpg">${svg.image}<b>JPG</b><small>Kompakte Bilddatei</small></button><button type="button" class="v313ExportChoice" data-export="html">${svg.html}<b>HTML</b><small>Bearbeitbare Studia-Datei</small></button></div><div class="v313ExportStatus"></div></div>`;
- window.openModal?.(html);const root=q('.v313Export');if(!root)return;root.querySelector('.v313ExportClose').addEventListener('click',()=>window.closeModal?.());root.addEventListener('click',e=>{const b=e.target.closest('[data-export]');if(!b)return;e.preventDefault();e.stopPropagation();run(b.dataset.export,b)})
+async function deliver(blob,name){
+ const file=new File([blob],name,{type:blob.type||'application/octet-stream'});
+ if(innerWidth<900&&navigator.share&&navigator.canShare){try{if(navigator.canShare({files:[file]})){await navigator.share({files:[file],title:name});return true}}catch(e){if(e?.name==='AbortError')return true}}
+ const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;a.rel='noopener';a.style.display='none';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),120000);return true;
+}
+window.v314ExportImage=async function(kind='png'){
+ const c=await exactPageCanvas(),jpeg=kind==='jpeg'||kind==='jpg',mime=jpeg?'image/jpeg':'image/png',ext=jpeg?'jpg':'png';
+ const blob=await new Promise((res,rej)=>c.toBlob(b=>b?res(b):rej(new Error('Bilddatei konnte nicht erstellt werden.')),mime,jpeg?.96:1));return deliver(blob,filename(ext));
 };
-/* Make every existing export entry point use this single owner. */
-window.v103OpenExportMenu=window.v313OpenExportMenu;window.v312OpenExportMenu=window.v313OpenExportMenu;
-function patch(){qa('.canvasTopbar .editorActions button,.canvasTopbar button,.v135MenuBar button').forEach(b=>{const t=(b.title||'').toLowerCase(),oc=b.getAttribute('onclick')||'';if(t.includes('export')||oc.includes('v103OpenExportMenu')||oc.includes('v312OpenExportMenu')||oc.includes('exportCanvasHTML')){b.title='Exportieren';b.onclick=e=>{e?.preventDefault?.();window.v313OpenExportMenu()};b.removeAttribute('onclick')}})}
-let queued=false;const schedule=()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;patch()})};new MutationObserver(schedule).observe(document.documentElement,{subtree:true,childList:true});[0,120,500,1500].forEach(t=>setTimeout(schedule,t));
+window.v314ExportPdf=async function(){const c=await exactPageCanvas(),jpg=c.toDataURL('image/jpeg',.98),blob=makePdf(bytesFromDataUrl(jpg),c.width,c.height,pageW()>pageH());return deliver(blob,filename('pdf'))};
+window.v314ExportHtml=async function(){if(typeof window.exportCanvasHTML!=='function')throw new Error('HTML-Export ist nicht verfügbar.');return window.exportCanvasHTML()};
+function status(text,error=false){const el=q('.v314ExportStatus');if(el){el.textContent=text||'';el.classList.toggle('err',!!error)}}
+async function run(kind){status('Wird exakt wie das Blatt gerendert …');qa('.v314ExportChoice').forEach(x=>x.classList.add('busy'));try{if(kind==='pdf')await window.v314ExportPdf();else if(kind==='png')await window.v314ExportImage('png');else if(kind==='jpg')await window.v314ExportImage('jpeg');else if(kind==='html')await window.v314ExportHtml();status('Gespeichert ✓');setTimeout(()=>window.closeModal?.(),300)}catch(err){console.error('[Studia V314 Export]',err);status(String(err?.message||err),true);qa('.v314ExportChoice').forEach(x=>x.classList.remove('busy'))}}
+window.v314OpenExportMenu=function(){
+ const html=`<div class="v314Export"><div class="v314ExportHead"><div><div class="eyebrow">EXPORT</div><h2>Speichern als</h2></div><button type="button" class="v314ExportClose" aria-label="Schließen">${svg.close}</button></div><div class="v314ExportGrid"><button type="button" class="v314ExportChoice" data-export="pdf">${svg.pdf}<b>PDF</b><small>So wie das Blatt im Editor aussieht</small></button><button type="button" class="v314ExportChoice" data-export="png">${svg.image}<b>PNG</b><small>Exakte Seite in hoher Qualität</small></button><button type="button" class="v314ExportChoice" data-export="jpg">${svg.image}<b>JPG</b><small>Exakte Seite als Bilddatei</small></button><button type="button" class="v314ExportChoice" data-export="html">${svg.html}<b>HTML</b><small>Bearbeitbare Studia-Datei</small></button></div><div class="v314ExportStatus"></div></div>`;
+ window.openModal?.(html);const root=q('.v314Export');if(!root)return;root.querySelector('.v314ExportClose')?.addEventListener('click',()=>window.closeModal?.());root.addEventListener('click',e=>{const b=e.target.closest('[data-export]');if(!b)return;e.preventDefault();e.stopPropagation();run(b.dataset.export)})
+};
+/* The old entry point now points to this single export owner; no second export handler is installed. */
+window.v103OpenExportMenu=window.v314OpenExportMenu;
+function wireExportButton(){const b=q('.canvasTopbar .editorActions button[title="Exportieren"]')||qa('.canvasTopbar .editorActions button').find(x=>(x.textContent||'').trim()==='Export');if(!b)return;b.title='Exportieren';b.onclick=window.v314OpenExportMenu;b.removeAttribute('onclick');b.addEventListener('click',window.v314OpenExportMenu,{once:false});}
+/* use one DOM handler only */
+let boundButton=null;function bindOnce(){const b=q('.canvasTopbar .editorActions button[title="Exportieren"]')||qa('.canvasTopbar .editorActions button').find(x=>(x.textContent||'').trim()==='Export');if(!b||b===boundButton)return;if(boundButton)boundButton.removeEventListener('click',window.v314OpenExportMenu);b.removeAttribute('onclick');b.addEventListener('click',window.v314OpenExportMenu);boundButton=b}
+[0,100,350,900,1800].forEach(t=>setTimeout(bindOnce,t));
 })();
 </script>
-<script id="studia-v313-version">(()=>{const f=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 313'};[0,250,900].forEach(t=>setTimeout(f,t))})();</script>
+<script id="studia-v314-version">(()=>{const f=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 314'};[0,250,900].forEach(t=>setTimeout(f,t))})();</script>
