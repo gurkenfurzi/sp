@@ -11574,7 +11574,7 @@ window.v96DeletePage=function(){
   v96LoadPageData(canvasState.pages[canvasState.activePage]);
   v96RenderPageStrip();
   markCanvasDirty();
-  try{saveCanvasSheetCore?.(true)}catch(_){}
+  try{saveCanvasSheetCore?.(true)}catch(_){ }
   if(window.innerWidth>=900&&typeof window.v102RightTab==='function')setTimeout(()=>window.v102RightTab('page'),20);
   v96RefreshOpenMobilePages();
   cuteToast('Seite gelöscht ✓');
@@ -11969,7 +11969,7 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
     if(mode==='page'){
       page.style.display='block';canvasState.pages ||= [v96CurrentPageData()];const ps=canvasState.pageStyle||{};
       const canDelete=canvasState.pages.length>1;
-      page.innerHTML=`<div class="rowBetween"><b>Seiten</b><button class="miniIcon" onclick="v96AddPage();setTimeout(()=>v102RightTab('page'),20)">＋</button></div><div class="v185PageActions"><button type="button" onclick="v96DuplicatePage();setTimeout(()=>v102RightTab('page'),20)">⧉ Duplizieren</button><button type="button" ${canDelete?'':'disabled'} onclick="if(!this.disabled){v96DeletePage();setTimeout(()=>v102RightTab('page'),20)}">⌫ Löschen</button></div><div class="v102SidePages">${canvasState.pages.map((p,i)=>`<button class="${i===canvasState.activePage?'active':''} v106PageButton" draggable="true" onclick="v96SwitchPage(${i});setTimeout(()=>v102RightTab('page'),20)" ondragstart="v106PageDragStart(event,${i})" ondragover="v106PageDragOver(event,${i})" ondragleave="v106PageDragLeave(event)" ondrop="v106PageDrop(event,${i})" ondragend="v106PageDragEnd()"><span>${i+1}</span><small>Seite ${i+1}</small></button>`).join('')}</div><div class="v106DragHint">Seitenreihenfolge ändern: Seite ziehen und loslassen.</div><div class="v102SidePageSettings"><label>Hintergrund<input type="color" value="${ps.color||'#ffffff'}" onchange="setCanvasPageStyle('color',this.value)"></label><label>Muster<select onchange="setCanvasPageStyle('pattern',this.value)"><option value="blank" ${ps.pattern==='blank'?'selected':''}>Leer</option><option value="dots" ${ps.pattern==='dots'?'selected':''}>Punkte</option><option value="grid" ${ps.pattern==='grid'?'selected':''}>Kariert</option><option value="lined" ${ps.pattern==='lined'?'selected':''}>Liniert</option></select></label><label>Raster<input type="number" min="10" max="60" value="${ps.spacing||24}" onchange="setCanvasPageStyle('spacing',+this.value)"></label><label>Layout-Rand<input type="number" min="0" max="160" value="${ps.margin??55}" onchange="setCanvasPageStyle('margin',+this.value)"></label><div class="two"><button class="ghost" onclick="setCanvasOrientation('portrait')">Hochformat</button><button class="ghost" onclick="setCanvasOrientation('landscape')">Querformat</button></div></div>`;
+      page.innerHTML=`<div class="rowBetween"><b>Seiten</b><div class="row"><button class="miniIcon" title="Seite hinzufügen" onclick="v96AddPage();setTimeout(()=>v102RightTab('page'),20)">＋</button><button class="miniIcon" title="Seite duplizieren" onclick="v96DuplicatePage();setTimeout(()=>v102RightTab('page'),20)">⧉</button><button class="miniIcon dangerMini" title="Seite löschen" ${canDelete?'':'disabled'} onclick="if(!this.disabled){v96DeletePage();setTimeout(()=>v102RightTab('page'),20)}">⌫</button></div></div><div class="v102SidePages">${canvasState.pages.map((p,i)=>`<button class="${i===canvasState.activePage?'active':''}" onclick="v96SwitchPage(${i});setTimeout(()=>v102RightTab('page'),20)"><span>${i+1}</span><small>Seite ${i+1}</small></button>`).join('')}</div><div class="v102SidePageSettings"><label>Hintergrund<input type="color" value="${ps.color||'#ffffff'}" onchange="setCanvasPageStyle('color',this.value)"></label><label>Muster<select onchange="setCanvasPageStyle('pattern',this.value)"><option value="blank" ${ps.pattern==='blank'?'selected':''}>Leer</option><option value="dots" ${ps.pattern==='dots'?'selected':''}>Punkte</option><option value="grid" ${ps.pattern==='grid'?'selected':''}>Kariert</option><option value="lined" ${ps.pattern==='lined'?'selected':''}>Liniert</option></select></label><label>Raster<input type="number" min="10" max="60" value="${ps.spacing||24}" onchange="setCanvasPageStyle('spacing',+this.value)"></label><label>Layout-Rand<input type="number" min="0" max="160" value="${ps.margin??55}" onchange="setCanvasPageStyle('margin',+this.value)"></label><div class="two"><button class="ghost" onclick="setCanvasOrientation('portrait')">Hochformat</button><button class="ghost" onclick="setCanvasOrientation('landscape')">Querformat</button></div></div>`;
     }
     side.querySelectorAll('.v102RightTabs button').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));
   };
@@ -13183,6 +13183,31 @@ body:has(#view-subjects.active)>.app>.header,body:has(#view-subject-detail.activ
     strip.innerHTML=`<div class="v96PageThumbs v103PageThumbs">${canvasState.pages.map((p,i)=>`<button class="v96PageThumb ${i===canvasState.activePage?'active':''}" draggable="true" onclick="v96SwitchPage(${i})" ondragstart="v106PageDragStart(event,${i})" ondragover="v106PageDragOver(event,${i})" ondragleave="v106PageDragLeave(event)" ondrop="v106PageDrop(event,${i})" ondragend="v106PageDragEnd()"><span>${i+1}</span><small>Seite ${i+1}</small></button>`).join('')}<button class="v96PageAdd v103PageAdd" onclick="v96AddPage()">${(window.icon||window.v103Icon||window.v102Icon)?.('plus')||'+'}<small>Seite hinzufügen</small></button></div><div class="v96PageActions"><button title="Duplizieren" onclick="v96DuplicatePage()">${(window.icon||window.v103Icon||window.v102Icon)?.('duplicate')||'⧉'}</button><button title="Löschen" onclick="v96DeletePage()">${(window.icon||window.v103Icon||window.v102Icon)?.('trash')||'⌫'}</button></div>`;
   };
 
+  const _oldRightTab = window.v102RightTab;
+  window.v102RightTab=function(mode){
+    if(typeof _oldRightTab==='function') _oldRightTab(mode);
+    if(mode==='page'){
+      const list=document.querySelector('#v102PagePanel .v102SidePages');
+      if(list){
+        [...list.querySelectorAll('button')].forEach((btn,i)=>{
+          btn.classList.add('v106PageButton');
+          btn.setAttribute('draggable','true');
+          btn.ondragstart=(e)=>v106PageDragStart(e,i);
+          btn.ondragover=(e)=>v106PageDragOver(e,i);
+          btn.ondragleave=(e)=>v106PageDragLeave(e);
+          btn.ondrop=(e)=>v106PageDrop(e,i);
+          btn.ondragend=()=>v106PageDragEnd();
+        });
+        if(!list.parentElement.querySelector('.v106DragHint')){
+          const hint=document.createElement('div');
+          hint.className='v106DragHint';
+          hint.textContent='Seitenreihenfolge ändern: Seite ziehen und loslassen.';
+          list.insertAdjacentElement('afterend', hint);
+        }
+      }
+    }
+    afterPaint(v106EnhanceFontPreview);
+  };
 
   const _oldRenderSheetEditor = renderSheetEditor;
   renderSheetEditor=function(){
@@ -20012,7 +20037,6 @@ setTimeout(install,1100);setTimeout(install,2600);
   body.editorMode #v102PagePanel .v185PageActions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:0 0 10px}
   body.editorMode #v102PagePanel .v185PageActions button{min-height:34px;border:1px solid #eadbd6;border-radius:9px;background:#fff;color:#765e57;font-size:10px;font-weight:850;padding:7px 9px}
   body.editorMode #v102PagePanel .v185PageActions button:last-child{background:#fff5f4;color:#a45f64;border-color:#efd0cd}
-  body.editorMode #v102PagePanel .v185PageActions button:disabled{opacity:.42;cursor:not-allowed;background:#faf7f5!important;color:#aa9d97!important;border-color:#ece4e0!important}
 }
 </style>
 <!-- ===== Studia laptop final stabilization: keep the V134 reference design, no duplicate chrome ===== -->
@@ -20341,7 +20365,7 @@ function ensureViewBar(){if(!laptop())return;const shell=q('.canvasEditorShell')
  for(const [sel,fn] of [['[data-v190-minus]',()=>window.canvasZoomBy?.(-.1)],['[data-v190-plus]',()=>window.canvasZoomBy?.(.1)],['[data-v190-fit]',()=>window.fitCanvasStage?.()]]){const b=q(sel,bar);if(b&&!b.dataset.v190){b.dataset.v190='1';b.onclick=()=>{fn();setTimeout(syncViewBar,30)}}}
  syncViewBar();
 }
-function singleChrome(){if(!laptop())return;const root=q('#view-sheet-editor');if(!root)return;bindReferenceNav();const keepFirst=(selector)=>{const all=qa(selector,root);all.slice(1).forEach(x=>x.remove());return all[0]||null};keepFirst('.canvasQuickNav');keepFirst('#canvasQuickDrawer');keepFirst('#desktopEditorSidebar');keepFirst('#v96PageStrip');keepFirst('#v102PagePanel');keepFirst('#desktopEditorSidebar .v102RightTabs');const tabs=q("#desktopEditorSidebar .v102RightTabs");let close=q("#desktopEditorSidebar .v135SideClose");if(tabs&&!close){close=document.createElement("button");close.className="v135SideClose";close.title="Leiste schließen";close.setAttribute("aria-label","Leiste schließen");close.innerHTML=icon("close");close.onclick=()=>window.v135ToggleSidebar?.()}if(tabs&&close&&close.parentElement!==tabs)tabs.appendChild(close);const actions=q(".canvasTopbar .editorActions"),hist=q(".historyBar",root);if(actions&&hist){if(hist.parentElement!==actions)actions.prepend(hist);for(const [id,label,name,fn] of [["undoBtn","Rückgängig","undo","undoCanvas()"],["redoBtn","Wiederholen","redo","redoCanvas()"]]){const b=q("#"+id,hist);if(b){b.title=label;b.setAttribute("aria-label",label);b.setAttribute("onclick",fn);if(b.dataset.v133Icon!==name){b.innerHTML=icon(name);b.dataset.v133Icon=name}}}try{updateHistoryButtons()}catch(_){}}qa('.historyBar',root).slice(1).forEach(x=>x.remove());qa('.v132SelectionBar',root).slice(1).forEach(x=>x.remove());qa('.v134FormatTools',root).slice(1).forEach(x=>x.remove());qa('.v134Brand',root).slice(1).forEach(x=>x.remove());qa('.v134BottomBar',root).slice(1).forEach(x=>x.remove());qa('.v135MenuBar,.desktopCommandBar',root).forEach(x=>x.remove());ensureViewBar();}
+function singleChrome(){if(!laptop())return;const root=q('#view-sheet-editor');if(!root)return;bindReferenceNav();const tabs=q("#desktopEditorSidebar .v102RightTabs");let close=q("#desktopEditorSidebar .v135SideClose");if(tabs&&!close){close=document.createElement("button");close.className="v135SideClose";close.title="Leiste schließen";close.setAttribute("aria-label","Leiste schließen");close.innerHTML=icon("close");close.onclick=()=>window.v135ToggleSidebar?.()}if(tabs&&close&&close.parentElement!==tabs)tabs.appendChild(close);const actions=q(".canvasTopbar .editorActions"),hist=q(".historyBar",root);if(actions&&hist){if(hist.parentElement!==actions)actions.prepend(hist);for(const [id,label,name,fn] of [["undoBtn","Rückgängig","undo","undoCanvas()"],["redoBtn","Wiederholen","redo","redoCanvas()"]]){const b=q("#"+id,hist);if(b){b.title=label;b.setAttribute("aria-label",label);b.setAttribute("onclick",fn);if(b.dataset.v133Icon!==name){b.innerHTML=icon(name);b.dataset.v133Icon=name}}}try{updateHistoryButtons()}catch(_){}}qa('.historyBar',root).slice(1).forEach(x=>x.remove());qa('.v132SelectionBar',root).slice(1).forEach(x=>x.remove());qa('.v134FormatTools',root).slice(1).forEach(x=>x.remove());qa('.v134Brand',root).slice(1).forEach(x=>x.remove());qa('.v134BottomBar',root).slice(1).forEach(x=>x.remove());ensureViewBar();}
 
 /* Elements click is captured before legacy drawer renderers. It always uses V134. */
 window.addEventListener('click',e=>{if(!laptop())return;const b=e.target instanceof Element?e.target.closest('.canvasQuickNav [data-v134="elements"]'):null;if(!b)return;e.preventDefault();e.stopImmediatePropagation();window.v134Open?.('elements',b);setTimeout(singleChrome,0)},true);
@@ -25492,7 +25516,7 @@ function handleShortcutV305(e){
   if(key==='i')return v305RunShortcut(e,window.v165ToggleFormatPainter||window.v164ToggleFormatPainter);
 }
 document.addEventListener('keydown',handleShortcutV305,true);
-const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 306'};
+const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 309'};
 [0,250,900,1800].forEach(t=>setTimeout(setVer,t));
 })();
 </script>
@@ -25581,7 +25605,7 @@ let queued=false;const schedule=()=>{if(queued)return;queued=true;requestAnimati
 const shell=q('.canvasEditorShell')||document.body;new MutationObserver(schedule).observe(shell,{childList:true,subtree:true});
 window.addEventListener('resize',()=>{close();schedule()},{passive:true});
 [0,120,450,1100,2200].forEach(t=>setTimeout(install,t));
-const setVersion=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 305'};[0,300,1000].forEach(t=>setTimeout(setVersion,t));
+const setVersion=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 309'};[0,300,1000].forEach(t=>setTimeout(setVersion,t));
 })();
 </script>
 <style id="studia-v305-editor-clean">
