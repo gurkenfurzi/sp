@@ -25632,3 +25632,58 @@ const setVersion=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 30
 @media(min-width:900px){body.editorMode .v134BrandMark{display:none!important}body.editorMode .v134Brand{gap:0!important;padding-left:4px!important;flex-basis:120px!important}}
 </style>
 <script id="studia-v305-version">(()=>{const f=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 310'};[0,200,800].forEach(t=>setTimeout(f,t))})();</script>
+
+<script id="studia-v312-export-owner">
+(()=>{
+'use strict';
+if(window.__STUDIA_V312_EXPORT__) return; window.__STUDIA_V312_EXPORT__=true;
+const q=(s,r=document)=>r.querySelector(s), qa=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const icon=(name)=>{
+  const map={
+    close:'<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+    pdf:'<svg viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v6h6"/><path d="M9 17h1.6a1.9 1.9 0 0 0 0-3.8H9V17zm5 0v-3.8h2.6M14 15h2.1M18.6 17v-3.8h2.2"/></svg>',
+    image:'<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-6 6-2-2-5 5"/></svg>',
+    html:'<svg viewBox="0 0 24 24"><path d="M8 7L4 12l4 5M16 7l4 5-4 5M13 5l-2 14"/></svg>'
+  };return map[name]||map.image;
+ };
+ function sheetTitle(){try{return (data.studySheets||[]).find(x=>x.id===selectedSheetId)?.title||q('.editorTitle b')?.textContent||'Lernblatt'}catch(_){return 'Lernblatt'}}
+ async function exportPdfDirect(){
+   try{
+     if(typeof pageCanvas170==='function' && typeof pdf170==='function'){
+       const canvas=await pageCanvas170();
+       const jpegData=canvas.toDataURL('image/jpeg',0.97);
+       const raw=atob((jpegData.split(',')[1]||''));
+       const bytes=new Uint8Array(raw.length);
+       for(let i=0;i<raw.length;i++) bytes[i]=raw.charCodeAt(i);
+       const blob=pdf170(bytes,canvas.width,canvas.height,canvas.width>canvas.height);
+       const url=URL.createObjectURL(blob); const a=document.createElement('a');
+       a.href=url; a.download=(typeof title170==='function'?title170():sheetTitle().replace(/[^a-z0-9äöüß _-]/gi,'_'))+'.pdf'; a.click();
+       setTimeout(()=>URL.revokeObjectURL(url),120000); return;
+     }
+   }catch(err){console.error('[V312 export pdf]',err)}
+   return window.printCanvasSheet?.();
+ }
+ window.v312ExportImage=window.v103ExportImage||window.v312ExportImage||function(){};
+ window.v312OpenExportMenu=function(){
+   const html=`<div class="v312ExportWrap"><div class="rowBetween"><div><div class="eyebrow">EXPORT</div><h2>Speichern als</h2></div><button class="iconbtn" onclick="closeModal()" aria-label="Schließen">${icon('close')}</button></div><div class="v312ExportGrid"><button onclick="closeModal();v312ExportPdf()">${icon('pdf')}<b>PDF</b><small>Aktuelle Seite als PDF</small></button><button onclick="closeModal();v312ExportImage('png')">${icon('image')}<b>PNG</b><small>Aktuelle Seite</small></button><button onclick="closeModal();v312ExportImage('jpeg')">${icon('image')}<b>JPG</b><small>Aktuelle Seite</small></button><button onclick="closeModal();exportCanvasHTML()">${icon('html')}<b>HTML</b><small>Bearbeitbare Datei</small></button></div></div>`;
+   if(typeof openModal==='function') openModal(html); else alert('Export-Menü konnte nicht geöffnet werden.');
+ };
+ window.v312ExportPdf=exportPdfDirect;
+ function patchButtons(){
+   qa('.canvasTopbar .editorActions button,.canvasTopbar .editorIcon,.v135MenuBar button').forEach(btn=>{
+     const t=(btn.getAttribute('title')||'').toLowerCase(); const oc=btn.getAttribute('onclick')||'';
+     if(t.includes('export') || oc.includes('exportCanvasHTML')){
+       btn.setAttribute('onclick','v312OpenExportMenu()');
+       btn.title='Exportieren';
+     }
+   });
+ }
+ const mo=new MutationObserver(()=>patchButtons()); mo.observe(document.documentElement,{childList:true,subtree:true});
+ [0,150,600,1500].forEach(t=>setTimeout(patchButtons,t));
+})();
+</script>
+<style id="studia-v312-export-style">
+.v312ExportWrap{display:grid;gap:14px}.v312ExportGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}.v312ExportGrid button{display:grid;justify-items:start;gap:8px;padding:14px;border:1px solid #eadbd6;border-radius:18px;background:#fff;cursor:pointer;color:#5b4f49;text-align:left}.v312ExportGrid button:hover{background:#fff5f6;border-color:#dfc1c7}.v312ExportGrid svg{width:22px;height:22px;stroke:currentColor;stroke-width:1.8;fill:none}.v312ExportGrid b{font-size:14px}.v312ExportGrid small{font-size:11px;color:#8b7770;line-height:1.35}
+</style>
+<script id="studia-v312-version">(()=>{const f=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 312'};[0,250,900].forEach(t=>setTimeout(f,t))})();</script>
