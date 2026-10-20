@@ -6905,7 +6905,7 @@ window.editorOpenGroup=function(group,btn){
    html=`<div class="mobilePagePanel">
     <div class="mobileDrawerTitle">Seite wechseln</div>
     <div class="mobilePageChoices">${pageButtons}<button class="mobilePageChoice add" onclick="v96AddPage()"><b>＋</b><span>Neue Seite</span></button></div>
-    <div class="mobileDrawerActions rowish"><button onclick="v96DuplicatePage()">⧉ Duplizieren</button><button onclick="v96DeletePage()">⌫ Löschen</button></div>
+    <div class="mobileDrawerActions rowish"><button type="button" onclick="event.preventDefault();event.stopPropagation();v96DuplicatePage()">⧉ Duplizieren</button><button type="button" ${canvasState.pages.length<=1?'disabled':''} onclick="event.preventDefault();event.stopPropagation();v96DeletePage()">⌫ Löschen</button></div>
     <div class="mobileDrawerTitle">Ansicht</div>
     <div class="mobileDrawerActions rowish"><button onclick="fitCanvasStage()">⊡ An Bildschirm</button><button onclick="setCanvasZoom(.5)">50%</button><button onclick="setCanvasZoom(.75)">75%</button><button onclick="setCanvasZoom(1)">100%</button></div>
     <div class="mobileDrawerTitle">Seitenstil</div>
@@ -11551,9 +11551,12 @@ function v96RenderPageStrip(){
   strip.innerHTML=`<div class="v96PageThumbs">${canvasState.pages.map((p,i)=>`<button class="v96PageThumb ${i===canvasState.activePage?'active':''}" onclick="v96SwitchPage(${i})"><span>${i+1}</span><small>Seite</small></button>`).join('')}<button class="v96PageAdd" onclick="v96AddPage()"><b>＋</b><small>Seite</small></button></div><div class="v96PageActions"><button onclick="v96DuplicatePage()">⧉</button><button onclick="v96DeletePage()">⌫</button></div>`;
 }
 function v96RefreshOpenMobilePages(){
-  if(window.innerWidth>=900||openEditorGroup!=="pages"||!$("#canvasQuickDrawer")?.classList.contains("open"))return;
+  if(window.innerWidth>=900)return;
+  const drawer=$("#canvasQuickDrawer");
+  const button=document.querySelector('.canvasQuickNav button[data-group="pages"],.canvasQuickNav button[data-v139="pages"],.canvasQuickNav button[data-v138="pages"]');
+  /* Re-render the one existing mobile pages drawer after a page mutation. */
   openEditorGroup=null;
-  setTimeout(()=>editorOpenGroup("pages",document.querySelector('.canvasQuickNav button[data-group="pages"]')),0);
+  requestAnimationFrame(()=>{try{window.editorOpenGroup?.("pages",button)}catch(_){try{editorOpenGroup("pages",button)}catch(__){}}});
 }
 window.v96SwitchPage=function(index){
   index=Number(index);if(index===canvasState.activePage||!canvasState.pages?.[index])return;
@@ -11563,21 +11566,34 @@ window.v96AddPage=function(){
   v96SyncPage();canvasState.pages.push(v96BlankPage());canvasState.activePage=canvasState.pages.length-1;v96LoadPageData(canvasState.pages[canvasState.activePage]);v96RenderPageStrip();markCanvasDirty();cuteToast('Neue Seite hinzugefügt ♡');setTimeout(()=>v96FitCanvas(false),30);v96RefreshOpenMobilePages();
 };
 window.v96DuplicatePage=function(){
-  v96SyncPage();const copy=v96Deep(canvasState.pages[canvasState.activePage]);copy.objects.forEach(o=>o.id=id());copy.vectors.forEach(v=>v.id=id());canvasState.pages.splice(canvasState.activePage+1,0,copy);canvasState.activePage++;v96LoadPageData(copy);v96RenderPageStrip();markCanvasDirty();cuteToast('Seite dupliziert ✦');v96RefreshOpenMobilePages();
+  canvasState.pages ||= [v96CurrentPageData()];
+  v96SyncPage();
+  const source=canvasState.pages[canvasState.activePage]||v96BlankPage();
+  const copy=v96Deep(source);
+  copy.objects=Array.isArray(copy.objects)?copy.objects:[];copy.vectors=Array.isArray(copy.vectors)?copy.vectors:[];copy.layerGroups=Array.isArray(copy.layerGroups)?copy.layerGroups:[];
+  copy.objects.forEach(o=>o.id=id());copy.vectors.forEach(v=>v.id=id());
+  canvasState.pages.splice(canvasState.activePage+1,0,copy);canvasState.activePage++;
+  v96LoadPageData(copy);v96RenderPageStrip();markCanvasDirty();
+  try{saveCanvasSheetCore?.(true)}catch(_){ }
+  cuteToast('Seite dupliziert ✦');v96RefreshOpenMobilePages();
 };
-window.v96DeletePage=function(){
-  if((canvasState.pages||[]).length<=1)return cuteToast('Mindestens eine Seite bleibt ♡');
-  if(!confirm('Diese Seite wirklich löschen?'))return;
+window.v96DeletePage=function(confirmed=false){
+  canvasState.pages ||= [v96CurrentPageData()];
+  if(canvasState.pages.length<=1)return cuteToast('Mindestens eine Seite bleibt ♡');
+  if(!confirmed){
+    if(window.innerWidth<900&&typeof window.confirmDanger==='function'){
+      confirmDanger({title:'Seite löschen?',text:'Diese Seite wird aus dem Lernblatt entfernt.',confirmText:'Seite löschen',onConfirm:"closeModal();v96DeletePage(true)"});
+      return;
+    }
+    if(!confirm('Diese Seite wirklich löschen?'))return;
+  }
   const removeAt=Math.max(0,Math.min(canvasState.pages.length-1,Number(canvasState.activePage)||0));
   canvasState.pages.splice(removeAt,1);
   canvasState.activePage=Math.max(0,Math.min(removeAt,canvasState.pages.length-1));
-  v96LoadPageData(canvasState.pages[canvasState.activePage]);
-  v96RenderPageStrip();
-  markCanvasDirty();
+  v96LoadPageData(canvasState.pages[canvasState.activePage]);v96RenderPageStrip();markCanvasDirty();
   try{saveCanvasSheetCore?.(true)}catch(_){ }
   if(window.innerWidth>=900&&typeof window.v102RightTab==='function')setTimeout(()=>window.v102RightTab('page'),20);
-  v96RefreshOpenMobilePages();
-  cuteToast('Seite gelöscht ✓');
+  cuteToast('Seite gelöscht ✓');v96RefreshOpenMobilePages();
 };
 
 const v96BaseRenderSheetEditor=renderSheetEditor;
@@ -25611,4 +25627,4 @@ const setVersion=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 30
 <style id="studia-v305-editor-clean">
 @media(min-width:900px){body.editorMode .v134BrandMark{display:none!important}body.editorMode .v134Brand{gap:0!important;padding-left:4px!important;flex-basis:120px!important}}
 </style>
-<script id="studia-v305-version">(()=>{const f=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 305'};[0,200,800].forEach(t=>setTimeout(f,t))})();</script>
+<script id="studia-v305-version">(()=>{const f=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 310'};[0,200,800].forEach(t=>setTimeout(f,t))})();</script>

@@ -18893,6 +18893,8 @@ body.v214LearningReadOnly #view-deck-detail .v214EditOnly{display:none!important
     if(!readOnly214())return;
     /* Header rename + per-card edit/delete are intentionally absent in study mode. */
     $$1('button',root).forEach(btn=>{
+      /* The current single-owner mode switch must always stay clickable. */
+      if(btn.closest?.('.v299DeckModeSwitch'))return;
       const t=(btn.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();
       if(t==='umbenennen'||t==='bearbeiten'||t==='löschen')btn.remove();
     });
@@ -18925,6 +18927,8 @@ body.v214LearningReadOnly #view-deck-detail .v214EditOnly{display:none!important
   document.addEventListener('click',e=>{
     if(!readOnly214())return;
     const b=e.target.closest?.('#view-learnsets button,#view-deck-detail button');if(!b)return;
+    /* V299 is the one active deck switch; do not let the retired V214 capture guard block it. */
+    if(b.closest?.('.v299DeckModeSwitch'))return;
     const t=(b.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();
     if(b.id==='addCardToDeckBtn'||t==='umbenennen'||t==='bearbeiten'||t==='löschen'||t.startsWith('+ ordner')||t.startsWith('+ quiz')){
       e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();
@@ -22965,9 +22969,12 @@ function ensureDeckChrome(){
  qa('.v214LearnModeSwitch,.v215DeckModeSwitch,.v216DeckModeSwitch,.v216LearnModeSwitch,.v217DeckModeSwitch,.v292DeckModeSwitch,.v297DeckModeSwitch,.v298DeckModeSwitch,.v299DeckModeSwitch',view).forEach(x=>x.remove());
  const add=q('#addCardToDeckBtn',view);if(add)add.style.display='none';
 }
-function deckModeSwitchHTML(){return `<div class="v299DeckModeSwitch" role="tablist" aria-label="Karteikartenmodus"><button type="button" class="${deckMode==='learn'?'active':''}" onclick="v298SetDeckMode('learn')">Lernen</button><button type="button" class="${deckMode==='edit'?'active':''}" onclick="v298SetDeckMode('edit')">Bearbeiten</button></div>`}
+function deckModeSwitchHTML(){return `<div class="v299DeckModeSwitch" role="tablist" aria-label="Karteikartenmodus"><button type="button" data-deck-mode="learn" class="${deckMode==='learn'?'active':''}" onclick="v298SetDeckMode('learn')">Lernen</button><button type="button" data-deck-mode="edit" class="${deckMode==='edit'?'active':''}" onclick="v298SetDeckMode('edit')">Bearbeiten</button></div>`}
 window.v298SetDeckMode=function(mode){
- deckMode=mode==='edit'?'edit':'learn';localStorage.setItem('studia-v298-deck-mode',deckMode);
+ deckMode=mode==='edit'?'edit':'learn';
+ localStorage.setItem('studia-v298-deck-mode',deckMode);
+ /* Keep the retired legacy mode variable aligned so its old read-only cleanup cannot fight the final owner. */
+ try{window.v214SetLearningMode?.(deckMode)}catch(_){ }
  document.body.classList.toggle('v214LearningReadOnly',deckMode==='learn');document.body.classList.toggle('v292DeckLearn',deckMode==='learn');
  flashFlipped=false;if(deckMode==='learn'&&String(study.deckId)!==String(deckIdNow()))resetStudy(deckIdNow());
  renderDeckDetail298();
@@ -23099,7 +23106,7 @@ const boot=()=>{
  if(q('#view-deck-detail.active')){document.body.classList.toggle('v214LearningReadOnly',deckMode==='learn');renderDeckDetail298()}
  if(q('#view-settings.active'))wireThemeControls();
  if(cleaned)try{save()}catch(_){}
- const e=q('#headerEyebrow');if(e)e.textContent='VERSION 303';
+ const e=q('#headerEyebrow');if(e)e.textContent='VERSION 310';
 };
 [0,120,600,1600,2400,4200].forEach(ms=>setTimeout(boot,ms));
 window.addEventListener('pageshow',()=>setTimeout(boot,50));
