@@ -5044,6 +5044,15 @@ function normalizeGraphExpr(expr){
  const allowed=["sin","cos","tan","sqrt","abs","exp","ln","log","pi","e"];
  const words=s.match(/[a-z]+/g)||[];
  if(words.some(w=>w!=="x"&&!allowed.includes(w)))throw new Error("Unbekannte Funktion");
+ // Mathematische Schreibweise darf Multiplikationspunkte weglassen: 2e^x, 3x, 2(x+1), e(x+1), (x+1)(x-1).
+ // Funktionsnamen werden vorher geschützt, damit sin(x) nicht zu sin*(x) wird.
+ const protectedFns=[];
+ s=s.replace(/(\d|x|e|pi|\))(?=(?:sin|cos|tan|sqrt|abs|exp|ln|log)\()/g,'$1*');
+ s=s.replace(/\b(sin|cos|tan|sqrt|abs|exp|ln|log)\(/g,m=>{protectedFns.push(m.slice(0,-1));return `§${protectedFns.length-1}§(`});
+ s=s.replace(/(\d|x|e|pi|\))(?=(x|e|pi|\())/g,'$1*');
+ s=s.replace(/(x|e|pi|\))(?=\d)/g,'$1*');
+ s=s.replace(/(\d|x|e|pi|\))(?=§\d+§\()/g,'$1*');
+ s=s.replace(/§(\d+)§\(/g,(_,i)=>protectedFns[+i]+'(');
  s=s.replace(/\^/g,"**")
     .replace(/\bpi\b/g,"Math.PI")
     .replace(/\be\b/g,"Math.E")
@@ -25209,14 +25218,23 @@ function node(n){
     const s=n.querySelector(':scope > sup');
     let base=children(b).replace(/\s+/g,'') || visible(b);
     let exp=children(s).replace(/\s+/g,'') || visible(s);
-    /* Wenn der Browser einen Slot intern merkwürdig verschachtelt, textContent des sup ist maßgeblich. */
-    if(!exp&&s)exp=normText(s.innerText||s.textContent||s.dataset?.mathValue||'').replace(/\s+/g,'');
-    /* Letzte Rettung: direkt aus dem HTML des sup. */
+    /* contenteditable kann sichtbaren Text als verschachtelten/Browser-eigenen Knoten halten. Alle realen Quellen lesen. */
+    if(!exp&&s)exp=normText(s.innerText||s.textContent||s.dataset?.mathValue||s.getAttribute('data-math-value')||'').replace(/\s+/g,'');
     if(!exp&&s){
       const tmp=document.createElement('div');tmp.innerHTML=s.innerHTML||'';
-      exp=normText(tmp.textContent||'').replace(/\s+/g,'');
+      exp=normText(tmp.innerText||tmp.textContent||'').replace(/\s+/g,'');
     }
-    return `(${required(base,'Basis')})^(${required(exp,'Exponent')})`;
+    /* Legacy-DOM: sichtbarer Exponent kann direkt hinter dem power-Wrapper gelandet sein. Nur einen echten SUP übernehmen. */
+    if(!exp){
+      const next=n.nextElementSibling;
+      if(next?.tagName==='SUP')exp=children(next).replace(/\s+/g,'')||visible(next);
+    }
+    base=String(base||'').replace(/\s+/g,'');
+    exp=String(exp||'').replace(/\s+/g,'');
+    if(!base)return '';
+    /* Ein leerer alter/Phantom-Power-Slot darf eine sonst vollständige Formel nicht blockieren. */
+    if(!exp)return `(${base})`;
+    return `(${base})^(${exp})`;
   }
   if(n.matches('.vfFrac,.fracExpr')){
     const ps=[...n.children].filter(x=>!x.classList.contains('vfParenMark'));
@@ -25230,8 +25248,14 @@ function node(n){
     const a=n.querySelector(':scope > span');if(!fn)throw new Error('Funktion nicht erkannt');return `${fn}(${required(children(a)||visible(a),fn)})`;
   }
   if(n.matches('.vfAbs')){const a=n.querySelector(':scope > span');return `abs(${required(children(a)||visible(a),'Betrag')})`}
-  if(n.matches('.vfExp')){const s=n.querySelector(':scope > sup');return `e^(${required(children(s)||visible(s),'Exponent')})`}
-  if(n.tagName==='SUP')return `^(${required(children(n)||visible(n),'Exponent')})`;
+  if(n.matches('.vfExp')){
+    const s=n.querySelector(':scope > sup');const exp=String(children(s)||visible(s)||'').replace(/\s+/g,'');
+    return exp?`e^(${exp})`:'e';
+  }
+  if(n.tagName==='SUP'){
+    const exp=String(children(n)||visible(n)||'').replace(/\s+/g,'');
+    return exp?`^(${exp})`:'';
+  }
   if(n.tagName==='SUB')return '';
   if(n.matches('.vfParen')){
     const a=n.querySelector(':scope > .vfParenBody')||n.querySelector(':scope > .vfEditable');
@@ -25241,6 +25265,11 @@ function node(n){
 }
 function serialize(ed){
   repairPowerBases(ed);
+  /* Leere, alte SUP-Platzhalter sind kein mathematischer Inhalt und werden vor dem Lesen ignoriert. */
+  qa('sup',ed).forEach(s=>{
+    const val=String(children(s)||visible(s)||'').replace(/\s+/g,'');
+    if(!val && !s.closest('.vfPower,.vfExp'))s.remove();
+  });
   let expr=children(ed).replace(/\s+/g,'');
   expr=expr.replace(/^f\(x\)=/i,'').replace(/^y=/i,'');
   if(!expr)throw new Error('Funktion ist leer');
@@ -25301,12 +25330,12 @@ function setup(i){
   if(old && old.dataset.v229Fresh!=='1'){
     const fresh=old.cloneNode(true);fresh.dataset.v229Fresh='1';fresh.textContent='Übernehmen';fresh.removeAttribute('onclick');
     old.replaceWith(fresh);
-    fresh.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();saveGraphFormula(i)},true);
+    fresh.onclick=e=>{e.preventDefault();e.stopPropagation();saveGraphFormula(i)};
   }
   const close=q('.presetModalHead .miniIcon',modal);
   if(close && close.dataset.v229Fresh!=='1'){
     const fresh=close.cloneNode(true);fresh.dataset.v229Fresh='1';fresh.removeAttribute('onclick');close.replaceWith(fresh);
-    fresh.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();let d;try{d=clone(graphDraft)}catch(_){d=null}if(d)returnToGraph(d)},true);
+    fresh.onclick=e=>{e.preventDefault();e.stopPropagation();let d;try{d=clone(graphDraft)}catch(_){d=null}if(d)returnToGraph(d)};
   }
 }
 window.openGraphFunctionEditor=function(i){
@@ -25330,8 +25359,9 @@ try{openGraphFunctionEditor=window.openGraphFunctionEditor}catch(_){ }
 /* Falls die Graph-Zeilen durch ältere Wrapper neu gerendert werden: Klick danach immer auf V229 routen. */
 function bindRows(){
   qa('#graphCurveRows .graphExprButton').forEach((b,i)=>{
-    if(b.dataset.v229Bound==='1')return;b.dataset.v229Bound='1';
-    b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();window.openGraphFunctionEditor(i)},true);
+    b.dataset.v229Bound='1';
+    b.removeAttribute('onclick');
+    b.onclick=e=>{e.preventDefault();e.stopPropagation();window.openGraphFunctionEditor(i)};
   });
 }
 new MutationObserver(bindRows).observe(document.body,{childList:true,subtree:true});
@@ -25742,4 +25772,4 @@ let boundButton=null;function bindOnce(){const b=q('.canvasTopbar .editorActions
 [0,100,350,900,1800].forEach(t=>setTimeout(bindOnce,t));
 })();
 </script>
-<script id="studia-v315-version">(()=>{const f=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 317'};[0,250,900].forEach(t=>setTimeout(f,t))})();</script>
+<script id="studia-v315-version">(()=>{const f=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 318'};[0,250,900].forEach(t=>setTimeout(f,t))})();</script>
