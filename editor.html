@@ -3280,7 +3280,7 @@ html,body{background:#fff7f4;}
         </div>
         <div class="editorActions">
           <button class="editorIcon viewTopBtn pageTopButton" title="Seite & Ansicht" onclick="toggleTopViewMenu()"><span class="pageTopIcon">▯</span><span class="pageTopLabel">Seite</span></button>
-          <button class="editorIcon" title="Exportieren" onclick="v314OpenExportMenu()"><svg viewBox="0 0 24 24"><path d="M12 3v12M8 11l4 4 4-4M4 19h16"/></svg></button>
+          <button class="editorIcon" title="Exportieren" onclick="v315OpenExportMenu()"><svg viewBox="0 0 24 24"><path d="M12 3v12M8 11l4 4 4-4M4 19h16"/></svg></button>
           <button class="editorIcon" title="PDF / Drucken" onclick="printCanvasSheet()"><svg viewBox="0 0 24 24"><path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><rect x="7" y="14" width="10" height="7"/></svg></button>
           <button class="editorIcon primaryIcon" title="Speichern" onclick="saveCanvasSheet()"><svg viewBox="0 0 24 24"><path d="M5 3h12l2 2v16H5z"/><path d="M8 3v6h8V3M8 21v-7h8v7"/></svg></button>
         </div>
@@ -4643,6 +4643,7 @@ window.openFormulaDialog=function(editId=""){
      <button onclick="insertVisualFormula('divide')">÷</button>
      <button onclick="insertHTMLAtCaret('=')">＝</button>
      <button onclick="insertHTMLAtCaret('x')">x</button>
+     <button onclick="insertVisualFormula('e')" title="Eulersche Zahl e">e</button>
    </div>
 
    <div class="formulaToolSections">
@@ -4665,6 +4666,7 @@ window.openFormulaDialog=function(editId=""){
       <button onclick="insertVisualFormula('iff')"><b>⇔</b><span>Äquivalent</span></button>
       <button onclick="insertVisualFormula('infinity')"><b>∞</b><span>Unendlich</span></button>
       <button onclick="insertVisualFormula('pi')"><b>π</b><span>Pi</span></button>
+      <button onclick="insertVisualFormula('e')"><b>e</b><span>Eulerzahl</span></button>
       <button onclick="insertVisualFormula('pm')"><b>±</b><span>Plus/Minus</span></button>
       <button onclick="insertVisualFormula('minusInfinity')"><b>−∞</b><span>− unendlich</span></button>
       <button onclick="insertVisualFormula('plusInfinity')"><b>+∞</b><span>+ unendlich</span></button>
@@ -4904,6 +4906,7 @@ window.insertVisualFormula=function(type){
  else if(type==="plusInfinity") insertHTMLAtCaret("+∞");
  else if(type==="infinity") insertHTMLAtCaret("∞");
  else if(type==="pi") insertHTMLAtCaret("π");
+ else if(type==="e") insertHTMLAtCaret('<span class="vfConstant vfConstantE" data-constant="e" contenteditable="false">e</span>');
  else if(type==="pm") insertHTMLAtCaret("±");
  else if(type==="times") insertHTMLAtCaret("×");
  else if(type==="divide") insertHTMLAtCaret("÷");
@@ -5261,6 +5264,7 @@ window.openGraphFunctionEditor=function(i){
      <button onclick="graphFnInsert('divide')" title="Geteilt">÷</button>
      <button onclick="graphFnInsert('paren')" title="Klammer">( )</button>
      <button onclick="graphFnInsert('x')" title="Variable">x</button>
+     <button onclick="graphFnInsert('e')" title="Eulersche Zahl e">e</button>
    </div>
 
    <div class="graphToolSections">
@@ -5283,6 +5287,7 @@ window.openGraphFunctionEditor=function(i){
          <button onclick="graphFnInsert('cos')"><b>cos</b><span>Cosinus</span></button>
          <button onclick="graphFnInsert('tan')"><b>tan</b><span>Tangens</span></button>
          <button onclick="graphFnInsert('pi')"><b>π</b><span>Pi</span></button>
+         <button onclick="graphFnInsert('e')"><b>e</b><span>Eulerzahl</span></button>
          <button onclick="graphFnInsert('infinity')"><b>∞</b><span>Unendlich</span></button>
          <button onclick="graphFnInsert('arrow')"><b>→</b><span>Pfeil</span></button>
        </div>
@@ -5367,6 +5372,7 @@ window.graphFnInsert=function(kind){
  else if(kind==="divide") graphInsertHTML(" ÷ ");
  else if(kind==="paren") graphInsertHTML(`<span class="vfParen">(<span class="vfEditable" contenteditable="true">${selected||"x"}</span>)</span>&nbsp;`,".vfEditable");
  else if(kind==="pi") graphInsertHTML("π");
+ else if(kind==="e") graphInsertHTML('<span class="vfConstant vfConstantE" data-constant="e" contenteditable="false">e</span>');
  else if(kind==="infinity") graphInsertHTML("∞");
  else if(kind==="arrow") graphInsertHTML("→");
  const ed=$("#graphFunctionVisual");
@@ -11965,7 +11971,7 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
   const v102BaseAddVector=addVectorShape;
   window.addVectorShape=function(type){v102BaseAddVector(type);const v=canvasState.vectors.at(-1);if(v&&type==='triangle')v.cornerRadius=0;renderVectors()};
   const v102BaseInspector=renderCanvasInspector;
-  renderCanvasInspector=function(){v102BaseInspector();if(window.innerWidth>=900&&document.body.classList.contains('editorMode')&&canvasState.selectedId)setTimeout(()=>v102RightTab('design'),0);if(canvasState.selectedType==='vector'){const v=canvasState.vectors.find(x=>x.id===canvasState.selectedId);if(v&&v.type==='triangle'){const box=$('#canvasInspector .vectorControls');if(box&&!box.querySelector('.v102CornerCtl'))box.insertAdjacentHTML('beforeend',`<div class="v102CornerCtl"><label>Ecken rund</label><input type="number" min="0" max="90" value="${v.cornerRadius||0}" onchange="updateVectorStyle('cornerRadius',+this.value)"></div>`)}}};
+  renderCanvasInspector=function(){v102BaseInspector();if(canvasState.selectedType==='vector'){const v=canvasState.vectors.find(x=>x.id===canvasState.selectedId);if(v&&v.type==='triangle'){const box=$('#canvasInspector .vectorControls');if(box&&!box.querySelector('.v102CornerCtl'))box.insertAdjacentHTML('beforeend',`<div class="v102CornerCtl"><label>Ecken rund</label><input type="number" min="0" max="90" value="${v.cornerRadius||0}" onchange="updateVectorStyle('cornerRadius',+this.value)"></div>`)}}};
 
   /* desktop editor: one clean left palette, pretty background, pan + Alt wheel zoom */
   function paletteButton(label,icon,action){return `<button onclick="${action}">${v102Icon(icon)}<span>${label}</span></button>`}
@@ -11989,7 +11995,7 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
     }
     side.querySelectorAll('.v102RightTabs button').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));
   };
-  function v102DesktopEditorInit(){if(window.innerWidth<900||!document.body.classList.contains('editorMode'))return;const shell=$('.canvasEditorShell'),nav=$('.canvasQuickNav'),drawer=$('#canvasQuickDrawer'),vp=$('#canvasViewport'),side=$('#desktopEditorSidebar');if(!shell||!nav||!drawer||!vp||!side)return;let left=$('.v102DesktopLeft');if(!left){left=document.createElement('div');left.className='v102DesktopLeft';nav.parentNode.insertBefore(left,nav);left.append(nav,drawer)}if(!window.__STUDIA_V134_REFERENCE_ONLY__){nav.innerHTML=`<button class="active" onclick="document.getElementById('canvasQuickDrawer').innerHTML=v102PaletteHTML()">${v102Icon('rect')}<span>Elemente</span></button><button onclick="document.getElementById('canvasQuickDrawer').innerHTML=v102PaletteHTML()">${v102Icon('pencil')}<span>Text</span></button><button onclick="v102RightTab('page')">${v102Icon('pages')}<span>Seiten</span></button><button onclick="v102RightTab('layers')">${v102Icon('layers')}<span>Ebenen</span></button>`;drawer.classList.add('open');drawer.innerHTML=v102PaletteHTML();}if(!side.querySelector('.v102RightTabs'))side.insertAdjacentHTML('afterbegin',`<div class="v102RightTabs"><button data-mode="design" onclick="v102RightTab('design')">Design</button><button data-mode="page" onclick="v102RightTab('page')">Seiten</button><button data-mode="layers" onclick="v102RightTab('layers')">Ebenen</button></div>`);v102RightTab(canvasState.selectedId?'design':'page');v102InstallDesktopPanZoom(vp);}
+  function v102DesktopEditorInit(){if(window.innerWidth<900||!document.body.classList.contains('editorMode'))return;const shell=$('.canvasEditorShell'),nav=$('.canvasQuickNav'),drawer=$('#canvasQuickDrawer'),vp=$('#canvasViewport'),side=$('#desktopEditorSidebar');if(!shell||!nav||!drawer||!vp||!side)return;let left=$('.v102DesktopLeft');if(!left){left=document.createElement('div');left.className='v102DesktopLeft';nav.parentNode.insertBefore(left,nav);left.append(nav,drawer)}if(!window.__STUDIA_V134_REFERENCE_ONLY__){nav.innerHTML=`<button class="active" onclick="document.getElementById('canvasQuickDrawer').innerHTML=v102PaletteHTML()">${v102Icon('rect')}<span>Elemente</span></button><button onclick="document.getElementById('canvasQuickDrawer').innerHTML=v102PaletteHTML()">${v102Icon('pencil')}<span>Text</span></button><button onclick="v102RightTab('page')">${v102Icon('pages')}<span>Seiten</span></button><button onclick="v102RightTab('layers')">${v102Icon('layers')}<span>Ebenen</span></button>`;drawer.classList.add('open');drawer.innerHTML=v102PaletteHTML();}if(!side.querySelector('.v102RightTabs'))side.insertAdjacentHTML('afterbegin',`<div class="v102RightTabs"><button data-mode="design" onclick="v102RightTab('design')">Design</button><button data-mode="page" onclick="v102RightTab('page')">Seiten</button><button data-mode="layers" onclick="v102RightTab('layers')">Ebenen</button></div>`);v102RightTab('page');v102InstallDesktopPanZoom(vp);}
   window.v102PaletteHTML=v102PaletteHTML;
   function v102InstallDesktopPanZoom(vp){if(vp.dataset.v102PanZoom)return;vp.dataset.v102PanZoom='1';let space=false,pan=null;window.addEventListener('keydown',e=>{const a=e.target instanceof Element?e.target:document.activeElement,typing=/INPUT|TEXTAREA|SELECT/.test(a?.tagName)||a?.isContentEditable||!!a?.closest?.('[contenteditable="true"]');if(e.code==='Space'&&!typing){space=true;if(document.body.classList.contains('editorMode'))e.preventDefault()}});window.addEventListener('keyup',e=>{if(e.code==='Space')space=false});vp.addEventListener('wheel',e=>{if(window.__STUDIA_V115_OWNS_GESTURES)return;if(!e.altKey)return;e.preventDefault();const rect=vp.getBoundingClientRect(),focus={x:e.clientX-rect.left,y:e.clientY-rect.top};v96ApplyZoom((canvasZoom||1)*(e.deltaY<0?1.08:.92),true,focus)},{passive:false});vp.addEventListener('pointerdown',e=>{if(window.__STUDIA_V115_OWNS_GESTURES)return;if(!(e.button===1||(e.button===0&&space)))return;e.preventDefault();vp.classList.add('v102Panning');pan={x:e.clientX,y:e.clientY,l:vp.scrollLeft,t:vp.scrollTop};vp.setPointerCapture?.(e.pointerId)});vp.addEventListener('pointermove',e=>{if(!pan)return;vp.scrollLeft=pan.l-(e.clientX-pan.x);vp.scrollTop=pan.t-(e.clientY-pan.y)});const end=()=>{pan=null;vp.classList.remove('v102Panning')};vp.addEventListener('pointerup',end);vp.addEventListener('pointercancel',end)}
   const v102RenderSheet=renderSheetEditor;renderSheetEditor=function(){v102RenderSheet();setTimeout(v102DesktopEditorInit,100)};
@@ -12101,7 +12107,7 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
 
   /* Rectangle + triangle corner controls are consistent. */
   const v103InspectorBase=renderCanvasInspector;
-  renderCanvasInspector=function(){v103InspectorBase();if(canvasState.selectedType==='vector'){const v=canvasState.vectors.find(x=>x.id===canvasState.selectedId),box=$('#canvasInspector .vectorControls');if(v&&box){const existing=box.querySelector('.v103RoundCtl');if(!existing&&(v.type==='rect'||v.type==='triangle'))box.insertAdjacentHTML('beforeend',`<div class="v103RoundCtl"><label>Ecken rund</label><input type="range" min="0" max="${v.type==='rect'?100:70}" value="${v.type==='rect'?(v.rx||0):(v.cornerRadius||0)}" oninput="updateVectorStyle('${v.type==='rect'?'rx':'cornerRadius'}',+this.value)"></div>`)}}if(window.innerWidth>=900&&document.body.classList.contains('editorMode')&&canvasState.selectedId)setTimeout(()=>v102RightTab('design'),0)};
+  renderCanvasInspector=function(){v103InspectorBase();if(canvasState.selectedType==='vector'){const v=canvasState.vectors.find(x=>x.id===canvasState.selectedId),box=$('#canvasInspector .vectorControls');if(v&&box){const existing=box.querySelector('.v103RoundCtl');if(!existing&&(v.type==='rect'||v.type==='triangle'))box.insertAdjacentHTML('beforeend',`<div class="v103RoundCtl"><label>Ecken rund</label><input type="range" min="0" max="${v.type==='rect'?100:70}" value="${v.type==='rect'?(v.rx||0):(v.cornerRadius||0)}" oninput="updateVectorStyle('${v.type==='rect'?'rx':'cornerRadius'}',+this.value)"></div>`)}}};
 
   /* Cleaner categorized desktop palette. */
   function pbtn(label,ico,act){return `<button onclick="${act}"><span class="v103PaletteIcon">${icon(ico)}</span><span>${label}</span></button>`}
@@ -12116,7 +12122,7 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
 
   /* Upgrade desktop init without touching the phone editor. */
   const v103RenderSheetBase=renderSheetEditor;
-  renderSheetEditor=function(){v103RenderSheetBase();setTimeout(()=>{if(window.innerWidth>=900){const d=$('#canvasQuickDrawer');if(d)d.innerHTML=v103PaletteHTML();v103Topbar();v96RenderPageStrip();v102RightTab(canvasState.selectedId?'design':'page')}},80)};
+  renderSheetEditor=function(){v103RenderSheetBase();setTimeout(()=>{if(window.innerWidth>=900){const d=$('#canvasQuickDrawer');if(d)d.innerHTML=v103PaletteHTML();v103Topbar();v96RenderPageStrip();v102RightTab('page')}},80)};
 
   /* Keep current view after refresh, including subject/topic/editor. */
   const v103OpenViewBase=openView;
@@ -13232,7 +13238,7 @@ body:has(#view-subjects.active)>.app>.header,body:has(#view-subject-detail.activ
       if(window.innerWidth>=900){
         const drawer=document.getElementById('canvasQuickDrawer');
         if(drawer && !drawer.innerHTML.trim() && window.v102PaletteHTML) drawer.innerHTML=window.v102PaletteHTML();
-        v102RightTab(canvasState.selectedId?'design':'page');
+        v102RightTab('page');
       }
       v106EnhanceFontPreview();
       updateMobileSelectionTools();
@@ -13373,7 +13379,7 @@ body.editorMode #canvasViewport.v102Panning{cursor:grabbing!important;user-selec
   const oldRender=renderSheetEditor;
   renderSheetEditor=function(){
     oldRender();
-    setTimeout(()=>{ fillDesktopDrawer(); enhanceTopbar(); if(window.innerWidth>=900 && typeof v102RightTab==='function') v102RightTab(canvasState.selectedId?'design':'page'); }, 80);
+    setTimeout(()=>{ fillDesktopDrawer(); enhanceTopbar(); if(window.innerWidth>=900 && typeof v102RightTab==='function') v102RightTab('page'); }, 80);
     setTimeout(()=>{ fillDesktopDrawer(); enhanceTopbar(); }, 240);
   };
   document.addEventListener('click', ()=>setTimeout(()=>{ fillDesktopDrawer(); enhanceTopbar(); }, 0), true);
@@ -23764,6 +23770,7 @@ window.v221GraphInsert=function(kind){
   else if(kind==='divide')graphInsert221('÷');
   else if(kind==='equals')graphInsert221('=');
   else if(kind==='x')graphInsert221('x');
+  else if(kind==='e')graphInsert221('<span class="vfConstant vfConstantE" data-constant="e" contenteditable="false">e</span>');
   else if(kind==='fx')graphInsert221('f(x) = ');
   else if(kind==='sqrt')graphInsert221(`<span class="vfRoot">√<span class="vfEditable" contenteditable="true">${selected||'x'}</span></span>&nbsp;`,'.vfEditable');
   else if(kind==='frac')graphInsert221(selected?`<span class="vfFrac"><span>${selected}</span><span class="vfEditable" contenteditable="true">b</span></span>&nbsp;`:`<span class="vfFrac"><span class="vfEditable" contenteditable="true">a</span><span class="vfEditable" contenteditable="true">b</span></span>&nbsp;`,'.vfEditable');
@@ -23794,14 +23801,14 @@ window.openGraphFunctionEditor=function(i){
     <div class="v221GraphPrefix"><span>f(x) =</span></div>
     <div id="graphFunctionVisual" class="formulaVisualEditor graphFunctionVisual" contenteditable="true" spellcheck="false" data-placeholder="z. B. 0,5ˣ">${graphExprToVisual(current).replace(/×/g,'⋅')}</div>
     <div class="formulaInlineOps">
-      <button onclick="v221GraphInsert('plus')">＋</button><button onclick="v221GraphInsert('minus')">−</button><button onclick="v221GraphInsert('times')">⋅</button><button onclick="v221GraphInsert('divide')">÷</button><button onclick="v221GraphInsert('equals')">＝</button><button onclick="v221GraphInsert('x')">x</button><button onclick="v221GraphInsert('fx')">f(x)=</button>
+      <button onclick="v221GraphInsert('plus')">＋</button><button onclick="v221GraphInsert('minus')">−</button><button onclick="v221GraphInsert('times')">⋅</button><button onclick="v221GraphInsert('divide')">÷</button><button onclick="v221GraphInsert('equals')">＝</button><button onclick="v221GraphInsert('x')">x</button><button onclick="v221GraphInsert('e')">e</button><button onclick="v221GraphInsert('fx')">f(x)=</button>
     </div>
     <div class="formulaToolSections">
       <section class="formulaToolSection"><div class="formulaToolTitle">Bausteine</div><div class="formulaTemplateGrid visualOnly compactFormulaGrid">
         <button onclick="v221GraphInsert('sqrt')"><b>√x</b><span>Wurzel</span></button><button onclick="v221GraphInsert('frac')"><b>½</b><span>Bruch</span></button><button onclick="v221GraphInsert('power')"><b>xⁿ</b><span>Exponent</span></button><button onclick="v221GraphInsert('sub')"><b>ₙ</b><span>Index</span></button><button onclick="v221GraphInsert('paren')"><b>(x)</b><span>Klammer</span></button><button onclick="v221GraphInsert('abs')"><b>|x|</b><span>Betrag</span></button>
       </div></section>
       <section class="formulaToolSection"><div class="formulaToolTitle">Funktionen & Symbole</div><div class="formulaTemplateGrid visualOnly compactFormulaGrid">
-        <button onclick="v221GraphInsert('sin')"><b>sin</b><span>Sinus</span></button><button onclick="v221GraphInsert('cos')"><b>cos</b><span>Cosinus</span></button><button onclick="v221GraphInsert('tan')"><b>tan</b><span>Tangens</span></button><button onclick="v221GraphInsert('exp')"><b>eˣ</b><span>Exponential</span></button><button onclick="v221GraphInsert('pi')"><b>π</b><span>Pi</span></button><button onclick="v221GraphInsert('pm')"><b>±</b><span>Plus/Minus</span></button><button onclick="v221GraphInsert('infinity')"><b>∞</b><span>Unendlich</span></button>
+        <button onclick="v221GraphInsert('sin')"><b>sin</b><span>Sinus</span></button><button onclick="v221GraphInsert('cos')"><b>cos</b><span>Cosinus</span></button><button onclick="v221GraphInsert('tan')"><b>tan</b><span>Tangens</span></button><button onclick="v221GraphInsert('exp')"><b>eˣ</b><span>Exponential</span></button><button onclick="v221GraphInsert('e')"><b>e</b><span>Eulerzahl</span></button><button onclick="v221GraphInsert('pi')"><b>π</b><span>Pi</span></button><button onclick="v221GraphInsert('pm')"><b>±</b><span>Plus/Minus</span></button><button onclick="v221GraphInsert('infinity')"><b>∞</b><span>Unendlich</span></button>
       </div></section>
     </div>
     <div class="v221GraphExamples"><button onclick="v221GraphExample('square')">x²</button><button onclick="v221GraphExample('decay')">0,5ˣ</button><button onclick="v221GraphExample('sin')">sin(x)</button></div>
@@ -25014,12 +25021,33 @@ function v228SlotValue(el){
   return v228NormText(v);
 }
 function v228Need(v,label){const s=String(v||'').replace(/\s+/g,'');if(!s)throw new Error(label+' ist leer');return v}
+function v228RepairPowerBases(root){
+  if(!root)return;
+  root.querySelectorAll('.vfPower').forEach(power=>{
+    const sup=power.querySelector(':scope > sup');
+    let base=power.querySelector(':scope > .vfPowerBase');
+    if(!base){base=document.createElement('span');base.className='vfPowerBase';power.insertBefore(base,sup||power.firstChild)}
+    if(String(base.textContent||'').replace(/\u200b/g,'').trim()||base.children.length)return;
+    /* Legacy formulas sometimes left the base directly before the power wrapper. Move exactly one mathematical atom back into the base. */
+    let prev=power.previousSibling;while(prev&&prev.nodeType===Node.TEXT_NODE&&!String(prev.nodeValue||'').trim())prev=prev.previousSibling;
+    if(prev?.nodeType===Node.TEXT_NODE){
+      const raw=String(prev.nodeValue||''),m=raw.match(/(π|e|[A-Za-zÄÖÜäöüß]+|\d+(?:[.,]\d+)?)\s*$/);
+      if(m){base.textContent=m[1];prev.nodeValue=raw.slice(0,m.index)}
+    }else if(prev?.nodeType===Node.ELEMENT_NODE&&prev.matches('.vfConstant,.vfParen,.vfFrac,.fracExpr,.vfRoot,.sqrtExpr,.vfFunction,.vfAbs')){base.appendChild(prev)}
+    /* Some old DOMs kept the base as a naked text node inside .vfPower. */
+    if(!String(base.textContent||'').trim()&&!base.children.length){
+      const direct=[...power.childNodes].find(n=>n!==base&&n!==sup&&n.nodeType===Node.TEXT_NODE&&String(n.nodeValue||'').trim());
+      if(direct){base.textContent=String(direct.nodeValue||'').trim();direct.remove()}
+    }
+  });
+}
 function v228Children(el){return el?[...el.childNodes].map(v228Node).join(''):''}
 function v228Node(node){
   if(!node)return '';
   if(node.nodeType===Node.TEXT_NODE)return v228NormText(node.nodeValue);
   if(node.nodeType!==Node.ELEMENT_NODE)return '';
   if(node.tagName==='BR'||node.classList?.contains('vfParenMark'))return '';
+  if(node.matches('.vfConstant[data-constant="e"],.vfConstantE'))return 'e';
   if(node.matches('.vfPeriodDigit'))return v228NormText(node.textContent||'');
   if(node.matches('.vfFrac,.fracExpr')){
     const parts=[...node.children].filter(x=>!x.classList.contains('vfParenMark'));
@@ -25070,6 +25098,7 @@ function v228Node(node){
 }
 function v228SerializeGraphFormula(ed){
   v228EnhanceSlots(ed);
+  v228RepairPowerBases(ed);
   let expr=v228Children(ed).replace(/\s+/g,'');
   expr=expr.replace(/^f\(x\)=/i,'').replace(/^y=/i,'');
   if(!expr)throw new Error('Funktion ist leer');
@@ -25150,11 +25179,30 @@ function visible(el){
 }
 function children(el){return el?[...el.childNodes].map(node).join(''):''}
 function required(v,label){v=String(v||'').replace(/\s+/g,'');if(!v)throw new Error(label+' ist leer');return v}
+function repairPowerBases(root){
+  if(!root)return;
+  qa('.vfPower',root).forEach(power=>{
+    const sup=q(':scope > sup',power);
+    let base=q(':scope > .vfPowerBase',power);
+    if(!base){base=document.createElement('span');base.className='vfPowerBase';power.insertBefore(base,sup||power.firstChild)}
+    if(String(base.textContent||'').replace(/\u200b/g,'').trim()||base.children.length)return;
+    let prev=power.previousSibling;while(prev&&prev.nodeType===Node.TEXT_NODE&&!String(prev.nodeValue||'').trim())prev=prev.previousSibling;
+    if(prev?.nodeType===Node.TEXT_NODE){
+      const raw=String(prev.nodeValue||''),m=raw.match(/(π|e|[A-Za-zÄÖÜäöüß]+|\d+(?:[.,]\d+)?)\s*$/);
+      if(m){base.textContent=m[1];prev.nodeValue=raw.slice(0,m.index)}
+    }else if(prev?.nodeType===Node.ELEMENT_NODE&&prev.matches('.vfConstant,.vfParen,.vfFrac,.fracExpr,.vfRoot,.sqrtExpr,.vfFunction,.vfAbs')){base.appendChild(prev)}
+    if(!String(base.textContent||'').trim()&&!base.children.length){
+      const direct=[...power.childNodes].find(x=>x!==base&&x!==sup&&x.nodeType===Node.TEXT_NODE&&String(x.nodeValue||'').trim());
+      if(direct){base.textContent=String(direct.nodeValue||'').trim();direct.remove()}
+    }
+  });
+}
 function node(n){
   if(!n)return '';
   if(n.nodeType===Node.TEXT_NODE)return normText(n.nodeValue);
   if(n.nodeType!==Node.ELEMENT_NODE)return '';
   if(n.tagName==='BR'||n.classList?.contains('vfParenMark'))return '';
+  if(n.matches('.vfConstant[data-constant="e"],.vfConstantE'))return 'e';
   if(n.matches('.vfPeriodDigit'))return normText(n.textContent||'');
   if(n.matches('.vfPower')){
     const b=n.querySelector(':scope > .vfPowerBase');
@@ -25192,6 +25240,7 @@ function node(n){
   return children(n);
 }
 function serialize(ed){
+  repairPowerBases(ed);
   let expr=children(ed).replace(/\s+/g,'');
   expr=expr.replace(/^f\(x\)=/i,'').replace(/^y=/i,'');
   if(!expr)throw new Error('Funktion ist leer');
@@ -25338,7 +25387,7 @@ function selectSlot(slot){
 }
 function trailingTextAtom(text,offset){
   const before=String(text||'').slice(0,offset);
-  const m=before.match(/([A-Za-zÄÖÜäöüß]+|\d+(?:[.,]\d+)?|π)\s*$/);
+  const m=before.match(/(e|π|[A-Za-zÄÖÜäöüß]+|\d+(?:[.,]\d+)?)\s*$/);
   return m?{token:m[1],start:before.lastIndexOf(m[1])}:null;
 }
 function makePower(baseHTML){
@@ -25634,13 +25683,13 @@ const setVersion=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 30
 </style>
 <script id="studia-v305-version">(()=>{const f=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 310'};[0,200,800].forEach(t=>setTimeout(f,t))})();</script>
 
-<style id="studia-v314-export-style">
-.v314Export{display:grid;gap:15px}.v314ExportHead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.v314ExportHead h2{margin:2px 0 0}.v314ExportClose{width:38px;height:38px;border:1px solid #eadbd6;border-radius:12px;background:#fff;color:#6b5952;display:grid;place-items:center}.v314ExportGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.v314ExportChoice{min-height:96px;border:1px solid #eadbd6;border-radius:18px;background:#fff;color:#5c504b;padding:14px;display:grid;grid-template-columns:34px minmax(0,1fr);grid-template-rows:auto auto;column-gap:11px;align-items:center;text-align:left;cursor:pointer}.v314ExportChoice:hover{background:#fff5f5;border-color:#e7c7c9}.v314ExportChoice svg{grid-row:1/3;width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;color:#a86e72}.v314ExportChoice b{font-size:14px}.v314ExportChoice small{font-size:10px;color:#968079;line-height:1.35}.v314ExportChoice.busy{opacity:.58;pointer-events:none}.v314ExportStatus{min-height:18px;font-size:11px;color:#8d786f}.v314ExportStatus.err{color:#b35f63}@media(max-width:600px){.v314ExportGrid{grid-template-columns:1fr}.v314ExportChoice{min-height:78px}}
+<style id="studia-v315-export-style">
+.v315Export{display:grid;gap:15px}.v315ExportHead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.v315ExportHead h2{margin:2px 0 0}.v315ExportClose{width:38px;height:38px;border:1px solid #eadbd6;border-radius:12px;background:#fff;color:#6b5952;display:grid;place-items:center}.v315ExportGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.v315ExportChoice{min-height:96px;border:1px solid #eadbd6;border-radius:18px;background:#fff;color:#5c504b;padding:14px;display:grid;grid-template-columns:34px minmax(0,1fr);grid-template-rows:auto auto;column-gap:11px;align-items:center;text-align:left;cursor:pointer}.v315ExportChoice:hover{background:#fff5f5;border-color:#e7c7c9}.v315ExportChoice svg{grid-row:1/3;width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;color:#a86e72}.v315ExportChoice b{font-size:14px}.v315ExportChoice small{font-size:10px;color:#968079;line-height:1.35}.v315ExportChoice.busy{opacity:.58;pointer-events:none}.v315ExportStatus{min-height:18px;font-size:11px;color:#8d786f}.v315ExportStatus.err{color:#b35f63}@media(max-width:600px){.v315ExportGrid{grid-template-columns:1fr}.v315ExportChoice{min-height:78px}}
 </style>
-<script id="studia-v314-export-owner">
+<script id="studia-v315-export-owner">
 (()=>{
 'use strict';
-if(window.__STUDIA_V314_EXPORT__)return;window.__STUDIA_V314_EXPORT__=true;
+if(window.__STUDIA_V315_EXPORT__)return;window.__STUDIA_V315_EXPORT__=true;
 const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
 const svg={
  pdf:'<svg viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v6h6"/><path d="M9 16h2a2 2 0 0 0 0-4H9v6M14 18v-6h3M14 15h2.5"/></svg>',
@@ -25651,70 +25700,46 @@ function cleanName(){let t='Studia-Lernblatt';try{t=(data.studySheets||[]).find(
 function filename(ext){return cleanName()+'.'+ext}
 function pageW(){try{return typeof canvasPageWidth==='function'?canvasPageWidth():794}catch(_){return 794}}
 function pageH(){try{return typeof canvasPageHeight==='function'?canvasPageHeight():1123}catch(_){return 1123}}
-function blobToDataURL(blob){return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>res(String(fr.result));fr.onerror=rej;fr.readAsDataURL(blob)})}
-async function inlineUrl(raw){
- if(!raw||/^data:/i.test(raw))return raw;
- try{const u=new URL(raw,location.href);const r=await fetch(u.href,{cache:'force-cache',mode:'cors'});if(!r.ok)throw new Error('HTTP '+r.status);return await blobToDataURL(await r.blob())}catch(_){return raw}
-}
-function copyComputedTree(source,clone){
- const src=[source,...qa('*',source)],dst=[clone,...qa('*',clone)],n=Math.min(src.length,dst.length);
- for(let i=0;i<n;i++){
-   const from=src[i],to=dst[i];let cs;try{cs=getComputedStyle(from)}catch(_){continue}
-   for(let j=0;j<cs.length;j++){const prop=cs[j];try{to.style.setProperty(prop,cs.getPropertyValue(prop),cs.getPropertyPriority(prop))}catch(_){}}
-   if(from instanceof HTMLInputElement){to.value=from.value;if(from.checked)to.setAttribute('checked','')}
-   if(from instanceof HTMLTextAreaElement)to.textContent=from.value;
- }
-}
+function scriptLoad(url,timeout=12000){return new Promise((res,rej)=>{const old=qa('script').find(x=>x.src===url);if(old&&window.html2canvas){res();return}const s=document.createElement('script');s.src=url;s.async=true;s.crossOrigin='anonymous';const tm=setTimeout(()=>{s.remove();rej(new Error('Zeitüberschreitung'))},timeout);s.onload=()=>{clearTimeout(tm);window.html2canvas?res():rej(new Error('Renderer wurde nicht geladen'))};s.onerror=()=>{clearTimeout(tm);s.remove();rej(new Error('Renderer konnte nicht geladen werden'))};document.head.appendChild(s)})}
+async function ensureRenderer(){if(window.html2canvas)return window.html2canvas;const urls=['https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js','https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js','https://html2canvas.hertzen.com/dist/html2canvas.min.js'];let last;for(const u of urls){try{await scriptLoad(u);if(window.html2canvas)return window.html2canvas}catch(e){last=e}}throw new Error('Der Bild-Renderer konnte nicht geladen werden. Prüfe kurz die Internetverbindung und versuche es erneut.')}
+function shouldIgnore(el){return !!el?.matches?.('#v132InteractionLayer,#v152TextHitLayer,#v168MobileTextLayer,#canvasGuides,#pathDrawHint,.resizeHandle,.rotateHandle,.v138TransformHandle,.vectorSelectBox,.vectorHandle,.vectorRotateLine,.pathNode,.shapeHit,.vectorTouchProxy,.v135LinkBadge,.tableMoveHandle,.v108MoveHandle,.v108VectorMoveHandle,.v137Marquee,.selectionBox,.selectionOutline')}
 async function exactPageCanvas(){
  try{window.v96SyncPage?.()}catch(_){}
- if(document.fonts?.ready){try{await Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,1200))])}catch(_){}}
- const source=q('#canvasStage');if(!source)throw new Error('Die Lernblatt-Seite wurde nicht gefunden.');
- const W=pageW(),H=pageH(),clone=source.cloneNode(true);
- copyComputedTree(source,clone);
- clone.id='v314ExportStage';
- clone.querySelectorAll('#v132InteractionLayer,#v152TextHitLayer,#v168MobileTextLayer,#canvasGuides,#pathDrawHint,.resizeHandle,.rotateHandle,.v138TransformHandle,.vectorSelectBox,.vectorHandle,.vectorRotateLine,.pathNode,.shapeHit,.vectorTouchProxy,.v135LinkBadge,.tableMoveHandle,.v108MoveHandle,.v108VectorMoveHandle,.v137Marquee,.selectionBox,.selectionOutline').forEach(x=>x.remove());
- clone.querySelectorAll('[contenteditable]').forEach(x=>{x.removeAttribute('contenteditable');x.removeAttribute('spellcheck')});
- clone.querySelectorAll('.selected,.editing,.locked,.showPageMargins').forEach(x=>x.classList.remove('selected','editing','locked','showPageMargins'));
- clone.style.setProperty('position','relative','important');clone.style.setProperty('left','0','important');clone.style.setProperty('top','0','important');clone.style.setProperty('width',W+'px','important');clone.style.setProperty('height',H+'px','important');clone.style.setProperty('min-width',W+'px','important');clone.style.setProperty('min-height',H+'px','important');clone.style.setProperty('max-width',W+'px','important');clone.style.setProperty('max-height',H+'px','important');clone.style.setProperty('transform','none','important');clone.style.setProperty('transform-origin','0 0','important');clone.style.setProperty('margin','0','important');clone.style.setProperty('border','0','important');clone.style.setProperty('border-radius','0','important');clone.style.setProperty('box-shadow','none','important');clone.style.setProperty('overflow','hidden','important');
- const images=qa('img',clone);for(const im of images){const src=await inlineUrl(im.getAttribute('src'));if(src)im.setAttribute('src',src)}
- const svgImages=qa('image',clone);for(const im of svgImages){const raw=im.getAttribute('href')||im.getAttribute('xlink:href');if(!raw)continue;const src=await inlineUrl(raw);if(src){im.setAttribute('href',src);im.setAttributeNS('http://www.w3.org/1999/xlink','href',src)}}
- const wrap=document.createElement('div');wrap.setAttribute('xmlns','http://www.w3.org/1999/xhtml');wrap.style.cssText=`position:relative;width:${W}px;height:${H}px;margin:0;padding:0;overflow:hidden;background:#fff;box-sizing:border-box;`;wrap.appendChild(clone);
- const xhtml=new XMLSerializer().serializeToString(wrap);
- const markup=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><foreignObject x="0" y="0" width="${W}" height="${H}">${xhtml}</foreignObject></svg>`;
- const url=URL.createObjectURL(new Blob([markup],{type:'image/svg+xml;charset=utf-8'})),img=new Image();
- try{
-   await new Promise((res,rej)=>{const tm=setTimeout(()=>rej(new Error('Die Seite hat beim Rendern zu lange gebraucht.')),15000);img.onload=()=>{clearTimeout(tm);res()};img.onerror=()=>{clearTimeout(tm);rej(new Error('Die Seite konnte nicht als Bild gerendert werden.'))};img.src=url});
-   const scale=Math.min(3,Math.max(2,window.devicePixelRatio||2));const c=document.createElement('canvas');c.width=Math.round(W*scale);c.height=Math.round(H*scale);const ctx=c.getContext('2d',{alpha:false});ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);ctx.drawImage(img,0,0,c.width,c.height);return c;
- }finally{URL.revokeObjectURL(url)}
+ if(document.fonts?.ready){try{await Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,1600))])}catch(_){}}
+ const stage=q('#canvasStage');if(!stage)throw new Error('Die Lernblatt-Seite wurde nicht gefunden.');
+ const html2canvas=await ensureRenderer(),W=pageW(),H=pageH(),scale=Math.min(3,Math.max(2,window.devicePixelRatio||2));
+ const canvas=await html2canvas(stage,{backgroundColor:null,scale,useCORS:true,allowTaint:false,foreignObjectRendering:false,logging:false,width:W,height:H,scrollX:0,scrollY:0,windowWidth:Math.max(document.documentElement.clientWidth,W),windowHeight:Math.max(document.documentElement.clientHeight,H),ignoreElements:shouldIgnore,onclone:(doc)=>{
+   const cloned=doc.querySelector('#canvasStage');if(!cloned)return;
+   cloned.style.setProperty('position','relative','important');cloned.style.setProperty('left','0','important');cloned.style.setProperty('top','0','important');cloned.style.setProperty('width',W+'px','important');cloned.style.setProperty('height',H+'px','important');cloned.style.setProperty('min-width',W+'px','important');cloned.style.setProperty('min-height',H+'px','important');cloned.style.setProperty('max-width',W+'px','important');cloned.style.setProperty('max-height',H+'px','important');cloned.style.setProperty('transform','none','important');cloned.style.setProperty('transform-origin','0 0','important');cloned.style.setProperty('margin','0','important');cloned.style.setProperty('border','0','important');cloned.style.setProperty('border-radius','0','important');cloned.style.setProperty('box-shadow','none','important');cloned.style.setProperty('overflow','hidden','important');
+   cloned.querySelectorAll('[contenteditable]').forEach(x=>{x.removeAttribute('contenteditable');x.removeAttribute('spellcheck')});
+   cloned.querySelectorAll('.selected,.editing,.locked,.showPageMargins').forEach(x=>x.classList.remove('selected','editing','locked','showPageMargins'));
+   cloned.querySelectorAll('#v132InteractionLayer,#v152TextHitLayer,#v168MobileTextLayer,#canvasGuides,#pathDrawHint,.resizeHandle,.rotateHandle,.v138TransformHandle,.vectorSelectBox,.vectorHandle,.vectorRotateLine,.pathNode,.shapeHit,.vectorTouchProxy,.v135LinkBadge,.tableMoveHandle,.v108MoveHandle,.v108VectorMoveHandle,.v137Marquee,.selectionBox,.selectionOutline').forEach(x=>x.remove());
+ }});
+ if(!canvas||!canvas.width||!canvas.height)throw new Error('Die Seite konnte nicht gerendert werden.');
+ return canvas;
 }
 function bytesFromDataUrl(url){const raw=atob(String(url).split(',')[1]||''),u=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)u[i]=raw.charCodeAt(i);return u}
-function makePdf(jpeg,w,h,land){
- if(typeof window.__studiaV170Pdf==='function')return window.__studiaV170Pdf(jpeg,w,h,land);
- throw new Error('Der PDF-Renderer ist nicht verfügbar.');
-}
+function makePdf(jpeg,w,h,land){if(typeof window.__studiaV170Pdf==='function')return window.__studiaV170Pdf(jpeg,w,h,land);throw new Error('Der PDF-Renderer ist nicht verfügbar.')}
 async function deliver(blob,name){
  const file=new File([blob],name,{type:blob.type||'application/octet-stream'});
  if(innerWidth<900&&navigator.share&&navigator.canShare){try{if(navigator.canShare({files:[file]})){await navigator.share({files:[file],title:name});return true}}catch(e){if(e?.name==='AbortError')return true}}
- const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;a.rel='noopener';a.style.display='none';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),120000);return true;
+ const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.rel='noopener';a.style.display='none';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),120000);return true;
 }
-window.v314ExportImage=async function(kind='png'){
+window.v315ExportImage=async function(kind='png'){
  const c=await exactPageCanvas(),jpeg=kind==='jpeg'||kind==='jpg',mime=jpeg?'image/jpeg':'image/png',ext=jpeg?'jpg':'png';
  const blob=await new Promise((res,rej)=>c.toBlob(b=>b?res(b):rej(new Error('Bilddatei konnte nicht erstellt werden.')),mime,jpeg?.96:1));return deliver(blob,filename(ext));
 };
-window.v314ExportPdf=async function(){const c=await exactPageCanvas(),jpg=c.toDataURL('image/jpeg',.98),blob=makePdf(bytesFromDataUrl(jpg),c.width,c.height,pageW()>pageH());return deliver(blob,filename('pdf'))};
-window.v314ExportHtml=async function(){if(typeof window.exportCanvasHTML!=='function')throw new Error('HTML-Export ist nicht verfügbar.');return window.exportCanvasHTML()};
-function status(text,error=false){const el=q('.v314ExportStatus');if(el){el.textContent=text||'';el.classList.toggle('err',!!error)}}
-async function run(kind){status('Wird exakt wie das Blatt gerendert …');qa('.v314ExportChoice').forEach(x=>x.classList.add('busy'));try{if(kind==='pdf')await window.v314ExportPdf();else if(kind==='png')await window.v314ExportImage('png');else if(kind==='jpg')await window.v314ExportImage('jpeg');else if(kind==='html')await window.v314ExportHtml();status('Gespeichert ✓');setTimeout(()=>window.closeModal?.(),300)}catch(err){console.error('[Studia V314 Export]',err);status(String(err?.message||err),true);qa('.v314ExportChoice').forEach(x=>x.classList.remove('busy'))}}
-window.v314OpenExportMenu=function(){
- const html=`<div class="v314Export"><div class="v314ExportHead"><div><div class="eyebrow">EXPORT</div><h2>Speichern als</h2></div><button type="button" class="v314ExportClose" aria-label="Schließen">${svg.close}</button></div><div class="v314ExportGrid"><button type="button" class="v314ExportChoice" data-export="pdf">${svg.pdf}<b>PDF</b><small>So wie das Blatt im Editor aussieht</small></button><button type="button" class="v314ExportChoice" data-export="png">${svg.image}<b>PNG</b><small>Exakte Seite in hoher Qualität</small></button><button type="button" class="v314ExportChoice" data-export="jpg">${svg.image}<b>JPG</b><small>Exakte Seite als Bilddatei</small></button><button type="button" class="v314ExportChoice" data-export="html">${svg.html}<b>HTML</b><small>Bearbeitbare Studia-Datei</small></button></div><div class="v314ExportStatus"></div></div>`;
- window.openModal?.(html);const root=q('.v314Export');if(!root)return;root.querySelector('.v314ExportClose')?.addEventListener('click',()=>window.closeModal?.());root.addEventListener('click',e=>{const b=e.target.closest('[data-export]');if(!b)return;e.preventDefault();e.stopPropagation();run(b.dataset.export)})
+window.v315ExportPdf=async function(){const c=await exactPageCanvas(),jpg=c.toDataURL('image/jpeg',.98),blob=makePdf(bytesFromDataUrl(jpg),c.width,c.height,pageW()>pageH());return deliver(blob,filename('pdf'))};
+window.v315ExportHtml=async function(){if(typeof window.exportCanvasHTML!=='function')throw new Error('HTML-Export ist nicht verfügbar.');return window.exportCanvasHTML()};
+function status(text,error=false){const el=q('.v315ExportStatus');if(el){el.textContent=text||'';el.classList.toggle('err',!!error)}}
+async function run(kind){status('Wird genauso wie das Blatt gerendert …');qa('.v315ExportChoice').forEach(x=>x.classList.add('busy'));try{if(kind==='pdf')await window.v315ExportPdf();else if(kind==='png')await window.v315ExportImage('png');else if(kind==='jpg')await window.v315ExportImage('jpeg');else if(kind==='html')await window.v315ExportHtml();status('Gespeichert ✓');setTimeout(()=>window.closeModal?.(),350)}catch(err){console.error('[Studia V315 Export]',err);status(String(err?.message||err),true);qa('.v315ExportChoice').forEach(x=>x.classList.remove('busy'))}}
+window.v315OpenExportMenu=function(){
+ const html=`<div class="v315Export"><div class="v315ExportHead"><div><div class="eyebrow">EXPORT</div><h2>Speichern als</h2></div><button type="button" class="v315ExportClose" aria-label="Schließen">${svg.close}</button></div><div class="v315ExportGrid"><button type="button" class="v315ExportChoice" data-export="pdf">${svg.pdf}<b>PDF</b><small>Genau wie die Seite im Editor</small></button><button type="button" class="v315ExportChoice" data-export="png">${svg.image}<b>PNG</b><small>Exakte Seite in hoher Qualität</small></button><button type="button" class="v315ExportChoice" data-export="jpg">${svg.image}<b>JPG</b><small>Exakte Seite als Bilddatei</small></button><button type="button" class="v315ExportChoice" data-export="html">${svg.html}<b>HTML</b><small>Bearbeitbare Studia-Datei</small></button></div><div class="v315ExportStatus"></div></div>`;
+ window.openModal?.(html);const root=q('.v315Export');if(!root)return;root.querySelector('.v315ExportClose')?.addEventListener('click',()=>window.closeModal?.());root.addEventListener('click',e=>{const b=e.target.closest('[data-export]');if(!b)return;e.preventDefault();e.stopPropagation();run(b.dataset.export)})
 };
-/* The old entry point now points to this single export owner; no second export handler is installed. */
-window.v103OpenExportMenu=window.v314OpenExportMenu;
-function wireExportButton(){const b=q('.canvasTopbar .editorActions button[title="Exportieren"]')||qa('.canvasTopbar .editorActions button').find(x=>(x.textContent||'').trim()==='Export');if(!b)return;b.title='Exportieren';b.onclick=window.v314OpenExportMenu;b.removeAttribute('onclick');b.addEventListener('click',window.v314OpenExportMenu,{once:false});}
-/* use one DOM handler only */
-let boundButton=null;function bindOnce(){const b=q('.canvasTopbar .editorActions button[title="Exportieren"]')||qa('.canvasTopbar .editorActions button').find(x=>(x.textContent||'').trim()==='Export');if(!b||b===boundButton)return;if(boundButton)boundButton.removeEventListener('click',window.v314OpenExportMenu);b.removeAttribute('onclick');b.addEventListener('click',window.v314OpenExportMenu);boundButton=b}
+window.v103OpenExportMenu=window.v315OpenExportMenu;
+let boundButton=null;function bindOnce(){const b=q('.canvasTopbar .editorActions button[title="Exportieren"]')||qa('.canvasTopbar .editorActions button').find(x=>(x.textContent||'').trim()==='Export');if(!b||b===boundButton)return;if(boundButton)boundButton.removeEventListener('click',window.v315OpenExportMenu);b.removeAttribute('onclick');b.addEventListener('click',window.v315OpenExportMenu);boundButton=b}
 [0,100,350,900,1800].forEach(t=>setTimeout(bindOnce,t));
 })();
 </script>
-<script id="studia-v314-version">(()=>{const f=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 314'};[0,250,900].forEach(t=>setTimeout(f,t))})();</script>
+<script id="studia-v315-version">(()=>{const f=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 317'};[0,250,900].forEach(t=>setTimeout(f,t))})();</script>

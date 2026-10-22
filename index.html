@@ -11756,10 +11756,18 @@ window.saveSubjectSettings=function(sid){
   collections.forEach(arr=>(arr||[]).forEach(x=>{if(x.subject===old)x.subject=newName}));
   save();closeModal();selectedSubjectId=sid;openView('subject-detail');
 };
-window.deleteSubjectFromSettings=function(sid){
-  const s=data.subjects.find(x=>x.id===sid);if(!s)return;
+window.deleteSubjectFromSettings=window.deleteSubjectFromPage=window.deleteSubject=function(sid){
+  const s=(data.subjects||[]).find(x=>String(x.id)===String(sid));if(!s)return;
   if(!confirm(`„${s.name}“ wirklich löschen?`))return;
-  data.subjects=data.subjects.filter(x=>x.id!==sid);save();closeModal();selectedSubjectId=null;selectedTopicId=null;openView('subjects');
+  const name=String(s.name||''),deckIds=new Set((data.flashDecks||[]).filter(d=>String(d.subject||'')===name).map(d=>String(d.id)));
+  data.subjects=(data.subjects||[]).filter(x=>String(x.id)!==String(sid));
+  data.flashDecks=(data.flashDecks||[]).filter(x=>String(x.subject||'')!==name);
+  data.flashcards=(data.flashcards||[]).filter(x=>String(x.subject||'')!==name&&!deckIds.has(String(x.deckId)));
+  for(const key of ['studySheets','quizzes','writtenTests','tests','homework','grades']){
+    if(Array.isArray(data[key]))data[key]=data[key].filter(x=>String(x?.subject||'')!==name);
+  }
+  selectedSubjectId=null;selectedTopicId=null;selectedDeckId=null;selectedQuizId=null;selectedSheetId=null;
+  save();closeModal();openView('subjects');try{renderSubjects()}catch(_){}
 };
 
 const v97DesktopSubjectRender=v96BaseRenderSubjectDetail;
@@ -11919,7 +11927,7 @@ window.v97DeleteTopicFile=async function(fid){const {t}=currentTopic();if(!t||!c
 
   window.renderSubjects=renderSubjects;
 
-  renderSubjectDetail=function(){const root=$('#subjectDetail');if(!root)return;const s=data.subjects.find(x=>x.id===selectedSubjectId);if(!s){root.innerHTML='<div class="empty">Fach nicht gefunden.</div>';return}ensureSubjectShape(s);const topics=s.topics||[];const cards=topics.map((t,i)=>{const decks=(data.flashDecks||[]).filter(d=>d.subject===s.name&&d.topicId===t.id),cardCount=decks.reduce((n,d)=>n+(data.flashcards||[]).filter(c=>c.deckId===d.id).length,0),sheets=typedSheets(s,t,'sheet').length,works=typedSheets(s,t,'worksheet').length,home=typedSheets(s,t,'homework').length,quiz=(data.quizzes||[]).filter(q=>q.subject===s.name&&q.topicId===t.id).length,tests=(data.writtenTests||[]).filter(x=>x.subject===s.name&&x.topicId===t.id).length,c=colorAt(i);return `<button class="v102TopicFolder" data-search="${esc(String(t.title||'').toLowerCase())}" onclick="openTopic('${s.id}','${t.id}')"><div class="v102TopicTop"><span class="v102FolderIcon" style="--bubble:${c[0]};color:${c[1]}">${v102Icon('folder')}</span><b>${esc(t.title)}</b><i>›</i></div><div class="v102TopicStats"><span>${v102Icon('sheet')}${sheets} Lernblätter</span><span>${v102Icon('worksheet')}${home+works} Aufgaben/Arbeitsblätter</span><span>${v102Icon('cards')}${cardCount} Karteikarten</span><span>${v102Icon('quiz')}${quiz} Quizze · ${tests} Tests</span></div></button>`}).join('')||'<div class="empty">Noch keine Themen.</div>';root.innerHTML=`<div class="v102SubjectDetail"><div class="v102SubjectPageHead"><div class="v102SubjectIdentity"><button class="v102Back" onclick="leaveSubjectNotebook()">${v102Icon('back')}</button><div><h2>${esc(s.name)}</h2><p>Themenordner</p></div></div><button class="v102RoundIcon" onclick="openSubjectSettings('${s.id}')">${v102Icon('settings')}</button></div><div class="v102SubjectTools"><label class="v102Search">${v102Icon('search')}<input placeholder="Themen suchen …" oninput="v102FilterTopics(this.value)"></label><button class="v102AddTopic" onclick="openNewTopic('${s.id}')">＋ Thema</button></div><div class="v102TopicGrid">${cards}</div></div>`};
+  renderSubjectDetail=function(){const root=$('#subjectDetail');if(!root)return;const s=data.subjects.find(x=>x.id===selectedSubjectId);if(!s){root.innerHTML='<div class="empty">Fach nicht gefunden.</div>';return}ensureSubjectShape(s);const del=$('#deleteCurrentSubjectBtn');if(del)del.onclick=()=>deleteSubjectFromPage(s.id);const topics=s.topics||[];const cards=topics.map((t,i)=>{const decks=(data.flashDecks||[]).filter(d=>d.subject===s.name&&d.topicId===t.id),cardCount=decks.reduce((n,d)=>n+(data.flashcards||[]).filter(c=>c.deckId===d.id).length,0),sheets=typedSheets(s,t,'sheet').length,works=typedSheets(s,t,'worksheet').length,home=typedSheets(s,t,'homework').length,quiz=(data.quizzes||[]).filter(q=>q.subject===s.name&&q.topicId===t.id).length,tests=(data.writtenTests||[]).filter(x=>x.subject===s.name&&x.topicId===t.id).length,c=colorAt(i);return `<button class="v102TopicFolder" data-search="${esc(String(t.title||'').toLowerCase())}" onclick="openTopic('${s.id}','${t.id}')"><div class="v102TopicTop"><span class="v102FolderIcon" style="--bubble:${c[0]};color:${c[1]}">${v102Icon('folder')}</span><b>${esc(t.title)}</b><i>›</i></div><div class="v102TopicStats"><span>${v102Icon('sheet')}${sheets} Lernblätter</span><span>${v102Icon('worksheet')}${home+works} Aufgaben/Arbeitsblätter</span><span>${v102Icon('cards')}${cardCount} Karteikarten</span><span>${v102Icon('quiz')}${quiz} Quizze · ${tests} Tests</span></div></button>`}).join('')||'<div class="empty">Noch keine Themen.</div>';root.innerHTML=`<div class="v102SubjectDetail"><div class="v102SubjectPageHead"><div class="v102SubjectIdentity"><button class="v102Back" onclick="leaveSubjectNotebook()">${v102Icon('back')}</button><div><h2>${esc(s.name)}</h2><p>Themenordner</p></div></div><button class="v102RoundIcon" onclick="openSubjectSettings('${s.id}')">${v102Icon('settings')}</button></div><div class="v102SubjectTools"><label class="v102Search">${v102Icon('search')}<input placeholder="Themen suchen …" oninput="v102FilterTopics(this.value)"></label><button class="v102AddTopic" onclick="openNewTopic('${s.id}')">＋ Thema</button></div><div class="v102TopicGrid">${cards}</div></div>`};
 
   function topicCounts(s,t){const decks=(data.flashDecks||[]).filter(d=>d.subject===s.name&&d.topicId===t.id);return {sheet:typedSheets(s,t,'sheet'),homework:typedSheets(s,t,'homework'),worksheet:typedSheets(s,t,'worksheet'),decks,cardCount:decks.reduce((n,d)=>n+(data.flashcards||[]).filter(c=>c.deckId===d.id).length,0),quizzes:(data.quizzes||[]).filter(q=>q.subject===s.name&&q.topicId===t.id),tests:(data.writtenTests||[]).filter(x=>x.subject===s.name&&x.topicId===t.id)}}
   renderTopicDetail=function(){const root=$('#topicDetail');if(!root)return;const {s,t}=currentTopic();if(!s||!t){root.innerHTML='<div class="empty">Thema nicht gefunden.</div>';return}const st=topicCounts(s,t),rows=[['sheet','Lernblätter',st.sheet.length,'#f8e3e5','#bd7b80'],['homework','Hausaufgaben',st.homework.length,'#fff0cf','#af884b'],['worksheet','Arbeitsblätter',st.worksheet.length,'#eaf1dc','#819b63'],['cards','Karteikarten',st.cardCount,'#edf3df','#819b63'],['quiz','Quizze',st.quizzes.length,'#eee5f6','#8e78a7'],['test','Tests & Klassenarbeiten',st.tests.length,'#e7eff8','#728fab']];root.innerHTML=`<div class="v102TopicDetail"><div class="v102TopicPageHead"><div class="v102SubjectIdentity"><button class="v102Back" onclick="backToNotebook()">${v102Icon('back')}</button><div><h2>${esc(t.title)}</h2><p>Alle Inhalte an einem Ort</p></div></div><div class="row" style="gap:8px"><button class="v102RoundIcon" onclick="editTopic('${s.id}','${t.id}')">${v102Icon('settings')}</button><button class="v102OnlyPlus" onclick="v102OpenAddResource()">＋ Hinzufügen</button></div></div><div class="v102TopicResourceList">${rows.map(r=>`<button class="v102ResourceCard" onclick="v102OpenTopicHub('${r[0]}')"><span class="v102ResourceIcon" style="--bubble:${r[3]};--ico:${r[4]}">${v102Icon(r[0]==='homework'?'homework':r[0])}</span><span><b>${r[1]}</b><small>${r[2]} ${r[1]}</small></span><i class="v102Chevron">›</i></button>`).join('')}</div></div>`};
@@ -17605,7 +17613,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
     const dates=[]; for(let i=0;i<5;i++){const d=new Date(monday); d.setDate(monday.getDate()+i); dates.push(d);}
     const months=['Jan.','Feb.','März','Apr.','Mai','Juni','Juli','Aug.','Sep.','Okt.','Nov.','Dez.'];
     const iso=(d)=>{const x=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())); const day=x.getUTCDay()||7; x.setUTCDate(x.getUTCDate()+4-day); const ys=new Date(Date.UTC(x.getUTCFullYear(),0,1)); return Math.ceil((((x-ys)/86400000)+1)/7)};
-    return {week:`KW ${iso(now)}`, range:`${dates[0].getDate()}. – ${dates[4].getDate()}. ${months[dates[4].getMonth()]} ${dates[4].getFullYear()}`, short:(d)=>`${d.getDate()}. ${months[d.getMonth()]}`, dates};
+    return {week:`Woche ${iso(now)}`, range:`${dates[0].getDate()}. – ${dates[4].getDate()}. ${months[dates[4].getMonth()]} ${dates[4].getFullYear()}`, short:(d)=>`${d.getDate()}. ${months[d.getMonth()]}`, dates};
   }
   function currentView(){return document.querySelector('.view.active')?.id?.replace('view-','')||'plan'}
   function taskBubble(){
@@ -18013,7 +18021,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
   .v210LessonTitle{display:block!important;font-size:14px!important;line-height:1.14!important;font-weight:850!important;color:#342d2b!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
   .v210LessonTime{display:block!important;margin-top:3px!important;font-size:11px!important;line-height:1.15!important;font-weight:600!important;color:#8d7972!important}
   .v210LessonMeta{display:block!important;margin-top:3px!important;font-size:10px!important;line-height:1.15!important;font-weight:550!important;color:#8e7b75!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
-  .v210Lesson.compact{padding-top:7px!important;padding-bottom:7px!important}.v210Lesson.compact .v210LessonMeta{display:none!important}.v210Lesson.compact .v210LessonTitle{font-size:12px!important}.v210Lesson.compact .v210LessonTime{font-size:9px!important}
+  .v210Lesson.compact{padding-top:7px!important;padding-bottom:7px!important}.v210Lesson.compact .v210LessonMeta:not(.v210RoomMeta){display:none!important}.v210Lesson.compact .v210RoomMeta{display:block!important}.v210Lesson.compact .v210LessonTitle{font-size:12px!important}.v210Lesson.compact .v210LessonTime{font-size:9px!important}
   .v210Badge{position:absolute!important;right:6px!important;top:5px!important;max-width:calc(100% - 12px)!important;border:1px solid rgba(179,125,125,.16)!important;border-radius:999px!important;background:rgba(255,251,249,.80)!important;color:#a36969!important;padding:3px 6px!important;font-size:6.5px!important;font-weight:900!important;letter-spacing:.055em!important;text-transform:uppercase!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
   .v210Lesson.hasBadge .v210LessonTitle{padding-right:48px!important}.v210Lesson.current:after{content:"JETZT"!important;position:absolute!important;left:6px!important;bottom:5px!important;padding:3px 5px!important;border-radius:999px!important;background:#fff5f4!important;border:1px solid #e8c0be!important;color:#ad696b!important;font-size:6px!important;font-weight:950!important;letter-spacing:.07em!important}
   .v210Empty,.v210Special{position:absolute!important;left:7px!important;right:7px!important;top:12px!important;padding:13px!important;border:1px dashed #eadfd9!important;border-radius:14px!important;background:#fffaf8!important;color:#a3948e!important;font-size:11px!important;text-align:center!important;z-index:2!important}.v210Special{text-align:left!important;background:#fff8ec!important;color:#8d796c!important}.v210Special b{display:block!important;color:#5d504a!important;margin-bottom:4px!important}
@@ -18108,7 +18116,7 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
 
   function startOfWeek(offset=0){const n=new Date();const d=new Date(n.getFullYear(),n.getMonth(),n.getDate(),12);d.setDate(d.getDate()-((d.getDay()+6)%7)+(offset*7));return d}
   function isoWeek(d){const x=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));const day=x.getUTCDay()||7;x.setUTCDate(x.getUTCDate()+4-day);const ys=new Date(Date.UTC(x.getUTCFullYear(),0,1));return Math.ceil((((x-ys)/86400000)+1)/7)}
-  function weekInfo(){const mon=startOfWeek(weekOffset),dates=[];for(let i=0;i<5;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);dates.push(d)}const fmt=d=>d.toLocaleDateString('de-DE',{day:'2-digit',month:'short'}).replace('. ',' ').replace(/\.$/,'');const range=`${dates[0].toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'})} – ${dates[4].toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'})}`;return{week:`KW ${isoWeek(mon)}`,range,dates,short:fmt}}
+  function weekInfo(){const mon=startOfWeek(weekOffset),dates=[];for(let i=0;i<5;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);dates.push(d)}const fmt=d=>d.toLocaleDateString('de-DE',{day:'2-digit',month:'short'}).replace('. ',' ').replace(/\.$/,'');const range=`${dates[0].toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'})} – ${dates[4].toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'})}`;return{week:`Woche ${isoWeek(mon)}`,range,dates,short:fmt}}
   window.v210ShiftWeek=function(n){weekOffset+=Number(n)||0;localStorage.setItem('studia-v210-week-offset',String(weekOffset));ensurePlanHead();if(document.getElementById('view-plan')?.classList.contains('active'))renderPlan()};
   window.v210SetPlanMode=function(mode){desktopMode=mode==='day'?'day':'week';localStorage.setItem('studia-v210-plan-mode',desktopMode);ensurePlanHead();renderPlan()};
   window.v210SetPlanDay=function(day){if(!['Mo','Di','Mi','Do','Fr'].includes(day))return;desktopDay=day;localStorage.setItem('studia-v210-plan-day',day);renderPlan()};
@@ -18158,8 +18166,8 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
       const cards=merged.map(l=>{
         const raw=(Array.isArray(l.duplicates)&&l.duplicates.length?l.duplicates[0].raw:l.raw)||'';const p=splitCell(raw),title=desktopPretty(p.subject||raw),badge=changeLabel(l,p),cancelled=badge==='ENTFÄLLT';
         const top=Math.max(0,pos(l.start))+4,height=Math.max(44,Math.round((toMin(l.end)-toMin(l.start))*px)-7),compact=height<70,current=!cancelled&&typeof isLessonCurrentNow==='function'&&isLessonCurrentNow(l);
-        const meta=[p.room?('Raum '+p.room):'',p.teacher||p.meta].filter(Boolean).join(' · ');const color=subjectColor(title);
-        return `<button class="v210Lesson ${compact?'compact':''} ${current?'current':''} ${cancelled?'cancelled':''} ${badge?'hasBadge':''}" style="top:${top}px;height:${height}px;--lesson-color:${esc2(color)}" onclick='openLessonDetails(${JSON.stringify(JSON.stringify(l))})'>${badge?`<span class="v210Badge">${esc2(badge)}</span>`:''}<span class="v210LessonIcon">${lessonIcon(title)}</span><span><span class="v210LessonTitle">${esc2(title)}</span><span class="v210LessonTime">${esc2(l.start)} – ${esc2(l.end)}</span>${meta&&!cancelled?`<span class="v210LessonMeta">${esc2(meta)}</span>`:''}</span></button>`
+        const room=String(p.room||l.room||'').trim()||'—',teacher=p.teacher||p.meta,color=subjectColor(title);
+        return `<button class="v210Lesson ${compact?'compact':''} ${current?'current':''} ${cancelled?'cancelled':''} ${badge?'hasBadge':''}" style="top:${top}px;height:${height}px;--lesson-color:${esc2(color)}" onclick='openLessonDetails(${JSON.stringify(JSON.stringify(l))})'>${badge?`<span class="v210Badge">${esc2(badge)}</span>`:''}<span class="v210LessonIcon">${lessonIcon(title)}</span><span><span class="v210LessonTitle">${esc2(title)}</span><span class="v210LessonTime">${esc2(l.start)} – ${esc2(l.end)}</span><span class="v210LessonMeta v210RoomMeta">Raum ${esc2(room)}</span>${teacher&&!cancelled?`<span class="v210LessonMeta">${esc2(teacher)}</span>`:''}</span></button>`
       }).join('');
       return `<div class="v210DayBody" style="height:${bodyHeight}px">${lines}${pauses}${cards||'<div class="v210Empty">Kein Unterricht</div>'}</div>`
     }
@@ -18480,11 +18488,20 @@ body.planViewActive #view-plan>.planTopPanel .planToolsMenu .heatModeButtons but
     const mode=localStorage.getItem('studia-v210-plan-mode')==='day'?'day':'week';
     const selectedDay=['Mo','Di','Mi','Do','Fr'].includes(localStorage.getItem('studia-v210-plan-day'))?localStorage.getItem('studia-v210-plan-day'):(today||'Mo');
     const days=mode==='day'?[selectedDay]:dayOrderV212;
+    let basisForRooms=[];try{basisForRooms=basisScheduleForClass(cls)||[]}catch(_){}
+    function roomForLesson(l,p){
+      const candidates=[p?.room,l?.room];
+      if(Array.isArray(l?.duplicates))for(const d of l.duplicates){try{candidates.push(splitCell(d?.raw||'').room)}catch(_){}}
+      if(l?.changedFromRaw)try{candidates.push(splitCell(l.changedFromRaw).room)}catch(_){}
+      const basis=basisForRooms.find(x=>x.day===l.day&&((l.rowNum!=null&&x.rowNum!=null&&Number(x.rowNum)===Number(l.rowNum))||(l.start&&x.start===l.start)));
+      if(basis)try{candidates.push(splitCell(basis.raw||'').room)}catch(_){}
+      return candidates.map(x=>String(x||'').trim()).find(Boolean)||'—';
+    }
     function body(day){
       const rawDay=stableTimetableDay(applyEffectiveDisplayTimes(source.filter(x=>x.day===day))).filter(x=>toMin(x.end)>tl.start&&toMin(x.start)<tl.end);const special=rawDay.filter(x=>x.specialOnly),normal=rawDay.filter(x=>!x.specialOnly);const lines=tl.labels.map(t=>`<div class="v210GridLine" style="top:${pos(t)}px"></div>`).join('');
       const pauses=(typeof getActivePauses==='function'?getActivePauses():[]).filter(p=>toMin(p.end)>tl.start&&toMin(p.start)<tl.end).map(p=>{const n=new Date(),now=n.getHours()*60+n.getMinutes(),active=day===today&&toMin(p.start)<=now&&now<toMin(p.end);return `<div class="v210PauseBand ${active?'current':''}" style="top:${Math.max(0,pos(p.start))}px;height:${Math.max(10,pos(p.end)-pos(p.start))}px">${active?'JETZT · ':''}${esc(p.label||'Pause')}</div>`}).join('');
       if(special.length&&!normal.length){const info=special.map(x=>`<div class="v210Special"><b>Info</b>${esc(cleanPdfCellText(x.raw||''))}</div>`).join('');return `<div class="v210DayBody" style="height:${bodyHeight}px">${lines}${pauses}${info}</div>`}
-      const merged=expandLessonsForVisibleBreaks(mergeLessons(rawDay.filter(x=>timetableViewMode==='basis'?!x.cancelledFromBasis:true)));const cards=merged.map(l=>{const p=splitCell(l.raw||''),title=planTitle(p.subject||l.raw||''),badge=changeBadge(l,p),cancelled=badge==='ENTFÄLLT',top=Math.max(0,pos(l.start))+4,height=Math.max(44,Math.round((toMin(l.end)-toMin(l.start))*px)-7),compact=height<70,current=!cancelled&&typeof isLessonCurrentNow==='function'&&isLessonCurrentNow(l),meta=[p.room?('Raum '+p.room):'',p.teacher||p.meta].filter(Boolean).join(' · '),color=getColor(title);return `<button class="v210Lesson ${compact?'compact':''} ${current?'current':''} ${cancelled?'cancelled':''} ${badge?'hasBadge':''}" style="top:${top}px;height:${height}px;--lesson-color:${esc(color)}" onclick='openLessonDetails(${JSON.stringify(JSON.stringify(l))})'>${badge?`<span class="v210Badge">${esc(badge)}</span>`:''}<span class="v210LessonIcon" style="font-size:17px">${esc(lessonSvg(title))}</span><span><span class="v210LessonTitle">${esc(title)}</span><span class="v210LessonTime">${esc(l.start)} – ${esc(l.end)}</span>${meta&&!cancelled?`<span class="v210LessonMeta">${esc(meta)}</span>`:''}${Number(l.blocks||1)>=2?`<span class="v210LessonMeta">Doppelstunde</span>`:''}</span></button>`}).join('');return `<div class="v210DayBody" style="height:${bodyHeight}px">${lines}${pauses}${cards||'<div class="v210Empty">Kein Unterricht</div>'}</div>`
+      const merged=expandLessonsForVisibleBreaks(mergeLessons(rawDay.filter(x=>timetableViewMode==='basis'?!x.cancelledFromBasis:true)));const cards=merged.map(l=>{const p=splitCell(l.raw||''),title=planTitle(p.subject||l.raw||''),badge=changeBadge(l,p),cancelled=badge==='ENTFÄLLT',top=Math.max(0,pos(l.start))+4,height=Math.max(44,Math.round((toMin(l.end)-toMin(l.start))*px)-7),compact=height<70,current=!cancelled&&typeof isLessonCurrentNow==='function'&&isLessonCurrentNow(l),room=roomForLesson(l,p),teacher=p.teacher||p.meta,color=getColor(title);return `<button class="v210Lesson ${compact?'compact':''} ${current?'current':''} ${cancelled?'cancelled':''} ${badge?'hasBadge':''}" style="top:${top}px;height:${height}px;--lesson-color:${esc(color)}" onclick='openLessonDetails(${JSON.stringify(JSON.stringify(l))})'>${badge?`<span class="v210Badge">${esc(badge)}</span>`:''}<span class="v210LessonIcon" style="font-size:17px">${esc(lessonSvg(title))}</span><span><span class="v210LessonTitle">${esc(title)}</span><span class="v210LessonTime">${esc(l.start)} – ${esc(l.end)}</span><span class="v210LessonMeta v210RoomMeta">Raum ${esc(room)}</span>${teacher&&!cancelled?`<span class="v210LessonMeta">${esc(teacher)}</span>`:''}${Number(l.blocks||1)>=2?`<span class="v210LessonMeta">Doppelstunde</span>`:''}</span></button>`}).join('');return `<div class="v210DayBody" style="height:${bodyHeight}px">${lines}${pauses}${cards||'<div class="v210Empty">Kein Unterricht</div>'}</div>`
     }
     const heads=days.map(d=>{const i=dayOrderV212.indexOf(d);return `<div class="v210DayHead ${d===today?'today':''}"><b>${esc(d)}</b><span>${esc(dates[i].toLocaleDateString('de-DE',{day:'2-digit',month:'short'}).replace(/\.$/,''))}</span></div>`}).join('');
     const tabs=mode==='day'?`<div class="v210DayTabs">${dayOrderV212.map((d,i)=>`<button class="v210DayTab ${d===selectedDay?'active':''}" onclick="v210SetPlanDay('${d}')">${d} · ${esc(dates[i].toLocaleDateString('de-DE',{day:'2-digit',month:'short'}).replace(/\.$/,''))}</button>`).join('')}</div>`:'';
@@ -18841,8 +18858,11 @@ body.v214LearningReadOnly #view-deck-detail .v214EditOnly{display:none!important
   let learningMode214='learn';
   function readOnly214(){return learningMode214==='learn'}
   function applyLearningClass214(){document.body.classList.toggle('v214LearningReadOnly',readOnly214())}
-  window.v214SetLearningMode=function(mode){
+  window.__studiaV214SetModeState=function(mode){
     learningMode214=mode==='edit'?'edit':'learn';applyLearningClass214();
+  };
+  window.v214SetLearningMode=function(mode){
+    window.__studiaV214SetModeState(mode);
     try{renderLearnsetsLists()}catch(_){}
     try{renderFlash()}catch(_){}
     decorateLearnsets214();
@@ -22973,8 +22993,8 @@ function deckModeSwitchHTML(){return `<div class="v299DeckModeSwitch" role="tabl
 window.v298SetDeckMode=function(mode){
  deckMode=mode==='edit'?'edit':'learn';
  localStorage.setItem('studia-v298-deck-mode',deckMode);
- /* Keep the retired legacy mode variable aligned so its old read-only cleanup cannot fight the final owner. */
- try{window.v214SetLearningMode?.(deckMode)}catch(_){ }
+ /* Keep the retired V214 closure in sync WITHOUT calling the final setter recursively. */
+ try{window.__studiaV214SetModeState?.(deckMode)}catch(_){ }
  document.body.classList.toggle('v214LearningReadOnly',deckMode==='learn');document.body.classList.toggle('v292DeckLearn',deckMode==='learn');
  flashFlipped=false;if(deckMode==='learn'&&String(study.deckId)!==String(deckIdNow()))resetStudy(deckIdNow());
  renderDeckDetail298();
@@ -23106,7 +23126,7 @@ const boot=()=>{
  if(q('#view-deck-detail.active')){document.body.classList.toggle('v214LearningReadOnly',deckMode==='learn');renderDeckDetail298()}
  if(q('#view-settings.active'))wireThemeControls();
  if(cleaned)try{save()}catch(_){}
- const e=q('#headerEyebrow');if(e)e.textContent='VERSION 310';
+ const e=q('#headerEyebrow');if(e)e.textContent='VERSION 316';
 };
 [0,120,600,1600,2400,4200].forEach(ms=>setTimeout(boot,ms));
 window.addEventListener('pageshow',()=>setTimeout(boot,50));
