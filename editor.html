@@ -430,7 +430,7 @@ body.modalOpen{overflow:hidden;position:fixed;width:100%}
 .canvasPage{position:absolute;inset:0;background:white;overflow:hidden}
 .canvasSvg{position:absolute;inset:0;width:100%;height:100%;z-index:5;touch-action:none}
 .canvasObjects{position:absolute;inset:0;z-index:10;pointer-events:none}
-.cobj{position:absolute;min-width:60px;min-height:30px;box-sizing:border-box;pointer-events:auto;touch-action:none;user-select:none}
+.cobj{position:absolute;min-width:0;min-height:0;box-sizing:border-box;pointer-events:auto;touch-action:none;user-select:none}
 .cobj.selected{outline:2px solid #e99e9a;outline-offset:2px}
 .cobj .resizeHandle{display:none;position:absolute;width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid #e99e9a;right:-8px;bottom:-8px}
 .cobj.selected .resizeHandle{display:block}
@@ -438,8 +438,7 @@ body.modalOpen{overflow:hidden;position:fixed;width:100%}
 .cobj.textObj[contenteditable="true"]{user-select:text;cursor:text}
 .cobj.imageObj img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none}
 .cobj.stickerObj{display:grid;place-items:center;font-size:50px}
-.cobj.tableObj table{border-collapse:collapse;width:100%;height:100%;background:white}
-.cobj.tableObj td,.cobj.tableObj th{border:1px solid #bdb6b1;padding:6px;min-width:40px}
+
 .cobj.calloutObj{padding:12px;border-radius:14px;background:#f4f8e9;border:1px solid #d7e3c4}
 .cobj.taskObj{padding:12px;border-radius:14px;background:#fff5eb;border:1px solid #efd4be}
 .cobj.merkeObj{padding:12px;border-radius:14px;background:#fff0ef;border:1px solid #efcac7}
@@ -1402,10 +1401,13 @@ body.editorMode{-webkit-text-size-adjust:100%;overscroll-behavior:none}
 .stylePresetBar{margin:7px 0!important;padding:0!important}
 .canvasViewport{margin-top:8px!important}
 .cobj[contenteditable="true"],.tableObj td[contenteditable="true"]{-webkit-user-select:text;user-select:text;touch-action:manipulation;caret-color:#725f56}
-.tableObj{overflow:hidden;background:white}
-.tableObj table{width:100%;height:100%;table-layout:fixed;border-collapse:collapse;font-size:var(--tbl-font,16px)}
-.tableObj td{border:var(--tbl-border,1px) var(--tbl-style,solid) var(--tbl-color,#aaa7a2);background:var(--tbl-bg,#fff);padding:7px;vertical-align:top;outline:none;overflow-wrap:anywhere;font-size:max(16px,var(--tbl-font,16px))}
-.tableObj td:focus{background:#fff8f6;box-shadow:inset 0 0 0 2px #e9a7a4}
+/* V320 canonical table rendering — one visual owner */
+.cobj.tableObj{overflow:visible;background:transparent;min-width:0;min-height:0}
+.cobj.tableObj table{width:100%;height:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;overflow:hidden;box-sizing:border-box;background:var(--tbl-bg,#fff);border:var(--tbl-border,1px) var(--tbl-style,solid) var(--tbl-color,#aaa7a2);border-radius:var(--tbl-radius,12px);font-family:var(--tbl-family,Inter,Arial,sans-serif);font-size:var(--tbl-font,16px);color:var(--tbl-text,#3d3835)}
+.cobj.tableObj td{min-width:0;min-height:0;padding:clamp(2px,1.2%,7px);border:0;border-right:var(--cell-right,0);border-bottom:var(--cell-bottom,0);background:var(--cell-bg,var(--tbl-bg,#fff));font:inherit;color:inherit;text-align:var(--tbl-align,left);vertical-align:var(--tbl-valign,top);outline:none;overflow:hidden;overflow-wrap:anywhere;word-break:break-word;box-sizing:border-box}
+.cobj.tableObj td:focus{background:#fff8f6;box-shadow:inset 0 0 0 1.5px rgba(224,126,139,.42)}
+
+
 .tableEditGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:8px}
 .tableEditGrid button{border:1px solid #e6cec7;background:#fff;color:#745f57;border-radius:10px;padding:9px 7px;font-weight:850}
 .objectPanel{padding:10px!important;margin-top:8px!important}
@@ -1443,8 +1445,7 @@ body.editorMode{-webkit-text-size-adjust:100%;overscroll-behavior:none}
 }
 .topViewButtons button.active{background:#efaaa6;color:white;border-color:#efaaa6}
 .viewTopBtn{font-size:18px!important}
-.tableObj{overflow:visible!important}
-.tableObj table{overflow:hidden;border-radius:2px}
+
 .tableMoveHandle{
  display:none;position:absolute;left:-18px;top:-18px;width:30px;height:30px;
  border-radius:9px;background:#e99e9a;color:white;z-index:20;place-items:center;
@@ -4394,6 +4395,28 @@ const canvasStylesDefault=[
  {id:"task",name:"Aufgabe",type:"block",fontSize:16,fontWeight:"700",color:"#6b554c",fontFamily:"Trebuchet MS",bg:"#fff5eb",borderColor:"#efd4be",borderWidth:1,radius:14,padding:12,prefix:"Aufgabe: "},
  {id:"merke",name:"Merke",type:"block",fontSize:16,fontWeight:"700",color:"#765750",fontFamily:"Georgia",bg:"#fff0ef",borderColor:"#efcac7",borderWidth:1,radius:14,padding:12,prefix:"Merke: "}
 ];
+const EDITOR_DEFAULT_TEXT_COLOR_KEY="studia-editor-default-text-color";
+function editorDefaultTextColor(){const v=localStorage.getItem(EDITOR_DEFAULT_TEXT_COLOR_KEY)||"";return /^#[0-9a-f]{6}$/i.test(v)?v:""}
+function editorFontNamesSync(){
+ const out=["Inter","Arial","Georgia","Trebuchet MS","Verdana","Times New Roman","Courier New","Lato","Playfair Display"];
+ for(const key of ["schoolbloom-v91-custom-fonts","schoolbloom-custom-fonts"]){try{for(const f of JSON.parse(localStorage.getItem(key)||"[]")){const n=typeof f==="string"?f:(f?.name||f?.css);if(n&&!out.includes(n))out.push(n)}}catch(_){}}
+ return out;
+}
+window.setEditorDefaultTextColor=function(value,applyAll=false){
+ if(!/^#[0-9a-f]{6}$/i.test(String(value||"")))return;
+ localStorage.setItem(EDITOR_DEFAULT_TEXT_COLOR_KEY,value);
+ if(applyAll)window.applyDefaultTextColorToAll(value);
+ try{renderCanvasInspector();mobileRefreshTextMode?.()}catch(_){}
+};
+window.applyDefaultTextColorToAll=function(value=editorDefaultTextColor()||"#3d3835"){
+ if(!/^#[0-9a-f]{6}$/i.test(String(value||"")))return;
+ for(const o of canvasState.objects||[]){
+   if(["text","block","task","merke","file"].includes(o.kind)){o.style||={};o.style.color=value}
+   else if(o.kind==="formula"){o.style||={};o.style.color=value}
+   else if(o.kind==="table")o.textColor=value;
+ }
+ renderCanvasObjects();renderCanvasInspector();markCanvasDirty();pushHistory();cuteToast("Textfarbe auf alle Texte angewendet ♡");
+};
 
 
 function canvasSnapshot(){return JSON.stringify({objects:canvasState.objects,vectors:canvasState.vectors,orientation:canvasState.orientation,pageStyle:canvasState.pageStyle,layerGroups:canvasState.layerGroups||[]})}
@@ -4432,7 +4455,7 @@ function renderStylePresets(){
 }
 
 window.saveSelectionAsTextFormat=function(){
- const ids=selectedObjectIds(),selectedV=selectedVectorIds();
+ const ids0=selectedObjectIds(),selectedV=selectedVectorIds();const ids=ids0.length?ids0:(canvasState.selectedType==="object"&&canvasState.selectedId?[canvasState.selectedId]:[]);
  if(ids.length+selectedV.length<1){
    openModal(`<div class="compactPresetModal"><h2>Nichts ausgewählt</h2><p class="small">Aktiviere Mehrfachauswahl und wähle den Text plus die Formen/Sticker aus, die zum Format gehören sollen.</p><button class="primary" onclick="closeModal()">OK</button></div>`);
    return;
@@ -4441,6 +4464,7 @@ window.saveSelectionAsTextFormat=function(){
  const vecIds=selectedV;
  const vectors=canvasState.vectors.filter(v=>vecIds.includes(v.id));
  const textItems=items.filter(o=>["text","block","task","merke","formula"].includes(o.kind));
+ if(textItems.length===1&&items.length===1&&!vectors.length&&textItems[0].kind!=="formula"){createCustomStylePreset();return;}
  if(!textItems.length){
    openModal(`<div class="compactPresetModal"><h2>Text fehlt</h2><p class="small">Ein Textformat braucht mindestens ein ausgewähltes Textobjekt. Formen, Zettel, Sticker oder Bilder können zusätzlich dazugehören.</p><button class="primary" onclick="closeModal()">OK</button></div>`);
    return;
@@ -4553,9 +4577,11 @@ window.saveBundleTextFormatName=function(idv){
 }
 
 window.createCustomStylePreset=function(editId=null){
- const old=editId?canvasPresets().find(x=>x.id===editId):null;
+ const chosen=!editId&&canvasState.selectedType==="object"?canvasState.objects.find(x=>x.id===canvasState.selectedId&&["text","block","task","merke","file"].includes(x.kind)):null;
+ const cs=chosen?.style||{};
+ const old=editId?canvasPresets().find(x=>x.id===editId):(chosen?{name:"",type:chosen.kind==="text"?"text":"block",fontSize:cs.fontSize,fontWeight:cs.fontWeight,color:cs.color,fontFamily:cs.fontFamily,bg:cs.background,borderColor:cs.borderColor,borderWidth:cs.borderWidth,radius:cs.borderRadius,padding:cs.padding,prefix:""}:null);
  if(old?.bundle){editBundleTextFormat(editId);return}
- const fontChoices=["Arial","Georgia","Trebuchet MS","Verdana","Times New Roman","Courier New",...(typeof v91StoredFonts==='function'?v91StoredFonts().map(f=>f.name):[])];
+ const fontChoices=editorFontNamesSync();
  openModal(`<div class="compactPresetModal"><div class="presetModalHead"><div><span class="eyebrow">TEXTFORMAT</span><h2>${old?"Textformat bearbeiten":"Neues Textformat"}</h2></div><button class="miniIcon" onclick="closeModal()">×</button></div>
  <div class="presetFormGrid">
   <div><label>Name</label><input id="presetName" value="${esc(old?.name||"")}" placeholder="z. B. Definition"></div>
@@ -4655,6 +4681,7 @@ window.openFormulaDialog=function(editId=""){
       <button onclick="insertVisualFormula('sub')"><b>ₙ</b><span>Index</span></button>
       <button onclick="insertVisualFormula('paren')"><b>(x)</b><span>Klammer</span></button>
       <button onclick="insertVisualFormula('abs')"><b>|x|</b><span>Betrag</span></button>
+      <button class="formulaPairBtn" onclick="insertVisualFormula('pair')"><b>(x|x)</b><span>Wertepaar</span></button>
      </div>
     </section>
     <section class="formulaToolSection"><div class="formulaToolTitle">Symbole & Pfeile</div>
@@ -4896,6 +4923,9 @@ window.insertVisualFormula=function(type){
  }
  else if(type==="abs"){
    replaceSelectionWithHTML(`<span class="vfAbs">|<span class="vfEditable" contenteditable="true">${selected||"x"}</span>|</span>&nbsp;`,".vfEditable");
+ }
+ else if(type==="pair"){
+   replaceSelectionWithHTML(`<span class="vfPair">(<span class="vfEditable" contenteditable="true">${selected||"x"}</span>|<span class="vfEditable" contenteditable="true">x</span>)</span>&nbsp;`,".vfEditable");
  }
  else if(type==="arrowRight") insertHTMLAtCaret("→");
  else if(type==="arrowLeft") insertHTMLAtCaret("←");
@@ -5611,7 +5641,7 @@ function newCanvasObject(styleId){
  const s=canvasPresets().find(x=>x.id===styleId)||canvasStylesDefault[2];
  return {id:id(),z:nextCanvasZ(),kind:s.type==="block"?"block":"text",formatId:s.id,x:80,y:90,w:s.type==="block"?430:360,h:s.type==="block"?100:70,
  text:s.prefix||"",rotation:0,locked:false,editing:false,
- style:{fontSize:s.fontSize,fontWeight:s.fontWeight,color:s.color,fontFamily:s.fontFamily||"Arial",background:s.bg||"transparent",
+ style:{fontSize:s.fontSize,fontWeight:s.fontWeight,color:editorDefaultTextColor()||s.color,fontFamily:s.fontFamily||"Arial",background:s.bg||"transparent",
  borderColor:s.borderColor||"transparent",borderWidth:s.borderWidth||0,borderRadius:s.radius||0,padding:s.padding??7,textAlign:"left"}};
 }
 window.addCanvasText=function(styleId){
@@ -5697,8 +5727,8 @@ window.openTableDialog=function(){
 }
 window.insertCanvasTable=function(){
  const cols=Math.max(1,Math.min(12,+$("#tblCols").value||3)),rows=Math.max(1,Math.min(30,+$("#tblRows").value||4));
- const cells=Array.from({length:rows},()=>Array.from({length:cols},()=>"..."));
- const o={id:id(),z:nextCanvasZ(),kind:"table",x:90,y:180,w:520,h:Math.max(100,rows*38),rows,cols,cells,cellColors:Array.from({length:rows},()=>Array.from({length:cols},()=>"")),borderRadius:12,activeCell:{r:0,c:0}};canvasState.objects.push(o);closeModal();renderCanvasObjects();selectCanvasObject(o.id);pushHistory();
+ const cells=Array.from({length:rows},()=>Array.from({length:cols},()=>""));
+ const o={id:id(),z:nextCanvasZ(),kind:"table",x:90,y:180,w:520,h:Math.max(100,rows*38),rows,cols,cells,cellColors:Array.from({length:rows},()=>Array.from({length:cols},()=>"")),borderRadius:12,borderWidth:1,borderColor:"#aaa7a2",borderStyle:"solid",cellBackground:"#ffffff",fontFamily:"Inter",fontSize:16,textColor:editorDefaultTextColor()||"#3d3835",textAlign:"left",verticalAlign:"top",activeCell:{r:0,c:0}};canvasState.objects.push(o);closeModal();renderCanvasObjects();selectCanvasObject(o.id);pushHistory();
 }
 const stickers=["🌸","🌷","🎀","🧸","⭐","✨","🍀","🍓","🫐","☁️","🌙","💗","📚","✏️","📝","🌼","🐻","🐰","🍵","💫","🌱"];
 function renderStickerPicker(){const el=$("#stickerPicker");if(el)el.innerHTML=stickers.map(s=>`<button onclick="addSticker('${s}')">${s}</button>`).join("")}
@@ -5803,9 +5833,10 @@ function renderCanvasObjects(){
      return `<div class="cobj formulaObj ${sel}${lockCls}" data-id="${o.id}" style="${base}transform:rotate(${o.rotation||0}deg);font-size:${s.fontSize||28}px;color:${s.color||"#4f4642"};font-family:${s.fontFamily||"Cambria Math, serif"};text-align:${s.textAlign||"center"}"><span class="formulaContent">${o.formulaHTML||formulaToHTML(o.formula||o.text||"")}</span><span class="rotateHandle"></span><span class="resizeHandle"></span></div>`;
    }
    if(o.kind==="table"){
-     const bw=o.borderWidth??1,bc=o.borderColor||"#aaa7a2",bg=o.cellBackground||"#ffffff",fs=o.fontSize||16,rad=o.borderRadius??12;
+     const bw=Math.max(0,Math.min(20,Number(o.borderWidth??1)||0)),bc=o.borderColor||"#aaa7a2",bg=o.cellBackground||"#ffffff",fs=Math.max(6,Math.min(96,Number(o.fontSize)||16)),rad=Math.max(0,Math.min(Number(o.borderRadius??12)||0,Math.max(0,Math.min(o.w,o.h)/2))),family=o.fontFamily||"Inter",txt=o.textColor||editorDefaultTextColor()||"#3d3835",align=o.textAlign||"left",valign=o.verticalAlign||"top";
      o.cellColors ||= Array.from({length:o.rows||o.cells.length},(_,ri)=>Array.from({length:o.cols||o.cells[ri]?.length||1},()=>""));
-     const table=`<table style="--tbl-border:${bw}px;--tbl-style:${o.borderStyle||"solid"};--tbl-color:${bc};--tbl-bg:${bg};--tbl-font:${fs}px;border-radius:${rad}px;overflow:hidden">${o.cells.map((row,ri)=>`<tr>${row.map((c,ci)=>`<td contenteditable="${o.locked?"false":"true"}" inputmode="text" data-r="${ri}" data-c="${ci}" style="background:${o.cellColors?.[ri]?.[ci]||bg}">${esc(c)}</td>`).join("")}</tr>`).join("")}</table>`;
+     const rows=o.cells.length,cols=Math.max(1,...o.cells.map(r=>r.length));
+     const table=`<table style="--tbl-border:${bw}px;--tbl-style:${o.borderStyle||"solid"};--tbl-color:${bc};--tbl-bg:${bg};--tbl-font:${fs}px;--tbl-family:${escAttr(family)};--tbl-text:${txt};--tbl-align:${align};--tbl-valign:${valign};--tbl-radius:${rad}px">${o.cells.map((row,ri)=>`<tr>${row.map((c,ci)=>{const right=ci<cols-1?`${bw}px ${o.borderStyle||"solid"} ${bc}`:"0";const bottom=ri<rows-1?`${bw}px ${o.borderStyle||"solid"} ${bc}`:"0";return `<td contenteditable="${o.locked?"false":"true"}" inputmode="text" data-r="${ri}" data-c="${ci}" style="--cell-bg:${o.cellColors?.[ri]?.[ci]||bg};--cell-right:${right};--cell-bottom:${bottom}">${esc(c)}</td>`}).join("")}</tr>`).join("")}</table>`;
      return `<div class="cobj tableObj ${sel}${lockCls}" data-id="${o.id}" style="${base}transform:rotate(${o.rotation||0}deg);transform-origin:50% 50%"><span class="tableMoveHandle" title="Tabelle bewegen">⠿</span>${table}<span class="rotateHandle"></span><span class="resizeHandle"></span></div>`;
    }
    const cls=(o.kind==="block"||o.kind==="file")?"calloutObj":o.kind==="task"?"taskObj":o.kind==="merke"?"merkeObj":"textObj";
@@ -6066,9 +6097,11 @@ function renderCanvasInspector(){
            <button title="Nummerierte Liste" onclick="formatSelectedText('insertOrderedList')">1≡</button>
          </div>
          <div class="v302TextGrid">
-           <div class="v302Wide"><label>Schriftart</label><select class="fontSelect" onchange="applyTextProperty('fontFamily',this.value)"><option value="Arial" ${String(s.fontFamily).includes("Arial")?"selected":""}>Arial</option><option value="Georgia" ${String(s.fontFamily).includes("Georgia")?"selected":""}>Georgia</option><option value="Trebuchet MS" ${String(s.fontFamily).includes("Trebuchet")?"selected":""}>Trebuchet</option><option value="Verdana" ${String(s.fontFamily).includes("Verdana")?"selected":""}>Verdana</option><option value="Times New Roman" ${String(s.fontFamily).includes("Times")?"selected":""}>Times</option><option value="Courier New" ${String(s.fontFamily).includes("Courier")?"selected":""}>Courier</option></select></div>
+           <div class="v302Wide"><label>Schriftart</label><select class="fontSelect" style="font-family:${escAttr(s.fontFamily||'Arial')}" onchange="applyTextProperty('fontFamily',this.value);this.style.fontFamily=this.value"><option value="Arial" style="font-family:Arial" ${String(s.fontFamily).includes("Arial")?"selected":""}>Arial</option><option value="Georgia" style="font-family:Georgia" ${String(s.fontFamily).includes("Georgia")?"selected":""}>Georgia</option><option value="Trebuchet MS" style="font-family:Trebuchet MS" ${String(s.fontFamily).includes("Trebuchet")?"selected":""}>Trebuchet</option><option value="Verdana" style="font-family:Verdana" ${String(s.fontFamily).includes("Verdana")?"selected":""}>Verdana</option><option value="Times New Roman" style="font-family:Times New Roman" ${String(s.fontFamily).includes("Times")?"selected":""}>Times</option><option value="Courier New" style="font-family:Courier New" ${String(s.fontFamily).includes("Courier")?"selected":""}>Courier</option></select></div>
            <div><label>Größe</label><input id="insFontSize" type="number" min="8" max="72" value="${s.fontSize||16}" onchange="applyTextProperty('fontSize',+this.value)"></div>
            <div><label>Farbe</label><input id="insColor" type="color" value="${s.color||"#333333"}" onchange="applyTextProperty('color',this.value)"></div>
+           <div><label>Standardfarbe</label><input id="v320DefaultTextColor" type="color" value="${editorDefaultTextColor()||s.color||'#3d3835'}" onchange="setEditorDefaultTextColor(this.value,false)"></div>
+           <div class="v302Wide"><button class="v302DuplicateButton" onclick="applyDefaultTextColorToAll(editorDefaultTextColor()||'#3d3835')">Standardfarbe auf alle Texte anwenden</button></div>
            <div class="v302Wide"><label>Ausrichtung</label><select onchange="updateObjStyle('textAlign',this.value)"><option value="left" ${s.textAlign==="left"?"selected":""}>Links</option><option value="center" ${s.textAlign==="center"?"selected":""}>Mitte</option><option value="right" ${s.textAlign==="right"?"selected":""}>Rechts</option></select></div>
          </div>
        </section>
@@ -6077,7 +6110,7 @@ function renderCanvasInspector(){
          <div class="v302StyleGrid">
            <div><label>Hintergrund</label><input type="color" value="${s.background&&s.background!=="transparent"?s.background:"#ffffff"}" onchange="updateObjStyle('background',this.value)"></div>
            <div><label>Kontur</label><input type="color" value="${s.borderColor&&s.borderColor!=="transparent"?s.borderColor:"#ffffff"}" onchange="updateObjStyle('borderColor',this.value)"></div>
-           <div><label>Konturdicke</label><input type="number" min="0" max="15" value="${s.borderWidth||0}" onchange="updateObjStyle('borderWidth',+this.value)"></div>
+           <div><label>Konturdicke</label><input type="number" min="0" max="30" step="0.5" value="${s.borderWidth||0}" onchange="updateObjStyle('borderWidth',+this.value)"></div>
            <div><label>Ecken rund</label><input type="number" min="0" max="80" value="${s.borderRadius||0}" onchange="updateObjStyle('borderRadius',+this.value)"></div>
          </div>
        </section>
@@ -6106,26 +6139,25 @@ function renderCanvasInspector(){
          <div><label>Farbe</label><input type="color" value="${o.style?.color||"#4f4642"}" onchange="updateFormulaStyle('color',this.value)"></div>
        </div></div>`;
    }else if(o.kind==="table"){
+     const tableFonts=editorFontNamesSync(),tf=o.fontFamily||"Inter",tr=Math.max(0,Math.min(Number(o.borderRadius??12)||0,Math.max(0,Math.min(o.w,o.h)/2)));
      el.innerHTML=`<div class="tableInspector">
-       <div class="editorHintStrong"><b>${o.rows} × ${o.cols} Tabelle</b> · Zelle antippen und schreiben.</div>
-       <div class="tableEditGrid">
-        <button onclick="tableAddRow()">＋ Zeile</button><button onclick="tableRemoveRow()">− Zeile</button>
-        <button onclick="tableAddCol()">＋ Spalte</button><button onclick="tableRemoveCol()">− Spalte</button>
-       </div>
-       <div class="objectPanelGrid" style="margin-top:8px">
-        <div><label>Linienfarbe</label><input type="color" value="${o.borderColor||"#aaa7a2"}" onchange="updateSelectedTable('borderColor',this.value)"></div>
-        <div><label>Linienstärke</label><input type="number" min="0" max="8" value="${o.borderWidth??1}" onchange="updateSelectedTable('borderWidth',+this.value)"></div>
-        <div><label>Alle Zellen</label><input type="color" value="${o.cellBackground||"#ffffff"}" onchange="updateSelectedTable('cellBackground',this.value)"></div>
-        <div><label>Aktive Zelle</label><input type="color" value="${o.cellColors?.[o.activeCell?.r||0]?.[o.activeCell?.c||0]||o.cellBackground||"#ffffff"}" onchange="updateSelectedTableCellColor(this.value)"></div>
-        <div><label>Eckenradius</label><input type="number" min="0" max="60" value="${o.borderRadius??12}" onchange="updateSelectedTable('borderRadius',+this.value)"></div>
-        <div><label>Textgröße</label><input type="number" min="12" max="40" value="${o.fontSize||16}" onchange="updateSelectedTable('fontSize',+this.value)"></div>
-       </div>
-       <div class="positionGrid" style="margin-top:8px">
-        <div><label>X</label><input type="number" value="${Math.round(o.x)}" onchange="setSelectedGeometry('x',+this.value)"></div>
-        <div><label>Y</label><input type="number" value="${Math.round(o.y)}" onchange="setSelectedGeometry('y',+this.value)"></div>
-        <div><label>W</label><input type="number" value="${Math.round(o.w)}" onchange="setSelectedGeometry('w',+this.value)"></div>
-        <div><label>H</label><input type="number" value="${Math.round(o.h)}" onchange="setSelectedGeometry('h',+this.value)"></div>
-       </div>
+       <div class="editorHintStrong"><b>${o.rows} × ${o.cols} Tabelle</b> · Zelle anklicken und direkt schreiben.</div>
+       <div class="tableEditGrid"><button onclick="tableAddRow()">＋ Zeile</button><button onclick="tableRemoveRow()">− Zeile</button><button onclick="tableAddCol()">＋ Spalte</button><button onclick="tableRemoveCol()">− Spalte</button></div>
+       <section class="v302InspectorSection"><div class="v302InspectorSectionHead"><b>Schrift</b><span>Tabelle</span></div><div class="v302StyleGrid">
+         <div class="v302Wide"><label>Schriftart</label><select class="v320TableFont" style="font-family:${escAttr(tf)}" onchange="updateSelectedTable('fontFamily',this.value);this.style.fontFamily=this.value">${tableFonts.map(f=>`<option value="${escAttr(f)}" style="font-family:${escAttr(f)}" ${f===tf?"selected":""}>${esc(f)}</option>`).join("")}</select></div>
+         <div><label>Textgröße</label><input type="number" min="6" max="96" step="1" value="${o.fontSize||16}" onchange="updateSelectedTable('fontSize',+this.value)"></div>
+         <div><label>Textfarbe</label><input type="color" value="${o.textColor||editorDefaultTextColor()||'#3d3835'}" onchange="updateSelectedTable('textColor',this.value)"></div>
+       </div><div class="alignRow"><button class="${(o.textAlign||'left')==='left'?'active':''}" onclick="updateSelectedTable('textAlign','left')">⇤ Links</button><button class="${o.textAlign==='center'?'active':''}" onclick="updateSelectedTable('textAlign','center')">↔ Mitte</button><button class="${o.textAlign==='right'?'active':''}" onclick="updateSelectedTable('textAlign','right')">Rechts ⇥</button></div><div class="alignRow" style="margin-top:6px"><button class="${(o.verticalAlign||'top')==='top'?'active':''}" onclick="updateSelectedTable('verticalAlign','top')">↑ Oben</button><button class="${o.verticalAlign==='middle'?'active':''}" onclick="updateSelectedTable('verticalAlign','middle')">↕ Mitte</button><button class="${o.verticalAlign==='bottom'?'active':''}" onclick="updateSelectedTable('verticalAlign','bottom')">↓ Unten</button></div></section>
+       <section class="v302InspectorSection"><div class="v302InspectorSectionHead"><b>Fläche & Kontur</b><span>Tabelle</span></div><div class="v302StyleGrid">
+         <div><label>Linienfarbe</label><input type="color" value="${o.borderColor||'#aaa7a2'}" onchange="updateSelectedTable('borderColor',this.value)"></div>
+         <div><label>Konturstärke</label><input type="number" min="0" max="20" step="0.5" value="${o.borderWidth??1}" onchange="updateSelectedTable('borderWidth',+this.value)"></div>
+         <div><label>Alle Zellen</label><input type="color" value="${o.cellBackground||'#ffffff'}" onchange="updateSelectedTable('cellBackground',this.value)"></div>
+         <div><label>Aktive Zelle</label><input type="color" value="${o.cellColors?.[o.activeCell?.r||0]?.[o.activeCell?.c||0]||o.cellBackground||'#ffffff'}" onchange="updateSelectedTableCellColor(this.value)"></div>
+         <div class="v302Wide"><label>Ecken abrunden · ${Math.round(tr)} px</label><input type="range" min="0" max="60" step="1" value="${tr}" oninput="this.previousElementSibling.textContent='Ecken abrunden · '+this.value+' px';updateSelectedTable('borderRadius',+this.value)"></div>
+       </div></section>
+       <section class="v302InspectorSection"><div class="v302InspectorSectionHead"><b>Position & Größe</b><span>px</span></div><div class="positionGrid">
+         <div><label>X</label><input type="number" value="${Math.round(o.x)}" onchange="setSelectedGeometry('x',+this.value)"></div><div><label>Y</label><input type="number" value="${Math.round(o.y)}" onchange="setSelectedGeometry('y',+this.value)"></div><div><label>W</label><input type="number" min="80" value="${Math.round(o.w)}" onchange="setSelectedGeometry('w',+this.value)"></div><div><label>H</label><input type="number" min="50" value="${Math.round(o.h)}" onchange="setSelectedGeometry('h',+this.value)"></div>
+       </div><div class="alignRow" style="margin-top:7px"><button onclick="alignSelected('centerX')">↔ Blattmitte</button><button onclick="alignSelected('centerY')">↕ Blattmitte</button><button onclick="moveSelectedLayer(1)">↑ Nach vorne</button><button onclick="moveSelectedLayer(-1)">↓ Nach hinten</button></div></section>
      </div>`;
    }else if(o.kind==="paper"){
      el.innerHTML=`<div class="objectPanelGrid">
@@ -6144,7 +6176,7 @@ function renderCanvasInspector(){
      <div class="v302StyleGrid">
        <div><label>Füllfarbe</label><input type="color" value="${v.fill||"#f7d2cf"}" onchange="updateVectorStyle('fill',this.value)"></div>
        <div><label>Kontur</label><input type="color" value="${v.stroke||"#8d7369"}" onchange="updateVectorStyle('stroke',this.value)"></div>
-       <div><label>Konturstärke</label><input type="number" min="0" max="30" value="${v.strokeWidth||2}" onchange="updateVectorStyle('strokeWidth',+this.value)"></div>
+       <div><label>Konturstärke</label><input type="number" min="0" max="30" step="0.5" value="${v.strokeWidth||2}" onchange="updateVectorStyle('strokeWidth',+this.value)"></div>
        <div><label>Linienart</label><select onchange="updateVectorStyle('dash',this.value)"><option value="solid">Durchgezogen</option><option value="dashed" ${v.dash==="dashed"?"selected":""}>Gestrichelt</option><option value="dotted" ${v.dash==="dotted"?"selected":""}>Gepunktet</option></select></div>
        <div><label>Drehung</label><input type="number" min="-180" max="180" value="${Math.round(v.rotation||0)}" onchange="updateVectorStyle('rotation',+this.value)"></div>
        ${v.type==="rect"?`<div><label>Ecken rund</label><input type="number" min="0" max="100" value="${v.rx||0}" onchange="updateVectorStyle('rx',+this.value)"></div>`:""}
@@ -6175,7 +6207,13 @@ function selectedTable(){
  return o?.kind==="table"?o:null;
 }
 window.updateSelectedTable=function(prop,value){
- const o=selectedTable();if(!o)return;o[prop]=value;
+ const o=selectedTable();if(!o)return;
+ if(prop==="borderWidth")value=Math.max(0,Math.min(20,Number(value)||0));
+ if(prop==="borderRadius")value=Math.max(0,Math.min(60,Number(value)||0,Math.max(0,Math.min(o.w,o.h)/2)));
+ if(prop==="fontSize")value=Math.max(6,Math.min(96,Number(value)||16));
+ if(prop==="textAlign"&&!['left','center','right'].includes(value))value='left';
+ if(prop==="verticalAlign"&&!['top','middle','bottom'].includes(value))value='top';
+ o[prop]=value;
  renderCanvasObjects();renderCanvasInspector();markCanvasDirty();pushHistory();
 }
 window.updateSelectedTableCellColor=function(value){
@@ -6235,7 +6273,7 @@ window.setPaperSpacing=function(v){const o=canvasState.objects.find(x=>x.id===ca
 window.setTapeColor=function(v){const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(!o)return;o.color=v;renderCanvasObjects();renderCanvasInspector();markCanvasDirty()}
 window.setTapeRotation=function(v){const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(!o)return;o.rotation=Math.max(-45,Math.min(45,v||0));renderCanvasObjects();renderCanvasInspector();markCanvasDirty()}
 
-window.updateObjStyle=function(k,v){const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(!o)return;o.style||={};o.style[k]=v;renderCanvasObjects();markCanvasDirty()}
+window.updateObjStyle=function(k,v){const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(!o)return;o.style||={};if(k==="borderWidth")v=Math.max(0,Math.min(30,Number(v)||0));if(k==="borderRadius")v=Math.max(0,Math.min(120,Number(v)||0,Math.min(o.w||999,o.h||999)/2));o.style[k]=v;renderCanvasObjects();renderCanvasInspector();markCanvasDirty();pushHistory()}
 
 
 function updateMultiSelectStatus(){
@@ -6449,7 +6487,7 @@ function clearCanvasSelection(){canvasState.objects.forEach(x=>x.editing=false);
 
 
 
-window.setSelectedGeometry=function(k,v){if(canvasState.selectedType!=="object")return;const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(!o)return;if(k==="w"||k==="h")o[k]=Math.max(20,v);else o[k]=v;renderCanvasObjects();renderCanvasInspector();pushHistory()}
+window.setSelectedGeometry=function(k,v){if(canvasState.selectedType!=="object")return;const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(!o)return;if(k==="w"||k==="h"){const min=o.kind==="table"?(k==="w"?80:50):20;o[k]=Math.max(min,Number(v)||min);if(o.kind==="table")o.borderRadius=Math.min(Number(o.borderRadius||0),Math.min(o.w,o.h)/2)}else o[k]=Number(v)||0;renderCanvasObjects();renderCanvasInspector();pushHistory()}
 window.alignSelected=function(mode){if(canvasState.selectedType==="object"){const o=canvasState.objects.find(x=>x.id===canvasState.selectedId);if(!o)return;if(mode==="centerX")o.x=(canvasPageWidth()-o.w)/2;if(mode==="centerY")o.y=(canvasPageHeight()-o.h)/2;renderCanvasObjects()}else if(canvasState.selectedType==="vector"){const v=canvasState.vectors.find(x=>x.id===canvasState.selectedId);if(!v)return;const b=vectorBounds(v),dx=mode==="centerX"?397-b.cx:0,dy=mode==="centerY"?561.5-b.cy:0;if(v.type==="rect"){v.x+=dx;v.y+=dy}else if(v.type==="ellipse"){v.cx+=dx;v.cy+=dy}else if(v.points)v.points=v.points.map(p=>[p[0]+dx,p[1]+dy]);renderVectors()}pushHistory()}
 window.duplicateSelected=function(){if(canvasState.selectedType==="object"){const ids=selectedObjectIds();if(!ids.length)return;const newIds=[];for(const oid of ids){const o=canvasState.objects.find(x=>x.id===oid);if(!o)continue;const n=JSON.parse(JSON.stringify(o));n.id=id();n.x+=18;n.y+=18;n.z=nextCanvasZ();n.locked=false;n.editing=false;canvasState.objects.push(n);newIds.push(n.id)}canvasState.selectedIds=newIds;canvasState.selectedId=newIds.at(-1)||null;canvasState.selectedType=newIds.length?"object":null;renderCanvasObjects();renderCanvasInspector()}else if(canvasState.selectedType==="vector"){const v=canvasState.vectors.find(x=>x.id===canvasState.selectedId);if(!v)return;const n=JSON.parse(JSON.stringify(v));n.id=id();n.z=nextCanvasZ();n.locked=false;if(n.x!=null){n.x+=18;n.y+=18}if(n.cx!=null){n.cx+=18;n.cy+=18}if(n.points)n.points=n.points.map(p=>[p[0]+18,p[1]+18]);canvasState.vectors.push(n);selectVector(n.id)}pushHistory()}
 
@@ -6707,7 +6745,7 @@ function startVectorDrag(e,vid){
  const move=ev=>{const q=canvasPoint(ev),dx=q.x-p.x,dy=q.y-p.y;if(v.type==="rect"){v.x=snap.x+dx;v.y=snap.y+dy}if(v.type==="ellipse"){v.cx=snap.cx+dx;v.cy=snap.cy+dy}if(v.type==="triangle"||v.type==="path")v.points=snap.points.map(pt=>[pt[0]+dx,pt[1]+dy]);renderVectors();markCanvasDirty(false)};
  const up=()=>{window.removeEventListener("pointermove",move);window.removeEventListener("pointerup",up);pushHistory()};window.addEventListener("pointermove",move);window.addEventListener("pointerup",up);
 }
-window.updateVectorStyle=function(k,v){const x=canvasState.vectors.find(x=>x.id===canvasState.selectedId);if(!x)return;x[k]=v;renderVectors();markCanvasDirty()}
+window.updateVectorStyle=function(k,v){const x=canvasState.vectors.find(x=>x.id===canvasState.selectedId);if(!x)return;if(k==="strokeWidth")v=Math.max(0,Math.min(30,Number(v)||0));if(k==="rx")v=Math.max(0,Math.min(120,Number(v)||0));x[k]=v;renderVectors();renderCanvasInspector();markCanvasDirty();pushHistory()}
 window.duplicateSelectedVector=function(){const v=canvasState.vectors.find(x=>x.id===canvasState.selectedId);if(!v)return;const n=JSON.parse(JSON.stringify(v));n.id=id();if(n.x!=null){n.x+=18;n.y+=18}if(n.cx!=null){n.cx+=18;n.cy+=18}if(n.points)n.points=n.points.map(p=>[p[0]+18,p[1]+18]);canvasState.vectors.push(n);selectVector(n.id);markCanvasDirty()}
 window.toggleNodeEdit=function(){canvasState.nodeEdit=!canvasState.nodeEdit;renderVectors()}
 function startNodeDrag(e,index){const v=canvasState.vectors.find(x=>x.id===canvasState.selectedId);if(!v)return;
@@ -6818,9 +6856,11 @@ function mobileTextModeContentHTML(kind){
  }
  if(kind==='appearance')return `<div class="mobileModeSection"><div class="mobileModeIntro"><b>Aussehen</b><span>Farbe, Fläche, Kontur und Transparenz.</span></div><div class="mobileSubGrid">
    <label>Textfarbe<input type="color" value="${st.color||'#7a5f57'}" onchange="applyTextProperty('color',this.value)"></label>
+   <label>Standardfarbe<input type="color" value="${editorDefaultTextColor()||st.color||'#3d3835'}" onchange="setEditorDefaultTextColor(this.value,false)"></label>
+   <button type="button" onclick="applyDefaultTextColorToAll(editorDefaultTextColor()||'#3d3835')">Auf alle Texte anwenden</button>
    <label>Hintergrund<input type="color" value="${st.background&&st.background!=='transparent'?st.background:'#ffffff'}" onchange="updateObjStyle('background',this.value)"></label>
    <label>Kontur<input type="color" value="${st.borderColor||'#e5aaa9'}" onchange="updateObjStyle('borderColor',this.value)"></label>
-   <label>Dicke<input type="number" min="0" max="20" value="${st.borderWidth||0}" onchange="updateObjStyle('borderWidth',+this.value)"></label>
+   <label>Dicke<input type="number" min="0" max="30" step="0.5" value="${st.borderWidth||0}" onchange="updateObjStyle('borderWidth',+this.value)"></label>
    <label>Linie<select onchange="updateObjStyle('borderStyle',this.value)"><option value="solid" ${(!st.borderStyle||st.borderStyle==='solid')?'selected':''}>Durchgezogen</option><option value="dashed" ${st.borderStyle==='dashed'?'selected':''}>Gestrichelt</option><option value="dotted" ${st.borderStyle==='dotted'?'selected':''}>Gepunktet</option></select></label>
    <label>Transparenz<input type="range" min="0" max="100" value="${Math.round((st.opacity??1)*100)}" oninput="updateObjStyle('opacity',+this.value/100)"></label>
    <button onclick="mobileGradient()">Verlauf</button><button onclick="updateObjStyle('background','transparent')">Fläche aus</button>
@@ -6930,7 +6970,9 @@ window.editorOpenGroup=function(group,btn){
  }else if(group==="layers"){
    title="Ebenen";renderLayerList();html=`<div class="mobileDrawerSection"><div class="mobileModeIntro"><b>Ziehen zum Sortieren</b><span>Oben = vorne · unten = hinten. Am Griff ⠿ ziehen.</span></div><div class="mobileLayerList">${$("#layerList")?.innerHTML||'<div class="small">Noch keine Ebenen.</div>'}</div></div>`;
  }else if(group==="selection"){
-   title="Auswahl";html=`<div class="mobileDrawerSection">${grid([item(canvasState.multiMode?"Mehrfach aus":"Mehrfachauswahl","toggleMultiSelectMode()","☑"),item("Gruppieren","groupSelectedItems()","▣"),item("Gruppierung lösen","ungroupSelectedItems()","▢"),item("Duplizieren","duplicateSelected()","⧉"),item("Als Textformat","saveSelectionAsTextFormat()","Aa"),item("Format kopieren","copySelectedCanvasFormat()","⧉"),item("Format einfügen","pasteSelectedCanvasFormat()","▣"),item("Sperren","toggleSelectedLock()","🔒"),item("Löschen","deleteSelectedCanvasItem()","⌫")])}<div class="mobileDrawerTitle">Ausrichten</div>${grid([item("Links","mobileAlignMulti('left')","⇤"),item("Horizontal Mitte","mobileAlignMulti('centerX')","↔"),item("Rechts","mobileAlignMulti('right')","⇥"),item("Oben","mobileAlignMulti('top')","⇧"),item("Vertikal Mitte","mobileAlignMulti('centerY')","↕"),item("Unten","mobileAlignMulti('bottom')","⇩")])}</div>`;
+   const table=selectedTable?.();
+   if(table){const fonts=editorFontNamesSync(),ff=table.fontFamily||'Inter';title="Tabelle";html=`<div class="mobileDrawerSection"><div class="mobileDrawerTitle">Schrift & Inhalt</div><div class="mobileSubGrid"><label>Schriftart<select style="font-family:${escAttr(ff)}" onchange="updateSelectedTable('fontFamily',this.value);this.style.fontFamily=this.value">${fonts.map(f=>`<option value="${escAttr(f)}" style="font-family:${escAttr(f)}" ${f===ff?'selected':''}>${esc(f)}</option>`).join('')}</select></label><label>Größe<input type="number" min="6" max="96" value="${table.fontSize||16}" onchange="updateSelectedTable('fontSize',+this.value)"></label><label>Textfarbe<input type="color" value="${table.textColor||editorDefaultTextColor()||'#3d3835'}" onchange="updateSelectedTable('textColor',this.value)"></label><label>Konturstärke<input type="number" min="0" max="20" step="0.5" value="${table.borderWidth??1}" onchange="updateSelectedTable('borderWidth',+this.value)"></label><label>Kontur<input type="color" value="${table.borderColor||'#aaa7a2'}" onchange="updateSelectedTable('borderColor',this.value)"></label><label>Ecken<input type="range" min="0" max="60" value="${table.borderRadius??12}" oninput="updateSelectedTable('borderRadius',+this.value)"></label></div><div class="mobileDrawerTitle">Text anordnen</div>${grid([item("Links","updateSelectedTable('textAlign','left')","⇤"),item("Mitte","updateSelectedTable('textAlign','center')","↔"),item("Rechts","updateSelectedTable('textAlign','right')","⇥"),item("Oben","updateSelectedTable('verticalAlign','top')","⇧"),item("Vertikal Mitte","updateSelectedTable('verticalAlign','middle')","↕"),item("Unten","updateSelectedTable('verticalAlign','bottom')","⇩")])}<div class="mobileDrawerTitle">Tabelle</div>${grid([item("Zeile +","tableAddRow()","＋"),item("Zeile −","tableRemoveRow()","−"),item("Spalte +","tableAddCol()","＋"),item("Spalte −","tableRemoveCol()","−"),item("Duplizieren","duplicateSelected()","⧉"),item("Löschen","deleteSelectedCanvasItem()","⌫")])}<div class="mobileDrawerTitle">Position</div>${grid([item("Blattmitte ↔","alignSelected('centerX')","↔"),item("Blattmitte ↕","alignSelected('centerY')","↕"),item("Nach vorne","moveSelectedLayer(1)","↑"),item("Nach hinten","moveSelectedLayer(-1)","↓")])}</div>`;}
+   else{title="Auswahl";html=`<div class="mobileDrawerSection">${grid([item(canvasState.multiMode?"Mehrfach aus":"Mehrfachauswahl","toggleMultiSelectMode()","☑"),item("Gruppieren","groupSelectedItems()","▣"),item("Gruppierung lösen","ungroupSelectedItems()","▢"),item("Duplizieren","duplicateSelected()","⧉"),item("Als Textformat","saveSelectionAsTextFormat()","Aa"),item("Format kopieren","copySelectedCanvasFormat()","⧉"),item("Format einfügen","pasteSelectedCanvasFormat()","▣"),item("Sperren","toggleSelectedLock()","🔒"),item("Löschen","deleteSelectedCanvasItem()","⌫")])}<div class="mobileDrawerTitle">Ausrichten</div>${grid([item("Links","mobileAlignMulti('left')","⇤"),item("Horizontal Mitte","mobileAlignMulti('centerX')","↔"),item("Rechts","mobileAlignMulti('right')","⇥"),item("Oben","mobileAlignMulti('top')","⇧"),item("Vertikal Mitte","mobileAlignMulti('centerY')","↕"),item("Unten","mobileAlignMulti('bottom')","⇩")])}</div>`;}
  }
  d.innerHTML=mobileDrawerHead(title)+html;
 }
@@ -6958,7 +7000,7 @@ function canvasFormatSource(){
 window.copySelectedCanvasFormat=function(){
  const o=canvasFormatSource();if(!o)return cuteToast("Wähle zuerst ein Element ♡");
  if(["text","block","task","merke","file"].includes(o.kind))copiedCanvasFormat={type:"text",style:JSON.parse(JSON.stringify(o.style||{}))};
- else if(o.kind==="table")copiedCanvasFormat={type:"table",props:{borderColor:o.borderColor,borderWidth:o.borderWidth,cellBackground:o.cellBackground,fontSize:o.fontSize,borderRadius:o.borderRadius}};
+ else if(o.kind==="table")copiedCanvasFormat={type:"table",props:{borderColor:o.borderColor,borderWidth:o.borderWidth,borderStyle:o.borderStyle,cellBackground:o.cellBackground,fontSize:o.fontSize,fontFamily:o.fontFamily,textColor:o.textColor,textAlign:o.textAlign,verticalAlign:o.verticalAlign,borderRadius:o.borderRadius}};
  else if(o.kind==="vector")copiedCanvasFormat={type:"vector"};
  else return cuteToast("Für dieses Element gibt es noch kein Format ♡");
  cuteToast("Format kopiert ✦");
@@ -7012,7 +7054,7 @@ function serializedCanvas(){
    }
    if(o.kind==="tape")return `<div style="${base}background:rgba(242,190,178,.62);transform:rotate(${o.rotation||-4}deg)"></div>`;
    if(o.kind==="graph")return `<div style="${base}">${graphSvg(o.graph||graphDefault(),Math.max(120,Math.round(o.w)),Math.max(100,Math.round(o.h)))}</div>`;
-   if(o.kind==="table")return `<div style="${base}"><table style="border-collapse:collapse;width:100%;height:100%;font-size:${o.fontSize||16}px;border-radius:${o.borderRadius??12}px;overflow:hidden">${o.cells.map((r,ri)=>`<tr>${r.map((c,ci)=>`<td style="border:${o.borderWidth??1}px solid ${o.borderColor||"#aaa7a2"};background:${o.cellColors?.[ri]?.[ci]||o.cellBackground||"#ffffff"};padding:6px">${esc(c)}</td>`).join("")}</tr>`).join("")}</table></div>`;
+   if(o.kind==="table"){const bw=Math.max(0,+o.borderWidth||0),bc=o.borderColor||"#aaa7a2",bg=o.cellBackground||"#ffffff",rows=o.cells.length,cols=Math.max(1,...o.cells.map(r=>r.length)),rad=Math.max(0,Math.min(+o.borderRadius||0,Math.min(o.w,o.h)/2));return `<div style="${base}"><table style="border-collapse:separate;border-spacing:0;table-layout:fixed;width:100%;height:100%;font:${o.fontSize||16}px ${esc(o.fontFamily||'Inter')};color:${o.textColor||'#3d3835'};text-align:${o.textAlign||'left'};border:${bw}px ${o.borderStyle||'solid'} ${bc};border-radius:${rad}px;overflow:hidden">${o.cells.map((r,ri)=>`<tr>${r.map((c,ci)=>`<td style="border:0;border-right:${ci<cols-1?`${bw}px ${o.borderStyle||'solid'} ${bc}`:'0'};border-bottom:${ri<rows-1?`${bw}px ${o.borderStyle||'solid'} ${bc}`:'0'};background:${o.cellColors?.[ri]?.[ci]||bg};padding:6px;vertical-align:${o.verticalAlign||'top'}">${esc(c)}</td>`).join("")}</tr>`).join("")}</table></div>`;}
    const s=o.style||{},bg=o.kind==="task"?"#fff5eb":o.kind==="merke"?"#fff0ef":s.background||"transparent";
    return `<div style="${base}transform:rotate(${o.rotation||0}deg);padding:${s.padding??7}px;font-size:${s.fontSize||16}px;font-weight:${s.fontWeight||400};color:${s.color||"#333"};font-family:${s.fontFamily||"Arial"};background:${s.background||bg};text-align:${s.textAlign||"left"};border:${s.borderWidth||0}px solid ${s.borderColor||"transparent"};border-radius:${s.borderRadius||0}px">${o.text||""}</div>`;
  }).join("");
@@ -11515,6 +11557,8 @@ mobileTextModeContentHTML=function(kind){
   }
   if(kind==='appearance')return `<div class="v96CompactMode"><div class="v96CompactTitle"><b>Aussehen</b><span>Farben, Kontur und Transparenz</span></div><div class="v96CompactGrid">
       <label>Textfarbe<input type="color" value="${st.color||'#7a5f57'}" onchange="applyTextProperty('color',this.value)"></label>
+      <label>Standardfarbe<input type="color" value="${editorDefaultTextColor()||st.color||'#3d3835'}" onchange="setEditorDefaultTextColor(this.value,false)"></label>
+      <button type="button" onclick="applyDefaultTextColorToAll(editorDefaultTextColor()||'#3d3835')">Auf alle Texte</button>
       <label>Fläche<input type="color" value="${st.background&&st.background!=='transparent'?st.background:'#ffffff'}" onchange="updateObjStyle('background',this.value)"></label>
       <label>Kontur<input type="color" value="${st.borderColor||'#e5aaa9'}" onchange="updateObjStyle('borderColor',this.value)"></label>
       <label>Dicke<input type="number" min="0" max="20" value="${st.borderWidth||0}" onchange="updateObjStyle('borderWidth',+this.value)"></label>
@@ -12731,8 +12775,7 @@ html,body,button,input,select,textarea{font-family:ui-rounded,"SF Pro Rounded","
 
 .sheetCardDirect{cursor:pointer;transition:transform .14s ease,box-shadow .14s ease}
 .sheetCardDirect:active{transform:scale(.985)}
-.tableObj table{width:100%;height:100%;border-collapse:collapse;table-layout:fixed}
-.tableObj td{transition:background-color .15s ease}
+
 </style>
 
 <style id="v96-ui">
@@ -15428,8 +15471,7 @@ body.editorMode .v130TransparentBtn{width:36px!important;height:36px!important;m
 body.editorMode .v130TransparentBtn.active{outline:2px solid #d98f96;outline-offset:1px}
 body.editorMode .v130CornerControl{grid-column:1/-1}
 body.editorMode .v130CornerControl input[type="range"]{width:100%}
-body.editorMode .tableObj{border-radius:var(--v130-table-radius,12px);overflow:hidden}
-body.editorMode .tableObj table{border-collapse:separate!important;border-spacing:0!important;overflow:hidden!important}
+
 body.editorMode .v130RoundedShape{pointer-events:none}
 body.editorMode .v130SharpFallback{opacity:0}
 body.editorMode #canvasObjects:has(.v129ShapeProxy:active) .v130RoundedShape{opacity:0}
@@ -15616,7 +15658,7 @@ body.editorMode #canvasObjects .v131MoveProxy:active,body.editorMode.v131Draggin
 body.editorMode #canvasObjects .v131MoveProxy.locked{pointer-events:none!important}
 body.editorMode #canvasObjects .v131MoveProxy.tableGrip{height:27px!important;min-height:27px;width:78px!important;border:1px solid rgba(226,174,170,.75);border-radius:999px;background:rgba(255,249,246,.96);box-shadow:0 4px 12px rgba(107,75,65,.12);color:#80665e;display:grid;place-items:center;font-size:13px;font-weight:950;letter-spacing:2px}
 body.editorMode #canvasObjects .v131MoveProxy.tableGrip:before{content:'⠿ MOVE';pointer-events:none}
-body.editorMode #canvasObjects .cobj.tableObj td{border:var(--tbl-border,1px) var(--tbl-style,solid) var(--tbl-color,#aaa7a2)!important}
+
 body.editorMode.v131Panning #canvasViewport{cursor:grabbing!important}
 body.editorMode.v131Space #canvasViewport{cursor:grab!important}
 .v131VersionBadge{display:inline-flex;align-items:center;justify-content:center;height:28px;padding:0 10px;border:1px solid #edcfca;border-radius:999px;background:linear-gradient(135deg,#fff7f4,#f2f8e8);color:#9a6f6d;font-size:10px;font-weight:950;letter-spacing:.09em;white-space:nowrap;box-shadow:0 4px 12px rgba(110,76,67,.07)}
@@ -19277,7 +19319,7 @@ function drawText170(ctx,o){const st=o.style||{},base=styleCopy170(st),lhRaw=+st
 function image170(src,timeout=4500){return new Promise(res=>{if(!src){res(null);return}try{const u=new URL(src,location.href);if(!/^data:|^blob:/i.test(src)&&u.origin!==location.origin){res(null);return}}catch(_){}const im=new Image(),tm=setTimeout(()=>res(null),timeout);im.onload=()=>{clearTimeout(tm);res(im)};im.onerror=()=>{clearTimeout(tm);res(null)};im.src=src})}
 async function drawSvgDom170(ctx,o){const el=q(`#canvasObjects .cobj[data-id="${CSS.escape(String(o.id))}"] svg`);if(!el)return false;const xml=new XMLSerializer().serializeToString(el),src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(xml),im=await image170(src,2500);if(!im)return false;ctx.drawImage(im,0,0,o.w,o.h);return true}
 function drawPaper170(ctx,o){ctx.fillStyle=o.paperColor||'#fffdf7';ctx.fillRect(0,0,o.w,o.h);ctx.strokeStyle='rgba(130,105,90,.14)';ctx.lineWidth=1;ctx.strokeRect(.5,.5,o.w-1,o.h-1);const sp=Math.max(8,+o.spacing||(o.paperType==='grid'?20:28)),pc=o.patternColor||'#9aafc1';ctx.strokeStyle=alphaColor170(pc,o.paperType==='grid'?.38:.44);if(o.paperType==='grid'){for(let x=sp;x<o.w;x+=sp){ctx.beginPath();ctx.moveTo(x+.5,0);ctx.lineTo(x+.5,o.h);ctx.stroke()}for(let y=sp;y<o.h;y+=sp){ctx.beginPath();ctx.moveTo(0,y+.5);ctx.lineTo(o.w,y+.5);ctx.stroke()}}else if(o.paperType==='line'){for(let y=sp;y<o.h;y+=sp){ctx.beginPath();ctx.moveTo(0,y+.5);ctx.lineTo(o.w,y+.5);ctx.stroke()}}}
-function drawTable170(ctx,o){const cells=o.cells||[],rows=Math.max(1,cells.length||o.rows||1),cols=Math.max(1,cells[0]?.length||o.cols||1),cw=o.w/cols,ch=o.h/rows,bg=o.cellBackground||'#fff',bc=o.borderColor||'#aaa7a2',bw=Math.max(.5,+o.borderWidth||1),fs=Math.max(7,+o.fontSize||16);ctx.lineWidth=bw;ctx.strokeStyle=bc;ctx.setLineDash(dash170(o.borderStyle||o.dash,o.dashLength,o.dashGap));ctx.font=`400 ${fs}px Arial`;ctx.textBaseline='middle';ctx.fillStyle='#333';for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){ctx.fillStyle=o.cellColors?.[r]?.[c]||bg;ctx.fillRect(c*cw,r*ch,cw,ch);ctx.strokeStyle=bc;ctx.strokeRect(c*cw+.5,r*ch+.5,cw-1,ch-1);ctx.fillStyle='#333';const text=String(cells?.[r]?.[c]??'');ctx.save();ctx.beginPath();ctx.rect(c*cw+4,r*ch+2,cw-8,ch-4);ctx.clip();ctx.fillText(text,c*cw+6,r*ch+ch/2);ctx.restore()}}
+function drawTable170(ctx,o){const cells=o.cells||[],rows=Math.max(1,cells.length||o.rows||1),cols=Math.max(1,cells[0]?.length||o.cols||1),cw=o.w/cols,ch=o.h/rows,bg=o.cellBackground||'#fff',bc=o.borderColor||'#aaa7a2',bw=Math.max(0,+o.borderWidth||0),fs=Math.max(6,+o.fontSize||16),ff=o.fontFamily||'Inter,Arial,sans-serif',tc=o.textColor||'#3d3835',ta=o.textAlign||'left',va=o.verticalAlign||'top';ctx.lineWidth=bw;ctx.strokeStyle=bc;ctx.setLineDash(dash170(o.borderStyle||o.dash,o.dashLength,o.dashGap));ctx.font=`400 ${fs}px ${ff}`;ctx.textBaseline=va==='middle'?'middle':va==='bottom'?'bottom':'top';ctx.textAlign=ta==='center'?'center':ta==='right'?'right':'left';for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){const x=c*cw,y=r*ch;ctx.fillStyle=o.cellColors?.[r]?.[c]||bg;ctx.fillRect(x,y,cw,ch);if(bw){ctx.strokeStyle=bc;ctx.strokeRect(x+bw/2,y+bw/2,Math.max(0,cw-bw),Math.max(0,ch-bw))}ctx.fillStyle=tc;const text=String(cells?.[r]?.[c]??'');ctx.save();ctx.beginPath();ctx.rect(x+4,y+2,Math.max(0,cw-8),Math.max(0,ch-4));ctx.clip();const tx=ta==='center'?x+cw/2:ta==='right'?x+cw-6:x+6,ty=va==='middle'?y+ch/2:va==='bottom'?y+ch-5:y+5;ctx.fillText(text,tx,ty);ctx.restore()}}
 async function drawObject170(ctx,o){ctx.save();ctx.globalAlpha=o.kind==='text'||o.kind==='block'||o.kind==='task'||o.kind==='merke'||o.kind==='file'?(o.style?.opacity??1):(o.opacity??1);ctx.translate(o.x+o.w/2,o.y+o.h/2);ctx.rotate((+o.rotation||0)*Math.PI/180);ctx.translate(-o.w/2,-o.h/2);if(o.kind==='image'){const im=await image170(o.src);if(im){if(o.tintColor){const t=document.createElement('canvas');t.width=Math.max(1,im.naturalWidth||im.width);t.height=Math.max(1,im.naturalHeight||im.height);const x=t.getContext('2d');x.drawImage(im,0,0,t.width,t.height);x.globalCompositeOperation='source-in';x.fillStyle=o.tintColor;x.fillRect(0,0,t.width,t.height);ctx.drawImage(t,0,0,o.w,o.h)}else ctx.drawImage(im,0,0,o.w,o.h)}ctx.restore();return}if(o.kind==='sticker'){ctx.font=`${Math.max(18,Math.min(o.w,o.h)*.7)}px Apple Color Emoji,Segoe UI Emoji,sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(String(o.text||''),o.w/2,o.h/2);ctx.restore();return}if(o.kind==='paper'){drawPaper170(ctx,o);ctx.restore();return}if(o.kind==='tape'){ctx.fillStyle=o.color||'#f2beb2';ctx.fillRect(0,0,o.w,o.h);ctx.save();ctx.globalAlpha=.18;ctx.strokeStyle='#fff';ctx.lineWidth=2;for(let x=-o.h;x<o.w+o.h;x+=16){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x+o.h,o.h);ctx.stroke()}ctx.restore();ctx.restore();return}if(o.kind==='table'){drawTable170(ctx,o);ctx.restore();return}if(['graph','chart','timeline'].includes(o.kind)){if(!(await drawSvgDom170(ctx,o))){ctx.fillStyle='#fffdfb';ctx.fillRect(0,0,o.w,o.h)}ctx.restore();return}if(o.kind==='formula'){const stl=o.style||{};ctx.fillStyle=stl.color||'#4f4642';ctx.font=`${stl.fontStyle||'normal'} ${stl.fontWeight||400} ${Math.max(8,+stl.fontSize||28)}px ${stl.fontFamily||'Cambria Math,serif'}`;ctx.textAlign=stl.textAlign||'center';ctx.textBaseline='middle';ctx.fillText(String(o.formula||o.text||'').replace(/<[^>]+>/g,''),stl.textAlign==='left'?7:stl.textAlign==='right'?o.w-7:o.w/2,o.h/2);ctx.restore();return}
  const s=o.style||{},bg=s.background||'transparent',bw=Math.max(0,+s.borderWidth||0),rad=Math.max(0,+s.borderRadius||0);if(bg&&bg!=='transparent'&&bg!=='none'){ctx.fillStyle=bg;rounded170(ctx,0,0,o.w,o.h,rad);ctx.fill()}if(bw&&s.borderColor&&s.borderColor!=='transparent'){ctx.strokeStyle=s.borderColor;ctx.lineWidth=bw;ctx.setLineDash(dash170(s.dash||s.borderStyle,s.dashLength,s.dashGap));rounded170(ctx,bw/2,bw/2,Math.max(0,o.w-bw),Math.max(0,o.h-bw),rad);ctx.stroke()}drawText170(ctx,o);ctx.restore()}
 async function pageCanvas170(){const w=W(),h=H(),scale=Math.min(2,Math.max(1,1800/Math.max(w,h))),c=document.createElement('canvas');c.width=Math.round(w*scale);c.height=Math.round(h*scale);const ctx=c.getContext('2d',{alpha:false});ctx.scale(scale,scale);pageBackground170(ctx,w,h);const s=st()||{},entries=[...(s.objects||[]).map(o=>({kind:'o',z:+o.z||0,ref:o})),...(s.vectors||[]).map(v=>({kind:'v',z:+v.z||0,ref:v}))].sort((a,b)=>a.z-b.z);for(const e of entries){if(e.kind==='v')drawVector170(ctx,e.ref);else await drawObject170(ctx,e.ref)}return c}
@@ -19314,11 +19356,11 @@ function capture171(){
  sel171={id:String(root.dataset.id),sp,so:r.startOffset,ep,eo:r.endOffset,sc:charOffset(root,r.startContainer,r.startOffset),ec:charOffset(root,r.endContainer,r.endOffset)};return true
 }
 function restore171(){
- if(!sel171)return false;const root=q(`.cobj[data-id="${CSS.escape(sel171.id)}"][contenteditable="true"]`);if(!root)return false;let sn=fromPath(root,sel171.sp),en=fromPath(root,sel171.ep),so=sel171.so,eo=sel171.eo;
+ if(!sel171)return false;const sid=String(st()?.selectedId||"");if(sid&&sid!==String(sel171.id)){sel171=null;return false}const root=q(`.cobj[data-id="${CSS.escape(sel171.id)}"][contenteditable="true"]`);if(!root)return false;let sn=fromPath(root,sel171.sp),en=fromPath(root,sel171.ep),so=sel171.so,eo=sel171.eo;
  if(!sn||!en){const a=pointAt(root,sel171.sc),b=pointAt(root,sel171.ec);sn=a.node;so=a.offset;en=b.node;eo=b.offset}
  try{const r=document.createRange();r.setStart(sn,Math.min(so,sn.nodeType===3?(sn.nodeValue?.length||0):sn.childNodes.length));r.setEnd(en,Math.min(eo,en.nodeType===3?(en.nodeValue?.length||0):en.childNodes.length));if(r.collapsed)return false;const s=getSelection();s.removeAllRanges();s.addRange(r);try{root.focus({preventScroll:true})}catch(_){root.focus()}return true}catch(_){const a=pointAt(root,sel171.sc),b=pointAt(root,sel171.ec);try{const r=document.createRange();r.setStart(a.node,a.offset);r.setEnd(b.node,b.offset);const s=getSelection();s.removeAllRanges();s.addRange(r);root.focus({preventScroll:true});return !r.collapsed}catch(__){return false}}
 }
-function has171(){return capture171()||!!(sel171&&q(`.cobj[data-id="${CSS.escape(sel171.id)}"][contenteditable="true"]`))}
+function has171(){if(capture171())return true;const sid=String(st()?.selectedId||"");if(sel171&&sid&&sid!==String(sel171.id)){sel171=null;return false}return !!(sel171&&q(`.cobj[data-id="${CSS.escape(sel171.id)}"][contenteditable="true"]`))}
 function selectedRoot171(){if(!restore171())return null;const s=getSelection();if(!s?.rangeCount||s.isCollapsed)return null;return editableRootFrom(s.getRangeAt(0).commonAncestorContainer)}
 function saveRoot171(root){if(!root)return;const s=st(),o=(s?.objects||[]).find(x=>String(x.id)===String(root.dataset.id));if(!o)return;o.text=root.innerHTML;window.markCanvasDirty?.();window.pushHistory?.();capture171()}
 function wrapStyle171(style){const root=selectedRoot171();if(!root)return false;const s=getSelection(),r=s.getRangeAt(0);try{const span=document.createElement('span');Object.assign(span.style,style);span.appendChild(r.extractContents());r.insertNode(span);const nr=document.createRange();nr.selectNodeContents(span);s.removeAllRanges();s.addRange(nr);saveRoot171(root);return true}catch(err){console.warn('[V171 rich]',err);return false}}
@@ -19971,7 +20013,7 @@ function resizeVector(v,s,b0,b1){const sx=b1.w/Math.max(1,b0.w),sy=b1.h/Math.max
 function resizeBox(b,h,dx,dy){let x=b.x,y=b.y,w=b.w,hh=b.h;const min=18;if(h.includes('e'))w=Math.max(min,b.w+dx);if(h.includes('s'))hh=Math.max(min,b.h+dy);if(h.includes('w')){const nw=Math.max(min,b.w-dx);x=b.x+(b.w-nw);w=nw}if(h.includes('n')){const nh=Math.max(min,b.h-dy);y=b.y+(b.h-nh);hh=nh}x=clamp(x,0,pageW()-min);y=clamp(y,0,pageH()-min);w=Math.min(w,pageW()-x);hh=Math.min(hh,pageH()-y);return{x,y,w,h:hh}}
 function beginGesture(mode,e,handle=''){const sel=selected(),b=boxOf(sel);if(!sel?.ref||sel.ref.locked||!b)return;e.preventDefault();e.stopImmediatePropagation();gesture={mode,kind:sel.kind,id:sel.ref.id,pid:e.pointerId,sx:e.clientX,sy:e.clientY,b,snap:clone(sel.ref),handle,sc:scale(),moved:false};try{e.target.setPointerCapture?.(e.pointerId)}catch(_){}document.body.classList.add('v183Transforming')}
 function frameDown(e){if(!desktop()||e.button!==0)return;const col=e.target.closest?.('[data-column]');if(col){e.preventDefault();e.stopImmediatePropagation();const sel=selected();if(sel?.ref?.kind==='table')selectColumn(sel.ref,+col.dataset.column||0,e.shiftKey);return}if(e.target.dataset.move)beginGesture('move',e);else if(e.target.dataset.resize)beginGesture('resize',e,e.target.dataset.resize);else if(e.target.dataset.rotate)beginGesture('rotate',e)}
-window.addEventListener('pointermove',e=>{if(!gesture||e.pointerId!==gesture.pid||!desktop())return;e.preventDefault();e.stopImmediatePropagation();const d=gesture,dx=(e.clientX-d.sx)/d.sc,dy=(e.clientY-d.sy)/d.sc;if(!d.moved&&Math.hypot(dx,dy)<.35)return;d.moved=true;if(d.kind==='object'){const o=(state()?.objects||[]).find(x=>String(x.id)===String(d.id));if(!o)return;if(d.mode==='move'){o.x=clamp(d.snap.x+dx,0,Math.max(0,pageW()-o.w));o.y=clamp(d.snap.y+dy,0,Math.max(0,pageH()-o.h))}else if(d.mode==='resize'){const a=(+d.b.rotation||0)*Math.PI/180,lx=dx*Math.cos(a)+dy*Math.sin(a),ly=-dx*Math.sin(a)+dy*Math.cos(a),nb=resizeBox(d.b,d.handle,lx,ly);Object.assign(o,{x:nb.x,y:nb.y,w:nb.w,h:nb.h})}else{const st=q('#canvasStage')?.getBoundingClientRect();if(!st)return;const cx=st.left+(d.b.x+d.b.w/2)*d.sc,cy=st.top+(d.b.y+d.b.h/2)*d.sc,start=Math.atan2(d.sy-cy,d.sx-cx),cur=Math.atan2(e.clientY-cy,e.clientX-cx);o.rotation=(+d.snap.rotation||0)+(cur-start)*180/Math.PI}const el=q(`#canvasObjects .cobj[data-id="${CSS.escape(String(o.id))}"]`);if(el){el.style.left=o.x+'px';el.style.top=o.y+'px';el.style.width=o.w+'px';el.style.height=o.h+'px';el.style.transform=`rotate(${o.rotation||0}deg)`}}
+window.addEventListener('pointermove',e=>{if(!gesture||e.pointerId!==gesture.pid||!desktop())return;e.preventDefault();e.stopImmediatePropagation();const d=gesture,dx=(e.clientX-d.sx)/d.sc,dy=(e.clientY-d.sy)/d.sc;if(!d.moved&&Math.hypot(dx,dy)<.35)return;d.moved=true;if(d.kind==='object'){const o=(state()?.objects||[]).find(x=>String(x.id)===String(d.id));if(!o)return;if(d.mode==='move'){o.x=clamp(d.snap.x+dx,0,Math.max(0,pageW()-o.w));o.y=clamp(d.snap.y+dy,0,Math.max(0,pageH()-o.h))}else if(d.mode==='resize'){const a=(+d.b.rotation||0)*Math.PI/180,lx=dx*Math.cos(a)+dy*Math.sin(a),ly=-dx*Math.sin(a)+dy*Math.cos(a),nb=resizeBox(d.b,d.handle,lx,ly);Object.assign(o,{x:nb.x,y:nb.y,w:o.kind==='table'?Math.max(80,nb.w):nb.w,h:o.kind==='table'?Math.max(50,nb.h):nb.h});if(o.kind==='table')o.borderRadius=Math.min(+o.borderRadius||0,Math.min(o.w,o.h)/2)}else{const st=q('#canvasStage')?.getBoundingClientRect();if(!st)return;const cx=st.left+(d.b.x+d.b.w/2)*d.sc,cy=st.top+(d.b.y+d.b.h/2)*d.sc,start=Math.atan2(d.sy-cy,d.sx-cx),cur=Math.atan2(e.clientY-cy,e.clientX-cx);o.rotation=(+d.snap.rotation||0)+(cur-start)*180/Math.PI}const el=q(`#canvasObjects .cobj[data-id="${CSS.escape(String(o.id))}"]`);if(el){el.style.left=o.x+'px';el.style.top=o.y+'px';el.style.width=o.w+'px';el.style.height=o.h+'px';el.style.transform=`rotate(${o.rotation||0}deg)`}}
  else{const v=(state()?.vectors||[]).find(x=>String(x.id)===String(d.id));if(!v)return;if(d.mode==='move')moveVector(v,d.snap,dx,dy);else if(d.mode==='resize'){const a=(+d.b.rotation||0)*Math.PI/180,lx=dx*Math.cos(a)+dy*Math.sin(a),ly=-dx*Math.sin(a)+dy*Math.cos(a);resizeVector(v,d.snap,d.b,resizeBox(d.b,d.handle,lx,ly))}else{const st=q('#canvasStage')?.getBoundingClientRect();if(!st)return;const cx=st.left+(d.b.x+d.b.w/2)*d.sc,cy=st.top+(d.b.y+d.b.h/2)*d.sc,start=Math.atan2(d.sy-cy,d.sx-cx),cur=Math.atan2(e.clientY-cy,e.clientX-cx);v.rotation=(+d.snap.rotation||0)+(cur-start)*180/Math.PI}try{renderVectors?.()}catch(_){}}
  paintFrame();try{markCanvasDirty?.(false)}catch(_){}},{capture:true,passive:false});
 function endGesture(e){if(!gesture||e.pointerId!==gesture.pid)return;const moved=gesture.moved;gesture=null;document.body.classList.remove('v183Transforming');if(moved){try{markCanvasDirty?.();pushHistory?.();renderCanvasInspector?.();renderLayerList?.()}catch(_){}}requestAnimationFrame(()=>{bindObjects();bindVectors();paintFrame()})}
@@ -20435,7 +20477,7 @@ window.addEventListener('pointerup',finish,{capture:true,passive:false});window.
 /* -------- Format kopieren: shapes now copy real visual properties too. -------- */
 let copied=null;
 function source(){const s=S();if(!s?.selectedId)return null;if(s.selectedType==='vector'){const v=(s.vectors||[]).find(x=>String(x.id)===String(s.selectedId));return v&&{kind:'vector',ref:v}}const o=(s.objects||[]).find(x=>String(x.id)===String(s.selectedId));return o&&{kind:'object',ref:o}}
-window.copySelectedCanvasFormat=function(){const x=source();if(!x)return cuteToast?.('Wähle zuerst ein Element ♡');if(x.kind==='vector'){const v=x.ref;copied={kind:'vector',props:{fill:v.fill,stroke:v.stroke,strokeWidth:v.strokeWidth,dash:v.dash,opacity:v.opacity,rx:v.rx,cornerRadius:v.cornerRadius}}}else if(['text','block','task','merke','file'].includes(x.ref.kind)){copied={kind:'text',props:clone(x.ref.style||{})}}else if(x.ref.kind==='table'){copied={kind:'table',props:{borderColor:x.ref.borderColor,borderWidth:x.ref.borderWidth,borderStyle:x.ref.borderStyle,cellBackground:x.ref.cellBackground,fontSize:x.ref.fontSize,borderRadius:x.ref.borderRadius}}}else{copied={kind:'object',props:{style:clone(x.ref.style||{}),color:x.ref.color,opacity:x.ref.opacity}}}cuteToast?.('Format kopiert ✦')};
+window.copySelectedCanvasFormat=function(){const x=source();if(!x)return cuteToast?.('Wähle zuerst ein Element ♡');if(x.kind==='vector'){const v=x.ref;copied={kind:'vector',props:{fill:v.fill,stroke:v.stroke,strokeWidth:v.strokeWidth,dash:v.dash,opacity:v.opacity,rx:v.rx,cornerRadius:v.cornerRadius}}}else if(['text','block','task','merke','file'].includes(x.ref.kind)){copied={kind:'text',props:clone(x.ref.style||{})}}else if(x.ref.kind==='table'){copied={kind:'table',props:{borderColor:x.ref.borderColor,borderWidth:x.ref.borderWidth,borderStyle:x.ref.borderStyle,cellBackground:x.ref.cellBackground,fontSize:x.ref.fontSize,fontFamily:x.ref.fontFamily,textColor:x.ref.textColor,textAlign:x.ref.textAlign,verticalAlign:x.ref.verticalAlign,borderRadius:x.ref.borderRadius}}}else{copied={kind:'object',props:{style:clone(x.ref.style||{}),color:x.ref.color,opacity:x.ref.opacity}}}cuteToast?.('Format kopiert ✦')};
 window.pasteSelectedCanvasFormat=function(){if(!copied)return cuteToast?.('Kopiere zuerst ein Format ♡');const s=S();if(!s)return;let changed=0;if(copied.kind==='vector'){let ids=[...(s.selectedVectorIds||[])];if(!ids.length&&s.selectedType==='vector'&&s.selectedId)ids=[s.selectedId];(s.vectors||[]).filter(v=>ids.some(id=>String(id)===String(v.id))).forEach(v=>{for(const [k,val] of Object.entries(copied.props)){if(val!==undefined){if(k==='rx'&&v.type!=='rect')continue;if(k==='cornerRadius'&&v.type!=='triangle')continue;v[k]=clone(val)}}changed++})}else{let ids=[...(s.selectedIds||[])];if(!ids.length&&s.selectedType==='object'&&s.selectedId)ids=[s.selectedId];(s.objects||[]).filter(o=>ids.some(id=>String(id)===String(o.id))).forEach(o=>{if(copied.kind==='text'&&['text','block','task','merke','file'].includes(o.kind)){o.style={...(o.style||{}),...clone(copied.props)};changed++}else if(copied.kind==='table'&&o.kind==='table'){Object.assign(o,clone(copied.props));changed++}else if(copied.kind==='object'){if(copied.props.style)o.style={...(o.style||{}),...clone(copied.props.style)};if(copied.props.color!==undefined)o.color=copied.props.color;if(copied.props.opacity!==undefined)o.opacity=copied.props.opacity;changed++}})}if(!changed)return cuteToast?.('Format passt nicht zu dieser Auswahl ♡');try{renderCanvasObjects?.();renderVectors?.();renderCanvasInspector?.();markCanvasDirty?.();pushHistory?.()}catch(_){}cuteToast?.('Format eingefügt ✦')};
 
 /* Keep font previews correct even after a drawer/toolbar rerender. */
@@ -23890,7 +23932,7 @@ function v222NormalizeExpr(expr){
   s=s.replace(/\u200b/g,'').replace(/\u00a0/g,'').replace(/\s+/g,'');
   s=s.replace(/^f\(x\)=/i,'').replace(/^y=/i,'');
   s=s.replace(/[×⋅]/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/π/g,'pi');
-  s=s.replace(/(\d),(\d)/g,'$1.$2');
+  s=s.replace(/(\d),(\d)/g,'$1.$2').replace(/\^\(\)/g,'');
   if(!s)return '';
 
   /* Übliche Schulschreibweise ohne sichtbares Malzeichen akzeptieren: 2x, 3sin(x), 2(x+1), x(x+1). */
@@ -23949,12 +23991,16 @@ function v222NodeExpr(node){
   }
   if(node.matches('.vfPower')){
     const base=node.querySelector(':scope > .vfPowerBase');const sup=node.querySelector(':scope > sup');
-    return `(${v222ChildrenExpr(base)})^(${v222ChildrenExpr(sup)})`;
+    const b=(v222ChildrenExpr(base)||String(base?.textContent||'')).replace(/\s+/g,'');
+    const e=(v222ChildrenExpr(sup)||String(sup?.textContent||'')).replace(/\s+/g,'');
+    if(!b)return e?`^(${e})`:'';
+    return e?`(${b})^(${e})`:`(${b})`;
   }
   if(node.matches('.vfExp')){
-    const sup=node.querySelector(':scope > sup');return `exp(${v222ChildrenExpr(sup)})`;
+    const sup=node.querySelector(':scope > sup');const e=(v222ChildrenExpr(sup)||String(sup?.textContent||'')).replace(/\s+/g,'');return e?`e^(${e})`:'e';
   }
-  if(node.tagName==='SUP')return `^(${v222ChildrenExpr(node)})`;
+  if(node.matches('.vfConstant[data-constant="e"],.vfConstantE'))return 'e';
+  if(node.tagName==='SUP'){const e=(v222ChildrenExpr(node)||String(node.textContent||'')).replace(/\s+/g,'');return e?`^(${e})`:'';}
   if(node.tagName==='SUB')return v222ChildrenExpr(node);
   return v222ChildrenExpr(node);
 }
@@ -24426,952 +24472,22 @@ const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 223'};
 <!-- ===== /Studia V223 ===== -->
 
 <!-- ===== Studia V224 · ein gemeinsamer Formeleditor + robuster Graph-Serializer ===== -->
-<style id="studia-v224-unified-formula-style">
-/* Ein Exponent ist ein echtes zusammenhängendes mathematisches Objekt. */
-#formulaVisualEditor .vfPower{
-  display:inline-flex!important;
-  align-items:baseline!important;
-  vertical-align:baseline!important;
-  white-space:nowrap!important;
-}
-#formulaVisualEditor .vfPower>.vfPowerBase{display:inline-flex!important;align-items:baseline!important}
-#formulaVisualEditor .vfPower>sup{
-  flex:0 0 auto!important;
-  align-self:flex-start!important;
-  transform:translateY(-.05em)!important;
-}
-</style>
-<script id="studia-v224-unified-formula-script">
-(()=>{
-'use strict';
-if(window.__STUDIA_V224__)return;window.__STUDIA_V224__=true;
-const q=(s,r=document)=>r?.querySelector?.(s)||null;
-const qa=(s,r=document)=>r?.querySelectorAll?[...r.querySelectorAll(s)]:[];
-let v224GraphCurve=-1;
-
-/* ------------------------------------------------------------------
-   1) Exponenten im ECHTEN Formeleditor als strukturiertes Objekt bauen.
-      Damit weiß der Graph später sicher: Basis ^ Exponent.
-------------------------------------------------------------------- */
-try{
-  const prevInsert=window.insertVisualFormula;
-  window.insertVisualFormula=function(type){
-    if(type==='power'){
-      const ed=q('#formulaVisualEditor');if(!ed)return;
-      ed.focus();
-      const selected=(typeof selectedFormulaHTML==='function'?selectedFormulaHTML():'')||'';
-      if(typeof replaceSelectionWithHTML==='function'){
-        const base=selected||'x';
-        replaceSelectionWithHTML(`<span class="vfPower"><span class="vfPowerBase">${base}</span><sup class="vfEditable vfExponentSlot" contenteditable="true">n</sup></span>&nbsp;`,'sup.vfExponentSlot');
-        try{installFormulaSlotProtection?.(ed)}catch(_){}
-        return;
-      }
-    }
-    return prevInsert?.apply(this,arguments);
-  };
-  try{insertVisualFormula=window.insertVisualFormula}catch(_){}
-}catch(_){}
-
-/* ------------------------------------------------------------------
-   2) DOM -> Graph-Ausdruck. KEIN textContent-Raten mehr.
-      Bruch, Wurzel, Exponent und Klammer werden rekursiv gelesen.
-------------------------------------------------------------------- */
-function v224Text(raw){
-  let s=String(raw||'').replace(/\u200b/g,'').replace(/\u00a0/g,' ')
-    .replace(/[×⋅]/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/π/g,'pi');
-  const supMap={'⁰':'0','¹':'1','²':'2','³':'3','⁴':'4','⁵':'5','⁶':'6','⁷':'7','⁸':'8','⁹':'9','⁻':'-','⁺':'+'};
-  s=s.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺]+/g,m=>'^('+[...m].map(c=>supMap[c]||c).join('')+')');
-  return s;
-}
-function v224Children(el){return el?[...el.childNodes].map(v224Node).join(''):''}
-function v224Need(value,label){
-  const v=String(value||'').replace(/\s+/g,'');
-  if(!v)throw new Error(label+' ist leer');
-  return value;
-}
-function v224Node(node){
-  if(!node)return '';
-  if(node.nodeType===Node.TEXT_NODE)return v224Text(node.nodeValue);
-  if(node.nodeType!==Node.ELEMENT_NODE)return '';
-  if(node.tagName==='BR')return '';
-  if(node.classList?.contains('vfParenMark'))return '';
-
-  if(node.matches('.vfFrac,.fracExpr')){
-    const parts=[...node.children];
-    const a=v224Need(v224Children(parts[0]),'Zähler');
-    const b=v224Need(v224Children(parts[1]),'Nenner');
-    return `((${a})/(${b}))`;
-  }
-  if(node.matches('.vfRoot,.sqrtExpr')){
-    const inside=node.querySelector(':scope > span');
-    return `sqrt(${v224Need(v224Children(inside),'Wurzel')})`;
-  }
-  if(node.matches('.vfPower')){
-    const base=node.querySelector(':scope > .vfPowerBase');
-    const sup=node.querySelector(':scope > sup');
-    const b=v224Need(v224Children(base),'Basis');
-    const e=v224Need(v224Children(sup),'Exponent');
-    return `(${b})^(${e})`;
-  }
-  if(node.matches('.vfExp')){
-    const sup=node.querySelector(':scope > sup');
-    return `e^(${v224Need(v224Children(sup),'Exponent')})`;
-  }
-  if(node.tagName==='SUP'){
-    const e=v224Need(v224Children(node),'Exponent');
-    return `^(${e})`;
-  }
-  if(node.tagName==='SUB'){
-    const sub=v224Children(node).replace(/\s+/g,'');
-    if(sub)throw new Error('Index kann im Funktionsgraphen nicht berechnet werden');
-    return '';
-  }
-  if(node.matches('.vfParen')){
-    const body=node.querySelector(':scope > .vfParenBody')||node.querySelector(':scope > .vfEditable');
-    if(body)return `(${v224Need(v224Children(body),'Klammer')})`;
-    /* alte Klammer-Struktur: die sichtbaren ( ) sind bereits Textknoten */
-    return v224Children(node);
-  }
-  if(node.matches('.vfAbs')){
-    const inside=node.querySelector(':scope > span');
-    return `abs(${v224Need(v224Children(inside),'Betrag')})`;
-  }
-  if(node.matches('.vfFunction')){
-    const lead=String(node.childNodes[0]?.nodeValue||'');
-    const fn=(lead.match(/(?:sin|cos|tan)/i)||[])[0]?.toLowerCase();
-    const inside=node.querySelector(':scope > span');
-    if(!fn)throw new Error('Funktion nicht erkannt');
-    return `${fn}(${v224Need(v224Children(inside),fn)})`;
-  }
-  return v224Children(node);
-}
-function v224FormulaToGraphExpr(ed){
-  if(!ed)throw new Error('Formeleditor nicht gefunden');
-  let expr=v224Children(ed).replace(/\s+/g,'');
-  expr=expr.replace(/^f\(x\)=/i,'').replace(/^y=/i,'');
-  expr=expr.replace(/(\d),(\d)/g,'$1.$2');
-  expr=expr.replace(/[×⋅]/g,'*').replace(/÷/g,'/').replace(/−/g,'-');
-  if(!expr)throw new Error('Funktion ist leer');
-  /* Empty legacy exponent placeholders are ignored; visible SUP content is serialized separately. */
-  expr=expr.replace(/\^\(\)/g,'');
-  if(/\/\(\)/.test(expr))throw new Error('Nenner ist leer');
-  return expr;
-}
-window.v224FormulaToGraphExpr=v224FormulaToGraphExpr;
-
-/* ------------------------------------------------------------------
-   3) Funktionsgraph benutzt EXAKT openFormulaDialog().
-      Keine zweite graphFunctionVisual-Oberfläche mehr.
-------------------------------------------------------------------- */
-function v224ReturnToGraph(){
-  v224GraphCurve=-1;
-  if(typeof window.v222ReturnToGraphDialog==='function')window.v222ReturnToGraphDialog();
-  else try{window.openGraphDialog?.()}catch(_){}
-}
-function v224SetupGraphFormulaEditor(i){
-  const ed=q('#formulaVisualEditor');if(!ed)return;
-  const curve=window.graphDraft?.curves?.[i] || (typeof graphDraft!=='undefined'?graphDraft?.curves?.[i]:null);
-  if(!curve)return;
-
-  /* Visuelles HTML bleibt erhalten. Nur alte Graphen müssen einmal aus expr aufgebaut werden. */
-  const visual=curve.formulaHTML || (typeof window.graphExprToVisual==='function'?window.graphExprToVisual(curve.expr||''):(curve.expr||''));
-  ed.innerHTML=String(visual||'').replace(/×/g,'⋅');
-  try{normalizeAllVisualRoots?.(ed)}catch(_){}
-  try{installFormulaSlotProtection?.(ed)}catch(_){}
-  try{formulaLocalHistory=[ed.innerHTML];formulaLocalIndex=0}catch(_){}
-
-  const modal=ed.closest('.visualFormulaModal,.formulaModal');if(!modal)return;
-  const eyebrow=q('.presetModalHead .eyebrow',modal);if(eyebrow)eyebrow.textContent='FUNKTIONSGRAPH';
-  const title=q('.presetModalHead h2',modal);if(title)title.textContent=`Funktion ${i+1} bearbeiten`;
-  const hint=q('.formulaEasyHint',modal);if(hint)hint.innerHTML='<b>Genau derselbe Formeleditor:</b> Exponent, Bruch, Wurzel und Klammern werden beim Übernehmen direkt als mathematische Struktur in den Funktionsgraphen übernommen.';
-
-  const close=q('.presetModalHead .miniIcon',modal);
-  if(close){close.removeAttribute('onclick');close.onclick=()=>v224ReturnToGraph()}
-  const primary=qa('button.primary',modal).at(-1);
-  if(primary){primary.textContent='Übernehmen';primary.removeAttribute('onclick');primary.onclick=()=>window.v224SaveGraphFormula(i)}
-
-  ed.focus();try{placeCaretAtEnd?.(ed)}catch(_){}
-  ed.dispatchEvent(new Event('input',{bubbles:true}));
-}
-window.openGraphFunctionEditor=function(i){
-  v224GraphCurve=Number(i);
-  try{graphActiveCurve=Number(i)}catch(_){}
-  /* Pseudo-ID trennt den lokalen Graph-Entwurf von normalen Formel-Entwürfen. */
-  window.openFormulaDialog(`__graph_curve_${i}`);
-  [120,180].forEach(t=>setTimeout(()=>v224SetupGraphFormulaEditor(Number(i)),t));
-};
-try{openGraphFunctionEditor=window.openGraphFunctionEditor}catch(_){}
-
-window.v224SaveGraphFormula=function(i){
-  const ed=q('#formulaVisualEditor');if(!ed)return;
-  let expr='';
-  try{
-    expr=v224FormulaToGraphExpr(ed);
-    /* Der bestehende Graph-Compiler prüft die fertige Schreibweise. */
-    if(typeof window.normalizeGraphExpr==='function')window.normalizeGraphExpr(expr);
-  }catch(err){
-    let msg=String(err?.message||'Ungültige Funktion');
-    if(/Unexpected token|Unexpected end|missing/i.test(msg))msg='Exponent, Bruch oder Klammer ist noch nicht vollständig';
-    try{cuteToast('Formel prüfen: '+msg)}catch(_){}
-    return;
-  }
-  const draft=(typeof graphDraft!=='undefined'?graphDraft:window.graphDraft);
-  const curve=draft?.curves?.[i];if(!curve)return;
-  curve.expr=expr;
-  curve.formulaHTML=ed.innerHTML;
-  try{cuteToast('Funktion übernommen ♡')}catch(_){}
-  v224ReturnToGraph();
-};
-/* Alte Save-Namen zeigen ebenfalls auf den neuen, einzigen Weg. */
-window.saveGraphFunctionEditor=function(i){return window.v224SaveGraphFormula(i)};
-try{saveGraphFunctionEditor=window.saveGraphFunctionEditor}catch(_){}
-
-/* Graph-Zeilen sollen immer den neuen gemeinsamen Editor öffnen. */
-try{
-  const prevRows=window.renderGraphCurveRows;
-  window.renderGraphCurveRows=function(){
-    const out=prevRows?.apply(this,arguments);
-    qa('#graphCurveRows .graphExprButton').forEach((b,i)=>{
-      b.removeAttribute('onclick');
-      b.onclick=e=>{e.stopPropagation();try{graphActiveCurve=i}catch(_){};window.openGraphFunctionEditor(i)};
-    });
-    return out;
-  };
-  try{renderGraphCurveRows=window.renderGraphCurveRows}catch(_){}
-}catch(_){}
-
-const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 224'};
-[0,250,900,1800].forEach(t=>setTimeout(setVer,t));
-})();
-</script>
 <!-- ===== /Studia V224 ===== -->
 
 
 <!-- ===== Studia V225 · Reparatur nach kaputtem Patch + Graph-Exponent-Fix ===== -->
-<script id="studia-v225-safe-fix">
-(()=>{
-'use strict';
-if(window.__STUDIA_V225_SAFE__) return; window.__STUDIA_V225_SAFE__ = true;
-const q=(s,r=document)=>r?.querySelector?.(s)||null;
-const qa=(s,r=document)=>r?.querySelectorAll?[...r.querySelectorAll(s)]:[];
-const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-
-function v225TakeTrailingTokenFromTextNode(node, offset){
-  if(!node || node.nodeType!==Node.TEXT_NODE) return '';
-  const text=String(node.nodeValue||'');
-  const cut=typeof offset==='number' ? offset : text.length;
-  const before=text.slice(0,cut), after=text.slice(cut);
-  const m=before.match(/([A-Za-z]+|\d+(?:[.,]\d+)?|π)\s*$/);
-  if(!m) return '';
-  const token=m[1];
-  const start=before.lastIndexOf(token);
-  node.nodeValue = before.slice(0,start) + after;
-  return esc(token);
-}
-function v225TakePrevAtom(ed){
-  const sel=window.getSelection?.();
-  if(!ed || !sel || !sel.rangeCount) return '';
-  const r=sel.getRangeAt(0);
-  if(!ed.contains(r.commonAncestorContainer) || !r.collapsed) return '';
-  let sc=r.startContainer, so=r.startOffset;
-  if(sc.nodeType===Node.TEXT_NODE){
-    const token=v225TakeTrailingTokenFromTextNode(sc, so);
-    if(token) return token;
-    const prev=sc.previousSibling;
-    if(prev?.nodeType===Node.ELEMENT_NODE && prev.tagName!=='BR'){
-      prev.remove();
-      return prev.outerHTML;
-    }
-  }
-  if(sc.nodeType===Node.ELEMENT_NODE){
-    const prev=sc.childNodes[Math.max(0,so-1)];
-    if(prev){
-      if(prev.nodeType===Node.TEXT_NODE){
-        const token=v225TakeTrailingTokenFromTextNode(prev);
-        if(token) return token;
-      }
-      if(prev.nodeType===Node.ELEMENT_NODE && prev.tagName!=='BR'){
-        prev.remove();
-        return prev.outerHTML;
-      }
-    }
-  }
-  return '';
-}
-
-/* Exponent: bei leerer Auswahl die vorherige Zahl / Variable als Basis nehmen, kein automatisches x. */
-try{
-  const prevInsert=window.insertVisualFormula;
-  window.insertVisualFormula=function(type){
-    if(type==='power'){
-      const ed=q('#formulaVisualEditor');
-      if(ed && typeof replaceSelectionWithHTML==='function'){
-        ed.focus();
-        let base=(typeof selectedFormulaHTML==='function' ? selectedFormulaHTML() : '') || '';
-        if(!String(base).trim()) base=v225TakePrevAtom(ed) || '';
-        if(!String(base).trim()) base='x';
-        replaceSelectionWithHTML(`<span class="vfPower"><span class="vfPowerBase">${base}</span><sup class="vfEditable vfExponentSlot" contenteditable="true">n</sup></span>&nbsp;`, 'sup.vfExponentSlot');
-        try{ installFormulaSlotProtection?.(ed); }catch(_){ }
-        try{ ed.dispatchEvent(new Event('input',{bubbles:true})); }catch(_){ }
-        return;
-      }
-    }
-    return prevInsert?.apply(this, arguments);
-  };
-  try{ insertVisualFormula = window.insertVisualFormula; }catch(_){ }
-}catch(_){ }
-
-function v225PickGraphVisual(curve){
-  const exprVisual = (typeof window.graphExprToVisual==='function') ? window.graphExprToVisual(curve?.expr||'') : (curve?.expr||'');
-  const candidate = String(curve?.formulaHTML||'').trim();
-  if(!candidate) return exprVisual;
-  try{
-    const tmp=document.createElement('div');
-    tmp.innerHTML=candidate;
-    const expr=window.v224FormulaToGraphExpr ? window.v224FormulaToGraphExpr(tmp) : '';
-    if(!expr) throw new Error('leer');
-    if(typeof window.normalizeGraphExpr==='function') window.normalizeGraphExpr(expr);
-    return candidate;
-  }catch(_){
-    return exprVisual;
-  }
-}
-
-window.v224SetupGraphFormulaEditor=function(i){
-  const ed=q('#formulaVisualEditor'); if(!ed) return;
-  const draft=(typeof graphDraft!=='undefined' ? graphDraft : window.graphDraft);
-  const curve=draft?.curves?.[i]; if(!curve) return;
-  const visual=v225PickGraphVisual(curve);
-  curve.formulaHTML=visual;
-  ed.innerHTML=String(visual||'').replace(/×/g,'⋅');
-  try{ normalizeAllVisualRoots?.(ed); }catch(_){ }
-  try{ installFormulaSlotProtection?.(ed); }catch(_){ }
-  try{ formulaLocalHistory=[ed.innerHTML]; formulaLocalIndex=0; }catch(_){ }
-
-  const modal=ed.closest('.visualFormulaModal,.formulaModal'); if(!modal) return;
-  const eyebrow=q('.presetModalHead .eyebrow',modal); if(eyebrow) eyebrow.textContent='FUNKTIONSGRAPH';
-  const title=q('.presetModalHead h2',modal); if(title) title.textContent=`Funktion ${Number(i)+1} bearbeiten`;
-  const hint=q('.formulaEasyHint',modal); if(hint) hint.innerHTML='<b>Exakt derselbe Formeleditor:</b> Exponenten werden direkt an die vorherige Zahl/Variable gebunden und sauber in den Funktionsgraphen übernommen.';
-  const close=q('.presetModalHead .miniIcon',modal); if(close){ close.removeAttribute('onclick'); close.onclick=()=>window.v224ReturnToGraph?.(); }
-  const primary=qa('button.primary',modal).at(-1); if(primary){ primary.textContent='Übernehmen'; primary.removeAttribute('onclick'); primary.onclick=()=>window.v224SaveGraphFormula(Number(i)); }
-  ed.focus(); try{ placeCaretAtEnd?.(ed); }catch(_){ }
-  ed.dispatchEvent(new Event('input',{bubbles:true}));
-};
-try{ v224SetupGraphFormulaEditor = window.v224SetupGraphFormulaEditor; }catch(_){ }
-
-window.openGraphFunctionEditor=function(i){
-  i=Number(i);
-  try{ window.graphActiveCurve=i; }catch(_){ }
-  if(typeof window.openFormulaDialog==='function'){
-    window.openFormulaDialog(`__graph_curve_${i}`);
-    [80,140,220].forEach(t=>setTimeout(()=>{ try{ window.v224SetupGraphFormulaEditor(i); }catch(_){ } }, t));
-  }
-};
-try{ openGraphFunctionEditor = window.openGraphFunctionEditor; }catch(_){ }
-
-/* Auch die Graph-Zeilen sicher an den gemeinsamen Editor binden. */
-try{
-  const prevRows=window.renderGraphCurveRows;
-  window.renderGraphCurveRows=function(){
-    const out=prevRows?.apply(this, arguments);
-    qa('#graphCurveRows .graphExprButton').forEach((b,i)=>{
-      b.removeAttribute('onclick');
-      b.onclick=e=>{ e?.stopPropagation?.(); try{ graphActiveCurve=i; }catch(_){ } window.openGraphFunctionEditor(i); };
-    });
-    return out;
-  };
-  try{ renderGraphCurveRows = window.renderGraphCurveRows; }catch(_){ }
-}catch(_){ }
-
-const setVer=()=>{ const e=q('#headerEyebrow'); if(e) e.textContent='VERSION 225'; };
-[0,250,900,1800].forEach(t=>setTimeout(setVer,t));
-})();
-</script>
 <!-- ===== /Studia V225 ===== -->
 
 
 <!-- ===== Studia V226 · fehlertoleranter Graph-Exponent-Parser ===== -->
-<script id="studia-v226-graph-exp-recover">
-(()=>{
-'use strict';
-if(window.__STUDIA_V226_GRAPH_RECOVER__) return; window.__STUDIA_V226_GRAPH_RECOVER__ = true;
-const q=(s,r=document)=>r?.querySelector?.(s)||null;
-function v226NormText(s){
-  const supMap={'⁰':'0','¹':'1','²':'2','³':'3','⁴':'4','⁵':'5','⁶':'6','⁷':'7','⁸':'8','⁹':'9','⁻':'-','⁺':'+'};
-  return String(s||'')
-    .replace(/\u200b/g,'').replace(/\u00a0/g,' ')
-    .replace(/f\(x\)\s*=\s*/ig,'').replace(/^y\s*=\s*/i,'')
-    .replace(/[×⋅]/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/π/g,'pi')
-    .replace(/(\d),(\d)/g,'$1.$2')
-    .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺]+/g,m=>'^('+[...m].map(c=>supMap[c]||c).join('')+')');
-}
-function v226Need(v,label){
-  const s=String(v||'').replace(/\s+/g,'');
-  if(!s) throw new Error(label+' ist leer');
-  return v;
-}
-function v226Children(node){return node?[...node.childNodes].map(v226Node).join(''):''}
-function v226Node(node){
-  if(!node) return '';
-  if(node.nodeType===Node.TEXT_NODE) return v226NormText(node.nodeValue);
-  if(node.nodeType!==Node.ELEMENT_NODE) return '';
-  if(node.tagName==='BR') return '';
-  if(node.classList?.contains('vfParenMark')) return '';
-
-  if(node.matches('.vfFrac,.fracExpr')){
-    const parts=[...node.children];
-    return `((${v226Need(v226Children(parts[0]),'Zähler')})/(${v226Need(v226Children(parts[1]),'Nenner')}))`;
-  }
-  if(node.matches('.vfRoot,.sqrtExpr')){
-    const inside=node.querySelector(':scope > span');
-    return `sqrt(${v226Need(v226Children(inside),'Wurzel')})`;
-  }
-  if(node.matches('.vfFunction')){
-    const first=(node.childNodes[0]?.nodeValue||'').trim();
-    const fn=(first.match(/(sin|cos|tan)/i)||[])[1]?.toLowerCase()||'sin';
-    const inside=node.querySelector(':scope > span');
-    return `${fn}(${v226Need(v226Children(inside),fn)})`;
-  }
-  if(node.matches('.vfAbs')){
-    const inside=node.querySelector(':scope > span');
-    return `abs(${v226Need(v226Children(inside),'Betrag')})`;
-  }
-  if(node.matches('.vfExp')){
-    const sup=node.querySelector(':scope > sup');
-    const e=(sup?.innerText||sup?.textContent||v226Children(sup)||'').trim();
-    const ex=v226NormText(e);return ex?`e^(${ex})`:'e';
-  }
-  if(node.matches('.vfPower')){
-    const baseEl=node.querySelector(':scope > .vfPowerBase');
-    const sup=node.querySelector(':scope > sup');
-    let base=(baseEl?.innerText||baseEl?.textContent||v226Children(baseEl)||'').trim();
-    let exp=(sup?.innerText||sup?.textContent||v226Children(sup)||'').trim();
-    const total=(node.innerText||node.textContent||'').trim();
-    if(!exp){
-      let rest=String(total||'');
-      if(base && rest.startsWith(base)) rest=rest.slice(base.length);
-      rest=rest.replace(/^\^+/,'').trim();
-      if(rest) exp=rest;
-    }
-    if(!base && total){
-      if(exp && typeof total.endsWith==='function' && total.endsWith(exp)) base=total.slice(0,total.length-exp.length).replace(/\^+$/,'').trim();
-      else base=total.trim();
-    }
-    base=v226NormText(base); exp=v226NormText(exp);
-    const b=v226Need(base,'Basis');return exp?`(${b})^(${exp})`:`(${b})`;
-  }
-  if(node.tagName==='SUP'){
-    const e=(node.innerText||node.textContent||v226Children(node)||'').trim();
-    const ex=v226NormText(e);return ex?`^(${ex})`:'';
-  }
-  if(node.tagName==='SUB') return '';
-  if(node.matches('.vfParen')){
-    const body=node.querySelector(':scope > .vfParenBody')||node.querySelector(':scope > .vfEditable');
-    if(body) return `(${v226Need(v226Children(body),'Klammer')})`;
-  }
-  return v226Children(node);
-}
-function v226FormulaToGraphExprLoose(ed){
-  if(!ed) throw new Error('Formeleditor nicht gefunden');
-  let expr=v226Children(ed).replace(/\s+/g,'');
-  expr=expr.replace(/^f\(x\)=/i,'').replace(/^y=/i,'');
-  expr=expr.replace(/\)\(/g,')*(').replace(/(\d|x|\))(?=sqrt\()/gi,'$1*');
-  if(!expr) throw new Error('Funktion ist leer');
-  return expr;
-}
-window.v226FormulaToGraphExprLoose=v226FormulaToGraphExprLoose;
-
-const prevSave=window.v224SaveGraphFormula;
-window.v224SaveGraphFormula=function(i){
-  const ed=q('#formulaVisualEditor'); if(!ed) return;
-  let expr='';
-  try{
-    expr=window.v224FormulaToGraphExpr(ed);
-    if(typeof window.normalizeGraphExpr==='function') window.normalizeGraphExpr(expr);
-  }catch(err){
-    try{
-      expr=v226FormulaToGraphExprLoose(ed);
-      if(typeof window.normalizeGraphExpr==='function') window.normalizeGraphExpr(expr);
-    }catch(err2){
-      let msg=String(err2?.message || err?.message || 'Ungültige Funktion');
-      if(/Unexpected token|Unexpected end|missing/i.test(msg)) msg='Exponent, Bruch oder Klammer ist noch nicht vollständig';
-      try{ cuteToast('Formel prüfen: '+msg); }catch(_){ }
-      return;
-    }
-  }
-  const draft=(typeof graphDraft!=='undefined' ? graphDraft : window.graphDraft);
-  const curve=draft?.curves?.[i]; if(!curve) return;
-  curve.expr=expr;
-  curve.formulaHTML=ed.innerHTML;
-  try{ cuteToast('Funktion übernommen ♡'); }catch(_){ }
-  window.v224ReturnToGraph?.();
-};
-window.saveGraphFunctionEditor=function(i){ return window.v224SaveGraphFormula(i); };
-try{ saveGraphFunctionEditor=window.saveGraphFunctionEditor; }catch(_){ }
-
-const setVer=()=>{ const e=q('#headerEyebrow'); if(e) e.textContent='VERSION 226'; };
-[0,250,900,1800].forEach(t=>setTimeout(setVer,t));
-})();
-</script>
 <!-- ===== /Studia V226 ===== -->
 
 
 <!-- ===== Studia V228 · freie Mathe-Slots + direkter Graph-Serializer ===== -->
-<style id="studia-v228-math-slots-style">
-#formulaVisualEditor :is(.vfEditable,.vfExponentSlot,sup[contenteditable],sub[contenteditable],.vfFrac>span,.vfRoot>span,.vfParenBody,.vfAbs>span,.vfFunction>span)[contenteditable="true"]{
-  min-width:.28em!important;
-  cursor:text!important;
-  user-select:text!important;
-  -webkit-user-select:text!important;
-  caret-color:#b85f62!important;
-}
-#formulaVisualEditor :is(sup,sub)[contenteditable="true"]{white-space:pre!important}
-</style>
-<script id="studia-v228-math-slots-script">
-(()=>{
-'use strict';
-if(window.__STUDIA_V228__)return;window.__STUDIA_V228__=true;
-const q=(s,r=document)=>r?.querySelector?.(s)||null;
-const qa=(s,r=document)=>r?.querySelectorAll?[...r.querySelectorAll(s)]:[];
-
-function v228Root(node){
-  const el=node instanceof Element?node:(node?.parentElement||null);
-  return el?.closest?.('#formulaVisualEditor')||null;
-}
-function v228SlotFromSelection(root){
-  const s=getSelection();if(!root||!s||!s.rangeCount)return null;
-  let n=s.anchorNode;let el=n?.nodeType===1?n:n?.parentElement;
-  const slot=el?.closest?.('[data-v228-slot="1"]');
-  return slot&&root.contains(slot)?slot:null;
-}
-function v228SetCaret(el,atEnd=true){
-  if(!el)return;el.focus?.();const r=document.createRange(),s=getSelection();
-  r.selectNodeContents(el);r.collapse(atEnd);s.removeAllRanges();s.addRange(r);
-}
-function v228Remember(slot){
-  if(!slot)return;
-  const val=(slot.textContent||'').replace(/\u200b/g,'');
-  if(val)slot.dataset.mathValue=val;
-  else if(!slot.dataset.mathValue)slot.dataset.mathValue='';
-}
-function v228EnhanceSlots(root){
-  if(!root)return;
-  const slots=new Set();
-  qa('sup,sub,.vfEditable,.vfExponentSlot,.vfFrac>span,.vfRoot>span,.vfParenBody,.vfAbs>span,.vfFunction>span',root).forEach(el=>{
-    if(!el.closest('#formulaVisualEditor'))return;
-    if(el.classList?.contains('vfParenMark'))return;
-    el.setAttribute('contenteditable','true');
-    el.setAttribute('spellcheck','false');
-    el.setAttribute('autocapitalize','off');
-    el.removeAttribute('inputmode');
-    el.dataset.v228Slot='1';
-    if(!el.hasAttribute('tabindex'))el.tabIndex=0;
-    v228Remember(el);slots.add(el);
-  });
-  return slots;
-}
-function v228InsertText(root,slot,text){
-  if(!root||!slot)return;
-  let value=String(text??'').replace(/\*/g,'⋅').replace(/-/g,'−');
-  if(!value)return;
-  const s=getSelection();let r=s?.rangeCount?s.getRangeAt(0):null;
-  if(!r||!slot.contains(r.commonAncestorContainer)){
-    r=document.createRange();r.selectNodeContents(slot);r.collapse(false);
-  }
-  r.deleteContents();
-  const n=document.createTextNode(value);r.insertNode(n);r.setStartAfter(n);r.collapse(true);
-  s.removeAllRanges();s.addRange(r);
-  slot.classList.remove('v221EmptySlot');v228Remember(slot);
-  root.dispatchEvent(new Event('input',{bubbles:true}));
-}
-
-/* Freie Eingabe: Buchstaben, Zahlen und normale Zeichen in JEDEM Mathe-Slot. */
-document.addEventListener('beforeinput',e=>{
-  const root=v228Root(e.target)||q('#formulaVisualEditor');if(!root||!root.isConnected)return;
-  v228EnhanceSlots(root);
-  const slot=v228SlotFromSelection(root);if(!slot)return;
-  if(e.inputType==='insertText'&&e.data!=null){
-    e.preventDefault();e.stopImmediatePropagation();v228InsertText(root,slot,e.data);return;
-  }
-  if(e.inputType==='insertParagraph'||e.inputType==='insertLineBreak'){
-    /* Enter verlässt Hoch-/Tiefstellungen, erzeugt aber nie kaputte Blockelemente darin. */
-    if(slot.matches('sup,sub')){
-      e.preventDefault();e.stopImmediatePropagation();const s=getSelection(),r=document.createRange();
-      r.setStartAfter(slot.closest('.vfPower,.vfExp')||slot);r.collapse(true);s.removeAllRanges();s.addRange(r);root.dispatchEvent(new Event('input',{bubbles:true}));
-    }
-  }
-},true);
-document.addEventListener('paste',e=>{
-  const root=v228Root(e.target)||q('#formulaVisualEditor');if(!root||!root.isConnected)return;
-  v228EnhanceSlots(root);const slot=v228SlotFromSelection(root);if(!slot)return;
-  const txt=e.clipboardData?.getData('text/plain');if(txt==null)return;
-  e.preventDefault();e.stopImmediatePropagation();v228InsertText(root,slot,txt.replace(/[\r\n]+/g,' '));
-},true);
-document.addEventListener('input',e=>{
-  const root=v228Root(e.target);if(!root)return;v228EnhanceSlots(root);
-  const slot=v228SlotFromSelection(root);if(slot)v228Remember(slot);
-},true);
-document.addEventListener('focusin',e=>{const root=v228Root(e.target);if(root)v228EnhanceSlots(root)},true);
-new MutationObserver(()=>{const root=q('#formulaVisualEditor');if(root)v228EnhanceSlots(root)}).observe(document.body,{childList:true,subtree:true});
-[0,50,150,400].forEach(t=>setTimeout(()=>v228EnhanceSlots(q('#formulaVisualEditor')),t));
-
-function v228NormText(s){
-  return String(s??'').replace(/\u200b/g,'').replace(/\u00a0/g,' ')
-    .replace(/[×⋅]/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/π/g,'pi')
-    .replace(/(\d),(\d)/g,'$1.$2');
-}
-function v228SlotValue(el){
-  if(!el)return '';
-  let v=(el.textContent||'').replace(/\u200b/g,'').trim();
-  if(!v)v=String(el.dataset?.mathValue||'').trim();
-  if(!v){
-    const raw=String(el.innerHTML||'').replace(/<br\s*\/?\s*>/gi,'').replace(/<[^>]+>/g,'').replace(/&nbsp;|&#160;/gi,' ').replace(/&#8203;|&ZeroWidthSpace;/gi,'').trim();
-    if(raw)v=raw;
-  }
-  return v228NormText(v);
-}
-function v228Need(v,label){const s=String(v||'').replace(/\s+/g,'');if(!s)throw new Error(label+' ist leer');return v}
-function v228RepairPowerBases(root){
-  if(!root)return;
-  root.querySelectorAll('.vfPower').forEach(power=>{
-    const sup=power.querySelector(':scope > sup');
-    let base=power.querySelector(':scope > .vfPowerBase');
-    if(!base){base=document.createElement('span');base.className='vfPowerBase';power.insertBefore(base,sup||power.firstChild)}
-    if(String(base.textContent||'').replace(/\u200b/g,'').trim()||base.children.length)return;
-    /* Legacy formulas sometimes left the base directly before the power wrapper. Move exactly one mathematical atom back into the base. */
-    let prev=power.previousSibling;while(prev&&prev.nodeType===Node.TEXT_NODE&&!String(prev.nodeValue||'').trim())prev=prev.previousSibling;
-    if(prev?.nodeType===Node.TEXT_NODE){
-      const raw=String(prev.nodeValue||''),m=raw.match(/(π|e|[A-Za-zÄÖÜäöüß]+|\d+(?:[.,]\d+)?)\s*$/);
-      if(m){base.textContent=m[1];prev.nodeValue=raw.slice(0,m.index)}
-    }else if(prev?.nodeType===Node.ELEMENT_NODE&&prev.matches('.vfConstant,.vfParen,.vfFrac,.fracExpr,.vfRoot,.sqrtExpr,.vfFunction,.vfAbs')){base.appendChild(prev)}
-    /* Some old DOMs kept the base as a naked text node inside .vfPower. */
-    if(!String(base.textContent||'').trim()&&!base.children.length){
-      const direct=[...power.childNodes].find(n=>n!==base&&n!==sup&&n.nodeType===Node.TEXT_NODE&&String(n.nodeValue||'').trim());
-      if(direct){base.textContent=String(direct.nodeValue||'').trim();direct.remove()}
-    }
-  });
-}
-function v228Children(el){return el?[...el.childNodes].map(v228Node).join(''):''}
-function v228Node(node){
-  if(!node)return '';
-  if(node.nodeType===Node.TEXT_NODE)return v228NormText(node.nodeValue);
-  if(node.nodeType!==Node.ELEMENT_NODE)return '';
-  if(node.tagName==='BR'||node.classList?.contains('vfParenMark'))return '';
-  if(node.matches('.vfConstant[data-constant="e"],.vfConstantE'))return 'e';
-  if(node.matches('.vfPeriodDigit'))return v228NormText(node.textContent||'');
-  if(node.matches('.vfFrac,.fracExpr')){
-    const parts=[...node.children].filter(x=>!x.classList.contains('vfParenMark'));
-    const a=v228Need(parts[0]?v228Children(parts[0]):'','Zähler');
-    const b=v228Need(parts[1]?v228Children(parts[1]):'','Nenner');
-    return `((${a})/(${b}))`;
-  }
-  if(node.matches('.vfRoot,.sqrtExpr')){
-    const inside=node.querySelector(':scope > span');return `sqrt(${v228Need(inside?v228Children(inside):'','Wurzel')})`;
-  }
-  if(node.matches('.vfPower')){
-    const baseEl=node.querySelector(':scope > .vfPowerBase');
-    const sup=node.querySelector(':scope > sup');
-    let base=baseEl?v228Children(baseEl):'';
-    if(!String(base).trim())base=v228SlotValue(baseEl);
-    let exp=sup?v228Children(sup):'';
-    if(!String(exp).replace(/\s+/g,''))exp=v228SlotValue(sup);
-    /* Letzte Rettung für ältere DOMs: sichtbaren Rest hinter der Basis als Exponent nehmen. */
-    if(!String(exp).replace(/\s+/g,'')){
-      const total=v228NormText(node.textContent||'').trim(),btxt=v228NormText(baseEl?.textContent||'').trim();
-      if(total&&btxt&&total.startsWith(btxt))exp=total.slice(btxt.length).replace(/^\^/,'').trim();
-    }
-    {const b=v228Need(base,'Basis');return String(exp||'').replace(/\s+/g,'')?`(${b})^(${exp})`:`(${b})`;}
-  }
-  if(node.matches('.vfExp')){
-    const sup=node.querySelector(':scope > sup');let exp=sup?v228Children(sup):'';if(!exp.trim())exp=v228SlotValue(sup);
-    return String(exp||'').replace(/\s+/g,'')?`e^(${exp})`:'e';
-  }
-  if(node.tagName==='SUP'){
-    let exp=v228Children(node);if(!exp.trim())exp=v228SlotValue(node);return String(exp||'').replace(/\s+/g,'')?`^(${exp})`:'';
-  }
-  if(node.tagName==='SUB'){
-    /* Index ist im normalen Formeleditor frei. Für einen Funktionsgraphen hat er keine Rechenbedeutung. */
-    return '';
-  }
-  if(node.matches('.vfParen')){
-    const body=node.querySelector(':scope > .vfParenBody')||node.querySelector(':scope > .vfEditable');
-    return body?`(${v228Need(v228Children(body),'Klammer')})`:v228Children(node);
-  }
-  if(node.matches('.vfAbs')){
-    const inside=node.querySelector(':scope > span');return `abs(${v228Need(v228Children(inside),'Betrag')})`;
-  }
-  if(node.matches('.vfFunction')){
-    const lead=String(node.childNodes[0]?.nodeValue||'');const fn=(lead.match(/(?:sin|cos|tan)/i)||[])[0]?.toLowerCase();
-    const inside=node.querySelector(':scope > span');if(!fn)throw new Error('Funktion nicht erkannt');return `${fn}(${v228Need(v228Children(inside),fn)})`;
-  }
-  return v228Children(node);
-}
-function v228SerializeGraphFormula(ed){
-  v228EnhanceSlots(ed);
-  v228RepairPowerBases(ed);
-  let expr=v228Children(ed).replace(/\s+/g,'');
-  expr=expr.replace(/^f\(x\)=/i,'').replace(/^y=/i,'');
-  if(!expr)throw new Error('Funktion ist leer');
-  return expr;
-}
-window.v228SerializeGraphFormula=v228SerializeGraphFormula;
-
-/* Graph speichern: ausschließlich die sichtbare gemeinsame Editor-Struktur lesen. */
-window.v224SaveGraphFormula=function(i){
-  const ed=q('#formulaVisualEditor');if(!ed)return;
-  let expr='';
-  try{
-    expr=v228SerializeGraphFormula(ed);
-    if(typeof window.normalizeGraphExpr==='function')window.normalizeGraphExpr(expr);
-  }catch(err){
-    let msg=String(err?.message||'Ungültige Funktion');
-    if(/Unbekannte Funktion/i.test(msg))msg='Im Funktionsgraphen kann nur x als freie Variable berechnet werden';
-    if(/Unexpected token|Unexpected end|missing/i.test(msg))msg='Die Formel ist noch nicht vollständig';
-    try{cuteToast('Formel prüfen: '+msg)}catch(_){ }
-    return;
-  }
-  const draft=(typeof graphDraft!=='undefined'?graphDraft:window.graphDraft),curve=draft?.curves?.[Number(i)];if(!curve)return;
-  curve.expr=expr;curve.formulaHTML=ed.innerHTML;
-  try{cuteToast('Funktion übernommen ♡')}catch(_){ }
-  window.v224ReturnToGraph?.();
-};
-window.saveGraphFunctionEditor=function(i){return window.v224SaveGraphFormula(Number(i))};
-try{saveGraphFunctionEditor=window.saveGraphFunctionEditor}catch(_){ }
-
-/* Ausdruck -> visueller Editor: auch geklammerte Basen wie (0.5)^(x) korrekt als echten Exponenten laden. */
-const prevGTV=window.graphExprToVisual;
-window.graphExprToVisual=function(expr){
-  let s=String(expr??'').trim().replace(/^f\(x\)\s*=\s*/i,'').replace(/^y\s*=\s*/i,'');
-  const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  let safe=esc(s).replace(/(\d)\.(\d)/g,'$1,$2');
-  safe=safe.replace(/\((\d+(?:[.,]\d+)?|[a-zA-Z])\)\^\(([^()]*)\)/g,'<span class="vfPower"><span class="vfPowerBase">$1</span><sup class="vfEditable vfExponentSlot" contenteditable="true">$2</sup></span>');
-  safe=safe.replace(/(\d+(?:[.,]\d+)?|[a-zA-Z])\^\(([^()]*)\)/g,'<span class="vfPower"><span class="vfPowerBase">$1</span><sup class="vfEditable vfExponentSlot" contenteditable="true">$2</sup></span>');
-  if(/vfPower/.test(safe))return safe.replace(/\*/g,'⋅');
-  return typeof prevGTV==='function'?prevGTV(expr):safe.replace(/\*/g,'⋅');
-};
-try{graphExprToVisual=window.graphExprToVisual}catch(_){ }
-
-/* Nach jedem Öffnen Slots sofort freischalten. */
-try{
-  const prevSetup=window.v224SetupGraphFormulaEditor;
-  window.v224SetupGraphFormulaEditor=function(i){const out=prevSetup?.apply(this,arguments);[0,30,100].forEach(t=>setTimeout(()=>v228EnhanceSlots(q('#formulaVisualEditor')),t));return out};
-  try{v224SetupGraphFormulaEditor=window.v224SetupGraphFormulaEditor}catch(_){ }
-}catch(_){ }
-
-const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 228'};[0,250,900,1800].forEach(t=>setTimeout(setVer,t));
-})();
-</script>
 <!-- ===== /Studia V228 ===== -->
 
 
 <!-- ===== Studia V229 · Graph-Formel Save komplett entkoppelt ===== -->
-<script id="studia-v229-graph-save-hardfix">
-(()=>{
-'use strict';
-if(window.__STUDIA_V229__)return;window.__STUDIA_V229__=true;
-const q=(s,r=document)=>r?.querySelector?.(s)||null;
-const qa=(s,r=document)=>r?.querySelectorAll?[...r.querySelectorAll(s)]:[];
-const clone=o=>JSON.parse(JSON.stringify(o));
-let activeGraphCurve=-1;
-
-function normText(s){
-  const supMap={'⁰':'0','¹':'1','²':'2','³':'3','⁴':'4','⁵':'5','⁶':'6','⁷':'7','⁸':'8','⁹':'9','⁻':'-','⁺':'+'};
-  return String(s??'').replace(/\u200b/g,'').replace(/\u00a0/g,' ')
-    .replace(/[×⋅]/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/π/g,'pi')
-    .replace(/(\d),(\d)/g,'$1.$2')
-    .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺]+/g,m=>'^('+[...m].map(c=>supMap[c]||c).join('')+')');
-}
-function visible(el){
-  if(!el)return '';
-  let s=String(el.textContent||'').replace(/\u200b/g,'').trim();
-  if(!s)s=String(el.dataset?.mathValue||'').replace(/\u200b/g,'').trim();
-  return normText(s);
-}
-function children(el){return el?[...el.childNodes].map(node).join(''):''}
-function required(v,label){v=String(v||'').replace(/\s+/g,'');if(!v)throw new Error(label+' ist leer');return v}
-function repairPowerBases(root){
-  if(!root)return;
-  qa('.vfPower',root).forEach(power=>{
-    const sup=q(':scope > sup',power);
-    let base=q(':scope > .vfPowerBase',power);
-    if(!base){base=document.createElement('span');base.className='vfPowerBase';power.insertBefore(base,sup||power.firstChild)}
-    if(String(base.textContent||'').replace(/\u200b/g,'').trim()||base.children.length)return;
-    let prev=power.previousSibling;while(prev&&prev.nodeType===Node.TEXT_NODE&&!String(prev.nodeValue||'').trim())prev=prev.previousSibling;
-    if(prev?.nodeType===Node.TEXT_NODE){
-      const raw=String(prev.nodeValue||''),m=raw.match(/(π|e|[A-Za-zÄÖÜäöüß]+|\d+(?:[.,]\d+)?)\s*$/);
-      if(m){base.textContent=m[1];prev.nodeValue=raw.slice(0,m.index)}
-    }else if(prev?.nodeType===Node.ELEMENT_NODE&&prev.matches('.vfConstant,.vfParen,.vfFrac,.fracExpr,.vfRoot,.sqrtExpr,.vfFunction,.vfAbs')){base.appendChild(prev)}
-    if(!String(base.textContent||'').trim()&&!base.children.length){
-      const direct=[...power.childNodes].find(x=>x!==base&&x!==sup&&x.nodeType===Node.TEXT_NODE&&String(x.nodeValue||'').trim());
-      if(direct){base.textContent=String(direct.nodeValue||'').trim();direct.remove()}
-    }
-  });
-}
-function node(n){
-  if(!n)return '';
-  if(n.nodeType===Node.TEXT_NODE)return normText(n.nodeValue);
-  if(n.nodeType!==Node.ELEMENT_NODE)return '';
-  if(n.tagName==='BR'||n.classList?.contains('vfParenMark'))return '';
-  if(n.matches('.vfConstant[data-constant="e"],.vfConstantE'))return 'e';
-  if(n.matches('.vfPeriodDigit'))return normText(n.textContent||'');
-  if(n.matches('.vfPower')){
-    const b=n.querySelector(':scope > .vfPowerBase');
-    const s=n.querySelector(':scope > sup');
-    let base=children(b).replace(/\s+/g,'') || visible(b);
-    let exp=children(s).replace(/\s+/g,'') || visible(s);
-    /* contenteditable kann sichtbaren Text als verschachtelten/Browser-eigenen Knoten halten. Alle realen Quellen lesen. */
-    if(!exp&&s)exp=normText(s.innerText||s.textContent||s.dataset?.mathValue||s.getAttribute('data-math-value')||'').replace(/\s+/g,'');
-    if(!exp&&s){
-      const tmp=document.createElement('div');tmp.innerHTML=s.innerHTML||'';
-      exp=normText(tmp.innerText||tmp.textContent||'').replace(/\s+/g,'');
-    }
-    /* Legacy-DOM: sichtbarer Exponent kann direkt hinter dem power-Wrapper gelandet sein. Nur einen echten SUP übernehmen. */
-    if(!exp){
-      const next=n.nextElementSibling;
-      if(next?.tagName==='SUP')exp=children(next).replace(/\s+/g,'')||visible(next);
-    }
-    base=String(base||'').replace(/\s+/g,'');
-    exp=String(exp||'').replace(/\s+/g,'');
-    if(!base)return '';
-    /* Ein leerer alter/Phantom-Power-Slot darf eine sonst vollständige Formel nicht blockieren. */
-    if(!exp)return `(${base})`;
-    return `(${base})^(${exp})`;
-  }
-  if(n.matches('.vfFrac,.fracExpr')){
-    const ps=[...n.children].filter(x=>!x.classList.contains('vfParenMark'));
-    return `((${required(children(ps[0])||visible(ps[0]),'Zähler')})/(${required(children(ps[1])||visible(ps[1]),'Nenner')}))`;
-  }
-  if(n.matches('.vfRoot,.sqrtExpr')){
-    const a=n.querySelector(':scope > span');return `sqrt(${required(children(a)||visible(a),'Wurzel')})`;
-  }
-  if(n.matches('.vfFunction')){
-    const lead=String(n.childNodes[0]?.nodeValue||'');const fn=(lead.match(/(?:sin|cos|tan)/i)||[])[0]?.toLowerCase();
-    const a=n.querySelector(':scope > span');if(!fn)throw new Error('Funktion nicht erkannt');return `${fn}(${required(children(a)||visible(a),fn)})`;
-  }
-  if(n.matches('.vfAbs')){const a=n.querySelector(':scope > span');return `abs(${required(children(a)||visible(a),'Betrag')})`}
-  if(n.matches('.vfExp')){
-    const s=n.querySelector(':scope > sup');const exp=String(children(s)||visible(s)||'').replace(/\s+/g,'');
-    return exp?`e^(${exp})`:'e';
-  }
-  if(n.tagName==='SUP'){
-    const exp=String(children(n)||visible(n)||'').replace(/\s+/g,'');
-    return exp?`^(${exp})`:'';
-  }
-  if(n.tagName==='SUB')return '';
-  if(n.matches('.vfParen')){
-    const a=n.querySelector(':scope > .vfParenBody')||n.querySelector(':scope > .vfEditable');
-    return a?`(${required(children(a)||visible(a),'Klammer')})`:children(n);
-  }
-  return children(n);
-}
-function serialize(ed){
-  repairPowerBases(ed);
-  /* Leere, alte SUP-Platzhalter sind kein mathematischer Inhalt und werden vor dem Lesen ignoriert. */
-  qa('sup',ed).forEach(s=>{
-    const val=String(children(s)||visible(s)||'').replace(/\s+/g,'');
-    if(!val && !s.closest('.vfPower,.vfExp'))s.remove();
-  });
-  let expr=children(ed).replace(/\s+/g,'');
-  expr=expr.replace(/^f\(x\)=/i,'').replace(/^y=/i,'');
-  expr=expr.replace(/\^\(\)/g,'');
-  if(!expr)throw new Error('Funktion ist leer');
-  return expr;
-}
-function compileCheck(expr){
-  const code=typeof window.normalizeGraphExpr==='function'?window.normalizeGraphExpr(expr):expr.replace(/\^/g,'**');
-  /* echte JS-Syntaxprüfung – normalizeGraphExpr alleine prüft nur erlaubte Zeichen. */
-  new Function('x',`"use strict"; return (${code});`);
-  return expr;
-}
-function restoreGraph(saved){
-  try{graphDraft=clone(saved)}catch(_){ }
-  try{window.graphDraft=graphDraft}catch(_){ }
-  try{renderGraphCurveRows()}catch(_){ }
-  try{openGraphDialogRefreshFields()}catch(_){ }
-  try{renderGraphPreview()}catch(_){ }
-}
-function returnToGraph(saved){
-  /* v222 kennt den aktuellen Graph-Dialog/Edit-ID und öffnet ihn wieder. */
-  try{window.v222ReturnToGraphDialog?.()}catch(_){ }
-  [0,30,90,180].forEach(t=>setTimeout(()=>restoreGraph(saved),t));
-}
-function saveGraphFormula(i){
-  i=Number(i);const ed=q('#formulaVisualEditor');if(!ed)return;
-  let expr='';
-  try{expr=compileCheck(serialize(ed))}
-  catch(err){
-    let msg=String(err?.message||'Ungültige Funktion');
-    if(/Unexpected token|Unexpected end|missing|expected/i.test(msg))msg='Die Formel ist noch nicht vollständig';
-    try{cuteToast('Formel prüfen: '+msg)}catch(_){ }
-    return;
-  }
-  let draft=null;
-  try{draft=graphDraft}catch(_){draft=window.graphDraft}
-  if(!draft?.curves?.[i]){try{cuteToast('Graph-Funktion nicht gefunden')}catch(_){};return}
-  draft.curves[i].expr=expr;
-  draft.curves[i].formulaHTML=ed.innerHTML;
-  const saved=clone(draft);
-  try{cuteToast('Funktion übernommen ♡')}catch(_){ }
-  returnToGraph(saved);
-}
-window.v229SaveGraphFormula=saveGraphFormula;
-window.v224SaveGraphFormula=saveGraphFormula;
-window.saveGraphFunctionEditor=saveGraphFormula;
-try{v224SaveGraphFormula=saveGraphFormula}catch(_){ }
-try{saveGraphFunctionEditor=saveGraphFormula}catch(_){ }
-
-function setup(i){
-  i=Number(i);activeGraphCurve=i;
-  const ed=q('#formulaVisualEditor');if(!ed)return;
-  try{window.v228EnhanceSlots?.(ed)}catch(_){ }
-  const modal=ed.closest('.visualFormulaModal,.formulaModal');if(!modal)return;
-  const eyebrow=q('.presetModalHead .eyebrow',modal);if(eyebrow)eyebrow.textContent='FUNKTIONSGRAPH';
-  const title=q('.presetModalHead h2',modal);if(title)title.textContent=`Funktion ${i+1} bearbeiten`;
-  /* Frischer Button = keine alten onClick/addEventListener Handler mehr. */
-  const old=qa('button.primary',modal).at(-1);
-  if(old && old.dataset.v229Fresh!=='1'){
-    const fresh=old.cloneNode(true);fresh.dataset.v229Fresh='1';fresh.textContent='Übernehmen';fresh.removeAttribute('onclick');
-    old.replaceWith(fresh);
-    fresh.onclick=e=>{e.preventDefault();e.stopPropagation();saveGraphFormula(i)};
-  }
-  const close=q('.presetModalHead .miniIcon',modal);
-  if(close && close.dataset.v229Fresh!=='1'){
-    const fresh=close.cloneNode(true);fresh.dataset.v229Fresh='1';fresh.removeAttribute('onclick');close.replaceWith(fresh);
-    fresh.onclick=e=>{e.preventDefault();e.stopPropagation();let d;try{d=clone(graphDraft)}catch(_){d=null}if(d)returnToGraph(d)};
-  }
-}
-window.openGraphFunctionEditor=function(i){
-  i=Number(i);activeGraphCurve=i;try{graphActiveCurve=i}catch(_){ }
-  let draft;try{draft=graphDraft}catch(_){draft=window.graphDraft}
-  const curve=draft?.curves?.[i];
-  window.openFormulaDialog?.(`__graph_curve_${i}`);
-  const hydrate=()=>{
-    const ed=q('#formulaVisualEditor');if(!ed||!curve)return;
-    const current=(curve.formulaHTML&&String(curve.formulaHTML).trim())?curve.formulaHTML:(typeof window.graphExprToVisual==='function'?window.graphExprToVisual(curve.expr||''):(curve.expr||''));
-    ed.innerHTML=String(current||'').replace(/×/g,'⋅');
-    try{normalizeAllVisualRoots?.(ed)}catch(_){ }
-    try{installFormulaSlotProtection?.(ed)}catch(_){ }
-    try{window.v228EnhanceSlots?.(ed)}catch(_){ }
-    setup(i);
-  };
-  [30,80,150,250].forEach(t=>setTimeout(hydrate,t));
-};
-try{openGraphFunctionEditor=window.openGraphFunctionEditor}catch(_){ }
-
-/* Falls die Graph-Zeilen durch ältere Wrapper neu gerendert werden: Klick danach immer auf V229 routen. */
-function bindRows(){
-  qa('#graphCurveRows .graphExprButton').forEach((b,i)=>{
-    b.dataset.v229Bound='1';
-    b.removeAttribute('onclick');
-    b.onclick=e=>{e.preventDefault();e.stopPropagation();window.openGraphFunctionEditor(i)};
-  });
-}
-new MutationObserver(bindRows).observe(document.body,{childList:true,subtree:true});
-[0,100,400,1000].forEach(t=>setTimeout(bindRows,t));
-
-const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 229'};[0,250,900,1800].forEach(t=>setTimeout(setVer,t));
-})();
-</script>
 <!-- ===== /Studia V229 ===== -->
 
 <!-- ===== Studia V230 · Cursor-sicherer Exponent + Textgröße + Shortcuts ===== -->
@@ -25557,8 +24673,10 @@ document.addEventListener('keydown',e=>{
 window.__STUDIA_SHORTCUT_OWNER_V305__=true;
 function editorShortcutActive(){return innerWidth>=900&&document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active')&&!document.body.classList.contains('v137ViewMode')}
 function v305TypingTarget(t){
-  const el=t instanceof Element?t:null;
-  return !!el&&(!!el.closest('input,textarea,select,[contenteditable="true"]'));
+  const el=t instanceof Element?t:null,active=document.activeElement instanceof Element?document.activeElement:null;
+  if(el?.closest('input,textarea,select,[contenteditable="true"]')||active?.closest?.('input,textarea,select,[contenteditable="true"]'))return true;
+  const s=getSelection?.();if(s?.rangeCount){const n=s.anchorNode,ne=n?.nodeType===1?n:n?.parentElement;if(ne?.closest?.('#canvasObjects [contenteditable="true"],.tableObj td[contenteditable="true"]'))return true}
+  return false;
 }
 function v305RunShortcut(e,fn){
   e.preventDefault();e.stopImmediatePropagation();
@@ -25579,7 +24697,9 @@ function handleShortcutV305(e){
   /* Text editing owns normal OS/browser shortcuts. Only Save and Hyperlink are editor actions. */
   if(typing){
     if(mod&&key==='s')return v305RunShortcut(e,()=>{window.saveSheetNow?.();window.cuteToast?.('Gespeichert ✓')});
-    if(mod&&key==='k'&&e.target?.closest?.('[contenteditable="true"]'))return v305RunShortcut(e,()=>{window.v152RememberRange?.();(window.v164Hyperlink||window.openHyperlinkDialog)?.()});
+    if(mod&&key==='k'&&(e.target?.closest?.('[contenteditable="true"]')||document.activeElement?.closest?.('[contenteditable="true"]')))return v305RunShortcut(e,()=>{window.v152RememberRange?.();(window.v164Hyperlink||window.openHyperlinkDialog)?.()});
+    /* Native text editing owns Backspace/Delete/C/X/V/A/Z/Y. Stop older editor handlers, but never prevent the browser action. */
+    if(e.key==='Backspace'||e.key==='Delete'||(mod&&['a','c','v','x','z','y'].includes(key)))e.stopImmediatePropagation();
     return;
   }
 
@@ -25667,49 +24787,6 @@ const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 309'};
 
 
 <!-- ===== Studia V293 · clean editor fixes: uses existing V152 mobile formatter only ===== -->
-<style id="studia-v299-editor-typography-style">
-/* V299 owns the two desktop typography controls only: font + text color. */
-#v299FontButton,#v299TextColorButton{height:31px;border:0;border-radius:9px;background:transparent;color:#504844;display:flex;align-items:center;justify-content:center;gap:6px;padding:0 9px;font:800 10px/1 Inter,Arial,sans-serif;cursor:pointer}
-#v299FontButton:hover,#v299TextColorButton:hover,#v299FontButton.open,#v299TextColorButton.open{background:#fff0f1;color:#a26068}
-#v299FontButton{min-width:112px;max-width:160px;justify-content:space-between}#v299FontButton .v299FontName{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#v299TextColorButton{width:34px;min-width:34px;padding:0;position:relative;font-size:13px}#v299TextColorButton:after{content:"";position:absolute;left:8px;right:8px;bottom:4px;height:3px;border-radius:4px;background:var(--v299-text-color,#333)}
-.v299TypePopover{position:fixed;z-index:2147483600;width:min(286px,calc(100vw - 16px));max-height:min(430px,70dvh);overflow:auto;border:1px solid #eadbd6;border-radius:17px;background:#fffdfb;box-shadow:0 18px 50px rgba(72,50,45,.18);padding:10px;color:#574b46}
-.v299TypePopoverHead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:3px 4px 9px}.v299TypePopoverHead b{font-size:12px}.v299TypePopoverHead small{font-size:8px;color:#a28b83;text-transform:uppercase;letter-spacing:.08em}
-.v299FontList{display:grid;gap:5px}.v299FontList button{min-height:48px;border:1px solid #eee1dc;border-radius:12px;background:#fff;color:#5f514b;display:grid;grid-template-columns:42px minmax(0,1fr);align-items:center;gap:9px;text-align:left;padding:6px 9px;cursor:pointer}.v299FontList button:hover{background:#fff4f4;border-color:#edc9cc}.v299FontList .aa{display:grid;place-items:center;width:38px;height:34px;border-radius:9px;background:#fff0f1;color:#a45f67;font-size:16px;font-weight:700}.v299FontList .name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px}
-.v299ColorPanel{display:grid;gap:10px}.v299ColorPreview{display:grid;grid-template-columns:54px minmax(0,1fr);gap:9px;align-items:center}.v299ColorPreview input[type=color]{width:54px;height:44px;border:1px solid #eadbd6;border-radius:12px;background:#fff;padding:4px}.v299ColorPreview input[type=text]{width:100%;height:44px;border:1px solid #eadbd6;border-radius:12px;background:#fff;color:#594d48;padding:0 11px;font:800 11px ui-monospace,SFMono-Regular,Consolas,monospace;text-transform:uppercase}.v299ColorHint{font-size:9px;color:#9c857e;line-height:1.4}
-</style>
-<script id="studia-v299-editor-typography-owner">
-(()=>{
-'use strict';
-if(window.__STUDIA_V299_EDITOR_TYPE__)return;window.__STUDIA_V299_EDITOR_TYPE__=true;
-const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
-const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-const isDesktop=()=>innerWidth>=900&&document.body.classList.contains('editorMode');
-function remember(){try{window.v152RememberRange?.()}catch(_){}}
-function restore(){try{window.v152RestoreRange?.()}catch(_){}}
-function selectedText(){try{return canvasState?.objects?.find(x=>String(x.id)===String(canvasState.selectedId)&&['text','block','task','merke','file'].includes(x.kind))}catch(_){return null}}
-function currentFont(){const o=selectedText();return String(o?.style?.fontFamily||'Inter').split(',')[0].replace(/["']/g,'').trim()||'Inter'}
-function currentColor(){const c=String(selectedText()?.style?.color||'#333333');return /^#[0-9a-f]{6}$/i.test(c)?c:'#333333'}
-function customFonts(){const out=[];for(const k of ['schoolbloom-v91-custom-fonts','schoolbloom-custom-fonts']){try{for(const f of JSON.parse(localStorage.getItem(k)||'[]')){const n=typeof f==='string'?f:f?.name;if(n&&!out.includes(n))out.push(n)}}catch(_){}}return out}
-function fonts(){return [...new Set(['Inter','Arial','Trebuchet MS','Verdana','Georgia','Times New Roman','Playfair Display','Lato',...customFonts()])]}
-function close(){q('#v299FontPopover')?.remove();q('#v299ColorPopover')?.remove();q('#v299FontButton')?.classList.remove('open');q('#v299TextColorButton')?.classList.remove('open')}
-function place(pop,btn){const r=btn.getBoundingClientRect(),w=Math.min(286,innerWidth-16);pop.style.left=Math.max(8,Math.min(innerWidth-w-8,r.left))+'px';pop.style.top=Math.min(innerHeight-pop.offsetHeight-8,r.bottom+7)+'px'}
-window.v299OpenFontMenu=function(btn){remember();if(q('#v299FontPopover')){close();return}close();const pop=document.createElement('div');pop.id='v299FontPopover';pop.className='v299TypePopover';pop.innerHTML=`<div class="v299TypePopoverHead"><b>Schriftart</b><small>Vorschau</small></div><div class="v299FontList">${fonts().map(f=>`<button type="button" data-font="${esc(f)}" style="font-family:'${esc(f)}',sans-serif"><span class="aa">Aa</span><span class="name">${esc(f)}</span></button>`).join('')}</div>`;document.body.appendChild(pop);btn.classList.add('open');place(pop,btn);pop.addEventListener('pointerdown',e=>{if(e.target.closest('button')){remember();e.preventDefault()}},true);pop.addEventListener('click',e=>{const b=e.target.closest('[data-font]');if(!b)return;restore();window.applyTextProperty?.('fontFamily',b.dataset.font);btn.querySelector('.v299FontName').textContent=b.dataset.font;btn.querySelector('.v299FontName').style.fontFamily=`"${b.dataset.font}",sans-serif`;close()})};
-function normHex(v){let h=String(v||'').trim().replace(/^#/,'');if(/^[0-9a-f]{3}$/i.test(h))h=[...h].map(c=>c+c).join('');return /^[0-9a-f]{6}$/i.test(h)?'#'+h.toUpperCase():null}
-window.v299OpenColorMenu=function(btn){remember();if(q('#v299ColorPopover')){close();return}close();const c=currentColor().toUpperCase(),pop=document.createElement('div');pop.id='v299ColorPopover';pop.className='v299TypePopover';pop.innerHTML=`<div class="v299TypePopoverHead"><b>Textfarbe</b><small>Farbe & HEX</small></div><div class="v299ColorPanel"><div class="v299ColorPreview"><input id="v299ColorPick" type="color" value="${c.toLowerCase()}"><input id="v299ColorHex" type="text" value="${c}" maxlength="7" spellcheck="false" aria-label="HEX-Farbe"></div><div class="v299ColorHint">HEX kannst du hier direkt eingeben, z. B. #8D7369.</div></div>`;document.body.appendChild(pop);btn.classList.add('open');place(pop,btn);const pick=q('#v299ColorPick',pop),hex=q('#v299ColorHex',pop);const apply=v=>{const n=normHex(v);if(!n)return false;restore();window.applyTextProperty?.('color',n);pick.value=n.toLowerCase();hex.value=n;btn.style.setProperty('--v299-text-color',n);return true};pick.oninput=()=>apply(pick.value);hex.addEventListener('input',()=>{const n=normHex(hex.value);hex.setCustomValidity(n?'':'HEX wie #8D7369');if(n)apply(n)});hex.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();if(apply(hex.value))hex.blur()}})};
-function install(){if(!isDesktop())return;const tools=q('.v134FormatTools');if(!tools)return;qa('.v193HexColor',tools).forEach(x=>x.remove());
- let fb=q('#v299FontButton',tools);if(!fb){const old=q('.v187TopFontButton,.v165FontMenuBtn,select.font,[title="Schriftart"]',tools);if(old){fb=document.createElement('button');fb.type='button';fb.id='v299FontButton';fb.title='Schriftart';fb.innerHTML='<span class="v299FontName"></span><span aria-hidden="true">⌄</span>';fb.onpointerdown=remember;fb.onclick=e=>{e.preventDefault();e.stopPropagation();v299OpenFontMenu(fb)};old.replaceWith(fb)}}if(fb){const f=currentFont();const n=q('.v299FontName',fb);if(n){n.textContent=f;n.style.fontFamily=`"${f}",sans-serif`}}
- let cb=q('#v299TextColorButton',tools);if(!cb){const old=q('label[title="Textfarbe"],button[title="Textfarbe"]',tools);if(old){cb=document.createElement('button');cb.type='button';cb.id='v299TextColorButton';cb.title='Textfarbe';cb.textContent='A';cb.onpointerdown=remember;cb.onclick=e=>{e.preventDefault();e.stopPropagation();v299OpenColorMenu(cb)};old.replaceWith(cb)}}if(cb)cb.style.setProperty('--v299-text-color',currentColor());
-}
-document.addEventListener('pointerdown',e=>{if((q('#v299FontPopover')||q('#v299ColorPopover'))&&!e.target.closest?.('#v299FontPopover,#v299ColorPopover,#v299FontButton,#v299TextColorButton'))close()},true);
-document.addEventListener('selectionchange',()=>setTimeout(install,0));
-let queued=false;const schedule=()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;install()})};
-const shell=q('.canvasEditorShell')||document.body;new MutationObserver(schedule).observe(shell,{childList:true,subtree:true});
-window.addEventListener('resize',()=>{close();schedule()},{passive:true});
-[0,120,450,1100,2200].forEach(t=>setTimeout(install,t));
-const setVersion=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 309'};[0,300,1000].forEach(t=>setTimeout(setVersion,t));
-})();
-</script>
 <style id="studia-v305-editor-clean">
 @media(min-width:900px){body.editorMode .v134BrandMark{display:none!important}body.editorMode .v134Brand{gap:0!important;padding-left:4px!important;flex-basis:120px!important}}
 </style>
@@ -25717,6 +24794,14 @@ const setVersion=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 30
 
 <style id="studia-v315-export-style">
 .v315Export{display:grid;gap:15px}.v315ExportHead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.v315ExportHead h2{margin:2px 0 0}.v315ExportClose{width:38px;height:38px;border:1px solid #eadbd6;border-radius:12px;background:#fff;color:#6b5952;display:grid;place-items:center}.v315ExportGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.v315ExportChoice{min-height:96px;border:1px solid #eadbd6;border-radius:18px;background:#fff;color:#5c504b;padding:14px;display:grid;grid-template-columns:34px minmax(0,1fr);grid-template-rows:auto auto;column-gap:11px;align-items:center;text-align:left;cursor:pointer}.v315ExportChoice:hover{background:#fff5f5;border-color:#e7c7c9}.v315ExportChoice svg{grid-row:1/3;width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;color:#a86e72}.v315ExportChoice b{font-size:14px}.v315ExportChoice small{font-size:10px;color:#968079;line-height:1.35}.v315ExportChoice.busy{opacity:.58;pointer-events:none}.v315ExportStatus{min-height:18px;font-size:11px;color:#8d786f}.v315ExportStatus.err{color:#b35f63}@media(max-width:600px){.v315ExportGrid{grid-template-columns:1fr}.v315ExportChoice{min-height:78px}}
+</style>
+
+<style id="studia-v320-canonical-editor-style">
+/* Canonical typography/table polish only — no event handlers. */
+#v165FontMenu [data-v172-font],#v165FontMenu [data-font],#v165FontMenu [data-v172-font] .v165FontAa,#v165FontMenu [data-font] .v165FontAa,.v144FontCard,.v144FontCard *{font-family:inherit!important}
+.v320TableFont option{font-size:14px}
+.tableInspector .alignRow button.active{background:#f9e2e2;border-color:#eebfc1;color:#9d5f64}
+@media(max-width:899px){.formulaPairBtn{display:grid!important}.tableInspector{padding-bottom:6px}}
 </style>
 <script id="studia-v315-export-owner">
 (()=>{
@@ -25791,4 +24876,4 @@ let boundButton=null;function bindOnce(){const b=q('.canvasTopbar .editorActions
 [0,100,350,900,1800].forEach(t=>setTimeout(bindOnce,t));
 })();
 </script>
-<script id="studia-v315-version">(()=>{const f=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 319'};[0,250,900].forEach(t=>setTimeout(f,t))})();</script>
+<script id="studia-v315-version">(()=>{const f=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 320'};[0,250,900].forEach(t=>setTimeout(f,t))})();</script>
