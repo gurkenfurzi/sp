@@ -21165,7 +21165,8 @@ function v224FormulaToGraphExpr(ed){
   expr=expr.replace(/(\d),(\d)/g,'$1.$2');
   expr=expr.replace(/[×⋅]/g,'*').replace(/÷/g,'/').replace(/−/g,'-');
   if(!expr)throw new Error('Funktion ist leer');
-  if(/\^\(\)/.test(expr))throw new Error('Exponent ist leer');
+  /* Empty legacy exponent placeholders are ignored; visible SUP content is serialized separately. */
+  expr=expr.replace(/\^\(\)/g,'');
   if(/\/\(\)/.test(expr))throw new Error('Nenner ist leer');
   return expr;
 }
@@ -21451,7 +21452,7 @@ function v226Node(node){
   if(node.matches('.vfExp')){
     const sup=node.querySelector(':scope > sup');
     const e=(sup?.innerText||sup?.textContent||v226Children(sup)||'').trim();
-    return `e^(${v226Need(v226NormText(e),'Exponent')})`;
+    const ex=v226NormText(e);return ex?`e^(${ex})`:'e';
   }
   if(node.matches('.vfPower')){
     const baseEl=node.querySelector(':scope > .vfPowerBase');
@@ -21470,11 +21471,11 @@ function v226Node(node){
       else base=total.trim();
     }
     base=v226NormText(base); exp=v226NormText(exp);
-    return `(${v226Need(base,'Basis')})^(${v226Need(exp,'Exponent')})`;
+    const b=v226Need(base,'Basis');return exp?`(${b})^(${exp})`:`(${b})`;
   }
   if(node.tagName==='SUP'){
     const e=(node.innerText||node.textContent||v226Children(node)||'').trim();
-    return `^(${v226Need(v226NormText(e),'Exponent')})`;
+    const ex=v226NormText(e);return ex?`^(${ex})`:'';
   }
   if(node.tagName==='SUB') return '';
   if(node.matches('.vfParen')){
@@ -21671,14 +21672,14 @@ function v228Node(node){
       const total=v228NormText(node.textContent||'').trim(),btxt=v228NormText(baseEl?.textContent||'').trim();
       if(total&&btxt&&total.startsWith(btxt))exp=total.slice(btxt.length).replace(/^\^/,'').trim();
     }
-    return `(${v228Need(base,'Basis')})^(${v228Need(exp,'Exponent')})`;
+    {const b=v228Need(base,'Basis');return String(exp||'').replace(/\s+/g,'')?`(${b})^(${exp})`:`(${b})`;}
   }
   if(node.matches('.vfExp')){
     const sup=node.querySelector(':scope > sup');let exp=sup?v228Children(sup):'';if(!exp.trim())exp=v228SlotValue(sup);
-    return `e^(${v228Need(exp,'Exponent')})`;
+    return String(exp||'').replace(/\s+/g,'')?`e^(${exp})`:'e';
   }
   if(node.tagName==='SUP'){
-    let exp=v228Children(node);if(!exp.trim())exp=v228SlotValue(node);return `^(${v228Need(exp,'Exponent')})`;
+    let exp=v228Children(node);if(!exp.trim())exp=v228SlotValue(node);return String(exp||'').replace(/\s+/g,'')?`^(${exp})`:'';
   }
   if(node.tagName==='SUB'){
     /* Index ist im normalen Formeleditor frei. Für einen Funktionsgraphen hat er keine Rechenbedeutung. */
@@ -21823,6 +21824,7 @@ function node(n){
 function serialize(ed){
   let expr=children(ed).replace(/\s+/g,'');
   expr=expr.replace(/^f\(x\)=/i,'').replace(/^y=/i,'');
+  expr=expr.replace(/\^\(\)/g,'');
   if(!expr)throw new Error('Funktion ist leer');
   return expr;
 }
@@ -22150,7 +22152,7 @@ const setVer=()=>{const e=q('#headerEyebrow');if(e)e.textContent='VERSION 231'};
 <style id="studia-v288-sync-style">
 @media(min-width:900px){#v232DesktopSync{position:fixed;right:20px;bottom:20px;z-index:10050;display:flex;align-items:center;gap:9px;min-height:42px;padding:8px 13px;border-radius:15px;border:1px solid #ead7d1;background:rgba(255,252,249,.97);color:#775f58;box-shadow:0 10px 28px rgba(91,67,59,.12);backdrop-filter:blur(14px);font-size:10px;font-weight:900;cursor:pointer}#v232DesktopSync .spin{font-size:17px;line-height:1}#v232DesktopSync.syncing .spin{animation:v287spin .8s linear infinite}#v232DesktopSync small{display:block;font-size:7px;font-weight:750;color:#a58d85;margin-top:1px;max-width:190px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}@keyframes v287spin{to{transform:rotate(360deg)}}}@media(max-width:899px){#v232DesktopSync{display:none!important}}#v232SyncStatusInline{font-size:8px;color:#9c837a;font-weight:800;margin-top:6px}
 </style>
-<script src="google-sync-config.js?v=298"></script>
+<script src="google-sync-config.js?v=319"></script>
 <script id="studia-v288-launcher">
 (function(){
  'use strict';

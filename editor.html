@@ -24552,7 +24552,8 @@ function v224FormulaToGraphExpr(ed){
   expr=expr.replace(/(\d),(\d)/g,'$1.$2');
   expr=expr.replace(/[×⋅]/g,'*').replace(/÷/g,'/').replace(/−/g,'-');
   if(!expr)throw new Error('Funktion ist leer');
-  if(/\^\(\)/.test(expr))throw new Error('Exponent ist leer');
+  /* Empty legacy exponent placeholders are ignored; visible SUP content is serialized separately. */
+  expr=expr.replace(/\^\(\)/g,'');
   if(/\/\(\)/.test(expr))throw new Error('Nenner ist leer');
   return expr;
 }
@@ -24838,7 +24839,7 @@ function v226Node(node){
   if(node.matches('.vfExp')){
     const sup=node.querySelector(':scope > sup');
     const e=(sup?.innerText||sup?.textContent||v226Children(sup)||'').trim();
-    return `e^(${v226Need(v226NormText(e),'Exponent')})`;
+    const ex=v226NormText(e);return ex?`e^(${ex})`:'e';
   }
   if(node.matches('.vfPower')){
     const baseEl=node.querySelector(':scope > .vfPowerBase');
@@ -24857,11 +24858,11 @@ function v226Node(node){
       else base=total.trim();
     }
     base=v226NormText(base); exp=v226NormText(exp);
-    return `(${v226Need(base,'Basis')})^(${v226Need(exp,'Exponent')})`;
+    const b=v226Need(base,'Basis');return exp?`(${b})^(${exp})`:`(${b})`;
   }
   if(node.tagName==='SUP'){
     const e=(node.innerText||node.textContent||v226Children(node)||'').trim();
-    return `^(${v226Need(v226NormText(e),'Exponent')})`;
+    const ex=v226NormText(e);return ex?`^(${ex})`:'';
   }
   if(node.tagName==='SUB') return '';
   if(node.matches('.vfParen')){
@@ -25079,14 +25080,14 @@ function v228Node(node){
       const total=v228NormText(node.textContent||'').trim(),btxt=v228NormText(baseEl?.textContent||'').trim();
       if(total&&btxt&&total.startsWith(btxt))exp=total.slice(btxt.length).replace(/^\^/,'').trim();
     }
-    return `(${v228Need(base,'Basis')})^(${v228Need(exp,'Exponent')})`;
+    {const b=v228Need(base,'Basis');return String(exp||'').replace(/\s+/g,'')?`(${b})^(${exp})`:`(${b})`;}
   }
   if(node.matches('.vfExp')){
     const sup=node.querySelector(':scope > sup');let exp=sup?v228Children(sup):'';if(!exp.trim())exp=v228SlotValue(sup);
-    return `e^(${v228Need(exp,'Exponent')})`;
+    return String(exp||'').replace(/\s+/g,'')?`e^(${exp})`:'e';
   }
   if(node.tagName==='SUP'){
-    let exp=v228Children(node);if(!exp.trim())exp=v228SlotValue(node);return `^(${v228Need(exp,'Exponent')})`;
+    let exp=v228Children(node);if(!exp.trim())exp=v228SlotValue(node);return String(exp||'').replace(/\s+/g,'')?`^(${exp})`:'';
   }
   if(node.tagName==='SUB'){
     /* Index ist im normalen Formeleditor frei. Für einen Funktionsgraphen hat er keine Rechenbedeutung. */
@@ -25272,6 +25273,7 @@ function serialize(ed){
   });
   let expr=children(ed).replace(/\s+/g,'');
   expr=expr.replace(/^f\(x\)=/i,'').replace(/^y=/i,'');
+  expr=expr.replace(/\^\(\)/g,'');
   if(!expr)throw new Error('Funktion ist leer');
   return expr;
 }
@@ -25733,6 +25735,22 @@ function pageH(){try{return typeof canvasPageHeight==='function'?canvasPageHeigh
 function scriptLoad(url,timeout=12000){return new Promise((res,rej)=>{const old=qa('script').find(x=>x.src===url);if(old&&window.html2canvas){res();return}const s=document.createElement('script');s.src=url;s.async=true;s.crossOrigin='anonymous';const tm=setTimeout(()=>{s.remove();rej(new Error('Zeitüberschreitung'))},timeout);s.onload=()=>{clearTimeout(tm);window.html2canvas?res():rej(new Error('Renderer wurde nicht geladen'))};s.onerror=()=>{clearTimeout(tm);s.remove();rej(new Error('Renderer konnte nicht geladen werden'))};document.head.appendChild(s)})}
 async function ensureRenderer(){if(window.html2canvas)return window.html2canvas;const urls=['https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js','https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js','https://html2canvas.hertzen.com/dist/html2canvas.min.js'];let last;for(const u of urls){try{await scriptLoad(u);if(window.html2canvas)return window.html2canvas}catch(e){last=e}}throw new Error('Der Bild-Renderer konnte nicht geladen werden. Prüfe kurz die Internetverbindung und versuche es erneut.')}
 function shouldIgnore(el){return !!el?.matches?.('#v132InteractionLayer,#v152TextHitLayer,#v168MobileTextLayer,#canvasGuides,#pathDrawHint,.resizeHandle,.rotateHandle,.v138TransformHandle,.vectorSelectBox,.vectorHandle,.vectorRotateLine,.pathNode,.shapeHit,.vectorTouchProxy,.v135LinkBadge,.tableMoveHandle,.v108MoveHandle,.v108VectorMoveHandle,.v137Marquee,.selectionBox,.selectionOutline')}
+function v319LegacyColor(value){
+ const raw=String(value||'');
+ return raw.replace(/color\(\s*(?:srgb|display-p3)\s+([+-]?(?:\d*\.)?\d+%?)\s+([+-]?(?:\d*\.)?\d+%?)\s+([+-]?(?:\d*\.)?\d+%?)(?:\s*\/\s*([+-]?(?:\d*\.)?\d+%?))?\s*\)/gi,(_,r,g,b,a)=>{
+   const cv=x=>String(x).endsWith('%')?Math.round(Math.max(0,Math.min(100,parseFloat(x)))*2.55):Math.round(Math.max(0,Math.min(1,parseFloat(x)))*255);
+   const av=a==null?1:(String(a).endsWith('%')?Math.max(0,Math.min(100,parseFloat(a)))/100:Math.max(0,Math.min(1,parseFloat(a))));
+   return av<.999?`rgba(${cv(r)}, ${cv(g)}, ${cv(b)}, ${av})`:`rgb(${cv(r)}, ${cv(g)}, ${cv(b)})`;
+ })
+}
+function v319FlattenExportColors(source,clone){
+ if(!source||!clone)return;
+ const src=[source,...source.querySelectorAll('*')],dst=[clone,...clone.querySelectorAll('*')],props=['color','backgroundColor','backgroundImage','borderTopColor','borderRightColor','borderBottomColor','borderLeftColor','outlineColor','textDecorationColor','boxShadow','textShadow','fill','stroke'];
+ for(let i=0;i<Math.min(src.length,dst.length);i++){
+   let cs;try{cs=getComputedStyle(src[i])}catch(_){continue}
+   for(const prop of props){let v='';try{v=cs[prop]||''}catch(_){ }if(!v||(!v.includes('color(')&&!v.includes('color-mix(')))continue;v=v319LegacyColor(v);if(v.includes('color-mix('))continue;try{dst[i].style[prop]=v}catch(_){}}
+ }
+}
 async function exactPageCanvas(){
  try{window.v96SyncPage?.()}catch(_){}
  if(document.fonts?.ready){try{await Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,1600))])}catch(_){}}
@@ -25742,6 +25760,7 @@ async function exactPageCanvas(){
    const cloned=doc.querySelector('#canvasStage');if(!cloned)return;
    cloned.style.setProperty('position','relative','important');cloned.style.setProperty('left','0','important');cloned.style.setProperty('top','0','important');cloned.style.setProperty('width',W+'px','important');cloned.style.setProperty('height',H+'px','important');cloned.style.setProperty('min-width',W+'px','important');cloned.style.setProperty('min-height',H+'px','important');cloned.style.setProperty('max-width',W+'px','important');cloned.style.setProperty('max-height',H+'px','important');cloned.style.setProperty('transform','none','important');cloned.style.setProperty('transform-origin','0 0','important');cloned.style.setProperty('margin','0','important');cloned.style.setProperty('border','0','important');cloned.style.setProperty('border-radius','0','important');cloned.style.setProperty('box-shadow','none','important');cloned.style.setProperty('overflow','hidden','important');
    cloned.querySelectorAll('[contenteditable]').forEach(x=>{x.removeAttribute('contenteditable');x.removeAttribute('spellcheck')});
+   v319FlattenExportColors(stage,cloned);
    cloned.querySelectorAll('.selected,.editing,.locked,.showPageMargins').forEach(x=>x.classList.remove('selected','editing','locked','showPageMargins'));
    cloned.querySelectorAll('#v132InteractionLayer,#v152TextHitLayer,#v168MobileTextLayer,#canvasGuides,#pathDrawHint,.resizeHandle,.rotateHandle,.v138TransformHandle,.vectorSelectBox,.vectorHandle,.vectorRotateLine,.pathNode,.shapeHit,.vectorTouchProxy,.v135LinkBadge,.tableMoveHandle,.v108MoveHandle,.v108VectorMoveHandle,.v137Marquee,.selectionBox,.selectionOutline').forEach(x=>x.remove());
  }});
@@ -25772,4 +25791,4 @@ let boundButton=null;function bindOnce(){const b=q('.canvasTopbar .editorActions
 [0,100,350,900,1800].forEach(t=>setTimeout(bindOnce,t));
 })();
 </script>
-<script id="studia-v315-version">(()=>{const f=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 318'};[0,250,900].forEach(t=>setTimeout(f,t))})();</script>
+<script id="studia-v315-version">(()=>{const f=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 319'};[0,250,900].forEach(t=>setTimeout(f,t))})();</script>
