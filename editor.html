@@ -4654,7 +4654,7 @@ window.openFormulaDialog=function(editId=""){
       <button onclick="insertVisualFormula('power')"><b>xⁿ</b><span>Exponent</span></button>
       <button onclick="insertVisualFormula('sub')"><b>ₙ</b><span>Index</span></button>
       <button onclick="insertVisualFormula('paren')"><b>(x)</b><span>Klammer</span></button>
-      <button onclick="insertVisualFormula('abs')"><b>|x|</b><span>Betrag</span></button><button onclick="insertHTMLAtCaret('(x|x)')"><b>(x|x)</b><span>(x|x)</span></button>
+      <button onclick="insertVisualFormula('abs')"><b>|x|</b><span>Betrag</span></button>
      </div>
     </section>
     <section class="formulaToolSection"><div class="formulaToolTitle">Symbole & Pfeile</div>
@@ -5697,8 +5697,8 @@ window.openTableDialog=function(){
 }
 window.insertCanvasTable=function(){
  const cols=Math.max(1,Math.min(12,+$("#tblCols").value||3)),rows=Math.max(1,Math.min(30,+$("#tblRows").value||4));
- const cells=Array.from({length:rows},()=>Array.from({length:cols},()=>""));
- const o={id:id(),z:nextCanvasZ(),kind:"table",x:90,y:180,w:520,h:Math.max(100,rows*38),rows,cols,cells,cellColors:Array.from({length:rows},()=>Array.from({length:cols},()=>"")),borderRadius:12,fontFamily:"Inter",textColor:"#333333",cellAlign:"left",cellVAlign:"middle",activeCell:{r:0,c:0}};canvasState.objects.push(o);closeModal();renderCanvasObjects();selectCanvasObject(o.id);pushHistory();
+ const cells=Array.from({length:rows},()=>Array.from({length:cols},()=>"..."));
+ const o={id:id(),z:nextCanvasZ(),kind:"table",x:90,y:180,w:520,h:Math.max(100,rows*38),rows,cols,cells,cellColors:Array.from({length:rows},()=>Array.from({length:cols},()=>"")),borderRadius:12,activeCell:{r:0,c:0}};canvasState.objects.push(o);closeModal();renderCanvasObjects();selectCanvasObject(o.id);pushHistory();
 }
 const stickers=["🌸","🌷","🎀","🧸","⭐","✨","🍀","🍓","🫐","☁️","🌙","💗","📚","✏️","📝","🌼","🐻","🐰","🍵","💫","🌱"];
 function renderStickerPicker(){const el=$("#stickerPicker");if(el)el.innerHTML=stickers.map(s=>`<button onclick="addSticker('${s}')">${s}</button>`).join("")}
@@ -5805,7 +5805,7 @@ function renderCanvasObjects(){
    if(o.kind==="table"){
      const bw=o.borderWidth??1,bc=o.borderColor||"#aaa7a2",bg=o.cellBackground||"#ffffff",fs=o.fontSize||16,rad=o.borderRadius??12;
      o.cellColors ||= Array.from({length:o.rows||o.cells.length},(_,ri)=>Array.from({length:o.cols||o.cells[ri]?.length||1},()=>""));
-     const table=`<table style="--tbl-border:${bw}px;--tbl-style:${o.borderStyle||"solid"};--tbl-color:${bc};--tbl-bg:${bg};--tbl-font:${fs}px;--tbl-family:${esc(o.fontFamily||"Inter")};--tbl-text-color:${esc(o.textColor||"#333333")};--tbl-align:${esc(o.cellAlign||"left")};--tbl-valign:${esc(o.cellVAlign||"middle")};border-radius:${Math.min(rad,o.w/2,o.h/2)}px;overflow:hidden">${o.cells.map((row,ri)=>`<tr>${row.map((c,ci)=>`<td contenteditable="${o.locked?"false":"true"}" inputmode="text" data-r="${ri}" data-c="${ci}" style="background:${o.cellColors?.[ri]?.[ci]||bg}">${esc(c)}</td>`).join("")}</tr>`).join("")}</table>`;
+     const table=`<table style="--tbl-border:${bw}px;--tbl-style:${o.borderStyle||"solid"};--tbl-color:${bc};--tbl-bg:${bg};--tbl-font:${fs}px;border-radius:${rad}px;overflow:hidden">${o.cells.map((row,ri)=>`<tr>${row.map((c,ci)=>`<td contenteditable="${o.locked?"false":"true"}" inputmode="text" data-r="${ri}" data-c="${ci}" style="background:${o.cellColors?.[ri]?.[ci]||bg}">${esc(c)}</td>`).join("")}</tr>`).join("")}</table>`;
      return `<div class="cobj tableObj ${sel}${lockCls}" data-id="${o.id}" style="${base}transform:rotate(${o.rotation||0}deg);transform-origin:50% 50%"><span class="tableMoveHandle" title="Tabelle bewegen">⠿</span>${table}<span class="rotateHandle"></span><span class="resizeHandle"></span></div>`;
    }
    const cls=(o.kind==="block"||o.kind==="file")?"calloutObj":o.kind==="task"?"taskObj":o.kind==="merke"?"merkeObj":"textObj";
@@ -6114,15 +6114,11 @@ function renderCanvasInspector(){
        </div>
        <div class="objectPanelGrid" style="margin-top:8px">
         <div><label>Linienfarbe</label><input type="color" value="${o.borderColor||"#aaa7a2"}" onchange="updateSelectedTable('borderColor',this.value)"></div>
-        <div><label>Linienstärke</label><input type="number" min="0" max="30" step="0.5" value="${o.borderWidth??1}" onchange="updateSelectedTable('borderWidth',+this.value)"></div>
+        <div><label>Linienstärke</label><input type="number" min="0" max="8" value="${o.borderWidth??1}" onchange="updateSelectedTable('borderWidth',+this.value)"></div>
         <div><label>Alle Zellen</label><input type="color" value="${o.cellBackground||"#ffffff"}" onchange="updateSelectedTable('cellBackground',this.value)"></div>
         <div><label>Aktive Zelle</label><input type="color" value="${o.cellColors?.[o.activeCell?.r||0]?.[o.activeCell?.c||0]||o.cellBackground||"#ffffff"}" onchange="updateSelectedTableCellColor(this.value)"></div>
         <div><label>Eckenradius</label><input type="number" min="0" max="60" value="${o.borderRadius??12}" onchange="updateSelectedTable('borderRadius',+this.value)"></div>
         <div><label>Textgröße</label><input type="number" min="12" max="40" value="${o.fontSize||16}" onchange="updateSelectedTable('fontSize',+this.value)"></div>
-        <div><label>Schriftart</label><select onchange="updateSelectedTable('fontFamily',this.value)">${['Inter','Arial','Georgia','Trebuchet MS','Verdana','Times New Roman','Lato','Playfair Display'].map(f=>`<option value="${f}" ${f===(o.fontFamily||'Inter')?'selected':''}>${f}</option>`).join('')}</select></div>
-        <div><label>Textfarbe</label><input type="color" value="${o.textColor||'#333333'}" onchange="updateSelectedTable('textColor',this.value)"></div>
-        <div><label>Horizontal</label><select onchange="updateSelectedTable('cellAlign',this.value)"><option value="left" ${!o.cellAlign||o.cellAlign==='left'?'selected':''}>Links</option><option value="center" ${o.cellAlign==='center'?'selected':''}>Mitte</option><option value="right" ${o.cellAlign==='right'?'selected':''}>Rechts</option></select></div>
-        <div><label>Vertikal</label><select onchange="updateSelectedTable('cellVAlign',this.value)"><option value="top" ${o.cellVAlign==='top'?'selected':''}>Oben</option><option value="middle" ${!o.cellVAlign||o.cellVAlign==='middle'?'selected':''}>Mitte</option><option value="bottom" ${o.cellVAlign==='bottom'?'selected':''}>Unten</option></select></div>
        </div>
        <div class="positionGrid" style="margin-top:8px">
         <div><label>X</label><input type="number" value="${Math.round(o.x)}" onchange="setSelectedGeometry('x',+this.value)"></div>
@@ -7946,82 +7942,6 @@ button.primary,button.ghost,.iconbtn{
 </style>
 
 </head><body><div class="page">${serializedCanvas()}</div><div id="buildVersionBadge" style="position:fixed;right:8px;bottom:8px;z-index:9999;font:800 9px Inter,sans-serif;color:#9b7d74;background:rgba(255,250,247,.88);border:1px solid #ead4cd;border-radius:999px;padding:5px 8px;pointer-events:none">V182</div>
-
-<style id="studia-v322-focused-table-style">
-body.editorMode #canvasObjects .tableObj{min-width:0!important;min-height:0!important;box-sizing:border-box!important}
-body.editorMode #canvasObjects .tableObj table{font-family:var(--tbl-family,Inter),sans-serif!important;color:var(--tbl-text-color,#333)!important;table-layout:fixed!important;border-collapse:separate!important;border-spacing:0!important;min-width:0!important;min-height:0!important;width:100%!important;height:100%!important;overflow:hidden!important}
-body.editorMode #canvasObjects .tableObj td{font-family:inherit!important;color:inherit!important;text-align:var(--tbl-align,left)!important;vertical-align:var(--tbl-valign,middle)!important;min-width:0!important;padding:clamp(1px,1%,7px)!important;font-size:var(--tbl-font,16px)!important;line-height:1.2!important;overflow-wrap:anywhere!important}
-#v299FontPopover .v299FontList button .aa,#v299FontPopover .v299FontList button .name{font-family:inherit!important}
-</style>
-<script id="studia-v322-focused-table-owner">
-(()=>{'use strict';
-// Existing selection and recovery owners remain in control; only table properties branch here.
-const prior=window.applyTextProperty;
-if(typeof prior==='function')window.applyTextProperty=function(prop,value){
- const s=canvasState;
- const o=s?.selectedType==='object'?(s.objects||[]).find(x=>x.id===s.selectedId):null;
- if(o?.kind==='table'){
-  const k=({fontFamily:'fontFamily',fontSize:'fontSize',color:'textColor',textAlign:'cellAlign'})[prop];
-  if(k){window.updateSelectedTable?.(k,value);return}
- }
- return prior.apply(this,arguments);
-};
-// Normalize oversized round corners and allow smooth resize of table border.
-const clampTable=()=>{const s=canvasState;if(!s)return;(s.objects||[]).forEach(o=>{if(o.kind!=='table')return;o.borderRadius=Math.max(0,Math.min(Number(o.borderRadius??12)||0,Math.max(0,Math.min(o.w||0,o.h||0)/2)));o.borderWidth=Math.max(0,Math.min(30,Number(o.borderWidth??1)||0))})};
-const oldRender=window.renderCanvasObjects;
-if(typeof oldRender==='function')window.renderCanvasObjects=function(){clampTable();return oldRender.apply(this,arguments)};
-// Prevent formerly shipped placeholder cells from affecting only future tables (existing user content untouched).
-})();
-</script>
-
-<style id="studia-v323-multi-move-style">
-/* V323: one non-overlapping drag grip for a mixed multi-selection. */
-#canvasObjects>.v323MultiMoveGrip{position:absolute!important;display:grid!important;place-items:center!important;width:36px!important;height:36px!important;min-width:36px!important;min-height:36px!important;padding:0!important;border:1px solid #ddb7af!important;border-radius:50%!important;background:#fffaf8!important;color:#8b655f!important;box-shadow:0 4px 12px #74514930!important;z-index:2147483000!important;cursor:grab!important;touch-action:none!important;pointer-events:auto!important;transform:none!important;user-select:none!important;-webkit-user-select:none!important}
-#canvasObjects>.v323MultiMoveGrip:active{cursor:grabbing!important}
-#canvasObjects>.v323MultiMoveGrip svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
-/* Individual grips are redundant when one common grip moves everything. */
-body.v323HasMultiMove #canvasObjects .v108MoveHandle,body.v323HasMultiMove #canvasObjects .v108VectorMoveHandle,body.v323HasMultiMove #canvasObjects .tableMoveHandle{display:none!important}
-</style>
-<script id="studia-v323-multi-move">
-(()=>{'use strict';
-const svg='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v20M2 12h20M9 5l3-3 3 3M9 19l3 3 3-3M5 9l-3 3 3 3M19 9l3 3-3 3"/></svg>';
-let root=null,observer=null,queued=false;
-function update(){
- queued=false;
- const r=document.getElementById('canvasObjects');if(!r)return;
- const state=typeof canvasState!=='undefined'?canvasState:null;
- const obj=(state?.selectedIds||[]).map(id=>state.objects.find(o=>o.id===id)).filter(o=>o&&!o.locked);
- const vec=(state?.selectedVectorIds||[]).map(id=>state.vectors.find(v=>v.id===id)).filter(v=>v&&!v.locked);
- const total=(state?.selectedIds?.length||0)+(state?.selectedVectorIds?.length||0);
- let grip=r.querySelector(':scope > .v323MultiMoveGrip');
- const enabled=document.body.classList.contains('editorMode')&&total>1&&(obj.length+vec.length)>0;
- document.body.classList.toggle('v323HasMultiMove',enabled);
- if(!enabled){grip?.remove();return}
- const boxes=obj.map(o=>({x:o.x,y:o.y,w:o.w,h:o.h}));
- for(const v of vec){try{boxes.push(vectorBounds(v))}catch(_){}}
- if(!boxes.length){grip?.remove();return}
- const x=Math.min(...boxes.map(b=>b.x)),y=Math.min(...boxes.map(b=>b.y));
- const right=Math.max(...boxes.map(b=>b.x+b.w));const bottom=Math.max(...boxes.map(b=>b.y+b.h));
- if(!grip){grip=document.createElement('button');grip.type='button';grip.className='v323MultiMoveGrip';grip.title='Alle ausgewählten Elemente zusammen bewegen';grip.setAttribute('aria-label','Auswahl gemeinsam verschieben');grip.innerHTML=svg;grip.addEventListener('pointerdown',e=>{
-   if(e.button!==0)return;
-   e.preventDefault();e.stopImmediatePropagation();
-   if(typeof startDragSelection==='function')startDragSelection(e);
- },true);r.appendChild(grip)}
- // Keep the control inside the paper; avoid covering the bottom-right resize handles.
- const W=typeof canvasPageWidth==='function'?canvasPageWidth():794;
- const H=typeof canvasPageHeight==='function'?canvasPageHeight():1123;
- grip.style.left=Math.max(3,Math.min(W-39,right+8))+'px';
- grip.style.top=Math.max(3,Math.min(H-39,bottom+8))+'px';
-}
-function schedule(){if(queued)return;queued=true;requestAnimationFrame(update)}
-function bind(){const r=document.getElementById('canvasObjects');if(!r)return;if(r!==root){observer?.disconnect();root=r;observer=new MutationObserver(schedule);observer.observe(r,{childList:true});}schedule()}
-[0,200,800].forEach(t=>setTimeout(bind,t));
-document.addEventListener('pointerup',schedule,true);
-document.addEventListener('click',schedule,true);
-window.addEventListener('resize',schedule);
-// Selection changes often redraw the objects; the observer catches those redraws.
-})();
-</script>
 </body></html>`;
  const blob=new Blob([html],{type:"text/html"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=title.replace(/[^\wäöüÄÖÜß-]+/g,"_")+".html";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
 }
@@ -23429,7 +23349,6 @@ body.editorMode .app > .header{
 .v219FormulaAlign button.active{background:#f7e3e1;border-color:#e7b8b7;color:#744f50}
 .v219ProtectedState{color:#7f9468!important}
 @media(max-width:650px){.formulaInlineOps{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
-.v321RecoveryModal{max-width:560px}.v321RecoveryModal h2{margin:4px 0 10px}.v321RecoveryModal .small{line-height:1.55}
 </style>
 <script id="studia-v219-formula-editor-guard-script">
 (function(){
@@ -23447,7 +23366,6 @@ body.editorMode .app > .header{
   let formulaAlign='center';
   let formulaEditId='';
   let formulaDraftTimer=0;
-  const v321RecoveryOffered=new Set();
 
   function editorActive(){return document.body.classList.contains('editorMode')&&!!q('#view-sheet-editor.active')}
   function contextId(){
@@ -23462,7 +23380,7 @@ body.editorMode .app > .header{
     try{return {ts:Date.now(),context:contextId(),sheetId:String(selectedSheetId||''),snapshot:canvasSnapshot()}}catch(_){return null}
   }
   function writeCanvasDraft(){
-    if(!editorActive()||window.__v321PendingDraft)return;
+    if(!editorActive())return;
     const payload=currentCanvasPayload();if(!payload)return;
     const raw=JSON.stringify(payload);
     try{sessionStorage.setItem(draftKey(),raw)}catch(_){}
@@ -23477,66 +23395,24 @@ body.editorMode .app > .header{
       const d=JSON.parse(raw);if(!d?.snapshot||Date.now()-Number(d.ts||0)>24*60*60*1000)return null;
       let sid='';try{sid=String(selectedSheetId||'')}catch(_){sid=String(window.selectedSheetId||'')}
       const sh=sid?(data.studySheets||[]).find(x=>String(x.id)===sid):null;
-      const savedAt=Math.max(Number(sh?.v219LocalSavedAt||0),Number(sh?.v321SavedAt||0),Number(sh?.updatedAt||0),Number(sh?.modifiedAt||0));
-      if(savedAt&&Number(d.ts||0)<=savedAt)return null;
+      const savedAt=Number(sh?.v219LocalSavedAt||0);
+      if(savedAt&&Number(d.ts||0)<=savedAt){try{sessionStorage.removeItem(key);localStorage.removeItem(key)}catch(_){};return null}
       return d;
     }catch(_){return null}
   }
-  function applyCanvasDraft321(d){
-    if(!d?.snapshot)return false;
+  function restoreCanvasDraft(){
+    const d=readCanvasDraft();if(!d)return false;
     try{
       const x=JSON.parse(d.snapshot);
       canvasState.objects=x.objects||[];canvasState.vectors=x.vectors||[];canvasState.orientation=x.orientation||'portrait';
       canvasState.pageStyle=x.pageStyle||canvasState.pageStyle;canvasState.layerGroups=x.layerGroups||[];
-      if(Array.isArray(x.pages)&&x.pages.length){canvasState.pages=x.pages;canvasState.activePage=Math.max(0,Math.min(Number(x.activePage)||0,x.pages.length-1))}
       canvasState.selectedType=null;canvasState.selectedId=null;canvasState.selectedIds=[];canvasState.selectedVectorIds=[];
       applyCanvasPageSize();renderCanvasObjects();renderVectors();renderCanvasInspector();renderLayerList?.();
-      try{v96RenderPageStrip?.()}catch(_){}
       canvasState.lastSavedHash=canvasSnapshot();
-      try{saveCanvasSheetCore(false);canvasState.lastSavedHash=canvasSnapshot()}catch(err){console.warn('Studia V321 recovery save',err)}
-      const st=q('#autosaveState');if(st){st.textContent='Wiederhergestellten Stand gespeichert ✓';st.className='autosaveState saved v219ProtectedState'}
+      const st=q('#autosaveState');if(st){st.textContent='Letzten lokalen Stand wiederhergestellt ✓';st.className='autosaveState saved v219ProtectedState'}
       return true;
-    }catch(err){console.warn('Studia V321 Draft konnte nicht wiederhergestellt werden',err);return false}
+    }catch(err){console.warn('Studia V219 Draft konnte nicht wiederhergestellt werden',err);return false}
   }
-  window.v321RestoreDraft=function(){const d=window.__v321PendingDraft;window.__v321PendingDraft=null;try{closeModal?.()}catch(_){};if(!applyCanvasDraft321(d))cuteToast?.('Entwurf konnte nicht wiederhergestellt werden.');};
-  window.v321KeepSaved=function(){window.__v321PendingDraft=null;try{closeModal?.()}catch(_){};const st=q('#autosaveState');if(st){st.textContent='Gespeicherter Stand geladen ✓';st.className='autosaveState saved'}};
-  async function sheetBackupCandidates321(){
-    let sid='';try{sid=String(selectedSheetId||'')}catch(_){sid=String(window.selectedSheetId||'')}
-    if(!sid||!window.indexedDB)return [];
-    try{
-      const db=await new Promise((res,rej)=>{const r=indexedDB.open('studia-local-backups-v1',1);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);r.onupgradeneeded=()=>{}});
-      if(!db.objectStoreNames.contains('snapshots'))return [];
-      const snaps=await new Promise((res,rej)=>{const r=db.transaction('snapshots').objectStore('snapshots').getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>rej(r.error)});
-      const current=(data.studySheets||[]).find(x=>String(x.id)===sid);const cur=JSON.stringify(current?.canvasData||null),out=[];
-      for(const snap of snaps.sort((a,b)=>Number(b.ts||0)-Number(a.ts||0))){
-        try{const raw=snap?.localStorage?.[KEY]||snap?.localStorage?.['schoolhub-v1'];if(!raw)continue;const obj=JSON.parse(raw),sh=(obj.studySheets||[]).find(x=>String(x.id)===sid);if(!sh?.canvasData)continue;const sig=JSON.stringify(sh.canvasData);if(sig===cur||out.some(x=>x.sig===sig))continue;out.push({ts:Number(snap.ts||0),reason:String(snap.reason||'backup'),title:sh.title||'Lernblatt',canvasData:sh.canvasData,sig});if(out.length>=8)break}catch(_){}}
-      return out;
-    }catch(err){console.warn('Studia V321 Backup-Suche',err);return []}
-  }
-  window.v321SearchSheetBackups=async function(){
-    const list=await sheetBackupCandidates321();window.__v321SheetBackups=list;
-    if(!list.length){cuteToast?.('Keine weitere lokale Lernblatt-Version gefunden.');return}
-    const rows=list.map((x,i)=>`<div class="v111RestoreRow"><div><b>${i===0?'Neueste andere Version':'Lokale Version '+(i+1)}</b><small>${new Date(x.ts).toLocaleString('de-DE')} · ${x.reason}</small></div><button onclick="v321RestoreSheetBackup(${i})">Lernblatt laden</button></div>`).join('');
-    openModal(`<div class="v111Restore"><div class="rowBetween"><div><div class="eyebrow">LERNBLATT-RECOVERY</div><h2>Lokale Versionen</h2></div><button class="iconbtn" onclick="closeModal()">×</button></div><p class="small">Nur dieses Lernblatt wird wiederhergestellt. Andere Studia-Daten bleiben unverändert.</p><div class="v111RestoreList">${rows}</div></div>`);
-  };
-  window.v321RestoreSheetBackup=function(i){const x=window.__v321SheetBackups?.[Number(i)];if(!x)return;let sid='';try{sid=String(selectedSheetId||'')}catch(_){sid=String(window.selectedSheetId||'')}const sh=(data.studySheets||[]).find(v=>String(v.id)===sid);if(!sh)return;sh.canvasData=JSON.parse(JSON.stringify(x.canvasData));sh.v321SavedAt=Date.now();sh.v219LocalSavedAt=sh.v321SavedAt;save();closeModal?.();setTimeout(()=>openStudySheetEditor(sid),60);cuteToast?.('Lokale Lernblatt-Version wiederhergestellt ✓')};
-  async function offerBackupRecovery321(){
-    const ctx='backup:'+contextId();if(v321RecoveryOffered.has(ctx)||window.__v321PendingDraft)return false;const list=await sheetBackupCandidates321();if(!list.length)return false;v321RecoveryOffered.add(ctx);window.__v321SheetBackups=list;const x=list[0];
-    openModal(`<div class="v321RecoveryModal"><div class="eyebrow">DATENSICHERHEIT</div><h2>Weitere lokale Lernblatt-Version gefunden</h2><p class="small">Studia hat noch eine andere lokale Version von <b>${new Date(x.ts).toLocaleString('de-DE')}</b>. Sie wird nicht automatisch geladen.</p><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:14px"><button class="primary" onclick="v321RestoreSheetBackup(0)">Diese Version wiederherstellen</button><button class="ghost" onclick="v321SearchSheetBackups()">Alle Versionen ansehen</button><button class="ghost" onclick="closeModal()">Aktuellen Stand behalten</button></div></div>`);return true;
-  }
-  function offerCanvasDraftRecovery(){
-    const ctx=contextId();if(v321RecoveryOffered.has(ctx))return false;
-    const d=readCanvasDraft();if(!d){setTimeout(()=>offerBackupRecovery321(),40);return false;}
-    let current='';try{current=canvasSnapshot()}catch(_){}
-    if(current&&d.snapshot===current)return false;
-    v321RecoveryOffered.add(ctx);window.__v321PendingDraft=d;
-    const when=new Date(Number(d.ts||Date.now())).toLocaleString('de-DE',{dateStyle:'short',timeStyle:'short'});
-    const st=q('#autosaveState');if(st){st.textContent='Lokaler Recovery-Entwurf gefunden';st.className='autosaveState saving v219ProtectedState'}
-    const html=`<div class="v321RecoveryModal"><div class="eyebrow">DATENSICHERHEIT</div><h2>Lokalen Entwurf gefunden</h2><p class="small">Es existiert noch ein separater Recovery-Entwurf von <b>${when}</b>. Studia überschreibt dein gespeichertes Lernblatt nicht mehr automatisch damit.</p><p class="small">Wenn darin dein fertig bearbeiteter Stand steckt, kannst du ihn gezielt wiederherstellen. Sonst behältst du den aktuell gespeicherten Stand.</p><div class="row" style="gap:8px;flex-wrap:wrap;margin-top:14px"><button class="primary" onclick="v321RestoreDraft()">Recovery-Entwurf wiederherstellen</button><button class="ghost" onclick="v321KeepSaved()">Gespeicherten Stand behalten</button><button class="ghost" onclick="v321SearchSheetBackups()">Weitere Backups suchen</button></div></div>`;
-    try{openModal(html)}catch(_){if(confirm('Lokalen Recovery-Entwurf von '+when+' wiederherstellen?'))window.v321RestoreDraft();else window.v321KeepSaved()}
-    return true;
-  }
-
 
   /* Every editor mutation gets a crash/sync-safe local draft immediately. */
   try{
@@ -23556,7 +23432,7 @@ body.editorMode .app > .header{
       const out=baseCanvasSave.apply(this,arguments);
       try{
         const sid=String(selectedSheetId||'');const sh=(data.studySheets||[]).find(x=>String(x.id)===sid);
-        if(sh){const now=Date.now();sh.v219LocalSavedAt=now;sh.v321SavedAt=now;localStorage.setItem(KEY,JSON.stringify(data));if(!window.__v321PendingDraft){try{const payload=currentCanvasPayload();if(payload){payload.ts=now;const raw=JSON.stringify(payload);sessionStorage.setItem(draftKey(),raw);if(raw.length<1800000)localStorage.setItem(draftKey(),raw)}}catch(_){}}}
+        if(sh){sh.v219LocalSavedAt=Date.now();localStorage.setItem(KEY,JSON.stringify(data))}
       }catch(_){}
       return out;
     };
@@ -23570,7 +23446,7 @@ body.editorMode .app > .header{
       if(editorActive()&&canvasLive&&!window.__v219ForceEditorRender)return;
       const out=baseRender.apply(this,arguments);
       canvasLive=true;
-      setTimeout(()=>offerCanvasDraftRecovery(),0);
+      setTimeout(()=>restoreCanvasDraft(),0);
       return out;
     };
     window.renderSheetEditor=safeRender;try{renderSheetEditor=safeRender}catch(_){}
@@ -23578,7 +23454,7 @@ body.editorMode .app > .header{
   try{
     const baseOpen=window.openStudySheetEditor;
     if(typeof baseOpen==='function'){
-      window.openStudySheetEditor=function(){canvasLive=false;editorTouched=false;window.__v219ForceEditorRender=true;const r=baseOpen.apply(this,arguments);setTimeout(()=>{window.__v219ForceEditorRender=false;canvasLive=true;offerCanvasDraftRecovery()},220);return r};
+      window.openStudySheetEditor=function(){canvasLive=false;editorTouched=false;window.__v219ForceEditorRender=true;const r=baseOpen.apply(this,arguments);setTimeout(()=>{window.__v219ForceEditorRender=false;canvasLive=true;restoreCanvasDraft()},220);return r};
       try{openStudySheetEditor=window.openStudySheetEditor}catch(_){}
     }
   }catch(_){}
@@ -23604,7 +23480,7 @@ body.editorMode .app > .header{
       try{openView=window.openView}catch(_){}
     }
   }catch(_){}
-  window.addEventListener('beforeunload',()=>{if(editorActive()&&!window.__v321PendingDraft)writeCanvasDraft()});
+  window.addEventListener('beforeunload',()=>{if(editorActive())writeCanvasDraft()});
 
   /* Formula UI: ⋅ instead of ×, f(x)= shortcut, local formula draft and alignment. */
   function saveFormulaDraft(){
@@ -25915,4 +25791,4 @@ let boundButton=null;function bindOnce(){const b=q('.canvasTopbar .editorActions
 [0,100,350,900,1800].forEach(t=>setTimeout(bindOnce,t));
 })();
 </script>
-<script id="studia-v315-version">(()=>{const f=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 321'};[0,250,900].forEach(t=>setTimeout(f,t))})();</script>
+<script id="studia-v315-version">(()=>{const f=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 319'};[0,250,900].forEach(t=>setTimeout(f,t))})();</script>
