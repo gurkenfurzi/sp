@@ -27,24 +27,11 @@ function meaningful(v){return /[\p{L}\p{N}]/u.test(String(v??'').trim())}
 function cleanState(src){
  const x=clone(src||{});
  const walk=v=>{if(Array.isArray(v)){v.forEach(walk);return}if(!isObj(v))return;delete v._updatedAt;delete v._syncMeta;delete v._syncV284;delete v._syncV281;delete v.__studiaSyncMeta;Object.values(v).forEach(walk)};walk(x);
- const dedupe=(arr,kind)=>{
-   const out=[],ids=new Set(),sig=new Set();
-   for(const o of Array.isArray(arr)?arr:[]){
-     if(!o||!isObj(o))continue;
-     const ok=kind==='homework'?meaningful(o.text):(meaningful(o.subject)&&meaningful(o.type||'Test'));
-     if(!ok){const badId=String(o.id||'').trim();if(badId)ghostDeletes[kind].add(badId);continue}
-     const idv=String(o.id||'').trim();
-     if(idv&&ids.has(idv))continue;
-     const s=(kind==='homework'
-       ?[o.subject,o.text,o.note,o.due,!!o.done]
-       :[o.subject,o.type,o.text,o.date]).map(v=>String(v??'').trim().toLowerCase()).join('|');
-     if(sig.has(s))continue;
-     if(idv)ids.add(idv);sig.add(s);out.push(o);
-   }
-   return out;
- };
- if(Array.isArray(x.homework))x.homework=dedupe(x.homework,'homework');
- if(Array.isArray(x.tests))x.tests=dedupe(x.tests,'tests');
+ // Keep distinct records even when their visible text matches. Identity is the stable ID.
+ // Never turn an incomplete/legacy record into an implicit cloud deletion.
+ const dedupe=arr=>{const out=[],ids=new Set();for(const o of Array.isArray(arr)?arr:[]){if(!isObj(o))continue;const id=String(o.id??'').trim();if(id&&ids.has(id))continue;if(id)ids.add(id);out.push(o)}return out};
+ if(Array.isArray(x.homework))x.homework=dedupe(x.homework);
+ if(Array.isArray(x.tests))x.tests=dedupe(x.tests);
  return x
 }
 function addMissingIds(x){let changed=false;const add=a=>{if(!Array.isArray(a))return;a.forEach(o=>{if(isObj(o)&&!String(o.id??'').trim()){o.id='sync-'+rid();changed=true}})};['subjects','homework','tests','grades','flashcards','absences','studySessions','reminders','flashDecks','quizzes','studySheets','writtenTests'].forEach(k=>add(x?.[k]));(x?.subjects||[]).forEach(s=>{add(s?.topics);add(s?.files);(s?.topics||[]).forEach(t=>add(t?.files))});(x?.quizzes||[]).forEach(q=>add(q?.questions));(x?.homework||[]).forEach(h=>add(h?.files));(x?.tests||[]).forEach(t=>add(t?.files));return changed}
@@ -52,7 +39,7 @@ function stable(v){if(Array.isArray(v))return '['+v.map(stable).join(',')+']';if
 function empty(v){return v==null||v===''||(Array.isArray(v)&&!v.length)||(isObj(v)&&!Object.keys(v).length)}
 function mergeBootstrap(remote,incoming){if(Array.isArray(remote)||Array.isArray(incoming)){const a=Array.isArray(remote)?remote:[],b=Array.isArray(incoming)?incoming:[],objs=[...a,...b].every(isObj);if(objs){const order=[],map=new Map(),getId=o=>String(o?.id??'')||('legacy-'+stable(o));for(const o of a){const id=getId(o);if(!map.has(id))order.push(id);map.set(id,clone(o))}for(const o of b){const id=getId(o);if(!map.has(id)){order.push(id);map.set(id,clone(o))}else map.set(id,mergeBootstrap(map.get(id),o))}return order.map(id=>map.get(id))}const out=[],seen=new Set();for(const o of [...a,...b]){const k=stable(o);if(!seen.has(k)){seen.add(k);out.push(clone(o))}}return out}if(isObj(remote)||isObj(incoming)){const r=isObj(remote)?remote:{},i=isObj(incoming)?incoming:{},o=clone(r);for(const k of Object.keys(i))o[k]=k in r?mergeBootstrap(r[k],i[k]):clone(i[k]);return o}if(empty(incoming)&&!empty(remote))return clone(remote);return clone(incoming)}
 function same(a,b){if(a===b)return true;if(a===undefined||b===undefined)return false;try{return JSON.stringify(a)===JSON.stringify(b)}catch(_){return false}}
-function idArray(a){if(!Array.isArray(a)||!a.length)return false;const seen=new Set();for(const x of a){if(!isObj(x)||x.id==null)return false;const id=String(x.id);if(seen.has(id))return false;seen.add(id)}return true}
+function idArray(a){if(!Array.isArray(a))return false;const seen=new Set();for(const x of a){if(!isObj(x)||x.id==null)return false;const id=String(x.id);if(seen.has(id))return false;seen.add(id)}return true}
 function injectGhostDeletes(base){const out=clone(base||{});for(const kind of ['homework','tests']){out[kind]=Array.isArray(out[kind])?out[kind]:[];const have=new Set(out[kind].map(x=>String(x?.id||'')));for(const id of ghostDeletes[kind])if(id&&!have.has(String(id)))out[kind].push({id:String(id),__ghost:true})}return out}
 function diff(base,next){if(same(base,next))return null;if(next===undefined)return{t:'d'};if(base===undefined)return{t:'s',v:clone(next)};if(Array.isArray(base)&&Array.isArray(next)&&idArray(base)&&idArray(next)){const B=Object.fromEntries(base.map(x=>[String(x.id),x])),N=Object.fromEntries(next.map(x=>[String(x.id),x])),c={},d=[];Object.keys(N).forEach(id=>{const z=diff(B[id],N[id]);if(z)c[id]=z});Object.keys(B).forEach(id=>{if(!(id in N))d.push(id)});return Object.keys(c).length||d.length?{t:'a',c,d}:null}if(isObj(base)&&isObj(next)){const c={};for(const k of new Set([...Object.keys(base),...Object.keys(next)])){const z=diff(base[k],next[k]);if(z)c[k]=z}return Object.keys(c).length?{t:'o',c}:null}return{t:'s',v:clone(next)}}
 function applyDelta(base,delta){if(!delta)return clone(base);if(delta.t==='d')return undefined;if(delta.t==='s')return clone(delta.v);if(delta.t==='o'){const out=isObj(base)?clone(base):{};for(const[k,z]of Object.entries(delta.c||{})){const v=applyDelta(out[k],z);if(v===undefined)delete out[k];else out[k]=v}return out}if(delta.t==='a'){let out=Array.isArray(base)?clone(base):[];const dead=new Set((delta.d||[]).map(String));out=out.filter(x=>!(x&&x.id!=null&&dead.has(String(x.id))));for(const[id,z]of Object.entries(delta.c||{})){const p=out.findIndex(x=>x&&x.id!=null&&String(x.id)===id);if(p>=0){const v=applyDelta(out[p],z);if(v===undefined)out.splice(p,1);else out[p]=v}else{const v=applyDelta(undefined,z);if(v!==undefined)out.push(v)}}return out}return clone(base)}
@@ -84,7 +71,71 @@ async function applyLocal(state){
  }
  return state
 }
-async function syncNow(opts={}){const manual=!!opts.manual;if(busy){if(busySince&&Date.now()-busySince>45000){busy=false;busySince=0;pending=false}else{pending=true;return{busy:true}}}if(!manual&&Date.now()<cooldownUntil)return{cooldown:true};if(!manual&&Date.now()-lastSyncAt<10000)return{recent:true};if(!navigator.onLine){status('Offline · lokal gespeichert','error');return{offline:true}}if(!token()){status('Nicht angemeldet · lokale Daten sicher','error');return{auth:false}}busy=true;busySince=Date.now();status('Synchronisiere Geräte …','syncing');let ok=false;try{try{if(typeof save==='function')save()}catch(_){}let current;try{current=cleanState(data)}catch(_){current=cleanState(safeJSON(localStorage.getItem(KEY)||'{}',{}))}if(addMissingIds(current)){await dbSet('localState',{state:clone(current),ts:Date.now()});safeSet(KEY,JSON.stringify(current));}let base=await dbGet('baseState',undefined),baseVersion=Number(await dbGet('baseVersion',0)||0);if(base===undefined){const full=await pullFull('Vollständiger Geräteabgleich …');base=full.state;baseVersion=full.version;current=cleanState(mergeBootstrap(base,current));addMissingIds(current);await applyLocal(current);await dbSet('baseState',clone(base));await dbSet('baseVersion',baseVersion)}const delta=diff(injectGhostDeletes(base),current);if(!delta){const ch=await pullChanges(baseVersion);if(ch.needFullPull){const full=await pullFull('Neue Daten vom anderen Gerät …');current=full.state;baseVersion=full.version}else if(ch.deltas?.length){for(const d of ch.deltas)current=applyDelta(current,d);baseVersion=ch.updatedAt;current=cleanState(current||{});addMissingIds(current)}await applyLocal(current);await dbSet('baseState',clone(current));await dbSet('baseVersion',baseVersion);lastSyncAt=Date.now();cooldownUntil=0;ghostDeletes.homework.clear();ghostDeletes.tests.clear();status(ch.deltas?.length?'Synchronisiert ✓ · andere Geräte übernommen':'Synchronisiert ✓ · keine Änderungen','ok');ok=true;return{ok:true,version:baseVersion}}const packed=await gzipJSON(delta),payload={token:token(),deviceId:deviceId(),deviceName:deviceName(),baseUpdatedAt:baseVersion};if(packed.gz&&packed.gz.length<packed.raw.length)payload.deltaGzip=packed.gz;else payload.delta=packed.raw;const ack=await fireAndAck('sync_delta',payload,22000);if(Number(ack.version)!==289)throw new Error('Google Apps Script V289 ist noch nicht bereitgestellt');let latest=clone(base),version=Number(ack.updatedAt||baseVersion||0);if(ack.needFullPull){const full=await pullFull('Aktuellen gemeinsamen Stand laden …');latest=full.state;version=full.version}else{const ch=await pullChanges(baseVersion);if(ch.needFullPull){const full=await pullFull('Aktuellen gemeinsamen Stand laden …');latest=full.state;version=full.version}else{for(const d of ch.deltas||[])latest=applyDelta(latest,d);version=ch.updatedAt;latest=cleanState(latest||{});addMissingIds(latest)}}await applyLocal(latest);await dbSet('baseState',clone(latest));await dbSet('baseVersion',version);lastSyncAt=Date.now();cooldownUntil=0;ok=true;const c={s:latest.subjects?.length||0,h:latest.homework?.length||0,t:latest.tests?.length||0};ghostDeletes.homework.clear();ghostDeletes.tests.clear();status(`Synchronisiert ✓ · ${c.s} Fächer · ${c.h} Aufgaben · ${c.t} Tests`,'ok');return{ok:true,version}}catch(e){console.error('[Studia V289 sync]',e);cooldownUntil=Date.now()+45000;pending=false;status(((e?.name==='QuotaExceededError'||/quota/i.test(String(e?.message||e)))?'Gerätespeicher voll – Studia nutzt sicheren App-Speicher':(e?.message||String(e)))+' · lokal sicher','error');if(manual)throw e;return{ok:false,error:e}}finally{busy=false;busySince=0;if(ok&&pending){pending=false;setTimeout(()=>syncNow().catch(()=>{}),1400)}}}
+// Rebase the local edits on the latest remote revision before every upload.
+// The server rejects stale revisions, so concurrent devices cannot silently overwrite one another.
+async function syncNow(opts={}){
+ const manual=!!opts.manual;
+ if(busy){pending=true;return{busy:true}}
+ if(!manual&&Date.now()<cooldownUntil)return{cooldown:true};
+ if(!manual&&Date.now()-lastSyncAt<6000)return{recent:true};
+ if(!navigator.onLine){status('Offline · lokal gespeichert','error');return{offline:true}}
+ if(!token()){status('Nicht angemeldet · lokale Daten sicher','error');return{auth:false}}
+ busy=true;busySince=Date.now();status('Synchronisiere Geräte …','syncing');let ok=false;
+ try{
+  // A live snapshot is authoritative: never overwrite edits made during a network request.
+  const readCurrent=()=>{try{return cleanState(data)}catch(_){return cleanState(safeJSON(localStorage.getItem(KEY)||'{}',{}))}};
+  let current=readCurrent();if(addMissingIds(current)){try{data=clone(current)}catch(_){window.data=clone(current)};safeSet(KEY,JSON.stringify(current))}
+  const saved=await dbSet('localState',{state:clone(current),ts:Date.now()});
+  if(!saved&&!safeSet(KEY,JSON.stringify(current)))throw new Error('Lokale Änderungen konnten nicht gesichert werden');
+  let base=await dbGet('baseState',undefined),version=Number(await dbGet('baseVersion',0)||0);
+  if(base===undefined){
+   const full=await pullFull('Ersten Geräteabgleich vorbereiten …');
+   base=full.state;version=full.version;
+   // Initial local data is merged, not replaced, and only uploaded after a fresh read.
+   current=cleanState(mergeBootstrap(base,current));addMissingIds(current);
+  }
+  let latest=null,latestVersion=version;
+  for(let attempt=0;attempt<4;attempt++){
+   // Pull the authoritative state each time. The old base is only used to identify
+   // what THIS device changed; changes from other devices are preserved.
+   const full=await pullFull('Aktuellen Cloud-Stand abgleichen …');
+   let local=readCurrent();addMissingIds(local);
+   if(attempt===0&&version===full.version&&base!==undefined&&!(await dbGet('baseVersion',0))){
+    local=cleanState(mergeBootstrap(base,local));
+   }
+   const localChanges=diff(base,local);
+   const combined=localChanges?applyDelta(full.state,localChanges):clone(full.state);
+   const proposed=cleanState(combined||{});addMissingIds(proposed);
+   const upload=diff(full.state,proposed);
+   if(!upload){latest=full.state;latestVersion=full.version;break}
+   const packed=await gzipJSON(upload);
+   const payload={token:token(),deviceId:deviceId(),deviceName:deviceName(),baseUpdatedAt:full.version};
+   if(packed.gz&&packed.gz.length<packed.raw.length)payload.deltaGzip=packed.gz;else payload.delta=packed.raw;
+   const ack=await fireAndAck('sync_delta',payload,22000);
+   if(Number(ack.version)!==289)throw new Error('Google Apps Script V289 ist noch nicht bereitgestellt');
+   if(ack.needFullPull){continue} // concurrent update: fetch and rebase again
+   // Verify actual server state; do not assume an ACK means every item survived.
+   const verified=await pullFull('Übertragung überprüfen …');
+   if(!same(verified.state,proposed)){
+    // Another device may have written after our ACK. Retry against the new state.
+    if(attempt<3)continue;
+    throw new Error('Cloud-Abgleich konnte nicht vollständig bestätigt werden');
+   }
+   latest=verified.state;latestVersion=verified.version;break;
+  }
+  if(latest===null)throw new Error('Gleichzeitige Änderungen – bitte Synchronisierung erneut versuchen');
+  // Edits made during network requests must survive and be scheduled for another sync.
+  const live=readCurrent(),unsent=diff(current,live);
+  if(unsent){latest=cleanState(applyDelta(latest,unsent));pending=true}
+  await applyLocal(latest);
+  if(!await dbSet('baseState',clone(unsent? (await pullFull('Cloud-Basis bestätigen …')).state:latest)))throw new Error('Sync-Basis konnte nicht gespeichert werden');
+  if(!await dbSet('baseVersion',latestVersion))throw new Error('Sync-Version konnte nicht gespeichert werden');
+  lastSyncAt=Date.now();cooldownUntil=0;ok=true;
+  status(unsent?'Cloud synchronisiert · neue lokale Änderungen ausstehend':`Synchronisiert ✓ · ${latest.homework?.length||0} Aufgaben · ${latest.tests?.length||0} Tests`,'ok');
+  return{ok:true,version:latestVersion,pending:!!unsent};
+ }catch(e){console.error('[Studia sync]',e);cooldownUntil=Date.now()+12000;status((e?.message||String(e))+' · lokal gespeichert','error');if(manual)throw e;return{ok:false,error:e}}
+ finally{busy=false;busySince=0;if(ok&&pending){pending=false;setTimeout(()=>syncNow().catch(()=>{}),1400)}}
+}
 async function loginAndSync(){const u=$('#v150Username')?.value?.trim()||'',p=$('#v150Password')?.value||'',ep=$('#v150ScriptUrl')?.value?.trim()||endpoint();if(ep)rememberUrl(ep);status('Anmeldung …','syncing');const r=await fireAndAck('login',{username:u,password:p},18000);if(Number(r.version)!==289)throw new Error('Google Apps Script V289 ist noch nicht bereitgestellt');rememberAuth(r);status('Angemeldet als '+(r.user?.username||u)+' ✓');return syncNow({manual:true})}
 async function register(){const u=$('#v150Username')?.value?.trim()||'',p=$('#v150Password')?.value||'',ep=$('#v150ScriptUrl')?.value?.trim()||endpoint();if(ep)rememberUrl(ep);status('Konto wird erstellt …','syncing');const r=await fireAndAck('register',{username:u,password:p},18000);if(Number(r.version)!==289)throw new Error('Google Apps Script V289 ist noch nicht bereitgestellt');rememberAuth(r);if(r.recoveryCode)alert('Wiederherstellungscode — sicher speichern:\n\n'+r.recoveryCode);status('Konto erstellt ✓');return syncNow({manual:true})}
 function ensureButton(){if(IS_EDITOR||$('#v232DesktopSync'))return;const b=document.createElement('button');b.id='v232DesktopSync';b.type='button';b.innerHTML='<span class="spin">↻</span><span>Geräte synchronisieren<small>Lokal gespeichert</small></span>';b.onclick=()=>syncNow({manual:true}).catch(()=>{});document.body.appendChild(b)}
@@ -97,8 +148,7 @@ function hookSave(){
    const r=old.apply(this,arguments);
    let snapshot=null;try{snapshot=cleanState(data)}catch(_){snapshot=cleanState(safeJSON(localStorage.getItem(KEY)||'{}',{}))}
    dbSet('localState',{state:clone(snapshot),ts:Date.now()});
-   const raw=JSON.stringify(snapshot);if(!window.__STUDIA_LOCAL_QUOTA__)safeSet(KEY,raw);
-   lastSeenLocal=safeSet(KEY,raw)?raw:'';
+   const raw=JSON.stringify(snapshot);lastSeenLocal=safeSet(KEY,raw)?raw:'';
    schedule();return r
  };
  w.__v298=true;window.save=w;try{save=w}catch(_){}
