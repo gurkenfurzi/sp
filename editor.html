@@ -3665,7 +3665,14 @@ function load(){
    return d;
  }catch{return structuredClone(defaultData)}
 }
-function save(){localStorage.setItem(KEY,JSON.stringify(data));renderAll()}
+function save(){
+  // Keep the editor usable when large embedded pictures exhaust localStorage.
+  // An IndexedDB copy is written by the sync controller; do not abort the
+  // user's edit merely because the synchronous localStorage cache is full.
+  try{localStorage.setItem(KEY,JSON.stringify(data));window.__STUDIA_LOCAL_QUOTA__=false}
+  catch(e){if(e?.name==='QuotaExceededError'||/quota/i.test(String(e?.message||e))){window.__STUDIA_LOCAL_QUOTA__=true;console.warn('[Studia editor] localStorage voll; IndexedDB-Sicherung erforderlich')}else throw e}
+  renderAll();
+}
 function id(){return Math.random().toString(36).slice(2)+Date.now().toString(36)}
 function esc(s=""){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
 function fmtDate(s){if(!s)return"";return new Date(s+"T12:00:00").toLocaleDateString("de-DE",{day:"2-digit",month:"2-digit",year:"2-digit"})}
@@ -4412,7 +4419,17 @@ window.undoCanvas=function(){restoreHistory(canvasState.historyIndex-1)}
 window.redoCanvas=function(){restoreHistory(canvasState.historyIndex+1)}
 function updateHistoryButtons(){const u=$("#undoBtn"),r=$("#redoBtn");if(u)u.disabled=canvasState.historyIndex<=0;if(r)r.disabled=canvasState.historyIndex>=canvasState.history.length-1}
 function scheduleAutosave(){clearTimeout(canvasState.autosaveTimer);const el=$("#autosaveState");if(el){el.textContent="Nicht gespeichert";el.className="autosaveState saving"}canvasState.autosaveTimer=setTimeout(()=>autoSaveCanvas(),850)}
-function autoSaveCanvas(){const {s,t}=currentTopic();if(!s||!t)return;const snapshot=canvasSnapshot();if(snapshot===canvasState.lastSavedHash)return;saveCanvasSheetCore(true);canvasState.lastSavedHash=canvasSnapshot();const el=$("#autosaveState");if(el){el.textContent="Automatisch gespeichert ✓";el.className="autosaveState saved"}}
+function autoSaveCanvas(){
+ const {s,t}=currentTopic();if(!s||!t)return;
+ const snapshot=canvasSnapshot();if(snapshot===canvasState.lastSavedHash)return;
+ try{
+   saveCanvasSheetCore(true);
+   const persistence=window.__STUDIA_V324_DURABLE_SAVE__?.flush();
+   if(persistence&&typeof persistence.then==='function'){
+     persistence.then(()=>{if(canvasSnapshot()===snapshot){canvasState.lastSavedHash=snapshot;const el=$("#autosaveState");if(el){el.textContent="Automatisch gespeichert ✓";el.className="autosaveState saved"}}}).catch(err=>{console.error('[Studia autosave]',err);markCanvasDirty(false)})
+   }else{canvasState.lastSavedHash=snapshot;const el=$("#autosaveState");if(el){el.textContent="Automatisch gespeichert ✓";el.className="autosaveState saved"}}
+ }catch(err){console.error('[Studia autosave]',err);markCanvasDirty(false)}
+}
 
 const TEXT_PRESET_HIDDEN_KEY="schoolbloom-hidden-default-styles";
 const TEXT_PRESET_OVERRIDE_KEY="schoolbloom-default-style-overrides";
@@ -6503,7 +6520,7 @@ document.addEventListener("keydown",e=>{
  if(mod&&key==="g"&&!e.shiftKey){e.preventDefault();groupSelectedItems();return}
  if(mod&&key==="g"&&e.shiftKey){e.preventDefault();ungroupSelectedItems();return}
  if(mod&&key==="0"){e.preventDefault();fitCanvasStage();return}
- if(mod&&key==="s"){e.preventDefault();saveSheetNow?.();cuteToast("Gespeichert ✓");return}
+ if(mod&&key==="s"){e.preventDefault();window.saveSheetNow?.();return}
  if((e.key==="Delete"||e.key==="Backspace")&&!isTyping){e.preventDefault();deleteSelectedCanvasItem();return}
  if(["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"].includes(e.key)&&!isTyping){
    e.preventDefault();const n=e.shiftKey?10:1;nudgeSelection(e.key==="ArrowLeft"?-n:e.key==="ArrowRight"?n:0,e.key==="ArrowUp"?-n:e.key==="ArrowDown"?n:0);return;
@@ -6995,7 +7012,7 @@ function markCanvasDirty(schedule=true){const x=$("#autosaveState");if(x){x.text
 window.addEventListener("resize",()=>{if($("#view-sheet-editor")?.classList.contains("active"))fitCanvasStage()})
 function saveCanvasSheetCore(auto=false){
  const {s,t}=currentTopic();if(!s||!t)return;const title=canvasState.objects.find(o=>["text","block"].includes(o.kind)&&(o.style?.fontSize||0)>=28)?.text?.replace(/<[^>]*>/g,"").slice(0,80)||t.title;const dataObj={objects:canvasState.objects,vectors:canvasState.vectors,orientation:canvasState.orientation,pageStyle:canvasState.pageStyle,layerGroups:canvasState.layerGroups||[]};
- if(selectedSheetId){const sh=data.studySheets.find(x=>x.id===selectedSheetId);if(sh){sh.title=title;sh.canvasData=dataObj;sh.html=""}}else{const sh={id:id(),subject:s.name,topicId:t.id,title,html:"",canvasData:dataObj,created:Date.now()};data.studySheets.push(sh);selectedSheetId=sh.id}save();if(!auto){const el=$("#autosaveState");if(el){el.textContent="Gespeichert ✓";el.className="autosaveState saved"}}
+ if(selectedSheetId){const sh=data.studySheets.find(x=>x.id===selectedSheetId);if(sh){sh.title=sh.title||title;sh.canvasData=dataObj;sh.html=""}}else{const sh={id:id(),subject:s.name,topicId:t.id,title,html:"",canvasData:dataObj,created:Date.now()};data.studySheets.push(sh);selectedSheetId=sh.id}save();if(!auto){const el=$("#autosaveState");if(el){el.textContent="Gespeichert ✓";el.className="autosaveState saved"}}
 }
 window.saveCanvasSheet=function(){saveCanvasSheetCore(false);canvasState.lastSavedHash=canvasSnapshot()}
 function serializedCanvas(){
@@ -11631,7 +11648,7 @@ saveCanvasSheetCore=function(auto=false){
   const title=first.objects?.find(o=>["text","block"].includes(o.kind)&&(o.style?.fontSize||0)>=28)?.text?.replace(/<[^>]*>/g,"").slice(0,80)||t.title;
   const active=canvasState.pages[canvasState.activePage]||v96CurrentPageData();
   const dataObj={objects:v96Deep(active.objects),vectors:v96Deep(active.vectors),orientation:active.orientation,pageStyle:v96Deep(active.pageStyle),layerGroups:v96Deep(active.layerGroups||canvasState.layerGroups||[]),pages:v96Deep(canvasState.pages),activePage:canvasState.activePage};
-  if(selectedSheetId){const sh=data.studySheets.find(x=>x.id===selectedSheetId);if(sh){sh.title=title;sh.canvasData=dataObj;sh.html=""}}
+  if(selectedSheetId){const sh=data.studySheets.find(x=>x.id===selectedSheetId);if(sh){sh.title=sh.title||title;sh.canvasData=dataObj;sh.html=""}}
   else{const sh={id:id(),subject:s.name,topicId:t.id,title,html:"",canvasData:dataObj,created:Date.now()};data.studySheets.push(sh);selectedSheetId=sh.id}
   save();if(!auto){const el=$("#autosaveState");if(el){el.textContent="Gespeichert ✓";el.className="autosaveState saved"}}
 };
@@ -25606,12 +25623,12 @@ function handleShortcutV305(e){
 
   /* Text editing owns normal OS/browser shortcuts. Only Save and Hyperlink are editor actions. */
   if(typing){
-    if(mod&&key==='s')return v305RunShortcut(e,()=>{window.saveSheetNow?.();window.cuteToast?.('Gespeichert ✓')});
+    if(mod&&key==='s')return v305RunShortcut(e,()=>{window.saveSheetNow?.()});
     if(mod&&key==='k'&&e.target?.closest?.('[contenteditable="true"]'))return v305RunShortcut(e,()=>{window.v152RememberRange?.();(window.v164Hyperlink||window.openHyperlinkDialog)?.()});
     return;
   }
 
-  if(mod&&key==='s')return v305RunShortcut(e,()=>{window.saveSheetNow?.();window.cuteToast?.('Gespeichert ✓')});
+  if(mod&&key==='s')return v305RunShortcut(e,()=>{window.saveSheetNow?.()});
   if(mod&&key==='z'&&e.shiftKey)return v305RunShortcut(e,window.redoCanvas||window.redo);
   if(mod&&key==='z')return v305RunShortcut(e,window.undoCanvas||window.undo);
   if(mod&&key==='y')return v305RunShortcut(e,window.redoCanvas||window.redo);
@@ -25821,5 +25838,75 @@ let boundButton=null;function bindOnce(){const b=q('.canvasTopbar .editorActions
 </script>
 <script id="studia-v315-version">(()=>{const f=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 321'};[0,250,900].forEach(t=>setTimeout(f,t))})();</script>
 
+<!-- Studia V324: durable sheet saves, stable titles and save shortcut. No design changes. -->
+<script id="studia-v324-durable-sheet-save">
+(()=>{
+ 'use strict';
+ const KEY='schoolhub-v1';
+ let lastError=null,writeSequence=0;
+ function status(message,failed=false){const el=document.querySelector('#autosaveState');if(el){el.textContent=message;el.className='autosaveState '+(failed?'saving':'saved')} }
+ function persistIndexedDB(state){return new Promise((resolve,reject)=>{
+   let request;try{request=indexedDB.open('studia-sync-v290',1)}catch(e){reject(e);return}
+   request.onupgradeneeded=()=>{if(!request.result.objectStoreNames.contains('kv'))request.result.createObjectStore('kv')};
+   request.onerror=()=>reject(request.error||new Error('IndexedDB konnte nicht geöffnet werden'));
+   request.onblocked=()=>reject(new Error('IndexedDB blockiert'));
+   request.onsuccess=()=>{
+     const db=request.result;
+     try{const tx=db.transaction('kv','readwrite');tx.objectStore('kv').put({state,ts:Date.now()},'localState');
+       tx.oncomplete=()=>{db.close();resolve(true)};
+       tx.onerror=()=>{const e=tx.error;db.close();reject(e||new Error('IndexedDB-Speicherung fehlgeschlagen'))};
+       tx.onabort=()=>{const e=tx.error;db.close();reject(e||new Error('IndexedDB-Speicherung abgebrochen'))};
+     }catch(e){db.close();reject(e)}
+   }
+ })}
+ // Queue entire snapshots in their original order; delayed writes must never
+ // replace a newer snapshot in IndexedDB.
+ let queue=Promise.resolve();
+ function durableSave(){
+   let snapshot;
+   try{snapshot=structuredClone(data)}catch(_){snapshot=JSON.parse(JSON.stringify(data))}
+   const n=++writeSequence;
+   queue=queue.catch(()=>{}).then(()=>persistIndexedDB(snapshot));
+   queue.then(()=>{if(n===writeSequence){lastError=null;if(window.__STUDIA_LOCAL_QUOTA__)status('Lokal gesichert · Cloud-Sync ausstehend')}})
+     .catch(e=>{lastError=e;console.error('[Studia V324] Lernblatt-Sicherung fehlgeschlagen',e);status('Speichern fehlgeschlagen – Speicher prüfen',true)});
+   return queue;
+ }
+ // The older core calls save() and previously reported success even when
+ // localStorage threw or its fallback was still pending.
+ const previous=window.saveCanvasSheetCore||((typeof saveCanvasSheetCore==='function')?saveCanvasSheetCore:null);
+ if(typeof previous==='function'){
+   const fixed=function(auto=false){
+     const result=previous.apply(this,arguments);
+     const sid=typeof selectedSheetId!=='undefined'?selectedSheetId:null;
+     const sh=(data.studySheets||[]).find(x=>String(x.id)===String(sid));
+     if(!sh){status('Nicht gespeichert – kein Lernblatt gefunden',true);return result}
+     // The original resource label must remain stable even if a heading is edited.
+     // The v102 creation handler sets the resourceType/name before this call returns.
+     const promise=durableSave();
+     if(!auto){status('Wird gespeichert …');promise.then(()=>{if(!lastError)status('Gespeichert ✓')}).catch(()=>{})}
+     return result;
+   };
+   window.saveCanvasSheetCore=fixed;
+   try{saveCanvasSheetCore=fixed}catch(_){}
+ }
+ // The 'Speichern' keyboard shortcut referred to a nonexistent saveSheetNow.
+ window.saveSheetNow=function(){
+   const fn=window.saveCanvasSheetCore||((typeof saveCanvasSheetCore==='function')?saveCanvasSheetCore:null);
+   if(typeof fn!=='function'){status('Speichern nicht verfügbar',true);return false}
+   try{fn(false);return true}
+   catch(e){lastError=e;console.error('[Studia V324] Speichern',e);status('Speichern fehlgeschlagen',true);return false}
+ };
+ // Explicit rename must update the saved sheet instead of only a temporary UI label.
+ const oldRename=window.v107RenameCurrentResource;
+ if(typeof oldRename==='function')window.v107RenameCurrentResource=function(){
+   const sid=typeof selectedSheetId!=='undefined'?selectedSheetId:null;
+   const before=(data.studySheets||[]).find(x=>String(x.id)===String(sid))?.title;
+   oldRename.apply(this,arguments);
+   const sh=(data.studySheets||[]).find(x=>String(x.id)===String(sid));
+   if(sh&&sh.title!==before)durableSave();
+ };
+ window.__STUDIA_V324_DURABLE_SAVE__={flush:()=>queue,getLastError:()=>lastError};
+})();
+</script>
 <!-- Studia V323: editor pages also need the cloud sync controller. -->
 <script src="google-sync-config.js?v=323"></script>
