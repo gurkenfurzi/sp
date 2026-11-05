@@ -85,6 +85,8 @@ async function syncNow(opts={}){
   // A live snapshot is authoritative: never overwrite edits made during a network request.
   const readCurrent=()=>{try{return cleanState(data)}catch(_){return cleanState(safeJSON(localStorage.getItem(KEY)||'{}',{}))}};
   let current=readCurrent();if(addMissingIds(current)){try{data=clone(current)}catch(_){window.data=clone(current)};safeSet(KEY,JSON.stringify(current))}
+  // Preserve the actual starting snapshot: the bootstrap merge is not a local edit.
+  const startLocal=clone(current);
   const saved=await dbSet('localState',{state:clone(current),ts:Date.now()});
   if(!saved&&!safeSet(KEY,JSON.stringify(current)))throw new Error('Lokale Änderungen konnten nicht gesichert werden');
   let base=await dbGet('baseState',undefined),version=Number(await dbGet('baseVersion',0)||0);
@@ -125,7 +127,7 @@ async function syncNow(opts={}){
   }
   if(latest===null)throw new Error('Gleichzeitige Änderungen – bitte Synchronisierung erneut versuchen');
   // Edits made during network requests must survive and be scheduled for another sync.
-  const live=readCurrent(),unsent=diff(current,live);
+  const live=readCurrent(),unsent=diff(startLocal,live);
   if(unsent){latest=cleanState(applyDelta(latest,unsent));pending=true}
   await applyLocal(latest);
   if(!await dbSet('baseState',clone(unsent? (await pullFull('Cloud-Basis bestätigen …')).state:latest)))throw new Error('Sync-Basis konnte nicht gespeichert werden');

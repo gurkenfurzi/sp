@@ -3030,6 +3030,7 @@ html,body{background:#fff7f4;}
 </style>
 <script>document.documentElement.classList.add("v286-editor-boot")</script>
 <style>html.v286-editor-boot body{visibility:hidden!important}body.v287StandaloneEditor .nav,body.v287StandaloneEditor>.app>.header{display:none!important}</style>
+<script src="math-core.js"></script>
 </head>
 <body class="v57">
 <script id="v162-safe-runtime">
@@ -5067,11 +5068,7 @@ function normalizeGraphExpr(expr){
  return s;
 }
 function graphEval(expr,x){
- try{
-   const code=normalizeGraphExpr(expr);if(!code)return NaN;
-   const fn=new Function("x",`"use strict";return (${code})`);
-   const y=fn(x);return Number.isFinite(y)?y:NaN;
- }catch(_){return NaN}
+ return window.StudiaMathV322.evaluate(expr,x);
 }
 function graphSvg(settings,w=520,h=330){
  const g={...graphDefault(),...(settings||{})};
@@ -7942,6 +7939,11 @@ button.primary,button.ghost,.iconbtn{
 </style>
 
 </head><body><div class="page">${serializedCanvas()}</div><div id="buildVersionBadge" style="position:fixed;right:8px;bottom:8px;z-index:9999;font:800 9px Inter,sans-serif;color:#9b7d74;background:rgba(255,250,247,.88);border:1px solid #ead4cd;border-radius:999px;padding:5px 8px;pointer-events:none">V182</div>
+<style id="studia-v322-math-layout-stability">
+#formulaVisualEditor .vfPower,#canvasObjects .formulaContent .vfPower{display:inline-flex!important;align-items:baseline!important;vertical-align:baseline!important;white-space:nowrap!important}
+#formulaVisualEditor .vfPower>.vfPowerBase,#canvasObjects .formulaContent .vfPower>.vfPowerBase{display:inline-block!important;min-width:0!important}
+#formulaVisualEditor .vfPower>sup,#canvasObjects .formulaContent .vfPower>sup{position:static!important;flex:0 0 auto!important;align-self:flex-start!important;transform:none!important;vertical-align:super!important}
+</style>
 </body></html>`;
  const blob=new Blob([html],{type:"text/html"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=title.replace(/[^\wäöüÄÖÜß-]+/g,"_")+".html";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000);
 }
@@ -20269,7 +20271,22 @@ function unwrap(root,selector){qa(selector,root).forEach(n=>{const p=n.parentNod
 function cleanInline(o,prop){const d=document.createElement('div');d.innerHTML=o.text||'';const all=qa('*',d);if(prop==='fontWeight'){unwrap(d,'b,strong');all.forEach(n=>n.style?.removeProperty('font-weight'))}if(prop==='fontStyle'){unwrap(d,'i,em');all.forEach(n=>n.style?.removeProperty('font-style'))}if(prop==='textDecoration'){unwrap(d,'u');all.forEach(n=>n.style?.removeProperty('text-decoration'))}if(prop==='fontSize'){all.forEach(n=>{n.style?.removeProperty('font-size');if(n.tagName==='FONT')n.removeAttribute('size')})}if(prop==='fontFamily'){all.forEach(n=>{n.style?.removeProperty('font-family');if(n.tagName==='FONT')n.removeAttribute('face')})}if(prop==='color'){all.forEach(n=>{n.style?.removeProperty('color');if(n.tagName==='FONT')n.removeAttribute('color')})}if(prop==='textAlign')all.forEach(n=>n.style?.removeProperty('text-align'));o.text=d.innerHTML}
 function commitTextDOM(o,el){if(o&&el)o.text=el.innerHTML;try{markCanvasDirty?.();pushHistory?.()}catch(_){}savedRange=null;requestAnimationFrame(()=>{syncToolbar();enhanceInspector()})}
 function execOnRange(o,cmd,value=null){const el=textEl(o.id);if(!el||!restoreRange(o.id))return false;try{document.execCommand('styleWithCSS',false,cmd==='fontSize'?false:true)}catch(_){}try{if(cmd==='fontSize')document.execCommand('fontSize',false,'7');else document.execCommand(cmd,false,value)}catch(_){return false}if(cmd==='fontSize'){const px=Math.max(6,Math.min(180,parseFloat(value)||16));qa('font[size="7"]',el).forEach(n=>{n.removeAttribute('size');n.style.fontSize=px+'px'});try{document.execCommand('styleWithCSS',false,true)}catch(_){}}o.text=el.innerHTML;rememberRange();try{markCanvasDirty?.();pushHistory?.()}catch(_){}return true}
-function wholeProp(o,prop,value){o.style||={};cleanInline(o,prop);o.style[prop]=value;wholeTextId=o.id;clearTextRange();try{renderCanvasObjects?.();renderCanvasInspector?.();markCanvasDirty?.();pushHistory?.()}catch(_){}syncToolbar();enhanceInspector();return true}
+function wholeProp(o,prop,value){
+ o.style||={};
+ // Textausrichtung verändert die Geometrie nicht: den aktiven Editor nicht neu aufbauen.
+ // Dadurch bleiben Caret, gemischte Textformatierungen und die Bearbeitungsauswahl erhalten.
+ if(prop==='textAlign'){
+   if(!['left','right','center','justify'].includes(value))return false;
+   o.style.textAlign=value;
+   const el=textEl(o.id);if(el)el.style.textAlign=value;
+   try{markCanvasDirty?.();pushHistory?.()}catch(_){}
+   requestAnimationFrame(()=>{syncToolbar();enhanceInspector()});
+   return true;
+ }
+ cleanInline(o,prop);o.style[prop]=value;wholeTextId=o.id;clearTextRange();
+ try{renderCanvasObjects?.();renderCanvasInspector?.();markCanvasDirty?.();pushHistory?.()}catch(_){}
+ syncToolbar();enhanceInspector();return true;
+}
 window.applyTextProperty=function(prop,value){const o=selectedText();if(!o)return false;if(prop==='textAlign')return wholeProp(o,prop,value);const r=validRange(o.id);if(r){if(prop==='fontSize')return execOnRange(o,'fontSize',Number(value)||16);if(prop==='fontFamily')return execOnRange(o,'fontName',value);if(prop==='color')return execOnRange(o,'foreColor',value);if(prop==='fontWeight'){const want=String(value)!=='400';restoreRange(o.id);let on=false;try{on=document.queryCommandState('bold')}catch(_){}if(on!==want)return execOnRange(o,'bold');return true}}
  return wholeProp(o,prop,value)};
 try{applyTextProperty=window.applyTextProperty}catch(_){}
@@ -23930,41 +23947,9 @@ let v222Pan=null;
 
 /* ---------- A. Graph-Ausdrücke: ein stabiler Parser statt mehrerer konkurrierender Wege ---------- */
 function v222NormalizeExpr(expr){
-  let s=String(expr??'').trim().toLowerCase();
-  s=s.replace(/\u200b/g,'').replace(/\u00a0/g,'').replace(/\s+/g,'');
-  s=s.replace(/^f\(x\)=/i,'').replace(/^y=/i,'');
-  s=s.replace(/[×⋅]/g,'*').replace(/÷/g,'/').replace(/−/g,'-').replace(/π/g,'pi');
-  s=s.replace(/(\d),(\d)/g,'$1.$2');
-  if(!s)return '';
-
-  /* Übliche Schulschreibweise ohne sichtbares Malzeichen akzeptieren: 2x, 3sin(x), 2(x+1), x(x+1). */
-  s=s.replace(/(\d|x|\)|pi|e)(?=(?:sin|cos|tan|sqrt|abs|exp|ln|log)\()/g,'$1*');
-  s=s.replace(/(\d|x|\))(?=(?:pi|e)\b)/g,'$1*');
-  s=s.replace(/(\b(?:pi|e)\b)(?=(?:x|\d|\())/g,'$1*');
-  s=s.replace(/(\d|x|\))(?=\()/g,'$1*');
-  s=s.replace(/\)(?=(?:\d|x|pi|e))/g,')*');
-  s=s.replace(/(\d)(?=x\b)/g,'$1*');
-  s=s.replace(/x(?=\d)/g,'x*');
-
-  if(!/^[0-9x+\-*/().,^a-z]+$/.test(s))throw new Error('Ungültige Zeichen in der Funktion');
-  const allowed=['sin','cos','tan','sqrt','abs','exp','ln','log','pi','e'];
-  const words=s.match(/[a-z]+/g)||[];
-  if(words.some(w=>w!=='x'&&!allowed.includes(w)))throw new Error('Unbekannte Funktion');
-
-  let code=s.replace(/\^/g,'**')
-    .replace(/\bpi\b/g,'Math.PI')
-    .replace(/\be\b/g,'Math.E')
-    .replace(/\bsin\(/g,'Math.sin(')
-    .replace(/\bcos\(/g,'Math.cos(')
-    .replace(/\btan\(/g,'Math.tan(')
-    .replace(/\bsqrt\(/g,'Math.sqrt(')
-    .replace(/\babs\(/g,'Math.abs(')
-    .replace(/\bexp\(/g,'Math.exp(')
-    .replace(/\bln\(/g,'Math.log(')
-    .replace(/\blog\(/g,'Math.log10(');
-  /* Schon beim Speichern kompilieren. So landet keine kaputte Formel im Graphen. */
-  new Function('x',`"use strict";return (${code})`);
-  return code;
+  // Gemeinsamer Parser statt JS-Konvertierung mit fehlerhafter Potenz-Syntax.
+  window.StudiaMathV322.validate(expr);
+  return window.StudiaMathV322.clean(expr);
 }
 window.normalizeGraphExpr=v222NormalizeExpr;
 try{normalizeGraphExpr=window.normalizeGraphExpr}catch(_){}
@@ -25198,7 +25183,7 @@ try{graphExprToVisual=window.graphExprToVisual}catch(_){ }
 /* Nach jedem Öffnen Slots sofort freischalten. */
 try{
   const prevSetup=window.v224SetupGraphFormulaEditor;
-  window.v224SetupGraphFormulaEditor=function(i){const out=prevSetup?.apply(this,arguments);[0,30,100].forEach(t=>setTimeout(()=>v228EnhanceSlots(q('#formulaVisualEditor')),t));return out};
+  window.v224SetupGraphFormulaEditor=function(i){const out=prevSetup?.apply(this,arguments);v228EnhanceSlots(q('#formulaVisualEditor'));return out};
   try{v224SetupGraphFormulaEditor=window.v224SetupGraphFormulaEditor}catch(_){ }
 }catch(_){ }
 
@@ -25322,9 +25307,8 @@ function serialize(ed){
   return expr;
 }
 function compileCheck(expr){
-  const code=typeof window.normalizeGraphExpr==='function'?window.normalizeGraphExpr(expr):expr.replace(/\^/g,'**');
-  /* echte JS-Syntaxprüfung – normalizeGraphExpr alleine prüft nur erlaubte Zeichen. */
-  new Function('x',`"use strict"; return (${code});`);
+  /* Sicherer AST-Parser mit Syntaxprüfung, keine dynamische Codeausführung. */
+  window.StudiaMathV322.validate(expr);
   return expr;
 }
 function restoreGraph(saved){
@@ -25398,7 +25382,7 @@ window.openGraphFunctionEditor=function(i){
     try{window.v228EnhanceSlots?.(ed)}catch(_){ }
     setup(i);
   };
-  [30,80,150,250].forEach(t=>setTimeout(hydrate,t));
+  setTimeout(hydrate,30);
 };
 try{openGraphFunctionEditor=window.openGraphFunctionEditor}catch(_){ }
 
@@ -25836,3 +25820,6 @@ let boundButton=null;function bindOnce(){const b=q('.canvasTopbar .editorActions
 })();
 </script>
 <script id="studia-v315-version">(()=>{const f=()=>{const e=document.querySelector('#headerEyebrow');if(e)e.textContent='VERSION 321'};[0,250,900].forEach(t=>setTimeout(f,t))})();</script>
+
+<!-- Studia V323: editor pages also need the cloud sync controller. -->
+<script src="google-sync-config.js?v=323"></script>
